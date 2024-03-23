@@ -1,23 +1,5 @@
 #include "D3DClass.h"
-D3DClass::D3DClass()
-{
-    m_swapChain = 0;
-    m_device = 0;
-    m_deviceContext = 0;
-    m_renderTargetView = 0;
-    m_depthStencilBuffer = 0;
-    m_depthStencilState = 0;
-    m_depthStencilView = 0;
-    m_rasterState = 0;
-}
 
-D3DClass::D3DClass(const D3DClass& other)
-{
-}
-
-D3DClass::~D3DClass()
-{
-}
 bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen,
     float screenDepth, float screenNear)
 {
@@ -39,7 +21,6 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
     D3D11_RASTERIZER_DESC rasterDesc;
     D3D11_VIEWPORT viewport;
     float fieldOfView, screenAspect;
-
 
     // vsync(수직동기화) 설정을 저장합니다.
     m_vsync_enabled = vsync;
@@ -389,7 +370,6 @@ void D3DClass::BeginScene(float red, float green, float blue, float alpha)
 {
     float color[4];
 
-
     // 버퍼를 어떤 색상으로 지울 것인지 설정합니다.
     color[0] = red;
     color[1] = green;
@@ -426,8 +406,6 @@ ID3D11Device* D3DClass::GetDevice()
 {
     return m_device;
 }
-
-
 ID3D11DeviceContext* D3DClass::GetDeviceContext()
 {
     return m_deviceContext;

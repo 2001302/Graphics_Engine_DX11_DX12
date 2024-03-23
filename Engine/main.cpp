@@ -10,7 +10,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline,
     System* system;
     bool result;
 
-
     // system 객체를 생성한다.
     system = new System();
     if (!system)

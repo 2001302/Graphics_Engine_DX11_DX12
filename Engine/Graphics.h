@@ -3,9 +3,7 @@
 
 #include "D3dclass.h"
 
-/////////////
-// GLOBALS //
-/////////////
+//GLOBALS
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;

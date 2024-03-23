@@ -4,9 +4,18 @@
 class Input
 {
 public:
-    Input() {};
-    Input(const Input&) {};
-    ~Input() {};
+    Input() 
+    {
+        *m_keys = new bool[256] {};
+    };
+    Input(const Input& input) 
+    {
+        *m_keys = input.m_keys;
+    };
+    ~Input() 
+    {
+        delete[] m_keys;
+    };
 
     void Initialize();
 

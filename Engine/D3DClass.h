@@ -16,6 +16,9 @@ class D3DClass
 public:
     D3DClass()
     {
+        m_vsync_enabled = false;
+        m_videoCardMemory = 0;
+
         m_swapChain = 0;
         m_device = 0;
         m_deviceContext = 0;
@@ -24,8 +27,11 @@ public:
         m_depthStencilState = 0;
         m_depthStencilView = 0;
         m_rasterState = 0;
+
+        m_projectionMatrix = XMMatrixIdentity();
+        m_worldMatrix = XMMatrixIdentity();
+        m_orthoMatrix = XMMatrixIdentity();
     }
-    D3DClass(const D3DClass& other){ }
     ~D3DClass(){ }
 
     bool Initialize(int, int, bool, HWND, bool, float, float);

@@ -13,7 +13,10 @@ class Graphics
 {
 public:
     Graphics() { m_D3D = 0; };
-    Graphics(const Graphics&) {};
+    Graphics(const Graphics& graphics) 
+    {
+        m_D3D = graphics.m_D3D;
+    };
     ~Graphics() {};
 
     bool Initialize(int, int, HWND);

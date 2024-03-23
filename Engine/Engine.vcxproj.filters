@@ -6,11 +6,21 @@
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="System.cpp" />
     <ClCompile Include="D3DClass.cpp" />
+    <ClCompile Include="Modelclass.cpp" />
+    <ClCompile Include="Colorshaderclass.cpp" />
+    <ClCompile Include="Cameraclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="D3DClass.h" />
+    <ClInclude Include="Modelclass.h" />
+    <ClInclude Include="Colorshaderclass.h" />
+    <ClInclude Include="Cameraclass.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Color.vs" />
+    <None Include="Color.ps" />
   </ItemGroup>
 </Project>

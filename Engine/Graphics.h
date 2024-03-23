@@ -2,6 +2,9 @@
 #define _Graphics_H_
 
 #include "D3dclass.h"
+#include "Cameraclass.h"
+#include "Modelclass.h"
+#include "Colorshaderclass.h"
 
 //GLOBALS
 const bool FULL_SCREEN = false;
@@ -12,7 +15,13 @@ const float SCREEN_NEAR = 0.1f;
 class Graphics
 {
 public:
-    Graphics() { m_D3D = 0; };
+    Graphics() 
+    { 
+        m_D3D = 0; 
+        m_Camera = 0;
+        m_Model = 0;
+        m_ColorShader = 0;
+    };
     Graphics(const Graphics& graphics) 
     {
         m_D3D = graphics.m_D3D;
@@ -28,6 +37,9 @@ private:
 
 private:
     D3DClass* m_D3D;
+    CameraClass* m_Camera;
+    ModelClass* m_Model;
+    ColorShaderClass* m_ColorShader;
 };
 
 #endif

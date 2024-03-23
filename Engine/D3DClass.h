@@ -8,6 +8,7 @@
 #include <d3dcommon.h>
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <memory>
 
 using namespace DirectX;
 

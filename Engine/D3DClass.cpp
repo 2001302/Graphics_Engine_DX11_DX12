@@ -24,6 +24,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 
     // vsync(수직동기화) 설정을 저장합니다.
     m_vsync_enabled = vsync;
+
     // DirectX 그래픽 인터페이스 팩토리를 만듭니다.
     result = CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&factory);
     if (FAILED(result))
@@ -303,6 +304,7 @@ bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hw
 
     // 월드 행렬을 단위 행렬로 초기화합니다.
     m_worldMatrix= XMMatrixIdentity();
+
     // 2D 렌더링에 사용될 직교 투영 행렬을 생성합니다.
     m_orthoMatrix= XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
 

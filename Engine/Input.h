@@ -14,7 +14,6 @@ public:
     };
     ~Input() 
     {
-        delete[] m_keys;
     };
 
     void Initialize();

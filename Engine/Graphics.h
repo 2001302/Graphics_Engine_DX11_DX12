@@ -1,12 +1,7 @@
 #ifndef _Graphics_H_
 #define _Graphics_H_
 
-
-//////////////
-// INCLUDES //
-//////////////
-#include <windows.h>
-
+#include "D3dclass.h"
 
 /////////////
 // GLOBALS //
@@ -19,9 +14,9 @@ const float SCREEN_NEAR = 0.1f;
 class Graphics
 {
 public:
-    Graphics();
-    Graphics(const Graphics&);
-    ~Graphics();
+    Graphics() { m_D3D = 0; };
+    Graphics(const Graphics&) {};
+    ~Graphics() {};
 
     bool Initialize(int, int, HWND);
     void Shutdown();
@@ -31,7 +26,7 @@ private:
     bool Render();
 
 private:
-
+    D3DClass* m_D3D;
 };
 
 #endif

@@ -17,14 +17,13 @@ class Graphics
 public:
     Graphics() 
     { 
-        m_D3D = 0; 
+        m_Direct3D = 0;
         m_Camera = 0;
         m_Model = 0;
         m_ColorShader = 0;
     };
     Graphics(const Graphics& graphics) 
     {
-        m_D3D = graphics.m_D3D;
     };
     ~Graphics() {};
 
@@ -36,7 +35,7 @@ private:
     bool Render();
 
 private:
-    D3DClass* m_D3D;
+    D3DClass* m_Direct3D;
     CameraClass* m_Camera;
     ModelClass* m_Model;
     ColorShaderClass* m_ColorShader;

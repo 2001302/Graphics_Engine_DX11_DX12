@@ -9,7 +9,6 @@
 #include <DirectXMath.h>
 #include <fstream>
 #include <d3dcompiler.h>
-#pragma comment(lib, "d3dcompiler.lib")
 
 using namespace std;
 using namespace DirectX;

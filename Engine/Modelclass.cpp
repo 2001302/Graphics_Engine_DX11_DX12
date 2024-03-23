@@ -47,7 +47,6 @@ int ModelClass::GetIndexCount()
 {
 	return m_indexCount;
 }
-
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
 	VertexType* vertices;
@@ -55,40 +54,41 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
-	// 정점 배열의 길이를 설정합니다.
+
+	// Set the number of vertices in the vertex array.
 	m_vertexCount = 3;
 
-	// 인덱스 배열의 길이를 설정합니다.
+	// Set the number of indices in the index array.
 	m_indexCount = 3;
 
-	// 정점 배열을 생성합니다.
+	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
 	if (!vertices)
 	{
 		return false;
 	}
 
-	// 인덱스 배열을 생성합니다.
+	// Create the index array.
 	indices = new unsigned long[m_indexCount];
 	if (!indices)
 	{
 		return false;
 	}
-	// 정점 배열에 값을 넣습니다.
-	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // 왼쪽 아래
+	// Load the vertex array with data.
+	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);  // Bottom left.
 	vertices[0].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 
-	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // 상단 가운데
+	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
 	vertices[1].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 
-	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // 오른쪽 아래
+	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
 	vertices[2].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 
-	// 인덱스 배열에 값을 넣습니다.
-	indices[0] = 0;  // 왼쪽 아래 Bottom left.
-	indices[1] = 1;  // 상단 가운데
-	indices[2] = 2;  // 오른쪽 아래
-	// 정점 버퍼의 description을 작성합니다.
+	// Load the index array with data.
+	indices[0] = 0;  // Bottom left.
+	indices[1] = 1;  // Top middle.
+	indices[2] = 2;  // Bottom right.
+	// Set up the description of the static vertex buffer.
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
@@ -96,19 +96,19 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
-	// 정점 데이터를 가리키는 보조 리소스 구조체를 작성합니다.
+	// Give the subresource structure a pointer to the vertex data.
 	vertexData.pSysMem = vertices;
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
-	// 정점 버퍼를 생성합니다.
+	// Now create the vertex buffer.
 	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
 	if (FAILED(result))
 	{
 		return false;
 	}
 
-	// 인덱스 버퍼의 description을 작성합니다.
+	// Set up the description of the static index buffer.
 	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
 	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
@@ -116,18 +116,18 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
-	// 인덱스 데이터를 가리키는 보조 리소스 구조체를 작성합니다.
+	// Give the subresource structure a pointer to the index data.
 	indexData.pSysMem = indices;
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
-	// 인덱스 버퍼를 생성합니다.
+	// Create the index buffer.
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
 	if (FAILED(result))
 	{
 		return false;
 	}
-	// 생성되고 값이 할당된 정점 버퍼와 인덱스 버퍼를 해제합니다.
+	// Release the arrays now that the vertex and index buffers have been created and loaded.
 	delete[] vertices;
 	vertices = 0;
 
@@ -136,6 +136,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 	return true;
 }
+
 void ModelClass::ShutdownBuffers()
 {
 	// 인덱스 버퍼를 해제합니다.

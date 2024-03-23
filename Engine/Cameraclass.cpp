@@ -47,18 +47,35 @@ XMFLOAT3 CameraClass::GetRotation()
 }
 void CameraClass::Render()
 {
-	XMVECTOR  up, position, lookAt;
+	XMFLOAT3 up, position, lookAt;
+	XMVECTOR upVector, positionVector, lookAtVector;
 	float yaw, pitch, roll;
 	XMMATRIX rotationMatrix;
 
+
 	// Setup the vector that points upwards.
-	up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+	up.x = 0.0f;
+	up.y = 1.0f;
+	up.z = 0.0f;
+
+	// Load it into a XMVECTOR structure.
+	upVector = XMLoadFloat3(&up);
 
 	// Setup the position of the camera in the world.
-	position = XMVectorSet(m_positionX, m_positionY, m_positionZ, 0.0f);
+	position.x = m_positionX;
+	position.y = m_positionY;
+	position.z = m_positionZ;
+
+	// Load it into a XMVECTOR structure.
+	positionVector = XMLoadFloat3(&position);
 
 	// Setup where the camera is looking by default.
-	lookAt = XMVectorSet(0.0f, 0.0f, 1.0f, 0.0f);
+	lookAt.x = 0.0f;
+	lookAt.y = 0.0f;
+	lookAt.z = 1.0f;
+
+	// Load it into a XMVECTOR structure.
+	lookAtVector = XMLoadFloat3(&lookAt);
 
 	// Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
 	pitch = m_rotationX * 0.0174532925f;
@@ -66,17 +83,17 @@ void CameraClass::Render()
 	roll = m_rotationZ * 0.0174532925f;
 
 	// Create the rotation matrix from the yaw, pitch, and roll values.
-	rotationMatrix = XMMatrixRotationRollPitchYaw(yaw, pitch, roll);
+	rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
 
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
-	XMVector3TransformCoord(lookAt, rotationMatrix);
-	XMVector3TransformCoord(up, rotationMatrix);
+	lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);
+	upVector = XMVector3TransformCoord(upVector, rotationMatrix);
 
 	// Translate the rotated camera position to the location of the viewer.
-	lookAt = position + lookAt;
+	lookAtVector = XMVectorAdd(positionVector, lookAtVector);
 
 	// Finally create the view matrix from the three updated vectors.
-	m_viewMatrix = XMMatrixLookAtLH(position, lookAt, up);
+	m_viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);
 
 	return;
 }

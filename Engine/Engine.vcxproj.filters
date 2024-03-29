@@ -9,6 +9,8 @@
     <ClCompile Include="Modelclass.cpp" />
     <ClCompile Include="Colorshaderclass.cpp" />
     <ClCompile Include="Cameraclass.cpp" />
+    <ClCompile Include="TextureShaderClass.cpp" />
+    <ClCompile Include="Textureclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h" />
@@ -18,9 +20,13 @@
     <ClInclude Include="Modelclass.h" />
     <ClInclude Include="Colorshaderclass.h" />
     <ClInclude Include="Cameraclass.h" />
+    <ClInclude Include="TextureShaderClass.h" />
+    <ClInclude Include="TextureClass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Color.vs" />
     <None Include="Color.ps" />
+    <None Include="Texture.vs" />
+    <None Include="Texture.ps" />
   </ItemGroup>
 </Project>

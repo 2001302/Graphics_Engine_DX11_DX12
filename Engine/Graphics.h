@@ -5,6 +5,7 @@
 #include "Cameraclass.h"
 #include "Modelclass.h"
 #include "Colorshaderclass.h"
+#include "TextureShaderClass.h"
 
 //GLOBALS
 const bool FULL_SCREEN = false;
@@ -20,7 +21,7 @@ public:
         m_Direct3D = 0;
         m_Camera = 0;
         m_Model = 0;
-        m_ColorShader = 0;
+        m_TextureShader = 0;
     };
     Graphics(const Graphics& graphics) 
     {
@@ -38,7 +39,7 @@ private:
     D3DClass* m_Direct3D;
     CameraClass* m_Camera;
     ModelClass* m_Model;
-    ColorShaderClass* m_ColorShader;
+    TextureShaderClass* m_TextureShader;
 };
 
 #endif

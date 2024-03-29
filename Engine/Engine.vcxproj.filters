@@ -11,6 +11,8 @@
     <ClCompile Include="Cameraclass.cpp" />
     <ClCompile Include="TextureShaderClass.cpp" />
     <ClCompile Include="Textureclass.cpp" />
+    <ClCompile Include="Lightshaderclass.cpp" />
+    <ClCompile Include="Lightclass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System.h" />
@@ -22,11 +24,15 @@
     <ClInclude Include="Cameraclass.h" />
     <ClInclude Include="TextureShaderClass.h" />
     <ClInclude Include="TextureClass.h" />
+    <ClInclude Include="Lightshaderclass.h" />
+    <ClInclude Include="Lightclass.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Color.vs" />
     <None Include="Color.ps" />
     <None Include="Texture.vs" />
     <None Include="Texture.ps" />
+    <None Include="Light.vs" />
+    <None Include="Light.ps" />
   </ItemGroup>
 </Project>

@@ -1,33 +1,29 @@
-#include <windows.h>
-#include <d3d11.h>
+////////////////////////////////////////////////////////////////////////////////
+// Filename: main.cpp
+////////////////////////////////////////////////////////////////////////////////
+#include "systemclass.h"
 
-#pragma comment(lib, "d3d11.lib")
-
-#include "System.h"
 
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PSTR pScmdline, int iCmdshow)
 {
-    System* system;
-    bool result;
+	SystemClass* System;
+	bool result;
+	
+	
+	// Create the system object.
+	System = new SystemClass;
 
-    // system 객체를 생성한다.
-    system = new System();
-    if (!system)
-    {
-        return 0;
-    }
+	// Initialize and run the system object.
+	result = System->Initialize();
+	if(result)
+	{
+		System->Run();
+	}
 
-    // system 객체를 초기화하고 run을 호출한다.
-    result = system->Initialize();
-    if (result)
-    {
-        system->Run();
-    }
+	// Shutdown and release the system object.
+	System->Shutdown();
+	delete System;
+	System = 0;
 
-    // system객체를 종료하고 메모리를 반환한다.
-    system->Shutdown();
-    delete system;
-    system = 0;
-
-    return 0;
+	return 0;
 }

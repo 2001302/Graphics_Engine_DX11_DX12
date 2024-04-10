@@ -129,39 +129,33 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Cameraclass.cpp" />
-    <ClCompile Include="Colorshaderclass.cpp" />
-    <ClCompile Include="D3DClass.cpp" />
-    <ClCompile Include="Graphics.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Lightclass.cpp" />
-    <ClCompile Include="Lightshaderclass.cpp" />
+    <ClInclude Include="applicationclass.h" />
+    <ClInclude Include="cameraclass.h" />
+    <ClInclude Include="d3dclass.h" />
+    <ClInclude Include="inputclass.h" />
+    <ClInclude Include="lightclass.h" />
+    <ClInclude Include="lightshaderclass.h" />
+    <ClInclude Include="modelclass.h" />
+    <ClInclude Include="refractionshaderclass.h" />
+    <ClInclude Include="rendertextureclass.h" />
+    <ClInclude Include="systemclass.h" />
+    <ClInclude Include="textureclass.h" />
+    <ClInclude Include="watershaderclass.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="applicationclass.cpp" />
+    <ClCompile Include="cameraclass.cpp" />
+    <ClCompile Include="d3dclass.cpp" />
+    <ClCompile Include="inputclass.cpp" />
+    <ClCompile Include="lightclass.cpp" />
+    <ClCompile Include="lightshaderclass.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Modelclass.cpp" />
-    <ClCompile Include="System.cpp" />
-    <ClCompile Include="Textureclass.cpp" />
-    <ClCompile Include="TextureShaderClass.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Cameraclass.h" />
-    <ClInclude Include="Colorshaderclass.h" />
-    <ClInclude Include="D3DClass.h" />
-    <ClInclude Include="Graphics.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="Lightclass.h" />
-    <ClInclude Include="Lightshaderclass.h" />
-    <ClInclude Include="Modelclass.h" />
-    <ClInclude Include="System.h" />
-    <ClInclude Include="TextureClass.h" />
-    <ClInclude Include="TextureShaderClass.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Color.ps" />
-    <None Include="Color.vs" />
-    <None Include="Light.ps" />
-    <None Include="Light.vs" />
-    <None Include="Texture.ps" />
-    <None Include="Texture.vs" />
+    <ClCompile Include="modelclass.cpp" />
+    <ClCompile Include="refractionshaderclass.cpp" />
+    <ClCompile Include="rendertextureclass.cpp" />
+    <ClCompile Include="systemclass.cpp" />
+    <ClCompile Include="textureclass.cpp" />
+    <ClCompile Include="watershaderclass.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

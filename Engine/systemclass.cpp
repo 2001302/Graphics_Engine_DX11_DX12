@@ -1,60 +1,50 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: systemclass.cpp
-////////////////////////////////////////////////////////////////////////////////
 #include "systemclass.h"
-
 
 SystemClass::SystemClass()
 {
 	m_Input = 0;
 	m_Application = 0;
+	m_applicationName = 0;
+	m_hinstance = 0;
+	m_hwnd = 0;
 }
-
 
 SystemClass::SystemClass(const SystemClass& other)
 {
+	m_Input = other.m_Input;
+	m_Application = other.m_Application;
+	m_applicationName = other.m_applicationName;
+	m_hinstance = other.m_hinstance;
+	m_hwnd = other.m_hwnd;
 }
-
 
 SystemClass::~SystemClass()
 {
 }
 
-
 bool SystemClass::Initialize()
 {
-	int screenWidth, screenHeight;
-	bool result;
-
-
 	// Initialize the width and height of the screen to zero before sending the variables into the function.
-	screenWidth = 0;
-	screenHeight = 0;
+	int screenWidth = 0;
+	int screenHeight = 0;
 
 	// Initialize the windows api.
 	InitializeWindows(screenWidth, screenHeight);
 
 	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
-	m_Input = new InputClass;
+	m_Input = new InputClass();
 
-	result = m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight);
-	if(!result)
-	{
+	if(!m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight))
 		return false;
-	}
 
 	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
-	m_Application = new ApplicationClass;
+	m_Application = new ApplicationClass();
 
-	result = m_Application->Initialize(screenWidth, screenHeight, m_hwnd);
-	if(!result)
-	{
+	if(!m_Application->Initialize(screenWidth, screenHeight, m_hwnd))
 		return false;
-	}
 	
 	return true;
 }
-
 
 void SystemClass::Shutdown()
 {
@@ -145,7 +135,12 @@ bool SystemClass::Frame()
 
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
-	return DefWindowProc(hwnd, umsg, wparam, lparam);
+	extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam))
+		return true;
+	else 
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
 
@@ -154,7 +149,6 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	WNDCLASSEX wc;
 	DEVMODE dmScreenSettings;
 	int posX, posY;
-
 
 	// Get an external pointer to this object.	
 	ApplicationHandle = this;
@@ -205,9 +199,10 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	}
 	else
 	{
+		float aspect = 9.0f / 16.0f;
 		// If windowed then set it to 800x600 resolution.
-		screenWidth  = 800;
-		screenHeight = 600;
+		screenWidth = screenWidth * (3.0f / 4.0f);
+		screenHeight = screenWidth * aspect;
 
 		// Place the window in the middle of the screen.
 		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth)  / 2;
@@ -224,18 +219,12 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	SetForegroundWindow(m_hwnd);
 	SetFocus(m_hwnd);
 
-	// Hide the mouse cursor.
-	ShowCursor(false);
-
 	return;
 }
 
 
 void SystemClass::ShutdownWindows()
 {
-	// Show the mouse cursor.
-	ShowCursor(true);
-
 	// Fix the display settings if leaving full screen mode.
 	if(FULL_SCREEN)
 	{

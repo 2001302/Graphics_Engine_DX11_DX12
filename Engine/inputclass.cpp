@@ -1,8 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: inputclass.cpp
-////////////////////////////////////////////////////////////////////////////////
 #include "inputclass.h"
-
 
 InputClass::InputClass()
 {
@@ -11,21 +7,17 @@ InputClass::InputClass()
 	m_mouse = 0;
 }
 
-
 InputClass::InputClass(const InputClass& other)
 {
 }
-
 
 InputClass::~InputClass()
 {
 }
 
-
 bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int screenHeight)
 {
 	HRESULT result;
-
 
 	// Store the screen size which will be used for positioning the mouse cursor.
 	m_screenWidth = screenWidth;

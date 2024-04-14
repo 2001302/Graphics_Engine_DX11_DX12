@@ -1,8 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: applicationclass.cpp
-////////////////////////////////////////////////////////////////////////////////
 #include "applicationclass.h"
-
 
 ApplicationClass::ApplicationClass()
 {
@@ -18,27 +14,41 @@ ApplicationClass::ApplicationClass()
 	m_LightShader = 0;
 	m_RefractionShader = 0;
 	m_WaterShader = 0;
+	m_Imgui = 0;
+	m_waterHeight = 0;
+	m_waterTranslation = 0;
 }
-
 
 ApplicationClass::ApplicationClass(const ApplicationClass& other)
 {
+	m_Direct3D = other.m_Direct3D;
+	m_Camera = other.m_Camera;
+	m_GroundModel = other.m_GroundModel;
+	m_WallModel = other.m_WallModel;
+	m_BathModel = other.m_BathModel;
+	m_WaterModel = other.m_WaterModel;
+	m_Light = other.m_Light;
+	m_RefractionTexture = other.m_RefractionTexture;
+	m_ReflectionTexture = other.m_ReflectionTexture;
+	m_LightShader = other.m_LightShader;
+	m_RefractionShader = other.m_RefractionShader;
+	m_WaterShader = other.m_WaterShader;
+	m_Imgui = other.m_Imgui;
+	m_waterHeight = other.m_waterHeight;
+	m_waterTranslation = other.m_waterTranslation;
 }
-
 
 ApplicationClass::~ApplicationClass()
 {
 }
-
 
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	char modelFilename[128], textureFilename[128];
 	bool result;
 
-
 	// Create and initialize the Direct3D object.
-	m_Direct3D = new D3DClass;
+	m_Direct3D = new D3DClass();
 
 	result = m_Direct3D->Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 	if(!result)
@@ -48,7 +58,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Create and initialize the camera object.
-	m_Camera = new CameraClass;
+	m_Camera = new CameraClass();
 
 	m_Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	m_Camera->Render();
@@ -62,7 +72,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
     strcpy_s(textureFilename, "../Engine/data/ground01.tga");
 
     // Create and initialize the ground model object.
-    m_GroundModel = new ModelClass;
+    m_GroundModel = new ModelClass();
 
     result = m_GroundModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
     if(!result)
@@ -76,7 +86,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
     strcpy_s(textureFilename, "../Engine/data/wall01.tga");
 
     // Create and initialize the wall model object.
-    m_WallModel = new ModelClass;
+    m_WallModel = new ModelClass();
 
     result = m_WallModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
     if(!result)
@@ -90,7 +100,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
     strcpy_s(textureFilename, "../Engine/data/marble01.tga");
 
     // Create and initialize the bath model object.
-    m_BathModel = new ModelClass;
+    m_BathModel = new ModelClass();
 
     result = m_BathModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
     if(!result)
@@ -104,7 +114,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
     strcpy_s(textureFilename, "../Engine/data/water01.tga");
 
     // Create and initialize the water model object.
-    m_WaterModel = new ModelClass;
+    m_WaterModel = new ModelClass();
 
     result = m_WaterModel->Initialize(m_Direct3D->GetDevice(), m_Direct3D->GetDeviceContext(), modelFilename, textureFilename);
     if(!result)
@@ -114,14 +124,14 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
     }
 
 	// Create and initialize the light object.
-	m_Light = new LightClass;
+	m_Light = new LightClass();
 
 	m_Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	m_Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	m_Light->SetDirection(0.0f, -1.0f, 0.5f);
 
 	// Create and initialize the refraction render to texture object.
-	m_RefractionTexture = new RenderTextureClass;
+	m_RefractionTexture = new RenderTextureClass();
 
 	result = m_RefractionTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR, 1);
 	if(!result)
@@ -131,7 +141,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Create and initialize the reflection render to texture object.
-	m_ReflectionTexture = new RenderTextureClass;
+	m_ReflectionTexture = new RenderTextureClass();
 
 	result = m_ReflectionTexture->Initialize(m_Direct3D->GetDevice(), screenWidth, screenHeight, SCREEN_DEPTH, SCREEN_NEAR, 1);
 	if(!result)
@@ -141,7 +151,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Create and initialize the light shader object.
-	m_LightShader = new LightShaderClass;
+	m_LightShader = new LightShaderClass();
 
 	result = m_LightShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if(!result)
@@ -151,7 +161,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Create and initialize the refraction shader object.
-	m_RefractionShader = new RefractionShaderClass;
+	m_RefractionShader = new RefractionShaderClass();
 
 	result = m_RefractionShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if(!result)
@@ -161,7 +171,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	}
 
 	// Create and initialize the water shader object.
-	m_WaterShader = new WaterShaderClass;
+	m_WaterShader = new WaterShaderClass();
 
 	result = m_WaterShader->Initialize(m_Direct3D->GetDevice(), hwnd);
 	if(!result)
@@ -185,7 +195,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	return true;
 }
-
 
 void ApplicationClass::Shutdown()
 {
@@ -286,7 +295,6 @@ void ApplicationClass::Shutdown()
 	return;
 }
 
-
 bool ApplicationClass::Frame(InputClass* Input)
 {
 	bool result;
@@ -327,13 +335,11 @@ bool ApplicationClass::Frame(InputClass* Input)
 	return true;
 }
 
-
 bool ApplicationClass::RenderRefractionToTexture()
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 	XMFLOAT4 clipPlane;
 	bool result;
-
 
 	// Setup a clipping plane based on the height of the water to clip everything above it.
 	clipPlane = XMFLOAT4(0.0f, -1.0f, 0.0f, m_waterHeight + 0.1f);
@@ -370,12 +376,10 @@ bool ApplicationClass::RenderRefractionToTexture()
 	return true;
 }
 
-
 bool ApplicationClass::RenderReflectionToTexture()
 {
 	XMMATRIX worldMatrix, reflectionViewMatrix, projectionMatrix;
 	bool result;
-
 
 	// Set the render target to be the reflection render to texture and clear it.
 	m_ReflectionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
@@ -410,7 +414,6 @@ bool ApplicationClass::RenderReflectionToTexture()
 
 	return true;
 }
-
 
 bool ApplicationClass::Render()
 {

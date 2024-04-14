@@ -170,6 +170,13 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	result = m_Imgui->Initialize(hwnd, m_Direct3D);
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not initialize the imgui object.", L"Error", MB_OK);
+		return false;
+	}
+
 	// Set the height of the water.
 	m_waterHeight = 2.75f;
 
@@ -284,7 +291,6 @@ bool ApplicationClass::Frame(InputClass* Input)
 {
 	bool result;
 
-
 	// Check if the user pressed escape and wants to exit the application.
 	if(Input->IsEscapePressed())
 	{
@@ -318,7 +324,6 @@ bool ApplicationClass::Frame(InputClass* Input)
 	{
 		return false;
 	}
-
 	return true;
 }
 
@@ -412,9 +417,14 @@ bool ApplicationClass::Render()
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix;
 	bool result;
 
-
 	// Clear the buffers to begin the scene.
 	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+
+	result = m_Imgui->Frame();
+	if (!result)
+	{
+		return false;
+	}
 
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();
@@ -489,6 +499,12 @@ bool ApplicationClass::Render()
 								   m_ReflectionTexture->GetShaderResourceView(), m_RefractionTexture->GetShaderResourceView(), m_WaterModel->GetTexture(),
 								   m_waterTranslation, 0.01f);
 	if(!result)
+	{
+		return false;
+	}
+
+	result = m_Imgui->Render();
+	if (!result)
 	{
 		return false;
 	}

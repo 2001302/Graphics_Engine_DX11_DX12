@@ -17,6 +17,7 @@
 #include "lightshaderclass.h"
 #include "refractionshaderclass.h"
 #include "watershaderclass.h"
+#include "ImGuiManager.h"
 
 
 /////////////
@@ -56,6 +57,7 @@ private:
 	LightShaderClass* m_LightShader;
 	RefractionShaderClass* m_RefractionShader;
 	WaterShaderClass* m_WaterShader;
+	ImGuiManager* m_Imgui;
 	float m_waterHeight, m_waterTranslation;
 };
 

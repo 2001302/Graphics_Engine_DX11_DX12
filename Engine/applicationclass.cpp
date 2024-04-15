@@ -196,105 +196,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	return true;
 }
 
-void ApplicationClass::Shutdown()
-{
-	// Release the water shader object.
-	if(m_WaterShader)
-	{
-		m_WaterShader->Shutdown();
-		delete m_WaterShader;
-		m_WaterShader = 0;
-	}
-
-	// Release the refraction shader object.
-	if(m_RefractionShader)
-	{
-		m_RefractionShader->Shutdown();
-		delete m_RefractionShader;
-		m_RefractionShader = 0;
-	}
-
-	// Release the light shader object.
-	if(m_LightShader)
-	{
-		m_LightShader->Shutdown();
-		delete m_LightShader;
-		m_LightShader = 0;
-	}
-
-	// Release the reflection render texture object.
-    if(m_ReflectionTexture)
-    {
-        m_ReflectionTexture->Shutdown();
-        delete m_ReflectionTexture;
-        m_ReflectionTexture = 0;
-    }
-
-	// Release the refraction render texture object.
-    if(m_RefractionTexture)
-    {
-        m_RefractionTexture->Shutdown();
-        delete m_RefractionTexture;
-        m_RefractionTexture = 0;
-    }
-
-	// Release the light object.
-	if(m_Light)
-	{
-		delete m_Light;
-		m_Light = 0;
-	}
-
-	// Release the water model object.
-    if(m_WaterModel)
-    {
-        m_WaterModel->Shutdown();
-        delete m_WaterModel;
-        m_WaterModel = 0;
-    }
-
-	// Release the bath model object.
-    if(m_BathModel)
-    {
-        m_BathModel->Shutdown();
-        delete m_BathModel;
-        m_BathModel = 0;
-    }
-
-	// Release the wall model object.
-    if(m_WallModel)
-    {
-        m_WallModel->Shutdown();
-        delete m_WallModel;
-        m_WallModel = 0;
-    }
-
-	// Release the ground model object.
-    if(m_GroundModel)
-    {
-        m_GroundModel->Shutdown();
-        delete m_GroundModel;
-        m_GroundModel = 0;
-    }
-
-	// Release the camera object.
-	if(m_Camera)
-	{
-		delete m_Camera;
-		m_Camera = 0;
-	}
-
-	// Release the Direct3D object.
-	if(m_Direct3D)
-	{
-		m_Direct3D->Shutdown();
-		delete m_Direct3D;
-		m_Direct3D = 0;
-	}
-
-	return;
-}
-
 bool ApplicationClass::Frame(InputClass* Input)
 {
 	bool result;
@@ -304,7 +205,8 @@ bool ApplicationClass::Frame(InputClass* Input)
 	{
 		return false;
 	}
-
+	
+	/* NOTE: hide water rendering
 	// Update the position of the water to simulate motion.
 	m_waterTranslation += 0.001f;
 	if(m_waterTranslation > 1.0f)
@@ -325,6 +227,7 @@ bool ApplicationClass::Frame(InputClass* Input)
 	{
 		return false;
 	}
+	*/
 
 	// Render the scene as normal to the back buffer.
 	result = Render();
@@ -332,86 +235,6 @@ bool ApplicationClass::Frame(InputClass* Input)
 	{
 		return false;
 	}
-	return true;
-}
-
-bool ApplicationClass::RenderRefractionToTexture()
-{
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-	XMFLOAT4 clipPlane;
-	bool result;
-
-	// Setup a clipping plane based on the height of the water to clip everything above it.
-	clipPlane = XMFLOAT4(0.0f, -1.0f, 0.0f, m_waterHeight + 0.1f);
-
-	// Set the render target to be the refraction render to texture and clear it.
-	m_RefractionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
-	m_RefractionTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Generate the view matrix based on the camera's position.
-	m_Camera->Render();
-
-	// Get the world, view, and projection matrices from the camera and d3d objects.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_Camera->GetViewMatrix(viewMatrix);
-	m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
-	// Translate to where the bath model will be rendered.
-	worldMatrix = XMMatrixTranslation(0.0f, 2.0f, 0.0f);
-
-	// Render the bath model using the refraction shader.
-	m_BathModel->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_RefractionShader->Render(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_BathModel->GetTexture(),
-										m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), clipPlane);
-	if(!result)
-	{
-		return false;
-	}
-
-	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
-	m_Direct3D->SetBackBufferRenderTarget();
-	m_Direct3D->ResetViewport();
-
-	return true;
-}
-
-bool ApplicationClass::RenderReflectionToTexture()
-{
-	XMMATRIX worldMatrix, reflectionViewMatrix, projectionMatrix;
-	bool result;
-
-	// Set the render target to be the reflection render to texture and clear it.
-	m_ReflectionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
-	m_ReflectionTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
-
-	// Use the camera to render the reflection and create a reflection view matrix.
-	m_Camera->RenderReflection(m_waterHeight);
-
-	// Get the camera reflection view matrix instead of the normal view matrix.
-	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
-
-	// Get the world and projection matrices from the d3d object.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_Direct3D->GetProjectionMatrix(projectionMatrix);
-
-	// Translate to where the wall model will be rendered.
-	worldMatrix = XMMatrixTranslation(0.0f, 6.0f, 8.0f);
-
-	// Render the wall model using the light shader and the reflection view matrix.
-	m_WallModel->Render(m_Direct3D->GetDeviceContext());
-
-	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_WallModel->GetIndexCount(), worldMatrix, reflectionViewMatrix, projectionMatrix, m_WallModel->GetTexture(),
-								   m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
-	if(!result)
-	{
-		return false;
-	}
-
-	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
-	m_Direct3D->SetBackBufferRenderTarget();
-	m_Direct3D->ResetViewport();
-
 	return true;
 }
 
@@ -516,4 +339,183 @@ bool ApplicationClass::Render()
 	m_Direct3D->EndScene();
 
 	return true;
+}
+
+bool ApplicationClass::RenderRefractionToTexture()
+{
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
+	XMFLOAT4 clipPlane;
+	bool result;
+
+	// Setup a clipping plane based on the height of the water to clip everything above it.
+	clipPlane = XMFLOAT4(0.0f, -1.0f, 0.0f, m_waterHeight + 0.1f);
+
+	// Set the render target to be the refraction render to texture and clear it.
+	m_RefractionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
+	m_RefractionTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Generate the view matrix based on the camera's position.
+	m_Camera->Render();
+
+	// Get the world, view, and projection matrices from the camera and d3d objects.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Camera->GetViewMatrix(viewMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+	// Translate to where the bath model will be rendered.
+	worldMatrix = XMMatrixTranslation(0.0f, 2.0f, 0.0f);
+
+	// Render the bath model using the refraction shader.
+	m_BathModel->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_RefractionShader->Render(m_Direct3D->GetDeviceContext(), m_BathModel->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, m_BathModel->GetTexture(),
+		m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor(), clipPlane);
+	if (!result)
+	{
+		return false;
+	}
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
+	m_Direct3D->SetBackBufferRenderTarget();
+	m_Direct3D->ResetViewport();
+
+	return true;
+}
+
+bool ApplicationClass::RenderReflectionToTexture()
+{
+	XMMATRIX worldMatrix, reflectionViewMatrix, projectionMatrix;
+	bool result;
+
+	// Set the render target to be the reflection render to texture and clear it.
+	m_ReflectionTexture->SetRenderTarget(m_Direct3D->GetDeviceContext());
+	m_ReflectionTexture->ClearRenderTarget(m_Direct3D->GetDeviceContext(), 0.0f, 0.0f, 0.0f, 1.0f);
+
+	// Use the camera to render the reflection and create a reflection view matrix.
+	m_Camera->RenderReflection(m_waterHeight);
+
+	// Get the camera reflection view matrix instead of the normal view matrix.
+	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
+
+	// Get the world and projection matrices from the d3d object.
+	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+
+	// Translate to where the wall model will be rendered.
+	worldMatrix = XMMatrixTranslation(0.0f, 6.0f, 8.0f);
+
+	// Render the wall model using the light shader and the reflection view matrix.
+	m_WallModel->Render(m_Direct3D->GetDeviceContext());
+
+	result = m_LightShader->Render(m_Direct3D->GetDeviceContext(), m_WallModel->GetIndexCount(), worldMatrix, reflectionViewMatrix, projectionMatrix, m_WallModel->GetTexture(),
+		m_Light->GetDirection(), m_Light->GetAmbientColor(), m_Light->GetDiffuseColor());
+	if (!result)
+	{
+		return false;
+	}
+
+	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
+	m_Direct3D->SetBackBufferRenderTarget();
+	m_Direct3D->ResetViewport();
+
+	return true;
+}
+
+void ApplicationClass::Shutdown()
+{
+	// Release the water shader object.
+	if (m_WaterShader)
+	{
+		m_WaterShader->Shutdown();
+		delete m_WaterShader;
+		m_WaterShader = 0;
+	}
+
+	// Release the refraction shader object.
+	if (m_RefractionShader)
+	{
+		m_RefractionShader->Shutdown();
+		delete m_RefractionShader;
+		m_RefractionShader = 0;
+	}
+
+	// Release the light shader object.
+	if (m_LightShader)
+	{
+		m_LightShader->Shutdown();
+		delete m_LightShader;
+		m_LightShader = 0;
+	}
+
+	// Release the reflection render texture object.
+	if (m_ReflectionTexture)
+	{
+		m_ReflectionTexture->Shutdown();
+		delete m_ReflectionTexture;
+		m_ReflectionTexture = 0;
+	}
+
+	// Release the refraction render texture object.
+	if (m_RefractionTexture)
+	{
+		m_RefractionTexture->Shutdown();
+		delete m_RefractionTexture;
+		m_RefractionTexture = 0;
+	}
+
+	// Release the light object.
+	if (m_Light)
+	{
+		delete m_Light;
+		m_Light = 0;
+	}
+
+	// Release the water model object.
+	if (m_WaterModel)
+	{
+		m_WaterModel->Shutdown();
+		delete m_WaterModel;
+		m_WaterModel = 0;
+	}
+
+	// Release the bath model object.
+	if (m_BathModel)
+	{
+		m_BathModel->Shutdown();
+		delete m_BathModel;
+		m_BathModel = 0;
+	}
+
+	// Release the wall model object.
+	if (m_WallModel)
+	{
+		m_WallModel->Shutdown();
+		delete m_WallModel;
+		m_WallModel = 0;
+	}
+
+	// Release the ground model object.
+	if (m_GroundModel)
+	{
+		m_GroundModel->Shutdown();
+		delete m_GroundModel;
+		m_GroundModel = 0;
+	}
+
+	// Release the camera object.
+	if (m_Camera)
+	{
+		delete m_Camera;
+		m_Camera = 0;
+	}
+
+	// Release the Direct3D object.
+	if (m_Direct3D)
+	{
+		m_Direct3D->Shutdown();
+		delete m_Direct3D;
+		m_Direct3D = 0;
+	}
+
+	return;
 }

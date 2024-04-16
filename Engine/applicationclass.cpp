@@ -244,7 +244,7 @@ bool ApplicationClass::Render()
 	bool result;
 
 	// Clear the buffers to begin the scene.
-	m_Direct3D->BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
+	m_Direct3D->BeginScene(EnumViewType::eScene, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	result = m_Imgui->Frame();
 	if (!result)
@@ -256,9 +256,9 @@ bool ApplicationClass::Render()
 	m_Camera->Render();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Direct3D->GetWorldMatrix(EnumViewType::eScene, worldMatrix);
 	m_Camera->GetViewMatrix(viewMatrix);
-	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+	m_Direct3D->GetProjectionMatrix(EnumViewType::eScene, projectionMatrix);
 
 	// Translate to where the ground model will be rendered.
 	worldMatrix = XMMatrixTranslation(0.0f, 1.0f, 0.0f);
@@ -275,7 +275,7 @@ bool ApplicationClass::Render()
 	}
 
 	// Reset the world matrix.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Direct3D->GetWorldMatrix(EnumViewType::eScene, worldMatrix);
 
 	// Translate to where the wall model will be rendered.
 	worldMatrix = XMMatrixTranslation(0.0f, 6.0f, 8.0f);
@@ -292,7 +292,7 @@ bool ApplicationClass::Render()
 	}
 
 	// Reset the world matrix.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Direct3D->GetWorldMatrix(EnumViewType::eScene, worldMatrix);
 
 	// Translate to where the bath model will be rendered.
 	worldMatrix = XMMatrixTranslation(0.0f, 2.0f, 0.0f);
@@ -309,7 +309,7 @@ bool ApplicationClass::Render()
 	}
 
 	// Reset the world matrix.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Direct3D->GetWorldMatrix(EnumViewType::eScene, worldMatrix);
 
 	// Get the camera reflection view matrix.
 	m_Camera->GetReflectionViewMatrix(reflectionMatrix);
@@ -358,9 +358,9 @@ bool ApplicationClass::RenderRefractionToTexture()
 	m_Camera->Render();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
+	m_Direct3D->GetWorldMatrix(EnumViewType::eScene, worldMatrix);
 	m_Camera->GetViewMatrix(viewMatrix);
-	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+	m_Direct3D->GetProjectionMatrix(EnumViewType::eScene, projectionMatrix);
 
 	// Translate to where the bath model will be rendered.
 	worldMatrix = XMMatrixTranslation(0.0f, 2.0f, 0.0f);
@@ -376,8 +376,8 @@ bool ApplicationClass::RenderRefractionToTexture()
 	}
 
 	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
-	m_Direct3D->SetBackBufferRenderTarget();
-	m_Direct3D->ResetViewport();
+	m_Direct3D->SetBackBufferRenderTarget(EnumViewType::eScene);
+	m_Direct3D->ResetViewport(EnumViewType::eScene);
 
 	return true;
 }
@@ -398,8 +398,8 @@ bool ApplicationClass::RenderReflectionToTexture()
 	m_Camera->GetReflectionViewMatrix(reflectionViewMatrix);
 
 	// Get the world and projection matrices from the d3d object.
-	m_Direct3D->GetWorldMatrix(worldMatrix);
-	m_Direct3D->GetProjectionMatrix(projectionMatrix);
+	m_Direct3D->GetWorldMatrix(EnumViewType::eScene, worldMatrix);
+	m_Direct3D->GetProjectionMatrix(EnumViewType::eScene, projectionMatrix);
 
 	// Translate to where the wall model will be rendered.
 	worldMatrix = XMMatrixTranslation(0.0f, 6.0f, 8.0f);
@@ -415,8 +415,8 @@ bool ApplicationClass::RenderReflectionToTexture()
 	}
 
 	// Reset the render target back to the original back buffer and not the render to texture anymore.  And reset the viewport back to the original.
-	m_Direct3D->SetBackBufferRenderTarget();
-	m_Direct3D->ResetViewport();
+	m_Direct3D->SetBackBufferRenderTarget(EnumViewType::eScene);
+	m_Direct3D->ResetViewport(EnumViewType::eScene);
 
 	return true;
 }

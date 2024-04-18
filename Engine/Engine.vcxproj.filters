@@ -39,6 +39,7 @@
     </ClInclude>
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="BehaviorTree.h" />
+    <ClInclude Include="Header.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />

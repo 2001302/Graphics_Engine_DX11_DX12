@@ -133,6 +133,7 @@
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="D3dClass.h" />
+    <ClInclude Include="Header.h" />
     <ClInclude Include="imconfig.h" />
     <ClInclude Include="imgui.h" />
     <ClInclude Include="ImGuiManager.h" />

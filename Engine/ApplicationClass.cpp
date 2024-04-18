@@ -5,8 +5,6 @@ ApplicationClass::ApplicationClass()
 	m_Direct3D = 0;
 	m_Camera = 0;
 	m_Imgui = 0;
-	m_waterHeight = 0;
-	m_waterTranslation = 0;
 	m_Manager = 0;
 }
 
@@ -15,8 +13,6 @@ ApplicationClass::ApplicationClass(const ApplicationClass& other)
 	m_Direct3D = other.m_Direct3D;
 	m_Camera = other.m_Camera;
 	m_Imgui = other.m_Imgui;
-	m_waterHeight = other.m_waterHeight;
-	m_waterTranslation = other.m_waterTranslation;
 	m_Manager = other.m_Manager;
 }
 
@@ -92,12 +88,6 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	// Set the height of the water.
-	m_waterHeight = 2.75f;
-
-	// Initialize the position of the water.
-	m_waterTranslation = 0.0f;
-
 	return true;
 }
 
@@ -129,10 +119,6 @@ bool ApplicationClass::Render()
 	m_Direct3D->BeginScene(EnumViewType::eScene, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	result = m_Imgui->Frame();
-	if (!result)
-	{
-		return false;
-	}
 
 	// Generate the view matrix based on the camera's position.
 	m_Camera->Render();

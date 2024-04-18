@@ -1,6 +1,9 @@
+#pragma once
+
 #ifndef _APPLICATIONCLASS_H_
 #define _APPLICATIONCLASS_H_
 
+#include "header.h"
 #include "d3dclass.h"
 #include "inputclass.h"
 #include "cameraclass.h"
@@ -40,12 +43,9 @@ private:
 	bool Render();
 	  
 private:
+	ImGuiManager* m_Imgui;
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-
-	ImGuiManager* m_Imgui;
-	float m_waterHeight, m_waterTranslation;
-
 	Manager* m_Manager;
 };
 

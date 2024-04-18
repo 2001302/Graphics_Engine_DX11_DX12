@@ -1,8 +1,4 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: modelclass.cpp
-////////////////////////////////////////////////////////////////////////////////
 #include "modelclass.h"
-
 
 ModelClass::ModelClass()
 {
@@ -12,18 +8,15 @@ ModelClass::ModelClass()
 	m_model = 0;
 }
 
-
 ModelClass::ModelClass(const ModelClass& other)
 {
 }
-
 
 ModelClass::~ModelClass()
 {
 }
 
-
-bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* modelFilename, char* textureFilename)
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, const char* textureFilename)
 {
 	bool result;
 
@@ -52,7 +45,6 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	return true;
 }
 
-
 void ModelClass::Shutdown()
 {
 	// Release the model texture.
@@ -67,7 +59,6 @@ void ModelClass::Shutdown()
 	return;
 }
 
-
 void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 {
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
@@ -76,18 +67,15 @@ void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
-
 int ModelClass::GetIndexCount()
 {
 	return m_indexCount;
 }
 
-
 ID3D11ShaderResourceView* ModelClass::GetTexture()
 {
 	return m_Texture->GetTexture();
 }
-
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
@@ -97,7 +85,6 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 	int i;
-
 
 	// Create the vertex array.
 	vertices = new VertexType[m_vertexCount];
@@ -209,7 +196,7 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
 }
 
 
-bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
+bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const  char* filename)
 {
 	bool result;
 
@@ -241,7 +228,7 @@ void ModelClass::ReleaseTexture()
 }
 
 
-bool ModelClass::LoadModel(char* filename)
+bool ModelClass::LoadModel(const char* filename)
 {
 	ifstream fin;
 	char input;

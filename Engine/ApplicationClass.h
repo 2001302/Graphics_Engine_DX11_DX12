@@ -1,13 +1,6 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: applicationclass.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _APPLICATIONCLASS_H_
 #define _APPLICATIONCLASS_H_
 
-
-///////////////////////
-// MY CLASS INCLUDES //
-///////////////////////
 #include "d3dclass.h"
 #include "inputclass.h"
 #include "cameraclass.h"
@@ -19,19 +12,19 @@
 #include "watershaderclass.h"
 #include "ImGuiManager.h"
 
-
-/////////////
-// GLOBALS //
-/////////////
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.3f;
 
+class Manager
+{
+public:
+	std::vector <ModelClass*> Models;
+	LightClass* Light;
+	LightShaderClass* LightShader;
+};
 
-////////////////////////////////////////////////////////////////////////////////
-// Class name: ApplicationClass
-////////////////////////////////////////////////////////////////////////////////
 class ApplicationClass
 {
 public:
@@ -44,21 +37,16 @@ public:
 	bool Frame(InputClass*);
 
 private:
-	bool RenderRefractionToTexture();
-	bool RenderReflectionToTexture();
 	bool Render();
 	  
 private:
 	D3DClass* m_Direct3D;
 	CameraClass* m_Camera;
-	ModelClass *m_GroundModel, *m_WallModel, *m_BathModel, *m_WaterModel;
-	LightClass* m_Light;
-	RenderTextureClass *m_RefractionTexture, *m_ReflectionTexture;
-	LightShaderClass* m_LightShader;
-	RefractionShaderClass* m_RefractionShader;
-	WaterShaderClass* m_WaterShader;
+
 	ImGuiManager* m_Imgui;
 	float m_waterHeight, m_waterTranslation;
+
+	Manager* m_Manager;
 };
 
 #endif

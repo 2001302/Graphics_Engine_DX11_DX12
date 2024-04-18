@@ -1,29 +1,14 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: modelclass.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _MODELCLASS_H_
 #define _MODELCLASS_H_
 
-
-//////////////
-// INCLUDES //
-//////////////
 #include <d3d11.h>
 #include <directxmath.h>
 #include <fstream>
 using namespace DirectX;
 using namespace std;
 
-
-///////////////////////
-// MY CLASS INCLUDES //
-///////////////////////
 #include "textureclass.h"
 
-
-////////////////////////////////////////////////////////////////////////////////
-// Class name: ModelClass
-////////////////////////////////////////////////////////////////////////////////
 class ModelClass
 {
 private:
@@ -46,22 +31,24 @@ public:
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, char*, char*);
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext*,const char*, const char*);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
 	int GetIndexCount();
 	ID3D11ShaderResourceView* GetTexture();
 
+	XMMATRIX defaultTransform;
+
 private:
 	bool InitializeBuffers(ID3D11Device*);
 	void ShutdownBuffers();
 	void RenderBuffers(ID3D11DeviceContext*);
 
-	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, char*);
+	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, const char*);
 	void ReleaseTexture();
 
-	bool LoadModel(char*);
+	bool LoadModel(const char*);
 	void ReleaseModel();
 
 private:

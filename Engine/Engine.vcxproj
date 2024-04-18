@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ApplicationClass.h" />
+    <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="D3dClass.h" />
     <ClInclude Include="imconfig.h" />
@@ -153,6 +154,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />
+    <ClCompile Include="BehaviorTree.cpp" />
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="D3dClass.cpp" />
     <ClCompile Include="imgui.cpp" />

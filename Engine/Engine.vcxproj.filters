@@ -38,6 +38,7 @@
       <Filter>Imgui</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiManager.h" />
+    <ClInclude Include="BehaviorTree.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />
@@ -75,6 +76,7 @@
       <Filter>Imgui</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiManager.cpp" />
+    <ClCompile Include="BehaviorTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Imgui">

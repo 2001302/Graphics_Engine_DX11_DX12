@@ -22,7 +22,7 @@ TextureClass::~TextureClass()
 }
 
 
-bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, char* filename)
+bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename)
 {
 	bool result;
 	D3D11_TEXTURE2D_DESC textureDesc;
@@ -30,9 +30,11 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 	unsigned int rowPitch;
 	D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
 
+	char name[128];
+	strcpy_s(name, filename);
 
 	// Load the targa image data into memory.
-	result = LoadTarga32Bit(filename);
+	result = LoadTarga32Bit(name);
 	if(!result)
 	{
 		return false;

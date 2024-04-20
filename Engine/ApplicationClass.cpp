@@ -20,16 +20,14 @@ ApplicationClass::~ApplicationClass()
 
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	bool result;
-
-	result = D3DClass::GetInstance().Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
-
 	m_Manager = new Manager();
 
 	std::map<EnumDataBlockType, IDataBlock*> dataBlock = 
 	{
 		{EnumDataBlockType::eManager,m_Manager},
 	};
+
+	D3DClass::GetInstance().Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 
 	auto builder = new BehaviorTreeBuilder();
 
@@ -42,27 +40,8 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	builder->Run();
 
-	result = m_Imgui->Initialize(hwnd, &D3DClass::GetInstance());
+	m_Imgui->Initialize(hwnd, &D3DClass::GetInstance());
 
-	return true;
-}
-
-bool ApplicationClass::Frame(InputClass* Input)
-{
-	bool result;
-
-	// Check if the user pressed escape and wants to exit the application.
-	if (Input->IsEscapePressed())
-	{
-		return false;
-	}
-
-	// Render the scene as normal to the back buffer.
-	result = Render();
-	if (!result)
-	{
-		return false;
-	}
 	return true;
 }
 
@@ -87,11 +66,32 @@ bool ApplicationClass::Render()
 
 	builder->Run();
 
-	m_Imgui->Frame();
+	//ImGui
+	m_Imgui->Prepare();
+	m_Imgui->Render();
 
 	// Present the rendered scene to the screen.
 	D3DClass::GetInstance().EndScene();
 
+	return true;
+}
+
+bool ApplicationClass::Frame(InputClass* Input)
+{
+	bool result;
+
+	// Check if the user pressed escape and wants to exit the application.
+	if (Input->IsEscapePressed())
+	{
+		return false;
+	}
+
+	// Render the scene as normal to the back buffer.
+	result = Render();
+	if (!result)
+	{
+		return false;
+	}
 	return true;
 }
 

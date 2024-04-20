@@ -9,6 +9,8 @@ bool ImGuiManager::Initialize(HWND hWnd, Engine::D3DClass* d3d)
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
+	auto font = io.Fonts->AddFontFromFileTTF("../Engine/data/Roboto-Black.ttf", 16.0f);
+
 	// Setup Platform/Renderer backends
 	ImGui_ImplWin32_Init(hWnd);
 	ImGui_ImplDX11_Init(d3d->GetDevice(), d3d->GetDeviceContext());
@@ -16,16 +18,23 @@ bool ImGuiManager::Initialize(HWND hWnd, Engine::D3DClass* d3d)
 	return true;
 }
 
-bool ImGuiManager::Frame()
+bool ImGuiManager::Prepare()
 {
 	// (Your code process and dispatch Win32 messages)
-	// Start the Dear ImGui frame
+	// Start the ImGui frame
+	ImGuiIO& io = ImGui::GetIO();
+
+	//Frame
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	ImGui::ShowDemoWindow(); // Show demo window! :)
 
-	Render();
+	//Font
+	ImGui::PushFont(io.Fonts->Fonts.back());
+	ImGui::Text("Hello with font size 16!");
+	ImGui::PopFont();
+
+
 	return true;
 }
 bool ImGuiManager::Render()

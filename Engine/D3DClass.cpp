@@ -210,7 +210,7 @@ bool D3DClass::InitializeMainScene(int screenWidth, int screenHeight,float scree
 
 		// Setup the viewport for rendering.
 		view.Viewport.Width = (float)screenWidth * (3.0f / 4.0f);
-		view.Viewport.Height = (float)screenHeight * (3.0f / 4.0f);
+		view.Viewport.Height = (float)screenHeight /* (3.0f / 4.0f)*/;
 		view.Viewport.MinDepth = 0.0f;
 		view.Viewport.MaxDepth = 1.0f;
 		view.Viewport.TopLeftX = 0.0f;

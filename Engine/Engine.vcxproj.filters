@@ -2,33 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="ApplicationClass.h" />
-    <ClInclude Include="CameraClass.h" />
     <ClInclude Include="SystemClass.h" />
-    <ClInclude Include="imconfig.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_internal.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_rectpack.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_textedit.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imstb_truetype.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_dx11.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="imgui_impl_win32.h">
-      <Filter>Imgui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="Header.h">
       <Filter>Model</Filter>
     </ClInclude>
@@ -66,34 +40,41 @@
     <ClInclude Include="BehaviorLeaf.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
+    <ClInclude Include="imconfig.h">
+      <Filter>ImGui\API</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui.h">
+      <Filter>ImGui\API</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_dx11.h">
+      <Filter>ImGui\API</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_internal.h">
+      <Filter>ImGui\API</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui_impl_win32.h">
+      <Filter>ImGui\API</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_textedit.h">
+      <Filter>ImGui\API</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_rectpack.h">
+      <Filter>ImGui\API</Filter>
+    </ClInclude>
+    <ClInclude Include="imstb_truetype.h">
+      <Filter>ImGui\API</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGuiManager.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />
-    <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SystemClass.cpp" />
-    <ClCompile Include="imgui.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_demo.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_draw.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_tables.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_widgets.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_dx11.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="imgui_impl_win32.cpp">
-      <Filter>Imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="D3dClass.cpp">
       <Filter>Model</Filter>
     </ClCompile>
@@ -125,16 +106,46 @@
     <ClCompile Include="BehaviorLeaf.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
+    <ClCompile Include="imgui.cpp">
+      <Filter>ImGui\API</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_demo.cpp">
+      <Filter>ImGui\API</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_draw.cpp">
+      <Filter>ImGui\API</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_dx11.cpp">
+      <Filter>ImGui\API</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_impl_win32.cpp">
+      <Filter>ImGui\API</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_tables.cpp">
+      <Filter>ImGui\API</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui_widgets.cpp">
+      <Filter>ImGui\API</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGuiManager.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Imgui">
-      <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Model">
       <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
     </Filter>
     <Filter Include="BehaviorTree">
       <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
+      <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui\API">
+      <UniqueIdentifier>{e021e165-822a-41a0-aae5-6bae40c3ae15}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

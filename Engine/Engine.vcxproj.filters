@@ -3,16 +3,7 @@
   <ItemGroup>
     <ClInclude Include="ApplicationClass.h" />
     <ClInclude Include="CameraClass.h" />
-    <ClInclude Include="D3dClass.h" />
-    <ClInclude Include="InputClass.h" />
-    <ClInclude Include="LightClass.h" />
-    <ClInclude Include="LightshaderClass.h" />
-    <ClInclude Include="ModelClass.h" />
-    <ClInclude Include="RefractionshaderClass.h" />
-    <ClInclude Include="RendertextureClass.h" />
     <ClInclude Include="SystemClass.h" />
-    <ClInclude Include="TextureClass.h" />
-    <ClInclude Include="WatershaderClass.h" />
     <ClInclude Include="imconfig.h">
       <Filter>Imgui</Filter>
     </ClInclude>
@@ -40,23 +31,43 @@
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="BehaviorLeaf.h" />
-    <ClInclude Include="CommonModel.h" />
-    <ClInclude Include="Header.h" />
+    <ClInclude Include="Header.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="D3dClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="LightClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="LightshaderClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonModel.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="RendertextureClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="RefractionshaderClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ModelClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="WatershaderClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="TextureClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="InputClass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />
     <ClCompile Include="CameraClass.cpp" />
-    <ClCompile Include="D3dClass.cpp" />
-    <ClCompile Include="InputClass.cpp" />
-    <ClCompile Include="LightClass.cpp" />
-    <ClCompile Include="LightshaderClass.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ModelClass.cpp" />
-    <ClCompile Include="RefractionshaderClass.cpp" />
-    <ClCompile Include="RendertextureClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />
-    <ClCompile Include="TextureClass.cpp" />
-    <ClCompile Include="WatershaderClass.cpp" />
     <ClCompile Include="imgui.cpp">
       <Filter>Imgui</Filter>
     </ClCompile>
@@ -81,10 +92,38 @@
     <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="BehaviorTree.cpp" />
     <ClCompile Include="BehaviorLeaf.cpp" />
+    <ClCompile Include="D3dClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="LightClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="LightshaderClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="RendertextureClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="RefractionshaderClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="WatershaderClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="TextureClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="InputClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Imgui">
       <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model">
+      <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

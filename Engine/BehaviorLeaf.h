@@ -1,6 +1,6 @@
 #pragma once
 #include "D3dclass.h"
-#include "Manager.h"
+#include "CommonModel.h"
 #include "BehaviorTree.h"
 
 namespace Engine

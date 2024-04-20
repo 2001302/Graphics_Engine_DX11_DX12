@@ -4,7 +4,7 @@
 #define _APPLICATIONCLASS_H_
 
 #include "D3dclass.h"
-#include "Manager.h"
+#include "CommonModel.h"
 #include "ImGuiManager.h"
 #include "BehaviorTree.h"
 #include "BehaviorLeaf.h"

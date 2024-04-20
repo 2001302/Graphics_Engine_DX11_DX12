@@ -1,7 +1,6 @@
 #pragma once
 
-#include "header.h"
-#include "Manager.h"
+#include "CommonModel.h"
 
 namespace Engine
 {

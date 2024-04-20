@@ -8,6 +8,7 @@
 #include "lightshaderclass.h"
 #include "refractionshaderclass.h"
 #include "watershaderclass.h"
+#include "D3dclass.h"
 
 namespace Engine
 {

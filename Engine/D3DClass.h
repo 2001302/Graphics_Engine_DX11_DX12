@@ -8,7 +8,7 @@
 #include <d3d11.h>
 #include <directxmath.h>
 
-#include "header.h"
+#include "Header.h"
 
 using namespace DirectX;
 

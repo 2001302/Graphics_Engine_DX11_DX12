@@ -1,10 +1,22 @@
 #pragma once
+#include "D3dclass.h"
+#include "Manager.h"
+#include "BehaviorTree.h"
 
-/// <summary>
-/// Abstract class
-/// BehaviorTree traversal 수행 시 사용되는 DataBlock 단위.
-/// </summary>
-class IDataBlock
+namespace Engine
 {
+	class LoadModelData : public ActionNode 
+	{
+		EnumBehaviorTreeStatus Invoke() override;
+	};
 
-};
+	class InitializeCamera : public ActionNode
+	{
+		EnumBehaviorTreeStatus Invoke() override;
+	};
+
+	class InitializeLight : public ActionNode
+	{
+		EnumBehaviorTreeStatus Invoke() override;
+	};
+}

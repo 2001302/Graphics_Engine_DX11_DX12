@@ -147,6 +147,7 @@
     <ClInclude Include="InputClass.h" />
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="LightshaderClass.h" />
+    <ClInclude Include="Manager.h" />
     <ClInclude Include="ModelClass.h" />
     <ClInclude Include="RefractionshaderClass.h" />
     <ClInclude Include="RendertextureClass.h" />
@@ -172,6 +173,7 @@
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="LightshaderClass.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Manager.cpp" />
     <ClCompile Include="ModelClass.cpp" />
     <ClCompile Include="RefractionshaderClass.cpp" />
     <ClCompile Include="RendertextureClass.cpp" />

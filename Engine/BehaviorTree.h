@@ -1,10 +1,11 @@
 #pragma once
 
 #include "header.h"
-#include "BehaviorLeaf.h"
+#include "Manager.h"
 
-namespace BehaviorTree
+namespace Engine
 {
+
 	enum EnumDataBlockType
 	{
 		eManager = 0,
@@ -21,7 +22,7 @@ namespace BehaviorTree
 	public:
 		virtual EnumBehaviorTreeStatus Invoke();
 		void SetParent(IBehaviorTreeNode* node);
-		std::map<EnumDataBlockType, IDataBlock> DataBlock;
+		std::map<EnumDataBlockType, IDataBlock*> DataBlock;
 	protected:
 		IBehaviorTreeNode* parentNode = 0;
 	};
@@ -29,11 +30,6 @@ namespace BehaviorTree
 	class BehaviorTreeRootNode : public IBehaviorTreeNode
 	{
 	public:
-		BehaviorTreeRootNode() {};
-		BehaviorTreeRootNode(std::map<EnumDataBlockType, IDataBlock> dataBlock) 
-		{ 
-			DataBlock = dataBlock;
-		};
 		BehaviorTreeRootNode* Excute(IBehaviorTreeNode* node);
 		BehaviorTreeRootNode* Sequence();
 		BehaviorTreeRootNode* Selector();
@@ -45,6 +41,12 @@ namespace BehaviorTree
 	class SequenceNode : public BehaviorTreeRootNode
 	{
 	public:
+		//TODO : need refactoring
+		SequenceNode() {};
+		SequenceNode(std::map<EnumDataBlockType, IDataBlock*> dataBlock)
+		{
+			DataBlock = dataBlock;
+		};
 		EnumBehaviorTreeStatus Invoke() override;
 	};
 
@@ -56,15 +58,14 @@ namespace BehaviorTree
 
 	class ActionNode : public IBehaviorTreeNode
 	{
-
 	};
 
 	class BehaviorTreeBuilder
 	{
 	public:
-		BehaviorTreeRootNode* Build(std::map<EnumDataBlockType, IDataBlock> dataBlock)
+		BehaviorTreeRootNode* Build(std::map<EnumDataBlockType, IDataBlock*> dataBlock)
 		{
-			m_Tree = new BehaviorTreeRootNode(dataBlock);
+			m_Tree = new SequenceNode(dataBlock);
 			return m_Tree;
 		}
 		void Run() 
@@ -75,30 +76,31 @@ namespace BehaviorTree
 		BehaviorTreeRootNode* m_Tree;
 	};
 
-	class Test
-	{
-	public:
-		void TestFunc()
-		{
-			auto builder = new BehaviorTreeBuilder();
+	//class Test
+	//{
+	//public:
+	//	void TestFunc()
+	//	{
+	//		auto builder = new BehaviorTreeBuilder();
 
-			builder->Build()
-				->Sequence()
-					->Excute(new ActionNode())
-					->Sequence()
-						->Excute(new ActionNode())
-						->Excute(new ActionNode())
-					->Close()
-					->Excute(new ActionNode())
-					->Excute(new ActionNode())
-				->Close()
-				->Selector()
-					->Excute(new ActionNode())
-					->Excute(new ActionNode())
-					->Excute(new ActionNode())
-				->Close();
+	//		builder->Build()
+	//			->Sequence()
+	//				->Excute(new ActionNode())
+	//				->Sequence()
+	//					->Excute(new ActionNode())
+	//					->Excute(new ActionNode())
+	//				->Close()
+	//				->Excute(new ActionNode())
+	//				->Excute(new ActionNode())
+	//			->Close()
+	//			->Selector()
+	//				->Excute(new ActionNode())
+	//				->Excute(new ActionNode())
+	//				->Excute(new ActionNode())
+	//			->Close();
 
-			builder->Run();
-		};
-	};
+	//		builder->Run();
+	//	};
+	//};
+
 }

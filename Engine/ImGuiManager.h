@@ -10,7 +10,7 @@ public:
 	ImGuiManager(const ImGuiManager&) {};
 	~ImGuiManager() {};
 
-	bool Initialize(HWND m_hWnd, D3DClass* d3d);
+	bool Initialize(HWND m_hWnd, Engine::D3DClass* d3d);
 	void Shutdown();
 	bool Frame();
 	bool Render();

@@ -14,39 +14,42 @@
 #include "refractionshaderclass.h"
 #include "watershaderclass.h"
 #include "ImGuiManager.h"
+//#include "BehaviorTree.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
 const float SCREEN_DEPTH = 1000.0f;
 const float SCREEN_NEAR = 0.3f;
 
-class Manager
+namespace Engine
 {
-public:
-	std::vector <ModelClass*> Models;
-	LightClass* Light;
-	LightShaderClass* LightShader;
-};
+	class Manager
+	{
+	public:
+		std::vector <ModelClass*> Models;
+		LightClass* Light;
+		LightShaderClass* LightShader;
+		CameraClass* Camera;
+	};
 
-class ApplicationClass
-{
-public:
-	ApplicationClass();
-	ApplicationClass(const ApplicationClass&);
-	~ApplicationClass();
+	class ApplicationClass
+	{
+	public:
+		ApplicationClass();
+		ApplicationClass(const ApplicationClass&);
+		~ApplicationClass();
 
-	bool Initialize(int, int, HWND);
-	void Shutdown();
-	bool Frame(InputClass*);
+		bool Initialize(int, int, HWND);
+		void Shutdown();
+		bool Frame(InputClass*);
 
-private:
-	bool Render();
-	  
-private:
-	ImGuiManager* m_Imgui;
-	D3DClass* m_Direct3D;
-	CameraClass* m_Camera;
-	Manager* m_Manager;
-};
+	private:
+		bool Render();
+
+	private:
+		ImGuiManager* m_Imgui;
+		Manager* m_Manager;
+	};
 
 #endif
+}

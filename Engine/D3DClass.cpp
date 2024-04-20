@@ -1,25 +1,6 @@
 #include "d3dclass.h"
 
-D3DClass::D3DClass()
-{
-	m_vsync_enabled = false;
-	m_swapChain = 0;
-	m_device = 0;
-	m_deviceContext = 0;
-}
-
-D3DClass::D3DClass(const D3DClass& other)
-{
-	m_vsync_enabled = other.m_vsync_enabled;
-	m_vsync_enabled = other.m_vsync_enabled;
-	m_swapChain = other.m_swapChain;
-	m_device = other.m_device;
-	m_deviceContext = other.m_deviceContext;
-}
-
-D3DClass::~D3DClass()
-{
-}
+using namespace Engine;
 
 bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
@@ -396,7 +377,6 @@ void D3DClass::Shutdown()
 			info.RenderTargetView->Release();
 			info.RenderTargetView = 0;
 		}
-
 	}
 
 	return;

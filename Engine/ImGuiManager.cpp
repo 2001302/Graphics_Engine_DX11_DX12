@@ -1,6 +1,6 @@
 #include "ImGuiManager.h"
 
-bool ImGuiManager::Initialize(HWND hWnd, D3DClass* d3d)
+bool ImGuiManager::Initialize(HWND hWnd, Engine::D3DClass* d3d)
 {
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();

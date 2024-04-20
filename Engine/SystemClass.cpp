@@ -1,5 +1,7 @@
 #include "systemclass.h"
 
+using namespace Engine;
+
 SystemClass::SystemClass()
 {
 	m_Input = 0;
@@ -246,28 +248,3 @@ void SystemClass::ShutdownWindows()
 }
 
 
-LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
-{
-	switch(umessage)
-	{
-		// Check if the window is being destroyed.
-		case WM_DESTROY:
-		{
-			PostQuitMessage(0);
-			return 0;
-		}
-
-		// Check if the window is being closed.
-		case WM_CLOSE:
-		{
-			PostQuitMessage(0);		
-			return 0;
-		}
-
-		// All other messages pass to the message handler in the system class.
-		default:
-		{
-			return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
-		}
-	}
-}

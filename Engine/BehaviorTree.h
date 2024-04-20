@@ -13,15 +13,8 @@ namespace BehaviorTree
 	class IBehaviorTreeNode
 	{
 	public:
-		virtual EnumBehaviorTreeStatus Invoke()
-		{
-			return EnumBehaviorTreeStatus::eSuccess;
-		}
-
-		void SetParent(IBehaviorTreeNode* node)
-		{
-			parentNode = node;
-		}
+		virtual EnumBehaviorTreeStatus Invoke();
+		void SetParent(IBehaviorTreeNode* node);
 
 	protected:
 		IBehaviorTreeNode* parentNode;
@@ -29,62 +22,25 @@ namespace BehaviorTree
 
 	class BehaviorTreeRootNode : public IBehaviorTreeNode
 	{
-	public:
-		BehaviorTreeRootNode* Excute(IBehaviorTreeNode* node)
-		{
-			node->SetParent(this);
-			childNodes.push_back(node);
-			return this;
-		}
-
-		SequenceNode* Sequence()
-		{
-			SequenceNode* node = new SequenceNode();
-			childNodes.push_back(dynamic_cast<IBehaviorTreeNode*>(node));
-			return node;
-		}
-
-		SelectorNode* Selector()
-		{
-			SelectorNode* node = new SelectorNode();
-			childNodes.push_back(dynamic_cast<IBehaviorTreeNode*>(node));
-			return node;
-		}
-
-		BehaviorTreeRootNode* Close()
-		{
-			return dynamic_cast<BehaviorTreeRootNode*>(parentNode);
-		}
-
 	protected:
 		std::vector<IBehaviorTreeNode*> childNodes;
+	public:
+		BehaviorTreeRootNode* Excute(IBehaviorTreeNode* node);
+		BehaviorTreeRootNode* Sequence();
+		BehaviorTreeRootNode* Selector();
+		BehaviorTreeRootNode* Close();
 	};
 
 	class SequenceNode : public BehaviorTreeRootNode
 	{
-		EnumBehaviorTreeStatus Invoke() override
-		{
-			for (auto& child : childNodes)
-			{
-				if (child->Invoke() == EnumBehaviorTreeStatus::eFail)
-					return EnumBehaviorTreeStatus::eFail;
-			}
-			return EnumBehaviorTreeStatus::eSuccess;
-		}
+	public:
+		EnumBehaviorTreeStatus Invoke() override;
 	};
 
 	class SelectorNode : public BehaviorTreeRootNode
 	{
 	public:
-		EnumBehaviorTreeStatus Invoke() override
-		{
-			for (auto& child : childNodes)
-			{
-				if (child->Invoke() == EnumBehaviorTreeStatus::eSuccess)
-					return EnumBehaviorTreeStatus::eSuccess;
-			}
-			return EnumBehaviorTreeStatus::eSuccess;
-		}
+		EnumBehaviorTreeStatus Invoke() override;
 	};
 
 	class ActionNode : public IBehaviorTreeNode
@@ -107,7 +63,6 @@ namespace BehaviorTree
 	private:
 		BehaviorTreeRootNode* m_Tree;
 	};
-
 
 	class Test
 	{

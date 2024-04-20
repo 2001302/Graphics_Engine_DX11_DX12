@@ -93,40 +93,9 @@ bool InputClass::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth, int
 	return true;
 }
 
-
-void InputClass::Shutdown()
-{
-	// Release the mouse.
-	if(m_mouse)
-	{
-		m_mouse->Unacquire();
-		m_mouse->Release();
-		m_mouse = 0;
-	}
-
-	// Release the keyboard.
-	if(m_keyboard)
-	{
-		m_keyboard->Unacquire();
-		m_keyboard->Release();
-		m_keyboard = 0;
-	}
-
-	// Release the main interface to direct input.
-	if(m_directInput)
-	{
-		m_directInput->Release();
-		m_directInput = 0;
-	}
-
-	return;
-}
-
-
 bool InputClass::Frame()
 {
 	bool result;
-
 
 	// Read the current state of the keyboard.
 	result = ReadKeyboard();
@@ -134,7 +103,6 @@ bool InputClass::Frame()
 	{
 		return false;
 	}
-
 	// Read the current state of the mouse.
 	result = ReadMouse();
 	if(!result)
@@ -148,11 +116,9 @@ bool InputClass::Frame()
 	return true;
 }
 
-
 bool InputClass::ReadKeyboard()
 {
 	HRESULT result;
-
 
 	// Read the keyboard device.
 	result = m_keyboard->GetDeviceState(sizeof(m_keyboardState), (LPVOID)&m_keyboardState);
@@ -172,11 +138,9 @@ bool InputClass::ReadKeyboard()
 	return true;
 }
 
-
 bool InputClass::ReadMouse()
 {
 	HRESULT result;
-
 
 	// Read the mouse device.
 	result = m_mouse->GetDeviceState(sizeof(DIMOUSESTATE), (LPVOID)&m_mouseState);
@@ -196,7 +160,6 @@ bool InputClass::ReadMouse()
 	return true;
 }
 
-
 void InputClass::ProcessInput()
 {
 	// Update the location of the mouse cursor based on the change of the mouse location during the frame.
@@ -213,7 +176,6 @@ void InputClass::ProcessInput()
 	return;
 }
 
-
 bool InputClass::IsEscapePressed()
 {
 	// Do a bitwise and on the keyboard state to check if the escape key is currently being pressed.
@@ -225,7 +187,6 @@ bool InputClass::IsEscapePressed()
 	return false;
 }
 
-
 bool InputClass::IsLeftArrowPressed()
 {
 	if(m_keyboardState[DIK_LEFT] & 0x80)
@@ -235,7 +196,6 @@ bool InputClass::IsLeftArrowPressed()
 
 	return false;
 }
-
 
 bool InputClass::IsRightArrowPressed()
 {
@@ -247,14 +207,12 @@ bool InputClass::IsRightArrowPressed()
 	return false;
 }
 
-
 void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
 {
 	mouseX = m_mouseX;
 	mouseY = m_mouseY;
 	return;
 }
-
 
 bool InputClass::IsMousePressed()
 {
@@ -265,4 +223,32 @@ bool InputClass::IsMousePressed()
 	}
 
 	return false;
+}
+
+void InputClass::Shutdown()
+{
+	// Release the mouse.
+	if (m_mouse)
+	{
+		m_mouse->Unacquire();
+		m_mouse->Release();
+		m_mouse = 0;
+	}
+
+	// Release the keyboard.
+	if (m_keyboard)
+	{
+		m_keyboard->Unacquire();
+		m_keyboard->Release();
+		m_keyboard = 0;
+	}
+
+	// Release the main interface to direct input.
+	if (m_directInput)
+	{
+		m_directInput->Release();
+		m_directInput = 0;
+	}
+
+	return;
 }

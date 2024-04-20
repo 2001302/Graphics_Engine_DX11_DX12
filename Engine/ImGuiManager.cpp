@@ -29,14 +29,16 @@ bool ImGuiManager::Prepare()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 
-	//Font
-	ImGui::PushFont(io.Fonts->Fonts.back());
-	ImGui::Text("Hello with font size 16!");
-	ImGui::PopFont();
+	////Font
+	//ImGui::PushFont(io.Fonts->Fonts.back());
+	//ImGui::Text("Hello with font size 16!");
+	//ImGui::PopFont();
 
+	ImGui::ShowDemoWindow();
 
 	return true;
 }
+
 bool ImGuiManager::Render()
 {
 	// Rendering
@@ -46,7 +48,6 @@ bool ImGuiManager::Render()
 	// (Your code calls swapchain's Present() function)
 	return true;
 }
-
 
 void ImGuiManager::Shutdown()
 {

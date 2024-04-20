@@ -71,7 +71,6 @@ void SystemClass::Shutdown()
 	return;
 }
 
-
 void SystemClass::Run()
 {
 	MSG msg;
@@ -111,11 +110,9 @@ void SystemClass::Run()
 	return;
 }
 
-
 bool SystemClass::Frame()
 {
 	bool result;
-
 
 	// Do the input frame processing.
 	result = m_Input->Frame();
@@ -141,8 +138,8 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam))
 		return true;
-	else 
-		return DefWindowProc(hwnd, umsg, wparam, lparam);
+
+	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
 
 
@@ -153,7 +150,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	int posX, posY;
 
 	// Get an external pointer to this object.	
-	ApplicationHandle = this;
+	SystemHandle = this;
 
 	// Get the instance of this application.
 	m_hinstance = GetModuleHandle(NULL);
@@ -224,7 +221,6 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	return;
 }
 
-
 void SystemClass::ShutdownWindows()
 {
 	// Fix the display settings if leaving full screen mode.
@@ -242,9 +238,7 @@ void SystemClass::ShutdownWindows()
 	m_hinstance = NULL;
 
 	// Release the pointer to this class.
-	ApplicationHandle = NULL;
+	SystemHandle = NULL;
 
 	return;
 }
-
-

@@ -76,12 +76,12 @@ bool ApplicationClass::Render()
 	return true;
 }
 
-bool ApplicationClass::Frame(InputClass* Input)
+bool ApplicationClass::Frame(InputClass* input)
 {
 	bool result;
 
 	// Check if the user pressed escape and wants to exit the application.
-	if (Input->IsEscapePressed())
+	if (input->IsEscapePressed())
 	{
 		return false;
 	}
@@ -118,6 +118,11 @@ void ApplicationClass::Shutdown()
 			delete m_Manager->Camera;
 			m_Manager->Camera = 0;
 		}
+	}
+
+	if(m_Imgui)
+	{
+		m_Imgui->Shutdown();
 	}
 
 	D3DClass::GetInstance().Shutdown();

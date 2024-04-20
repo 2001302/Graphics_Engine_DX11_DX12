@@ -36,7 +36,10 @@ namespace Engine
 		ApplicationClass* m_Application;
 	};
 
-	static SystemClass* ApplicationHandle = 0;
+	/// <summary>
+	/// NOTE : Global
+	/// </summary>
+	static SystemClass* SystemHandle = 0;
 	static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 	{
 		switch (umessage)
@@ -58,7 +61,7 @@ namespace Engine
 		// All other messages pass to the message handler in the system class.
 		default:
 		{
-			return ApplicationHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+			return SystemHandle->MessageHandler(hwnd, umessage, wparam, lparam);
 		}
 		}
 	}

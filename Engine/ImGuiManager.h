@@ -11,7 +11,7 @@ public:
 	~ImGuiManager() {};
 
 	bool Initialize(HWND m_hWnd, Engine::D3DClass* d3d);
-	void Shutdown();
 	bool Prepare();
 	bool Render();
+	void Shutdown();
 };

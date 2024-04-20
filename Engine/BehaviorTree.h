@@ -8,6 +8,7 @@ namespace Engine
 	enum EnumDataBlockType
 	{
 		eManager = 0,
+		eViewingPoint=1,
 	};
 
 	enum EnumBehaviorTreeStatus

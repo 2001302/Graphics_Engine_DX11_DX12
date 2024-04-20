@@ -20,7 +20,17 @@ namespace Engine
 		EnumBehaviorTreeStatus Invoke() override;
 		HWND m_window;
 	public :
-		InitializeLight() {};
+		InitializeLight() { m_window = 0; };
 		InitializeLight(HWND hwnd) { m_window = hwnd; };
+	};
+
+	class GetViewingPoint : public ActionNode
+	{
+		EnumBehaviorTreeStatus Invoke() override;
+	};
+
+	class RenderModels : public ActionNode
+	{
+		EnumBehaviorTreeStatus Invoke() override;
 	};
 }

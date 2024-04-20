@@ -68,32 +68,26 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 bool ApplicationClass::Render()
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
-	bool result;
+	std::map<EnumDataBlockType, IDataBlock*> dataBlock =
+	{
+		{EnumDataBlockType::eManager, m_Manager},
+		{EnumDataBlockType::eViewingPoint, new ViewingPoint()},
+	};
 
 	// Clear the buffers to begin the scene.
 	D3DClass::GetInstance().BeginScene(EnumViewType::eScene, 0.0f, 0.0f, 0.0f, 1.0f);
 
-	// Generate the view matrix based on the camera's position.
-	m_Manager->Camera->Render();
+	auto builder = new BehaviorTreeBuilder();
 
-	// Get the world, view, and projection matrices from the camera and d3d objects.
-	D3DClass::GetInstance().GetWorldMatrix(EnumViewType::eScene, worldMatrix);
-	m_Manager->Camera->GetViewMatrix(viewMatrix);
-	D3DClass::GetInstance().GetProjectionMatrix(EnumViewType::eScene, projectionMatrix);
+	builder->Build(dataBlock)
+		->Sequence()
+			->Excute(new GetViewingPoint())
+			->Excute(new RenderModels())
+		->Close();
 
-	for (auto& model : m_Manager->Models)
-	{
-		model->Render(D3DClass::GetInstance().GetDeviceContext());
+	builder->Run();
 
-		worldMatrix = model->defaultTransform;
-
-		result = m_Manager->LightShader->Render(D3DClass::GetInstance().GetDeviceContext(), model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, model->GetTexture(),
-			m_Manager->Light->GetDirection(), m_Manager->Light->GetAmbientColor(), m_Manager->Light->GetDiffuseColor());
-	}
-
-	result = m_Imgui->Frame();
-	result = m_Imgui->Render();
+	m_Imgui->Frame();
 
 	// Present the rendered scene to the screen.
 	D3DClass::GetInstance().EndScene();

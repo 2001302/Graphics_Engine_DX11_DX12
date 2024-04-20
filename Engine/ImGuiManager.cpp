@@ -25,6 +25,7 @@ bool ImGuiManager::Frame()
 	ImGui::NewFrame();
 	ImGui::ShowDemoWindow(); // Show demo window! :)
 
+	Render();
 	return true;
 }
 bool ImGuiManager::Render()

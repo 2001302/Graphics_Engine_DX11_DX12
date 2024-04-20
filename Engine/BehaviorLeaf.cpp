@@ -55,7 +55,6 @@ EnumBehaviorTreeStatus InitializeCamera::Invoke()
 	return EnumBehaviorTreeStatus::eSuccess;
 }
 
-
 EnumBehaviorTreeStatus InitializeLight::Invoke()
 {
 	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
@@ -73,6 +72,52 @@ EnumBehaviorTreeStatus InitializeLight::Invoke()
 	// Create and initialize the light shader object.
 	manager->LightShader = new LightShaderClass();
 	manager->LightShader->Initialize(D3DClass::GetInstance().GetDevice(), m_window);
+
+	return EnumBehaviorTreeStatus::eSuccess;
+}
+
+EnumBehaviorTreeStatus GetViewingPoint::Invoke()
+{
+	IDataBlock* managerBlock = DataBlock[EnumDataBlockType::eManager];
+	IDataBlock* viewBlock = DataBlock[EnumDataBlockType::eViewingPoint];
+	
+	auto manager = dynamic_cast<Engine::Manager*>(managerBlock);
+	assert(manager != nullptr);
+
+	auto viewingPoint = dynamic_cast<Engine::ViewingPoint*>(viewBlock);
+	assert(viewingPoint != nullptr);
+
+	// Generate the view matrix based on the camera's position.
+	manager->Camera->Render();
+
+	// Get the world, view, and projection matrices from the camera and d3d objects.
+	D3DClass::GetInstance().GetWorldMatrix(EnumViewType::eScene, viewingPoint->WorldMatrix);
+	manager->Camera->GetViewMatrix(viewingPoint->ViewMatrix);
+	D3DClass::GetInstance().GetProjectionMatrix(EnumViewType::eScene, viewingPoint->ProjectionMatrix);
+
+	return EnumBehaviorTreeStatus::eSuccess;
+}
+
+EnumBehaviorTreeStatus RenderModels::Invoke()
+{
+	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
+	IDataBlock* viewBlock = DataBlock[EnumDataBlockType::eViewingPoint];
+
+	auto manager = dynamic_cast<Engine::Manager*>(block);
+	assert(manager != nullptr);
+
+	auto viewingPoint = dynamic_cast<Engine::ViewingPoint*>(viewBlock);
+	assert(viewingPoint != nullptr);
+
+	for (auto& model : manager->Models)
+	{
+		model->Render(D3DClass::GetInstance().GetDeviceContext());
+
+		viewingPoint->WorldMatrix = model->defaultTransform;
+
+		manager->LightShader->Render(D3DClass::GetInstance().GetDeviceContext(), model->GetIndexCount(), viewingPoint->WorldMatrix, viewingPoint->ViewMatrix, viewingPoint->ProjectionMatrix,
+			model->GetTexture(), manager->Light->GetDirection(), manager->Light->GetAmbientColor(), manager->Light->GetDiffuseColor());
+	}
 
 	return EnumBehaviorTreeStatus::eSuccess;
 }

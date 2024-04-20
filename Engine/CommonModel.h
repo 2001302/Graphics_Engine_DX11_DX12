@@ -40,4 +40,17 @@ namespace Engine
 		CameraClass* Camera;
 	};
 
+	class ViewingPoint : public IDataBlock
+	{
+	public:
+		ViewingPoint()
+		{
+
+		};
+		~ViewingPoint() {};
+
+		XMMATRIX WorldMatrix;
+		XMMATRIX ViewMatrix;
+		XMMATRIX ProjectionMatrix;
+	};
 }

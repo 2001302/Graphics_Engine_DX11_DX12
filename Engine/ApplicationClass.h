@@ -3,7 +3,6 @@
 #ifndef _APPLICATIONCLASS_H_
 #define _APPLICATIONCLASS_H_
 
-#include "header.h"
 #include "d3dclass.h"
 #include "inputclass.h"
 #include "cameraclass.h"
@@ -14,7 +13,8 @@
 #include "refractionshaderclass.h"
 #include "watershaderclass.h"
 #include "ImGuiManager.h"
-//#include "BehaviorTree.h"
+#include "BehaviorTree.h"
+#include "BehaviorLeaf.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -23,7 +23,7 @@ const float SCREEN_NEAR = 0.3f;
 
 namespace Engine
 {
-	class Manager
+	class Manager : public IDataBlock
 	{
 	public:
 		std::vector <ModelClass*> Models;

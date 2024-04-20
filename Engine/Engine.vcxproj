@@ -130,6 +130,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ApplicationClass.h" />
+    <ClInclude Include="BehaviorLeaf.h" />
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="D3dClass.h" />
@@ -155,6 +156,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />
+    <ClCompile Include="BehaviorLeaf.cpp" />
     <ClCompile Include="BehaviorTree.cpp" />
     <ClCompile Include="CameraClass.cpp" />
     <ClCompile Include="D3dClass.cpp" />

@@ -15,6 +15,7 @@ void IBehaviorTreeNode::SetParent(IBehaviorTreeNode* node)
 BehaviorTreeRootNode* BehaviorTreeRootNode::Excute(IBehaviorTreeNode* node)
 {
 	node->SetParent(this);
+	node->DataBlock = DataBlock;
 	childNodes.push_back(node);
 	return this;
 }
@@ -22,6 +23,7 @@ BehaviorTreeRootNode* BehaviorTreeRootNode::Excute(IBehaviorTreeNode* node)
 BehaviorTreeRootNode* BehaviorTreeRootNode::Sequence()
 {
 	SequenceNode* node = new SequenceNode();
+	node->DataBlock = DataBlock;
 	childNodes.push_back(dynamic_cast<IBehaviorTreeNode*>(node));
 	return node;
 }
@@ -29,6 +31,7 @@ BehaviorTreeRootNode* BehaviorTreeRootNode::Sequence()
 BehaviorTreeRootNode* BehaviorTreeRootNode::Selector()
 {
 	SelectorNode* node = new SelectorNode();
+	node->DataBlock = DataBlock;
 	childNodes.push_back(dynamic_cast<IBehaviorTreeNode*>(node));
 	return node;
 }
@@ -37,7 +40,6 @@ BehaviorTreeRootNode* BehaviorTreeRootNode::Close()
 {
 	return dynamic_cast<BehaviorTreeRootNode*>(parentNode);
 }
-
 
 EnumBehaviorTreeStatus SequenceNode::Invoke()
 {
@@ -48,7 +50,6 @@ EnumBehaviorTreeStatus SequenceNode::Invoke()
 	}
 	return EnumBehaviorTreeStatus::eSuccess;
 }
-
 
 EnumBehaviorTreeStatus SelectorNode::Invoke() 
 {

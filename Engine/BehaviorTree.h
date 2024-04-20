@@ -1,9 +1,15 @@
 #pragma once
 
 #include "header.h"
+#include "BehaviorLeaf.h"
 
 namespace BehaviorTree
 {
+	enum EnumDataBlockType
+	{
+		eManager = 0,
+	};
+
 	enum EnumBehaviorTreeStatus
 	{
 		eSuccess = 0,
@@ -15,20 +21,25 @@ namespace BehaviorTree
 	public:
 		virtual EnumBehaviorTreeStatus Invoke();
 		void SetParent(IBehaviorTreeNode* node);
-
+		std::map<EnumDataBlockType, IDataBlock> DataBlock;
 	protected:
-		IBehaviorTreeNode* parentNode;
+		IBehaviorTreeNode* parentNode = 0;
 	};
 
 	class BehaviorTreeRootNode : public IBehaviorTreeNode
 	{
-	protected:
-		std::vector<IBehaviorTreeNode*> childNodes;
 	public:
+		BehaviorTreeRootNode() {};
+		BehaviorTreeRootNode(std::map<EnumDataBlockType, IDataBlock> dataBlock) 
+		{ 
+			DataBlock = dataBlock;
+		};
 		BehaviorTreeRootNode* Excute(IBehaviorTreeNode* node);
 		BehaviorTreeRootNode* Sequence();
 		BehaviorTreeRootNode* Selector();
 		BehaviorTreeRootNode* Close();
+	protected:
+		std::vector<IBehaviorTreeNode*> childNodes;
 	};
 
 	class SequenceNode : public BehaviorTreeRootNode
@@ -51,9 +62,9 @@ namespace BehaviorTree
 	class BehaviorTreeBuilder
 	{
 	public:
-		BehaviorTreeRootNode* Build()
+		BehaviorTreeRootNode* Build(std::map<EnumDataBlockType, IDataBlock> dataBlock)
 		{
-			m_Tree = new BehaviorTreeRootNode();
+			m_Tree = new BehaviorTreeRootNode(dataBlock);
 			return m_Tree;
 		}
 		void Run() 

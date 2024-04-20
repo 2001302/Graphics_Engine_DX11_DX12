@@ -40,6 +40,7 @@
     <ClInclude Include="ImGuiManager.h" />
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="Header.h" />
+    <ClInclude Include="BehaviorLeaf.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />
@@ -78,6 +79,7 @@
     </ClCompile>
     <ClCompile Include="ImGuiManager.cpp" />
     <ClCompile Include="BehaviorTree.cpp" />
+    <ClCompile Include="BehaviorLeaf.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Imgui">

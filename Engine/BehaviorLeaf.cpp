@@ -72,6 +72,7 @@ EnumBehaviorTreeStatus InitializeLight::Invoke()
 
 	// Create and initialize the light shader object.
 	manager->LightShader = new LightShaderClass();
+	manager->LightShader->Initialize(D3DClass::GetInstance().GetDevice(), m_window);
 
 	return EnumBehaviorTreeStatus::eSuccess;
 }

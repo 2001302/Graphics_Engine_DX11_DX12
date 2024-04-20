@@ -40,7 +40,7 @@ namespace Engine
 	class SequenceNode : public BehaviorTreeRootNode
 	{
 	public:
-		//TODO : need refactoring
+		//TODO : need to refactor
 		SequenceNode() {};
 		SequenceNode(std::map<EnumDataBlockType, IDataBlock*> dataBlock)
 		{

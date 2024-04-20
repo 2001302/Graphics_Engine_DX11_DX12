@@ -18,5 +18,9 @@ namespace Engine
 	class InitializeLight : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;
+		HWND m_window;
+	public :
+		InitializeLight() {};
+		InitializeLight(HWND hwnd) { m_window = hwnd; };
 	};
 }

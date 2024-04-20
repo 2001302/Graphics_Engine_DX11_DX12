@@ -22,10 +22,16 @@ namespace Engine
 		virtual ~IDataBlock() {};
 	};
 
+	/// <summary>
+	/// Rendering에 필요한 shared object의 집합.
+	/// </summary>
 	class Manager : public IDataBlock
 	{
 	public:
-		Manager() {};
+		Manager() 
+		{
+
+		};
 		~Manager() {};
 
 		std::vector <ModelClass*> Models;
@@ -33,4 +39,5 @@ namespace Engine
 		LightShaderClass* LightShader;
 		CameraClass* Camera;
 	};
+
 }

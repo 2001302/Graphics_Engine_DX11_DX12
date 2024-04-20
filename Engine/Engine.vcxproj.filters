@@ -29,8 +29,6 @@
       <Filter>Imgui</Filter>
     </ClInclude>
     <ClInclude Include="ImGuiManager.h" />
-    <ClInclude Include="BehaviorTree.h" />
-    <ClInclude Include="BehaviorLeaf.h" />
     <ClInclude Include="Header.h">
       <Filter>Model</Filter>
     </ClInclude>
@@ -62,6 +60,12 @@
     <ClInclude Include="RefractionshaderClass.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="BehaviorTree.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorLeaf.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />
@@ -90,8 +94,6 @@
       <Filter>Imgui</Filter>
     </ClCompile>
     <ClCompile Include="ImGuiManager.cpp" />
-    <ClCompile Include="BehaviorTree.cpp" />
-    <ClCompile Include="BehaviorLeaf.cpp" />
     <ClCompile Include="D3dClass.cpp">
       <Filter>Model</Filter>
     </ClCompile>
@@ -117,6 +119,12 @@
     <ClCompile Include="RefractionshaderClass.cpp">
       <Filter>Model</Filter>
     </ClCompile>
+    <ClCompile Include="BehaviorTree.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorLeaf.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Imgui">
@@ -124,6 +132,9 @@
     </Filter>
     <Filter Include="Model">
       <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BehaviorTree">
+      <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

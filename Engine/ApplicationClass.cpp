@@ -26,8 +26,10 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	m_Manager = new Manager();
 
-	std::map<EnumDataBlockType, IDataBlock*> dataBlock;
-	dataBlock[EnumDataBlockType::eManager] = dynamic_cast<IDataBlock*>(m_Manager);
+	std::map<EnumDataBlockType, IDataBlock*> dataBlock = 
+	{
+		{EnumDataBlockType::eManager,m_Manager},
+	};
 
 	auto builder = new BehaviorTreeBuilder();
 
@@ -35,12 +37,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		->Sequence()
 			->Excute(new LoadModelData())
 			->Excute(new InitializeCamera())
-			->Excute(new InitializeLight())
+			->Excute(new InitializeLight(hwnd))
 		->Close();
 
 	builder->Run();
 
-	result = m_Manager->LightShader->Initialize(D3DClass::GetInstance().GetDevice(), hwnd);
 	result = m_Imgui->Initialize(hwnd, &D3DClass::GetInstance());
 
 	return true;
@@ -67,13 +68,11 @@ bool ApplicationClass::Frame(InputClass* Input)
 
 bool ApplicationClass::Render()
 {
-	XMMATRIX worldMatrix, viewMatrix, projectionMatrix, reflectionMatrix;
+	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 	bool result;
 
 	// Clear the buffers to begin the scene.
 	D3DClass::GetInstance().BeginScene(EnumViewType::eScene, 0.0f, 0.0f, 0.0f, 1.0f);
-
-	result = m_Imgui->Frame();
 
 	// Generate the view matrix based on the camera's position.
 	m_Manager->Camera->Render();
@@ -93,6 +92,7 @@ bool ApplicationClass::Render()
 			m_Manager->Light->GetDirection(), m_Manager->Light->GetAmbientColor(), m_Manager->Light->GetDiffuseColor());
 	}
 
+	result = m_Imgui->Frame();
 	result = m_Imgui->Render();
 
 	// Present the rendered scene to the screen.

@@ -46,22 +46,22 @@
     <ClInclude Include="CommonModel.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="RendertextureClass.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="RefractionshaderClass.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="ModelClass.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="WatershaderClass.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="TextureClass.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="InputClass.h" />
+    <ClInclude Include="WatershaderClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="RendertextureClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="RefractionshaderClass.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />
@@ -101,22 +101,22 @@
     <ClCompile Include="LightshaderClass.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="RendertextureClass.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="RefractionshaderClass.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="ModelClass.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="WatershaderClass.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="TextureClass.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="InputClass.cpp" />
+    <ClCompile Include="WatershaderClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="RendertextureClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="RefractionshaderClass.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Imgui">

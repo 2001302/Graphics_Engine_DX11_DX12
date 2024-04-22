@@ -27,6 +27,7 @@ namespace Engine
 		bool Initialize(int, int, HWND);
 		void Shutdown();
 		bool Frame(InputClass*);
+		bool OnModelLoadRequest() { return true; };
 
 	private:
 		bool Render();

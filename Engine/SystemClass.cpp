@@ -131,17 +131,28 @@ bool SystemClass::Frame()
 	return true;
 }
 
-
 LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+	switch (umsg)
+	{
+		case WM_MODEL_LOAD:
+		{
+			if(m_Application->OnModelLoadRequest())
+				return 0;
+			//TODO : Error Code ¸¸µé°Í
+		}
+		default:
+		{
+			return DefWindowProc(hwnd, umsg, wparam, lparam);
+		}
+	}
+
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam))
 		return true;
 
-	return DefWindowProc(hwnd, umsg, wparam, lparam);
 }
-
 
 void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 {

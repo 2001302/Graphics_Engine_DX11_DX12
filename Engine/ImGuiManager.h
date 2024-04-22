@@ -14,4 +14,8 @@ public:
 	bool Prepare();
 	bool Render();
 	void Shutdown();
+	void ShowWindow(bool* p_open = NULL);
+
+private:
+	HWND m_window;
 };

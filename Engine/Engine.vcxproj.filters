@@ -133,6 +133,9 @@
     <ClCompile Include="CameraClass.cpp">
       <Filter>Model</Filter>
     </ClCompile>
+    <ClCompile Include="ImguiWindow.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Model">

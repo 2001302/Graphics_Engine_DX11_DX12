@@ -135,6 +135,9 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 {
 	extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+	if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam))
+		return true;
+
 	switch (umsg)
 	{
 		case WM_MODEL_LOAD:
@@ -148,10 +151,6 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 			return DefWindowProc(hwnd, umsg, wparam, lparam);
 		}
 	}
-
-	if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam))
-		return true;
-
 }
 
 void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)

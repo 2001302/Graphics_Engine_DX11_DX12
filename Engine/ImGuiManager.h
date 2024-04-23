@@ -14,8 +14,30 @@ public:
 	bool Prepare();
 	bool Render();
 	void Shutdown();
-	void ShowWindow(bool* p_open = NULL);
 
+	void ShowWindow(HWND hwnd,bool* p_open = NULL);
+};
+
+class WindowHandler
+{
 private:
-	HWND m_window;
+	WindowHandler() {}
+	WindowHandler(const WindowHandler& ref) {}
+	WindowHandler& operator=(const WindowHandler& ref) {}
+	~WindowHandler() {}
+
+	HWND x;
+
+public:
+	static WindowHandler& GetInstance()
+	{
+		static WindowHandler instance;
+		return instance;
+	}
+	HWND GetHandle() { return x; }
+	void SetHandle(HWND hwnd) 
+	{	
+		if(x==nullptr)
+			x = hwnd; 
+	}
 };

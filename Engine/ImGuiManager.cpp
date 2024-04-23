@@ -34,7 +34,7 @@ bool ImGuiManager::Prepare()
 	//ImGui::Text("Hello with font size 16!");
 	//ImGui::PopFont();
 
-	ShowWindow();
+	//ShowWindow();
 
 	return true;
 }

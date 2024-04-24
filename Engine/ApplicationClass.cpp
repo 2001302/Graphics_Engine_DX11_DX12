@@ -132,5 +132,27 @@ void ApplicationClass::Shutdown()
 
 bool ApplicationClass::OnModelLoadRequest()
 {
-	
+	OPENFILENAME ofn;
+	wchar_t* szFile = new wchar_t[240];
+
+	// OPENFILENAME struct initialize
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = WindowHandler::GetInstance().GetHandle();
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = L"All files\0*.*\0Text Files\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+	//show file explorer
+	if (GetOpenFileName(&ofn) == TRUE) {
+		//do something
+	}
+
+	return true;
 }

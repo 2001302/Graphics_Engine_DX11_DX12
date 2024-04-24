@@ -15,6 +15,8 @@ bool ImGuiManager::Initialize(HWND hWnd, Engine::D3DClass* d3d)
 	ImGui_ImplWin32_Init(hWnd);
 	ImGui_ImplDX11_Init(d3d->GetDevice(), d3d->GetDeviceContext());
 
+	WindowHandler::GetInstance().SetHandle(hWnd);
+
 	return true;
 }
 
@@ -33,8 +35,7 @@ bool ImGuiManager::Prepare()
 	//ImGui::PushFont(io.Fonts->Fonts.back());
 	//ImGui::Text("Hello with font size 16!");
 	//ImGui::PopFont();
-
-	//ShowWindow();
+	ShowWindow(WindowHandler::GetInstance().GetHandle());
 
 	return true;
 }

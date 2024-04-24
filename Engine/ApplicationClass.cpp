@@ -129,3 +129,8 @@ void ApplicationClass::Shutdown()
 
 	return;
 }
+
+bool ApplicationClass::OnModelLoadRequest()
+{
+	
+}

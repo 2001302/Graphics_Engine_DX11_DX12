@@ -137,8 +137,6 @@ void* GImGuiDemoMarkerCallbackUserData = NULL;
 // You may then search for keywords in the code when you are interested by a specific feature.
 void ImGuiManager::ShowWindow(HWND hwnd, bool* p_open)
 {
-    WindowHandler::GetInstance().SetHandle(hwnd);
-
     // Exceptionally add an extra assert here for people confused about initial Dear ImGui setup
     // Most functions would normally just assert/crash if the context is missing.
     IM_ASSERT(ImGui::GetCurrentContext() != NULL && "Missing Dear ImGui context. Refer to examples app!");
@@ -292,6 +290,15 @@ void ImGuiManager::ShowWindow(HWND hwnd, bool* p_open)
                 ImGui::SetItemTooltip("Requires io.ConfigDebugIsDebuggerPresent=true to be set.\n\nWe otherwise disable the menu option to avoid casual users crashing the application.\n\nYou can however always access the Item Picker in Metrics->Tools.");
             ImGui::Separator();
             ImGui::MenuItem("About Dear ImGui", NULL, &show_tool_about);
+            ImGui::EndMenu();
+        }
+        if (ImGui::BeginMenu("Asset"))
+        {
+            IMGUI_DEMO_MARKER("Menu/Asset");
+            if (ImGui::MenuItem("Import")) 
+            {
+                SendMessage(WindowHandler::GetInstance().GetHandle(), WM_MODEL_LOAD, 0, 0);
+            }
             ImGui::EndMenu();
         }
         ImGui::EndMenuBar();

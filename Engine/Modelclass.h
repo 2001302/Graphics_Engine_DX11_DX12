@@ -1,13 +1,34 @@
-#ifndef _MODELCLASS_H_
-#define _MODELCLASS_H_
-
 #include <d3d11.h>
 #include <directxmath.h>
 #include <fstream>
+#include "textureclass.h"
+
 using namespace DirectX;
 using namespace std;
 
-#include "textureclass.h"
+class Maya
+{
+private:
+	struct VertexTypeMaya
+	{
+		float x, y, z;
+	};
+	struct FaceType
+	{
+		int vIndex1, vIndex2, vIndex3;
+		int tIndex1, tIndex2, tIndex3;
+		int nIndex1, nIndex2, nIndex3;
+	};
+
+public:
+	int vertexCount, textureCount, normalCount, faceCount;
+	VertexTypeMaya* vertices, * texcoords, * normals;
+	FaceType* faces;
+
+	bool LoadModelMaya(const char*);
+	bool ReadFileCounts(const char* filename);
+	bool LoadDataStructures(const char* filename);
+};
 
 class ModelClass
 {
@@ -25,18 +46,18 @@ private:
 		float tu, tv;
 		float nx, ny, nz;
 	};
-
 public:
 	ModelClass();
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*,const char*, const char*);
+	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const char*, const char*);
 	void Shutdown();
 	void Render(ID3D11DeviceContext*);
 
 	int GetIndexCount();
 	ID3D11ShaderResourceView* GetTexture();
+	void ConvertFromMaya(Maya* maya);
 
 	XMMATRIX defaultTransform;
 
@@ -50,12 +71,8 @@ private:
 
 	bool LoadModel(const char*);
 	void ReleaseModel();
-
-private:
-	ID3D11Buffer *m_vertexBuffer, *m_indexBuffer;
+	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Texture;
 	ModelType* m_model;
 };
-
-#endif

@@ -132,8 +132,19 @@ void ApplicationClass::Shutdown()
 
 bool ApplicationClass::OnModelLoadRequest()
 {
-	OPENFILENAME ofn;
-	wchar_t* szFile = new wchar_t[240];
+	auto ToString = [](LPWSTR lpwstr) -> std::string 
+	{
+		if (!lpwstr) 
+			return std::string();
+
+		int len = WideCharToMultiByte(CP_UTF8, 0, lpwstr, -1, NULL, 0, NULL, NULL);
+		std::string result(len, '\0');
+		WideCharToMultiByte(CP_UTF8, 0, lpwstr, -1, &result[0], len, NULL, NULL);
+		return result;
+	};
+
+	OPENFILENAMEW  ofn;
+	wchar_t szFile[260] = { 0 };
 
 	// OPENFILENAME struct initialize
 	ZeroMemory(&ofn, sizeof(ofn));
@@ -149,10 +160,28 @@ bool ApplicationClass::OnModelLoadRequest()
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
-	//show file explorer
-	if (GetOpenFileName(&ofn) == TRUE) {
-		//do something
-	}
 
+	//show file explorer
+	if (GetOpenFileName(&ofn)) 
+	{
+		std::vector<std::string> modelFile;
+		std::vector<std::string> textureFile;
+		std::vector<XMMATRIX> matrix;
+
+		modelFile.push_back(ToString(ofn.lpstrFile));
+		textureFile.push_back("C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\wall01.tga"); //default
+		matrix.push_back(XMMatrixTranslation(0.0f, 1.0f, 0.0f));
+
+		for (int i = 0; i < modelFile.size(); i++)
+		{
+			m_Manager->Models.push_back(new ModelClass());
+			m_Manager->Models[i]->Initialize(D3DClass::GetInstance().GetDevice(), D3DClass::GetInstance().GetDeviceContext(), modelFile[i].c_str(), textureFile[i].c_str());
+			m_Manager->Models[i]->defaultTransform = matrix[i];
+		}
+	}
+	else 
+	{
+		//need logger
+	}
 	return true;
 }

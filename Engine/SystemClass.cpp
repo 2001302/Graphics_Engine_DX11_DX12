@@ -135,8 +135,10 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 {
 	extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-	if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam))
-		return true;
+	ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam);
+
+	//if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam))
+	//	return true;
 
 	switch (umsg)
 	{

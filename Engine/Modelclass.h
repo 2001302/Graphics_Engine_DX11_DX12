@@ -1,8 +1,8 @@
 #include <d3d11.h>
 #include <directxmath.h>
-#include <fstream>
 
-#include "textureclass.h"
+#include "TextureClass.h"
+#include "Header.h"
 
 using namespace DirectX;
 using namespace std;

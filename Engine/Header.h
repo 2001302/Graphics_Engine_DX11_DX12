@@ -5,6 +5,9 @@
 #include <map>
 #include <vector>
 #include <windows.h>
+#include <fstream>
+#include <sstream>
+#include <string>
 
 #include <ctype.h>
 #include <limits.h>

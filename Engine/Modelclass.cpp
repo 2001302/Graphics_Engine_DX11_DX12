@@ -405,138 +405,105 @@ void ModelClass::ReleaseModel()
 
 bool Maya::LoadModelMaya(const char* filename)
 {
-	// Read in the number of vertices, tex coords, normals, and faces so that the data structures can be initialized with the exact sizes needed.
-	ifstream file;
-
-	// Initialize the counts.
 	int vertexCount = 0;
 	int	textureCount = 0;
 	int normalCount = 0;
 
-	// Open the file.
-	file.open(filename);
-
-	// Check if it was successful in opening the file.
-	if (file.fail() == true)
-		return false;
-
 	{
-		char input;
-		// Read from the file and continue to read until the end of the file is reached.
-		file.get(input);
-		while (!file.eof())
+		std::ifstream file(filename);
+		if (file.is_open())
 		{
-			// If the line starts with 'v' then count either the vertex, the texture coordinates, or the normal vector.
-			if (input == 'v')
-			{
-				file.get(input);
-				if (input == ' ') { vertexCount++; }
-				if (input == 't') { textureCount++; }
-				if (input == 'n') { normalCount++; }
-			}
+			// read file buffer
+			std::stringstream buffer;
+			buffer << file.rdbuf();
+			//file.close();
 
-			// If the line starts with 'f' then increment the face count.
-			if (input == 'f')
+			//read the count from v,vt,vn,f
+			std::string line;
+			while (std::getline(buffer, line))
 			{
-				file.get(input);
-				if (input == ' ') { faceCount++; }
-			}
+				istringstream iss(line);
 
-			// Otherwise read in the remainder of the line.
-			while (input != '\n')
-			{
-				file.get(input);
-			}
+				std::string input;
+				iss >> input;  //read first string on the line
 
-			// Start reading the beginning of the next line.
-			file.get(input);
+				if (input == "v") { vertexCount++; }
+				if (input == "vt") { textureCount++; }
+				if (input == "vn") { normalCount++; }
+
+				// if the line starts with 'f' then increment the face count.
+				if (input == "f") { faceCount++; }
+			}
 		}
 	}
-
 	{
-		// Now read the data from the file into the data structures and then output it in our model format.
-		int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
-		char input, input2;
-
-		// Initialize the four data structures.
-		vertices = new VertexTypeMaya[vertexCount];
-		texcoords = new VertexTypeMaya[textureCount];
-		normals = new VertexTypeMaya[normalCount];
-		faces = new FaceType[faceCount];
-
-		// Initialize the indexes.
-		vertexIndex = 0;
-		texcoordIndex = 0;
-		normalIndex = 0;
-		faceIndex = 0;
-
-		// Read in the vertices, texture coordinates, and normals into the data structures.
-		// Important: Also convert to left hand coordinate system since Maya uses right hand coordinate system.
-		file.get(input);
-		while (!file.eof())
+		std::ifstream file(filename);
+		if (file.is_open())
 		{
-			if (input == 'v')
+			// read file buffer
+			std::stringstream buffer;
+			buffer << file.rdbuf();
+			file.close();
+
+			// Now read the data from the file into the data structures and then output it in our model format.
+			int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
+			char input, input2;
+
+			// Initialize the four data structures.
+			vertices = new VertexTypeMaya[vertexCount];
+			texcoords = new VertexTypeMaya[textureCount];
+			normals = new VertexTypeMaya[normalCount];
+			faces = new FaceType[faceCount];
+
+			// Initialize the indexes.
+			vertexIndex = 0;
+			texcoordIndex = 0;
+			normalIndex = 0;
+			faceIndex = 0;
+
+			// Read in the vertices, texture coordinates, and normals into the data structures.
+			// Important: Also convert to left hand coordinate system since Maya uses right hand coordinate system.
+			std::string line;
+			while (std::getline(buffer, line))
 			{
-				file.get(input);
+				istringstream iss(line);
 
-				// Read in the vertices.
-				if (input == ' ')
+				std::string input;
+				iss >> input;  //read first string on the line
+
+				if (input == "v")
 				{
-					file >> vertices[vertexIndex].x >> vertices[vertexIndex].y >> vertices[vertexIndex].z;
-
+					iss >> vertices[vertexIndex].x >> vertices[vertexIndex].y >> vertices[vertexIndex].z;
 					// Invert the Z vertex to change to left hand system.
 					vertices[vertexIndex].z = vertices[vertexIndex].z * -1.0f;
 					vertexIndex++;
 				}
-
-				// Read in the texture uv coordinates.
-				if (input == 't')
+				if (input == "vt")
 				{
-					file >> texcoords[texcoordIndex].x >> texcoords[texcoordIndex].y;
-
+					iss >> texcoords[texcoordIndex].x >> texcoords[texcoordIndex].y;
 					// Invert the V texture coordinates to left hand system.
 					texcoords[texcoordIndex].y = 1.0f - texcoords[texcoordIndex].y;
 					texcoordIndex++;
 				}
-
-				// Read in the normals.
-				if (input == 'n')
+				if (input == "vn")
 				{
-					file >> normals[normalIndex].x >> normals[normalIndex].y >> normals[normalIndex].z;
-
+					iss >> normals[normalIndex].x >> normals[normalIndex].y >> normals[normalIndex].z;
 					// Invert the Z normal to change to left hand system.
 					normals[normalIndex].z = normals[normalIndex].z * -1.0f;
 					normalIndex++;
 				}
-			}
 
-			// Read in the faces.
-			if (input == 'f')
-			{
-				file.get(input);
-				if (input == ' ')
+				// Read in the faces.
+				if (input == "f")
 				{
 					// Read the face data in backwards to convert it to a left hand system from right hand system.
-					file >> faces[faceIndex].vIndex3 >> input2 >> faces[faceIndex].tIndex3 >> input2 >> faces[faceIndex].nIndex3
+					iss >> faces[faceIndex].vIndex3 >> input2 >> faces[faceIndex].tIndex3 >> input2 >> faces[faceIndex].nIndex3
 						>> faces[faceIndex].vIndex2 >> input2 >> faces[faceIndex].tIndex2 >> input2 >> faces[faceIndex].nIndex2
 						>> faces[faceIndex].vIndex1 >> input2 >> faces[faceIndex].tIndex1 >> input2 >> faces[faceIndex].nIndex1;
 					faceIndex++;
 				}
 			}
-
-			// Read in the remainder of the line.
-			while (input != '\n')
-			{
-				file.get(input);
-			}
-
-			// Start reading the beginning of the next line.
-			file.get(input);
 		}
 	}
-
-	// Close the file.
-	file.close();
-
 	return true;
 }

@@ -13,17 +13,17 @@ EnumBehaviorTreeStatus LoadModelData::Invoke()
 	std::vector<std::string> textureFile;
 	std::vector<XMMATRIX> matrix;
 
-	modelFile.push_back("../Engine/data/ground.txt");
-	textureFile.push_back("../Engine/data/ground01.tga");
-	matrix.push_back(XMMatrixTranslation(0.0f, 1.0f, 0.0f));
+	//modelFile.push_back("../Engine/data/ground.txt");
+	//textureFile.push_back("../Engine/data/ground01.tga");
+	//matrix.push_back(XMMatrixTranslation(0.0f, 1.0f, 0.0f));
 
-	modelFile.push_back("../Engine/data/wall.txt");
-	textureFile.push_back("../Engine/data/wall01.tga");
-	matrix.push_back(XMMatrixTranslation(0.0f, 6.0f, 8.0f));
+	//modelFile.push_back("../Engine/data/wall.txt");
+	//textureFile.push_back("../Engine/data/wall01.tga");
+	//matrix.push_back(XMMatrixTranslation(0.0f, 6.0f, 8.0f));
 
-	modelFile.push_back("../Engine/data/bath.txt");
-	textureFile.push_back("../Engine/data/marble01.tga");
-	matrix.push_back(XMMatrixTranslation(0.0f, 2.0f, 0.0f));
+	//modelFile.push_back("../Engine/data/bath.txt");
+	//textureFile.push_back("../Engine/data/marble01.tga");
+	//matrix.push_back(XMMatrixTranslation(0.0f, 2.0f, 0.0f));
 
 	for (int i = 0; i < modelFile.size(); i++)
 	{

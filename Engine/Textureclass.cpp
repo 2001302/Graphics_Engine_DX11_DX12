@@ -131,8 +131,7 @@ bool TextureClass::LoadTarga32Bit(char* filename)
 	TargaHeader targaFileHeader;
 	unsigned char* targaImage;
 
-
-	// Open the targa file for reading in binary.
+	// Open the target file for reading in binary.
 	error = fopen_s(&filePtr, filename, "rb");
 	if(error != 0)
 	{

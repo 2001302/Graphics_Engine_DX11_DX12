@@ -5,7 +5,7 @@
 
 namespace Engine
 {
-	class LoadModelData : public ActionNode 
+	class LoadTextureData : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;
 	};

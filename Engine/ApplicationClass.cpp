@@ -33,7 +33,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	builder->Build(dataBlock)
 		->Sequence()
-			->Excute(new LoadModelData())
+			->Excute(new LoadTextureData())
 			->Excute(new InitializeCamera())
 			->Excute(new InitializeLight(hwnd))
 		->Close();
@@ -160,23 +160,20 @@ bool ApplicationClass::OnModelLoadRequest()
 	ofn.lpstrInitialDir = NULL;
 	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
-
 	//show file explorer
 	if (GetOpenFileName(&ofn)) 
 	{
 		std::vector<std::string> modelFile;
-		std::vector<std::string> textureFile;
 		std::vector<XMMATRIX> matrix;
 
 		modelFile.push_back(ToString(ofn.lpstrFile));
-		textureFile.push_back("C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\wall01.tga"); //default
-		matrix.push_back(XMMatrixTranslation(0.0f, 1.0f, 0.0f));
+		matrix.push_back(XMMatrixTranslation(0.0f, 20.0f, 0.0f));
 
 		for (int i = 0; i < modelFile.size(); i++)
 		{
 			m_Manager->Models.push_back(new ModelClass());
-			m_Manager->Models[i]->Initialize(D3DClass::GetInstance().GetDevice(), D3DClass::GetInstance().GetDeviceContext(), modelFile[i].c_str(), textureFile[i].c_str());
-			m_Manager->Models[i]->defaultTransform = matrix[i];
+			m_Manager->Models[i]->Initialize(D3DClass::GetInstance().GetDevice(), D3DClass::GetInstance().GetDeviceContext(), modelFile[i].c_str(), m_Manager->Texture);
+			m_Manager->Models[i]->Transform = matrix[i];
 		}
 	}
 	else 

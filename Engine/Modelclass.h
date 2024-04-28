@@ -1,6 +1,7 @@
 #include <d3d11.h>
 #include <directxmath.h>
 #include <fstream>
+
 #include "textureclass.h"
 
 using namespace DirectX;
@@ -19,13 +20,12 @@ private:
 		int tIndex1, tIndex2, tIndex3;
 		int nIndex1, nIndex2, nIndex3;
 	};
-
 public:
 	int vertexCount, textureCount, normalCount, faceCount;
 	VertexTypeMaya* vertices, * texcoords, * normals;
 	FaceType* faces;
 
-	bool LoadModelMaya(const char*);
+	bool LoadModelMaya(const char* filename);
 	bool ReadFileCounts(const char* filename);
 	bool LoadDataStructures(const char* filename);
 };
@@ -39,7 +39,6 @@ private:
 		XMFLOAT2 texture;
 		XMFLOAT3 normal;
 	};
-
 	struct ModelType
 	{
 		float x, y, z;
@@ -51,26 +50,27 @@ public:
 	ModelClass(const ModelClass&);
 	~ModelClass();
 
-	bool Initialize(ID3D11Device*, ID3D11DeviceContext*, const char*, const char*);
+	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, const char* textureFilename);
+	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, TextureClass* texture);
 	void Shutdown();
-	void Render(ID3D11DeviceContext*);
+	void Render(ID3D11DeviceContext* deviceContext);
 
 	int GetIndexCount();
 	ID3D11ShaderResourceView* GetTexture();
 	void ConvertFromMaya(Maya* maya);
 
-	XMMATRIX defaultTransform;
-
+	XMMATRIX Transform;
 private:
-	bool InitializeBuffers(ID3D11Device*);
+	bool InitializeBuffers(ID3D11Device* device);
 	void ShutdownBuffers();
-	void RenderBuffers(ID3D11DeviceContext*);
+	void RenderBuffers(ID3D11DeviceContext* deviceContext);
 
-	bool LoadTexture(ID3D11Device*, ID3D11DeviceContext*, const char*);
+	bool LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename);
 	void ReleaseTexture();
 
-	bool LoadModel(const char*);
+	bool LoadModel(const char* filename);
 	void ReleaseModel();
+
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 	TextureClass* m_Texture;

@@ -38,6 +38,7 @@ namespace Engine
 		LightClass* Light;
 		LightShaderClass* LightShader;
 		CameraClass* Camera;
+		TextureClass* Texture; //default
 	};
 
 	class ViewingPoint : public IDataBlock

@@ -35,16 +35,15 @@ namespace Engine
 			for (auto& child : childNodes)
 			{
 				child->Dispose();
-				delete child;
-				child = 0;
+				child.reset();
 			}
 		};
-		BehaviorTreeRootNode* Excute(IBehaviorTreeNode* node);
+		BehaviorTreeRootNode* Excute(std::shared_ptr<IBehaviorTreeNode> node);
 		BehaviorTreeRootNode* Sequence();
 		BehaviorTreeRootNode* Selector();
 		BehaviorTreeRootNode* Close();
 	protected:
-		std::vector<IBehaviorTreeNode*> childNodes;
+		std::vector<std::shared_ptr<IBehaviorTreeNode>> childNodes;
 	};
 
 	class SequenceNode : public BehaviorTreeRootNode

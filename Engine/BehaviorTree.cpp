@@ -12,27 +12,32 @@ void IBehaviorTreeNode::SetParent(IBehaviorTreeNode* node)
 	parentNode = node;
 }
 
-BehaviorTreeRootNode* BehaviorTreeRootNode::Excute(IBehaviorTreeNode* node)
+BehaviorTreeRootNode* BehaviorTreeRootNode::Excute(std::shared_ptr<IBehaviorTreeNode> node)
 {
 	node->SetParent(this);
 	node->DataBlock = DataBlock;
 	childNodes.emplace_back(node);
+
 	return this;
 }
 
 BehaviorTreeRootNode* BehaviorTreeRootNode::Sequence()
 {
-	SequenceNode* node = new SequenceNode();
+	childNodes.emplace_back(std::make_shared<SequenceNode>());
+
+	auto node = dynamic_cast<BehaviorTreeRootNode*>(childNodes.back().get());
 	node->DataBlock = DataBlock;
-	childNodes.emplace_back(dynamic_cast<IBehaviorTreeNode*>(node));
+
 	return node;
 }
 
 BehaviorTreeRootNode* BehaviorTreeRootNode::Selector()
 {
-	SelectorNode* node = new SelectorNode();
+	childNodes.emplace_back(std::make_shared<SelectorNode>());
+
+	auto node = dynamic_cast<BehaviorTreeRootNode*>(childNodes.back().get());
 	node->DataBlock = DataBlock;
-	childNodes.emplace_back(dynamic_cast<IBehaviorTreeNode*>(node));
+
 	return node;
 }
 

@@ -32,12 +32,12 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	auto builder = new BehaviorTreeBuilder();
 
-	builder->Build(dataBlock)
-		->Sequence()
-			->Excute(new LoadTextureData())
-			->Excute(new InitializeCamera())
-			->Excute(new InitializeLight(hwnd))
-		->Close();
+	builder ->Build(dataBlock)
+				->Sequence()
+					->Excute(std::make_shared<LoadTextureData>())
+					->Excute(std::make_shared<InitializeCamera>())
+					->Excute(std::make_shared<InitializeLight>(hwnd))
+				->Close();
 
 	builder->Run();
 
@@ -60,10 +60,10 @@ bool ApplicationClass::Render()
 	auto builder = std::make_unique<BehaviorTreeBuilder>();
 
 	builder->Build(dataBlock)
-		->Sequence()
-			->Excute(new GetViewingPoint())
-			->Excute(new RenderModels())
-		->Close();
+				->Sequence()
+					->Excute(std::make_shared<GetViewingPoint>())
+					->Excute(std::make_shared<RenderModels>())
+				->Close();
 
 	builder->Run();
 

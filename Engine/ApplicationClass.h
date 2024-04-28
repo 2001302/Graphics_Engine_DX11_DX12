@@ -26,7 +26,7 @@ namespace Engine
 
 		bool Initialize(int, int, HWND);
 		void Shutdown();
-		bool Frame(InputClass*);
+		bool Frame(std::unique_ptr<InputClass>& input);
 		bool OnModelLoadRequest();
 
 	private:

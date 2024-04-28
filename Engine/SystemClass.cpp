@@ -4,8 +4,6 @@ using namespace Engine;
 
 SystemClass::SystemClass()
 {
-	m_Input = 0;
-	m_Application = 0;
 	m_applicationName = 0;
 	m_hinstance = 0;
 	m_hwnd = 0;
@@ -13,8 +11,6 @@ SystemClass::SystemClass()
 
 SystemClass::SystemClass(const SystemClass& other)
 {
-	m_Input = other.m_Input;
-	m_Application = other.m_Application;
 	m_applicationName = other.m_applicationName;
 	m_hinstance = other.m_hinstance;
 	m_hwnd = other.m_hwnd;
@@ -34,13 +30,13 @@ bool SystemClass::Initialize()
 	InitializeWindows(screenWidth, screenHeight);
 
 	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
-	m_Input = new InputClass();
+	m_Input = std::make_unique<InputClass>();
 
 	if(!m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight))
 		return false;
 
 	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
-	m_Application = new ApplicationClass();
+	m_Application = std::make_unique<ApplicationClass>();
 
 	if(!m_Application->Initialize(screenWidth, screenHeight, m_hwnd))
 		return false;
@@ -51,19 +47,10 @@ bool SystemClass::Initialize()
 void SystemClass::Shutdown()
 {
 	// Release the application class object.
-	if(m_Application)
-	{
-		m_Application->Shutdown();
-		delete m_Application;
-		m_Application = 0;
-	}
+	m_Application.reset();
 
 	// Release the input object.
-	if(m_Input)
-	{
-		delete m_Input;
-		m_Input = 0;
-	}
+	m_Input.reset();
 
 	// Shutdown the window.
 	ShutdownWindows();

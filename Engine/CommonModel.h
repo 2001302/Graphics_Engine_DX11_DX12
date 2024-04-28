@@ -23,6 +23,19 @@ namespace Engine
 	};
 
 	/// <summary>
+	/// Disposer Pattern
+	/// </summary>
+	class IDisposable
+	{
+	public:
+		~IDisposable() 
+		{ 
+			Dispose(); 
+		};
+		virtual void Dispose() {};
+	};
+
+	/// <summary>
 	/// Rendering에 필요한 shared object의 집합.
 	/// </summary>
 	class Manager : public IDataBlock

@@ -21,13 +21,11 @@ private:
 		int nIndex1, nIndex2, nIndex3;
 	};
 public:
-	int vertexCount, textureCount, normalCount, faceCount;
 	VertexTypeMaya* vertices, * texcoords, * normals;
 	FaceType* faces;
+	int faceCount = 0;
 
 	bool LoadModelMaya(const char* filename);
-	bool ReadFileCounts(const char* filename);
-	bool LoadDataStructures(const char* filename);
 };
 
 class ModelClass

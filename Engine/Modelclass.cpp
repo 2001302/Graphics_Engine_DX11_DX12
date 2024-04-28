@@ -405,206 +405,138 @@ void ModelClass::ReleaseModel()
 
 bool Maya::LoadModelMaya(const char* filename)
 {
-	int vertexCount, textureCount, normalCount, faceCount;
-
 	// Read in the number of vertices, tex coords, normals, and faces so that the data structures can be initialized with the exact sizes needed.
-	ReadFileCounts(filename);
-
-	// Now read the data from the file into the data structures and then output it in our model format.
-	LoadDataStructures(filename);
-
-	return true;
-}
-bool Maya::ReadFileCounts(const char* filename)
-{
-	ifstream fin;
-	char input;
+	ifstream file;
 
 	// Initialize the counts.
-	vertexCount = 0;
-	textureCount = 0;
-	normalCount = 0;
-	faceCount = 0;
+	int vertexCount = 0;
+	int	textureCount = 0;
+	int normalCount = 0;
 
 	// Open the file.
-	fin.open(filename);
+	file.open(filename);
 
 	// Check if it was successful in opening the file.
-	if (fin.fail() == true)
-	{
+	if (file.fail() == true)
 		return false;
+
+	{
+		char input;
+		// Read from the file and continue to read until the end of the file is reached.
+		file.get(input);
+		while (!file.eof())
+		{
+			// If the line starts with 'v' then count either the vertex, the texture coordinates, or the normal vector.
+			if (input == 'v')
+			{
+				file.get(input);
+				if (input == ' ') { vertexCount++; }
+				if (input == 't') { textureCount++; }
+				if (input == 'n') { normalCount++; }
+			}
+
+			// If the line starts with 'f' then increment the face count.
+			if (input == 'f')
+			{
+				file.get(input);
+				if (input == ' ') { faceCount++; }
+			}
+
+			// Otherwise read in the remainder of the line.
+			while (input != '\n')
+			{
+				file.get(input);
+			}
+
+			// Start reading the beginning of the next line.
+			file.get(input);
+		}
 	}
 
-	// Read from the file and continue to read until the end of the file is reached.
-	fin.get(input);
-	while (!fin.eof())
 	{
-		// If the line starts with 'v' then count either the vertex, the texture coordinates, or the normal vector.
-		if (input == 'v')
-		{
-			fin.get(input);
-			if (input == ' ') { vertexCount++; }
-			if (input == 't') { textureCount++; }
-			if (input == 'n') { normalCount++; }
-		}
+		// Now read the data from the file into the data structures and then output it in our model format.
+		int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
+		char input, input2;
 
-		// If the line starts with 'f' then increment the face count.
-		if (input == 'f')
-		{
-			fin.get(input);
-			if (input == ' ') { faceCount++; }
-		}
+		// Initialize the four data structures.
+		vertices = new VertexTypeMaya[vertexCount];
+		texcoords = new VertexTypeMaya[textureCount];
+		normals = new VertexTypeMaya[normalCount];
+		faces = new FaceType[faceCount];
 
-		// Otherwise read in the remainder of the line.
-		while (input != '\n')
-		{
-			fin.get(input);
-		}
+		// Initialize the indexes.
+		vertexIndex = 0;
+		texcoordIndex = 0;
+		normalIndex = 0;
+		faceIndex = 0;
 
-		// Start reading the beginning of the next line.
-		fin.get(input);
+		// Read in the vertices, texture coordinates, and normals into the data structures.
+		// Important: Also convert to left hand coordinate system since Maya uses right hand coordinate system.
+		file.get(input);
+		while (!file.eof())
+		{
+			if (input == 'v')
+			{
+				file.get(input);
+
+				// Read in the vertices.
+				if (input == ' ')
+				{
+					file >> vertices[vertexIndex].x >> vertices[vertexIndex].y >> vertices[vertexIndex].z;
+
+					// Invert the Z vertex to change to left hand system.
+					vertices[vertexIndex].z = vertices[vertexIndex].z * -1.0f;
+					vertexIndex++;
+				}
+
+				// Read in the texture uv coordinates.
+				if (input == 't')
+				{
+					file >> texcoords[texcoordIndex].x >> texcoords[texcoordIndex].y;
+
+					// Invert the V texture coordinates to left hand system.
+					texcoords[texcoordIndex].y = 1.0f - texcoords[texcoordIndex].y;
+					texcoordIndex++;
+				}
+
+				// Read in the normals.
+				if (input == 'n')
+				{
+					file >> normals[normalIndex].x >> normals[normalIndex].y >> normals[normalIndex].z;
+
+					// Invert the Z normal to change to left hand system.
+					normals[normalIndex].z = normals[normalIndex].z * -1.0f;
+					normalIndex++;
+				}
+			}
+
+			// Read in the faces.
+			if (input == 'f')
+			{
+				file.get(input);
+				if (input == ' ')
+				{
+					// Read the face data in backwards to convert it to a left hand system from right hand system.
+					file >> faces[faceIndex].vIndex3 >> input2 >> faces[faceIndex].tIndex3 >> input2 >> faces[faceIndex].nIndex3
+						>> faces[faceIndex].vIndex2 >> input2 >> faces[faceIndex].tIndex2 >> input2 >> faces[faceIndex].nIndex2
+						>> faces[faceIndex].vIndex1 >> input2 >> faces[faceIndex].tIndex1 >> input2 >> faces[faceIndex].nIndex1;
+					faceIndex++;
+				}
+			}
+
+			// Read in the remainder of the line.
+			while (input != '\n')
+			{
+				file.get(input);
+			}
+
+			// Start reading the beginning of the next line.
+			file.get(input);
+		}
 	}
 
 	// Close the file.
-	fin.close();
-
-	return true;
-}
-bool Maya::LoadDataStructures(const char* filename)
-{
-	ifstream fin;
-	int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
-	char input, input2;
-	ofstream fout;
-
-	// Initialize the four data structures.
-	vertices = new VertexTypeMaya[vertexCount];
-	if (!vertices)
-	{
-		return false;
-	}
-
-	texcoords = new VertexTypeMaya[textureCount];
-	if (!texcoords)
-	{
-		return false;
-	}
-
-	normals = new VertexTypeMaya[normalCount];
-	if (!normals)
-	{
-		return false;
-	}
-
-	faces = new FaceType[faceCount];
-	if (!faces)
-	{
-		return false;
-	}
-
-	// Initialize the indexes.
-	vertexIndex = 0;
-	texcoordIndex = 0;
-	normalIndex = 0;
-	faceIndex = 0;
-
-	// Open the file.
-	fin.open(filename);
-
-	// Check if it was successful in opening the file.
-	if (fin.fail() == true)
-	{
-		return false;
-	}
-
-	// Read in the vertices, texture coordinates, and normals into the data structures.
-	// Important: Also convert to left hand coordinate system since Maya uses right hand coordinate system.
-	fin.get(input);
-	while (!fin.eof())
-	{
-		if (input == 'v')
-		{
-			fin.get(input);
-
-			// Read in the vertices.
-			if (input == ' ')
-			{
-				fin >> vertices[vertexIndex].x >> vertices[vertexIndex].y >> vertices[vertexIndex].z;
-
-				// Invert the Z vertex to change to left hand system.
-				vertices[vertexIndex].z = vertices[vertexIndex].z * -1.0f;
-				vertexIndex++;
-			}
-
-			// Read in the texture uv coordinates.
-			if (input == 't')
-			{
-				fin >> texcoords[texcoordIndex].x >> texcoords[texcoordIndex].y;
-
-				// Invert the V texture coordinates to left hand system.
-				texcoords[texcoordIndex].y = 1.0f - texcoords[texcoordIndex].y;
-				texcoordIndex++;
-			}
-
-			// Read in the normals.
-			if (input == 'n')
-			{
-				fin >> normals[normalIndex].x >> normals[normalIndex].y >> normals[normalIndex].z;
-
-				// Invert the Z normal to change to left hand system.
-				normals[normalIndex].z = normals[normalIndex].z * -1.0f;
-				normalIndex++;
-			}
-		}
-
-		// Read in the faces.
-		if (input == 'f')
-		{
-			fin.get(input);
-			if (input == ' ')
-			{
-				// Read the face data in backwards to convert it to a left hand system from right hand system.
-				fin >> faces[faceIndex].vIndex3 >> input2 >> faces[faceIndex].tIndex3 >> input2 >> faces[faceIndex].nIndex3
-					>> faces[faceIndex].vIndex2 >> input2 >> faces[faceIndex].tIndex2 >> input2 >> faces[faceIndex].nIndex2
-					>> faces[faceIndex].vIndex1 >> input2 >> faces[faceIndex].tIndex1 >> input2 >> faces[faceIndex].nIndex1;
-				faceIndex++;
-			}
-		}
-
-		// Read in the remainder of the line.
-		while (input != '\n')
-		{
-			fin.get(input);
-		}
-
-		// Start reading the beginning of the next line.
-		fin.get(input);
-	}
-
-	// Close the file.
-	fin.close();
-
-	//// Release the four data structures.
-	//if (vertices)
-	//{
-	//	delete[] vertices;
-	//	vertices = 0;
-	//}
-	//if (texcoords)
-	//{
-	//	delete[] texcoords;
-	//	texcoords = 0;
-	//}
-	//if (normals)
-	//{
-	//	delete[] normals;
-	//	normals = 0;
-	//}
-	//if (faces)
-	//{
-	//	delete[] faces;
-	//	faces = 0;
-	//}
+	file.close();
 
 	return true;
 }

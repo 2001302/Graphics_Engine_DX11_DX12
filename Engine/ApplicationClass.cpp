@@ -6,12 +6,14 @@ ApplicationClass::ApplicationClass()
 {
 	m_Imgui = 0;
 	m_Manager = 0;
+	m_ViewingPoint = 0;
 }
 
 ApplicationClass::ApplicationClass(const ApplicationClass& other)
 {
 	m_Imgui = other.m_Imgui;
 	m_Manager = other.m_Manager;
+	m_ViewingPoint = other.m_ViewingPoint;
 }
 
 ApplicationClass::~ApplicationClass()

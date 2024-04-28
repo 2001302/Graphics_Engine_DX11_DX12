@@ -72,7 +72,6 @@ bool LightShaderClass::Render(ID3D11DeviceContext* deviceContext, int indexCount
 {
 	bool result;
 
-
 	// Set the shader parameters that it will use for rendering.
 	result = SetShaderParameters(deviceContext, worldMatrix, viewMatrix, projectionMatrix, texture, lightDirection, ambientColor, diffuseColor);
 	if(!result)

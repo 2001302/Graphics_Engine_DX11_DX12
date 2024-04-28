@@ -51,7 +51,7 @@ public:
 	~ModelClass();
 
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, const char* textureFilename);
-	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, TextureClass* texture);
+	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, std::unique_ptr<TextureClass>& texture);
 	void Shutdown();
 	void Render(ID3D11DeviceContext* deviceContext);
 
@@ -73,6 +73,6 @@ private:
 
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	int m_vertexCount, m_indexCount;
-	TextureClass* m_Texture;
+	std::unique_ptr<TextureClass> m_Texture;
 	ModelType* m_model;
 };

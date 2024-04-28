@@ -17,7 +17,7 @@ namespace Engine
 		eFail = 1,
 	};
 
-	class IBehaviorTreeNode
+	class IBehaviorTreeNode : public IDisposable
 	{
 	public:
 		virtual EnumBehaviorTreeStatus Invoke();
@@ -30,6 +30,15 @@ namespace Engine
 	class BehaviorTreeRootNode : public IBehaviorTreeNode
 	{
 	public:
+		void Dispose() override 
+		{
+			for (auto& child : childNodes)
+			{
+				child->Dispose();
+				delete child;
+				child = 0;
+			}
+		};
 		BehaviorTreeRootNode* Excute(IBehaviorTreeNode* node);
 		BehaviorTreeRootNode* Sequence();
 		BehaviorTreeRootNode* Selector();
@@ -41,7 +50,6 @@ namespace Engine
 	class SequenceNode : public BehaviorTreeRootNode
 	{
 	public:
-		//TODO : need to refactor
 		SequenceNode() {};
 		SequenceNode(std::map<EnumDataBlockType, IDataBlock*> dataBlock)
 		{
@@ -52,7 +60,7 @@ namespace Engine
 
 	class SelectorNode : public BehaviorTreeRootNode
 	{
-	public:
+	public:		
 		EnumBehaviorTreeStatus Invoke() override;
 	};
 
@@ -63,44 +71,18 @@ namespace Engine
 	class BehaviorTreeBuilder
 	{
 	public:
-		BehaviorTreeRootNode* Build(std::map<EnumDataBlockType, IDataBlock*> dataBlock)
+		std::shared_ptr<BehaviorTreeRootNode> Build(std::map<EnumDataBlockType, IDataBlock*> dataBlock)
 		{
-			m_Tree = new SequenceNode(dataBlock);
+			m_Tree = make_shared<SequenceNode>(dataBlock);
 			return m_Tree;
 		}
-		void Run() 
+		void Run()
 		{
 			m_Tree->Invoke();
+			m_Tree->Dispose();
+			m_Tree.reset();
 		}
 	private:
-		BehaviorTreeRootNode* m_Tree;
+		std::shared_ptr<BehaviorTreeRootNode> m_Tree;
 	};
-
-	//class Test
-	//{
-	//public:
-	//	void TestFunc()
-	//	{
-	//		auto builder = new BehaviorTreeBuilder();
-
-	//		builder->Build()
-	//			->Sequence()
-	//				->Excute(new ActionNode())
-	//				->Sequence()
-	//					->Excute(new ActionNode())
-	//					->Excute(new ActionNode())
-	//				->Close()
-	//				->Excute(new ActionNode())
-	//				->Excute(new ActionNode())
-	//			->Close()
-	//			->Selector()
-	//				->Excute(new ActionNode())
-	//				->Excute(new ActionNode())
-	//				->Excute(new ActionNode())
-	//			->Close();
-
-	//		builder->Run();
-	//	};
-	//};
-
 }

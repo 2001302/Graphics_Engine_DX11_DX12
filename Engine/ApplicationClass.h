@@ -35,6 +35,7 @@ namespace Engine
 	private:
 		ImGuiManager* m_Imgui;
 		Manager* m_Manager;
+		ViewingPoint* m_ViewingPoint;
 	};
 
 #endif

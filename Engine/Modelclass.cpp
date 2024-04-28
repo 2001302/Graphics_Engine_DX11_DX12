@@ -43,7 +43,7 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 
 	return true;
 }
-bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, TextureClass* texture)
+bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, std::unique_ptr<TextureClass>& texture)
 {
 	bool result;
 
@@ -60,8 +60,8 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	{
 		return false;
 	}
-
-	m_Texture = texture;
+	
+	m_Texture = std::move(texture);
 
 	return true;
 }
@@ -222,7 +222,7 @@ bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceCo
 
 
 	// Create and initialize the texture object.
-	m_Texture = new TextureClass;
+	m_Texture = std::make_unique<TextureClass>();
 
 	result = m_Texture->Initialize(device, deviceContext, filename);
 	if(!result)
@@ -240,8 +240,7 @@ void ModelClass::ReleaseTexture()
 	if(m_Texture)
 	{
 		m_Texture->Shutdown();
-		delete m_Texture;
-		m_Texture = 0;
+		m_Texture.reset();
 	}
 
 	return;

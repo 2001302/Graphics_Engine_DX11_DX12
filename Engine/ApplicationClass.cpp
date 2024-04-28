@@ -21,6 +21,7 @@ ApplicationClass::~ApplicationClass()
 bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	m_Manager = new Manager();
+	m_ViewingPoint = new ViewingPoint();
 
 	std::map<EnumDataBlockType, IDataBlock*> dataBlock = 
 	{
@@ -50,13 +51,13 @@ bool ApplicationClass::Render()
 	std::map<EnumDataBlockType, IDataBlock*> dataBlock =
 	{
 		{EnumDataBlockType::eManager, m_Manager},
-		{EnumDataBlockType::eViewingPoint, new ViewingPoint()},
+		{EnumDataBlockType::eViewingPoint, m_ViewingPoint},
 	};
 
 	// Clear the buffers to begin the scene.
 	D3DClass::GetInstance().BeginScene(EnumViewType::eScene, 0.0f, 0.0f, 0.0f, 1.0f);
 
-	auto builder = new BehaviorTreeBuilder();
+	auto builder = std::make_unique<BehaviorTreeBuilder>();
 
 	builder->Build(dataBlock)
 		->Sequence()
@@ -106,18 +107,18 @@ void ApplicationClass::Shutdown()
 			model = 0;
 		}
 
-		delete m_Manager->Light;
-		m_Manager->Light = 0;
+		m_Manager->Light.reset();
 
 		m_Manager->LightShader->Shutdown();
-		delete m_Manager->LightShader;
-		m_Manager->LightShader = 0;
+		m_Manager->LightShader.reset();
 
-		if (m_Manager->Camera)
-		{
-			delete m_Manager->Camera;
-			m_Manager->Camera = 0;
-		}
+		m_Manager->Camera.reset();
+	}
+
+	if (m_ViewingPoint)
+	{
+		delete m_ViewingPoint;
+		m_ViewingPoint = 0;
 	}
 
 	if(m_Imgui)

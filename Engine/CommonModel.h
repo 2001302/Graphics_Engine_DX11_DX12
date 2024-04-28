@@ -43,15 +43,14 @@ namespace Engine
 	public:
 		Manager() 
 		{
-
 		};
 		~Manager() {};
 
 		std::vector <ModelClass*> Models;
-		LightClass* Light;
-		LightShaderClass* LightShader;
-		CameraClass* Camera;
-		TextureClass* Texture; //default
+		std::unique_ptr<LightClass> Light;
+		std::unique_ptr<LightShaderClass> LightShader;
+		std::unique_ptr<CameraClass> Camera;
+		std::unique_ptr<TextureClass> Texture; //default
 	};
 
 	class ViewingPoint : public IDataBlock

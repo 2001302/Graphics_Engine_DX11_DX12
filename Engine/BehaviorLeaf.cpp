@@ -10,7 +10,7 @@ EnumBehaviorTreeStatus LoadTextureData::Invoke()
 	assert(manager != nullptr);
 
 	const char* textureFilename = "../Engine/data/wall01.tga"; //TODO : need path policy
-	manager->Texture = new TextureClass;
+	manager->Texture = std::make_unique<TextureClass>();
 	manager->Texture->Initialize(D3DClass::GetInstance().GetDevice(), D3DClass::GetInstance().GetDeviceContext(), textureFilename);
 
 	return EnumBehaviorTreeStatus::eSuccess;
@@ -24,7 +24,7 @@ EnumBehaviorTreeStatus InitializeCamera::Invoke()
 	assert(manager != nullptr);
 
 	// Create and initialize the camera object.
-	manager->Camera = new CameraClass();
+	manager->Camera =std::make_unique<CameraClass>();
 
 	manager->Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	manager->Camera->Render();
@@ -44,14 +44,14 @@ EnumBehaviorTreeStatus InitializeLight::Invoke()
 	assert(manager != nullptr);
 
 	// Create and initialize the light object.
-	manager->Light = new LightClass();
+	manager->Light = std::make_unique<LightClass>();
 
 	manager->Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
 	manager->Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	manager->Light->SetDirection(0.0f, -1.0f, 0.5f);
 
 	// Create and initialize the light shader object.
-	manager->LightShader = new LightShaderClass();
+	manager->LightShader = std::make_unique<LightShaderClass>();
 	manager->LightShader->Initialize(D3DClass::GetInstance().GetDevice(), m_window);
 
 	return EnumBehaviorTreeStatus::eSuccess;

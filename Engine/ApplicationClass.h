@@ -27,7 +27,10 @@ namespace Engine
 		bool Initialize(int, int, HWND);
 		void Shutdown();
 		bool Frame(std::unique_ptr<InputClass>& input);
-		bool OnModelLoadRequest();
+
+		Manager* GetManager() { return m_Manager; }
+
+		bool OnModelLoadRequest(); 
 
 	private:
 		bool Render();

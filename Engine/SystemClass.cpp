@@ -118,30 +118,6 @@ bool SystemClass::Frame()
 	return true;
 }
 
-LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
-{
-	extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-	ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam);
-
-	//if (ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam))
-	//	return true;
-
-	switch (umsg)
-	{
-		case WM_MODEL_LOAD:
-		{
-			if(m_Application->OnModelLoadRequest())
-				return 0;
-			//TODO : Error Code 만들것
-		}
-		default:
-		{
-			return DefWindowProc(hwnd, umsg, wparam, lparam);
-		}
-	}
-}
-
 void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 {
 	WNDCLASSEX wc;
@@ -240,4 +216,105 @@ void SystemClass::ShutdownWindows()
 	SystemHandle = NULL;
 
 	return;
+}
+
+LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+{
+	extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+	ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam);
+
+	//TODO : Error Code 만들것
+	switch (umsg)
+	{
+		case WM_MODEL_LOAD:
+		{
+			if (m_Application->OnModelLoadRequest())
+				return 0;
+		}
+		case WM_MOUSEMOVE:
+		{
+			if (wparam & MK_RBUTTON)
+			{
+				return OnRightDragRequest();
+			}
+			break;
+		}
+		case WM_RBUTTONDOWN:
+		{
+			//return OnRightClickRequest();
+			break;
+		}
+		case WM_LBUTTONUP:
+		{
+			break;
+		}
+		default:
+		{
+			return DefWindowProc(hwnd, umsg, wparam, lparam);
+		}
+	}
+}
+
+bool SystemClass::OnRightClickRequest()
+{
+	DIMOUSESTATE mouseState;
+	if (FAILED(m_Input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
+	{
+		//retry
+		m_Input->Mouse()->Acquire();
+	}
+	else
+	{
+		m_Input->SetMouseLocation(mouseState.lX, mouseState.lY);
+		//int mouseZ = mouseState.lZ; //?
+	}
+	return true;
+}
+
+bool SystemClass::OnRightDragRequest()
+{
+	DIMOUSESTATE mouseState;
+	if (FAILED(m_Input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
+	{
+		//retry
+		m_Input->Mouse()->Acquire();
+	}
+	else
+	{
+		auto viewPort = D3DClass::GetInstance().Views[EnumViewType::eScene].Viewport;
+
+		//mouse move dist
+		Eigen::Vector2d vector = Eigen::Vector2d(mouseState.lX, mouseState.lY);
+
+		Eigen::Vector3d origin(m_Application->GetManager()->Camera->GetPosition().x, m_Application->GetManager()->Camera->GetPosition().z, m_Application->GetManager()->Camera->GetPosition().y );
+		// radian
+		double theta1 = (2 * M_PI) * (vector.x() / viewPort.Width);
+		double theta2 = (2 * M_PI) * (vector.y() / viewPort.Height);
+
+		// rotate matrix
+		Eigen::Matrix3d R1;
+		R1 <<cos(theta1),-sin(theta1),0,
+			sin(theta1),cos(theta1) ,0,
+			0		   ,0			,1;
+
+		Eigen::Vector3d origin_prime = R1 * origin;
+
+		Eigen::Matrix3d R2;
+		R2 <<1,0		  ,0,
+			 0,cos(theta2),-sin(theta2),
+			 0,sin(theta2),cos(theta2);
+
+		origin_prime = R2 * origin_prime;
+
+		m_Application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.z(), origin_prime.y());
+
+		//double degree = atan2(origin_prime.y(), origin_prime.x()) * 180.0 / M_PI;
+		//m_Application->GetManager()->Camera->SetRotation(0.0f, -degree, 0.0f);
+
+		//m_Input->SetMouseLocation(mouseState.lY, mouseState.lX);
+		//int mouseZ = mouseState.lZ; //?
+	}
+	
+	return true;
 }

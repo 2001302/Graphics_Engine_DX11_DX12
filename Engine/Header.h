@@ -1,17 +1,14 @@
 #pragma once
 
+#define _USE_MATH_DEFINES
 #define WM_MODEL_LOAD (WM_APP + 1)
 
 #include <map>
 #include <vector>
 #include <windows.h>
+#include <windowsx.h>
 #include <fstream>
 #include <sstream>
 #include <string>
-
-#include <ctype.h>
-#include <limits.h>
-#include <math.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdint.h>
+#include <cmath>
+#include <Eigen/Dense>

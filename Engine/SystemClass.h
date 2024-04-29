@@ -5,7 +5,6 @@
 
 #include "inputclass.h"
 #include "applicationclass.h"
-#include "header.h"
 
 namespace Engine
 {
@@ -19,6 +18,9 @@ namespace Engine
 		bool Initialize();
 		void Shutdown();
 		void Run();
+
+		bool OnRightClickRequest();
+		bool OnRightDragRequest();
 
 		LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 
@@ -45,26 +47,25 @@ namespace Engine
 		switch (umessage)
 		{
 			// Check if the window is being destroyed.
-		case WM_DESTROY:
-		{
-			PostQuitMessage(0);
-			return 0;
-		}
+			case WM_DESTROY:
+			{
+				PostQuitMessage(0);
+				return 0;
+			}
 
-		// Check if the window is being closed.
-		case WM_CLOSE:
-		{
-			PostQuitMessage(0);
-			return 0;
-		}
+			// Check if the window is being closed.
+			case WM_CLOSE:
+			{
+				PostQuitMessage(0);
+				return 0;
+			}
 
-		// All other messages pass to the message handler in the system class.
-		default:
-		{
-			return SystemHandle->MessageHandler(hwnd, umessage, wparam, lparam);
-		}
+			// All other messages pass to the message handler in the system class.
+			default:
+			{
+				return SystemHandle->MessageHandler(hwnd, umessage, wparam, lparam);
+			}
 		}
 	}
-
 }
 #endif

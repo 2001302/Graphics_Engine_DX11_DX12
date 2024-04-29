@@ -170,7 +170,7 @@ bool ApplicationClass::OnModelLoadRequest()
 		std::vector<XMMATRIX> matrix;
 
 		modelFile.push_back(ToString(ofn.lpstrFile));
-		matrix.push_back(XMMatrixTranslation(0.0f, 20.0f, 0.0f));
+		matrix.push_back(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
 
 		for (int i = 0; i < modelFile.size(); i++)
 		{

@@ -1,32 +1,14 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: inputclass.h
-////////////////////////////////////////////////////////////////////////////////
 #ifndef _INPUTCLASS_H_
 #define _INPUTCLASS_H_
 
-
-///////////////////////////////
-// PRE-PROCESSING DIRECTIVES //
-///////////////////////////////
 #define DIRECTINPUT_VERSION 0x0800
 
-
-/////////////
-// LINKING //
-/////////////
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-
-//////////////
-// INCLUDES //
-//////////////
 #include <dinput.h>
+#include "Header.h"
 
-
-////////////////////////////////////////////////////////////////////////////////
-// Class name: InputClass
-////////////////////////////////////////////////////////////////////////////////
 class InputClass
 {
 public:
@@ -41,9 +23,12 @@ public:
 	bool IsEscapePressed();
 	bool IsLeftArrowPressed();
 	bool IsRightArrowPressed();
-
-	void GetMouseLocation(int&, int&);
+	Eigen::Vector2d GetMouseLocation();
+	void SetMouseLocation(int x, int y);
 	bool IsMousePressed();
+
+	IDirectInputDevice8* Mouse() {return m_mouse;}
+	IDirectInputDevice8* Keyboard() { return m_keyboard; }
 
 private:
 	bool ReadKeyboard();
@@ -58,5 +43,4 @@ private:
 	DIMOUSESTATE m_mouseState;
 	int m_screenWidth, m_screenHeight, m_mouseX, m_mouseY;
 };
-
 #endif

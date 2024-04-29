@@ -207,13 +207,14 @@ bool InputClass::IsRightArrowPressed()
 	return false;
 }
 
-void InputClass::GetMouseLocation(int& mouseX, int& mouseY)
+Eigen::Vector2d InputClass::GetMouseLocation()
 {
-	mouseX = m_mouseX;
-	mouseY = m_mouseY;
-	return;
+	return Eigen::Vector2d(m_mouseX, m_mouseY);
 }
 
+void InputClass::SetMouseLocation(int x, int y) {
+	m_mouseX = x; m_mouseY = y;
+};
 bool InputClass::IsMousePressed()
 {
 	// Check the left mouse button state.

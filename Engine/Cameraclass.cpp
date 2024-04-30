@@ -83,7 +83,7 @@ void CameraClass::Render()
 	// Setup where the camera is looking by default.
 	lookAt.x = 0.0f;
 	lookAt.y = 0.0f;
-	lookAt.z = 1.0f;
+	lookAt.z = 0.0f;
 
 	// Load it into a XMVECTOR structure.
 	lookAtVector = XMLoadFloat3(&lookAt);
@@ -97,11 +97,11 @@ void CameraClass::Render()
 	rotationMatrix = XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
 
 	// Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
-	lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);
+	//lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix); //TODO : need SetLookAt
 	upVector = XMVector3TransformCoord(upVector, rotationMatrix);
 
 	// Translate the rotated camera position to the location of the viewer.
-	lookAtVector = XMVectorAdd(positionVector, lookAtVector);
+	//lookAtVector = XMVectorAdd(positionVector, lookAtVector); //TODO : need SetLookAt
 
 	// Finally create the view matrix from the three updated vectors.
 	m_viewMatrix = XMMatrixLookAtLH(positionVector, lookAtVector, upVector);

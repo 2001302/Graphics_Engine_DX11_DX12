@@ -284,36 +284,36 @@ bool SystemClass::OnRightDragRequest()
 	{
 		auto viewPort = D3DClass::GetInstance().Views[EnumViewType::eScene].Viewport;
 
-		//mouse move dist
+		//mouse move vector
 		Eigen::Vector2d vector = Eigen::Vector2d(mouseState.lX, mouseState.lY);
 
-		Eigen::Vector3d origin(m_Application->GetManager()->Camera->GetPosition().x, m_Application->GetManager()->Camera->GetPosition().z, m_Application->GetManager()->Camera->GetPosition().y );
-		// radian
-		double theta1 = (2 * M_PI) * (vector.x() / viewPort.Width);
-		double theta2 = (2 * M_PI) * (vector.y() / viewPort.Height);
+		Eigen::Vector3d origin(m_Application->GetManager()->Camera->GetPosition().x, m_Application->GetManager()->Camera->GetPosition().y, m_Application->GetManager()->Camera->GetPosition().z );
 
-		// rotate matrix
-		Eigen::Matrix3d R1;
-		R1 <<cos(theta1),-sin(theta1),0,
-			sin(theta1),cos(theta1) ,0,
-			0		   ,0			,1;
+		//convert to spherical coordinates
+		double r = origin.norm();
+		double theta = acos(origin.z() / r);
+		double phi = atan2(origin.y(), origin.x());
 
-		Eigen::Vector3d origin_prime = R1 * origin;
+		//rotation
+		double deltaTheta = (2 * M_PI) * (vector.x() / viewPort.Width);
+		double deltaPhi = (2 * M_PI) * (vector.y() / viewPort.Width);
 
-		Eigen::Matrix3d R2;
-		R2 <<1,0		  ,0,
-			 0,cos(theta2),-sin(theta2),
-			 0,sin(theta2),cos(theta2);
+		theta += deltaTheta;
+		phi += deltaPhi;
 
-		origin_prime = R2 * origin_prime;
+		//convert to Cartesian coordinates after rotation
+		double x = r * sin(theta) * cos(phi);
+		double y = r * sin(theta) * sin(phi);
+		double z = r * cos(theta);
 
-		m_Application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.z(), origin_prime.y());
+		Eigen::Vector3d origin_prime(x, y, z);
 
-		//double degree = atan2(origin_prime.y(), origin_prime.x()) * 180.0 / M_PI;
-		//m_Application->GetManager()->Camera->SetRotation(0.0f, -degree, 0.0f);
+		m_Application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.y(), origin_prime.z());
 
-		//m_Input->SetMouseLocation(mouseState.lY, mouseState.lX);
-		//int mouseZ = mouseState.lZ; //?
+		auto rotation = m_Application->GetManager()->Camera->GetRotation();
+
+		auto yaw = deltaTheta * 180 / M_PI;
+		auto pitch = deltaPhi * 180 / M_PI;
 	}
 	
 	return true;

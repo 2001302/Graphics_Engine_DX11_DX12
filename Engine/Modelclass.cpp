@@ -409,100 +409,99 @@ bool Maya::LoadModelMaya(const char* filename)
 	int	textureCount = 0;
 	int normalCount = 0;
 
+	boost::iostreams::mapped_file mmap(filename, boost::iostreams::mapped_file::readonly);
+
 	{
-		std::ifstream file(filename);
-		if (file.is_open())
-		{
-			// read file buffer
-			std::stringstream buffer;
-			buffer << file.rdbuf();
-			//file.close();
+		const char* start = mmap.const_data();
+		const char* end = start + mmap.size();
+		const char* current = start;
 
-			//read the count from v,vt,vn,f
-			std::string line;
-			while (std::getline(buffer, line))
-			{
-				istringstream iss(line);
+		while (current && current != end) {
+			const char* next = static_cast<const char*>(memchr(current, '\n', end - current));
 
-				std::string input;
-				iss >> input;  //read first string on the line
+			// If 'next' is nullptr, then we are at the last line (which might not end with a newline character)
+			if (!next) next = end;
 
-				if (input == "v") { vertexCount++; }
-				if (input == "vt") { textureCount++; }
-				if (input == "vn") { normalCount++; }
+			// Extract the line between 'current' and 'next'
+			std::string line(current, next);
 
-				// if the line starts with 'f' then increment the face count.
-				if (input == "f") { faceCount++; }
-			}
+			if (line.substr(0, 2) == "v ") { vertexCount++; }
+			if (line.substr(0, 2) == "vt") { textureCount++; }
+			if (line.substr(0, 2) == "vn") { normalCount++; }
+			if (line.substr(0, 2) == "f ") { faceCount++; }
+
+			// Move 'current' to the character after the newline
+			current = next + 1;
 		}
 	}
 	{
-		std::ifstream file(filename);
-		if (file.is_open())
-		{
-			// read file buffer
-			std::stringstream buffer;
-			buffer << file.rdbuf();
-			file.close();
+		// Now read the data from the file into the data structures and then output it in our model format.
+		int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
+		char input, input2;
 
-			// Now read the data from the file into the data structures and then output it in our model format.
-			int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
-			char input, input2;
+		// Initialize the four data structures.
+		vertices = new VertexTypeMaya[vertexCount];
+		texcoords = new VertexTypeMaya[textureCount];
+		normals = new VertexTypeMaya[normalCount];
+		faces = new FaceType[faceCount];
 
-			// Initialize the four data structures.
-			vertices = new VertexTypeMaya[vertexCount];
-			texcoords = new VertexTypeMaya[textureCount];
-			normals = new VertexTypeMaya[normalCount];
-			faces = new FaceType[faceCount];
+		// Initialize the indexes.
+		vertexIndex = 0;
+		texcoordIndex = 0;
+		normalIndex = 0;
+		faceIndex = 0;
 
-			// Initialize the indexes.
-			vertexIndex = 0;
-			texcoordIndex = 0;
-			normalIndex = 0;
-			faceIndex = 0;
+		const char* start = mmap.const_data();
+		const char* end = start + mmap.size();
+		const char* current = start;
 
-			// Read in the vertices, texture coordinates, and normals into the data structures.
-			// Important: Also convert to left hand coordinate system since Maya uses right hand coordinate system.
-			std::string line;
-			while (std::getline(buffer, line))
+		while (current && current != end) {
+			const char* next = static_cast<const char*>(memchr(current, '\n', end - current));
+
+			// If 'next' is nullptr, then we are at the last line (which might not end with a newline character)
+			if (!next) next = end;
+
+			// Extract the line between 'current' and 'next'
+			std::string line(current, next);
+
+			istringstream iss(line);
+
+			std::string input;
+			iss >> input;  //read first string on the line
+
+			if (input == "v")
 			{
-				istringstream iss(line);
-
-				std::string input;
-				iss >> input;  //read first string on the line
-
-				if (input == "v")
-				{
-					iss >> vertices[vertexIndex].x >> vertices[vertexIndex].y >> vertices[vertexIndex].z;
-					// Invert the Z vertex to change to left hand system.
-					vertices[vertexIndex].z = vertices[vertexIndex].z * -1.0f;
-					vertexIndex++;
-				}
-				if (input == "vt")
-				{
-					iss >> texcoords[texcoordIndex].x >> texcoords[texcoordIndex].y;
-					// Invert the V texture coordinates to left hand system.
-					texcoords[texcoordIndex].y = 1.0f - texcoords[texcoordIndex].y;
-					texcoordIndex++;
-				}
-				if (input == "vn")
-				{
-					iss >> normals[normalIndex].x >> normals[normalIndex].y >> normals[normalIndex].z;
-					// Invert the Z normal to change to left hand system.
-					normals[normalIndex].z = normals[normalIndex].z * -1.0f;
-					normalIndex++;
-				}
-
-				// Read in the faces.
-				if (input == "f")
-				{
-					// Read the face data in backwards to convert it to a left hand system from right hand system.
-					iss >> faces[faceIndex].vIndex3 >> input2 >> faces[faceIndex].tIndex3 >> input2 >> faces[faceIndex].nIndex3
-						>> faces[faceIndex].vIndex2 >> input2 >> faces[faceIndex].tIndex2 >> input2 >> faces[faceIndex].nIndex2
-						>> faces[faceIndex].vIndex1 >> input2 >> faces[faceIndex].tIndex1 >> input2 >> faces[faceIndex].nIndex1;
-					faceIndex++;
-				}
+				iss >> vertices[vertexIndex].x >> vertices[vertexIndex].y >> vertices[vertexIndex].z;
+				// Invert the Z vertex to change to left hand system.
+				vertices[vertexIndex].z = vertices[vertexIndex].z * -1.0f;
+				vertexIndex++;
 			}
+			if (input == "vt")
+			{
+				iss >> texcoords[texcoordIndex].x >> texcoords[texcoordIndex].y;
+				// Invert the V texture coordinates to left hand system.
+				texcoords[texcoordIndex].y = 1.0f - texcoords[texcoordIndex].y;
+				texcoordIndex++;
+			}
+			if (input == "vn")
+			{
+				iss >> normals[normalIndex].x >> normals[normalIndex].y >> normals[normalIndex].z;
+				// Invert the Z normal to change to left hand system.
+				normals[normalIndex].z = normals[normalIndex].z * -1.0f;
+				normalIndex++;
+			}
+
+			// Read in the faces.
+			if (input == "f")
+			{
+				// Read the face data in backwards to convert it to a left hand system from right hand system.
+				iss >> faces[faceIndex].vIndex3 >> input2 >> faces[faceIndex].tIndex3 >> input2 >> faces[faceIndex].nIndex3
+					>> faces[faceIndex].vIndex2 >> input2 >> faces[faceIndex].tIndex2 >> input2 >> faces[faceIndex].nIndex2
+					>> faces[faceIndex].vIndex1 >> input2 >> faces[faceIndex].tIndex1 >> input2 >> faces[faceIndex].nIndex1;
+				faceIndex++;
+			}
+			// Move 'current' to the character after the newline
+			current = next + 1;
 		}
 	}
 	return true;

@@ -12,3 +12,4 @@
 #include <string>
 #include <cmath>
 #include <Eigen/Dense>
+#include <boost/iostreams/device/mapped_file.hpp>

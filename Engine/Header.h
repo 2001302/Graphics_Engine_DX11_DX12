@@ -15,3 +15,4 @@
 #include <Eigen/Dense>
 #include <boost/iostreams/device/mapped_file.hpp>
 #include <boost/algorithm/string.hpp>
+#include <omp.h>

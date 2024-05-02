@@ -411,6 +411,7 @@ bool Maya::LoadModelMaya(const char* filename)
 	int vertexCount = 0;
 	int	textureCount = 0;
 	int normalCount = 0;
+	std::vector<const char*> starts;
 
 	boost::iostreams::mapped_file mmap(filename, boost::iostreams::mapped_file::readonly);
 
@@ -435,12 +436,13 @@ bool Maya::LoadModelMaya(const char* filename)
 
 			// Move 'current' to the character after the newline
 			current = next + 1;
+			starts.push_back(current);
 		}
 	}
 
 	{
 		// Now read the data from the file into the data structures and then output it in our model format.
-		int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
+		std::atomic<int> vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
 		char input, input2;
 
 		// Initialize the four data structures.
@@ -459,19 +461,20 @@ bool Maya::LoadModelMaya(const char* filename)
 		const char* end = start + mmap.size();
 		const char* current = start;
 
-		while (current && current != end) {
-			const char* next = static_cast<const char*>(memchr(current, '\n', end - current));
+		for(int i =0; i< starts.size(); i++)
+		{
+			std::string line;
 
-			// If 'next' is nullptr, then we are at the last line (which might not end with a newline character)
-			if (!next) next = end;
-
-			// Extract the line between 'current' and 'next'
-			std::string line(current, next);
+			// Extract the line
+			if (i == starts.size() - 1)
+				line = std::string(starts[i], end);
+			else 
+				line = std::string(starts[i], starts[i + 1]);
 
 			std::deque<std::string> words;
 			boost::split(words, line, boost::is_any_of(" /"), boost::token_compress_on);
 
-			if (line.substr(0, 2) == "v ")
+			if (words.front() == "v")
 			{
 				words.pop_front();
 
@@ -489,7 +492,7 @@ bool Maya::LoadModelMaya(const char* filename)
 				vertices[vertexIndex].z = vertices[vertexIndex].z * -1.0f;
 				vertexIndex++;
 			}
-			if (line.substr(0, 2) == "vt")
+			else if (words.front() == "vt")
 			{
 				words.pop_front();
 
@@ -504,7 +507,7 @@ bool Maya::LoadModelMaya(const char* filename)
 				texcoords[texcoordIndex].y = 1.0f - texcoords[texcoordIndex].y;
 				texcoordIndex++;
 			}
-			if (line.substr(0, 2) == "vn")
+			else if (words.front() == "vn")
 			{
 				words.pop_front();
 
@@ -522,10 +525,9 @@ bool Maya::LoadModelMaya(const char* filename)
 				normals[normalIndex].z = normals[normalIndex].z * -1.0f;
 				normalIndex++;
 			}
-
-			// Read in the faces.
-			if (line.substr(0, 2) == "f ")
+			else if (words.front() == "f")
 			{
+				//read in the faces.
 				words.pop_front();
 
 				assert(words.size() == 9);
@@ -555,8 +557,6 @@ bool Maya::LoadModelMaya(const char* filename)
 
 				faceIndex++;
 			}
-			// Move 'current' to the character after the newline
-			current = next + 1;
 		}
 	}
 	return true;

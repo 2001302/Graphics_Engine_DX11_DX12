@@ -240,6 +240,11 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 			}
 			break;
 		}
+		case WM_MOUSEWHEEL:
+		{
+			return OnMouseWheelRequest();
+			break;
+		}
 		case WM_RBUTTONDOWN:
 		{
 			//return OnRightClickRequest();
@@ -287,7 +292,7 @@ bool SystemClass::OnRightDragRequest()
 		//mouse move vector
 		Eigen::Vector2d vector = Eigen::Vector2d(mouseState.lX, mouseState.lY);
 
-		Eigen::Vector3d origin(m_Application->GetManager()->Camera->GetPosition().x, m_Application->GetManager()->Camera->GetPosition().y, m_Application->GetManager()->Camera->GetPosition().z );
+		Eigen::Vector3d origin(m_Application->GetManager()->Camera->GetPosition().x, m_Application->GetManager()->Camera->GetPosition().y, m_Application->GetManager()->Camera->GetPosition().z);
 
 		//convert to spherical coordinates
 		double r = origin.norm();
@@ -309,12 +314,35 @@ bool SystemClass::OnRightDragRequest()
 		Eigen::Vector3d origin_prime(x, y, z);
 
 		m_Application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.y(), origin_prime.z());
-
-		auto rotation = m_Application->GetManager()->Camera->GetRotation();
-
-		auto yaw = deltaTheta * 180 / M_PI;
-		auto pitch = deltaPhi * 180 / M_PI;
 	}
 	
+	return true;
+}
+
+bool SystemClass::OnMouseWheelRequest()
+{
+	DIMOUSESTATE mouseState;
+	if (FAILED(m_Input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
+	{
+		//retry
+		m_Input->Mouse()->Acquire();
+	}
+	else
+	{
+		double wheel = -mouseState.lZ/(120.0 * 50.0);
+
+		Eigen::Vector3d origin(m_Application->GetManager()->Camera->GetPosition().x, m_Application->GetManager()->Camera->GetPosition().y, m_Application->GetManager()->Camera->GetPosition().z);
+
+		double theta1 = 0;
+
+		Eigen::Matrix3d R1;
+		R1 <<	1.0 + wheel, 0.0, 0.0,
+				0.0, 1.0 + wheel, 0.0,
+				0.0, 0.0, 1.0 + wheel;
+
+		Eigen::Vector3d origin_prime = R1* origin;
+		m_Application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.y(), origin_prime.z());
+	}
+
 	return true;
 }

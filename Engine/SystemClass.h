@@ -21,6 +21,7 @@ namespace Engine
 
 		bool OnRightClickRequest();
 		bool OnRightDragRequest();
+		bool OnMouseWheelRequest();
 
 		LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 

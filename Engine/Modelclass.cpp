@@ -1,3 +1,6 @@
+#pragma warning(disable:6385)
+#pragma warning(disable:6386)
+
 #include "modelclass.h"
 
 ModelClass::ModelClass()
@@ -434,6 +437,7 @@ bool Maya::LoadModelMaya(const char* filename)
 			current = next + 1;
 		}
 	}
+
 	{
 		// Now read the data from the file into the data structures and then output it in our model format.
 		int vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
@@ -464,40 +468,91 @@ bool Maya::LoadModelMaya(const char* filename)
 			// Extract the line between 'current' and 'next'
 			std::string line(current, next);
 
-			istringstream iss(line);
+			std::deque<std::string> words;
+			boost::split(words, line, boost::is_any_of(" /"), boost::token_compress_on);
 
-			std::string input;
-			iss >> input;  //read first string on the line
-
-			if (input == "v")
+			if (line.substr(0, 2) == "v ")
 			{
-				iss >> vertices[vertexIndex].x >> vertices[vertexIndex].y >> vertices[vertexIndex].z;
-				// Invert the Z vertex to change to left hand system.
+				words.pop_front();
+
+				assert(words.size() == 3);
+				assert(vertexIndex <= vertexCount);
+
+				vertices[vertexIndex].x = std::stof(words.front());
+				words.pop_front();
+				vertices[vertexIndex].y = std::stof(words.front());
+				words.pop_front();
+				vertices[vertexIndex].z = std::stof(words.front());
+				words.pop_front();
+
+				//invert the Z vertex to change to left hand system.
 				vertices[vertexIndex].z = vertices[vertexIndex].z * -1.0f;
 				vertexIndex++;
 			}
-			if (input == "vt")
+			if (line.substr(0, 2) == "vt")
 			{
-				iss >> texcoords[texcoordIndex].x >> texcoords[texcoordIndex].y;
-				// Invert the V texture coordinates to left hand system.
+				words.pop_front();
+
+				assert(words.size() == 2);
+				assert(texcoordIndex <= textureCount);
+
+				texcoords[texcoordIndex].x = std::stof(words.front());
+				words.pop_front();
+				texcoords[texcoordIndex].y = std::stof(words.front());
+				words.pop_front();
+
 				texcoords[texcoordIndex].y = 1.0f - texcoords[texcoordIndex].y;
 				texcoordIndex++;
 			}
-			if (input == "vn")
+			if (line.substr(0, 2) == "vn")
 			{
-				iss >> normals[normalIndex].x >> normals[normalIndex].y >> normals[normalIndex].z;
-				// Invert the Z normal to change to left hand system.
+				words.pop_front();
+
+				assert(words.size() == 3);
+				assert(normalIndex <= normalCount);
+
+				normals[normalIndex].x = std::stof(words.front());
+				words.pop_front();
+				normals[normalIndex].y = std::stof(words.front());
+				words.pop_front();
+				normals[normalIndex].z = std::stof(words.front());
+				words.pop_front();
+
+				//invert the Z normal to change to left hand system.
 				normals[normalIndex].z = normals[normalIndex].z * -1.0f;
 				normalIndex++;
 			}
 
 			// Read in the faces.
-			if (input == "f")
+			if (line.substr(0, 2) == "f ")
 			{
+				words.pop_front();
+
+				assert(words.size() == 9);
+				assert(faceIndex <= faceCount);
+
 				// Read the face data in backwards to convert it to a left hand system from right hand system.
-				iss >> faces[faceIndex].vIndex3 >> input2 >> faces[faceIndex].tIndex3 >> input2 >> faces[faceIndex].nIndex3
-					>> faces[faceIndex].vIndex2 >> input2 >> faces[faceIndex].tIndex2 >> input2 >> faces[faceIndex].nIndex2
-					>> faces[faceIndex].vIndex1 >> input2 >> faces[faceIndex].tIndex1 >> input2 >> faces[faceIndex].nIndex1;
+				faces[faceIndex].vIndex3 = std::stof(words.front());
+				words.pop_front();
+				faces[faceIndex].tIndex3 = std::stof(words.front());
+				words.pop_front();
+				faces[faceIndex].nIndex3 = std::stof(words.front());
+				words.pop_front();
+
+				faces[faceIndex].vIndex2 = std::stof(words.front());
+				words.pop_front();
+				faces[faceIndex].tIndex2 = std::stof(words.front());
+				words.pop_front();
+				faces[faceIndex].nIndex2 = std::stof(words.front());
+				words.pop_front();
+
+				faces[faceIndex].vIndex1 = std::stof(words.front());
+				words.pop_front();
+				faces[faceIndex].tIndex1 = std::stof(words.front());
+				words.pop_front();
+				faces[faceIndex].nIndex1 = std::stof(words.front());
+				words.pop_front();
+
 				faceIndex++;
 			}
 			// Move 'current' to the character after the newline

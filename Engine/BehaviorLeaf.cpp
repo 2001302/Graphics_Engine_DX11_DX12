@@ -30,7 +30,7 @@ EnumBehaviorTreeStatus InitializeCamera::Invoke()
 	manager->Camera->Render();
 
 	// Update the position and rotation of the camera for this scene.
-	manager->Camera->SetPosition(-20.0f, 0.0f, -20.0f);
+	manager->Camera->SetPosition(-200.0f, 0.0f, -200.0f);
 	manager->Camera->SetRotation(0.0f, 45.0f, 0.0f);
 
 	return EnumBehaviorTreeStatus::eSuccess;

@@ -3,6 +3,8 @@
 #define _USE_MATH_DEFINES
 #define WM_MODEL_LOAD (WM_APP + 1)
 
+#include <d3d11.h>
+#include <directxmath.h>
 #include <map>
 #include <vector>
 #include <windows.h>

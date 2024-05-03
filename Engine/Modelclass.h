@@ -7,27 +7,6 @@
 using namespace DirectX;
 using namespace std;
 
-class Maya
-{
-private:
-	struct VertexTypeMaya
-	{
-		float x, y, z;
-	};
-	struct FaceType
-	{
-		int vIndex1, vIndex2, vIndex3;
-		int tIndex1, tIndex2, tIndex3;
-		int nIndex1, nIndex2, nIndex3;
-	};
-public:
-	VertexTypeMaya* vertices, * texcoords, * normals;
-	FaceType* faces;
-	int faceCount = 0;
-
-	bool LoadModelMaya(const char* filename);
-};
-
 class ModelClass
 {
 private:
@@ -55,7 +34,6 @@ public:
 
 	int GetIndexCount();
 	ID3D11ShaderResourceView* GetTexture();
-	void ConvertFromMaya(Maya* maya);
 
 	XMMATRIX Transform;
 private:
@@ -67,6 +45,9 @@ private:
 	void ReleaseTexture();
 
 	bool LoadModel(const char* filename);
+	bool LoadTextModel(const char* filename);
+	bool LoadMayaModel(const char* filename);
+	
 	void ReleaseModel();
 
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;

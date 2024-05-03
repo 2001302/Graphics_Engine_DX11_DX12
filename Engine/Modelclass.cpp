@@ -269,130 +269,223 @@ bool ModelClass::LoadModel(const char* filename)
 
 	if (extension == "txt") 
 	{
-		ifstream fin;
-		char input;
-		int i;
-
-		// Open the model file.
-		fin.open(filename);
-
-		// If it could not open the file then exit.
-		if (fin.fail())
-		{
-			return false;
-		}
-
-		// Read up to the value of vertex count.
-		fin.get(input);
-		while (input != ':')
-		{
-			fin.get(input);
-		}
-
-		// Read in the vertex count.
-		fin >> m_vertexCount;
-
-		// Set the number of indices to be the same as the vertex count.
-		m_indexCount = m_vertexCount;
-
-		// Create the model using the vertex count that was read in.
-		m_model = new ModelType[m_vertexCount];
-
-		// Read up to the beginning of the data.
-		fin.get(input);
-		while (input != ':')
-		{
-			fin.get(input);
-		}
-		fin.get(input);
-		fin.get(input);
-
-		// Read in the vertex data.
-		for (i = 0; i < m_vertexCount; i++)
-		{
-			fin >> m_model[i].x >> m_model[i].y >> m_model[i].z;
-			fin >> m_model[i].tu >> m_model[i].tv;
-			fin >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
-		}
-
-		// Close the model file.
-		fin.close();
+		LoadTextModel(filename);
 	}
 	else if (extension == "obj")
 	{
-		Maya maya;
-		maya.LoadModelMaya(filename);
-		ConvertFromMaya(&maya);
+		LoadMayaModel(filename);
 	}
 
 	return true;
 }
 
-void ModelClass::ConvertFromMaya(Maya* maya)
+bool ModelClass::LoadTextModel(const char* filename)
 {
-	m_vertexCount = maya->faceCount * 3;
+	ifstream fin;
+	char input;
+	int i;
+
+	// Open the model file.
+	fin.open(filename);
+
+	// If it could not open the file then exit.
+	if (fin.fail())
+	{
+		return false;
+	}
+
+	// Read up to the value of vertex count.
+	fin.get(input);
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+
+	// Read in the vertex count.
+	fin >> m_vertexCount;
+
 	// Set the number of indices to be the same as the vertex count.
 	m_indexCount = m_vertexCount;
 
 	// Create the model using the vertex count that was read in.
-	m_model = new ModelType[maya->faceCount*3];
+	m_model = new ModelType[m_vertexCount];
 
-	int index = 0;
-	// Now loop through all the faces and output the three vertices for each face.
-	for (int i = 0; i < maya->faceCount; i++)
+	// Read up to the beginning of the data.
+	fin.get(input);
+	while (input != ':')
 	{
-		int vIndex = maya->faces[i].vIndex1 - 1;
-		int tIndex = maya->faces[i].tIndex1 - 1;
-		int nIndex = maya->faces[i].nIndex1 - 1;
-
-		m_model[index].x = maya->vertices[vIndex].x;
-		m_model[index].y = maya->vertices[vIndex].y;
-		m_model[index].z = maya->vertices[vIndex].z;
-
-		m_model[index].tu = maya->texcoords[tIndex].x;
-		m_model[index].tv = maya->texcoords[tIndex].y;
-
-		m_model[index].nx = maya->normals[nIndex].x;
-		m_model[index].ny = maya->normals[nIndex].y;
-		m_model[index].nz = maya->normals[nIndex].z;
-
-		index++;
-
-		vIndex = maya->faces[i].vIndex2 - 1;
-		tIndex = maya->faces[i].tIndex2 - 1;
-		nIndex = maya->faces[i].nIndex2 - 1;
-
-		m_model[index].x = maya->vertices[vIndex].x;
-		m_model[index].y = maya->vertices[vIndex].y;
-		m_model[index].z = maya->vertices[vIndex].z;
-
-		m_model[index].tu = maya->texcoords[tIndex].x;
-		m_model[index].tv = maya->texcoords[tIndex].y;
-
-		m_model[index].nx = maya->normals[nIndex].x;
-		m_model[index].ny = maya->normals[nIndex].y;
-		m_model[index].nz = maya->normals[nIndex].z;
-
-		index++;
-
-		vIndex = maya->faces[i].vIndex3 - 1;
-		tIndex = maya->faces[i].tIndex3 - 1;
-		nIndex = maya->faces[i].nIndex3 - 1;
-
-		m_model[index].x = maya->vertices[vIndex].x;
-		m_model[index].y = maya->vertices[vIndex].y;
-		m_model[index].z = maya->vertices[vIndex].z;
-
-		m_model[index].tu = maya->texcoords[tIndex].x;
-		m_model[index].tv = maya->texcoords[tIndex].y;
-
-		m_model[index].nx = maya->normals[nIndex].x;
-		m_model[index].ny = maya->normals[nIndex].y;
-		m_model[index].nz = maya->normals[nIndex].z;
-
-		index++;
+		fin.get(input);
 	}
-	index;
+	fin.get(input);
+	fin.get(input);
+
+	// Read in the vertex data.
+	for (i = 0; i < m_vertexCount; i++)
+	{
+		fin >> m_model[i].x >> m_model[i].y >> m_model[i].z;
+		fin >> m_model[i].tu >> m_model[i].tv;
+		fin >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
+	}
+
+	// Close the model file.
+	fin.close();
+	return true;
+}
+
+bool ModelClass::LoadMayaModel(const char* filename)
+{
+	boost::iostreams::mapped_file mmap(filename, boost::iostreams::mapped_file::readonly);
+
+	std::vector<XMFLOAT3> vertices;
+	std::vector<XMFLOAT2> texcoords;
+	std::vector<XMFLOAT3> normals;
+	std::vector<std::pair<const char*, const char*>> faceStarts;
+
+	{
+		//Now read the data from the file into the data structures and then output it in our model format.
+		const char* start = mmap.const_data();
+		const char* end = start + mmap.size();
+		const char* current = start;
+
+		while (current && current != end) 
+		{
+			const char* next = static_cast<const char*>(memchr(current, '\n', end - current));
+			
+			//extract the line
+			std::string line(current, next);
+
+			std::deque<std::string> words;
+			boost::split(words, line, boost::is_any_of(" "), boost::token_compress_on);
+
+			if (words.front() == "v")
+			{
+				words.pop_front();
+				assert(words.size() == 3);
+
+				//invert the Z vertex to change to left hand system.
+				XMFLOAT3 vertex;
+				vertex.x = std::stof(words.front());
+				words.pop_front();
+				vertex.y = std::stof(words.front());
+				words.pop_front();
+				vertex.z = std::stof(words.front()) * -1.0f;
+				words.pop_front();
+
+				vertices.push_back(vertex);
+			}
+			else if (words.front() == "vt")
+			{
+				words.pop_front();
+				assert(words.size() == 2);
+
+				XMFLOAT2 texcoord;
+				texcoord.x = std::stof(words.front());
+				words.pop_front();
+				texcoord.y = 1.0f - std::stof(words.front());
+				words.pop_front();
+
+				texcoords.push_back(texcoord);
+			}
+			else if (words.front() == "vn")
+			{
+				words.pop_front();
+				assert(words.size() == 3);
+
+				//invert the Z normal to change to left hand system.
+				XMFLOAT3 normal;
+				normal.x = std::stof(words.front());
+				words.pop_front();
+				normal.y = std::stof(words.front());
+				words.pop_front();
+				normal.z = std::stof(words.front()) * -1.0f;
+				words.pop_front();
+
+				normals.push_back(normal);
+			}
+			else if (words.front() == "f")
+			{
+				faceStarts.push_back(make_pair(current,next));
+			}
+			//move 'current' to the character after the newline
+			current = next + 1;
+		}
+
+		{
+			// Set the number of indices to be the same as the vertex count.
+			m_vertexCount = faceStarts.size() * 3;
+			m_indexCount = m_vertexCount;
+			m_model = new ModelType[m_vertexCount];
+
+			for (int i =0 ;i< faceStarts.size();i++ )
+			{
+				int index = i * 3;
+				//extract the line
+				std::string line(faceStarts[i].first, faceStarts[i].second);
+
+				std::deque<std::string> words;
+				boost::split(words, line, boost::is_any_of(" /"), boost::token_compress_on);
+
+				words.pop_front();
+				assert(words.size() == 9);
+
+				{
+					auto nIndex1 = std::stof(words.back()) - 1;
+					m_model[index].nx = normals[nIndex1].x;
+					m_model[index].ny = normals[nIndex1].y;
+					m_model[index].nz = normals[nIndex1].z;
+					words.pop_back();
+
+					auto tIndex1 = std::stof(words.back()) - 1;
+					m_model[index].tu = texcoords[tIndex1].x;
+					m_model[index].tv = texcoords[tIndex1].y;
+					words.pop_back();
+
+					auto vIndex1 = std::stof(words.back()) - 1;
+					m_model[index].x = vertices[vIndex1].x;
+					m_model[index].y = vertices[vIndex1].y;
+					m_model[index].z = vertices[vIndex1].z;
+					words.pop_back();
+				}
+				{
+					auto nIndex1 = std::stof(words.back()) - 1;
+					m_model[index+1].nx = normals[nIndex1].x;
+					m_model[index+1].ny = normals[nIndex1].y;
+					m_model[index+1].nz = normals[nIndex1].z;
+					words.pop_back();
+
+					auto tIndex1 = std::stof(words.back()) - 1;
+					m_model[index+1].tu = texcoords[tIndex1].x;
+					m_model[index+1].tv = texcoords[tIndex1].y;
+					words.pop_back();
+
+					auto vIndex1 = std::stof(words.back()) - 1;
+					m_model[index+1].x = vertices[vIndex1].x;
+					m_model[index+1].y = vertices[vIndex1].y;
+					m_model[index+1].z = vertices[vIndex1].z;
+					words.pop_back();
+				} 
+				{
+					auto nIndex1 = std::stof(words.back()) - 1;
+					m_model[index+2].nx = normals[nIndex1].x;
+					m_model[index+2].ny = normals[nIndex1].y;
+					m_model[index+2].nz = normals[nIndex1].z;
+					words.pop_back();
+
+					auto tIndex1 = std::stof(words.back()) - 1;
+					m_model[index+2].tu = texcoords[tIndex1].x;
+					m_model[index+2].tv = texcoords[tIndex1].y;
+					words.pop_back();
+
+					auto vIndex1 = std::stof(words.back()) - 1;
+					m_model[index+2].x = vertices[vIndex1].x;
+					m_model[index+2].y = vertices[vIndex1].y;
+					m_model[index+2].z = vertices[vIndex1].z;
+					words.pop_back();
+				}
+			}
+		}
+	}
+	return true;
 }
 
 void ModelClass::ReleaseModel()
@@ -404,160 +497,4 @@ void ModelClass::ReleaseModel()
 	}
 
 	return;
-}
-
-bool Maya::LoadModelMaya(const char* filename)
-{
-	int vertexCount = 0;
-	int	textureCount = 0;
-	int normalCount = 0;
-	std::vector<const char*> starts;
-
-	boost::iostreams::mapped_file mmap(filename, boost::iostreams::mapped_file::readonly);
-
-	{
-		const char* start = mmap.const_data();
-		const char* end = start + mmap.size();
-		const char* current = start;
-
-		while (current && current != end) {
-			const char* next = static_cast<const char*>(memchr(current, '\n', end - current));
-
-			// If 'next' is nullptr, then we are at the last line (which might not end with a newline character)
-			if (!next) next = end;
-
-			// Extract the line between 'current' and 'next'
-			std::string line(current, next);
-
-			if (line.substr(0, 2) == "v ") { vertexCount++; }
-			if (line.substr(0, 2) == "vt") { textureCount++; }
-			if (line.substr(0, 2) == "vn") { normalCount++; }
-			if (line.substr(0, 2) == "f ") { faceCount++; }
-
-			// Move 'current' to the character after the newline
-			current = next + 1;
-			starts.push_back(current);
-		}
-	}
-
-	{
-		// Now read the data from the file into the data structures and then output it in our model format.
-		std::atomic<int> vertexIndex, texcoordIndex, normalIndex, faceIndex, vIndex, tIndex, nIndex;
-		char input, input2;
-
-		// Initialize the four data structures.
-		vertices = new VertexTypeMaya[vertexCount];
-		texcoords = new VertexTypeMaya[textureCount];
-		normals = new VertexTypeMaya[normalCount];
-		faces = new FaceType[faceCount];
-
-		// Initialize the indexes.
-		vertexIndex = 0;
-		texcoordIndex = 0;
-		normalIndex = 0;
-		faceIndex = 0;
-
-		const char* start = mmap.const_data();
-		const char* end = start + mmap.size();
-		const char* current = start;
-
-		for(int i =0; i< starts.size(); i++)
-		{
-			std::string line;
-
-			// Extract the line
-			if (i == starts.size() - 1)
-				line = std::string(starts[i], end);
-			else 
-				line = std::string(starts[i], starts[i + 1]);
-
-			std::deque<std::string> words;
-			boost::split(words, line, boost::is_any_of(" /"), boost::token_compress_on);
-
-			if (words.front() == "v")
-			{
-				words.pop_front();
-
-				assert(words.size() == 3);
-				assert(vertexIndex <= vertexCount);
-
-				vertices[vertexIndex].x = std::stof(words.front());
-				words.pop_front();
-				vertices[vertexIndex].y = std::stof(words.front());
-				words.pop_front();
-				vertices[vertexIndex].z = std::stof(words.front());
-				words.pop_front();
-
-				//invert the Z vertex to change to left hand system.
-				vertices[vertexIndex].z = vertices[vertexIndex].z * -1.0f;
-				vertexIndex++;
-			}
-			else if (words.front() == "vt")
-			{
-				words.pop_front();
-
-				assert(words.size() == 2);
-				assert(texcoordIndex <= textureCount);
-
-				texcoords[texcoordIndex].x = std::stof(words.front());
-				words.pop_front();
-				texcoords[texcoordIndex].y = std::stof(words.front());
-				words.pop_front();
-
-				texcoords[texcoordIndex].y = 1.0f - texcoords[texcoordIndex].y;
-				texcoordIndex++;
-			}
-			else if (words.front() == "vn")
-			{
-				words.pop_front();
-
-				assert(words.size() == 3);
-				assert(normalIndex <= normalCount);
-
-				normals[normalIndex].x = std::stof(words.front());
-				words.pop_front();
-				normals[normalIndex].y = std::stof(words.front());
-				words.pop_front();
-				normals[normalIndex].z = std::stof(words.front());
-				words.pop_front();
-
-				//invert the Z normal to change to left hand system.
-				normals[normalIndex].z = normals[normalIndex].z * -1.0f;
-				normalIndex++;
-			}
-			else if (words.front() == "f")
-			{
-				//read in the faces.
-				words.pop_front();
-
-				assert(words.size() == 9);
-				assert(faceIndex <= faceCount);
-
-				// Read the face data in backwards to convert it to a left hand system from right hand system.
-				faces[faceIndex].vIndex3 = std::stof(words.front());
-				words.pop_front();
-				faces[faceIndex].tIndex3 = std::stof(words.front());
-				words.pop_front();
-				faces[faceIndex].nIndex3 = std::stof(words.front());
-				words.pop_front();
-
-				faces[faceIndex].vIndex2 = std::stof(words.front());
-				words.pop_front();
-				faces[faceIndex].tIndex2 = std::stof(words.front());
-				words.pop_front();
-				faces[faceIndex].nIndex2 = std::stof(words.front());
-				words.pop_front();
-
-				faces[faceIndex].vIndex1 = std::stof(words.front());
-				words.pop_front();
-				faces[faceIndex].tIndex1 = std::stof(words.front());
-				words.pop_front();
-				faces[faceIndex].nIndex1 = std::stof(words.front());
-				words.pop_front();
-
-				faceIndex++;
-			}
-		}
-	}
-	return true;
 }

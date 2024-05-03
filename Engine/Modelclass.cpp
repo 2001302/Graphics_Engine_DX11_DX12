@@ -339,13 +339,14 @@ bool ModelClass::LoadMayaModel(const char* filename)
 	std::vector<XMFLOAT3> vertices;
 	std::vector<XMFLOAT2> texcoords;
 	std::vector<XMFLOAT3> normals;
-	std::vector<std::pair<const char*, const char*>> faceStarts;
+	std::map<int, std::pair<const char*, const char*>> faceStarts;
 
 	{
 		//Now read the data from the file into the data structures and then output it in our model format.
 		const char* start = mmap.const_data();
 		const char* end = start + mmap.size();
 		const char* current = start;
+		int faceIndex = 0;
 
 		while (current && current != end) 
 		{
@@ -404,7 +405,8 @@ bool ModelClass::LoadMayaModel(const char* filename)
 			}
 			else if (words.front() == "f")
 			{
-				faceStarts.push_back(make_pair(current,next));
+				faceStarts[faceIndex] = make_pair(current,next);
+				faceIndex++;
 			}
 			//move 'current' to the character after the newline
 			current = next + 1;
@@ -416,9 +418,10 @@ bool ModelClass::LoadMayaModel(const char* filename)
 			m_indexCount = m_vertexCount;
 			m_model = new ModelType[m_vertexCount];
 
-			for (int i =0 ;i< faceStarts.size();i++ )
+#pragma omp parallel for
+			for(int i =0; i< faceStarts.size() ; i++)
 			{
-				int index = i * 3;
+				auto index = i * 3;
 				//extract the line
 				std::string line(faceStarts[i].first, faceStarts[i].second);
 

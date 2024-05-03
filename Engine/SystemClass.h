@@ -1,5 +1,5 @@
-#ifndef _SYSTEMCLASS_H_
-#define _SYSTEMCLASS_H_
+#ifndef _SYSTEM
+#define _SYSTEM
 
 #define WIN32_LEAN_AND_MEAN
 
@@ -19,7 +19,6 @@ namespace Engine
 		void Shutdown();
 		void Run();
 
-		bool OnRightClickRequest();
 		bool OnRightDragRequest();
 		bool OnMouseWheelRequest();
 

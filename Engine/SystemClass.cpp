@@ -44,17 +44,81 @@ bool SystemClass::Initialize()
 	return true;
 }
 
-void SystemClass::Shutdown()
+void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 {
-	// Release the application class object.
-	m_Application.reset();
+	WNDCLASSEX windowClass;
+	DEVMODE screenSettings;
+	int posX, posY;
 
-	// Release the input object.
-	m_Input.reset();
+	// Get an external pointer to this object.	
+	SystemHandle = this;
 
-	// Shutdown the window.
-	ShutdownWindows();
-	
+	// Get the instance of this application.
+	m_hinstance = GetModuleHandle(NULL);
+
+	// Give the application a name.
+	m_applicationName = L"Engine";
+
+	// Setup the windows class with default settings.
+	windowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	windowClass.lpfnWndProc = WndProc;
+	windowClass.cbClsExtra = 0;
+	windowClass.cbWndExtra = 0;
+	windowClass.hInstance = m_hinstance;
+	windowClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+	windowClass.hIconSm = windowClass.hIcon;
+	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+	windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	windowClass.lpszMenuName = NULL;
+	windowClass.lpszClassName = m_applicationName;
+	windowClass.cbSize = sizeof(WNDCLASSEX);
+
+	// Register the window class.
+	RegisterClassEx(&windowClass);
+
+	// Determine the resolution of the clients desktop screen.
+	screenWidth = GetSystemMetrics(SM_CXSCREEN);
+	screenHeight = GetSystemMetrics(SM_CYSCREEN);
+
+	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
+	if (FULL_SCREEN)
+	{
+		// If full screen set the screen to maximum size of the users desktop and 32bit.
+		memset(&screenSettings, 0, sizeof(screenSettings));
+		screenSettings.dmSize = sizeof(screenSettings);
+		screenSettings.dmPelsWidth = (unsigned long)screenWidth;
+		screenSettings.dmPelsHeight = (unsigned long)screenHeight;
+		screenSettings.dmBitsPerPel = 32;
+		screenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+
+		// Change the display settings to full screen.
+		ChangeDisplaySettings(&screenSettings, CDS_FULLSCREEN);
+
+		// Set the position of the window to the top left corner.
+		posX = posY = 0;
+	}
+	else
+	{
+		float aspect = 9.0f / 16.0f;
+		// If windowed then set it to 800x600 resolution.
+		screenWidth = 1920;//screenWidth * (3.0f / 4.0f);
+		screenHeight = screenWidth * aspect;
+
+		// Place the window in the middle of the screen.
+		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
+		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+	}
+
+	// Create the window with the screen settings and get the handle to it.
+	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
+		WS_CLIPSIBLINGS /*WS_OVERLAPPEDWINDOW*/ | WS_CLIPCHILDREN | WS_POPUP,
+		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
+
+	// Bring the window up on the screen and set it as main focus.
+	ShowWindow(m_hwnd, SW_SHOW);
+	SetForegroundWindow(m_hwnd);
+	SetFocus(m_hwnd);
+
 	return;
 }
 
@@ -118,84 +182,6 @@ bool SystemClass::Frame()
 	return true;
 }
 
-void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
-{
-	WNDCLASSEX windowClass;
-	DEVMODE screenSettings;
-	int posX, posY;
-
-	// Get an external pointer to this object.	
-	SystemHandle = this;
-
-	// Get the instance of this application.
-	m_hinstance = GetModuleHandle(NULL);
-
-	// Give the application a name.
-	m_applicationName = L"Engine";
-
-	// Setup the windows class with default settings.
-	windowClass.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	windowClass.lpfnWndProc   = WndProc;
-	windowClass.cbClsExtra    = 0;
-	windowClass.cbWndExtra    = 0;
-	windowClass.hInstance     = m_hinstance;
-	windowClass.hIcon		 = LoadIcon(NULL, IDI_WINLOGO);
-	windowClass.hIconSm       = windowClass.hIcon;
-	windowClass.hCursor       = LoadCursor(NULL, IDC_ARROW);
-	windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	windowClass.lpszMenuName  = NULL;
-	windowClass.lpszClassName = m_applicationName;
-	windowClass.cbSize        = sizeof(WNDCLASSEX);
-	
-	// Register the window class.
-	RegisterClassEx(&windowClass);
-
-	// Determine the resolution of the clients desktop screen.
-	screenWidth  = GetSystemMetrics(SM_CXSCREEN);
-	screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
-	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
-	if(FULL_SCREEN)
-	{
-		// If full screen set the screen to maximum size of the users desktop and 32bit.
-		memset(&screenSettings, 0, sizeof(screenSettings));
-		screenSettings.dmSize       = sizeof(screenSettings);
-		screenSettings.dmPelsWidth  = (unsigned long)screenWidth;
-		screenSettings.dmPelsHeight = (unsigned long)screenHeight;
-		screenSettings.dmBitsPerPel = 32;			
-		screenSettings.dmFields     = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-		// Change the display settings to full screen.
-		ChangeDisplaySettings(&screenSettings, CDS_FULLSCREEN);
-
-		// Set the position of the window to the top left corner.
-		posX = posY = 0;
-	}
-	else
-	{
-		float aspect = 9.0f / 16.0f;
-		// If windowed then set it to 800x600 resolution.
-		screenWidth = 1920;//screenWidth * (3.0f / 4.0f);
-		screenHeight = screenWidth * aspect;
-
-		// Place the window in the middle of the screen.
-		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth)  / 2;
-		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
-	}
-
-	// Create the window with the screen settings and get the handle to it.
-	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName, 
-						    WS_CLIPSIBLINGS /*WS_OVERLAPPEDWINDOW*/ | WS_CLIPCHILDREN | WS_POPUP,
-						    posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
-
-	// Bring the window up on the screen and set it as main focus.
-	ShowWindow(m_hwnd, SW_SHOW);
-	SetForegroundWindow(m_hwnd);
-	SetFocus(m_hwnd);
-
-	return;
-}
-
 void SystemClass::ShutdownWindows()
 {
 	// Fix the display settings if leaving full screen mode.
@@ -214,6 +200,20 @@ void SystemClass::ShutdownWindows()
 
 	// Release the pointer to this class.
 	SystemHandle = NULL;
+
+	return;
+}
+
+void SystemClass::Shutdown()
+{
+	// Release the application class object.
+	m_Application.reset();
+
+	// Release the input object.
+	m_Input.reset();
+
+	// Shutdown the window.
+	ShutdownWindows();
 
 	return;
 }
@@ -259,22 +259,6 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 			return DefWindowProc(hwnd, umsg, wparam, lparam);
 		}
 	}
-}
-
-bool SystemClass::OnRightClickRequest()
-{
-	DIMOUSESTATE mouseState;
-	if (FAILED(m_Input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
-	{
-		//retry
-		m_Input->Mouse()->Acquire();
-	}
-	else
-	{
-		m_Input->SetMouseLocation(mouseState.lX, mouseState.lY);
-		//int mouseZ = mouseState.lZ; //?
-	}
-	return true;
 }
 
 bool SystemClass::OnRightDragRequest()
@@ -330,10 +314,7 @@ bool SystemClass::OnMouseWheelRequest()
 	else
 	{
 		double wheel = -mouseState.lZ/(600.0);
-
 		Eigen::Vector3d origin(m_Application->GetManager()->Camera->GetPosition().x, m_Application->GetManager()->Camera->GetPosition().y, m_Application->GetManager()->Camera->GetPosition().z);
-
-		double theta1 = 0;
 
 		Eigen::Matrix3d R1;
 		R1 <<	1.0 + wheel, 0.0, 0.0,

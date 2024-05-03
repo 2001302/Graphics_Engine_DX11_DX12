@@ -339,7 +339,7 @@ bool ModelClass::LoadMayaModel(const char* filename)
 	std::vector<XMFLOAT3> vertices;
 	std::vector<XMFLOAT2> texcoords;
 	std::vector<XMFLOAT3> normals;
-	std::map<int, std::pair<const char*, const char*>> faceStarts;
+	boost::container::flat_map<int, std::pair<const char*, const char*>> faceStarts;
 
 	{
 		//Now read the data from the file into the data structures and then output it in our model format.

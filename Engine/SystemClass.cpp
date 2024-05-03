@@ -120,8 +120,8 @@ bool SystemClass::Frame()
 
 void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 {
-	WNDCLASSEX wc;
-	DEVMODE dmScreenSettings;
+	WNDCLASSEX windowClass;
+	DEVMODE screenSettings;
 	int posX, posY;
 
 	// Get an external pointer to this object.	
@@ -134,21 +134,21 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	m_applicationName = L"Engine";
 
 	// Setup the windows class with default settings.
-	wc.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	wc.lpfnWndProc   = WndProc;
-	wc.cbClsExtra    = 0;
-	wc.cbWndExtra    = 0;
-	wc.hInstance     = m_hinstance;
-	wc.hIcon		 = LoadIcon(NULL, IDI_WINLOGO);
-	wc.hIconSm       = wc.hIcon;
-	wc.hCursor       = LoadCursor(NULL, IDC_ARROW);
-	wc.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	wc.lpszMenuName  = NULL;
-	wc.lpszClassName = m_applicationName;
-	wc.cbSize        = sizeof(WNDCLASSEX);
+	windowClass.style         = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+	windowClass.lpfnWndProc   = WndProc;
+	windowClass.cbClsExtra    = 0;
+	windowClass.cbWndExtra    = 0;
+	windowClass.hInstance     = m_hinstance;
+	windowClass.hIcon		 = LoadIcon(NULL, IDI_WINLOGO);
+	windowClass.hIconSm       = windowClass.hIcon;
+	windowClass.hCursor       = LoadCursor(NULL, IDC_ARROW);
+	windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
+	windowClass.lpszMenuName  = NULL;
+	windowClass.lpszClassName = m_applicationName;
+	windowClass.cbSize        = sizeof(WNDCLASSEX);
 	
 	// Register the window class.
-	RegisterClassEx(&wc);
+	RegisterClassEx(&windowClass);
 
 	// Determine the resolution of the clients desktop screen.
 	screenWidth  = GetSystemMetrics(SM_CXSCREEN);
@@ -158,15 +158,15 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	if(FULL_SCREEN)
 	{
 		// If full screen set the screen to maximum size of the users desktop and 32bit.
-		memset(&dmScreenSettings, 0, sizeof(dmScreenSettings));
-		dmScreenSettings.dmSize       = sizeof(dmScreenSettings);
-		dmScreenSettings.dmPelsWidth  = (unsigned long)screenWidth;
-		dmScreenSettings.dmPelsHeight = (unsigned long)screenHeight;
-		dmScreenSettings.dmBitsPerPel = 32;			
-		dmScreenSettings.dmFields     = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+		memset(&screenSettings, 0, sizeof(screenSettings));
+		screenSettings.dmSize       = sizeof(screenSettings);
+		screenSettings.dmPelsWidth  = (unsigned long)screenWidth;
+		screenSettings.dmPelsHeight = (unsigned long)screenHeight;
+		screenSettings.dmBitsPerPel = 32;			
+		screenSettings.dmFields     = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
 
 		// Change the display settings to full screen.
-		ChangeDisplaySettings(&dmScreenSettings, CDS_FULLSCREEN);
+		ChangeDisplaySettings(&screenSettings, CDS_FULLSCREEN);
 
 		// Set the position of the window to the top left corner.
 		posX = posY = 0;
@@ -290,14 +290,14 @@ bool SystemClass::OnRightDragRequest()
 		auto viewPort = D3DClass::GetInstance().Views[EnumViewType::eScene].Viewport;
 
 		//mouse move vector
-		Eigen::Vector2d vector = Eigen::Vector2d(mouseState.lX, mouseState.lY);
+		Eigen::Vector2d vector = Eigen::Vector2d(-mouseState.lX, -mouseState.lY);
 
 		Eigen::Vector3d origin(m_Application->GetManager()->Camera->GetPosition().x, m_Application->GetManager()->Camera->GetPosition().y, m_Application->GetManager()->Camera->GetPosition().z);
 
 		//convert to spherical coordinates
 		double r = origin.norm();
-		double theta = acos(origin.z() / r);
-		double phi = atan2(origin.y(), origin.x());
+		double phi = acos(origin.y() / r);
+		double theta = atan2(origin.z(), origin.x());
 
 		//rotation
 		double deltaTheta = (2 * M_PI) * (vector.x() / viewPort.Width);
@@ -307,9 +307,9 @@ bool SystemClass::OnRightDragRequest()
 		phi += deltaPhi;
 
 		//convert to Cartesian coordinates after rotation
-		double x = r * sin(theta) * cos(phi);
-		double y = r * sin(theta) * sin(phi);
-		double z = r * cos(theta);
+		double x = r * sin(phi) * cos(theta);
+		double y = r * cos(phi);
+		double z = r * sin(phi) * sin(theta);
 
 		Eigen::Vector3d origin_prime(x, y, z);
 
@@ -329,7 +329,7 @@ bool SystemClass::OnMouseWheelRequest()
 	}
 	else
 	{
-		double wheel = -mouseState.lZ/(120.0 * 50.0);
+		double wheel = -mouseState.lZ/(600.0);
 
 		Eigen::Vector3d origin(m_Application->GetManager()->Camera->GetPosition().x, m_Application->GetManager()->Camera->GetPosition().y, m_Application->GetManager()->Camera->GetPosition().z);
 

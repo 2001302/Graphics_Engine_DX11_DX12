@@ -1,3 +1,6 @@
+#ifndef _MODEL
+#define _MODEL
+
 #include <d3d11.h>
 #include <directxmath.h>
 
@@ -55,3 +58,4 @@ private:
 	std::unique_ptr<TextureClass> m_Texture;
 	ModelType* m_model;
 };
+#endif

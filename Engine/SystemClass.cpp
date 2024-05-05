@@ -101,7 +101,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	{
 		float aspect = 9.0f / 16.0f;
 		// If windowed then set it to 800x600 resolution.
-		screenWidth = 1920;//screenWidth * (3.0f / 4.0f);
+		screenWidth = 1280;//screenWidth * (3.0f / 4.0f);
 		screenHeight = screenWidth * aspect;
 
 		// Place the window in the middle of the screen.

@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _BehaviorLeaf
+#define _BehaviorLeaf
+
 #include "D3dclass.h"
 #include "CommonModel.h"
 #include "BehaviorTree.h"
@@ -34,3 +36,4 @@ namespace Engine
 		EnumBehaviorTreeStatus Invoke() override;
 	};
 }
+#endif

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _BehaviorTree
+#define _BehaviorTree
 
 #include "CommonModel.h"
 
@@ -85,3 +86,4 @@ namespace Engine
 		std::shared_ptr<BehaviorTreeRootNode> m_Tree;
 	};
 }
+#endif

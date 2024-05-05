@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _CommonModel
+#define _CommonModel
 
 #include "inputclass.h"
 #include "cameraclass.h"
@@ -67,3 +68,4 @@ namespace Engine
 		XMMATRIX ProjectionMatrix;
 	};
 }
+#endif

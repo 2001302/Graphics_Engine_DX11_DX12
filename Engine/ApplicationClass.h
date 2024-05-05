@@ -1,11 +1,11 @@
 #pragma once
 
-#ifndef _APPLICATIONCLASS_H_
-#define _APPLICATIONCLASS_H_
+#ifndef _APPLICATION
+#define _APPLICATION
 
 #include "D3dclass.h"
 #include "CommonModel.h"
-#include "ImGuiManager.h"
+#include "ImGui/ImGuiManager.h"
 #include "BehaviorTree.h"
 #include "BehaviorLeaf.h"
 

@@ -56,6 +56,6 @@ private:
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	int m_vertexCount, m_indexCount;
 	std::unique_ptr<TextureClass> m_Texture;
-	ModelType* m_model;
+	std::vector<ModelType> m_model;
 };
 #endif

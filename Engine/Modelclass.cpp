@@ -8,7 +8,7 @@ ModelClass::ModelClass()
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
 	m_Texture = 0;
-	m_model = 0;
+	m_model.clear();
 }
 
 ModelClass::ModelClass(const ModelClass& other)
@@ -308,7 +308,7 @@ bool ModelClass::LoadTextModel(const char* filename)
 	m_indexCount = m_vertexCount;
 
 	// Create the model using the vertex count that was read in.
-	m_model = new ModelType[m_vertexCount];
+	m_model = std::vector<ModelType>(m_vertexCount);
 
 	// Read up to the beginning of the data.
 	fin.get(input);
@@ -413,12 +413,9 @@ bool ModelClass::LoadMayaModel(const char* filename)
 		}
 
 		{
-			// Set the number of indices to be the same as the vertex count.
-			m_vertexCount = faceStarts.size() * 3;
-			m_indexCount = m_vertexCount;
-			m_model = new ModelType[m_vertexCount];
-
-#pragma omp parallel for
+			//Set the number of indices to be the same as the vertex count.
+			
+//#pragma omp parallel for
 			for(int i =0; i< faceStarts.size() ; i++)
 			{
 				auto index = i * 3;
@@ -429,63 +426,37 @@ bool ModelClass::LoadMayaModel(const char* filename)
 				boost::split(words, line, boost::is_any_of(" /"), boost::token_compress_on);
 
 				words.pop_front();
-				assert(words.size() == 9);
+				//assert(words.size() == 9);
 
+				int count = words.size() / 3;
+
+				for(int i=0;i<count;i++)
 				{
+					ModelType model;
+
 					auto nIndex1 = std::stof(words.back()) - 1;
-					m_model[index].nx = normals[nIndex1].x;
-					m_model[index].ny = normals[nIndex1].y;
-					m_model[index].nz = normals[nIndex1].z;
+					model.nx = normals[nIndex1].x;
+					model.ny = normals[nIndex1].y;
+					model.nz = normals[nIndex1].z;
 					words.pop_back();
 
 					auto tIndex1 = std::stof(words.back()) - 1;
-					m_model[index].tu = texcoords[tIndex1].x;
-					m_model[index].tv = texcoords[tIndex1].y;
+					model.tu = texcoords[tIndex1].x;
+					model.tv = texcoords[tIndex1].y;
 					words.pop_back();
 
 					auto vIndex1 = std::stof(words.back()) - 1;
-					m_model[index].x = vertices[vIndex1].x;
-					m_model[index].y = vertices[vIndex1].y;
-					m_model[index].z = vertices[vIndex1].z;
-					words.pop_back();
-				}
-				{
-					auto nIndex1 = std::stof(words.back()) - 1;
-					m_model[index+1].nx = normals[nIndex1].x;
-					m_model[index+1].ny = normals[nIndex1].y;
-					m_model[index+1].nz = normals[nIndex1].z;
+					model.x = vertices[vIndex1].x;
+					model.y = vertices[vIndex1].y;
+					model.z = vertices[vIndex1].z;
 					words.pop_back();
 
-					auto tIndex1 = std::stof(words.back()) - 1;
-					m_model[index+1].tu = texcoords[tIndex1].x;
-					m_model[index+1].tv = texcoords[tIndex1].y;
-					words.pop_back();
-
-					auto vIndex1 = std::stof(words.back()) - 1;
-					m_model[index+1].x = vertices[vIndex1].x;
-					m_model[index+1].y = vertices[vIndex1].y;
-					m_model[index+1].z = vertices[vIndex1].z;
-					words.pop_back();
-				} 
-				{
-					auto nIndex1 = std::stof(words.back()) - 1;
-					m_model[index+2].nx = normals[nIndex1].x;
-					m_model[index+2].ny = normals[nIndex1].y;
-					m_model[index+2].nz = normals[nIndex1].z;
-					words.pop_back();
-
-					auto tIndex1 = std::stof(words.back()) - 1;
-					m_model[index+2].tu = texcoords[tIndex1].x;
-					m_model[index+2].tv = texcoords[tIndex1].y;
-					words.pop_back();
-
-					auto vIndex1 = std::stof(words.back()) - 1;
-					m_model[index+2].x = vertices[vIndex1].x;
-					m_model[index+2].y = vertices[vIndex1].y;
-					m_model[index+2].z = vertices[vIndex1].z;
-					words.pop_back();
+					m_model.push_back(model);
 				}
 			}
+
+			m_vertexCount = m_model.size();
+			m_indexCount = m_vertexCount;
 		}
 	}
 	return true;
@@ -493,11 +464,7 @@ bool ModelClass::LoadMayaModel(const char* filename)
 
 void ModelClass::ReleaseModel()
 {
-	if(m_model)
-	{
-		delete [] m_model;
-		m_model = 0;
-	}
+	m_model.clear();
 
 	return;
 }

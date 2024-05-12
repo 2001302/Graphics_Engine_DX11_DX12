@@ -55,21 +55,17 @@ private:
 	void ReleaseTexture();
 
 	bool LoadModel(const char* filename);
-	void ReadModelData(aiNode* node, int index, int parent);
-	void ReadMeshData(aiNode* node, int bone);
-	void ReadSkinData();
+	void ReadModelData(const aiScene* scene, aiNode* node, int index, int parent);
+	void ReadMeshData(const aiScene* scene, aiNode* node, int bone);
+	void ReadSkinData(const aiScene* scene);
 	unsigned int GetBoneIndex(const std::string& name);
 	void ReleaseModel();
 
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
 	std::unique_ptr<TextureClass> m_texture;
 
-	std::vector<VertexType> vertices;
-	std::vector<int> indices;
-
 	std::vector<std::shared_ptr<Bone>> bones;
 	std::vector<std::shared_ptr<Mesh>> meshes;
-	const aiScene* scene;
 };
 
 class BlendWeight

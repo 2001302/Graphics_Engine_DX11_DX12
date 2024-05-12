@@ -9,9 +9,6 @@ ModelClass::ModelClass()
 	m_indexBuffer = 0;
 	m_texture = 0;
 
-	vertices.clear();
-	indices.clear();
-
 	meshes.clear();
 	bones.clear();
 }
@@ -97,7 +94,10 @@ void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 
 int ModelClass::GetIndexCount()
 {
-	return indices.size();
+	int count = 0;
+	for (auto mesh : meshes)
+		count += mesh->indices.size();
+	return count;
 }
 
 ID3D11ShaderResourceView* ModelClass::GetTexture()
@@ -107,6 +107,9 @@ ID3D11ShaderResourceView* ModelClass::GetTexture()
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
+	std::vector<VertexType> vertices;
+	std::vector<int> indices;
+
 	for (auto mesh : meshes)
 	{
 		vertices.insert(vertices.end(), mesh->vertices.begin(), mesh->vertices.end());
@@ -236,9 +239,6 @@ void ModelClass::ReleaseTexture()
 
 void ModelClass::ReleaseModel()
 {
-	vertices.clear();
-	indices.clear();
-
 	meshes.clear();
 	bones.clear();
 	return;
@@ -248,7 +248,7 @@ bool ModelClass::LoadModel(const char* filename)
 {
 	Assimp::Importer importer;
 
-	scene = importer.ReadFile(std::string(filename),
+	auto scene = importer.ReadFile(std::string(filename),
 		aiProcess_Triangulate |
 		aiProcess_ConvertToLeftHanded);
 
@@ -269,72 +269,65 @@ bool ModelClass::LoadModel(const char* filename)
 		aiProcess_SortByPType);                 //Create a 'clean' mesh composed of a single type of primitive
 	*/
 
-	// Assimp 라이브러리를 사용하여 읽어온 3D 모델의 루트 노드부터 시작하여
-	// 모델 데이터를 순회하며 읽어들입니다.
-	ReadModelData(scene->mRootNode, -1, -1);
+	//Using the Assimp library, start from the root node of the imported 3D model and traverse through the model data to read it
+	ReadModelData(scene, scene->mRootNode, -1, -1);
 
-	// 메시에 적용될 스킨(본) 데이터를 읽어들입니다.
-	ReadSkinData();
+	//Read the skin (bone) data to be applied to the mesh.
+	ReadSkinData(scene);
 
 	return true;
 }
 
-// 모델의 노드(본) 데이터를 읽고 처리하는 함수
-void ModelClass::ReadModelData(aiNode* node, int index, int parent)
+void ModelClass::ReadModelData(const aiScene* scene , aiNode* node, int index, int parent)
 {
-	// 새로운 본 객체를 생성하고 기본 정보를 설정합니다.
 	std::shared_ptr<Bone> bone = std::make_shared<Bone>();
 
-	bone->index = index; // 본의 고유 인덱스
-	bone->parent = parent; // 부모 본의 인덱스
-	bone->name = node->mName.C_Str(); // 본의 이름
+	bone->index = index; 
+	bone->parent = parent; 
+	bone->name = node->mName.C_Str(); 
 
-	// 본의 로컬 변환 행렬을 가져오고, 전치(transpose)하여 저장합니다.
-	// Assimp는 열 기준(column-major) 행렬을 사용하지만, DirectX나 OpenGL은 행 기준(row-major) 행렬을 사용할 수 있으므로, 전치가 필요할 수 있습니다.
+	//Retrieve the bone's local transformation matrix, transpose it, and store it
+	//Assimp uses column-major matrices, but since DirectX and OpenGL can use row-major matrices, transposing may be necessary.
 	DirectX::XMMATRIX transform(node->mTransformation[0]);
 	bone->transform = XMMatrixTranspose(transform);
 
-	// 루트(혹은 부모) 본으로부터 상대적인 변환을 계산합니다.
-	DirectX::XMMATRIX matParent = DirectX::XMMatrixIdentity(); // 기본값으로 단위 행렬을 사용
+	//Calculate the transformation relative to the root (or parent) bone.
+	DirectX::XMMATRIX matParent = DirectX::XMMatrixIdentity();
 	if (parent >= 0) {
-		matParent = bones[parent]->transform; // 부모 본의 변환 행렬을 가져옵니다.
+		matParent = bones[parent]->transform;
 	}
 
-	// 최종적으로 본의 변환 행렬을 계산합니다.
-	// 본 자신의 로컬 변환에 부모의 변환 행렬을 곱합니다.
+	//Finally, calculate the transformation matrix of the bone.
 	bone->transform = bone->transform * matParent;
 
-	// 처리된 본 정보를 내부 리스트에 추가합니다.
 	bones.push_back(bone);
 
-	// 현재 노드(본)에 연결된 메시 데이터를 읽어들입니다.
-	ReadMeshData(node, index);
+	//Read the mesh data linked to the current node (bone).
+	ReadMeshData(scene, node, index);
 
-	// 현재 노드의 모든 자식 노드를 재귀적으로 탐색하여 같은 처리를 반복합니다.
+	//Recursively traverse all child nodes of the current node, repeating the same process.
 	for (unsigned int i = 0; i < node->mNumChildren; i++) {
-		ReadModelData(node->mChildren[i], bones.size(), index);
+		ReadModelData(scene, node->mChildren[i], bones.size(), index);
 	}
 }
 
-// 노드에서 메시 데이터를 읽어와 내부 구조체에 저장하는 함수
-void ModelClass::ReadMeshData(aiNode* node, int bone)
+void ModelClass::ReadMeshData(const aiScene* scene, aiNode* node, int bone)
 {
+	//Do not process nodes without a mesh.
 	if (node->mNumMeshes < 1)
-		return; // 메시가 없는 노드는 처리하지 않음
+		return; 
 
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>(); // 새 메시 객체 생성
+	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
-	mesh->name = node->mName.C_Str(); // 메시 이름 설정
-	mesh->boneIndex = bone; // 메시와 연결된 본 인덱스 설정
+	mesh->name = node->mName.C_Str(); 
+	mesh->boneIndex = bone; //Set the bone indices associated with the mesh.
 
-	// 노드에 포함된 모든 메시에 대해 반복
 	for (int i = 0; i < node->mNumMeshes; i++) {
 		int index = node->mMeshes[i];
-		const aiMesh* srcMesh = scene->mMeshes[index]; // 소스 메시 참조
+		const aiMesh* srcMesh = scene->mMeshes[index];
 
-		// 메시의 재질 이름을 가져옴
 		const aiMaterial* material = scene->mMaterials[srcMesh->mMaterialIndex];
-		mesh->materialName = material->GetName().C_Str(); // 재질 이름 설정
+		mesh->materialName = material->GetName().C_Str();
 
 		for (unsigned int k = 0; k < srcMesh->mNumVertices; k++)
 		{
@@ -365,39 +358,38 @@ void ModelClass::ReadMeshData(aiNode* node, int bone)
 		}
 	}
 
-	meshes.push_back(mesh); // 메시를 내부 메시 리스트에 추가
+	meshes.push_back(mesh);
 }
 
-// 모델의 본과 정점 가중치 정보를 읽어와 처리하는 함수
-void ModelClass::ReadSkinData()
+void ModelClass::ReadSkinData(const aiScene* scene)
 {
-	// 모든 메시에 대해 반복
-	for (int i = 0; i < scene->mNumMeshes; i++) {
+	for (int i = 0; i < scene->mNumMeshes; i++) 
+	{
 		aiMesh* srcMesh = scene->mMeshes[i];
-		if (!srcMesh->HasBones()) continue; // 본이 없으면 건너뜀
 
-		std::shared_ptr<Mesh> mesh = meshes[i]; // 현재 메시 참조
+		//Skip if there are no bones
+		if (!srcMesh->HasBones()) continue; 
+
+		std::shared_ptr<Mesh> mesh = meshes[i];
 
 		std::vector<BoneWeights> tempVertexBoneWeights;
-		tempVertexBoneWeights.resize(mesh->vertices.size()); // 정점별 가중치 리스트 초기화
+		tempVertexBoneWeights.resize(mesh->vertices.size());
 
-		// 모든 본에 대해 반복하여 가중치 정보 추출
 		for (int b = 0; b < srcMesh->mNumBones; b++) {
 			aiBone* srcMeshBone = srcMesh->mBones[b];
-			int boneIndex = GetBoneIndex(srcMeshBone->mName.C_Str()); // 본 인덱스 검색
+			int boneIndex = GetBoneIndex(srcMeshBone->mName.C_Str());
 
 			for (unsigned int w = 0; w < srcMeshBone->mNumWeights; w++) {
-				unsigned int index = srcMeshBone->mWeights[w].mVertexId; // 정점 인덱스
-				float weight = srcMeshBone->mWeights[w].mWeight; // 가중치
+				unsigned int index = srcMeshBone->mWeights[w].mVertexId;
+				float weight = srcMeshBone->mWeights[w].mWeight;
 
-				tempVertexBoneWeights[index].AddWeights(boneIndex, weight); // 가중치 정보 추가
+				tempVertexBoneWeights[index].AddWeights(boneIndex, weight);
 			}
 		}
 
-		// 최종 가중치 정보를 정점 데이터에 적용
 		for (unsigned int v = 0; v < tempVertexBoneWeights.size(); v++)
 		{
-			tempVertexBoneWeights[v].Normalize(); // 가중치 정규화
+			tempVertexBoneWeights[v].Normalize();
 
 			BlendWeight blendWeight = tempVertexBoneWeights[v].GetBlendWeights();
 			//mesh->vertices[v].blendIndices = blendWeight.indices; // 본 인덱스 설정

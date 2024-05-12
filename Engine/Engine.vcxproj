@@ -189,6 +189,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="ImGui\imgui.ini" />
+    <None Include="light.ps" />
+    <None Include="light.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

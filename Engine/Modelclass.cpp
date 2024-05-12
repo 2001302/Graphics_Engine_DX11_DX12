@@ -392,8 +392,8 @@ void ModelClass::ReadSkinData(const aiScene* scene)
 			tempVertexBoneWeights[v].Normalize();
 
 			BlendWeight blendWeight = tempVertexBoneWeights[v].GetBlendWeights();
-			//mesh->vertices[v].blendIndices = blendWeight.indices; // 본 인덱스 설정
-			//mesh->vertices[v].blendWeights = blendWeight.weights; // 본 가중치 설정
+			mesh->vertices[v].blendIndices = blendWeight.indices;
+			mesh->vertices[v].blendWeights = blendWeight.weights;
 		}
 	}
 }

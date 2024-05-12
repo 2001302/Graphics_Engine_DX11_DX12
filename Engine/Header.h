@@ -7,6 +7,7 @@
 #include <vector>
 #include <windows.h>
 #include <string>
+#include <iostream>
 #include <fstream>		//for text file open
 #include <cmath>		//for calculate coordination
 #include <omp.h>		//for omp parallel

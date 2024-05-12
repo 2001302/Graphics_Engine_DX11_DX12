@@ -273,7 +273,7 @@ bool ModelClass::LoadModel(const char* filename)
 	}
 	else if (extension == "obj")
 	{
-		LoadMayaModel(filename);
+		LoadObjectModel(filename);
 	}
 
 	return true;
@@ -332,133 +332,145 @@ bool ModelClass::LoadTextModel(const char* filename)
 	return true;
 }
 
-bool ModelClass::LoadMayaModel(const char* filename)
+bool ModelClass::LoadObjectModel(const char* filename)
 {
-	boost::iostreams::mapped_file mmap(filename, boost::iostreams::mapped_file::readonly);
+	Assimp::Importer importer;
 
-	std::vector<XMFLOAT3> vertices;
-	std::vector<XMFLOAT2> texcoords;
-	std::vector<XMFLOAT3> normals;
-	boost::container::flat_map<int, std::pair<const char*, const char*>> faceStarts;
+	/*
+		aiProcess_JoinIdenticalVertices |       //Combine identical vertices, optimize indexing
+		aiProcess_ValidateDataStructure |       //Verify the output of the loader
+		aiProcess_ImproveCacheLocality |        //Improve the cache position of the output vertices
+		aiProcess_RemoveRedundantMaterials |    //Remove duplicate materials
+		aiProcess_GenUVCoords |					//Convert spherical, cylindrical, box, and planar mapping to appropriate UVs
+		aiProcess_TransformUVCoords |           //UV transformation processor (scaling, transforming...)
+		aiProcess_FindInstances |               //Search for instanced meshes and remove them as references to a single master
+		aiProcess_LimitBoneWeights |            //Limit bone weights to a maximum of four per vertex
+		aiProcess_OptimizeMeshes |              //Join small meshes where possible
+		aiProcess_GenSmoothNormals |            //Generate smooth normal vectors
+		aiProcess_SplitLargeMeshes |            //Split a large single mesh into sub-meshes
+		aiProcess_Triangulate |                 //Convert polygonal faces with more than three edges into triangles
+		aiProcess_ConvertToLeftHanded |         //Convert to D3D's left-handed coordinate system
+		aiProcess_SortByPType);                 //Create a 'clean' mesh composed of a single type of primitive
+	*/
 
+	const aiScene* scene = importer.ReadFile(std::string(filename), 
+	aiProcess_Triangulate |						
+	aiProcess_ConvertToLeftHanded);            
+
+	std::vector<VertexType> vertices;
+	std::vector<unsigned int> indices;
+	std::vector<ModelType> models;
+	for (unsigned int i = 0; i < scene->mNumMeshes; i++) 
 	{
-		//Now read the data from the file into the data structures and then output it in our model format.
-		const char* start = mmap.const_data();
-		const char* end = start + mmap.size();
-		const char* current = start;
-		int faceIndex = 0;
-
-		while (current && current != end) 
+		aiMesh* mesh = scene->mMeshes[i];
+		for (unsigned int k = 0; k < mesh->mNumVertices; k++)
 		{
-			const char* next = static_cast<const char*>(memchr(current, '\n', end - current));
-			
-			//extract the line
-			std::string line(current, next);
+			ModelType model;
+			model.x = mesh->mVertices[k].x;
+			model.y = mesh->mVertices[k].y;
+			model.z = mesh->mVertices[k].z;
 
-			std::deque<std::string> words;
-			boost::split(words, line, boost::is_any_of(" "), boost::token_compress_on);
+			model.nx = mesh->mNormals[k].x;
+			model.ny = mesh->mNormals[k].y;
+			model.nz = mesh->mNormals[k].z;
 
-			if (words.front() == "v")
+			if (mesh->mTextureCoords[0])
 			{
-				words.pop_front();
-				assert(words.size() == 3);
-
-				//invert the Z vertex to change to left hand system.
-				XMFLOAT3 vertex;
-				vertex.x = std::stof(words.front());
-				words.pop_front();
-				vertex.y = std::stof(words.front());
-				words.pop_front();
-				vertex.z = std::stof(words.front()) * -1.0f;
-				words.pop_front();
-
-				vertices.push_back(vertex);
+				model.tu = mesh->mTextureCoords[0][k].x;
+				model.tv = mesh->mTextureCoords[0][k].y;
 			}
-			else if (words.front() == "vt")
-			{
-				words.pop_front();
-				assert(words.size() == 2);
-
-				XMFLOAT2 texcoord;
-				texcoord.x = std::stof(words.front());
-				words.pop_front();
-				texcoord.y = 1.0f - std::stof(words.front());
-				words.pop_front();
-
-				texcoords.push_back(texcoord);
-			}
-			else if (words.front() == "vn")
-			{
-				words.pop_front();
-				assert(words.size() == 3);
-
-				//invert the Z normal to change to left hand system.
-				XMFLOAT3 normal;
-				normal.x = std::stof(words.front());
-				words.pop_front();
-				normal.y = std::stof(words.front());
-				words.pop_front();
-				normal.z = std::stof(words.front()) * -1.0f;
-				words.pop_front();
-
-				normals.push_back(normal);
-			}
-			else if (words.front() == "f")
-			{
-				faceStarts[faceIndex] = make_pair(current,next);
-				faceIndex++;
-			}
-			//move 'current' to the character after the newline
-			current = next + 1;
+			models.push_back(model);
 		}
 
+		for (UINT i = 0; i < mesh->mNumFaces; ++i) 
 		{
-			//Set the number of indices to be the same as the vertex count.
-			
-//#pragma omp parallel for
-			for(int i =0; i< faceStarts.size() ; i++)
-			{
-				auto index = i * 3;
-				//extract the line
-				std::string line(faceStarts[i].first, faceStarts[i].second);
+			const aiFace& face = mesh->mFaces[i];
 
-				std::deque<std::string> words;
-				boost::split(words, line, boost::is_any_of(" /"), boost::token_compress_on);
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
 
-				words.pop_front();
-				//assert(words.size() == 9);
-
-				int count = words.size() / 3;
-
-				for(int i=0;i<count;i++)
-				{
-					ModelType model;
-
-					auto nIndex1 = std::stof(words.back()) - 1;
-					model.nx = normals[nIndex1].x;
-					model.ny = normals[nIndex1].y;
-					model.nz = normals[nIndex1].z;
-					words.pop_back();
-
-					auto tIndex1 = std::stof(words.back()) - 1;
-					model.tu = texcoords[tIndex1].x;
-					model.tv = texcoords[tIndex1].y;
-					words.pop_back();
-
-					auto vIndex1 = std::stof(words.back()) - 1;
-					model.x = vertices[vIndex1].x;
-					model.y = vertices[vIndex1].y;
-					model.z = vertices[vIndex1].z;
-					words.pop_back();
-
-					m_model.push_back(model);
-				}
-			}
-
-			m_vertexCount = m_model.size();
-			m_indexCount = m_vertexCount;
+		for (UINT i = 0; i < indices.size(); ++i)
+		{
+			auto index = indices[i];
+			m_model.push_back(models[index]);
 		}
 	}
+
+	m_vertexCount = m_model.size();
+	m_indexCount = m_vertexCount;
+	return true;
+}
+
+bool ModelClass::LoadFBXModel(const char* filename)
+{
+	Assimp::Importer importer;
+
+	/*
+		aiProcess_JoinIdenticalVertices |       //Combine identical vertices, optimize indexing
+		aiProcess_ValidateDataStructure |       //Verify the output of the loader
+		aiProcess_ImproveCacheLocality |        //Improve the cache position of the output vertices
+		aiProcess_RemoveRedundantMaterials |    //Remove duplicate materials
+		aiProcess_GenUVCoords |					//Convert spherical, cylindrical, box, and planar mapping to appropriate UVs
+		aiProcess_TransformUVCoords |           //UV transformation processor (scaling, transforming...)
+		aiProcess_FindInstances |               //Search for instanced meshes and remove them as references to a single master
+		aiProcess_LimitBoneWeights |            //Limit bone weights to a maximum of four per vertex
+		aiProcess_OptimizeMeshes |              //Join small meshes where possible
+		aiProcess_GenSmoothNormals |            //Generate smooth normal vectors
+		aiProcess_SplitLargeMeshes |            //Split a large single mesh into sub-meshes
+		aiProcess_Triangulate |                 //Convert polygonal faces with more than three edges into triangles
+		aiProcess_ConvertToLeftHanded |         //Convert to D3D's left-handed coordinate system
+		aiProcess_SortByPType);                 //Create a 'clean' mesh composed of a single type of primitive
+	*/
+
+	const aiScene* scene = importer.ReadFile(std::string(filename),
+		aiProcess_Triangulate |
+		aiProcess_ConvertToLeftHanded);
+
+	std::vector<VertexType> vertices;
+	std::vector<unsigned int> indices;
+	std::vector<ModelType> models;
+	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
+	{
+		aiMesh* mesh = scene->mMeshes[i];
+		for (unsigned int k = 0; k < mesh->mNumVertices; k++)
+		{
+			ModelType model;
+			model.x = mesh->mVertices[k].x;
+			model.y = mesh->mVertices[k].y;
+			model.z = mesh->mVertices[k].z;
+
+			model.nx = mesh->mNormals[k].x;
+			model.ny = mesh->mNormals[k].y;
+			model.nz = mesh->mNormals[k].z;
+
+			if (mesh->mTextureCoords[0])
+			{
+				model.tu = mesh->mTextureCoords[0][k].x;
+				model.tv = mesh->mTextureCoords[0][k].y;
+			}
+			models.push_back(model);
+		}
+
+		for (UINT i = 0; i < mesh->mNumFaces; ++i)
+		{
+			const aiFace& face = mesh->mFaces[i];
+
+			indices.push_back(face.mIndices[0]);
+			indices.push_back(face.mIndices[1]);
+			indices.push_back(face.mIndices[2]);
+		}
+
+		for (UINT i = 0; i < indices.size(); ++i)
+		{
+			auto index = indices[i];
+			m_model.push_back(models[index]);
+		}
+	}
+
+	m_vertexCount = m_model.size();
+	m_indexCount = m_vertexCount;
 	return true;
 }
 

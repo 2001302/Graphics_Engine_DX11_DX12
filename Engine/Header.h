@@ -12,8 +12,12 @@
 #include <sstream>
 #include <string>
 #include <cmath>
-#include <Eigen/Dense>
+#include <omp.h>
+
+#include <eigen/dense>
 #include <boost/iostreams/device/mapped_file.hpp>
 #include <boost/algorithm/string.hpp>
 #include <boost/container/flat_map.hpp>
-#include <omp.h>
+#include <assimp/importer.hpp>
+#include <assimp/scene.h>           
+#include <assimp/postprocess.h>     

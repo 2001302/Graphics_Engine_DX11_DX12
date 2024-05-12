@@ -49,7 +49,8 @@ private:
 
 	bool LoadModel(const char* filename);
 	bool LoadTextModel(const char* filename);
-	bool LoadMayaModel(const char* filename);
+	bool LoadObjectModel(const char* filename);
+	bool LoadFBXModel(const char* filename);
 	
 	void ReleaseModel();
 

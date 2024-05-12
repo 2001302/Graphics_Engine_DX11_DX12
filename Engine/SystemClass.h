@@ -19,6 +19,7 @@ namespace Engine
 		void Shutdown();
 		void Run();
 
+		bool OnModelLoadRequest();
 		bool OnRightDragRequest();
 		bool OnMouseWheelRequest();
 

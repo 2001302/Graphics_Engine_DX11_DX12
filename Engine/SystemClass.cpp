@@ -229,8 +229,7 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 	{
 		case WM_MODEL_LOAD:
 		{
-			if (m_Application->OnModelLoadRequest())
-				return 0;
+			return OnModelLoadRequest();
 		}
 		case WM_MOUSEMOVE:
 		{
@@ -259,6 +258,60 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 			return DefWindowProc(hwnd, umsg, wparam, lparam);
 		}
 	}
+}
+
+bool SystemClass::OnModelLoadRequest()
+{
+	auto ToString = [](LPWSTR lpwstr) -> std::string
+		{
+			if (!lpwstr)
+				return std::string();
+
+			int len = WideCharToMultiByte(CP_UTF8, 0, lpwstr, -1, NULL, 0, NULL, NULL);
+			std::string result(len, '\0');
+			WideCharToMultiByte(CP_UTF8, 0, lpwstr, -1, &result[0], len, NULL, NULL);
+			return result;
+		};
+
+	
+	OPENFILENAMEW  ofn;
+	wchar_t szFile[260] = { 0 };
+
+	// OPENFILENAME struct initialize
+	ZeroMemory(&ofn, sizeof(ofn));
+	ofn.lStructSize = sizeof(ofn);
+	ofn.hwndOwner = WindowHandler::GetInstance().GetHandle();
+	ofn.lpstrFile = szFile;
+	ofn.lpstrFile[0] = '\0';
+	ofn.nMaxFile = sizeof(szFile);
+	ofn.lpstrFilter = L"All files\0*.*\0Text Files\0*.TXT\0";
+	ofn.nFilterIndex = 1;
+	ofn.lpstrFileTitle = NULL;
+	ofn.nMaxFileTitle = 0;
+	ofn.lpstrInitialDir = NULL;
+	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+
+	//show file explorer
+	if (GetOpenFileName(&ofn))
+	{
+		std::vector<std::string> modelFile;
+		std::vector<XMMATRIX> matrix;
+
+		modelFile.push_back(ToString(ofn.lpstrFile));
+		matrix.push_back(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
+
+		for (int i = 0; i < modelFile.size(); i++)
+		{
+			m_Application->GetManager()->Models.push_back(new ModelClass());
+			m_Application->GetManager()->Models[i]->Initialize(D3DClass::GetInstance().GetDevice(), D3DClass::GetInstance().GetDeviceContext(), modelFile[i].c_str(), m_Application->GetManager()->Texture);
+			m_Application->GetManager()->Models[i]->Transform = matrix[i];
+		}
+	}
+	else
+	{
+		//need logger
+	}
+	return true;
 }
 
 bool SystemClass::OnRightDragRequest()

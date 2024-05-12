@@ -16,7 +16,6 @@ const float SCREEN_NEAR = 0.3f;
 
 namespace Engine
 {
-
 	class ApplicationClass
 	{
 	public:
@@ -30,8 +29,6 @@ namespace Engine
 
 		Manager* GetManager() { return m_Manager; }
 
-		bool OnModelLoadRequest(); 
-
 	private:
 		bool Render();
 
@@ -40,6 +37,5 @@ namespace Engine
 		Manager* m_Manager;
 		ViewingPoint* m_ViewingPoint;
 	};
-
-#endif
 }
+#endif

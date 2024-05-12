@@ -5,14 +5,12 @@
 
 #include <map>
 #include <vector>
-#include <deque>
 #include <windows.h>
-#include <windowsx.h>
-#include <fstream>
-#include <sstream>
 #include <string>
-#include <cmath>
-#include <omp.h>
+#include <fstream>		//for text file open
+#include <cmath>		//for calculate coordination
+#include <omp.h>		//for omp parallel
+#include <commdlg.h>	//for file open
 
 #include <eigen/dense>
 #include <boost/iostreams/device/mapped_file.hpp>

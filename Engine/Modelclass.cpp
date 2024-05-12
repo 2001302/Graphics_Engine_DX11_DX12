@@ -275,6 +275,10 @@ bool ModelClass::LoadModel(const char* filename)
 	{
 		LoadObjectModel(filename);
 	}
+	else if (extension == "fbx")
+	{
+		LoadFBXModel(filename);
+	}
 
 	return true;
 }

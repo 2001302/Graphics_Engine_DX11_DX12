@@ -19,12 +19,6 @@ private:
 		XMFLOAT2 texture;
 		XMFLOAT3 normal;
 	};
-	struct ModelType
-	{
-		float x, y, z;
-		float tu, tv;
-		float nx, ny, nz;
-	};
 public:
 	ModelClass();
 	ModelClass(const ModelClass&);
@@ -48,15 +42,15 @@ private:
 	void ReleaseTexture();
 
 	bool LoadModel(const char* filename);
-	bool LoadTextModel(const char* filename);
 	bool LoadObjectModel(const char* filename);
 	bool LoadFBXModel(const char* filename);
 	
 	void ReleaseModel();
 
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
-	int m_vertexCount, m_indexCount;
 	std::unique_ptr<TextureClass> m_Texture;
-	std::vector<ModelType> m_model;
+
+	std::vector <VertexType> vertices;
+	std::vector<unsigned long> indices;
 };
 #endif

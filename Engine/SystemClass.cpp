@@ -230,6 +230,7 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 		case WM_MODEL_LOAD:
 		{
 			return OnModelLoadRequest();
+			break;
 		}
 		case WM_MOUSEMOVE:
 		{

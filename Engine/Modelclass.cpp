@@ -8,7 +8,9 @@ ModelClass::ModelClass()
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
 	m_Texture = 0;
-	m_model.clear();
+
+	vertices.clear();
+	indices.clear();
 }
 
 ModelClass::ModelClass(const ModelClass& other)
@@ -92,7 +94,7 @@ void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 
 int ModelClass::GetIndexCount()
 {
-	return m_indexCount;
+	return indices.size();
 }
 
 ID3D11ShaderResourceView* ModelClass::GetTexture()
@@ -102,39 +104,23 @@ ID3D11ShaderResourceView* ModelClass::GetTexture()
 
 bool ModelClass::InitializeBuffers(ID3D11Device* device)
 {
-	VertexType* vertices;
-	unsigned long* indices;
+	//VertexType* vertices;
+	//unsigned long* indices;
+
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
     D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
-	int i;
-
-	// Create the vertex array.
-	vertices = new VertexType[m_vertexCount];
-
-	// Create the index array.
-	indices = new unsigned long[m_indexCount];
-
-	// Load the vertex array and index array with data.
-	for(i=0; i<m_vertexCount; i++)
-	{
-		vertices[i].position = XMFLOAT3(m_model[i].x, m_model[i].y, m_model[i].z);
-		vertices[i].texture = XMFLOAT2(m_model[i].tu, m_model[i].tv);
-		vertices[i].normal = XMFLOAT3(m_model[i].nx, m_model[i].ny, m_model[i].nz);
-
-		indices[i] = i;
-	}
 
 	// Set up the description of the static vertex buffer.
     vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_vertexCount;
+    vertexBufferDesc.ByteWidth = sizeof(VertexType) * vertices.size();
     vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vertexBufferDesc.CPUAccessFlags = 0;
     vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-    vertexData.pSysMem = vertices;
+    vertexData.pSysMem = &vertices[0];
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
@@ -147,14 +133,14 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 
 	// Set up the description of the static index buffer.
     indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * m_indexCount;
+    indexBufferDesc.ByteWidth = sizeof(unsigned long) * indices.size();
     indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     indexBufferDesc.CPUAccessFlags = 0;
     indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-    indexData.pSysMem = indices;
+    indexData.pSysMem = &indices[0];
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
@@ -164,13 +150,6 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	{
 		return false;
 	}
-
-	// Release the arrays now that the vertex and index buffers have been created and loaded.
-	delete [] vertices;
-	vertices = 0;
-
-	delete [] indices;
-	indices = 0;
 
 	return true;
 }
@@ -267,11 +246,7 @@ bool ModelClass::LoadModel(const char* filename)
 
 	auto extension = GetModelType(filename);
 
-	if (extension == "txt") 
-	{
-		LoadTextModel(filename);
-	}
-	else if (extension == "obj")
+	if (extension == "obj")
 	{
 		LoadObjectModel(filename);
 	}
@@ -280,59 +255,6 @@ bool ModelClass::LoadModel(const char* filename)
 		LoadFBXModel(filename);
 	}
 
-	return true;
-}
-
-bool ModelClass::LoadTextModel(const char* filename)
-{
-	ifstream fin;
-	char input;
-	int i;
-
-	// Open the model file.
-	fin.open(filename);
-
-	// If it could not open the file then exit.
-	if (fin.fail())
-	{
-		return false;
-	}
-
-	// Read up to the value of vertex count.
-	fin.get(input);
-	while (input != ':')
-	{
-		fin.get(input);
-	}
-
-	// Read in the vertex count.
-	fin >> m_vertexCount;
-
-	// Set the number of indices to be the same as the vertex count.
-	m_indexCount = m_vertexCount;
-
-	// Create the model using the vertex count that was read in.
-	m_model = std::vector<ModelType>(m_vertexCount);
-
-	// Read up to the beginning of the data.
-	fin.get(input);
-	while (input != ':')
-	{
-		fin.get(input);
-	}
-	fin.get(input);
-	fin.get(input);
-
-	// Read in the vertex data.
-	for (i = 0; i < m_vertexCount; i++)
-	{
-		fin >> m_model[i].x >> m_model[i].y >> m_model[i].z;
-		fin >> m_model[i].tu >> m_model[i].tv;
-		fin >> m_model[i].nx >> m_model[i].ny >> m_model[i].nz;
-	}
-
-	// Close the model file.
-	fin.close();
 	return true;
 }
 
@@ -361,29 +283,27 @@ bool ModelClass::LoadObjectModel(const char* filename)
 	aiProcess_Triangulate |						
 	aiProcess_ConvertToLeftHanded);            
 
-	std::vector<VertexType> vertices;
-	std::vector<unsigned int> indices;
-	std::vector<ModelType> models;
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++) 
 	{
 		aiMesh* mesh = scene->mMeshes[i];
+
 		for (unsigned int k = 0; k < mesh->mNumVertices; k++)
 		{
-			ModelType model;
-			model.x = mesh->mVertices[k].x;
-			model.y = mesh->mVertices[k].y;
-			model.z = mesh->mVertices[k].z;
+			VertexType vertice;
 
-			model.nx = mesh->mNormals[k].x;
-			model.ny = mesh->mNormals[k].y;
-			model.nz = mesh->mNormals[k].z;
+			XMFLOAT3 pos(&mesh->mVertices[k].x);
+			vertice.position = pos;
+
+			XMFLOAT3 normal(&mesh->mNormals[k].x);
+			vertice.normal = normal;
 
 			if (mesh->mTextureCoords[0])
 			{
-				model.tu = mesh->mTextureCoords[0][k].x;
-				model.tv = mesh->mTextureCoords[0][k].y;
+				XMFLOAT2 tex = XMFLOAT2(&mesh->mTextureCoords[0][k].x);
+				vertice.texture = tex;
 			}
-			models.push_back(model);
+
+			vertices.push_back(vertice);
 		}
 
 		for (UINT i = 0; i < mesh->mNumFaces; ++i) 
@@ -394,16 +314,8 @@ bool ModelClass::LoadObjectModel(const char* filename)
 			indices.push_back(face.mIndices[1]);
 			indices.push_back(face.mIndices[2]);
 		}
-
-		for (UINT i = 0; i < indices.size(); ++i)
-		{
-			auto index = indices[i];
-			m_model.push_back(models[index]);
-		}
 	}
 
-	m_vertexCount = m_model.size();
-	m_indexCount = m_vertexCount;
 	return true;
 }
 
@@ -432,29 +344,27 @@ bool ModelClass::LoadFBXModel(const char* filename)
 		aiProcess_Triangulate |
 		aiProcess_ConvertToLeftHanded);
 
-	std::vector<VertexType> vertices;
-	std::vector<unsigned int> indices;
-	std::vector<ModelType> models;
 	for (unsigned int i = 0; i < scene->mNumMeshes; i++)
 	{
 		aiMesh* mesh = scene->mMeshes[i];
+
 		for (unsigned int k = 0; k < mesh->mNumVertices; k++)
 		{
-			ModelType model;
-			model.x = mesh->mVertices[k].x;
-			model.y = mesh->mVertices[k].y;
-			model.z = mesh->mVertices[k].z;
+			VertexType vertice;
 
-			model.nx = mesh->mNormals[k].x;
-			model.ny = mesh->mNormals[k].y;
-			model.nz = mesh->mNormals[k].z;
+			XMFLOAT3 pos(&mesh->mVertices[k].x);
+			vertice.position = pos;
+
+			XMFLOAT3 normal(&mesh->mNormals[k].x);
+			vertice.normal = normal;
 
 			if (mesh->mTextureCoords[0])
 			{
-				model.tu = mesh->mTextureCoords[0][k].x;
-				model.tv = mesh->mTextureCoords[0][k].y;
+				XMFLOAT2 tex = XMFLOAT2(&mesh->mTextureCoords[0][k].x);
+				vertice.texture = tex;
 			}
-			models.push_back(model);
+
+			vertices.push_back(vertice);
 		}
 
 		for (UINT i = 0; i < mesh->mNumFaces; ++i)
@@ -465,22 +375,15 @@ bool ModelClass::LoadFBXModel(const char* filename)
 			indices.push_back(face.mIndices[1]);
 			indices.push_back(face.mIndices[2]);
 		}
-
-		for (UINT i = 0; i < indices.size(); ++i)
-		{
-			auto index = indices[i];
-			m_model.push_back(models[index]);
-		}
 	}
 
-	m_vertexCount = m_model.size();
-	m_indexCount = m_vertexCount;
 	return true;
 }
 
 void ModelClass::ReleaseModel()
 {
-	m_model.clear();
+	vertices.clear();
+	indices.clear();
 
 	return;
 }

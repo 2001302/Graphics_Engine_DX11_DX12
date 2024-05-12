@@ -18,7 +18,7 @@
     <ClInclude Include="CommonModel.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="ModelClass.h">
+    <ClInclude Include="GameObject.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="TextureClass.h">
@@ -84,7 +84,7 @@
     <ClCompile Include="LightshaderClass.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="ModelClass.cpp">
+    <ClCompile Include="GameObject.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="TextureClass.cpp">
@@ -152,5 +152,7 @@
     <None Include="ImGui\imgui.ini">
       <Filter>ImGui</Filter>
     </None>
+    <None Include="light.ps" />
+    <None Include="light.vs" />
   </ItemGroup>
 </Project>

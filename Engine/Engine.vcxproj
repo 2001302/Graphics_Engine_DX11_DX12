@@ -154,7 +154,7 @@
     <ClInclude Include="LightClass.h" />
     <ClInclude Include="LightshaderClass.h" />
     <ClInclude Include="CommonModel.h" />
-    <ClInclude Include="ModelClass.h" />
+    <ClInclude Include="GameObject.h" />
     <ClInclude Include="RefractionshaderClass.h" />
     <ClInclude Include="RendertextureClass.h" />
     <ClInclude Include="SystemClass.h" />
@@ -180,7 +180,7 @@
     <ClCompile Include="LightClass.cpp" />
     <ClCompile Include="LightshaderClass.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="ModelClass.cpp" />
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="RefractionshaderClass.cpp" />
     <ClCompile Include="RendertextureClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />

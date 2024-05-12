@@ -8,7 +8,8 @@
 using namespace DirectX;
 using namespace std;
 
-class LightShaderClass
+//TODO : need to change name or make interface. ex)ShaderManager
+class LightShaderClass 
 {
 private:
 	struct MatrixBufferType

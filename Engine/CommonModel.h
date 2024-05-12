@@ -3,7 +3,7 @@
 
 #include "inputclass.h"
 #include "cameraclass.h"
-#include "modelclass.h"
+#include "gameobject.h"
 #include "lightclass.h"
 #include "rendertextureclass.h"
 #include "lightshaderclass.h"
@@ -47,7 +47,7 @@ namespace Engine
 		};
 		~Manager() {};
 
-		std::vector <ModelClass*> Models;
+		std::vector <GameObject*> Models;
 		std::unique_ptr<LightClass> Light;
 		std::unique_ptr<LightShaderClass> LightShader;
 		std::unique_ptr<CameraClass> Camera;

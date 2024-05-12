@@ -303,7 +303,7 @@ bool SystemClass::OnModelLoadRequest()
 
 		for (int i = 0; i < modelFile.size(); i++)
 		{
-			m_Application->GetManager()->Models.push_back(new ModelClass());
+			m_Application->GetManager()->Models.push_back(new GameObject());
 			m_Application->GetManager()->Models[i]->Initialize(D3DClass::GetInstance().GetDevice(), D3DClass::GetInstance().GetDeviceContext(), modelFile[i].c_str(), m_Application->GetManager()->Texture);
 			m_Application->GetManager()->Models[i]->Transform = matrix[i];
 		}

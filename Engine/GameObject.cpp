@@ -1,9 +1,9 @@
 #pragma warning(disable:6385)
 #pragma warning(disable:6386)
 
-#include "modelclass.h"
+#include "GameObject.h"
 
-ModelClass::ModelClass()
+GameObject::GameObject()
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
@@ -13,15 +13,15 @@ ModelClass::ModelClass()
 	bones.clear();
 }
 
-ModelClass::ModelClass(const ModelClass& other)
+GameObject::GameObject(const GameObject& other)
 {
 }
 
-ModelClass::~ModelClass()
+GameObject::~GameObject()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, const char* textureFilename)
+bool GameObject::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, const char* textureFilename)
 {
 	bool result;
 
@@ -34,21 +34,21 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 
 	// Initialize the vertex and index buffers.
 	result = InitializeBuffers(device);
-	if(!result)
+	if (!result)
 	{
 		return false;
 	}
 
 	// Load the texture for this model.
 	result = LoadTexture(device, deviceContext, textureFilename);
-	if(!result)
+	if (!result)
 	{
 		return false;
 	}
 
 	return true;
 }
-bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, std::unique_ptr<TextureClass>& texture)
+bool GameObject::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, std::unique_ptr<TextureClass>& texture)
 {
 	bool result;
 
@@ -65,12 +65,12 @@ bool ModelClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	{
 		return false;
 	}
-	
+
 	m_texture = std::move(texture);
 
 	return true;
 }
-void ModelClass::Shutdown()
+void GameObject::Shutdown()
 {
 	// Release the model texture.
 	ReleaseTexture();
@@ -84,7 +84,7 @@ void ModelClass::Shutdown()
 	return;
 }
 
-void ModelClass::Render(ID3D11DeviceContext* deviceContext)
+void GameObject::Render(ID3D11DeviceContext* deviceContext)
 {
 	// Put the vertex and index buffers on the graphics pipeline to prepare them for drawing.
 	RenderBuffers(deviceContext);
@@ -92,7 +92,7 @@ void ModelClass::Render(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
-int ModelClass::GetIndexCount()
+int GameObject::GetIndexCount()
 {
 	int count = 0;
 	for (auto mesh : meshes)
@@ -100,12 +100,12 @@ int ModelClass::GetIndexCount()
 	return count;
 }
 
-ID3D11ShaderResourceView* ModelClass::GetTexture()
+ID3D11ShaderResourceView* GameObject::GetTexture()
 {
 	return m_texture->GetTexture();
 }
 
-bool ModelClass::InitializeBuffers(ID3D11Device* device)
+bool GameObject::InitializeBuffers(ID3D11Device* device)
 {
 	std::vector<VertexType> vertices;
 	std::vector<int> indices;
@@ -117,45 +117,45 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 	}
 
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
-    D3D11_SUBRESOURCE_DATA vertexData, indexData;
+	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
 
 	// Set up the description of the static vertex buffer.
-    vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    vertexBufferDesc.ByteWidth = sizeof(VertexType) * vertices.size();
-    vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    vertexBufferDesc.CPUAccessFlags = 0;
-    vertexBufferDesc.MiscFlags = 0;
+	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	vertexBufferDesc.ByteWidth = sizeof(VertexType) * vertices.size();
+	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	vertexBufferDesc.CPUAccessFlags = 0;
+	vertexBufferDesc.MiscFlags = 0;
 	vertexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the vertex data.
-    vertexData.pSysMem = &vertices[0];
+	vertexData.pSysMem = &vertices[0];
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
 	// Now create the vertex buffer.
-    result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
-	if(FAILED(result))
+	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &m_vertexBuffer);
+	if (FAILED(result))
 	{
 		return false;
 	}
 
 	// Set up the description of the static index buffer.
-    indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-    indexBufferDesc.ByteWidth = sizeof(unsigned long) * indices.size();
-    indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    indexBufferDesc.CPUAccessFlags = 0;
-    indexBufferDesc.MiscFlags = 0;
+	indexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	indexBufferDesc.ByteWidth = sizeof(unsigned long) * indices.size();
+	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	indexBufferDesc.CPUAccessFlags = 0;
+	indexBufferDesc.MiscFlags = 0;
 	indexBufferDesc.StructureByteStride = 0;
 
 	// Give the subresource structure a pointer to the index data.
-    indexData.pSysMem = &indices[0];
+	indexData.pSysMem = &indices[0];
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
 	// Create the index buffer.
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &m_indexBuffer);
-	if(FAILED(result))
+	if (FAILED(result))
 	{
 		return false;
 	}
@@ -164,17 +164,17 @@ bool ModelClass::InitializeBuffers(ID3D11Device* device)
 }
 
 
-void ModelClass::ShutdownBuffers()
+void GameObject::ShutdownBuffers()
 {
 	// Release the index buffer.
-	if(m_indexBuffer)
+	if (m_indexBuffer)
 	{
 		m_indexBuffer->Release();
 		m_indexBuffer = 0;
 	}
 
 	// Release the vertex buffer.
-	if(m_vertexBuffer)
+	if (m_vertexBuffer)
 	{
 		m_vertexBuffer->Release();
 		m_vertexBuffer = 0;
@@ -184,30 +184,30 @@ void ModelClass::ShutdownBuffers()
 }
 
 
-void ModelClass::RenderBuffers(ID3D11DeviceContext* deviceContext)
+void GameObject::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
 	unsigned int stride;
 	unsigned int offset;
 
 
 	// Set vertex buffer stride and offset.
-	stride = sizeof(VertexType); 
+	stride = sizeof(VertexType);
 	offset = 0;
-    
+
 	// Set the vertex buffer to active in the input assembler so it can be rendered.
 	deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer, &stride, &offset);
 
-    // Set the index buffer to active in the input assembler so it can be rendered.
+	// Set the index buffer to active in the input assembler so it can be rendered.
 	deviceContext->IASetIndexBuffer(m_indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 
-    // Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+	// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	return;
 }
 
 
-bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const  char* filename)
+bool GameObject::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const  char* filename)
 {
 	bool result;
 
@@ -216,7 +216,7 @@ bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceCo
 	m_texture = std::make_unique<TextureClass>();
 
 	result = m_texture->Initialize(device, deviceContext, filename);
-	if(!result)
+	if (!result)
 	{
 		return false;
 	}
@@ -225,10 +225,10 @@ bool ModelClass::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceCo
 }
 
 
-void ModelClass::ReleaseTexture()
+void GameObject::ReleaseTexture()
 {
 	// Release the texture object.
-	if(m_texture)
+	if (m_texture)
 	{
 		m_texture->Shutdown();
 		m_texture.reset();
@@ -237,14 +237,14 @@ void ModelClass::ReleaseTexture()
 	return;
 }
 
-void ModelClass::ReleaseModel()
+void GameObject::ReleaseModel()
 {
 	meshes.clear();
 	bones.clear();
 	return;
 }
 
-bool ModelClass::LoadModel(const char* filename)
+bool GameObject::LoadModel(const char* filename)
 {
 	Assimp::Importer importer;
 
@@ -278,13 +278,13 @@ bool ModelClass::LoadModel(const char* filename)
 	return true;
 }
 
-void ModelClass::ReadModelData(const aiScene* scene , aiNode* node, int index, int parent)
+void GameObject::ReadModelData(const aiScene* scene, aiNode* node, int index, int parent)
 {
 	std::shared_ptr<Bone> bone = std::make_shared<Bone>();
 
-	bone->index = index; 
-	bone->parent = parent; 
-	bone->name = node->mName.C_Str(); 
+	bone->index = index;
+	bone->parent = parent;
+	bone->name = node->mName.C_Str();
 
 	//Retrieve the bone's local transformation matrix, transpose it, and store it
 	//Assimp uses column-major matrices, but since DirectX and OpenGL can use row-major matrices, transposing may be necessary.
@@ -311,15 +311,15 @@ void ModelClass::ReadModelData(const aiScene* scene , aiNode* node, int index, i
 	}
 }
 
-void ModelClass::ReadMeshData(const aiScene* scene, aiNode* node, int bone)
+void GameObject::ReadMeshData(const aiScene* scene, aiNode* node, int bone)
 {
 	//Do not process nodes without a mesh.
 	if (node->mNumMeshes < 1)
-		return; 
+		return;
 
 	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
 
-	mesh->name = node->mName.C_Str(); 
+	mesh->name = node->mName.C_Str();
 	mesh->boneIndex = bone; //Set the bone indices associated with the mesh.
 
 	for (int i = 0; i < node->mNumMeshes; i++) {
@@ -361,14 +361,14 @@ void ModelClass::ReadMeshData(const aiScene* scene, aiNode* node, int bone)
 	meshes.push_back(mesh);
 }
 
-void ModelClass::ReadSkinData(const aiScene* scene)
+void GameObject::ReadSkinData(const aiScene* scene)
 {
-	for (int i = 0; i < scene->mNumMeshes; i++) 
+	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
 		aiMesh* srcMesh = scene->mMeshes[i];
 
 		//Skip if there are no bones
-		if (!srcMesh->HasBones()) continue; 
+		if (!srcMesh->HasBones()) continue;
 
 		std::shared_ptr<Mesh> mesh = meshes[i];
 
@@ -398,7 +398,7 @@ void ModelClass::ReadSkinData(const aiScene* scene)
 	}
 }
 
-unsigned int ModelClass::GetBoneIndex(const std::string& name)
+unsigned int GameObject::GetBoneIndex(const std::string& name)
 {
 	for (std::shared_ptr<Bone>& bone : bones)
 	{

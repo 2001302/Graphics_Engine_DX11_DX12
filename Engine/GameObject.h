@@ -1,5 +1,5 @@
-#ifndef _MODEL
-#define _MODEL
+#ifndef _GAMEOBJECT
+#define _GAMEOBJECT
 
 #include <d3d11.h>
 #include <directxmath.h>
@@ -7,7 +7,7 @@
 #include "TextureClass.h"
 #include "Header.h"
 
-class ModelClass
+class GameObject
 {
 private:	
 	struct VertexType
@@ -35,9 +35,9 @@ private:
 	};
 
 public:
-	ModelClass();
-	ModelClass(const ModelClass&);
-	~ModelClass();
+	GameObject();
+	GameObject(const GameObject&);
+	~GameObject();
 
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, const char* textureFilename);
 	bool Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, std::unique_ptr<TextureClass>& texture);

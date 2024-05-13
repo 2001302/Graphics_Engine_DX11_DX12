@@ -12,7 +12,7 @@
     <ClInclude Include="LightClass.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="LightshaderClass.h">
+    <ClInclude Include="LightShader.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="CommonModel.h">
@@ -25,15 +25,6 @@
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="InputClass.h" />
-    <ClInclude Include="WatershaderClass.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="RendertextureClass.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="RefractionshaderClass.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="BehaviorTree.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
@@ -81,7 +72,7 @@
     <ClCompile Include="LightClass.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="LightshaderClass.cpp">
+    <ClCompile Include="LightShader.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
@@ -91,15 +82,6 @@
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="InputClass.cpp" />
-    <ClCompile Include="WatershaderClass.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="RendertextureClass.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="RefractionshaderClass.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="BehaviorTree.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>

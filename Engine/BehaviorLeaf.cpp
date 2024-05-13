@@ -51,7 +51,7 @@ EnumBehaviorTreeStatus InitializeLight::Invoke()
 	manager->Light->SetDirection(0.0f, -1.0f, 0.5f);
 
 	// Create and initialize the light shader object.
-	manager->LightShader = std::make_unique<LightShaderClass>();
+	manager->LightShader = std::make_unique<LightShader>();
 	manager->LightShader->Initialize(D3DClass::GetInstance().GetDevice(), m_window);
 
 	return EnumBehaviorTreeStatus::eSuccess;
@@ -79,7 +79,7 @@ EnumBehaviorTreeStatus GetViewingPoint::Invoke()
 	return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus RenderModels::Invoke()
+EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 {
 	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
 	IDataBlock* viewBlock = DataBlock[EnumDataBlockType::eViewingPoint];

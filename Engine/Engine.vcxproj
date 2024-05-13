@@ -152,14 +152,11 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="InputClass.h" />
     <ClInclude Include="LightClass.h" />
-    <ClInclude Include="LightshaderClass.h" />
+    <ClInclude Include="LightShader.h" />
     <ClInclude Include="CommonModel.h" />
     <ClInclude Include="GameObject.h" />
-    <ClInclude Include="RefractionshaderClass.h" />
-    <ClInclude Include="RendertextureClass.h" />
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="TextureClass.h" />
-    <ClInclude Include="WatershaderClass.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />
@@ -178,14 +175,11 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="InputClass.cpp" />
     <ClCompile Include="LightClass.cpp" />
-    <ClCompile Include="LightshaderClass.cpp" />
+    <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="RefractionshaderClass.cpp" />
-    <ClCompile Include="RendertextureClass.cpp" />
     <ClCompile Include="SystemClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
-    <ClCompile Include="WatershaderClass.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ImGui\imgui.ini" />

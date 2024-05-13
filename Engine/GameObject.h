@@ -7,9 +7,10 @@
 #include "TextureClass.h"
 #include "Header.h"
 
+//TODO : need to make file loader extension class
 class GameObject
 {
-private:	
+public:
 	struct VertexType
 	{
 		DirectX::XMFLOAT3 position;
@@ -34,7 +35,6 @@ private:
 		std::vector<int> indices;
 	};
 
-public:
 	GameObject();
 	GameObject(const GameObject&);
 	~GameObject();
@@ -45,9 +45,10 @@ public:
 	void Render(ID3D11DeviceContext* deviceContext);
 
 	int GetIndexCount();
-	ID3D11ShaderResourceView* GetTexture();
+	ID3D11ShaderResourceView* GetTexture() { return m_texture->GetTexture(); }
 
 	DirectX::XMMATRIX Transform;
+
 private:
 	bool InitializeBuffers(ID3D11Device* device);
 	void ShutdownBuffers();
@@ -61,6 +62,7 @@ private:
 	void ReadMeshData(const aiScene* scene, aiNode* node, int bone);
 	void ReadSkinData(const aiScene* scene);
 	unsigned int GetBoneIndex(const std::string& name);
+	void ReadAnimationData(const aiScene* scene);
 	void ReleaseModel();
 
 	ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;

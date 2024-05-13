@@ -100,11 +100,6 @@ int GameObject::GetIndexCount()
 	return count;
 }
 
-ID3D11ShaderResourceView* GameObject::GetTexture()
-{
-	return m_texture->GetTexture();
-}
-
 bool GameObject::InitializeBuffers(ID3D11Device* device)
 {
 	std::vector<VertexType> vertices;
@@ -275,6 +270,8 @@ bool GameObject::LoadModel(const char* filename)
 	//Read the skin (bone) data to be applied to the mesh.
 	ReadSkinData(scene);
 
+	ReadAnimationData(scene);
+
 	return true;
 }
 
@@ -408,4 +405,43 @@ unsigned int GameObject::GetBoneIndex(const std::string& name)
 
 	assert(false);
 	return 0;
+}
+
+void GameObject::ReadAnimationData(const aiScene* scene) 
+{
+	// Check if the scene has animations
+	if (scene->HasAnimations()) {
+		for (unsigned int i = 0; i < scene->mNumAnimations; i++) {
+			aiAnimation* anim = scene->mAnimations[i];
+			std::cout << "Animation: " << anim->mName.C_Str() << "\n";
+			std::cout << "Duration: " << anim->mDuration << "\n";
+			std::cout << "Ticks per second: " << anim->mTicksPerSecond << "\n";
+
+			// Process each channel (each channel corresponds to a bone)
+			for (unsigned int j = 0; j < anim->mNumChannels; j++) {
+				aiNodeAnim* channel = anim->mChannels[j];
+
+				// Print bone name
+				std::cout << "Bone: " << channel->mNodeName.C_Str() << "\n";
+
+				// Position keys
+				for (unsigned int k = 0; k < channel->mNumPositionKeys; k++) {
+					aiVectorKey key = channel->mPositionKeys[k];
+					std::cout << "Position Key: Time: " << key.mTime << " Value: " << key.mValue.x << ", " << key.mValue.y << ", " << key.mValue.z << "\n";
+				}
+
+				// Rotation keys
+				for (unsigned int k = 0; k < channel->mNumRotationKeys; k++) {
+					aiQuatKey key = channel->mRotationKeys[k];
+					std::cout << "Rotation Key: Time: " << key.mTime << " Value: " << key.mValue.w << ", " << key.mValue.x << ", " << key.mValue.y << ", " << key.mValue.z << "\n";
+				}
+
+				// Scaling keys
+				for (unsigned int k = 0; k < channel->mNumScalingKeys; k++) {
+					aiVectorKey key = channel->mScalingKeys[k];
+					std::cout << "Scale Key: Time: " << key.mTime << " Value: " << key.mValue.x << ", " << key.mValue.y << ", " << key.mValue.z << "\n";
+				}
+			}
+		}
+	}
 }

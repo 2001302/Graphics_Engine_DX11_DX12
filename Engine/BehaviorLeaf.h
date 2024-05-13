@@ -31,7 +31,7 @@ namespace Engine
 		EnumBehaviorTreeStatus Invoke() override;
 	};
 
-	class RenderModels : public ActionNode
+	class RenderGameObjects : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;
 	};

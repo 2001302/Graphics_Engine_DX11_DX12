@@ -64,7 +64,7 @@ bool ApplicationClass::Render()
 	builder->Build(dataBlock)
 				->Sequence()
 					->Excute(std::make_shared<GetViewingPoint>())
-					->Excute(std::make_shared<RenderModels>())
+					->Excute(std::make_shared<RenderGameObjects>())
 				->Close();
 
 	builder->Run();

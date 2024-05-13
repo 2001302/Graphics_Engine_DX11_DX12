@@ -5,10 +5,7 @@
 #include "cameraclass.h"
 #include "gameobject.h"
 #include "lightclass.h"
-#include "rendertextureclass.h"
-#include "lightshaderclass.h"
-#include "refractionshaderclass.h"
-#include "watershaderclass.h"
+#include "lightshader.h"
 #include "D3dclass.h"
 
 namespace Engine
@@ -49,7 +46,7 @@ namespace Engine
 
 		std::vector <GameObject*> Models;
 		std::unique_ptr<LightClass> Light;
-		std::unique_ptr<LightShaderClass> LightShader;
+		std::unique_ptr<LightShader> LightShader;
 		std::unique_ptr<CameraClass> Camera;
 		std::unique_ptr<TextureClass> Texture; //default
 	};

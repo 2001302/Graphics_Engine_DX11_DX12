@@ -48,7 +48,7 @@ namespace Engine
 		std::unique_ptr<LightClass> Light;
 		std::unique_ptr<LightShader> LightShader;
 		std::unique_ptr<CameraClass> Camera;
-		std::unique_ptr<TextureClass> Texture; //default
+		std::shared_ptr<TextureClass> Texture; //default
 	};
 
 	class ViewingPoint : public IDataBlock

@@ -10,7 +10,7 @@ EnumBehaviorTreeStatus LoadTextureData::Invoke()
 	assert(manager != nullptr);
 
 	const char* textureFilename = "../Engine/data/wall01.tga"; //TODO : need path policy
-	manager->Texture = std::make_unique<TextureClass>();
+	manager->Texture = std::make_shared<TextureClass>();
 	manager->Texture->Initialize(D3DClass::GetInstance().GetDevice(), D3DClass::GetInstance().GetDeviceContext(), textureFilename);
 
 	return EnumBehaviorTreeStatus::eSuccess;
@@ -94,10 +94,10 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 	{
 		model->Render(D3DClass::GetInstance().GetDeviceContext());
 
-		viewingPoint->WorldMatrix = model->Transform;
+		viewingPoint->WorldMatrix = model->transform;
 
 		manager->LightShader->Render(D3DClass::GetInstance().GetDeviceContext(), model->GetIndexCount(), viewingPoint->WorldMatrix, viewingPoint->ViewMatrix, viewingPoint->ProjectionMatrix,
-			model->GetTexture(), manager->Light->GetDirection(), manager->Light->GetAmbientColor(), manager->Light->GetDiffuseColor());
+			model->texture->GetTexture(), manager->Light->GetDirection(), manager->Light->GetAmbientColor(), manager->Light->GetDiffuseColor());
 	}
 
 	return EnumBehaviorTreeStatus::eSuccess;

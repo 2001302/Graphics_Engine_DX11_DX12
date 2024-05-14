@@ -3,14 +3,13 @@
 
 #include "GameObject.h"
 
+using namespace Engine;
+
 GameObject::GameObject()
 {
 	m_vertexBuffer = 0;
 	m_indexBuffer = 0;
-	m_texture = 0;
-
-	meshes.clear();
-	bones.clear();
+	texture = 0;
 }
 
 GameObject::GameObject(const GameObject& other)
@@ -18,19 +17,12 @@ GameObject::GameObject(const GameObject& other)
 }
 
 GameObject::~GameObject()
-{
+{	
 }
 
-bool GameObject::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, const char* textureFilename)
+bool GameObject::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext)
 {
 	bool result;
-
-	// Load in the model data.
-	result = LoadModel(modelFilename);
-	if (!result)
-	{
-		return false;
-	}
 
 	// Initialize the vertex and index buffers.
 	result = InitializeBuffers(device);
@@ -38,49 +30,20 @@ bool GameObject::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceCon
 	{
 		return false;
 	}
-
-	// Load the texture for this model.
-	result = LoadTexture(device, deviceContext, textureFilename);
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
-}
-bool GameObject::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* modelFilename, std::unique_ptr<TextureClass>& texture)
-{
-	bool result;
-
-	// Load in the model data.
-	result = LoadModel(modelFilename);
-	if (!result)
-	{
-		return false;
-	}
-
-	// Initialize the vertex and index buffers.
-	result = InitializeBuffers(device);
-	if (!result)
-	{
-		return false;
-	}
-
-	m_texture = std::move(texture);
 
 	return true;
 }
 void GameObject::Shutdown()
 {
-	// Release the model texture.
-	ReleaseTexture();
+	// Release the texture object.
+	if (texture)
+	{
+		texture->Shutdown();
+		texture.reset();
+	}
 
 	// Shutdown the vertex and index buffers.
 	ShutdownBuffers();
-
-	// Release the model data.
-	ReleaseModel();
-
 	return;
 }
 
@@ -158,7 +121,6 @@ bool GameObject::InitializeBuffers(ID3D11Device* device)
 	return true;
 }
 
-
 void GameObject::ShutdownBuffers()
 {
 	// Release the index buffer.
@@ -178,12 +140,10 @@ void GameObject::ShutdownBuffers()
 	return;
 }
 
-
 void GameObject::RenderBuffers(ID3D11DeviceContext* deviceContext)
 {
 	unsigned int stride;
 	unsigned int offset;
-
 
 	// Set vertex buffer stride and offset.
 	stride = sizeof(VertexType);
@@ -201,45 +161,7 @@ void GameObject::RenderBuffers(ID3D11DeviceContext* deviceContext)
 	return;
 }
 
-
-bool GameObject::LoadTexture(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const  char* filename)
-{
-	bool result;
-
-
-	// Create and initialize the texture object.
-	m_texture = std::make_unique<TextureClass>();
-
-	result = m_texture->Initialize(device, deviceContext, filename);
-	if (!result)
-	{
-		return false;
-	}
-
-	return true;
-}
-
-
-void GameObject::ReleaseTexture()
-{
-	// Release the texture object.
-	if (m_texture)
-	{
-		m_texture->Shutdown();
-		m_texture.reset();
-	}
-
-	return;
-}
-
-void GameObject::ReleaseModel()
-{
-	meshes.clear();
-	bones.clear();
-	return;
-}
-
-bool GameObject::LoadModel(const char* filename)
+GameObject* ResourceHelper::ImportModel(Engine::GameObject* gameObject, const char* filename)
 {
 	Assimp::Importer importer;
 
@@ -265,19 +187,19 @@ bool GameObject::LoadModel(const char* filename)
 	*/
 
 	//Using the Assimp library, start from the root node of the imported 3D model and traverse through the model data to read it
-	ReadModelData(scene, scene->mRootNode, -1, -1);
+	ReadModelData(gameObject, scene, scene->mRootNode, -1, -1);
 
 	//Read the skin (bone) data to be applied to the mesh.
-	ReadSkinData(scene);
+	ReadSkinData(gameObject, scene);
 
-	ReadAnimationData(scene);
+	ReadAnimationData(gameObject, scene);
 
-	return true;
+	return gameObject;
 }
 
-void GameObject::ReadModelData(const aiScene* scene, aiNode* node, int index, int parent)
+void ResourceHelper::ReadModelData(Engine::GameObject* gameObject, const aiScene* scene, aiNode* node, int index, int parent)
 {
-	std::shared_ptr<Bone> bone = std::make_shared<Bone>();
+	std::shared_ptr<Engine::Bone> bone = std::make_shared<Engine::Bone>();
 
 	bone->index = index;
 	bone->parent = parent;
@@ -291,30 +213,30 @@ void GameObject::ReadModelData(const aiScene* scene, aiNode* node, int index, in
 	//Calculate the transformation relative to the root (or parent) bone.
 	DirectX::XMMATRIX matParent = DirectX::XMMatrixIdentity();
 	if (parent >= 0) {
-		matParent = bones[parent]->transform;
+		matParent = gameObject->bones[parent]->transform;
 	}
 
 	//Finally, calculate the transformation matrix of the bone.
 	bone->transform = bone->transform * matParent;
 
-	bones.push_back(bone);
+	gameObject->bones.push_back(bone);
 
 	//Read the mesh data linked to the current node (bone).
-	ReadMeshData(scene, node, index);
+	ReadMeshData(gameObject, scene, node, index);
 
 	//Recursively traverse all child nodes of the current node, repeating the same process.
 	for (unsigned int i = 0; i < node->mNumChildren; i++) {
-		ReadModelData(scene, node->mChildren[i], bones.size(), index);
+		ReadModelData(gameObject, scene, node->mChildren[i], gameObject->bones.size(), index);
 	}
 }
 
-void GameObject::ReadMeshData(const aiScene* scene, aiNode* node, int bone)
+void ResourceHelper::ReadMeshData(Engine::GameObject* gameObject, const aiScene* scene, aiNode* node, int bone)
 {
 	//Do not process nodes without a mesh.
 	if (node->mNumMeshes < 1)
 		return;
 
-	std::shared_ptr<Mesh> mesh = std::make_shared<Mesh>();
+	std::shared_ptr<Engine::Mesh> mesh = std::make_shared<Engine::Mesh>();
 
 	mesh->name = node->mName.C_Str();
 	mesh->boneIndex = bone; //Set the bone indices associated with the mesh.
@@ -355,10 +277,10 @@ void GameObject::ReadMeshData(const aiScene* scene, aiNode* node, int bone)
 		}
 	}
 
-	meshes.push_back(mesh);
+	gameObject->meshes.push_back(mesh);
 }
 
-void GameObject::ReadSkinData(const aiScene* scene)
+void ResourceHelper::ReadSkinData(Engine::GameObject* gameObject, const aiScene* scene)
 {
 	for (int i = 0; i < scene->mNumMeshes; i++)
 	{
@@ -367,14 +289,14 @@ void GameObject::ReadSkinData(const aiScene* scene)
 		//Skip if there are no bones
 		if (!srcMesh->HasBones()) continue;
 
-		std::shared_ptr<Mesh> mesh = meshes[i];
+		std::shared_ptr<Engine::Mesh> mesh = gameObject->meshes[i];
 
-		std::vector<BoneWeights> tempVertexBoneWeights;
+		std::vector<Engine::BoneWeights> tempVertexBoneWeights;
 		tempVertexBoneWeights.resize(mesh->vertices.size());
 
 		for (int b = 0; b < srcMesh->mNumBones; b++) {
 			aiBone* srcMeshBone = srcMesh->mBones[b];
-			int boneIndex = GetBoneIndex(srcMeshBone->mName.C_Str());
+			int boneIndex = GetBoneIndex(gameObject, srcMeshBone->mName.C_Str());
 
 			for (unsigned int w = 0; w < srcMeshBone->mNumWeights; w++) {
 				unsigned int index = srcMeshBone->mWeights[w].mVertexId;
@@ -395,9 +317,9 @@ void GameObject::ReadSkinData(const aiScene* scene)
 	}
 }
 
-unsigned int GameObject::GetBoneIndex(const std::string& name)
+unsigned int ResourceHelper::GetBoneIndex(Engine::GameObject* gameObject, const std::string& name)
 {
-	for (std::shared_ptr<Bone>& bone : bones)
+	for (std::shared_ptr<Bone>& bone : gameObject->bones)
 	{
 		if (bone->name == name)
 			return bone->index;
@@ -407,7 +329,7 @@ unsigned int GameObject::GetBoneIndex(const std::string& name)
 	return 0;
 }
 
-void GameObject::ReadAnimationData(const aiScene* scene) 
+void ResourceHelper::ReadAnimationData(Engine::GameObject* gameObject, const aiScene* scene)
 {
 	// Check if the scene has animations
 	if (scene->HasAnimations()) {
@@ -444,4 +366,15 @@ void GameObject::ReadAnimationData(const aiScene* scene)
 			}
 		}
 	}
+}
+
+GameObject* ResourceHelper::ImportTexture(GameObject* gameObject, ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename)
+{
+	gameObject->texture->Initialize(device, deviceContext, filename);
+	return gameObject;
+}
+GameObject* ResourceHelper::ImportTexture(GameObject* gameObject, std::shared_ptr<TextureClass> texture)
+{
+	gameObject->texture = texture;
+	return gameObject;
 }

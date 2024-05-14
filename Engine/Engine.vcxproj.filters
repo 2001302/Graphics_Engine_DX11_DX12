@@ -61,6 +61,9 @@
     <ClInclude Include="ImGui\imstb_truetype.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="ResourceHelper.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />
@@ -118,6 +121,9 @@
     <ClCompile Include="ImGui\ImguiWindow.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="ResourceHelper.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Model">
@@ -129,12 +135,22 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Util">
+      <UniqueIdentifier>{0e42b4f6-d6f5-44fe-bceb-6a275b568a85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader">
+      <UniqueIdentifier>{75d77732-7f85-4c0a-b799-392f4e62111e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ImGui\imgui.ini">
       <Filter>ImGui</Filter>
     </None>
-    <None Include="light.ps" />
-    <None Include="light.vs" />
+    <None Include="light.vs">
+      <Filter>Shader</Filter>
+    </None>
+    <None Include="light.ps">
+      <Filter>Shader</Filter>
+    </None>
   </ItemGroup>
 </Project>

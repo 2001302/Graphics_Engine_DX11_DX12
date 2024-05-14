@@ -157,6 +157,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="TextureClass.h" />
+    <ClInclude Include="ResourceHelper.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ApplicationClass.cpp" />
@@ -180,6 +181,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="SystemClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
+    <ClCompile Include="ResourceHelper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ImGui\imgui.ini" />

@@ -5,6 +5,7 @@
 
 #include "inputclass.h"
 #include "applicationclass.h"
+#include "resourcehelper.h"
 
 namespace Engine
 {

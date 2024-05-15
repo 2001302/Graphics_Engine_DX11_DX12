@@ -5,12 +5,14 @@
 
 namespace Engine
 {
+
 	/// <summary>
 	/// Resource Load/Save/Convert 등 작업을 수행하는 class. 
 	/// NOTE : member 변수를 가지지 말 것.
 	/// </summary>
 	class ResourceHelper
 	{
+
 	public:
 		ResourceHelper() {};
 		~ResourceHelper() {};
@@ -20,10 +22,13 @@ namespace Engine
 		static void ReadMeshData(GameObject* gameObject, const aiScene* scene, aiNode* node, int bone);
 		static void ReadSkinData(GameObject* gameObject, const aiScene* scene);
 		static unsigned int GetBoneIndex(GameObject* gameObject, const std::string& name);
-		static void ReadAnimationData(GameObject* gameObject, const aiScene* scene);
 
 		static GameObject* ImportTexture(GameObject* gameObject, ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename);
 		static GameObject* ImportTexture(GameObject* gameObject, std::shared_ptr<TextureClass> texture);
+	
+		std::shared_ptr<Animation> ReadAnimationData(aiAnimation* srcAnimation, const aiScene* scene);
+		std::shared_ptr<AnimationNode> ParseAnimationNode(std::shared_ptr<Animation> animation, aiNodeAnim* srcNode);
+		void ReadKeyframeData(std::shared_ptr<Animation> animation, aiNode* node, std::map<std::string, std::shared_ptr<AnimationNode>>& cache);
 	};
 
 	/// <summary>

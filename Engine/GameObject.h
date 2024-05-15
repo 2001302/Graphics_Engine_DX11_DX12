@@ -4,35 +4,12 @@
 #include <d3d11.h>
 #include <directxmath.h>
 
-#include "TextureClass.h"
 #include "Header.h"
+#include "TextureClass.h"
+#include "CommonStruct.h"
 
 namespace Engine
 {
-	struct VertexType
-	{
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT2 texture;
-		DirectX::XMFLOAT3 normal;
-		DirectX::XMFLOAT4 blendIndices;
-		DirectX::XMFLOAT4 blendWeights;
-	};
-	struct Bone
-	{
-		int index;
-		std::string name;
-		int parent;
-		DirectX::XMMATRIX transform;
-	};
-	struct Mesh
-	{
-		std::string name;
-		int boneIndex;
-		std::string materialName;
-		std::vector<VertexType> vertices;
-		std::vector<int> indices;
-	};
-
 	class GameObject
 	{
 	public:
@@ -50,6 +27,7 @@ namespace Engine
 		std::vector<std::shared_ptr<Bone>> bones;
 		std::vector<std::shared_ptr<Mesh>> meshes;
 		std::shared_ptr<TextureClass> texture;
+		std::shared_ptr<Animation> animation;
 
 	private:
 		bool InitializeBuffers(ID3D11Device* device);

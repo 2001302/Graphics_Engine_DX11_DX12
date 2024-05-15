@@ -1,9 +1,6 @@
 #ifndef _D3DCLASS_H_
 #define _D3DCLASS_H_
 
-#include <d3d11.h>
-#include <directxmath.h>
-
 #include "Header.h"
 
 using namespace DirectX;

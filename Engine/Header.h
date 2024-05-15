@@ -13,6 +13,8 @@
 #include <omp.h>		//for omp parallel
 #include <commdlg.h>	//for file open
 
+#include <d3d11.h>
+#include <directxmath.h>
 #include <eigen/dense>
 #include <boost/iostreams/device/mapped_file.hpp>
 #include <boost/algorithm/string.hpp>

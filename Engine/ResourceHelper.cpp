@@ -1,4 +1,4 @@
-#include "ResourceHelper.h"
+ï»¿#include "ResourceHelper.h"
 
 using namespace Engine;
 
@@ -33,8 +33,11 @@ GameObject* ResourceHelper::ImportModel(Engine::GameObject* gameObject, const ch
 	//Read the skin (bone) data to be applied to the mesh.
 	ReadSkinData(gameObject, scene);
 
-	//ReadAnimationData(gameObject, scene);
-
+	if(scene->HasAnimations())
+	{
+		gameObject->animation = ReadAnimationData(scene);
+	}
+	
 	return gameObject;
 }
 
@@ -182,60 +185,61 @@ GameObject* ResourceHelper::ImportTexture(GameObject* gameObject, std::shared_pt
 	return gameObject;
 }
 
-std::shared_ptr<Animation> ResourceHelper::ReadAnimationData(aiAnimation* srcAnimation, const aiScene* scene)
+std::shared_ptr<Animation> ResourceHelper::ReadAnimationData(const aiScene* scene)
 {
-	// »õ·Î¿î ¾Ö´Ï¸ŞÀÌ¼Ç °´Ã¼¸¦ »ı¼ºÇÕ´Ï´Ù.
+	auto srcAnimation = *scene->mAnimations;
+	// ìƒˆë¡œìš´ ì• ë‹ˆë©”ì´ì…˜ ê°ì²´ë¥¼ ìƒì„±í•©ë‹ˆë‹¤.
 	std::shared_ptr<Animation> animation = std::make_shared<Animation>();
-	// ¾Ö´Ï¸ŞÀÌ¼Ç ÀÌ¸§À» ¼³Á¤ÇÕ´Ï´Ù.
+	// ì• ë‹ˆë©”ì´ì…˜ ì´ë¦„ì„ ì„¤ì •í•©ë‹ˆë‹¤.
 	animation->name = srcAnimation->mName.C_Str();
-	// ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ ÇÁ·¹ÀÓ ¼Óµµ¸¦ ¼³Á¤ÇÕ´Ï´Ù. (ÃÊ´ç Æ½ ¼ö)
+	// ì• ë‹ˆë©”ì´ì…˜ì˜ í”„ë ˆì„ ì†ë„ë¥¼ ì„¤ì •í•©ë‹ˆë‹¤. (ì´ˆë‹¹ í‹± ìˆ˜)
 	animation->frameRate = (float)srcAnimation->mTicksPerSecond;
-	// ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ ÇÁ·¹ÀÓ ¼ö¸¦ ¼³Á¤ÇÕ´Ï´Ù. (Áö¼Ó ½Ã°£ ±â¹İ)
+	// ì• ë‹ˆë©”ì´ì…˜ì˜ í”„ë ˆì„ ìˆ˜ë¥¼ ì„¤ì •í•©ë‹ˆë‹¤. (ì§€ì† ì‹œê°„ ê¸°ë°˜)
 	animation->frameCount = (int)srcAnimation->mDuration + 1;
 
-	// ¾Ö´Ï¸ŞÀÌ¼Ç ³ëµå¸¦ Ä³½ÌÇÏ±â À§ÇÑ ¸ÊÀ» ¼±¾ğÇÕ´Ï´Ù.
+	// ì• ë‹ˆë©”ì´ì…˜ ë…¸ë“œë¥¼ ìºì‹±í•˜ê¸° ìœ„í•œ ë§µì„ ì„ ì–¸í•©ë‹ˆë‹¤.
 	std::map<std::string, std::shared_ptr<AnimationNode>> cacheAnimNodes;
-	// Assimp ¾Ö´Ï¸ŞÀÌ¼Ç Ã¤³ÎÀ» ¼øÈ¸ÇÏ¸ç ³ëµåº° ¾Ö´Ï¸ŞÀÌ¼Ç µ¥ÀÌÅÍ¸¦ Ã³¸®ÇÕ´Ï´Ù.
+	// Assimp ì• ë‹ˆë©”ì´ì…˜ ì±„ë„ì„ ìˆœíšŒí•˜ë©° ë…¸ë“œë³„ ì• ë‹ˆë©”ì´ì…˜ ë°ì´í„°ë¥¼ ì²˜ë¦¬í•©ë‹ˆë‹¤.
 	for (int i = 0; i < srcAnimation->mNumChannels; i++) {
 		aiNodeAnim* srcNode = srcAnimation->mChannels[i];
 
-		// ¾Ö´Ï¸ŞÀÌ¼Ç ³ëµå¸¦ ÆÄ½ÌÇÕ´Ï´Ù.
+		// ì• ë‹ˆë©”ì´ì…˜ ë…¸ë“œë¥¼ íŒŒì‹±í•©ë‹ˆë‹¤.
 		std::shared_ptr<AnimationNode> node = ParseAnimationNode(animation, srcNode);
 
-		// ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ ÃÖ´ë Áö¼Ó ½Ã°£À» ¾÷µ¥ÀÌÆ®ÇÕ´Ï´Ù.
+		// ì• ë‹ˆë©”ì´ì…˜ì˜ ìµœëŒ€ ì§€ì† ì‹œê°„ì„ ì—…ë°ì´íŠ¸í•©ë‹ˆë‹¤.
 		animation->duration = max(animation->duration, node->keyframe.back().time);
 
-		// ÆÄ½ÌµÈ ³ëµå¸¦ Ä³½Ã¿¡ Ãß°¡ÇÕ´Ï´Ù.
+		// íŒŒì‹±ëœ ë…¸ë“œë¥¼ ìºì‹œì— ì¶”ê°€í•©ë‹ˆë‹¤.
 		cacheAnimNodes[srcNode->mNodeName.C_Str()] = node;
 	}
-	// ¾Ö´Ï¸ŞÀÌ¼Ç Å°ÇÁ·¹ÀÓ µ¥ÀÌÅÍ¸¦ Ã³¸®ÇÕ´Ï´Ù.
+	// ì• ë‹ˆë©”ì´ì…˜ í‚¤í”„ë ˆì„ ë°ì´í„°ë¥¼ ì²˜ë¦¬í•©ë‹ˆë‹¤.
 	ReadKeyframeData(animation, scene->mRootNode, cacheAnimNodes);
 
 	return animation;
 }
 
 
-// ¾Ö´Ï¸ŞÀÌ¼Ç ³ëµå¸¦ ÆÄ½ÌÇÏ´Â ÇÔ¼ö
+// ì• ë‹ˆë©”ì´ì…˜ ë…¸ë“œë¥¼ íŒŒì‹±í•˜ëŠ” í•¨ìˆ˜
 std::shared_ptr<AnimationNode> ResourceHelper::ParseAnimationNode(std::shared_ptr<Animation> animation, aiNodeAnim* srcNode)
 {
-	// »õ·Î¿î ¾Ö´Ï¸ŞÀÌ¼Ç ³ëµå °´Ã¼¸¦ »ı¼ºÇÕ´Ï´Ù.
+	// ìƒˆë¡œìš´ ì• ë‹ˆë©”ì´ì…˜ ë…¸ë“œ ê°ì²´ë¥¼ ìƒì„±í•©ë‹ˆë‹¤.
 	std::shared_ptr<AnimationNode> node = std::make_shared<AnimationNode>();
-	// ³ëµå ÀÌ¸§À» ¼³Á¤ÇÕ´Ï´Ù.
+	// ë…¸ë“œ ì´ë¦„ì„ ì„¤ì •í•©ë‹ˆë‹¤.
 	node->name = srcNode->mNodeName.C_Str();
 
-	// À§Ä¡, È¸Àü, ½ºÄÉÀÏ Áß °¡Àå ¸¹Àº Å°ÇÁ·¹ÀÓÀ» °¡Áø °ÍÀ» ±âÁØÀ¸·Î ÃÑ Å°ÇÁ·¹ÀÓ ¼ö¸¦ °áÁ¤ÇÕ´Ï´Ù.
+	// ìœ„ì¹˜, íšŒì „, ìŠ¤ì¼€ì¼ ì¤‘ ê°€ì¥ ë§ì€ í‚¤í”„ë ˆì„ì„ ê°€ì§„ ê²ƒì„ ê¸°ì¤€ìœ¼ë¡œ ì´ í‚¤í”„ë ˆì„ ìˆ˜ë¥¼ ê²°ì •í•©ë‹ˆë‹¤.
 	int keyCount = max(max(srcNode->mNumPositionKeys, srcNode->mNumScalingKeys), srcNode->mNumRotationKeys);
 
-	// °¢ Å°ÇÁ·¹ÀÓ¿¡ ´ëÇØ ¹İº¹ÇÕ´Ï´Ù.
+	// ê° í‚¤í”„ë ˆì„ì— ëŒ€í•´ ë°˜ë³µí•©ë‹ˆë‹¤.
 	for (int k = 0; k < keyCount; k++)
 	{
 
-		KeyframeData frameData; // Å°ÇÁ·¹ÀÓ µ¥ÀÌÅÍ °´Ã¼
+		KeyframeData frameData; // í‚¤í”„ë ˆì„ ë°ì´í„° ê°ì²´
 
-		bool found = false; // Å°ÇÁ·¹ÀÓÀÌ ¹ß°ßµÇ¾ú´ÂÁö ¿©ºÎ
-		int t = node->keyframe.size(); // ÇöÀç Å°ÇÁ·¹ÀÓÀÇ ÀÎµ¦½º
+		bool found = false; // í‚¤í”„ë ˆì„ì´ ë°œê²¬ë˜ì—ˆëŠ”ì§€ ì—¬ë¶€
+		int t = node->keyframe.size(); // í˜„ì¬ í‚¤í”„ë ˆì„ì˜ ì¸ë±ìŠ¤
 
-		// À§Ä¡, È¸Àü, ½ºÄÉÀÏ Å°ÇÁ·¹ÀÓÀ» Ã³¸®ÇÕ´Ï´Ù.°¢ Å°ÇÁ·¹ÀÓÀÇ ½Ã°£°ú µ¥ÀÌÅÍ¸¦ ÃßÃâÇÏ¿© frameData¿¡ ÀúÀåÇÕ´Ï´Ù.
+		// ìœ„ì¹˜, íšŒì „, ìŠ¤ì¼€ì¼ í‚¤í”„ë ˆì„ì„ ì²˜ë¦¬í•©ë‹ˆë‹¤.ê° í‚¤í”„ë ˆì„ì˜ ì‹œê°„ê³¼ ë°ì´í„°ë¥¼ ì¶”ì¶œí•˜ì—¬ frameDataì— ì €ì¥í•©ë‹ˆë‹¤.
 		// Position
 		if (::fabsf((float)srcNode->mPositionKeys[k].mTime - (float)t) <= 0.0001f)
 		{
@@ -267,60 +271,60 @@ std::shared_ptr<AnimationNode> ResourceHelper::ParseAnimationNode(std::shared_pt
 		}
 
 		if (found == true)
-			node->keyframe.push_back(frameData); // Ã³¸®µÈ Å°ÇÁ·¹ÀÓÀ» ³ëµå¿¡ Ãß°¡ÇÕ´Ï´Ù.
+			node->keyframe.push_back(frameData); // ì²˜ë¦¬ëœ í‚¤í”„ë ˆì„ì„ ë…¸ë“œì— ì¶”ê°€í•©ë‹ˆë‹¤.
 	}
 
-	// ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ Å°ÇÁ·¹ÀÓ ¼öº¸´Ù ³ëµåÀÇ Å°ÇÁ·¹ÀÓ ¼ö°¡ ÀûÀº °æ¿ì, ¸¶Áö¸· Å°ÇÁ·¹ÀÓÀ» º¹Á¦ÇÏ¿© Ã¤¿ó´Ï´Ù.
+	// ì• ë‹ˆë©”ì´ì…˜ì˜ í‚¤í”„ë ˆì„ ìˆ˜ë³´ë‹¤ ë…¸ë“œì˜ í‚¤í”„ë ˆì„ ìˆ˜ê°€ ì ì€ ê²½ìš°, ë§ˆì§€ë§‰ í‚¤í”„ë ˆì„ì„ ë³µì œí•˜ì—¬ ì±„ì›ë‹ˆë‹¤.
 	if (node->keyframe.size() < animation->frameCount) {
-		int count = animation->frameCount - node->keyframe.size(); // Ã¤¿ö¾ß ÇÒ Å°ÇÁ·¹ÀÓ ¼ö
-		KeyframeData keyFrame = node->keyframe.back(); // ¸¶Áö¸· Å°ÇÁ·¹ÀÓ
+		int count = animation->frameCount - node->keyframe.size(); // ì±„ì›Œì•¼ í•  í‚¤í”„ë ˆì„ ìˆ˜
+		KeyframeData keyFrame = node->keyframe.back(); // ë§ˆì§€ë§‰ í‚¤í”„ë ˆì„
 
 		for (int n = 0; n < count; n++) {
-			node->keyframe.push_back(keyFrame); // Å°ÇÁ·¹ÀÓ º¹Á¦ÇÏ¿© Ãß°¡
+			node->keyframe.push_back(keyFrame); // í‚¤í”„ë ˆì„ ë³µì œí•˜ì—¬ ì¶”ê°€
 		}
 	}
 
 	return node;
 }
 
-// ¾Ö´Ï¸ŞÀÌ¼Ç µ¥ÀÌÅÍ¿¡¼­ Æ¯Á¤ ³ëµåÀÇ Å°ÇÁ·¹ÀÓ µ¥ÀÌÅÍ¸¦ ÀĞ¾î ³»ºÎ µ¥ÀÌÅÍ ±¸Á¶¿¡ ÀúÀåÇÏ´Â ÇÔ¼ö
+// ì• ë‹ˆë©”ì´ì…˜ ë°ì´í„°ì—ì„œ íŠ¹ì • ë…¸ë“œì˜ í‚¤í”„ë ˆì„ ë°ì´í„°ë¥¼ ì½ì–´ ë‚´ë¶€ ë°ì´í„° êµ¬ì¡°ì— ì €ì¥í•˜ëŠ” í•¨ìˆ˜
 void ResourceHelper::ReadKeyframeData(std::shared_ptr<Animation> animation, aiNode* node, std::map<std::string, std::shared_ptr<AnimationNode>>& cache)
 {
-	// »õ·Î¿î Å°ÇÁ·¹ÀÓ °´Ã¼¸¦ »ı¼ºÇÕ´Ï´Ù.
+	// ìƒˆë¡œìš´ í‚¤í”„ë ˆì„ ê°ì²´ë¥¼ ìƒì„±í•©ë‹ˆë‹¤.
 	std::shared_ptr<Keyframe> keyframe = std::make_shared<Keyframe>();
-	// ÇöÀç ³ëµå(º»)ÀÇ ÀÌ¸§À» Å°ÇÁ·¹ÀÓÀÇ º» ÀÌ¸§À¸·Î ¼³Á¤ÇÕ´Ï´Ù.
+	// í˜„ì¬ ë…¸ë“œ(ë³¸)ì˜ ì´ë¦„ì„ í‚¤í”„ë ˆì„ì˜ ë³¸ ì´ë¦„ìœ¼ë¡œ ì„¤ì •í•©ë‹ˆë‹¤.
 	keyframe->boneName = node->mName.C_Str();
 
-	// ÇöÀç ³ëµå¿¡ ÇØ´çÇÏ´Â ¾Ö´Ï¸ŞÀÌ¼Ç ³ëµå¸¦ Ã£½À´Ï´Ù.
+	// í˜„ì¬ ë…¸ë“œì— í•´ë‹¹í•˜ëŠ” ì• ë‹ˆë©”ì´ì…˜ ë…¸ë“œë¥¼ ì°¾ìŠµë‹ˆë‹¤.
 	std::shared_ptr<AnimationNode> findNode = cache[node->mName.C_Str()];
 
-	// ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ ¸ğµç ÇÁ·¹ÀÓ¿¡ ´ëÇØ ¹İº¹ÇÕ´Ï´Ù.
+	// ì• ë‹ˆë©”ì´ì…˜ì˜ ëª¨ë“  í”„ë ˆì„ì— ëŒ€í•´ ë°˜ë³µí•©ë‹ˆë‹¤.
 	for (int i = 0; i < animation->frameCount; i++) {
-		KeyframeData frameData; // Å°ÇÁ·¹ÀÓ µ¥ÀÌÅÍ °´Ã¼¸¦ »ı¼ºÇÕ´Ï´Ù.
+		KeyframeData frameData; // í‚¤í”„ë ˆì„ ë°ì´í„° ê°ì²´ë¥¼ ìƒì„±í•©ë‹ˆë‹¤.
 
-		// ¸¸¾à ÇöÀç ³ëµå¿¡ ´ëÇÑ ¾Ö´Ï¸ŞÀÌ¼Ç ³ëµå°¡ Ä³½Ã¿¡¼­ Ã£¾ÆÁöÁö ¾Ê´Â °æ¿ì
+		// ë§Œì•½ í˜„ì¬ ë…¸ë“œì— ëŒ€í•œ ì• ë‹ˆë©”ì´ì…˜ ë…¸ë“œê°€ ìºì‹œì—ì„œ ì°¾ì•„ì§€ì§€ ì•ŠëŠ” ê²½ìš°
 		if (findNode == nullptr) {
-			// ³ëµåÀÇ º¯È¯ Çà·ÄÀ» °¡Á®¿Í ÀüÄ¡ÇÑ µÚ, ÀÌ¸¦ ±â¹İÀ¸·Î À§Ä¡, È¸Àü, ½ºÄÉÀÏ µ¥ÀÌÅÍ¸¦ ÃßÃâÇÕ´Ï´Ù.
+			// ë…¸ë“œì˜ ë³€í™˜ í–‰ë ¬ì„ ê°€ì ¸ì™€ ì „ì¹˜í•œ ë’¤, ì´ë¥¼ ê¸°ë°˜ìœ¼ë¡œ ìœ„ì¹˜, íšŒì „, ìŠ¤ì¼€ì¼ ë°ì´í„°ë¥¼ ì¶”ì¶œí•©ë‹ˆë‹¤.
 			DirectX::XMMATRIX transform(node->mTransformation[0]);
 			transform = XMMatrixTranspose(transform);
-			frameData.time = (float)i; // ÇÁ·¹ÀÓ ½Ã°£À» ¼³Á¤ÇÕ´Ï´Ù.
+			frameData.time = (float)i; // í”„ë ˆì„ ì‹œê°„ì„ ì„¤ì •í•©ë‹ˆë‹¤.
 			//transform.Decompose(OUT frameData.scale, OUT frameData.rotation, OUT frameData.translation);
 			XMMatrixDecompose(&frameData.scale, &frameData.rotation, &frameData.translation, transform);
 		}
 		else
 		{
-			// Ä³½Ã¿¡¼­ Ã£¾ÆÁø ¾Ö´Ï¸ŞÀÌ¼Ç ³ëµå¿¡ ÀÌ¹Ì Å°ÇÁ·¹ÀÓ µ¥ÀÌÅÍ°¡ ÀÖÀ¸¸é, ÇØ´ç µ¥ÀÌÅÍ¸¦ »ç¿ëÇÕ´Ï´Ù.
+			// ìºì‹œì—ì„œ ì°¾ì•„ì§„ ì• ë‹ˆë©”ì´ì…˜ ë…¸ë“œì— ì´ë¯¸ í‚¤í”„ë ˆì„ ë°ì´í„°ê°€ ìˆìœ¼ë©´, í•´ë‹¹ ë°ì´í„°ë¥¼ ì‚¬ìš©í•©ë‹ˆë‹¤.
 			frameData = findNode->keyframe[i];
 		}
 
-		// Ã³¸®µÈ Å°ÇÁ·¹ÀÓ µ¥ÀÌÅÍ¸¦ Å°ÇÁ·¹ÀÓ °´Ã¼¿¡ Ãß°¡ÇÕ´Ï´Ù.
+		// ì²˜ë¦¬ëœ í‚¤í”„ë ˆì„ ë°ì´í„°ë¥¼ í‚¤í”„ë ˆì„ ê°ì²´ì— ì¶”ê°€í•©ë‹ˆë‹¤.
 		keyframe->transforms.push_back(frameData);
 	}
 
-	// Ã³¸®µÈ Å°ÇÁ·¹ÀÓ °´Ã¼¸¦ ¾Ö´Ï¸ŞÀÌ¼ÇÀÇ Å°ÇÁ·¹ÀÓ ¸ñ·Ï¿¡ Ãß°¡ÇÕ´Ï´Ù.
+	// ì²˜ë¦¬ëœ í‚¤í”„ë ˆì„ ê°ì²´ë¥¼ ì• ë‹ˆë©”ì´ì…˜ì˜ í‚¤í”„ë ˆì„ ëª©ë¡ì— ì¶”ê°€í•©ë‹ˆë‹¤.
 	animation->keyframes.push_back(*keyframe);
 
-	// ÇöÀç ³ëµåÀÇ ¸ğµç ÀÚ½Ä ³ëµå¿¡ ´ëÇØ Àç±ÍÀûÀ¸·Î µ¿ÀÏÇÑ Ã³¸®¸¦ ¼öÇàÇÕ´Ï´Ù.
+	// í˜„ì¬ ë…¸ë“œì˜ ëª¨ë“  ìì‹ ë…¸ë“œì— ëŒ€í•´ ì¬ê·€ì ìœ¼ë¡œ ë™ì¼í•œ ì²˜ë¦¬ë¥¼ ìˆ˜í–‰í•©ë‹ˆë‹¤.
 	for (int i = 0; i < node->mNumChildren; i++)
 		ReadKeyframeData(animation, node->mChildren[i], cache);
 }

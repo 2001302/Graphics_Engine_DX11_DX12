@@ -1,4 +1,4 @@
-#ifndef _RESOURCEHELPER
+ï»¿#ifndef _RESOURCEHELPER
 #define _RESOURCEHELPER	
 
 #include "GameObject.h"
@@ -7,8 +7,8 @@ namespace Engine
 {
 
 	/// <summary>
-	/// Resource Load/Save/Convert µî ÀÛ¾÷À» ¼öÇàÇÏ´Â class. 
-	/// NOTE : member º¯¼ö¸¦ °¡ÁöÁö ¸» °Í.
+	/// Resource Load/Save/Convert ë“± ì‘ì—…ì„ ìˆ˜í–‰í•˜ëŠ” class. 
+	/// NOTE : member ë³€ìˆ˜ë¥¼ ê°€ì§€ì§€ ë§ ê²ƒ.
 	/// </summary>
 	class ResourceHelper
 	{
@@ -26,13 +26,13 @@ namespace Engine
 		static GameObject* ImportTexture(GameObject* gameObject, ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename);
 		static GameObject* ImportTexture(GameObject* gameObject, std::shared_ptr<TextureClass> texture);
 	
-		std::shared_ptr<Animation> ReadAnimationData(aiAnimation* srcAnimation, const aiScene* scene);
-		std::shared_ptr<AnimationNode> ParseAnimationNode(std::shared_ptr<Animation> animation, aiNodeAnim* srcNode);
-		void ReadKeyframeData(std::shared_ptr<Animation> animation, aiNode* node, std::map<std::string, std::shared_ptr<AnimationNode>>& cache);
+		static std::shared_ptr<Animation> ReadAnimationData(const aiScene* scene);
+		static std::shared_ptr<AnimationNode> ParseAnimationNode(std::shared_ptr<Animation> animation, aiNodeAnim* srcNode);
+		static void ReadKeyframeData(std::shared_ptr<Animation> animation, aiNode* node, std::map<std::string, std::shared_ptr<AnimationNode>>& cache);
 	};
 
 	/// <summary>
-	/// AnimationÀ» °ü¸®ÇÏ´Â class
+	/// Animationì„ ê´€ë¦¬í•˜ëŠ” class
 	/// </summary>
 	class Animator
 	{
@@ -56,7 +56,7 @@ namespace Engine
 			}
 		}
 
-		DirectX::XMFLOAT4 indices = DirectX::XMFLOAT4(0, 0, 0, 0); // ½¦ÀÌ´õ¿¡ ³Ñ°ÜÁÙ ¶§µµ Vec4·Î ¹Ş¾ÆÁÙ °ÍÀÌ±â ¶§¹®
+		DirectX::XMFLOAT4 indices = DirectX::XMFLOAT4(0, 0, 0, 0); // ì‰ì´ë”ì— ë„˜ê²¨ì¤„ ë•Œë„ Vec4ë¡œ ë°›ì•„ì¤„ ê²ƒì´ê¸° ë•Œë¬¸
 		DirectX::XMFLOAT4 weights = DirectX::XMFLOAT4(0, 0, 0, 0);
 	};
 	class BoneWeights
@@ -68,16 +68,16 @@ namespace Engine
 				return;
 
 			auto findIt = std::find_if(boneWeights.begin(), boneWeights.end(),
-				[weight](const Pair& p) { return weight > p.second; }); // °¡Àå Ã³À½À¸·Î weightÀÌ ´Ù¸¥ ¾Ö º¸´Ü Å« °æ¿ì return
+				[weight](const Pair& p) { return weight > p.second; }); // ê°€ì¥ ì²˜ìŒìœ¼ë¡œ weightì´ ë‹¤ë¥¸ ì•  ë³´ë‹¨ í° ê²½ìš° return
 
-			// (1, 0.4) (2, 0, 0.2) ÀÌ·¸°Ô ÀÖÀ» ¶§ (5, 0.5)¸¦ ³Ö´Â´Ù ÇÏ¸é
-			// (5, 0.5) (1, 0.4) (2, 0, 0.2) ÀÌ·¸°Ô ¾Õ¿¡ µé¾î°¡°Ô µÈ´Ù. °¡ÁßÄ¡°¡ ³ôÀº ¾ÖµéÀ» ¾Õ¿¡ ¹èÄ¡ÇÏ±â À§ÇØ¼­ ÀÌ·¸°Ô ÇØÁá´Ù.
+			// (1, 0.4) (2, 0, 0.2) ì´ë ‡ê²Œ ìˆì„ ë•Œ (5, 0.5)ë¥¼ ë„£ëŠ”ë‹¤ í•˜ë©´
+			// (5, 0.5) (1, 0.4) (2, 0, 0.2) ì´ë ‡ê²Œ ì•ì— ë“¤ì–´ê°€ê²Œ ëœë‹¤. ê°€ì¤‘ì¹˜ê°€ ë†’ì€ ì• ë“¤ì„ ì•ì— ë°°ì¹˜í•˜ê¸° ìœ„í•´ì„œ ì´ë ‡ê²Œ í•´ì¤¬ë‹¤.
 			boneWeights.insert(findIt, Pair(boneIndex, weight));
 		}
 
-		// `asBoneWeights` ±¸Á¶Ã¼´Â »À ÀÎµ¦½º¿Í °¡ÁßÄ¡ Á¤º¸¸¦ pair<int32, float>ÀÇ ÇüÅÂ·Î °ü¸®ÇÕ´Ï´Ù.
-		// ÀÌ Á¤º¸´Â `asBlendWeight` ±¸Á¶Ã¼¸¦ ÅëÇØ ½¦ÀÌ´õ¿¡ È£È¯µÇ´Â Vec4 Çü½ÄÀ¸·Î º¯È¯µÇ¾î Àü´ŞµÉ ¿¹Á¤ÀÔ´Ï´Ù.
-		// ÀÌ º¯È¯ °úÁ¤Àº ½¦ÀÌ´õ¿¡¼­ µ¥ÀÌÅÍ¸¦ È¿À²ÀûÀ¸·Î »ç¿ëÇÏ±â À§ÇØ ÇÊ¿äÇÕ´Ï´Ù.
+		// `asBoneWeights` êµ¬ì¡°ì²´ëŠ” ë¼ˆ ì¸ë±ìŠ¤ì™€ ê°€ì¤‘ì¹˜ ì •ë³´ë¥¼ pair<int32, float>ì˜ í˜•íƒœë¡œ ê´€ë¦¬í•©ë‹ˆë‹¤.
+		// ì´ ì •ë³´ëŠ” `asBlendWeight` êµ¬ì¡°ì²´ë¥¼ í†µí•´ ì‰ì´ë”ì— í˜¸í™˜ë˜ëŠ” Vec4 í˜•ì‹ìœ¼ë¡œ ë³€í™˜ë˜ì–´ ì „ë‹¬ë  ì˜ˆì •ì…ë‹ˆë‹¤.
+		// ì´ ë³€í™˜ ê³¼ì •ì€ ì‰ì´ë”ì—ì„œ ë°ì´í„°ë¥¼ íš¨ìœ¨ì ìœ¼ë¡œ ì‚¬ìš©í•˜ê¸° ìœ„í•´ í•„ìš”í•©ë‹ˆë‹¤.
 		BlendWeight GetBlendWeights()
 		{
 			BlendWeight blendWeights;
@@ -93,10 +93,10 @@ namespace Engine
 			return blendWeights;
 		}
 
-		// ¸¸¾à¿¡ ¸ğµç Á¤Á¡µéÀÌ »À´ë 4°³ÀÇ ¿µÇâÀ» ¹ŞÀ¸¸é ÁÁ°ÚÁö¸¸, ¾î¶² ¾Ö´Â ÇÏ³ª¿¡¸¸ ¿µÇâÀ» ¹Ş°í, ¾î¶² ¾Ö´Â 2°³¿¡¸¸ ¿µÇâÀ» ¹Ş°Ô µÉ °ÍÀÌ´Ù.
-		// °á±¹ ÃÖÁ¾ÀûÀÎ ¸ğµç ¾ÖµéÀÇ ÇÕÀ» 1·Î ¸ÂÃçÁÖ±â À§ÇØ ¿¬»êÀ» ÇØÁØ´Ù. 
-		// (1, 0.3) (2, 0.2) ÀÌ °æ¿ì 
-		// (1, 0.6) (2, 0.4) ·Î ÇØ¼­ ÃÖÁ¾ÀûÀÎ ÇÕÀ» 1·Î ±¸ÇØÁÖ°Ú´Ù°¡ ÇÙ½ÉÀÌ´Ù. ÆÛ¼¾Æ¼Áö¶ó°í º¸¸é µÈ´Ù.
+		// ë§Œì•½ì— ëª¨ë“  ì •ì ë“¤ì´ ë¼ˆëŒ€ 4ê°œì˜ ì˜í–¥ì„ ë°›ìœ¼ë©´ ì¢‹ê² ì§€ë§Œ, ì–´ë–¤ ì• ëŠ” í•˜ë‚˜ì—ë§Œ ì˜í–¥ì„ ë°›ê³ , ì–´ë–¤ ì• ëŠ” 2ê°œì—ë§Œ ì˜í–¥ì„ ë°›ê²Œ ë  ê²ƒì´ë‹¤.
+		// ê²°êµ­ ìµœì¢…ì ì¸ ëª¨ë“  ì• ë“¤ì˜ í•©ì„ 1ë¡œ ë§ì¶°ì£¼ê¸° ìœ„í•´ ì—°ì‚°ì„ í•´ì¤€ë‹¤. 
+		// (1, 0.3) (2, 0.2) ì´ ê²½ìš° 
+		// (1, 0.6) (2, 0.4) ë¡œ í•´ì„œ ìµœì¢…ì ì¸ í•©ì„ 1ë¡œ êµ¬í•´ì£¼ê² ë‹¤ê°€ í•µì‹¬ì´ë‹¤. í¼ì„¼í‹°ì§€ë¼ê³  ë³´ë©´ ëœë‹¤.
 		void Normalize()
 		{
 			if (boneWeights.size() >= 4)
@@ -112,7 +112,7 @@ namespace Engine
 		}
 
 		using Pair = std::pair<unsigned int, float>; // boneIndex, weight
-		std::vector<Pair> boneWeights; // ³ªÁß¿£ 4°³ ÀÌ»óÀÌ¸é Á¤·ÄÇØ¼­ °¡ÁßÄ¡ ³ôÀº ¼ø¼­·Î Ä¿Æ®ÇÒ °ÍÀÌ´Ù.
+		std::vector<Pair> boneWeights; // ë‚˜ì¤‘ì—” 4ê°œ ì´ìƒì´ë©´ ì •ë ¬í•´ì„œ ê°€ì¤‘ì¹˜ ë†’ì€ ìˆœì„œë¡œ ì»¤íŠ¸í•  ê²ƒì´ë‹¤.
 	};
 }
 #endif

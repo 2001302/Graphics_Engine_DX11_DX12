@@ -7,9 +7,9 @@ cbuffer MatrixBuffer {
 };
 
 struct VertexInputType {
-    float3 position : POSITION;
-    float3 normal : NORMAL;
+    float4 position : POSITION;
     float2 tex : TEXCOORD0;
+    float3 normal : NORMAL;
     uint4 boneIndices : BONEINDICES;
     float4 boneWeights : BONEWEIGHTS;
 };
@@ -31,7 +31,7 @@ PixelInputType MainVS(VertexInputType input) {
     }
 
     // 버텍스 위치와 노멀 변환
-    float4 worldPosition = mul(float4(input.position, 1.0), finalBoneTransform);
+    float4 worldPosition = mul(float4(input.position), finalBoneTransform);
     worldPosition = mul(worldPosition, worldMatrix);
     output.position = mul(worldPosition, viewMatrix);
     output.position = mul(output.position, projectionMatrix);

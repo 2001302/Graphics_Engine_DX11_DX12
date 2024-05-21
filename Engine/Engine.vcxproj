@@ -156,6 +156,7 @@
     <ClInclude Include="LightShader.h" />
     <ClInclude Include="CommonModel.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="SystemClass.h" />
     <ClInclude Include="TextureClass.h" />
     <ClInclude Include="ResourceHelper.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="SystemClass.cpp" />
     <ClCompile Include="TextureClass.cpp" />
     <ClCompile Include="ResourceHelper.cpp" />

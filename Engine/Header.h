@@ -14,11 +14,9 @@
 #include <commdlg.h>	//for file open
 
 #include <d3d11.h>
+#include <d3dcompiler.h>
 #include <directxmath.h>
 #include <eigen/dense>
-#include <boost/iostreams/device/mapped_file.hpp>
-#include <boost/algorithm/string.hpp>
-#include <boost/container/flat_map.hpp>
 #include <assimp/importer.hpp>
 #include <assimp/scene.h>           
 #include <assimp/postprocess.h>     

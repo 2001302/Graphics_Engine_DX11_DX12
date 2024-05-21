@@ -1,14 +1,12 @@
 #ifndef _SHADER
 #define _SHADER
 
-#include <d3d11.h>
-#include <d3dcompiler.h>
-#include <directxmath.h>
-#include <fstream>
+#include "Header.h"
+#include "ShaderFactory.h"
 
 using namespace DirectX;
 
-class LightShader
+class LightShader 
 {
 private:
 	struct MatrixBufferType

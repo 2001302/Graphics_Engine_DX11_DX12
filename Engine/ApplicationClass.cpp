@@ -32,16 +32,16 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	D3DClass::GetInstance().Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 
-	auto builder = new BehaviorTreeBuilder();
+	auto tree = new BehaviorTreeBuilder();
 
-	builder ->Build(dataBlock)
+	tree->Build(dataBlock)
 				->Sequence()
 					->Excute(std::make_shared<LoadTextureData>())
 					->Excute(std::make_shared<InitializeCamera>())
 					->Excute(std::make_shared<InitializeLight>(hwnd))
 				->Close();
 
-	builder->Run();
+	tree->Run();
 
 	m_Imgui->Initialize(hwnd, &D3DClass::GetInstance());
 
@@ -57,20 +57,25 @@ bool ApplicationClass::Render()
 	};
 
 	// Clear the buffers to begin the scene.
-	D3DClass::GetInstance().BeginScene(EnumViewType::eScene, 0.0f, 0.0f, 0.0f, 1.0f);
+	D3DClass::GetInstance().BeginScene(EnumViewType::eScene, 0.2f, 0.2f, 0.2f, 1.0f);
 
-	auto builder = std::make_unique<BehaviorTreeBuilder>();
+	//ImGui
+	m_Imgui->Prepare();
 
-	builder->Build(dataBlock)
+	//ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
+	//ImGui::Begin("Scene");
+	//ImGui::End();
+
+	auto tree = std::make_unique<BehaviorTreeBuilder>();
+
+	tree->Build(dataBlock)
 				->Sequence()
 					->Excute(std::make_shared<GetViewingPoint>())
 					->Excute(std::make_shared<RenderGameObjects>())
 				->Close();
 
-	builder->Run();
+	tree->Run();
 
-	//ImGui
-	m_Imgui->Prepare();
 	m_Imgui->Render();
 
 	// Present the rendered scene to the screen.

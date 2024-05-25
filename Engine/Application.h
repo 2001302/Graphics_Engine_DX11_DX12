@@ -17,22 +17,18 @@ namespace Engine
 	class Application
 	{
 	public:
-		Application();
-		Application(const Application&);
-		~Application();
-
 		bool Initialize(int, int, HWND);
 		void Shutdown();
 		bool Frame(std::unique_ptr<InputClass>& input);
 
-		Manager* GetManager() { return m_Manager; }
+		PipelineManager* GetManager() { return m_Manager; }
 
 	private:
 		bool Render();
 
 	private:
 		ImGuiManager* m_Imgui;
-		Manager* m_Manager;
+		PipelineManager* m_Manager;
 		ViewingPoint* m_ViewingPoint;
 	};
 }

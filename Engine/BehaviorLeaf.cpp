@@ -6,7 +6,7 @@ EnumBehaviorTreeStatus LoadTextureData::Invoke()
 {
 	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
 
-	auto manager = dynamic_cast<Engine::Manager*>(block);
+	auto manager = dynamic_cast<Engine::PipelineManager*>(block);
 	assert(manager != nullptr);
 
 	const char* textureFilename = "../Engine/data/wall01.tga"; //TODO : need path policy
@@ -20,7 +20,7 @@ EnumBehaviorTreeStatus InitializeCamera::Invoke()
 {
 	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
 
-	auto manager = dynamic_cast<Engine::Manager*>(block);
+	auto manager = dynamic_cast<Engine::PipelineManager*>(block);
 	assert(manager != nullptr);
 
 	// Create and initialize the camera object.
@@ -40,7 +40,7 @@ EnumBehaviorTreeStatus InitializeLight::Invoke()
 {
 	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
 
-	auto manager = dynamic_cast<Engine::Manager*>(block);
+	auto manager = dynamic_cast<Engine::PipelineManager*>(block);
 	assert(manager != nullptr);
 
 	// Create and initialize the light object.
@@ -62,7 +62,7 @@ EnumBehaviorTreeStatus GetViewingPoint::Invoke()
 	IDataBlock* managerBlock = DataBlock[EnumDataBlockType::eManager];
 	IDataBlock* viewBlock = DataBlock[EnumDataBlockType::eViewingPoint];
 	
-	auto manager = dynamic_cast<Engine::Manager*>(managerBlock);
+	auto manager = dynamic_cast<Engine::PipelineManager*>(managerBlock);
 	assert(manager != nullptr);
 
 	auto viewingPoint = dynamic_cast<Engine::ViewingPoint*>(viewBlock);
@@ -84,7 +84,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
 	IDataBlock* viewBlock = DataBlock[EnumDataBlockType::eViewingPoint];
 
-	auto manager = dynamic_cast<Engine::Manager*>(block);
+	auto manager = dynamic_cast<Engine::PipelineManager*>(block);
 	assert(manager != nullptr);
 
 	auto viewingPoint = dynamic_cast<Engine::ViewingPoint*>(viewBlock);

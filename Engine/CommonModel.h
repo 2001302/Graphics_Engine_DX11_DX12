@@ -36,7 +36,7 @@ namespace Engine
 	/// <summary>
 	/// Rendering에 필요한 shared object의 집합.
 	/// </summary>
-	class Manager : public IDataBlock
+	class PipelineManager : public IDataBlock
 	{
 	public:
 		std::vector <GameObject*> Models;

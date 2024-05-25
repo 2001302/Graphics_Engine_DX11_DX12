@@ -2,27 +2,9 @@
 
 using namespace Engine;
 
-Application::Application()
-{
-	m_Imgui = 0;
-	m_Manager = 0;
-	m_ViewingPoint = 0;
-}
-
-Application::Application(const Application& other)
-{
-	m_Imgui = other.m_Imgui;
-	m_Manager = other.m_Manager;
-	m_ViewingPoint = other.m_ViewingPoint;
-}
-
-Application::~Application()
-{
-}
-
 bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	m_Manager = new Manager();
+	m_Manager = new PipelineManager();
 	m_ViewingPoint = new ViewingPoint();
 
 	std::map<EnumDataBlockType, IDataBlock*> dataBlock =

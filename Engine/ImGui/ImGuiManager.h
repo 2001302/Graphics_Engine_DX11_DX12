@@ -1,4 +1,4 @@
-#include "../d3dclass.h"
+#include "../D3dmanager.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -10,7 +10,7 @@ public:
 	ImGuiManager(const ImGuiManager&) {};
 	~ImGuiManager() {};
 
-	bool Initialize(HWND m_hWnd, Engine::D3DClass* d3d);
+	bool Initialize(HWND m_hWnd, Engine::D3DManager* d3d);
 	bool Prepare();
 	bool Render();
 	void Shutdown();

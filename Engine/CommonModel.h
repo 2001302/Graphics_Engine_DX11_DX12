@@ -4,9 +4,9 @@
 #include "inputclass.h"
 #include "cameraclass.h"
 #include "gameobject.h"
-#include "lightclass.h"
+#include "light.h"
 #include "lightshader.h"
-#include "D3dclass.h"
+#include "D3dmanager.h"
 
 namespace Engine
 {
@@ -39,13 +39,8 @@ namespace Engine
 	class Manager : public IDataBlock
 	{
 	public:
-		Manager() 
-		{
-		};
-		~Manager() {};
-
 		std::vector <GameObject*> Models;
-		std::unique_ptr<LightClass> Light;
+		std::unique_ptr<Light> Light;
 		std::unique_ptr<LightShader> LightShader;
 		std::unique_ptr<CameraClass> Camera;
 		std::shared_ptr<TextureClass> Texture; //default
@@ -54,12 +49,6 @@ namespace Engine
 	class ViewingPoint : public IDataBlock
 	{
 	public:
-		ViewingPoint()
-		{
-
-		};
-		~ViewingPoint() {};
-
 		XMMATRIX WorldMatrix;
 		XMMATRIX ViewMatrix;
 		XMMATRIX ProjectionMatrix;

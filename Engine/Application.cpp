@@ -30,20 +30,20 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		{EnumDataBlockType::eManager,m_Manager},
 	};
 
-	D3DClass::GetInstance().Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	D3DManager::GetInstance().Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 
 	auto tree = new BehaviorTreeBuilder();
 
 	tree->Build(dataBlock)
-		->Sequence()
-		->Excute(std::make_shared<LoadTextureData>())
-		->Excute(std::make_shared<InitializeCamera>())
-		->Excute(std::make_shared<InitializeLight>(hwnd))
-		->Close();
+			->Sequence()
+				->Excute(std::make_shared<LoadTextureData>())
+				->Excute(std::make_shared<InitializeCamera>())
+				->Excute(std::make_shared<InitializeLight>(hwnd))
+			->Close();
 
 	tree->Run();
 
-	m_Imgui->Initialize(hwnd, &D3DClass::GetInstance());
+	m_Imgui->Initialize(hwnd, &D3DManager::GetInstance());
 
 	return true;
 }
@@ -57,7 +57,7 @@ bool Application::Render()
 	};
 
 	// Clear the buffers to begin the scene.
-	D3DClass::GetInstance().BeginScene(EnumViewType::eScene, 0.2f, 0.2f, 0.2f, 1.0f);
+	D3DManager::GetInstance().BeginScene(EnumViewType::eScene, 0.2f, 0.2f, 0.2f, 1.0f);
 
 	//ImGui
 	m_Imgui->Prepare();
@@ -69,17 +69,17 @@ bool Application::Render()
 	auto tree = std::make_unique<BehaviorTreeBuilder>();
 
 	tree->Build(dataBlock)
-		->Sequence()
-		->Excute(std::make_shared<GetViewingPoint>())
-		->Excute(std::make_shared<RenderGameObjects>())
-		->Close();
+			->Sequence()
+				->Excute(std::make_shared<GetViewingPoint>())
+				->Excute(std::make_shared<RenderGameObjects>())
+			->Close();
 
 	tree->Run();
 
 	m_Imgui->Render();
 
 	// Present the rendered scene to the screen.
-	D3DClass::GetInstance().EndScene();
+	D3DManager::GetInstance().EndScene();
 
 	return true;
 }
@@ -133,7 +133,7 @@ void Application::Shutdown()
 		m_Imgui->Shutdown();
 	}
 
-	D3DClass::GetInstance().Shutdown();
+	D3DManager::GetInstance().Shutdown();
 
 	return;
 }

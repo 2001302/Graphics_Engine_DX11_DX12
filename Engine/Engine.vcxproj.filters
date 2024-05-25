@@ -6,10 +6,7 @@
     <ClInclude Include="Header.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="D3dClass.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="LightClass.h">
+    <ClInclude Include="Light.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="CommonModel.h">
@@ -65,20 +62,20 @@
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="LightShader.h">
-      <Filter>Shader</Filter>
+      <Filter>DirectX\Shader</Filter>
     </ClInclude>
     <ClInclude Include="ShaderFactory.h">
-      <Filter>Shader</Filter>
+      <Filter>DirectX\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="D3DManager.h">
+      <Filter>DirectX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="SystemClass.cpp" />
-    <ClCompile Include="D3dClass.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="LightClass.cpp">
+    <ClCompile Include="Light.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
@@ -128,10 +125,13 @@
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="LightShader.cpp">
-      <Filter>Shader</Filter>
+      <Filter>DirectX\Shader</Filter>
     </ClCompile>
     <ClCompile Include="ShaderFactory.cpp">
-      <Filter>Shader</Filter>
+      <Filter>DirectX\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="D3DManager.cpp">
+      <Filter>DirectX</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,7 +147,10 @@
     <Filter Include="Util">
       <UniqueIdentifier>{0e42b4f6-d6f5-44fe-bceb-6a275b568a85}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader">
+    <Filter Include="DirectX">
+      <UniqueIdentifier>{5f8f3dcc-1835-4e80-8498-b21fddb72fc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX\Shader">
       <UniqueIdentifier>{75d77732-7f85-4c0a-b799-392f4e62111e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -156,10 +159,10 @@
       <Filter>ImGui</Filter>
     </None>
     <None Include="light.vs">
-      <Filter>Shader</Filter>
+      <Filter>DirectX\Shader</Filter>
     </None>
     <None Include="light.ps">
-      <Filter>Shader</Filter>
+      <Filter>DirectX\Shader</Filter>
     </None>
   </ItemGroup>
 </Project>

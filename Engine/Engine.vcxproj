@@ -140,7 +140,7 @@
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="CameraClass.h" />
     <ClInclude Include="CommonStruct.h" />
-    <ClInclude Include="D3dClass.h" />
+    <ClInclude Include="D3DManager.h" />
     <ClInclude Include="Header.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -152,7 +152,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="InputClass.h" />
-    <ClInclude Include="LightClass.h" />
+    <ClInclude Include="Light.h" />
     <ClInclude Include="LightShader.h" />
     <ClInclude Include="CommonModel.h" />
     <ClInclude Include="GameObject.h" />
@@ -166,7 +166,7 @@
     <ClCompile Include="BehaviorLeaf.cpp" />
     <ClCompile Include="BehaviorTree.cpp" />
     <ClCompile Include="CameraClass.cpp" />
-    <ClCompile Include="D3dClass.cpp" />
+    <ClCompile Include="D3DManager.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\ImGuiManager.cpp" />
     <ClCompile Include="ImGui\ImguiWindow.cpp" />
@@ -177,7 +177,7 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="InputClass.cpp" />
-    <ClCompile Include="LightClass.cpp" />
+    <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameObject.cpp" />

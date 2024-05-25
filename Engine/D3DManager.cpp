@@ -1,16 +1,16 @@
-#include "d3dclass.h"
+#include "d3dmanager.h"
 
 using namespace Engine;
 
-bool D3DClass::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
+bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
 	InitializeGraphicDevice(screenWidth, screenHeight, hwnd, fullscreen);
 	InitializeMainScene(screenWidth, screenHeight, screenDepth, screenNear);
 
-    return true;
+	return true;
 }
 
-bool D3DClass::InitializeGraphicDevice(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
+bool D3DManager::InitializeGraphicDevice(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
 {
 	HRESULT result;
 	unsigned int numModes, i, numerator, denominator;
@@ -60,7 +60,7 @@ bool D3DClass::InitializeGraphicDevice(int screenWidth, int screenHeight, HWND h
 
 	// Set the feature level to DirectX 11.
 	featureLevel = D3D_FEATURE_LEVEL_11_0;
-	
+
 	// Create the swap chain, Direct3D device, and Direct3D device context.
 	result = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &featureLevel, 1,
 		D3D11_SDK_VERSION, &swapChainDesc, &m_swapChain, &m_device, NULL, &m_deviceContext);
@@ -69,7 +69,7 @@ bool D3DClass::InitializeGraphicDevice(int screenWidth, int screenHeight, HWND h
 		return false;
 	}
 }
-bool D3DClass::InitializeMainScene(int screenWidth, int screenHeight,float screenDepth, float screenNear) 
+bool D3DManager::InitializeMainScene(int screenWidth, int screenHeight, float screenDepth, float screenNear)
 {
 	HRESULT result;
 
@@ -300,79 +300,79 @@ bool D3DClass::InitializeMainScene(int screenWidth, int screenHeight,float scree
 	Views[EnumViewType::eScene] = view;
 }
 
-void D3DClass::Shutdown()
+void D3DManager::Shutdown()
 {
 	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
-	if(m_swapChain)
+	if (m_swapChain)
 	{
 		m_swapChain->SetFullscreenState(false, NULL);
 	}
 
-	if(m_deviceContext)
+	if (m_deviceContext)
 	{
 		m_deviceContext->Release();
 		m_deviceContext = 0;
 	}
 
-	if(m_device)
+	if (m_device)
 	{
 		m_device->Release();
 		m_device = 0;
 	}
 
-	if(m_swapChain)
+	if (m_swapChain)
 	{
 		m_swapChain->Release();
 		m_swapChain = 0;
 	}
 
-	for (auto &view : Views)
+	for (auto& view : Views)
 	{
 		auto info = view.second;
 
-		if(info.AlphaEnableBlendingState)
+		if (info.AlphaEnableBlendingState)
 		{
 			info.AlphaEnableBlendingState->Release();
 			info.AlphaEnableBlendingState = 0;
 		}
 
-		if(info.AlphaDisableBlendingState)
+		if (info.AlphaDisableBlendingState)
 		{
 			info.AlphaDisableBlendingState->Release();
 			info.AlphaDisableBlendingState = 0;
 		}
 
-		if(info.DepthDisabledStencilState)
+		if (info.DepthDisabledStencilState)
 		{
 			info.DepthDisabledStencilState->Release();
 			info.DepthDisabledStencilState = 0;
 		}
 
-		if(info.RasterState)
+		if (info.RasterState)
 		{
 			info.RasterState->Release();
 			info.RasterState = 0;
 		}
 
-		if(info.DepthStencilView)
+		if (info.DepthStencilView)
 		{
 			info.DepthStencilView->Release();
 			info.DepthStencilView = 0;
 		}
 
-		if(info.DepthStencilState)
+		if (info.DepthStencilState)
 		{
 			info.DepthStencilState->Release();
 			info.DepthStencilState = 0;
 		}
 
-		if(info.DepthStencilBuffer)
+		if (info.DepthStencilBuffer)
 		{
 			info.DepthStencilBuffer->Release();
 			info.DepthStencilBuffer = 0;
 		}
 
-		if(info.RenderTargetView)
+		if (info.RenderTargetView)
 		{
 			info.RenderTargetView->Release();
 			info.RenderTargetView = 0;
@@ -383,7 +383,7 @@ void D3DClass::Shutdown()
 }
 
 
-void D3DClass::BeginScene(EnumViewType type, float red, float green, float blue, float alpha)
+void D3DManager::BeginScene(EnumViewType type, float red, float green, float blue, float alpha)
 {
 	float color[4];
 
@@ -395,7 +395,7 @@ void D3DClass::BeginScene(EnumViewType type, float red, float green, float blue,
 
 	// Clear the back buffer.
 	m_deviceContext->ClearRenderTargetView(Views[type].RenderTargetView, color);
-    
+
 	// Clear the depth buffer.
 	m_deviceContext->ClearDepthStencilView(Views[type].DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
 
@@ -403,10 +403,10 @@ void D3DClass::BeginScene(EnumViewType type, float red, float green, float blue,
 }
 
 
-void D3DClass::EndScene()
+void D3DManager::EndScene()
 {
 	// Present the back buffer to the screen since rendering is complete.
-	if(m_vsync_enabled)
+	if (m_vsync_enabled)
 	{
 		// Lock to screen refresh rate.
 		m_swapChain->Present(1, 0);
@@ -421,40 +421,40 @@ void D3DClass::EndScene()
 }
 
 
-ID3D11Device* D3DClass::GetDevice()
+ID3D11Device* D3DManager::GetDevice()
 {
 	return m_device;
 }
 
 
-ID3D11DeviceContext* D3DClass::GetDeviceContext()
+ID3D11DeviceContext* D3DManager::GetDeviceContext()
 {
 	return m_deviceContext;
 }
 
 
-void D3DClass::GetProjectionMatrix(EnumViewType type, XMMATRIX& projectionMatrix)
+void D3DManager::GetProjectionMatrix(EnumViewType type, XMMATRIX& projectionMatrix)
 {
 	projectionMatrix = Views[type].ProjectionMatrix;
 	return;
 }
 
 
-void D3DClass::GetWorldMatrix(EnumViewType type, XMMATRIX& worldMatrix)
+void D3DManager::GetWorldMatrix(EnumViewType type, XMMATRIX& worldMatrix)
 {
 	worldMatrix = Views[type].WorldMatrix;
 	return;
 }
 
 
-void D3DClass::GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix)
+void D3DManager::GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix)
 {
 	orthoMatrix = Views[type].OrthoMatrix;
 	return;
 }
 
 //
-//void D3DClass::GetVideoCardInfo(char* cardName, int& memory)
+//void D3DManager::GetVideoCardInfo(char* cardName, int& memory)
 //{
 //	strcpy_s(cardName, 128, m_videoCardDescription);
 //	memory = m_videoCardMemory;
@@ -462,7 +462,7 @@ void D3DClass::GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix)
 //}
 
 
-void D3DClass::SetBackBufferRenderTarget(EnumViewType type)
+void D3DManager::SetBackBufferRenderTarget(EnumViewType type)
 {
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 	m_deviceContext->OMSetRenderTargets(1, &Views[type].RenderTargetView, Views[type].DepthStencilView);
@@ -471,7 +471,7 @@ void D3DClass::SetBackBufferRenderTarget(EnumViewType type)
 }
 
 
-void D3DClass::ResetViewport(EnumViewType type)
+void D3DManager::ResetViewport(EnumViewType type)
 {
 	// Set the viewport.
 	m_deviceContext->RSSetViewports(1, &Views[type].Viewport);
@@ -480,21 +480,21 @@ void D3DClass::ResetViewport(EnumViewType type)
 }
 
 
-void D3DClass::TurnZBufferOn(EnumViewType type)
+void D3DManager::TurnZBufferOn(EnumViewType type)
 {
 	m_deviceContext->OMSetDepthStencilState(Views[type].DepthStencilState, 1);
 	return;
 }
 
 
-void D3DClass::TurnZBufferOff(EnumViewType type)
+void D3DManager::TurnZBufferOff(EnumViewType type)
 {
 	m_deviceContext->OMSetDepthStencilState(Views[type].DepthDisabledStencilState, 1);
 	return;
 }
 
 
-void D3DClass::EnableAlphaBlending(EnumViewType type)
+void D3DManager::EnableAlphaBlending(EnumViewType type)
 {
 	float blendFactor[4];
 
@@ -512,7 +512,7 @@ void D3DClass::EnableAlphaBlending(EnumViewType type)
 }
 
 
-void D3DClass::DisableAlphaBlending(EnumViewType type)
+void D3DManager::DisableAlphaBlending(EnumViewType type)
 {
 	float blendFactor[4];
 

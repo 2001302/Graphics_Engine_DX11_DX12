@@ -1,9 +1,7 @@
-#pragma once
-
 #ifndef _APPLICATION
 #define _APPLICATION
 
-#include "D3dclass.h"
+#include "D3dmanager.h"
 #include "CommonModel.h"
 #include "ImGui/ImGuiManager.h"
 #include "BehaviorTree.h"

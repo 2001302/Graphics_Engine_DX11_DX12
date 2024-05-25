@@ -1,6 +1,10 @@
 #ifndef _D3DCLASS_H_
 #define _D3DCLASS_H_
 
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <directxmath.h>
+
 #include "Header.h"
 
 using namespace DirectX;
@@ -33,13 +37,13 @@ namespace Engine
 		D3D11_VIEWPORT Viewport;
 	};
 
-	class D3DClass
+	class D3DManager
 	{
 	private:
-		D3DClass() {}
-		D3DClass(const D3DClass& ref) {}
-		D3DClass& operator=(const D3DClass& ref) {}
-		~D3DClass() {}
+		D3DManager() {}
+		D3DManager(const D3DManager& ref) {}
+		D3DManager& operator=(const D3DManager& ref) {}
+		~D3DManager() {}
 
 		bool m_vsync_enabled;
 
@@ -48,8 +52,8 @@ namespace Engine
 		ID3D11DeviceContext* m_deviceContext;
 
 	public:
-		static D3DClass& GetInstance() {
-			static D3DClass instance;
+		static D3DManager& GetInstance() {
+			static D3DManager instance;
 			return instance;
 		}
 
@@ -78,8 +82,6 @@ namespace Engine
 		void DisableAlphaBlending(EnumViewType type);
 
 		std::map<EnumViewType, ViewInfo> Views;
-
 	};
 }
-
 #endif

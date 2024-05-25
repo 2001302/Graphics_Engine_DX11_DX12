@@ -1,6 +1,10 @@
 #ifndef _SHADERFACTORY
 #define _SHADERFACTORY
 
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <directxmath.h>
+
 #include "Header.h"
 
 namespace Engine

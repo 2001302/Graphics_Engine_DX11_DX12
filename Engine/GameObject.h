@@ -35,7 +35,6 @@ namespace Engine
 		void RenderBuffers(ID3D11DeviceContext* deviceContext);
 
 		ID3D11Buffer* m_vertexBuffer, * m_indexBuffer;
-		
 	};
 
 }

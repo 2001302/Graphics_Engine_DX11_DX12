@@ -1,31 +1,31 @@
-#include "Applicationclass.h"
+#include "Application.h"
 
 using namespace Engine;
 
-ApplicationClass::ApplicationClass()
+Application::Application()
 {
 	m_Imgui = 0;
 	m_Manager = 0;
 	m_ViewingPoint = 0;
 }
 
-ApplicationClass::ApplicationClass(const ApplicationClass& other)
+Application::Application(const Application& other)
 {
 	m_Imgui = other.m_Imgui;
 	m_Manager = other.m_Manager;
 	m_ViewingPoint = other.m_ViewingPoint;
 }
 
-ApplicationClass::~ApplicationClass()
+Application::~Application()
 {
 }
 
-bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
+bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	m_Manager = new Manager();
 	m_ViewingPoint = new ViewingPoint();
 
-	std::map<EnumDataBlockType, IDataBlock*> dataBlock = 
+	std::map<EnumDataBlockType, IDataBlock*> dataBlock =
 	{
 		{EnumDataBlockType::eManager,m_Manager},
 	};
@@ -35,11 +35,11 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	auto tree = new BehaviorTreeBuilder();
 
 	tree->Build(dataBlock)
-				->Sequence()
-					->Excute(std::make_shared<LoadTextureData>())
-					->Excute(std::make_shared<InitializeCamera>())
-					->Excute(std::make_shared<InitializeLight>(hwnd))
-				->Close();
+		->Sequence()
+		->Excute(std::make_shared<LoadTextureData>())
+		->Excute(std::make_shared<InitializeCamera>())
+		->Excute(std::make_shared<InitializeLight>(hwnd))
+		->Close();
 
 	tree->Run();
 
@@ -48,7 +48,7 @@ bool ApplicationClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	return true;
 }
 
-bool ApplicationClass::Render()
+bool Application::Render()
 {
 	std::map<EnumDataBlockType, IDataBlock*> dataBlock =
 	{
@@ -69,10 +69,10 @@ bool ApplicationClass::Render()
 	auto tree = std::make_unique<BehaviorTreeBuilder>();
 
 	tree->Build(dataBlock)
-				->Sequence()
-					->Excute(std::make_shared<GetViewingPoint>())
-					->Excute(std::make_shared<RenderGameObjects>())
-				->Close();
+		->Sequence()
+		->Excute(std::make_shared<GetViewingPoint>())
+		->Excute(std::make_shared<RenderGameObjects>())
+		->Close();
 
 	tree->Run();
 
@@ -84,7 +84,7 @@ bool ApplicationClass::Render()
 	return true;
 }
 
-bool ApplicationClass::Frame(std::unique_ptr<InputClass>& input)
+bool Application::Frame(std::unique_ptr<InputClass>& input)
 {
 	bool result;
 
@@ -103,7 +103,7 @@ bool ApplicationClass::Frame(std::unique_ptr<InputClass>& input)
 	return true;
 }
 
-void ApplicationClass::Shutdown()
+void Application::Shutdown()
 {
 	if (m_Manager)
 	{

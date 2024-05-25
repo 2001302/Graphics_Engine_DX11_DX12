@@ -36,7 +36,7 @@ bool SystemClass::Initialize()
 		return false;
 
 	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
-	m_Application = std::make_unique<ApplicationClass>();
+	m_Application = std::make_unique<Application>();
 
 	if(!m_Application->Initialize(screenWidth, screenHeight, m_hwnd))
 		return false;

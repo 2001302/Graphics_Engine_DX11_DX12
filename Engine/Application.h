@@ -16,12 +16,12 @@ const float SCREEN_NEAR = 0.3f;
 
 namespace Engine
 {
-	class ApplicationClass
+	class Application
 	{
 	public:
-		ApplicationClass();
-		ApplicationClass(const ApplicationClass&);
-		~ApplicationClass();
+		Application();
+		Application(const Application&);
+		~Application();
 
 		bool Initialize(int, int, HWND);
 		void Shutdown();

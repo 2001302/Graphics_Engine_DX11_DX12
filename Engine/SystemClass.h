@@ -4,7 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "inputclass.h"
-#include "applicationclass.h"
+#include "application.h"
 #include "resourcehelper.h"
 
 namespace Engine
@@ -37,7 +37,7 @@ namespace Engine
 		HWND m_hwnd;
 
 		std::unique_ptr<InputClass> m_Input;
-		std::unique_ptr<ApplicationClass> m_Application;
+		std::unique_ptr<Application> m_Application;
 	};
 
 	/// <summary>

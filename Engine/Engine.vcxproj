@@ -135,7 +135,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ApplicationClass.h" />
+    <ClInclude Include="Application.h" />
     <ClInclude Include="BehaviorLeaf.h" />
     <ClInclude Include="BehaviorTree.h" />
     <ClInclude Include="CameraClass.h" />
@@ -162,7 +162,7 @@
     <ClInclude Include="ResourceHelper.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ApplicationClass.cpp" />
+    <ClCompile Include="Application.cpp" />
     <ClCompile Include="BehaviorLeaf.cpp" />
     <ClCompile Include="BehaviorTree.cpp" />
     <ClCompile Include="CameraClass.cpp" />

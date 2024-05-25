@@ -12,20 +12,21 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		{EnumDataBlockType::eManager,m_Manager},
 	};
 
-	D3DManager::GetInstance().Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	Direct3D::GetInstance().Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
 
 	auto tree = new BehaviorTreeBuilder();
 
 	tree->Build(dataBlock)
-			->Sequence()
-				->Excute(std::make_shared<LoadTextureData>())
-				->Excute(std::make_shared<InitializeCamera>())
-				->Excute(std::make_shared<InitializeLight>(hwnd))
-			->Close();
+		->Sequence()
+		->Excute(std::make_shared<LoadTextureData>())//TODO:제거필요
+		->Excute(std::make_shared<InitializeCamera>())
+		->Excute(std::make_shared<InitializeLight>(hwnd))
+		//->Excute(std::make_shared<InitializeShader>())
+		->Close();
 
 	tree->Run();
 
-	m_Imgui->Initialize(hwnd, &D3DManager::GetInstance());
+	m_Imgui->Initialize(hwnd, &Direct3D::GetInstance());
 
 	return true;
 }
@@ -39,7 +40,7 @@ bool Application::Render()
 	};
 
 	// Clear the buffers to begin the scene.
-	D3DManager::GetInstance().BeginScene(EnumViewType::eScene, 0.2f, 0.2f, 0.2f, 1.0f);
+	Direct3D::GetInstance().BeginScene(EnumViewType::eScene, 0.2f, 0.2f, 0.2f, 1.0f);
 
 	//ImGui
 	m_Imgui->Prepare();
@@ -51,17 +52,17 @@ bool Application::Render()
 	auto tree = std::make_unique<BehaviorTreeBuilder>();
 
 	tree->Build(dataBlock)
-			->Sequence()
-				->Excute(std::make_shared<GetViewingPoint>())
-				->Excute(std::make_shared<RenderGameObjects>())
-			->Close();
+		->Sequence()
+		->Excute(std::make_shared<GetViewingPoint>())
+		->Excute(std::make_shared<RenderGameObjects>())
+		->Close();
 
 	tree->Run();
 
 	m_Imgui->Render();
 
 	// Present the rendered scene to the screen.
-	D3DManager::GetInstance().EndScene();
+	Direct3D::GetInstance().EndScene();
 
 	return true;
 }
@@ -110,12 +111,12 @@ void Application::Shutdown()
 		m_ViewingPoint = 0;
 	}
 
-	if(m_Imgui)
+	if (m_Imgui)
 	{
 		m_Imgui->Shutdown();
 	}
 
-	D3DManager::GetInstance().Shutdown();
+	Direct3D::GetInstance().Shutdown();
 
 	return;
 }

@@ -1,7 +1,7 @@
 #ifndef _APPLICATION
 #define _APPLICATION
 
-#include "D3dmanager.h"
+#include "Direct3D.h"
 #include "CommonModel.h"
 #include "ImGui/ImGuiManager.h"
 #include "BehaviorTree.h"

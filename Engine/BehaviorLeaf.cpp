@@ -11,12 +11,12 @@ EnumBehaviorTreeStatus LoadTextureData::Invoke()
 
 	const char* textureFilename = "../Engine/data/wall01.tga"; //TODO : need path policy
 	manager->Texture = std::make_shared<TextureClass>();
-	manager->Texture->Initialize(D3DManager::GetInstance().GetDevice(), D3DManager::GetInstance().GetDeviceContext(), textureFilename);
+	manager->Texture->Initialize(Direct3D::GetInstance().GetDevice(), Direct3D::GetInstance().GetDeviceContext(), textureFilename);
 
 	return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus InitializeCamera::Invoke() 
+EnumBehaviorTreeStatus InitializeCamera::Invoke()
 {
 	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
 
@@ -24,7 +24,7 @@ EnumBehaviorTreeStatus InitializeCamera::Invoke()
 	assert(manager != nullptr);
 
 	// Create and initialize the camera object.
-	manager->Camera =std::make_unique<CameraClass>();
+	manager->Camera = std::make_unique<CameraClass>();
 
 	manager->Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	manager->Camera->Render();
@@ -52,7 +52,7 @@ EnumBehaviorTreeStatus InitializeLight::Invoke()
 
 	// Create and initialize the light shader object.
 	manager->LightShader = std::make_unique<LightShader>();
-	manager->LightShader->Initialize(D3DManager::GetInstance().GetDevice(), m_window);
+	manager->LightShader->Initialize(Direct3D::GetInstance().GetDevice(), m_window);
 
 	return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -61,7 +61,7 @@ EnumBehaviorTreeStatus GetViewingPoint::Invoke()
 {
 	IDataBlock* managerBlock = DataBlock[EnumDataBlockType::eManager];
 	IDataBlock* viewBlock = DataBlock[EnumDataBlockType::eViewingPoint];
-	
+
 	auto manager = dynamic_cast<Engine::PipelineManager*>(managerBlock);
 	assert(manager != nullptr);
 
@@ -72,9 +72,9 @@ EnumBehaviorTreeStatus GetViewingPoint::Invoke()
 	manager->Camera->Render();
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
-	D3DManager::GetInstance().GetWorldMatrix(EnumViewType::eScene, viewingPoint->WorldMatrix);
+	Direct3D::GetInstance().GetWorldMatrix(EnumViewType::eScene, viewingPoint->WorldMatrix);
 	manager->Camera->GetViewMatrix(viewingPoint->ViewMatrix);
-	D3DManager::GetInstance().GetProjectionMatrix(EnumViewType::eScene, viewingPoint->ProjectionMatrix);
+	Direct3D::GetInstance().GetProjectionMatrix(EnumViewType::eScene, viewingPoint->ProjectionMatrix);
 
 	return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -92,11 +92,11 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 
 	for (auto& model : manager->Models)
 	{
-		model->Render(D3DManager::GetInstance().GetDeviceContext());
+		model->Render(Direct3D::GetInstance().GetDeviceContext());
 
 		viewingPoint->WorldMatrix = model->transform;
 
-		manager->LightShader->Render(D3DManager::GetInstance().GetDeviceContext(), model->GetIndexCount(), viewingPoint->WorldMatrix, viewingPoint->ViewMatrix, viewingPoint->ProjectionMatrix,
+		manager->LightShader->Render(Direct3D::GetInstance().GetDeviceContext(), model->GetIndexCount(), viewingPoint->WorldMatrix, viewingPoint->ViewMatrix, viewingPoint->ProjectionMatrix,
 			model->texture->GetTexture(), manager->Light->GetDirection(), manager->Light->GetAmbientColor(), manager->Light->GetDiffuseColor());
 	}
 

@@ -67,7 +67,7 @@
     <ClInclude Include="ShaderFactory.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="D3DManager.h">
+    <ClInclude Include="Direct3D.h">
       <Filter>DirectX</Filter>
     </ClInclude>
   </ItemGroup>
@@ -130,7 +130,7 @@
     <ClCompile Include="ShaderFactory.cpp">
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="D3DManager.cpp">
+    <ClCompile Include="Direct3D.cpp">
       <Filter>DirectX</Filter>
     </ClCompile>
   </ItemGroup>

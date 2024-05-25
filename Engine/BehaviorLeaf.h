@@ -1,7 +1,7 @@
 #ifndef _BehaviorLeaf
 #define _BehaviorLeaf
 
-#include "D3dmanager.h"
+#include "Direct3D.h"
 #include "CommonModel.h"
 #include "BehaviorTree.h"
 

@@ -37,13 +37,13 @@ namespace Engine
 		D3D11_VIEWPORT Viewport;
 	};
 
-	class D3DManager
+	class Direct3D
 	{
 	private:
-		D3DManager() {}
-		D3DManager(const D3DManager& ref) {}
-		D3DManager& operator=(const D3DManager& ref) {}
-		~D3DManager() {}
+		Direct3D() {}
+		Direct3D(const Direct3D& ref) {}
+		Direct3D& operator=(const Direct3D& ref) {}
+		~Direct3D() {}
 
 		bool m_vsync_enabled;
 
@@ -52,8 +52,8 @@ namespace Engine
 		ID3D11DeviceContext* m_deviceContext;
 
 	public:
-		static D3DManager& GetInstance() {
-			static D3DManager instance;
+		static Direct3D& GetInstance() {
+			static Direct3D instance;
 			return instance;
 		}
 

@@ -1,8 +1,8 @@
-#include "d3dmanager.h"
+#include "Direct3D.h"
 
 using namespace Engine;
 
-bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
+bool Direct3D::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
 {
 	InitializeGraphicDevice(screenWidth, screenHeight, hwnd, fullscreen);
 	InitializeMainScene(screenWidth, screenHeight, screenDepth, screenNear);
@@ -10,7 +10,7 @@ bool D3DManager::Initialize(int screenWidth, int screenHeight, bool vsync, HWND 
 	return true;
 }
 
-bool D3DManager::InitializeGraphicDevice(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
+bool Direct3D::InitializeGraphicDevice(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
 {
 	HRESULT result;
 	unsigned int numModes, i, numerator, denominator;
@@ -69,7 +69,7 @@ bool D3DManager::InitializeGraphicDevice(int screenWidth, int screenHeight, HWND
 		return false;
 	}
 }
-bool D3DManager::InitializeMainScene(int screenWidth, int screenHeight, float screenDepth, float screenNear)
+bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight, float screenDepth, float screenNear)
 {
 	HRESULT result;
 
@@ -300,7 +300,7 @@ bool D3DManager::InitializeMainScene(int screenWidth, int screenHeight, float sc
 	Views[EnumViewType::eScene] = view;
 }
 
-void D3DManager::Shutdown()
+void Direct3D::Shutdown()
 {
 	// Before shutting down set to windowed mode or when you release the swap chain it will throw an exception.
 	if (m_swapChain)
@@ -383,7 +383,7 @@ void D3DManager::Shutdown()
 }
 
 
-void D3DManager::BeginScene(EnumViewType type, float red, float green, float blue, float alpha)
+void Direct3D::BeginScene(EnumViewType type, float red, float green, float blue, float alpha)
 {
 	float color[4];
 
@@ -403,7 +403,7 @@ void D3DManager::BeginScene(EnumViewType type, float red, float green, float blu
 }
 
 
-void D3DManager::EndScene()
+void Direct3D::EndScene()
 {
 	// Present the back buffer to the screen since rendering is complete.
 	if (m_vsync_enabled)
@@ -421,40 +421,40 @@ void D3DManager::EndScene()
 }
 
 
-ID3D11Device* D3DManager::GetDevice()
+ID3D11Device* Direct3D::GetDevice()
 {
 	return m_device;
 }
 
 
-ID3D11DeviceContext* D3DManager::GetDeviceContext()
+ID3D11DeviceContext* Direct3D::GetDeviceContext()
 {
 	return m_deviceContext;
 }
 
 
-void D3DManager::GetProjectionMatrix(EnumViewType type, XMMATRIX& projectionMatrix)
+void Direct3D::GetProjectionMatrix(EnumViewType type, XMMATRIX& projectionMatrix)
 {
 	projectionMatrix = Views[type].ProjectionMatrix;
 	return;
 }
 
 
-void D3DManager::GetWorldMatrix(EnumViewType type, XMMATRIX& worldMatrix)
+void Direct3D::GetWorldMatrix(EnumViewType type, XMMATRIX& worldMatrix)
 {
 	worldMatrix = Views[type].WorldMatrix;
 	return;
 }
 
 
-void D3DManager::GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix)
+void Direct3D::GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix)
 {
 	orthoMatrix = Views[type].OrthoMatrix;
 	return;
 }
 
 //
-//void D3DManager::GetVideoCardInfo(char* cardName, int& memory)
+//void Direct3D::GetVideoCardInfo(char* cardName, int& memory)
 //{
 //	strcpy_s(cardName, 128, m_videoCardDescription);
 //	memory = m_videoCardMemory;
@@ -462,7 +462,7 @@ void D3DManager::GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix)
 //}
 
 
-void D3DManager::SetBackBufferRenderTarget(EnumViewType type)
+void Direct3D::SetBackBufferRenderTarget(EnumViewType type)
 {
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
 	m_deviceContext->OMSetRenderTargets(1, &Views[type].RenderTargetView, Views[type].DepthStencilView);
@@ -471,7 +471,7 @@ void D3DManager::SetBackBufferRenderTarget(EnumViewType type)
 }
 
 
-void D3DManager::ResetViewport(EnumViewType type)
+void Direct3D::ResetViewport(EnumViewType type)
 {
 	// Set the viewport.
 	m_deviceContext->RSSetViewports(1, &Views[type].Viewport);
@@ -480,21 +480,21 @@ void D3DManager::ResetViewport(EnumViewType type)
 }
 
 
-void D3DManager::TurnZBufferOn(EnumViewType type)
+void Direct3D::TurnZBufferOn(EnumViewType type)
 {
 	m_deviceContext->OMSetDepthStencilState(Views[type].DepthStencilState, 1);
 	return;
 }
 
 
-void D3DManager::TurnZBufferOff(EnumViewType type)
+void Direct3D::TurnZBufferOff(EnumViewType type)
 {
 	m_deviceContext->OMSetDepthStencilState(Views[type].DepthDisabledStencilState, 1);
 	return;
 }
 
 
-void D3DManager::EnableAlphaBlending(EnumViewType type)
+void Direct3D::EnableAlphaBlending(EnumViewType type)
 {
 	float blendFactor[4];
 
@@ -512,7 +512,7 @@ void D3DManager::EnableAlphaBlending(EnumViewType type)
 }
 
 
-void D3DManager::DisableAlphaBlending(EnumViewType type)
+void Direct3D::DisableAlphaBlending(EnumViewType type)
 {
 	float blendFactor[4];
 

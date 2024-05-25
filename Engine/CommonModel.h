@@ -6,7 +6,7 @@
 #include "gameobject.h"
 #include "light.h"
 #include "lightshader.h"
-#include "D3dmanager.h"
+#include "Direct3D.h"
 
 namespace Engine
 {

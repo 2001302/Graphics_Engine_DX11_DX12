@@ -308,7 +308,7 @@ bool SystemClass::OnModelLoadRequest()
 			ResourceHelper::ImportModel(m_Application->GetManager()->Models.back(), modelFile[i].c_str());
 			ResourceHelper::ImportTexture(m_Application->GetManager()->Models.back(), m_Application->GetManager()->Texture);
 
-			m_Application->GetManager()->Models.back()->Initialize(D3DManager::GetInstance().GetDevice(), D3DManager::GetInstance().GetDeviceContext());
+			m_Application->GetManager()->Models.back()->Initialize(Direct3D::GetInstance().GetDevice(), Direct3D::GetInstance().GetDeviceContext());
 			m_Application->GetManager()->Models.back()->transform = matrix[i];
 		}
 	}
@@ -329,7 +329,7 @@ bool SystemClass::OnRightDragRequest()
 	}
 	else
 	{
-		auto viewPort = D3DManager::GetInstance().Views[EnumViewType::eScene].Viewport;
+		auto viewPort = Direct3D::GetInstance().Views[EnumViewType::eScene].Viewport;
 
 		//mouse move vector
 		Eigen::Vector2d vector = Eigen::Vector2d(-mouseState.lX, -mouseState.lY);

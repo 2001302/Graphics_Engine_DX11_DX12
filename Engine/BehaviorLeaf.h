@@ -20,10 +20,15 @@ namespace Engine
 	class InitializeLight : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;
+	};
+
+	class InitializeShader : public ActionNode
+	{
+		EnumBehaviorTreeStatus Invoke() override;
 		HWND m_window;
-	public :
-		InitializeLight() { m_window = 0; };
-		InitializeLight(HWND hwnd) { m_window = hwnd; };
+	public:
+		InitializeShader() { m_window = 0; };
+		InitializeShader(HWND hwnd) { m_window = hwnd; };
 	};
 
 	class GetViewingPoint : public ActionNode

@@ -50,6 +50,16 @@ EnumBehaviorTreeStatus InitializeLight::Invoke()
 	manager->Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
 	manager->Light->SetDirection(0.0f, -1.0f, 0.5f);
 
+	return EnumBehaviorTreeStatus::eSuccess;
+}
+
+EnumBehaviorTreeStatus InitializeShader::Invoke()
+{
+	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
+
+	auto manager = dynamic_cast<Engine::PipelineManager*>(block);
+	assert(manager != nullptr);
+
 	// Create and initialize the light shader object.
 	manager->LightShader = std::make_unique<LightShader>();
 	manager->LightShader->Initialize(Direct3D::GetInstance().GetDevice(), m_window);

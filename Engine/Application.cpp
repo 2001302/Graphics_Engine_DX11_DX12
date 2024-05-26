@@ -17,12 +17,12 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	auto tree = new BehaviorTreeBuilder();
 
 	tree->Build(dataBlock)
-		->Sequence()
-		->Excute(std::make_shared<LoadTextureData>())//TODO:제거필요
-		->Excute(std::make_shared<InitializeCamera>())
-		->Excute(std::make_shared<InitializeLight>(hwnd))
-		//->Excute(std::make_shared<InitializeShader>())
-		->Close();
+			->Sequence()
+				->Excute(std::make_shared<LoadTextureData>())//TODO:제거필요
+				->Excute(std::make_shared<InitializeCamera>())
+				->Excute(std::make_shared<InitializeLight>())
+				->Excute(std::make_shared<InitializeShader>(hwnd))
+			->Close();
 
 	tree->Run();
 
@@ -52,10 +52,10 @@ bool Application::Render()
 	auto tree = std::make_unique<BehaviorTreeBuilder>();
 
 	tree->Build(dataBlock)
-		->Sequence()
-		->Excute(std::make_shared<GetViewingPoint>())
-		->Excute(std::make_shared<RenderGameObjects>())
-		->Close();
+			->Sequence()
+				->Excute(std::make_shared<GetViewingPoint>())
+				->Excute(std::make_shared<RenderGameObjects>())
+			->Close();
 
 	tree->Run();
 

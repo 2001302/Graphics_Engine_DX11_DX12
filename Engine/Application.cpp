@@ -4,12 +4,12 @@ using namespace Engine;
 
 bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
-	m_Manager = new PipelineManager();
-	m_ViewingPoint = new ViewingPoint();
+	m_manager = new PipelineManager();
+	m_viewingPoint = new ViewingPoint();
 
 	std::map<EnumDataBlockType, IDataBlock*> dataBlock =
 	{
-		{EnumDataBlockType::eManager,m_Manager},
+		{EnumDataBlockType::eManager,m_manager},
 	};
 
 	Direct3D::GetInstance().Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
@@ -26,7 +26,7 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	tree->Run();
 
-	m_Imgui->Initialize(hwnd, &Direct3D::GetInstance());
+	m_imgui->Initialize(hwnd, &Direct3D::GetInstance());
 
 	return true;
 }
@@ -35,19 +35,15 @@ bool Application::Render()
 {
 	std::map<EnumDataBlockType, IDataBlock*> dataBlock =
 	{
-		{EnumDataBlockType::eManager, m_Manager},
-		{EnumDataBlockType::eViewingPoint, m_ViewingPoint},
+		{EnumDataBlockType::eManager, m_manager},
+		{EnumDataBlockType::eViewingPoint, m_viewingPoint},
 	};
 
 	// Clear the buffers to begin the scene.
-	Direct3D::GetInstance().BeginScene(EnumViewType::eScene, 0.2f, 0.2f, 0.2f, 1.0f);
+	Direct3D::GetInstance().BeginScene(EnumViewType::eScene, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	//ImGui
-	m_Imgui->Prepare();
-
-	//ImGui::SetNextWindowSize(ImVec2(520, 600), ImGuiCond_FirstUseEver);
-	//ImGui::Begin("Scene");
-	//ImGui::End();
+	m_imgui->Prepare();
 
 	auto tree = std::make_unique<BehaviorTreeBuilder>();
 
@@ -59,7 +55,7 @@ bool Application::Render()
 
 	tree->Run();
 
-	m_Imgui->Render();
+	m_imgui->Render();
 
 	// Present the rendered scene to the screen.
 	Direct3D::GetInstance().EndScene();
@@ -88,31 +84,31 @@ bool Application::Frame(std::unique_ptr<InputClass>& input)
 
 void Application::Shutdown()
 {
-	if (m_Manager)
+	if (m_manager)
 	{
-		for (auto& model : m_Manager->Models)
+		for (auto& model : m_manager->Models)
 		{
 			delete model;
 			model = 0;
 		}
 
-		m_Manager->Light.reset();
+		m_manager->Light.reset();
 
-		m_Manager->LightShader->Shutdown();
-		m_Manager->LightShader.reset();
+		m_manager->LightShader->Shutdown();
+		m_manager->LightShader.reset();
 
-		m_Manager->Camera.reset();
+		m_manager->Camera.reset();
 	}
 
-	if (m_ViewingPoint)
+	if (m_viewingPoint)
 	{
-		delete m_ViewingPoint;
-		m_ViewingPoint = 0;
+		delete m_viewingPoint;
+		m_viewingPoint = 0;
 	}
 
-	if (m_Imgui)
+	if (m_imgui)
 	{
-		m_Imgui->Shutdown();
+		m_imgui->Shutdown();
 	}
 
 	Direct3D::GetInstance().Shutdown();

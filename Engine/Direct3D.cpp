@@ -453,7 +453,7 @@ void Direct3D::CreateVertexBuffer(std::vector<Engine::VertexType> vertices, ID3D
 
 	D3D11_BUFFER_DESC bufferDesc;
 	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-	bufferDesc.Usage = D3D11_USAGE_DEFAULT; // 초기화 후 변경X
+	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
 	bufferDesc.ByteWidth = sizeof(Engine::VertexType) * vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
@@ -474,7 +474,7 @@ void Direct3D::CreateVertexBuffer(std::vector<Engine::VertexType> vertices, ID3D
 
 void Direct3D::CreateIndexBuffer(std::vector<int> indices, ID3D11Buffer* indexBuffer) {
 	D3D11_BUFFER_DESC bufferDesc;
-	bufferDesc.Usage = D3D11_USAGE_DEFAULT; // 초기화 후 변경X
+	bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
 	bufferDesc.ByteWidth = sizeof(unsigned long) * indices.size();
 	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.

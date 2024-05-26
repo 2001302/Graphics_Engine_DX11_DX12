@@ -10,8 +10,6 @@
 
 namespace Engine
 {
-	using Microsoft::WRL::ComPtr;
-
 	class GameObject
 	{
 	public:
@@ -22,6 +20,7 @@ namespace Engine
 		int GetIndexCount();
 
 		DirectX::XMMATRIX transform;
+
 		std::vector<std::shared_ptr<Bone>> bones;
 		std::vector<std::shared_ptr<Mesh>> meshes;
 		std::shared_ptr<TextureClass> texture;

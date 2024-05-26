@@ -21,15 +21,15 @@ namespace Engine
 		void Shutdown();
 		bool Frame(std::unique_ptr<InputClass>& input);
 
-		PipelineManager* GetManager() { return m_Manager; }
+		PipelineManager* GetManager() { return m_manager; }
 
 	private:
 		bool Render();
 
 	private:
-		ImGuiManager* m_Imgui;
-		PipelineManager* m_Manager;
-		ViewingPoint* m_ViewingPoint;
+		ImGuiManager* m_imgui;
+		PipelineManager* m_manager;
+		ViewingPoint* m_viewingPoint;
 	};
 }
 #endif

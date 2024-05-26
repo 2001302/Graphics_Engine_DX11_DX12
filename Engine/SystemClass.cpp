@@ -2,6 +2,37 @@
 
 using namespace Engine;
 
+/// <summary>
+/// NOTE : Global
+/// </summary>
+static SystemClass* g_system = 0;
+
+static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
+{
+	switch (umessage)
+	{
+		// Check if the window is being destroyed.
+	case WM_DESTROY:
+	{
+		PostQuitMessage(0);
+		return 0;
+	}
+
+	// Check if the window is being closed.
+	case WM_CLOSE:
+	{
+		PostQuitMessage(0);
+		return 0;
+	}
+
+	// All other messages pass to the message handler in the system class.
+	default:
+	{
+		return g_system->MessageHandler(hwnd, umessage, wparam, lparam);
+	}
+	}
+}
+
 SystemClass::SystemClass()
 {
 	m_applicationName = 0;
@@ -30,17 +61,17 @@ bool SystemClass::Initialize()
 	InitializeWindows(screenWidth, screenHeight);
 
 	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
-	m_Input = std::make_unique<InputClass>();
+	m_input = std::make_unique<InputClass>();
 
-	if(!m_Input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight))
+	if (!m_input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight))
 		return false;
 
 	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
-	m_Application = std::make_unique<Application>();
+	m_application = std::make_unique<Application>();
 
-	if(!m_Application->Initialize(screenWidth, screenHeight, m_hwnd))
+	if (!m_application->Initialize(screenWidth, screenHeight, m_hwnd))
 		return false;
-	
+
 	return true;
 }
 
@@ -51,7 +82,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	int posX, posY;
 
 	// Get an external pointer to this object.	
-	SystemHandle = this;
+	g_system = this;
 
 	// Get the instance of this application.
 	m_hinstance = GetModuleHandle(NULL);
@@ -130,20 +161,20 @@ void SystemClass::Run()
 
 	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
-	
+
 	// Loop until there is a quit message from the window or the user.
 	done = false;
-	while(!done)
+	while (!done)
 	{
 		// Handle the windows messages.
-		if(PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
 			DispatchMessage(&msg);
 		}
 
 		// If windows signals to end the application then exit out.
-		if(msg.message == WM_QUIT)
+		if (msg.message == WM_QUIT)
 		{
 			done = true;
 		}
@@ -151,7 +182,7 @@ void SystemClass::Run()
 		{
 			// Otherwise do the frame processing.
 			result = Frame();
-			if(!result)
+			if (!result)
 			{
 				done = true;
 			}
@@ -166,15 +197,15 @@ bool SystemClass::Frame()
 	bool result;
 
 	// Do the input frame processing.
-	result = m_Input->Frame();
-	if(!result)
+	result = m_input->Frame();
+	if (!result)
 	{
 		return false;
 	}
 
 	// Do the frame processing for the application class object.
-	result = m_Application->Frame(m_Input);
-	if(!result)
+	result = m_application->Frame(m_input);
+	if (!result)
 	{
 		return false;
 	}
@@ -185,7 +216,7 @@ bool SystemClass::Frame()
 void SystemClass::ShutdownWindows()
 {
 	// Fix the display settings if leaving full screen mode.
-	if(FULL_SCREEN)
+	if (FULL_SCREEN)
 	{
 		ChangeDisplaySettings(NULL, 0);
 	}
@@ -199,7 +230,7 @@ void SystemClass::ShutdownWindows()
 	m_hinstance = NULL;
 
 	// Release the pointer to this class.
-	SystemHandle = NULL;
+	g_system = NULL;
 
 	return;
 }
@@ -207,10 +238,10 @@ void SystemClass::ShutdownWindows()
 void SystemClass::Shutdown()
 {
 	// Release the application class object.
-	m_Application.reset();
+	m_application.reset();
 
 	// Release the input object.
-	m_Input.reset();
+	m_input.reset();
 
 	// Shutdown the window.
 	ShutdownWindows();
@@ -303,15 +334,15 @@ bool SystemClass::OnModelLoadRequest()
 
 		for (int i = 0; i < modelFile.size(); i++)
 		{
-			m_Application->GetManager()->Models.push_back(new GameObject());
+			m_application->GetManager()->Models.push_back(new GameObject());
 
-			ResourceHelper::ImportModel(m_Application->GetManager()->Models.back(), modelFile[i].c_str());
-			ResourceHelper::ImportTexture(m_Application->GetManager()->Models.back(), m_Application->GetManager()->Texture);
+			ResourceHelper::ImportModel(m_application->GetManager()->Models.back(), modelFile[i].c_str());
+			ResourceHelper::ImportTexture(m_application->GetManager()->Models.back(), m_application->GetManager()->Texture);
 
 			std::vector<VertexType> vertices;
 			std::vector<int> indices;
 
-			for (auto mesh : m_Application->GetManager()->Models.back()->meshes)
+			for (auto mesh : m_application->GetManager()->Models.back()->meshes)
 			{
 				vertices.insert(vertices.end(), mesh->vertices.begin(), mesh->vertices.end());
 				indices.insert(indices.end(), mesh->indices.begin(), mesh->indices.end());
@@ -325,7 +356,6 @@ bool SystemClass::OnModelLoadRequest()
 				bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 				bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
 				bufferDesc.StructureByteStride = sizeof(Engine::VertexType);
-				bufferDesc.MiscFlags = 0;
 
 				D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
 				vertexBufferData.pSysMem = vertices.data();
@@ -333,7 +363,7 @@ bool SystemClass::OnModelLoadRequest()
 				vertexBufferData.SysMemSlicePitch = 0;
 
 				const HRESULT hr =
-					Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &m_Application->GetManager()->Models.back()->vertexBuffer);
+					Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &m_application->GetManager()->Models.back()->vertexBuffer);
 				if (FAILED(hr)) {
 					std::cout << "CreateBuffer() failed. " << std::hex << hr << std::endl;
 				};
@@ -345,21 +375,19 @@ bool SystemClass::OnModelLoadRequest()
 				bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 				bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
 				bufferDesc.StructureByteStride = sizeof(int);
-				bufferDesc.MiscFlags = 0;
 
 				D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
 				indexBufferData.pSysMem = indices.data();
 				indexBufferData.SysMemPitch = 0;
 				indexBufferData.SysMemSlicePitch = 0;
 
-				Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &m_Application->GetManager()->Models.back()->indexBuffer);
-
+				Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &m_application->GetManager()->Models.back()->indexBuffer);
 			}
 
-			//Direct3D::GetInstance().CreateVertexBuffer(vertices, m_Application->GetManager()->Models.back()->vertexBuffer);
-			//Direct3D::GetInstance().CreateIndexBuffer(indices, m_Application->GetManager()->Models.back()->indexBuffer);
+			//Direct3D::GetInstance().CreateVertexBuffer(vertices, m_application->GetManager()->Models.back()->vertexBuffer);
+			//Direct3D::GetInstance().CreateIndexBuffer(indices, m_application->GetManager()->Models.back()->indexBuffer);
 
-			m_Application->GetManager()->Models.back()->transform = matrix[i];
+			m_application->GetManager()->Models.back()->transform = matrix[i];
 		}
 	}
 	else
@@ -372,10 +400,10 @@ bool SystemClass::OnModelLoadRequest()
 bool SystemClass::OnRightDragRequest()
 {
 	DIMOUSESTATE mouseState;
-	if (FAILED(m_Input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
+	if (FAILED(m_input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
 	{
 		//retry
-		m_Input->Mouse()->Acquire();
+		m_input->Mouse()->Acquire();
 	}
 	else
 	{
@@ -384,7 +412,7 @@ bool SystemClass::OnRightDragRequest()
 		//mouse move vector
 		Eigen::Vector2d vector = Eigen::Vector2d(-mouseState.lX, -mouseState.lY);
 
-		Eigen::Vector3d origin(m_Application->GetManager()->Camera->GetPosition().x, m_Application->GetManager()->Camera->GetPosition().y, m_Application->GetManager()->Camera->GetPosition().z);
+		Eigen::Vector3d origin(m_application->GetManager()->Camera->GetPosition().x, m_application->GetManager()->Camera->GetPosition().y, m_application->GetManager()->Camera->GetPosition().z);
 
 		//convert to spherical coordinates
 		double r = origin.norm();
@@ -405,7 +433,7 @@ bool SystemClass::OnRightDragRequest()
 
 		Eigen::Vector3d origin_prime(x, y, z);
 
-		m_Application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.y(), origin_prime.z());
+		m_application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.y(), origin_prime.z());
 	}
 	
 	return true;
@@ -414,15 +442,15 @@ bool SystemClass::OnRightDragRequest()
 bool SystemClass::OnMouseWheelRequest()
 {
 	DIMOUSESTATE mouseState;
-	if (FAILED(m_Input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
+	if (FAILED(m_input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
 	{
 		//retry
-		m_Input->Mouse()->Acquire();
+		m_input->Mouse()->Acquire();
 	}
 	else
 	{
 		double wheel = -mouseState.lZ/(600.0);
-		Eigen::Vector3d origin(m_Application->GetManager()->Camera->GetPosition().x, m_Application->GetManager()->Camera->GetPosition().y, m_Application->GetManager()->Camera->GetPosition().z);
+		Eigen::Vector3d origin(m_application->GetManager()->Camera->GetPosition().x, m_application->GetManager()->Camera->GetPosition().y, m_application->GetManager()->Camera->GetPosition().z);
 
 		Eigen::Matrix3d R1;
 		R1 <<	1.0 + wheel, 0.0, 0.0,
@@ -430,7 +458,7 @@ bool SystemClass::OnMouseWheelRequest()
 				0.0, 0.0, 1.0 + wheel;
 
 		Eigen::Vector3d origin_prime = R1* origin;
-		m_Application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.y(), origin_prime.z());
+		m_application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.y(), origin_prime.z());
 	}
 
 	return true;

@@ -43,8 +43,8 @@ namespace Engine
 	class Direct3D
 	{
 	private:
-		Direct3D() {}
-		Direct3D(const Direct3D& ref) {}
+		Direct3D() : m_vsync_enabled(false), m_swapChain(0), m_device(0), m_deviceContext(0) {}
+		Direct3D(const Direct3D& x) : m_vsync_enabled(x.m_vsync_enabled), m_swapChain(x.m_swapChain), m_device(x.m_device), m_deviceContext(x.m_deviceContext) {}
 		Direct3D& operator=(const Direct3D& ref) {}
 		~Direct3D() {}
 
@@ -55,6 +55,8 @@ namespace Engine
 		ID3D11DeviceContext* m_deviceContext;
 
 	public:
+		std::map<EnumViewType, ViewInfo> Views;
+
 		static Direct3D& GetInstance() {
 			static Direct3D instance;
 			return instance;
@@ -74,8 +76,6 @@ namespace Engine
 		void GetProjectionMatrix(EnumViewType type, XMMATRIX& projectionMatrix);
 		void GetWorldMatrix(EnumViewType type, XMMATRIX& worldMatrix);
 		void GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix);
-
-		std::map<EnumViewType, ViewInfo> Views;
 
 		void CreateVertexBuffer(std::vector<Engine::VertexType> vertices, ID3D11Buffer* vertexBuffer);
 		void CreateIndexBuffer(std::vector<int> indices, ID3D11Buffer* indexBuffer);

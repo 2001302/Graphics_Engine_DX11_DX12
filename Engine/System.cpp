@@ -1,11 +1,11 @@
-#include "systemclass.h"
+#include "system.h"
 
 using namespace Engine;
 
 /// <summary>
 /// NOTE : Global
 /// </summary>
-static SystemClass* g_system = 0;
+static System* g_system = 0;
 
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
@@ -33,25 +33,25 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM 
 	}
 }
 
-SystemClass::SystemClass()
+System::System()
 {
 	m_applicationName = 0;
 	m_hinstance = 0;
 	m_hwnd = 0;
 }
 
-SystemClass::SystemClass(const SystemClass& other)
+System::System(const System& other)
 {
 	m_applicationName = other.m_applicationName;
 	m_hinstance = other.m_hinstance;
 	m_hwnd = other.m_hwnd;
 }
 
-SystemClass::~SystemClass()
+System::~System()
 {
 }
 
-bool SystemClass::Initialize()
+bool System::Initialize()
 {
 	// Initialize the width and height of the screen to zero before sending the variables into the function.
 	int screenWidth = 0;
@@ -61,7 +61,7 @@ bool SystemClass::Initialize()
 	InitializeWindows(screenWidth, screenHeight);
 
 	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
-	m_input = std::make_unique<InputClass>();
+	m_input = std::make_unique<Input>();
 
 	if (!m_input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight))
 		return false;
@@ -75,7 +75,7 @@ bool SystemClass::Initialize()
 	return true;
 }
 
-void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
+void System::InitializeWindows(int& screenWidth, int& screenHeight)
 {
 	WNDCLASSEX windowClass;
 	DEVMODE screenSettings;
@@ -153,7 +153,7 @@ void SystemClass::InitializeWindows(int& screenWidth, int& screenHeight)
 	return;
 }
 
-void SystemClass::Run()
+void System::Run()
 {
 	MSG msg;
 	bool done, result;
@@ -192,7 +192,7 @@ void SystemClass::Run()
 	return;
 }
 
-bool SystemClass::Frame()
+bool System::Frame()
 {
 	bool result;
 
@@ -213,7 +213,7 @@ bool SystemClass::Frame()
 	return true;
 }
 
-void SystemClass::ShutdownWindows()
+void System::ShutdownWindows()
 {
 	// Fix the display settings if leaving full screen mode.
 	if (FULL_SCREEN)
@@ -235,7 +235,7 @@ void SystemClass::ShutdownWindows()
 	return;
 }
 
-void SystemClass::Shutdown()
+void System::Shutdown()
 {
 	// Release the application class object.
 	m_application.reset();
@@ -249,7 +249,7 @@ void SystemClass::Shutdown()
 	return;
 }
 
-LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
 {
 	extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -258,41 +258,41 @@ LRESULT CALLBACK SystemClass::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam
 	//TODO : Error Code ¸¸µé°Í
 	switch (umsg)
 	{
-		case WM_MODEL_LOAD:
+	case WM_MODEL_LOAD:
+	{
+		return OnModelLoadRequest();
+		break;
+	}
+	case WM_MOUSEMOVE:
+	{
+		if (wparam & MK_RBUTTON)
 		{
-			return OnModelLoadRequest();
-			break;
+			return OnRightDragRequest();
 		}
-		case WM_MOUSEMOVE:
-		{
-			if (wparam & MK_RBUTTON)
-			{
-				return OnRightDragRequest();
-			}
-			break;
-		}
-		case WM_MOUSEWHEEL:
-		{
-			return OnMouseWheelRequest();
-			break;
-		}
-		case WM_RBUTTONDOWN:
-		{
-			//return OnRightClickRequest();
-			break;
-		}
-		case WM_LBUTTONUP:
-		{
-			break;
-		}
-		default:
-		{
-			return DefWindowProc(hwnd, umsg, wparam, lparam);
-		}
+		break;
+	}
+	case WM_MOUSEWHEEL:
+	{
+		return OnMouseWheelRequest();
+		break;
+	}
+	case WM_RBUTTONDOWN:
+	{
+		//return OnRightClickRequest();
+		break;
+	}
+	case WM_LBUTTONUP:
+	{
+		break;
+	}
+	default:
+	{
+		return DefWindowProc(hwnd, umsg, wparam, lparam);
+	}
 	}
 }
 
-bool SystemClass::OnModelLoadRequest()
+bool System::OnModelLoadRequest()
 {
 	auto ToString = [](LPWSTR lpwstr) -> std::string
 		{
@@ -305,7 +305,7 @@ bool SystemClass::OnModelLoadRequest()
 			return result;
 		};
 
-	
+
 	OPENFILENAMEW  ofn;
 	wchar_t szFile[260] = { 0 };
 
@@ -399,7 +399,7 @@ bool SystemClass::OnModelLoadRequest()
 	return true;
 }
 
-bool SystemClass::OnRightDragRequest()
+bool System::OnRightDragRequest()
 {
 	DIMOUSESTATE mouseState;
 	if (FAILED(m_input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
@@ -437,11 +437,11 @@ bool SystemClass::OnRightDragRequest()
 
 		m_application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.y(), origin_prime.z());
 	}
-	
+
 	return true;
 }
 
-bool SystemClass::OnMouseWheelRequest()
+bool System::OnMouseWheelRequest()
 {
 	DIMOUSESTATE mouseState;
 	if (FAILED(m_input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))

@@ -151,13 +151,13 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
-    <ClInclude Include="InputClass.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightShader.h" />
     <ClInclude Include="CommonModel.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="ShaderFactory.h" />
-    <ClInclude Include="SystemClass.h" />
+    <ClInclude Include="System.h" />
     <ClInclude Include="TextureClass.h" />
     <ClInclude Include="ResourceHelper.h" />
   </ItemGroup>
@@ -176,13 +176,13 @@
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="InputClass.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
-    <ClCompile Include="SystemClass.cpp" />
+    <ClCompile Include="System.cpp" />
     <ClCompile Include="TextureClass.cpp" />
     <ClCompile Include="ResourceHelper.cpp" />
   </ItemGroup>

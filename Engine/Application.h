@@ -19,7 +19,7 @@ namespace Engine
 	public:
 		bool Initialize(int, int, HWND);
 		void Shutdown();
-		bool Frame(std::unique_ptr<InputClass>& input);
+		bool Frame(std::unique_ptr<Input>& input);
 
 		PipelineManager* GetManager() { return m_manager; }
 

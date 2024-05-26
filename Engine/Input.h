@@ -1,5 +1,5 @@
-#ifndef _INPUTCLASS_H_
-#define _INPUTCLASS_H_
+#ifndef _INPUT
+#define _INPUT
 
 #define DIRECTINPUT_VERSION 0x0800
 
@@ -9,12 +9,12 @@
 #include <dinput.h>
 #include "Header.h"
 
-class InputClass
+class Input
 {
 public:
-	InputClass();
-	InputClass(const InputClass&);
-	~InputClass();
+	Input();
+	Input(const Input&);
+	~Input();
 
 	bool Initialize(HINSTANCE, HWND, int, int);
 	void Shutdown();

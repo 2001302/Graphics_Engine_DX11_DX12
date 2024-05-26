@@ -1,7 +1,7 @@
 #ifndef _CommonModel
 #define _CommonModel
 
-#include "inputclass.h"
+#include "input.h"
 #include "cameraclass.h"
 #include "gameobject.h"
 #include "light.h"

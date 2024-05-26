@@ -3,18 +3,18 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include "inputclass.h"
+#include "input.h"
 #include "application.h"
 #include "resourcehelper.h"
 
 namespace Engine
 {
-	class SystemClass
+	class System
 	{
 	public:
-		SystemClass();
-		SystemClass(const SystemClass&);
-		~SystemClass();
+		System();
+		System(const System&);
+		~System();
 
 		bool Initialize();
 		void Shutdown();
@@ -36,7 +36,7 @@ namespace Engine
 		HINSTANCE m_hinstance;
 		HWND m_hwnd;
 
-		std::unique_ptr<InputClass> m_input;
+		std::unique_ptr<Input> m_input;
 		std::unique_ptr<Application> m_application;
 	};
 }

@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="Application.h" />
-    <ClInclude Include="SystemClass.h" />
+    <ClInclude Include="System.h" />
     <ClInclude Include="Header.h">
       <Filter>Model</Filter>
     </ClInclude>
@@ -18,7 +18,7 @@
     <ClInclude Include="TextureClass.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="InputClass.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="BehaviorTree.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
@@ -74,7 +74,7 @@
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="SystemClass.cpp" />
+    <ClCompile Include="System.cpp" />
     <ClCompile Include="Light.cpp">
       <Filter>Model</Filter>
     </ClCompile>
@@ -84,7 +84,7 @@
     <ClCompile Include="TextureClass.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="InputClass.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="BehaviorTree.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>

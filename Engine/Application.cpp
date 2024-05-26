@@ -63,7 +63,7 @@ bool Application::Render()
 	return true;
 }
 
-bool Application::Frame(std::unique_ptr<InputClass>& input)
+bool Application::Frame(std::unique_ptr<Input>& input)
 {
 	bool result;
 

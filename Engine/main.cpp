@@ -1,13 +1,13 @@
-#include "systemclass.h"
+#include "system.h"
 
 
 int main()
 {
-	Engine::SystemClass* System;
+	Engine::System* System;
 	bool result;
 	
 	// Create the system object.
-	System = new Engine::SystemClass;
+	System = new Engine::System;
 
 	// Initialize and run the system object.
 	result = System->Initialize();

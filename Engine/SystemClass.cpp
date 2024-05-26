@@ -356,6 +356,7 @@ bool SystemClass::OnModelLoadRequest()
 				bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 				bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
 				bufferDesc.StructureByteStride = sizeof(Engine::VertexType);
+				bufferDesc.MiscFlags = 0;
 
 				D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
 				vertexBufferData.pSysMem = vertices.data();
@@ -375,6 +376,7 @@ bool SystemClass::OnModelLoadRequest()
 				bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 				bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
 				bufferDesc.StructureByteStride = sizeof(int);
+				bufferDesc.MiscFlags = 0;
 
 				D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
 				indexBufferData.pSysMem = indices.data();

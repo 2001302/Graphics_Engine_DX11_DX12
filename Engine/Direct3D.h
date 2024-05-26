@@ -6,11 +6,14 @@
 #include <directxmath.h>
 
 #include "Header.h"
+#include "CommonStruct.h"
 
 using namespace DirectX;
 
 namespace Engine 
 {
+	using Microsoft::WRL::ComPtr;
+
 	enum EnumViewType
 	{
 		eScene = 0,
@@ -72,16 +75,38 @@ namespace Engine
 		void GetWorldMatrix(EnumViewType type, XMMATRIX& worldMatrix);
 		void GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix);
 
-		void SetBackBufferRenderTarget(EnumViewType type);
-		void ResetViewport(EnumViewType type);
-
-		void TurnZBufferOn(EnumViewType type);
-		void TurnZBufferOff(EnumViewType type);
-
-		void EnableAlphaBlending(EnumViewType type);
-		void DisableAlphaBlending(EnumViewType type);
-
 		std::map<EnumViewType, ViewInfo> Views;
+
+		void CreateVertexBuffer(std::vector<Engine::VertexType> vertices, ID3D11Buffer* vertexBuffer);
+		void CreateIndexBuffer(std::vector<int> indices, ID3D11Buffer* indexBuffer);
+
+		template <typename T_CONSTANT>
+		void CreateConstantBuffer(const T_CONSTANT& constantBufferData,
+			ComPtr<ID3D11Buffer>& constantBuffer) {
+			D3D11_BUFFER_DESC cbDesc;
+			cbDesc.ByteWidth = sizeof(constantBufferData);
+			cbDesc.Usage = D3D11_USAGE_DYNAMIC;
+			cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+			cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+			cbDesc.MiscFlags = 0;
+			cbDesc.StructureByteStride = 0;
+
+			// Fill in the subresource data.
+			D3D11_SUBRESOURCE_DATA InitData;
+			InitData.pSysMem = &constantBufferData;
+			InitData.SysMemPitch = 0;
+			InitData.SysMemSlicePitch = 0;
+
+			m_device->CreateBuffer(&cbDesc, &InitData, constantBuffer.GetAddressOf());
+		}
+
+		template <typename T_DATA>
+		void UpdateBuffer(const T_DATA& bufferData, ComPtr<ID3D11Buffer>& buffer) {
+			D3D11_MAPPED_SUBRESOURCE ms;
+			m_deviceContext->Map(buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+			memcpy(ms.pData, &bufferData, sizeof(bufferData));
+			m_deviceContext->Unmap(buffer.Get(), NULL);
+		}
 	};
 }
 #endif

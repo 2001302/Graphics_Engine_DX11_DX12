@@ -308,7 +308,55 @@ bool SystemClass::OnModelLoadRequest()
 			ResourceHelper::ImportModel(m_Application->GetManager()->Models.back(), modelFile[i].c_str());
 			ResourceHelper::ImportTexture(m_Application->GetManager()->Models.back(), m_Application->GetManager()->Texture);
 
-			m_Application->GetManager()->Models.back()->Initialize(Direct3D::GetInstance().GetDevice(), Direct3D::GetInstance().GetDeviceContext());
+			std::vector<VertexType> vertices;
+			std::vector<int> indices;
+
+			for (auto mesh : m_Application->GetManager()->Models.back()->meshes)
+			{
+				vertices.insert(vertices.end(), mesh->vertices.begin(), mesh->vertices.end());
+				indices.insert(indices.end(), mesh->indices.begin(), mesh->indices.end());
+			}
+
+
+			D3D11_BUFFER_DESC bufferDesc;
+			ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+			bufferDesc.Usage = D3D11_USAGE_DEFAULT; // 초기화 후 변경X
+			bufferDesc.ByteWidth = sizeof(Engine::VertexType) * vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
+			bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+			bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+			bufferDesc.StructureByteStride = 0;// sizeof(T_VERTEX);
+			bufferDesc.MiscFlags = 0;
+
+			D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
+			vertexBufferData.pSysMem = vertices.data();
+			vertexBufferData.SysMemPitch = 0;
+			vertexBufferData.SysMemSlicePitch = 0;
+
+			const HRESULT hr =
+				Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &m_Application->GetManager()->Models.back()->vertexBuffer);
+			if (FAILED(hr)) {
+				std::cout << "CreateBuffer() failed. " << std::hex << hr << std::endl;
+			};
+
+
+			D3D11_BUFFER_DESC bufferDesc1;
+			bufferDesc1.Usage = D3D11_USAGE_DEFAULT; // 초기화 후 변경X
+			bufferDesc1.ByteWidth = sizeof(unsigned long) * indices.size();
+			bufferDesc1.BindFlags = D3D11_BIND_INDEX_BUFFER;
+			bufferDesc1.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+			bufferDesc1.StructureByteStride = 0;// sizeof(int);
+			bufferDesc1.MiscFlags = 0;
+
+			D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+			indexBufferData.pSysMem = indices.data();
+			indexBufferData.SysMemPitch = 0;
+			indexBufferData.SysMemSlicePitch = 0;
+
+			Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc1, &indexBufferData, &m_Application->GetManager()->Models.back()->indexBuffer);
+
+			//Direct3D::GetInstance().CreateVertexBuffer(vertices, m_Application->GetManager()->Models.back()->vertexBuffer);
+			//Direct3D::GetInstance().CreateIndexBuffer(indices, m_Application->GetManager()->Models.back()->indexBuffer);
+
 			m_Application->GetManager()->Models.back()->transform = matrix[i];
 		}
 	}

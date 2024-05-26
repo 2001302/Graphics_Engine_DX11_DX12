@@ -155,8 +155,8 @@ void ResourceHelper::ReadSkinData(Engine::GameObject* gameObject, const aiScene*
 			tempVertexBoneWeights[v].Normalize();
 
 			BlendWeight blendWeight = tempVertexBoneWeights[v].GetBlendWeights();
-			mesh->vertices[v].blendIndices = blendWeight.indices;
-			mesh->vertices[v].blendWeights = blendWeight.weights;
+			//mesh->vertices[v].blendIndices = blendWeight.indices;
+			//mesh->vertices[v].blendWeights = blendWeight.weights;
 		}
 	}
 }

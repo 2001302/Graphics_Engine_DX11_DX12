@@ -382,7 +382,6 @@ void Direct3D::Shutdown()
 	return;
 }
 
-
 void Direct3D::BeginScene(EnumViewType type, float red, float green, float blue, float alpha)
 {
 	float color[4];
@@ -402,7 +401,6 @@ void Direct3D::BeginScene(EnumViewType type, float red, float green, float blue,
 	return;
 }
 
-
 void Direct3D::EndScene()
 {
 	// Present the back buffer to the screen since rendering is complete.
@@ -420,18 +418,15 @@ void Direct3D::EndScene()
 	return;
 }
 
-
 ID3D11Device* Direct3D::GetDevice()
 {
 	return m_device;
 }
 
-
 ID3D11DeviceContext* Direct3D::GetDeviceContext()
 {
 	return m_deviceContext;
 }
-
 
 void Direct3D::GetProjectionMatrix(EnumViewType type, XMMATRIX& projectionMatrix)
 {
@@ -439,13 +434,11 @@ void Direct3D::GetProjectionMatrix(EnumViewType type, XMMATRIX& projectionMatrix
 	return;
 }
 
-
 void Direct3D::GetWorldMatrix(EnumViewType type, XMMATRIX& worldMatrix)
 {
 	worldMatrix = Views[type].WorldMatrix;
 	return;
 }
-
 
 void Direct3D::GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix)
 {
@@ -453,78 +446,45 @@ void Direct3D::GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix)
 	return;
 }
 
-//
-//void Direct3D::GetVideoCardInfo(char* cardName, int& memory)
-//{
-//	strcpy_s(cardName, 128, m_videoCardDescription);
-//	memory = m_videoCardMemory;
-//	return;
-//}
+void Direct3D::CreateVertexBuffer(std::vector<Engine::VertexType> vertices, ID3D11Buffer* vertexBuffer) {
 
+	// D3D11_USAGE enumeration (d3d11.h)
+	// https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_usage
 
-void Direct3D::SetBackBufferRenderTarget(EnumViewType type)
-{
-	// Bind the render target view and depth stencil buffer to the output render pipeline.
-	m_deviceContext->OMSetRenderTargets(1, &Views[type].RenderTargetView, Views[type].DepthStencilView);
+	D3D11_BUFFER_DESC bufferDesc;
+	ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+	bufferDesc.Usage = D3D11_USAGE_DEFAULT; // 초기화 후 변경X
+	bufferDesc.ByteWidth = sizeof(Engine::VertexType) * vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
+	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+	bufferDesc.StructureByteStride = 0;// sizeof(T_VERTEX);
+	bufferDesc.MiscFlags = 0;
 
-	return;
+	D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
+	vertexBufferData.pSysMem = vertices.data();
+	vertexBufferData.SysMemPitch = 0;
+	vertexBufferData.SysMemSlicePitch = 0;
+
+	const HRESULT hr =
+		m_device->CreateBuffer(&bufferDesc, &vertexBufferData, &vertexBuffer);
+	if (FAILED(hr)) {
+		std::cout << "CreateBuffer() failed. " << std::hex << hr << std::endl;
+	};
 }
 
+void Direct3D::CreateIndexBuffer(std::vector<int> indices, ID3D11Buffer* indexBuffer) {
+	D3D11_BUFFER_DESC bufferDesc;
+	bufferDesc.Usage = D3D11_USAGE_DEFAULT; // 초기화 후 변경X
+	bufferDesc.ByteWidth = sizeof(unsigned long) * indices.size();
+	bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+	bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+	bufferDesc.StructureByteStride = 0;// sizeof(int);
+	bufferDesc.MiscFlags = 0;
 
-void Direct3D::ResetViewport(EnumViewType type)
-{
-	// Set the viewport.
-	m_deviceContext->RSSetViewports(1, &Views[type].Viewport);
+	D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+	indexBufferData.pSysMem = indices.data();
+	indexBufferData.SysMemPitch = 0;
+	indexBufferData.SysMemSlicePitch = 0;
 
-	return;
-}
-
-
-void Direct3D::TurnZBufferOn(EnumViewType type)
-{
-	m_deviceContext->OMSetDepthStencilState(Views[type].DepthStencilState, 1);
-	return;
-}
-
-
-void Direct3D::TurnZBufferOff(EnumViewType type)
-{
-	m_deviceContext->OMSetDepthStencilState(Views[type].DepthDisabledStencilState, 1);
-	return;
-}
-
-
-void Direct3D::EnableAlphaBlending(EnumViewType type)
-{
-	float blendFactor[4];
-
-
-	// Setup the blend factor.
-	blendFactor[0] = 0.0f;
-	blendFactor[1] = 0.0f;
-	blendFactor[2] = 0.0f;
-	blendFactor[3] = 0.0f;
-
-	// Turn on the alpha blending.
-	m_deviceContext->OMSetBlendState(Views[type].AlphaEnableBlendingState, blendFactor, 0xffffffff);
-
-	return;
-}
-
-
-void Direct3D::DisableAlphaBlending(EnumViewType type)
-{
-	float blendFactor[4];
-
-
-	// Setup the blend factor.
-	blendFactor[0] = 0.0f;
-	blendFactor[1] = 0.0f;
-	blendFactor[2] = 0.0f;
-	blendFactor[3] = 0.0f;
-
-	// Turn off the alpha blending.
-	m_deviceContext->OMSetBlendState(Views[type].AlphaDisableBlendingState, blendFactor, 0xffffffff);
-
-	return;
+	m_device->CreateBuffer(&bufferDesc, &indexBufferData, &indexBuffer);
 }

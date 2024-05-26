@@ -102,7 +102,19 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 
 	for (auto& model : manager->Models)
 	{
-		model->Render(Direct3D::GetInstance().GetDeviceContext());
+		unsigned int stride;
+		unsigned int offset;
+
+		// Set vertex buffer stride and offset.
+		stride = sizeof(VertexType);
+		offset = 0;
+
+		// Set the vertex buffer to active in the input assembler so it can be rendered.
+		Direct3D::GetInstance().GetDeviceContext()->IASetVertexBuffers(0, 1, &model->vertexBuffer, &stride, &offset);
+		// Set the index buffer to active in the input assembler so it can be rendered.
+		Direct3D::GetInstance().GetDeviceContext()->IASetIndexBuffer(model->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
+		Direct3D::GetInstance().GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		viewingPoint->WorldMatrix = model->transform;
 

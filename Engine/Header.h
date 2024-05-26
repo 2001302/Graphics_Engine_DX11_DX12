@@ -12,6 +12,7 @@
 #include <cmath>		//for calculate coordination
 #include <omp.h>		//for omp parallel
 #include <commdlg.h>	//for file open
+#include <wrl.h>
 
 #include <eigen/dense>
 #include <assimp/importer.hpp>

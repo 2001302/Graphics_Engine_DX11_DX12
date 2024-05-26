@@ -10,8 +10,6 @@ namespace Engine
 		DirectX::XMFLOAT3 position;
 		DirectX::XMFLOAT2 texture;
 		DirectX::XMFLOAT3 normal;
-		DirectX::XMFLOAT4 blendIndices;
-		DirectX::XMFLOAT4 blendWeights;
 	};
 	struct Bone
 	{

@@ -92,7 +92,6 @@ void Application::Shutdown()
 	{
 		for (auto& model : m_Manager->Models)
 		{
-			model->Shutdown();
 			delete model;
 			model = 0;
 		}

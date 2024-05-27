@@ -118,8 +118,73 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 
 		viewingPoint->WorldMatrix = model->transform;
 
-		manager->LightShader->Render(Direct3D::GetInstance().GetDeviceContext(), model->GetIndexCount(), viewingPoint->WorldMatrix, viewingPoint->ViewMatrix, viewingPoint->ProjectionMatrix,
-			model->texture->GetTexture(), manager->Light->GetDirection(), manager->Light->GetAmbientColor(), manager->Light->GetDiffuseColor());
+		HRESULT result;
+		D3D11_MAPPED_SUBRESOURCE mappedResource;
+		unsigned int bufferNumber;
+		LightShader::MatrixBufferType* dataPtr;
+		LightShader::LightBufferType* dataPtr2;
+
+		// Transpose the matrices to prepare them for the shader.
+		auto worldMatrix = XMMatrixTranspose(viewingPoint->WorldMatrix);
+		auto viewMatrix = XMMatrixTranspose(viewingPoint->ViewMatrix);
+		auto projectionMatrix = XMMatrixTranspose(viewingPoint->ProjectionMatrix);
+
+		ID3D11ShaderResourceView* texture = model->texture->GetTexture();
+
+		// Lock the constant buffer so it can be written to.
+		Direct3D::GetInstance().GetDeviceContext()->Map(manager->LightShader->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+		// Get a pointer to the data in the constant buffer.
+		dataPtr = (LightShader::MatrixBufferType*)mappedResource.pData;
+
+		// Copy the matrices into the constant buffer.
+		dataPtr->world = worldMatrix;
+		dataPtr->view = viewMatrix;
+		dataPtr->projection = projectionMatrix;
+
+		// Unlock the constant buffer.
+		Direct3D::GetInstance().GetDeviceContext()->Unmap(manager->LightShader->m_matrixBuffer, 0);
+
+		// Set the position of the constant buffer in the vertex shader.
+		bufferNumber = 0;
+
+		// Now set the constant buffer in the vertex shader with the updated values.
+		Direct3D::GetInstance().GetDeviceContext()->VSSetConstantBuffers(bufferNumber, 1, &manager->LightShader->m_matrixBuffer);
+		// Set shader texture resource in the pixel shader.
+		Direct3D::GetInstance().GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+		// Lock the light constant buffer so it can be written to.
+		Direct3D::GetInstance().GetDeviceContext()->Map(manager->LightShader->m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
+
+		// Get a pointer to the data in the constant buffer.
+		dataPtr2 = (LightShader::LightBufferType*)mappedResource.pData;
+
+		// Copy the lighting variables into the constant buffer.
+		dataPtr2->ambientColor = manager->Light->GetAmbientColor();
+		dataPtr2->diffuseColor = manager->Light->GetDiffuseColor();
+		dataPtr2->lightDirection = manager->Light->GetDirection();
+		dataPtr2->padding = 0.0f;
+
+		// Unlock the constant buffer.
+		Direct3D::GetInstance().GetDeviceContext()->Unmap(manager->LightShader->m_lightBuffer, 0);
+
+		// Set the position of the light constant buffer in the pixel shader.
+		bufferNumber = 0;
+
+		// Finally set the light constant buffer in the pixel shader with the updated values.
+		Direct3D::GetInstance().GetDeviceContext()->PSSetConstantBuffers(bufferNumber, 1, &manager->LightShader->m_lightBuffer);
+
+		// Set the vertex input layout.
+		Direct3D::GetInstance().GetDeviceContext()->IASetInputLayout(manager->LightShader->m_layout);
+
+		// Set the vertex and pixel shaders that will be used to render this triangle.
+		Direct3D::GetInstance().GetDeviceContext()->VSSetShader(manager->LightShader->m_vertexShader, NULL, 0);
+		Direct3D::GetInstance().GetDeviceContext()->PSSetShader(manager->LightShader->m_pixelShader, NULL, 0);
+
+		// Set the sampler state in the pixel shader.
+		Direct3D::GetInstance().GetDeviceContext()->PSSetSamplers(0, 1, &manager->LightShader->m_sampleState);
+
+		// Render the triangle.
+		Direct3D::GetInstance().GetDeviceContext()->DrawIndexed(model->GetIndexCount(), 0, 0);
 	}
 
 	return EnumBehaviorTreeStatus::eSuccess;

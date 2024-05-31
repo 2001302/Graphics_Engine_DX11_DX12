@@ -10,7 +10,7 @@ EnumBehaviorTreeStatus LoadTextureData::Invoke()
 	assert(manager != nullptr);
 
 	const char* textureFilename = "../Engine/data/wall01.tga"; //TODO : need path policy
-	manager->Texture = std::make_shared<TextureClass>();
+	manager->Texture = std::make_shared<Texture>();
 	manager->Texture->Initialize(Direct3D::GetInstance().GetDevice(), Direct3D::GetInstance().GetDeviceContext(), textureFilename);
 
 	return EnumBehaviorTreeStatus::eSuccess;
@@ -24,7 +24,7 @@ EnumBehaviorTreeStatus InitializeCamera::Invoke()
 	assert(manager != nullptr);
 
 	// Create and initialize the camera object.
-	manager->Camera = std::make_unique<CameraClass>();
+	manager->Camera = std::make_unique<Camera>();
 
 	manager->Camera->SetPosition(0.0f, 0.0f, -10.0f);
 	manager->Camera->Render();

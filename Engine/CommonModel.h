@@ -2,7 +2,7 @@
 #define _CommonModel
 
 #include "input.h"
-#include "cameraclass.h"
+#include "camera.h"
 #include "gameobject.h"
 #include "light.h"
 #include "lightshader.h"
@@ -42,8 +42,8 @@ namespace Engine
 		std::vector <GameObject*> Models;
 		std::unique_ptr<Light> Light;
 		std::unique_ptr<LightShader> LightShader;
-		std::unique_ptr<CameraClass> Camera;
-		std::shared_ptr<TextureClass> Texture; //default
+		std::unique_ptr<Camera> Camera;
+		std::shared_ptr<Texture> Texture; //default
 	};
 
 	class ViewingPoint : public IDataBlock

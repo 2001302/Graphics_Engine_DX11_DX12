@@ -4,12 +4,12 @@
 #include <directxmath.h>
 using namespace DirectX;
 
-class CameraClass
+class Camera
 {
 public:
-	CameraClass();
-	CameraClass(const CameraClass&);
-	~CameraClass();
+	Camera();
+	Camera(const Camera&);
+	~Camera();
 
 	void SetPosition(float x, float y, float z);
 	void SetRotation(float x, float y, float z);

@@ -4,7 +4,7 @@
 #include <d3d11.h>
 #include <stdio.h>
 
-class TextureClass
+class Texture
 {
 private:
 	struct TargaHeader
@@ -17,9 +17,9 @@ private:
 	};
 
 public:
-	TextureClass();
-	TextureClass(const TextureClass&);
-	~TextureClass();
+	Texture();
+	Texture(const Texture&);
+	~Texture();
 
 	bool Initialize(ID3D11Device*, ID3D11DeviceContext*,const char*);
 	void Shutdown();

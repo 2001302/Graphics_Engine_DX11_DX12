@@ -24,7 +24,7 @@ namespace Engine
 		static unsigned int GetBoneIndex(GameObject* gameObject, const std::string& name);
 
 		static GameObject* ImportTexture(GameObject* gameObject, ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename);
-		static GameObject* ImportTexture(GameObject* gameObject, std::shared_ptr<TextureClass> texture);
+		static GameObject* ImportTexture(GameObject* gameObject, std::shared_ptr<Texture> texture);
 	
 		static std::shared_ptr<Animation> ReadAnimationData(const aiScene* scene);
 		static std::shared_ptr<AnimationNode> ParseAnimationNode(std::shared_ptr<Animation> animation, aiNodeAnim* srcNode);

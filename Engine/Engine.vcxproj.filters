@@ -15,7 +15,7 @@
     <ClInclude Include="GameObject.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="TextureClass.h">
+    <ClInclude Include="Texture.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="Input.h" />
@@ -25,7 +25,7 @@
     <ClInclude Include="BehaviorLeaf.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="CameraClass.h">
+    <ClInclude Include="Camera.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
@@ -81,7 +81,7 @@
     <ClCompile Include="GameObject.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="TextureClass.cpp">
+    <ClCompile Include="Texture.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp" />
@@ -91,7 +91,7 @@
     <ClCompile Include="BehaviorLeaf.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="CameraClass.cpp">
+    <ClCompile Include="Camera.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">

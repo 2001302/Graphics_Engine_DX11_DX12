@@ -179,7 +179,7 @@ GameObject* ResourceHelper::ImportTexture(GameObject* gameObject, ID3D11Device* 
 	return gameObject;
 }
 
-GameObject* ResourceHelper::ImportTexture(GameObject* gameObject, std::shared_ptr<TextureClass> texture)
+GameObject* ResourceHelper::ImportTexture(GameObject* gameObject, std::shared_ptr<Texture> texture)
 {
 	gameObject->texture = texture;
 	return gameObject;

@@ -5,7 +5,7 @@
 #include <directxmath.h>
 
 #include "Header.h"
-#include "TextureClass.h"
+#include "Texture.h"
 #include "CommonStruct.h"
 
 namespace Engine
@@ -23,7 +23,7 @@ namespace Engine
 
 		std::vector<std::shared_ptr<Bone>> bones;
 		std::vector<std::shared_ptr<Mesh>> meshes;
-		std::shared_ptr<TextureClass> texture;
+		std::shared_ptr<Texture> texture;
 		std::shared_ptr<Animation> animation;
 
 		ID3D11Buffer* vertexBuffer;

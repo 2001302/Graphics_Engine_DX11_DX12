@@ -1,10 +1,6 @@
-////////////////////////////////////////////////////////////////////////////////
-// Filename: textureclass.cpp
-////////////////////////////////////////////////////////////////////////////////
-#include "textureclass.h"
+#include "texture.h"
 
-
-TextureClass::TextureClass()
+Texture::Texture()
 {
 	m_targaData = 0;
 	m_texture = 0;
@@ -12,17 +8,17 @@ TextureClass::TextureClass()
 }
 
 
-TextureClass::TextureClass(const TextureClass& other)
+Texture::Texture(const Texture& other)
 {
 }
 
 
-TextureClass::~TextureClass()
+Texture::~Texture()
 {
 }
 
 
-bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename)
+bool Texture::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename)
 {
 	bool result;
 	D3D11_TEXTURE2D_DESC textureDesc;
@@ -90,7 +86,7 @@ bool TextureClass::Initialize(ID3D11Device* device, ID3D11DeviceContext* deviceC
 }
 
 
-void TextureClass::Shutdown()
+void Texture::Shutdown()
 {
 	// Release the texture view resource.
 	if(m_textureView)
@@ -117,13 +113,13 @@ void TextureClass::Shutdown()
 }
 
 
-ID3D11ShaderResourceView* TextureClass::GetTexture()
+ID3D11ShaderResourceView* Texture::GetTexture()
 {
 	return m_textureView;
 }
 
 
-bool TextureClass::LoadTarga32Bit(char* filename)
+bool Texture::LoadTarga32Bit(char* filename)
 {
 	int error, bpp, imageSize, index, i, j, k;
 	FILE* filePtr;
@@ -212,13 +208,13 @@ bool TextureClass::LoadTarga32Bit(char* filename)
 }
 
 
-int TextureClass::GetWidth()
+int Texture::GetWidth()
 {
     return m_width;
 }
 
 
-int TextureClass::GetHeight()
+int Texture::GetHeight()
 {
     return m_height;
 }

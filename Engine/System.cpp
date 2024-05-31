@@ -1,11 +1,11 @@
-#include "system.h"
+﻿#include "system.h"
 
 using namespace Engine;
 
 /// <summary>
 /// NOTE : Global
 /// </summary>
-static System* g_system = 0;
+static System* g_system = nullptr;
 
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
@@ -34,17 +34,16 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM 
 }
 
 System::System()
+	: m_screenWidth(1280), m_screenHeight(960), m_mainWindow(0), m_applicationName(0), m_hinstance(0)
 {
-	m_applicationName = 0;
-	m_hinstance = 0;
-	m_hwnd = 0;
+	g_system = this;
 }
 
 System::System(const System& other)
 {
 	m_applicationName = other.m_applicationName;
 	m_hinstance = other.m_hinstance;
-	m_hwnd = other.m_hwnd;
+	m_mainWindow = other.m_mainWindow;
 }
 
 System::~System()
@@ -53,104 +52,76 @@ System::~System()
 
 bool System::Initialize()
 {
-	// Initialize the width and height of the screen to zero before sending the variables into the function.
-	int screenWidth = 0;
-	int screenHeight = 0;
-
 	// Initialize the windows api.
-	InitializeWindows(screenWidth, screenHeight);
+	InitMainWindow();
 
 	// Create and initialize the input object.  This object will be used to handle reading the keyboard input from the user.
 	m_input = std::make_unique<Input>();
 
-	if (!m_input->Initialize(m_hinstance, m_hwnd, screenWidth, screenHeight))
+	if (!m_input->Initialize(m_hinstance, m_mainWindow, m_screenWidth, m_screenHeight))
 		return false;
 
 	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
 	m_application = std::make_unique<Application>();
 
-	if (!m_application->Initialize(screenWidth, screenHeight, m_hwnd))
+	if (!m_application->Initialize(m_screenWidth, m_screenHeight, m_mainWindow))
 		return false;
 
 	return true;
 }
 
-void System::InitializeWindows(int& screenWidth, int& screenHeight)
+bool System::InitMainWindow()
 {
-	WNDCLASSEX windowClass;
-	DEVMODE screenSettings;
-	int posX, posY;
-
-	// Get an external pointer to this object.	
-	g_system = this;
-
-	// Get the instance of this application.
 	m_hinstance = GetModuleHandle(NULL);
 
-	// Give the application a name.
-	m_applicationName = L"Engine";
+	WNDCLASSEX wc = { sizeof(WNDCLASSEX),
+					 CS_CLASSDC,
+					 WndProc,
+					 0L,
+					 0L,
+					 m_hinstance,
+					 NULL,
+					 NULL,
+					 NULL,
+					 NULL,
+					 L"Engine",// lpszClassName, L-string
+					 NULL };
 
-	// Setup the windows class with default settings.
-	windowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-	windowClass.lpfnWndProc = WndProc;
-	windowClass.cbClsExtra = 0;
-	windowClass.cbWndExtra = 0;
-	windowClass.hInstance = m_hinstance;
-	windowClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-	windowClass.hIconSm = windowClass.hIcon;
-	windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-	windowClass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
-	windowClass.lpszMenuName = NULL;
-	windowClass.lpszClassName = m_applicationName;
-	windowClass.cbSize = sizeof(WNDCLASSEX);
-
-	// Register the window class.
-	RegisterClassEx(&windowClass);
-
-	// Determine the resolution of the clients desktop screen.
-	screenWidth = GetSystemMetrics(SM_CXSCREEN);
-	screenHeight = GetSystemMetrics(SM_CYSCREEN);
-
-	// Setup the screen settings depending on whether it is running in full screen or in windowed mode.
-	if (FULL_SCREEN)
-	{
-		// If full screen set the screen to maximum size of the users desktop and 32bit.
-		memset(&screenSettings, 0, sizeof(screenSettings));
-		screenSettings.dmSize = sizeof(screenSettings);
-		screenSettings.dmPelsWidth = (unsigned long)screenWidth;
-		screenSettings.dmPelsHeight = (unsigned long)screenHeight;
-		screenSettings.dmBitsPerPel = 32;
-		screenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
-
-		// Change the display settings to full screen.
-		ChangeDisplaySettings(&screenSettings, CDS_FULLSCREEN);
-
-		// Set the position of the window to the top left corner.
-		posX = posY = 0;
-	}
-	else
-	{
-		float aspect = 9.0f / 16.0f;
-		// If windowed then set it to 800x600 resolution.
-		screenWidth = 1280;//screenWidth * (3.0f / 4.0f);
-		screenHeight = screenWidth * aspect;
-
-		// Place the window in the middle of the screen.
-		posX = (GetSystemMetrics(SM_CXSCREEN) - screenWidth) / 2;
-		posY = (GetSystemMetrics(SM_CYSCREEN) - screenHeight) / 2;
+	// The RegisterClass function has been superseded by the RegisterClassEx function.
+	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassa?redirectedfrom=MSDN
+	if (!RegisterClassEx(&wc)) {
+		std::cout << "RegisterClassEx() failed." << std::endl;
+		return false;
 	}
 
-	// Create the window with the screen settings and get the handle to it.
-	m_hwnd = CreateWindowEx(WS_EX_APPWINDOW, m_applicationName, m_applicationName,
-		WS_CLIPSIBLINGS /*WS_OVERLAPPEDWINDOW*/ | WS_CLIPCHILDREN | WS_POPUP,
-		posX, posY, screenWidth, screenHeight, NULL, NULL, m_hinstance, NULL);
+	// 툴바까지 포함한 윈도우 전체 해상도가 아니라
+	// 우리가 실제로 그리는 해상도가 width x height가 되도록
+	// 윈도우를 만들 해상도를 다시 계산해서 CreateWindow()에서 사용
 
-	// Bring the window up on the screen and set it as main focus.
-	ShowWindow(m_hwnd, SW_SHOW);
-	SetForegroundWindow(m_hwnd);
-	SetFocus(m_hwnd);
+	// 우리가 원하는 그림이 그려질 부분의 해상도
+	RECT wr = { 0, 0, m_screenWidth, m_screenHeight };
 
-	return;
+	// 필요한 윈도우 크기(해상도) 계산
+	// wr의 값이 바뀜
+	AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
+
+	// 윈도우를 만들때 위에서 계산한 wr 사용
+	m_mainWindow = CreateWindow(wc.lpszClassName, L"HongLabGraphics Example", WS_OVERLAPPEDWINDOW,
+		100,                // 윈도우 좌측 상단의 x 좌표
+		100,                // 윈도우 좌측 상단의 y 좌표
+		wr.right - wr.left, // 윈도우 가로 방향 해상도
+		wr.bottom - wr.top, // 윈도우 세로 방향 해상도
+		NULL, NULL, wc.hInstance, NULL);
+
+	if (!m_mainWindow) {
+		std::cout << "CreateWindow() failed." << std::endl;
+		return false;
+	}
+
+	ShowWindow(m_mainWindow, SW_SHOWDEFAULT);
+	UpdateWindow(m_mainWindow);
+
+	return true;
 }
 
 void System::Run()
@@ -222,8 +193,8 @@ void System::ShutdownWindows()
 	}
 
 	// Remove the window.
-	DestroyWindow(m_hwnd);
-	m_hwnd = NULL;
+	DestroyWindow(m_mainWindow);
+	m_mainWindow = NULL;
 
 	// Remove the application instance.
 	UnregisterClass(m_applicationName, m_hinstance);
@@ -255,7 +226,7 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 
 	ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam);
 
-	//TODO : Error Code �����
+	//TODO : Error Code 만들것
 	switch (umsg)
 	{
 	case WM_MODEL_LOAD:
@@ -351,14 +322,14 @@ bool System::OnModelLoadRequest()
 			{
 				D3D11_BUFFER_DESC bufferDesc;
 				ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-				bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // �ʱ�ȭ �� ����X
+				bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
 				bufferDesc.ByteWidth = sizeof(Engine::VertexType) * vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
 				bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 				bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
 				bufferDesc.StructureByteStride = sizeof(Engine::VertexType);
 				bufferDesc.MiscFlags = 0;
 
-				D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS �������� �ʱ�ȭ�ϴ� ���
+				D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
 				vertexBufferData.pSysMem = vertices.data();
 				vertexBufferData.SysMemPitch = 0;
 				vertexBufferData.SysMemSlicePitch = 0;
@@ -371,7 +342,7 @@ bool System::OnModelLoadRequest()
 			}
 			{
 				D3D11_BUFFER_DESC bufferDesc;
-				bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // �ʱ�ȭ �� ����X
+				bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
 				bufferDesc.ByteWidth = sizeof(unsigned long) * indices.size();
 				bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 				bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.

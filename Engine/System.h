@@ -28,13 +28,15 @@ namespace Engine
 
 	private:
 		bool Frame();
-		void InitializeWindows(int&, int&);
+		bool InitMainWindow();
 		void ShutdownWindows();
 
 	private:
+		int m_screenWidth;
+		int m_screenHeight;
 		LPCWSTR m_applicationName;
 		HINSTANCE m_hinstance;
-		HWND m_hwnd;
+		HWND m_mainWindow;
 
 		std::unique_ptr<Input> m_input;
 		std::unique_ptr<Application> m_application;

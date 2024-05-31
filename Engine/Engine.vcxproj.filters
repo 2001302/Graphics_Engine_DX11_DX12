@@ -3,13 +3,7 @@
   <ItemGroup>
     <ClInclude Include="Application.h" />
     <ClInclude Include="System.h" />
-    <ClInclude Include="Header.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Light.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="CommonModel.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
@@ -69,6 +63,9 @@
     </ClInclude>
     <ClInclude Include="Direct3D.h">
       <Filter>DirectX</Filter>
+    </ClInclude>
+    <ClInclude Include="IDataBlock.h">
+      <Filter>BehaviorTree</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -153,16 +150,19 @@
     <Filter Include="DirectX\Shader">
       <UniqueIdentifier>{75d77732-7f85-4c0a-b799-392f4e62111e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="DirectX\Shader\HLSL">
+      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ImGui\imgui.ini">
       <Filter>ImGui</Filter>
     </None>
     <None Include="light.vs">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>DirectX\Shader\HLSL</Filter>
     </None>
     <None Include="light.ps">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>DirectX\Shader\HLSL</Filter>
     </None>
   </ItemGroup>
 </Project>

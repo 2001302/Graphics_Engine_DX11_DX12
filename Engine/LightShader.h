@@ -1,7 +1,6 @@
 #ifndef _SHADER
 #define _SHADER
 
-#include "Header.h"
 #include "ShaderFactory.h"
 
 using namespace DirectX;

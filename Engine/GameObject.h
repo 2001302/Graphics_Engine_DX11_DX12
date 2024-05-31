@@ -1,10 +1,6 @@
 #ifndef _GAMEOBJECT
 #define _GAMEOBJECT
 
-#include <d3d11.h>
-#include <directxmath.h>
-
-#include "Header.h"
 #include "Texture.h"
 #include "CommonStruct.h"
 

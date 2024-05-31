@@ -5,7 +5,6 @@
 #include <d3dcompiler.h>
 #include <directxmath.h>
 
-#include "Header.h"
 #include "CommonStruct.h"
 
 using namespace DirectX;

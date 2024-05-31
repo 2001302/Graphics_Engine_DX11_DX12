@@ -141,7 +141,6 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="CommonStruct.h" />
     <ClInclude Include="Direct3D.h" />
-    <ClInclude Include="Header.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\ImGuiManager.h" />
@@ -154,8 +153,8 @@
     <ClInclude Include="Input.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightShader.h" />
-    <ClInclude Include="CommonModel.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="IDataBlock.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="System.h" />
     <ClInclude Include="Texture.h" />

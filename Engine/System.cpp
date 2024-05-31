@@ -40,10 +40,13 @@ System::System()
 }
 
 System::System(const System& other)
+	: m_screenWidth(other.m_screenWidth), m_screenHeight(other.m_screenHeight)
 {
+	g_system = this;
+
+	m_mainWindow = other.m_mainWindow;
 	m_applicationName = other.m_applicationName;
 	m_hinstance = other.m_hinstance;
-	m_mainWindow = other.m_mainWindow;
 }
 
 System::~System()

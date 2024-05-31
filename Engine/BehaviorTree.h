@@ -1,11 +1,10 @@
 #ifndef _BehaviorTree
 #define _BehaviorTree
 
-#include "CommonModel.h"
+#include "IDataBlock.h"
 
 namespace Engine
 {
-
 	enum EnumDataBlockType
 	{
 		eManager = 0,
@@ -16,6 +15,19 @@ namespace Engine
 	{
 		eSuccess = 0,
 		eFail = 1,
+	};
+
+	/// <summary>
+	/// Dispose Pattern
+	/// </summary>
+	class IDisposable
+	{
+	public:
+		~IDisposable()
+		{
+			Dispose();
+		};
+		virtual void Dispose() {};
 	};
 
 	class IBehaviorTreeNode : public IDisposable

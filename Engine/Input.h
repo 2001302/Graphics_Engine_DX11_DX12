@@ -7,7 +7,8 @@
 #pragma comment(lib, "dxguid.lib")
 
 #include <dinput.h>
-#include "Header.h"
+
+#include "CommonStruct.h"
 
 class Input
 {

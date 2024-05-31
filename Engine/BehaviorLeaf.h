@@ -1,7 +1,6 @@
 #ifndef _BehaviorLeaf
 #define _BehaviorLeaf
 
-#include "Direct3D.h"
 #include "BehaviorTree.h"
 
 namespace Engine

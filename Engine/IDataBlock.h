@@ -1,12 +1,12 @@
-#ifndef _CommonModel
-#define _CommonModel
+#ifndef _PipelineManager
+#define _PipelineManager
 
 #include "input.h"
 #include "camera.h"
 #include "gameobject.h"
 #include "light.h"
 #include "lightshader.h"
-#include "Direct3D.h"
+#include "direct3D.h"
 
 namespace Engine
 {
@@ -20,17 +20,12 @@ namespace Engine
 		virtual ~IDataBlock() {};
 	};
 
-	/// <summary>
-	/// Disposer Pattern
-	/// </summary>
-	class IDisposable
+	class ViewingPoint : public IDataBlock
 	{
 	public:
-		~IDisposable() 
-		{ 
-			Dispose(); 
-		};
-		virtual void Dispose() {};
+		XMMATRIX WorldMatrix;
+		XMMATRIX ViewMatrix;
+		XMMATRIX ProjectionMatrix;
 	};
 
 	/// <summary>
@@ -44,14 +39,6 @@ namespace Engine
 		std::unique_ptr<LightShader> LightShader;
 		std::unique_ptr<Camera> Camera;
 		std::shared_ptr<Texture> Texture; //default
-	};
-
-	class ViewingPoint : public IDataBlock
-	{
-	public:
-		XMMATRIX WorldMatrix;
-		XMMATRIX ViewMatrix;
-		XMMATRIX ProjectionMatrix;
 	};
 }
 #endif

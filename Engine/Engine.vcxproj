@@ -151,13 +151,13 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Input.h" />
+    <ClInclude Include="IShader.h" />
     <ClInclude Include="Light.h" />
     <ClInclude Include="LightShader.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="IDataBlock.h" />
     <ClInclude Include="ShaderFactory.h" />
     <ClInclude Include="System.h" />
-    <ClInclude Include="Texture.h" />
     <ClInclude Include="ResourceHelper.h" />
   </ItemGroup>
   <ItemGroup>
@@ -182,7 +182,6 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="ShaderFactory.cpp" />
     <ClCompile Include="System.cpp" />
-    <ClCompile Include="Texture.cpp" />
     <ClCompile Include="ResourceHelper.cpp" />
   </ItemGroup>
   <ItemGroup>

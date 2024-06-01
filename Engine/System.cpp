@@ -311,7 +311,7 @@ bool System::OnModelLoadRequest()
 			m_application->GetManager()->Models.push_back(new GameObject());
 
 			ResourceHelper::ImportModel(m_application->GetManager()->Models.back(), modelFile[i].c_str());
-			ResourceHelper::ImportTexture(m_application->GetManager()->Models.back(), m_application->GetManager()->Texture);
+			ResourceHelper::CreateTexture(m_application->GetManager()->Models.back(), "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\crate2_diffuse.png");
 
 			std::vector<VertexType> vertices;
 			std::vector<int> indices;

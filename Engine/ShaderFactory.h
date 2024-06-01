@@ -1,19 +1,10 @@
 #ifndef _SHADERFACTORY
 #define _SHADERFACTORY
 
-#include "CommonStruct.h"
+#include "IShader.h"
 
 namespace Engine
 {
-	class IShader
-	{
-	public:
-		virtual void SetParam() {};
-		virtual void Initialize() {};
-		virtual void Execute() {};
-		virtual void Dispose() {};
-	};
-
 	class ShaderFactory
 	{
 	public:

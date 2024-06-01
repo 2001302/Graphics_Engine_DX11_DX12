@@ -38,7 +38,6 @@ namespace Engine
 		std::unique_ptr<Light> Light;
 		std::unique_ptr<LightShader> LightShader;
 		std::unique_ptr<Camera> Camera;
-		std::shared_ptr<Texture> Texture; //default
 	};
 }
 #endif

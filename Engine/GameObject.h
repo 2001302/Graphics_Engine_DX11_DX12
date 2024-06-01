@@ -1,11 +1,12 @@
 #ifndef _GAMEOBJECT
 #define _GAMEOBJECT
 
-#include "Texture.h"
 #include "CommonStruct.h"
 
 namespace Engine
 {
+	using Microsoft::WRL::ComPtr;
+
 	class GameObject
 	{
 	public:
@@ -19,9 +20,10 @@ namespace Engine
 
 		std::vector<std::shared_ptr<Bone>> bones;
 		std::vector<std::shared_ptr<Mesh>> meshes;
-		std::shared_ptr<Texture> texture;
 		std::shared_ptr<Animation> animation;
 
+		ComPtr<ID3D11Texture2D> texture;
+		ComPtr<ID3D11ShaderResourceView> textureResourceView;
 		ID3D11Buffer* vertexBuffer;
 		ID3D11Buffer* indexBuffer;
 	};

@@ -20,8 +20,12 @@ GameObject::~GameObject()
 	// Release the texture object.
 	if (texture)
 	{
-		texture->Shutdown();
-		texture.reset();
+		texture->Release();
+	}
+
+	if (textureResourceView)
+	{
+		textureResourceView->Release();
 	}
 
 	// Shutdown the vertex and index buffers.	

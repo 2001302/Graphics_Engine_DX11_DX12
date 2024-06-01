@@ -9,9 +9,6 @@
     <ClInclude Include="GameObject.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="Texture.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h" />
     <ClInclude Include="BehaviorTree.h">
       <Filter>BehaviorTree</Filter>
@@ -67,6 +64,9 @@
     <ClInclude Include="IDataBlock.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
+    <ClInclude Include="IShader.h">
+      <Filter>DirectX\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Application.cpp" />
@@ -76,9 +76,6 @@
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="Texture.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="Input.cpp" />

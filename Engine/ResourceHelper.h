@@ -2,6 +2,7 @@
 #define _RESOURCEHELPER	
 
 #include "GameObject.h"
+#include "Direct3D.h"
 
 namespace Engine
 {
@@ -17,15 +18,13 @@ namespace Engine
 		ResourceHelper() {};
 		~ResourceHelper() {};
 
+		static GameObject* CreateTexture(GameObject* gameObject, const std::string filename);
 		static GameObject* ImportModel(GameObject* gameObject, const char* filename);
 		static void ReadModelData(GameObject* gameObject, const aiScene* scene, aiNode* node, int index, int parent);
 		static void ReadMeshData(GameObject* gameObject, const aiScene* scene, aiNode* node, int bone);
 		static void ReadSkinData(GameObject* gameObject, const aiScene* scene);
 		static unsigned int GetBoneIndex(GameObject* gameObject, const std::string& name);
 
-		static GameObject* ImportTexture(GameObject* gameObject, ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename);
-		static GameObject* ImportTexture(GameObject* gameObject, std::shared_ptr<Texture> texture);
-	
 		static std::shared_ptr<Animation> ReadAnimationData(const aiScene* scene);
 		static std::shared_ptr<AnimationNode> ParseAnimationNode(std::shared_ptr<Animation> animation, aiNodeAnim* srcNode);
 		static void ReadKeyframeData(std::shared_ptr<Animation> animation, aiNode* node, std::map<std::string, std::shared_ptr<AnimationNode>>& cache);

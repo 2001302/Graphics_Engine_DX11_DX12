@@ -2,20 +2,6 @@
 
 using namespace Engine;
 
-EnumBehaviorTreeStatus LoadTextureData::Invoke()
-{
-	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
-
-	auto manager = dynamic_cast<Engine::PipelineManager*>(block);
-	assert(manager != nullptr);
-
-	const char* textureFilename = "../Engine/data/wall01.tga"; //TODO : need path policy
-	manager->Texture = std::make_shared<Texture>();
-	manager->Texture->Initialize(Direct3D::GetInstance().GetDevice(), Direct3D::GetInstance().GetDeviceContext(), textureFilename);
-
-	return EnumBehaviorTreeStatus::eSuccess;
-}
-
 EnumBehaviorTreeStatus InitializeCamera::Invoke()
 {
 	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
@@ -129,8 +115,6 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		auto viewMatrix = XMMatrixTranspose(viewingPoint->ViewMatrix);
 		auto projectionMatrix = XMMatrixTranspose(viewingPoint->ProjectionMatrix);
 
-		ID3D11ShaderResourceView* texture = model->texture->GetTexture();
-
 		// Lock the constant buffer so it can be written to.
 		Direct3D::GetInstance().GetDeviceContext()->Map(manager->LightShader->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
@@ -151,7 +135,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		// Now set the constant buffer in the vertex shader with the updated values.
 		Direct3D::GetInstance().GetDeviceContext()->VSSetConstantBuffers(bufferNumber, 1, &manager->LightShader->m_matrixBuffer);
 		// Set shader texture resource in the pixel shader.
-		Direct3D::GetInstance().GetDeviceContext()->PSSetShaderResources(0, 1, &texture);
+		Direct3D::GetInstance().GetDeviceContext()->PSSetShaderResources(0, 1, model->textureResourceView.GetAddressOf());
 		// Lock the light constant buffer so it can be written to.
 		Direct3D::GetInstance().GetDeviceContext()->Map(manager->LightShader->m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 

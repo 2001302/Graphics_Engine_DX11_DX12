@@ -5,11 +5,6 @@
 
 namespace Engine
 {
-	class LoadTextureData : public ActionNode
-	{
-		EnumBehaviorTreeStatus Invoke() override;
-	};
-
 	class InitializeCamera : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;

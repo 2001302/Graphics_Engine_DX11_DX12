@@ -18,7 +18,6 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 
 	tree->Build(dataBlock)
 			->Sequence()
-				->Excute(std::make_shared<LoadTextureData>())//TODO:제거필요
 				->Excute(std::make_shared<InitializeCamera>())
 				->Excute(std::make_shared<InitializeLight>())
 				->Excute(std::make_shared<InitializeShader>(hwnd))

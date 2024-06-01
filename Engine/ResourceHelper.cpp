@@ -1,6 +1,50 @@
 ﻿#include "ResourceHelper.h"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 using namespace Engine;
+
+GameObject* ResourceHelper::CreateTexture(GameObject* gameObject, const std::string filename)
+{
+	int width, height, channels;
+
+	unsigned char* img =
+		stbi_load(filename.c_str(), &width, &height, &channels, 0);
+
+	// assert(channels == 4);
+
+	std::vector<uint8_t> image;
+
+	image.resize(width * height * channels);
+	memcpy(image.data(), img, image.size() * sizeof(uint8_t));
+
+	// Create texture.
+	D3D11_TEXTURE2D_DESC txtDesc = {};
+	txtDesc.Width = width;
+	txtDesc.Height = height;
+	txtDesc.MipLevels = txtDesc.ArraySize = 1;
+	txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	txtDesc.SampleDesc.Count = 1;
+	txtDesc.Usage = D3D11_USAGE_IMMUTABLE;
+	txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+	// Fill in the subresource data.
+	D3D11_SUBRESOURCE_DATA InitData;
+	InitData.pSysMem = image.data();
+	InitData.SysMemPitch = txtDesc.Width * sizeof(uint8_t) * channels;
+	// InitData.SysMemSlicePitch = 0;
+
+	// ID3D11Device* pd3dDevice; // Don't forget to initialize this
+	// TODO: You should really consider using a COM smart-pointer like
+	// Microsoft::WRL::ComPtr instead
+
+	Direct3D::GetInstance().GetDevice()->CreateTexture2D(&txtDesc, &InitData, gameObject->texture.GetAddressOf());
+	Direct3D::GetInstance().GetDevice()->CreateShaderResourceView(gameObject->texture.Get(), nullptr,
+		gameObject->textureResourceView.GetAddressOf());
+
+	return gameObject;
+}
 
 GameObject* ResourceHelper::ImportModel(Engine::GameObject* gameObject, const char* filename)
 {
@@ -171,18 +215,6 @@ unsigned int ResourceHelper::GetBoneIndex(Engine::GameObject* gameObject, const 
 
 	assert(false);
 	return 0;
-}
-
-GameObject* ResourceHelper::ImportTexture(GameObject* gameObject, ID3D11Device* device, ID3D11DeviceContext* deviceContext, const char* filename)
-{
-	gameObject->texture->Initialize(device, deviceContext, filename);
-	return gameObject;
-}
-
-GameObject* ResourceHelper::ImportTexture(GameObject* gameObject, std::shared_ptr<Texture> texture)
-{
-	gameObject->texture = texture;
-	return gameObject;
 }
 
 std::shared_ptr<Animation> ResourceHelper::ReadAnimationData(const aiScene* scene)

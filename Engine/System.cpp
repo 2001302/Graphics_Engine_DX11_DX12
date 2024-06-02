@@ -110,8 +110,8 @@ bool System::InitMainWindow()
 
 	// 윈도우를 만들때 위에서 계산한 wr 사용
 	m_mainWindow = CreateWindow(wc.lpszClassName, L"HongLabGraphics Example", WS_OVERLAPPEDWINDOW,
-		100,                // 윈도우 좌측 상단의 x 좌표
-		100,                // 윈도우 좌측 상단의 y 좌표
+		10,                // 윈도우 좌측 상단의 x 좌표
+		10,                // 윈도우 좌측 상단의 y 좌표
 		wr.right - wr.left, // 윈도우 가로 방향 해상도
 		wr.bottom - wr.top, // 윈도우 세로 방향 해상도
 		NULL, NULL, wc.hInstance, NULL);

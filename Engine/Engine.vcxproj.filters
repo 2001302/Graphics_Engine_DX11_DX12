@@ -155,11 +155,13 @@
     <None Include="ImGui\imgui.ini">
       <Filter>ImGui</Filter>
     </None>
-    <None Include="light.vs">
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="LightVertexShader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
-    </None>
-    <None Include="light.ps">
+    </FxCompile>
+    <FxCompile Include="LightPixelShader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
-    </None>
+    </FxCompile>
   </ItemGroup>
 </Project>

@@ -9,14 +9,14 @@ bool LightShader::Initialize(ID3D11Device* device, HWND hwnd)
 
 
 	// Set the filename of the vertex shader.
-	error = wcscpy_s(vsFilename, 128, L"../Engine/light.vs");
+	error = wcscpy_s(vsFilename, 128, L"../Engine/LightVertexShader.hlsl");
 	if (error != 0)
 	{
 		return false;
 	}
 
 	// Set the filename of the pixel shader.
-	error = wcscpy_s(psFilename, 128, L"../Engine/light.ps");
+	error = wcscpy_s(psFilename, 128, L"../Engine/LightPixelShader.hlsl");
 	if (error != 0)
 	{
 		return false;
@@ -97,7 +97,7 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	pixelShaderBuffer = 0;
 
 	// Compile the vertex shader code.
-	result = D3DCompileFromFile(vsFilename, NULL, NULL, "LightVertexShader", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
+	result = D3DCompileFromFile(vsFilename, NULL, NULL, "main", "vs_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &vertexShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
 		// If the shader failed to compile it should have writen something to the error message.
@@ -115,7 +115,7 @@ bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFil
 	}
 
 	// Compile the pixel shader code.
-	result = D3DCompileFromFile(psFilename, NULL, NULL, "LightPixelShader", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
+	result = D3DCompileFromFile(psFilename, NULL, NULL, "main", "ps_5_0", D3D10_SHADER_ENABLE_STRICTNESS, 0, &pixelShaderBuffer, &errorMessage);
 	if (FAILED(result))
 	{
 		// If the shader failed to compile it should have writen something to the error message.

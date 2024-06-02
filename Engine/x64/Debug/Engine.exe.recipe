@@ -5,7 +5,14 @@
       <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\Engine.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
-  <ContentFiles />
+  <ContentFiles>
+    <ContentFile>
+      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\LightPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\LightVertexShader.cso</FullPath>
+    </ContentFile>
+  </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />
 </Project>

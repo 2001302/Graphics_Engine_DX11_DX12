@@ -29,6 +29,7 @@ namespace Engine
 		ImGuiManager* m_imgui;
 		PipelineManager* m_manager;
 		ViewingPoint* m_viewingPoint;
+		int m_screenWidth, m_screenHeight;
 	};
 }
 #endif

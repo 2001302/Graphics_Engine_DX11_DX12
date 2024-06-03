@@ -30,12 +30,12 @@ bool ImGuiManager::Prepare()
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
+	ImGui::SetWindowPos(ImVec2(0.0f, 0.0f));
 
-	////Font
-	//ImGui::PushFont(io.Fonts->Fonts.back());
-	//ImGui::Text("Hello with font size 16!");
-	//ImGui::PopFont();
-	ShowWindow(WindowHandler::GetInstance().GetHandle());
+	if (ImGui::Button("Asset"))
+	{
+		SendMessage(WindowHandler::GetInstance().GetHandle(), WM_MODEL_LOAD, 0, 0);
+	}
 
 	return true;
 }
@@ -47,6 +47,7 @@ bool ImGuiManager::Render()
 	ImGui::Render();
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 	// (Your code calls swapchain's Present() function)
+
 	return true;
 }
 

@@ -61,9 +61,10 @@ namespace Engine
 			return instance;
 		}
 
-		bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear);
+		bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen);
 		bool InitializeGraphicDevice(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen);
-		bool InitializeMainScene(int screenWidth, int screenHeight, float screenDepth, float screenNear);
+		bool InitializeMainScene(int screenWidth, int screenHeight);
+		void SetViewPort(EnumViewType type, float x, float y, float width, float height);
 		void Shutdown();
 
 		void BeginScene(EnumViewType type, float, float, float, float);

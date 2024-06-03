@@ -2,10 +2,10 @@
 
 using namespace Engine;
 
-bool Direct3D::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen, float screenDepth, float screenNear)
+bool Direct3D::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen)
 {
 	InitializeGraphicDevice(screenWidth, screenHeight, hwnd, fullscreen);
-	InitializeMainScene(screenWidth, screenHeight, screenDepth, screenNear);
+	InitializeMainScene(screenWidth, screenHeight);
 
 	return true;
 }
@@ -69,7 +69,32 @@ bool Direct3D::InitializeGraphicDevice(int screenWidth, int screenHeight, HWND h
 		return false;
 	}
 }
-bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight, float screenDepth, float screenNear)
+
+void Direct3D::SetViewPort(EnumViewType type,float x, float y, float width, float height)
+{
+	const float SCREEN_DEPTH = 1000.0f;
+	const float SCREEN_NEAR = 0.3f;
+
+	// Setup the viewport for rendering.
+	Views[type].Viewport.Width = (float)width;
+	Views[type].Viewport.Height = (float)height;
+	Views[type].Viewport.MinDepth = 0.0f;
+	Views[type].Viewport.MaxDepth = 1.0f;
+	Views[type].Viewport.TopLeftX = x;
+	Views[type].Viewport.TopLeftY = y;
+
+	// Create the viewport.
+	m_deviceContext->RSSetViewports(1, &Views[type].Viewport);
+
+	// Setup the projection matrix.
+	float fieldOfView = 3.141592654f / 4.0f;
+	float screenAspect = (float)width / (float)height;
+	
+	Views[type].ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, SCREEN_DEPTH, SCREEN_NEAR);
+	Views[type].WorldMatrix = XMMatrixIdentity();
+	Views[type].OrthoMatrix = XMMatrixOrthographicLH((float)width, (float)height, SCREEN_DEPTH, SCREEN_NEAR);
+}
+bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 {
 	HRESULT result;
 
@@ -208,29 +233,8 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight, float scre
 		// Now set the rasterizer state.
 		m_deviceContext->RSSetState(view.RasterState);
 
-		// Setup the viewport for rendering.
-		view.Viewport.Width = (float)screenWidth * (3.0f / 4.0f);
-		view.Viewport.Height = (float)screenHeight /* (3.0f / 4.0f)*/;
-		view.Viewport.MinDepth = 0.0f;
-		view.Viewport.MaxDepth = 1.0f;
-		view.Viewport.TopLeftX = 0.0f;
-		view.Viewport.TopLeftY = 0.0f;
+		SetViewPort(EnumViewType::eScene, 0.0f, 0.0f, (float)screenWidth, (float)screenHeight);
 
-		// Create the viewport.
-		m_deviceContext->RSSetViewports(1, &view.Viewport);
-
-		// Setup the projection matrix.
-		fieldOfView = 3.141592654f / 4.0f;
-		screenAspect = (float)screenWidth / (float)screenHeight;
-
-		// Create the projection matrix for 3D rendering.
-		view.ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, screenNear, screenDepth);
-
-		// Initialize the world matrix to the identity matrix.
-		view.WorldMatrix = XMMatrixIdentity();
-
-		// Create an orthographic projection matrix for 2D rendering.
-		view.OrthoMatrix = XMMatrixOrthographicLH((float)screenWidth, (float)screenHeight, screenNear, screenDepth);
 	}
 
 	{

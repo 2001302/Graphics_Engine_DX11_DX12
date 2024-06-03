@@ -4,6 +4,9 @@ using namespace Engine;
 
 bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
+	m_screenWidth = screenWidth;
+	m_screenHeight = screenHeight;
+
 	m_manager = new PipelineManager();
 	m_viewingPoint = new ViewingPoint();
 
@@ -12,7 +15,7 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		{EnumDataBlockType::eManager,m_manager},
 	};
 
-	Direct3D::GetInstance().Initialize(screenWidth, screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN, SCREEN_DEPTH, SCREEN_NEAR);
+	Direct3D::GetInstance().Initialize(m_screenWidth, m_screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN);
 
 	auto tree = new BehaviorTreeBuilder();
 
@@ -44,6 +47,8 @@ bool Application::Render()
 	//ImGui
 	m_imgui->Prepare();
 
+	Direct3D::GetInstance().SetViewPort(EnumViewType::eScene, ImGui::GetWindowSize().x, 0.0f, (float)m_screenWidth - ImGui::GetWindowSize().x, (float)m_screenHeight);
+	
 	auto tree = std::make_unique<BehaviorTreeBuilder>();
 
 	tree->Build(dataBlock)

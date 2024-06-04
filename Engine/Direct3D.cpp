@@ -4,13 +4,13 @@ using namespace Engine;
 
 bool Direct3D::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen)
 {
-	InitializeGraphicDevice(screenWidth, screenHeight, hwnd, fullscreen);
+	InitializeDirect3D(screenWidth, screenHeight, hwnd, fullscreen);
 	InitializeMainScene(screenWidth, screenHeight);
 
 	return true;
 }
 
-bool Direct3D::InitializeGraphicDevice(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
+bool Direct3D::InitializeDirect3D(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
 {
 	HRESULT result;
 	unsigned int numModes, i, numerator, denominator;
@@ -113,7 +113,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		}
 
 		// Create the render target view with the back buffer pointer.
-		result = m_device->CreateRenderTargetView(backBufferPtr, NULL, &view.RenderTargetView);
+		result = m_device->CreateRenderTargetView(backBufferPtr, NULL, view.RenderTargetView.GetAddressOf());
 		if (FAILED(result))
 		{
 			return false;
@@ -142,7 +142,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		depthBufferDesc.CPUAccessFlags = 0;
 		depthBufferDesc.MiscFlags = 0;
 		// Create the texture for the depth buffer using the filled out description.
-		result = m_device->CreateTexture2D(&depthBufferDesc, NULL, &view.DepthStencilBuffer);
+		result = m_device->CreateTexture2D(&depthBufferDesc, NULL, view.DepthStencilBuffer.GetAddressOf());
 		if (FAILED(result))
 		{
 			return false;
@@ -176,7 +176,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 		// Create the depth stencil state.
-		result = m_device->CreateDepthStencilState(&depthStencilDesc, &view.DepthStencilState);
+		result = m_device->CreateDepthStencilState(&depthStencilDesc, view.DepthStencilState.GetAddressOf());
 		if (FAILED(result))
 		{
 			return false;
@@ -186,7 +186,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 	{
 		// Set the depth stencil state.
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-		m_deviceContext->OMSetDepthStencilState(view.DepthStencilState, 1);
+		m_deviceContext->OMSetDepthStencilState(view.DepthStencilState.Get(), 1);
 
 		// Initialize the depth stencil view.
 		ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
@@ -197,7 +197,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 		// Create the depth stencil view.
-		result = m_device->CreateDepthStencilView(view.DepthStencilBuffer, &depthStencilViewDesc, &view.DepthStencilView);
+		result = m_device->CreateDepthStencilView(view.DepthStencilBuffer.Get(), &depthStencilViewDesc, &view.DepthStencilView);
 		if (FAILED(result))
 		{
 			return false;
@@ -205,7 +205,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 	}
 
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
-	m_deviceContext->OMSetRenderTargets(1, &view.RenderTargetView, view.DepthStencilView);
+	m_deviceContext->OMSetRenderTargets(1, &view.RenderTargetView, view.DepthStencilView.Get());
 
 	{
 		D3D11_RASTERIZER_DESC rasterDesc;
@@ -223,7 +223,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 		// Create the rasterizer state from the description we just filled out.
-		result = m_device->CreateRasterizerState(&rasterDesc, &view.RasterState);
+		result = m_device->CreateRasterizerState(&rasterDesc, view.RasterState.GetAddressOf());
 		if (FAILED(result))
 		{
 			return false;
@@ -232,7 +232,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 
 	{
 		// Now set the rasterizer state.
-		m_deviceContext->RSSetState(view.RasterState);
+		m_deviceContext->RSSetState(view.RasterState.Get());
 		SetViewPort(EnumViewType::eScene, 0.0f, 0.0f, (float)screenWidth, (float)screenHeight);
 	}
 
@@ -259,7 +259,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		depthDisabledStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 		// Create the state using the device.
-		result = m_device->CreateDepthStencilState(&depthDisabledStencilDesc, &view.DepthDisabledStencilState);
+		result = m_device->CreateDepthStencilState(&depthDisabledStencilDesc, view.DepthDisabledStencilState.GetAddressOf());
 		if (FAILED(result))
 		{
 			return false;
@@ -314,19 +314,16 @@ void Direct3D::Shutdown()
 	if (m_deviceContext)
 	{
 		m_deviceContext->Release();
-		m_deviceContext = 0;
 	}
 
 	if (m_device)
 	{
 		m_device->Release();
-		m_device = 0;
 	}
 
 	if (m_swapChain)
 	{
 		m_swapChain->Release();
-		m_swapChain = 0;
 	}
 
 	for (auto& view : Views)
@@ -336,49 +333,41 @@ void Direct3D::Shutdown()
 		if (info.AlphaEnableBlendingState)
 		{
 			info.AlphaEnableBlendingState->Release();
-			info.AlphaEnableBlendingState = 0;
 		}
 
 		if (info.AlphaDisableBlendingState)
 		{
 			info.AlphaDisableBlendingState->Release();
-			info.AlphaDisableBlendingState = 0;
 		}
 
 		if (info.DepthDisabledStencilState)
 		{
 			info.DepthDisabledStencilState->Release();
-			info.DepthDisabledStencilState = 0;
 		}
 
 		if (info.RasterState)
 		{
 			info.RasterState->Release();
-			info.RasterState = 0;
 		}
 
 		if (info.DepthStencilView)
 		{
 			info.DepthStencilView->Release();
-			info.DepthStencilView = 0;
 		}
 
 		if (info.DepthStencilState)
 		{
 			info.DepthStencilState->Release();
-			info.DepthStencilState = 0;
 		}
 
 		if (info.DepthStencilBuffer)
 		{
 			info.DepthStencilBuffer->Release();
-			info.DepthStencilBuffer = 0;
 		}
 
 		if (info.RenderTargetView)
 		{
 			info.RenderTargetView->Release();
-			info.RenderTargetView = 0;
 		}
 	}
 
@@ -396,10 +385,10 @@ void Direct3D::BeginScene(EnumViewType type, float red, float green, float blue,
 	color[3] = alpha;
 
 	// Clear the back buffer.
-	m_deviceContext->ClearRenderTargetView(Views[type].RenderTargetView, color);
+	m_deviceContext->ClearRenderTargetView(Views[type].RenderTargetView.Get(), color);
 
 	// Clear the depth buffer.
-	m_deviceContext->ClearDepthStencilView(Views[type].DepthStencilView, D3D11_CLEAR_DEPTH, 1.0f, 0);
+	m_deviceContext->ClearDepthStencilView(Views[type].DepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	return;
 }
@@ -421,12 +410,12 @@ void Direct3D::EndScene()
 	return;
 }
 
-ID3D11Device* Direct3D::GetDevice()
+ComPtr<ID3D11Device> Direct3D::GetDevice()
 {
 	return m_device;
 }
 
-ID3D11DeviceContext* Direct3D::GetDeviceContext()
+ComPtr<ID3D11DeviceContext> Direct3D::GetDeviceContext()
 {
 	return m_deviceContext;
 }

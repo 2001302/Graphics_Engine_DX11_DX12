@@ -1,10 +1,6 @@
 #ifndef _D3DCLASS_H_
 #define _D3DCLASS_H_
 
-#include <d3d11.h>
-#include <d3dcompiler.h>
-#include <directxmath.h>
-
 #include "CommonStruct.h"
 
 using namespace DirectX;
@@ -22,20 +18,20 @@ namespace Engine
 
 	struct ViewInfo
 	{
-		ID3D11Texture2D* DepthStencilBuffer;
-		ID3D11DepthStencilState* DepthStencilState;
-		ID3D11DepthStencilView* DepthStencilView;
-		ID3D11RasterizerState* RasterState;
+		ComPtr<ID3D11Texture2D> DepthStencilBuffer;
+		ComPtr<ID3D11DepthStencilState> DepthStencilState;
+		ComPtr<ID3D11DepthStencilView> DepthStencilView;
+		ComPtr<ID3D11RasterizerState> RasterState;
 
 		XMMATRIX ProjectionMatrix;
 		XMMATRIX WorldMatrix;
 		XMMATRIX OrthoMatrix;
 
-		ID3D11DepthStencilState* DepthDisabledStencilState;
-		ID3D11BlendState* AlphaEnableBlendingState;
-		ID3D11BlendState* AlphaDisableBlendingState;
+		ComPtr<ID3D11DepthStencilState> DepthDisabledStencilState;
+		ComPtr<ID3D11BlendState> AlphaEnableBlendingState;
+		ComPtr<ID3D11BlendState> AlphaDisableBlendingState;
 
-		ID3D11RenderTargetView* RenderTargetView;
+		ComPtr<ID3D11RenderTargetView> RenderTargetView;
 		D3D11_VIEWPORT Viewport;
 	};
 
@@ -49,9 +45,9 @@ namespace Engine
 
 		bool m_vsync_enabled;
 
-		IDXGISwapChain* m_swapChain;
-		ID3D11Device* m_device;
-		ID3D11DeviceContext* m_deviceContext;
+		ComPtr<ID3D11Device> m_device;
+		ComPtr<IDXGISwapChain> m_swapChain;
+		ComPtr<ID3D11DeviceContext> m_deviceContext;
 
 	public:
 		std::map<EnumViewType, ViewInfo> Views;
@@ -62,7 +58,7 @@ namespace Engine
 		}
 
 		bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen);
-		bool InitializeGraphicDevice(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen);
+		bool InitializeDirect3D(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen);
 		bool InitializeMainScene(int screenWidth, int screenHeight);
 		void SetViewPort(EnumViewType type, float x, float y, float width, float height);
 		void Shutdown();
@@ -70,8 +66,8 @@ namespace Engine
 		void BeginScene(EnumViewType type, float, float, float, float);
 		void EndScene();
 
-		ID3D11Device* GetDevice();
-		ID3D11DeviceContext* GetDeviceContext();
+		ComPtr<ID3D11Device>  GetDevice();
+		ComPtr<ID3D11DeviceContext>  GetDeviceContext();
 
 		void GetProjectionMatrix(EnumViewType type, XMMATRIX& projectionMatrix);
 		void GetWorldMatrix(EnumViewType type, XMMATRIX& worldMatrix);

@@ -1,6 +1,8 @@
 #include "LightShader.h"
 
-bool LightShader::Initialize(ID3D11Device* device, HWND hwnd)
+using namespace Engine;
+
+bool LightShader::Initialize(ComPtr<ID3D11Device> device, HWND hwnd)
 {
 	wchar_t vsFilename[128];
 	wchar_t psFilename[128];
@@ -79,7 +81,7 @@ void LightShader::Shutdown()
 	return;
 }
 
-bool LightShader::InitializeShader(ID3D11Device* device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
+bool LightShader::InitializeShader(ComPtr<ID3D11Device> device, HWND hwnd, WCHAR* vsFilename, WCHAR* psFilename)
 {
 	HRESULT result;
 	ID3D10Blob* errorMessage;

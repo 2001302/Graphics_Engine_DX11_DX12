@@ -15,7 +15,7 @@ bool ImGuiManager::Initialize(HWND hWnd, Engine::Direct3D* d3d)
 
     //Windows + DX11
 	ImGui_ImplWin32_Init(hWnd);
-	ImGui_ImplDX11_Init(d3d->GetDevice(), d3d->GetDeviceContext());
+	ImGui_ImplDX11_Init(d3d->GetDevice().Get(), d3d->GetDeviceContext().Get());
 
     //Set window handle
 	WindowHandler::GetInstance().SetHandle(hWnd);

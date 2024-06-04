@@ -2,15 +2,15 @@
 
 using namespace Engine;
 
-bool Direct3D::Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen)
+bool Direct3D::Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen)
 {
-	InitializeDirect3D(screenWidth, screenHeight, hwnd, fullscreen);
-	InitializeMainScene(screenWidth, screenHeight);
+	InitDirect3D(screenWidth, screenHeight, hwnd, fullscreen);
+	InitMainScene(screenWidth, screenHeight);
 
 	return true;
 }
 
-bool Direct3D::InitializeDirect3D(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
+bool Direct3D::InitDirect3D(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen)
 {
 	HRESULT result;
 	unsigned int numModes, i, numerator, denominator;
@@ -70,32 +70,7 @@ bool Direct3D::InitializeDirect3D(int screenWidth, int screenHeight, HWND hwnd, 
 	}
 }
 
-void Direct3D::SetViewPort(EnumViewType type,float x, float y, float width, float height)
-{
-	const float SCREEN_DEPTH = 1000.0f;
-	const float SCREEN_NEAR = 0.3f;
-
-	// Setup the viewport for rendering.
-	Views[type].Viewport.Width = (float)width;
-	Views[type].Viewport.Height = (float)height;
-	Views[type].Viewport.MinDepth = 0.0f;
-	Views[type].Viewport.MaxDepth = 1.0f;
-	Views[type].Viewport.TopLeftX = x;
-	Views[type].Viewport.TopLeftY = y;
-
-	// Create the viewport.
-	m_deviceContext->RSSetViewports(1, &Views[type].Viewport);
-
-	// Setup the projection matrix.
-	float fieldOfView = M_PI / 4.0f;
-	float screenAspect = (float)width / (float)height;
-	
-	Views[type].ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
-	Views[type].WorldMatrix = XMMatrixIdentity();
-	Views[type].OrthoMatrix = XMMatrixOrthographicLH((float)width, (float)height, SCREEN_NEAR, SCREEN_DEPTH);
-}
-
-bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
+bool Direct3D::InitMainScene(int screenWidth, int screenHeight)
 {
 
 	float fieldOfView, screenAspect;
@@ -104,13 +79,12 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 
 	{
 		// Get the pointer to the back buffer.
-		ID3D11Texture2D* backBufferPtr;
-		m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
+		ComPtr<ID3D11Texture2D> backBufferPtr;
+		m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)backBufferPtr.GetAddressOf());
 		// Create the render target view with the back buffer pointer.
-		m_device->CreateRenderTargetView(backBufferPtr, NULL, &view.RenderTargetView);
+		m_device->CreateRenderTargetView(backBufferPtr.Get(), NULL, &view.RenderTargetView);
 		// Release pointer to the back buffer as we no longer need it.
 		backBufferPtr->Release();
-		backBufferPtr = 0;
 	}
 
 	{
@@ -215,6 +189,31 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 	Views[EnumViewType::eScene] = view;
 
 	return true;
+}
+
+void Direct3D::SetViewPort(EnumViewType type, float x, float y, float width, float height)
+{
+	const float SCREEN_DEPTH = 1000.0f;
+	const float SCREEN_NEAR = 0.3f;
+
+	// Setup the viewport for rendering.
+	Views[type].Viewport.Width = (float)width;
+	Views[type].Viewport.Height = (float)height;
+	Views[type].Viewport.MinDepth = 0.0f;
+	Views[type].Viewport.MaxDepth = 1.0f;
+	Views[type].Viewport.TopLeftX = x;
+	Views[type].Viewport.TopLeftY = y;
+
+	// Create the viewport.
+	m_deviceContext->RSSetViewports(1, &Views[type].Viewport);
+
+	// Setup the projection matrix.
+	float fieldOfView = M_PI / 4.0f;
+	float screenAspect = (float)width / (float)height;
+
+	Views[type].ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
+	Views[type].WorldMatrix = XMMatrixIdentity();
+	Views[type].OrthoMatrix = XMMatrixOrthographicLH((float)width, (float)height, SCREEN_NEAR, SCREEN_DEPTH);
 }
 
 void Direct3D::Shutdown()

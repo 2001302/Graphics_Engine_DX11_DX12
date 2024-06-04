@@ -53,9 +53,10 @@ namespace Engine
 			return instance;
 		}
 
-		bool Initialize(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen);
-		bool InitializeDirect3D(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen);
-		bool InitializeMainScene(int screenWidth, int screenHeight);
+		bool Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen);
+		bool InitDirect3D(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen);
+		bool InitMainScene(int screenWidth, int screenHeight);
+
 		void SetViewPort(EnumViewType type, float x, float y, float width, float height);
 		void Shutdown();
 

@@ -15,7 +15,7 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND mainWindow)
 		{EnumDataBlockType::eManager,m_manager},
 	};
 
-	Direct3D::GetInstance().Initialize(m_screenWidth, m_screenHeight, VSYNC_ENABLED, mainWindow, FULL_SCREEN);
+	Direct3D::GetInstance().Init(m_screenWidth, m_screenHeight, VSYNC_ENABLED, mainWindow, FULL_SCREEN);
 
 	auto tree = new BehaviorTreeBuilder();
 

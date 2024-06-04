@@ -53,7 +53,7 @@ EnumBehaviorTreeStatus InitializeShader::Invoke()
 	return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus GetViewingPoint::Invoke()
+EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 {
 	IDataBlock* managerBlock = DataBlock[EnumDataBlockType::eManager];
 	IDataBlock* viewBlock = DataBlock[EnumDataBlockType::eViewingPoint];
@@ -71,20 +71,6 @@ EnumBehaviorTreeStatus GetViewingPoint::Invoke()
 	Direct3D::GetInstance().GetWorldMatrix(EnumViewType::eScene, viewingPoint->WorldMatrix);
 	viewingPoint->ViewMatrix = manager->Camera->view;
 	Direct3D::GetInstance().GetProjectionMatrix(EnumViewType::eScene, viewingPoint->ProjectionMatrix);
-
-	return EnumBehaviorTreeStatus::eSuccess;
-}
-
-EnumBehaviorTreeStatus RenderGameObjects::Invoke()
-{
-	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
-	IDataBlock* viewBlock = DataBlock[EnumDataBlockType::eViewingPoint];
-
-	auto manager = dynamic_cast<Engine::PipelineManager*>(block);
-	assert(manager != nullptr);
-
-	auto viewingPoint = dynamic_cast<Engine::ViewingPoint*>(viewBlock);
-	assert(viewingPoint != nullptr);
 
 	for (auto& model : manager->Models)
 	{

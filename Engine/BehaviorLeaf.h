@@ -24,11 +24,6 @@ namespace Engine
 		InitializeShader(HWND hwnd) { m_window = hwnd; };
 	};
 
-	class GetViewingPoint : public ActionNode
-	{
-		EnumBehaviorTreeStatus Invoke() override;
-	};
-
 	class RenderGameObjects : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;

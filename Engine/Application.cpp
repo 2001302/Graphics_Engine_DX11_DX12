@@ -51,7 +51,6 @@ bool Application::Render()
 
 	tree->Build(dataBlock)
 			->Sequence()
-				->Excute(std::make_shared<GetViewingPoint>())
 				->Excute(std::make_shared<RenderGameObjects>())
 			->Close();
 
@@ -68,7 +67,7 @@ bool Application::Render()
 bool Application::Frame(std::unique_ptr<Input>& input)
 {
 	bool result;
-
+	 
 	// Check if the user pressed escape and wants to exit the application.
 	if (input->IsEscapePressed())
 	{

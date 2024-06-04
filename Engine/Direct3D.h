@@ -27,10 +27,6 @@ namespace Engine
 		XMMATRIX WorldMatrix;
 		XMMATRIX OrthoMatrix;
 
-		ComPtr<ID3D11DepthStencilState> DepthDisabledStencilState;
-		ComPtr<ID3D11BlendState> AlphaEnableBlendingState;
-		ComPtr<ID3D11BlendState> AlphaDisableBlendingState;
-
 		ID3D11RenderTargetView* RenderTargetView;
 		D3D11_VIEWPORT Viewport;
 	};

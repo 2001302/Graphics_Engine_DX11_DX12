@@ -97,7 +97,6 @@ void Direct3D::SetViewPort(EnumViewType type,float x, float y, float width, floa
 
 bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 {
-	HRESULT result;
 
 	float fieldOfView, screenAspect;
 
@@ -106,30 +105,20 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 	{
 		// Get the pointer to the back buffer.
 		ID3D11Texture2D* backBufferPtr;
-		result = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
-		if (FAILED(result))
-		{
-			return false;
-		}
-
+		m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&backBufferPtr);
 		// Create the render target view with the back buffer pointer.
-		result = m_device->CreateRenderTargetView(backBufferPtr, NULL, &view.RenderTargetView);
-		if (FAILED(result))
-		{
-			return false;
-		}
-
+		m_device->CreateRenderTargetView(backBufferPtr, NULL, &view.RenderTargetView);
 		// Release pointer to the back buffer as we no longer need it.
 		backBufferPtr->Release();
 		backBufferPtr = 0;
 	}
 
 	{
-		// Initialize the description of the depth buffer.
+		//Initialize the description of the depth buffer.
 		D3D11_TEXTURE2D_DESC depthBufferDesc;
 		ZeroMemory(&depthBufferDesc, sizeof(depthBufferDesc));
 
-		// Set up the description of the depth buffer.
+		//Set up the description of the depth buffer.
 		depthBufferDesc.Width = screenWidth;
 		depthBufferDesc.Height = screenHeight;
 		depthBufferDesc.MipLevels = 1;
@@ -141,12 +130,9 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		depthBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 		depthBufferDesc.CPUAccessFlags = 0;
 		depthBufferDesc.MiscFlags = 0;
-		// Create the texture for the depth buffer using the filled out description.
-		result = m_device->CreateTexture2D(&depthBufferDesc, NULL, view.DepthStencilBuffer.GetAddressOf());
-		if (FAILED(result))
-		{
-			return false;
-		}
+		//Create the texture for the depth buffer using the filled out description.
+		m_device->CreateTexture2D(&depthBufferDesc, NULL, view.DepthStencilBuffer.GetAddressOf());
+
 	}
 
 	{
@@ -176,11 +162,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 		// Create the depth stencil state.
-		result = m_device->CreateDepthStencilState(&depthStencilDesc, view.DepthStencilState.GetAddressOf());
-		if (FAILED(result))
-		{
-			return false;
-		}
+		m_device->CreateDepthStencilState(&depthStencilDesc, view.DepthStencilState.GetAddressOf());
 	}
 
 	{
@@ -197,11 +179,8 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 		// Create the depth stencil view.
-		result = m_device->CreateDepthStencilView(view.DepthStencilBuffer.Get(), &depthStencilViewDesc, &view.DepthStencilView);
-		if (FAILED(result))
-		{
-			return false;
-		}
+		m_device->CreateDepthStencilView(view.DepthStencilBuffer.Get(), &depthStencilViewDesc, &view.DepthStencilView);
+
 	}
 
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
@@ -223,84 +202,19 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 		// Create the rasterizer state from the description we just filled out.
-		result = m_device->CreateRasterizerState(&rasterDesc, view.RasterState.GetAddressOf());
-		if (FAILED(result))
-		{
-			return false;
-		}
+		m_device->CreateRasterizerState(&rasterDesc, view.RasterState.GetAddressOf());
+		// Now set the rasterizer state.
+		m_deviceContext->RSSetState(view.RasterState.Get());
+
 	}
 
 	{
-		// Now set the rasterizer state.
-		m_deviceContext->RSSetState(view.RasterState.Get());
 		SetViewPort(EnumViewType::eScene, 0.0f, 0.0f, (float)screenWidth, (float)screenHeight);
 	}
 
-	{
-		D3D11_DEPTH_STENCIL_DESC depthDisabledStencilDesc;
-		// Clear the second depth stencil state before setting the parameters.
-		ZeroMemory(&depthDisabledStencilDesc, sizeof(depthDisabledStencilDesc));
-
-		// Now create a second depth stencil state which turns off the Z buffer for 2D rendering.  The only difference is 
-		// that DepthEnable is set to false, all other parameters are the same as the other depth stencil state.
-		depthDisabledStencilDesc.DepthEnable = false;
-		depthDisabledStencilDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
-		depthDisabledStencilDesc.DepthFunc = D3D11_COMPARISON_LESS;
-		depthDisabledStencilDesc.StencilEnable = true;
-		depthDisabledStencilDesc.StencilReadMask = 0xFF;
-		depthDisabledStencilDesc.StencilWriteMask = 0xFF;
-		depthDisabledStencilDesc.FrontFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		depthDisabledStencilDesc.FrontFace.StencilDepthFailOp = D3D11_STENCIL_OP_INCR;
-		depthDisabledStencilDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		depthDisabledStencilDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-		depthDisabledStencilDesc.BackFace.StencilFailOp = D3D11_STENCIL_OP_KEEP;
-		depthDisabledStencilDesc.BackFace.StencilDepthFailOp = D3D11_STENCIL_OP_DECR;
-		depthDisabledStencilDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
-		depthDisabledStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
-
-		// Create the state using the device.
-		result = m_device->CreateDepthStencilState(&depthDisabledStencilDesc, &view.DepthDisabledStencilState);
-		if (FAILED(result))
-		{
-			return false;
-		}
-	}
-
-	{
-		D3D11_BLEND_DESC blendStateDescription;
-
-		// Clear the blend state description.
-		ZeroMemory(&blendStateDescription, sizeof(D3D11_BLEND_DESC));
-
-		// Create an alpha enabled blend state description.
-		blendStateDescription.RenderTarget[0].BlendEnable = TRUE;
-		blendStateDescription.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
-		blendStateDescription.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
-		blendStateDescription.RenderTarget[0].BlendOp = D3D11_BLEND_OP_ADD;
-		blendStateDescription.RenderTarget[0].SrcBlendAlpha = D3D11_BLEND_ONE;
-		blendStateDescription.RenderTarget[0].DestBlendAlpha = D3D11_BLEND_ZERO;
-		blendStateDescription.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
-		blendStateDescription.RenderTarget[0].RenderTargetWriteMask = 0x0f;
-
-		// Create the blend state using the description.
-		result = m_device->CreateBlendState(&blendStateDescription, &view.AlphaEnableBlendingState);
-		if (FAILED(result))
-		{
-			return false;
-		}
-
-		// Modify the description to create an alpha disabled blend state description.
-		blendStateDescription.RenderTarget[0].BlendEnable = FALSE;
-
-		// Create the blend state using the description.
-		result = m_device->CreateBlendState(&blendStateDescription, &view.AlphaDisableBlendingState);
-		if (FAILED(result))
-		{
-			return false;
-		}
-	}
-
 	Views[EnumViewType::eScene] = view;
+
+	return true;
 }
 
 void Direct3D::Shutdown()
@@ -329,21 +243,6 @@ void Direct3D::Shutdown()
 	for (auto& view : Views)
 	{
 		auto info = view.second;
-
-		if (info.AlphaEnableBlendingState)
-		{
-			info.AlphaEnableBlendingState->Release();
-		}
-
-		if (info.AlphaDisableBlendingState)
-		{
-			info.AlphaDisableBlendingState->Release();
-		}
-
-		if (info.DepthDisabledStencilState)
-		{
-			info.DepthDisabledStencilState->Release();
-		}
 
 		if (info.RasterState)
 		{

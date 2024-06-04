@@ -112,9 +112,6 @@
     <ClCompile Include="ImGui\ImGuiManager.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\ImguiWindow.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
     <ClCompile Include="ResourceHelper.cpp">
       <Filter>Util</Filter>
     </ClCompile>

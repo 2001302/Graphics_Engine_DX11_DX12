@@ -15,14 +15,15 @@ public:
 	bool Render();
 	void Shutdown();
 
-	void ShowWindow(HWND hwnd,bool* p_open = NULL);
+private:
+	void SetupImGuiStyle(bool styleDark, float alpha);
 };
 
 class WindowHandler
 {
 private:
-	WindowHandler() {}
-	WindowHandler(const WindowHandler& ref) {}
+	WindowHandler() { x = 0; }
+	WindowHandler(const WindowHandler& ref) { x = ref.x; }
 	WindowHandler& operator=(const WindowHandler& ref) {}
 	~WindowHandler() {}
 

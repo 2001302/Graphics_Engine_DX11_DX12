@@ -113,7 +113,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		}
 
 		// Create the render target view with the back buffer pointer.
-		result = m_device->CreateRenderTargetView(backBufferPtr, NULL, view.RenderTargetView.GetAddressOf());
+		result = m_device->CreateRenderTargetView(backBufferPtr, NULL, &view.RenderTargetView);
 		if (FAILED(result))
 		{
 			return false;
@@ -259,7 +259,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 		depthDisabledStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 		// Create the state using the device.
-		result = m_device->CreateDepthStencilState(&depthDisabledStencilDesc, view.DepthDisabledStencilState.GetAddressOf());
+		result = m_device->CreateDepthStencilState(&depthDisabledStencilDesc, &view.DepthDisabledStencilState);
 		if (FAILED(result))
 		{
 			return false;
@@ -385,7 +385,7 @@ void Direct3D::BeginScene(EnumViewType type, float red, float green, float blue,
 	color[3] = alpha;
 
 	// Clear the back buffer.
-	m_deviceContext->ClearRenderTargetView(Views[type].RenderTargetView.Get(), color);
+	m_deviceContext->ClearRenderTargetView(Views[type].RenderTargetView, color);
 
 	// Clear the depth buffer.
 	m_deviceContext->ClearDepthStencilView(Views[type].DepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);

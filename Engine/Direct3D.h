@@ -31,7 +31,7 @@ namespace Engine
 		ComPtr<ID3D11BlendState> AlphaEnableBlendingState;
 		ComPtr<ID3D11BlendState> AlphaDisableBlendingState;
 
-		ComPtr<ID3D11RenderTargetView> RenderTargetView;
+		ID3D11RenderTargetView* RenderTargetView;
 		D3D11_VIEWPORT Viewport;
 	};
 

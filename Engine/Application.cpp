@@ -45,10 +45,8 @@ bool Application::Render()
 	Direct3D::GetInstance().BeginScene(EnumViewType::eScene, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	//ImGui
-	m_imgui->Prepare();
+	m_imgui->Prepare(m_screenWidth, m_screenHeight);
 
-	Direct3D::GetInstance().SetViewPort(EnumViewType::eScene, ImGui::GetWindowSize().x, 0.0f, (float)m_screenWidth - ImGui::GetWindowSize().x, (float)m_screenHeight);
-	
 	auto tree = std::make_unique<BehaviorTreeBuilder>();
 
 	tree->Build(dataBlock)

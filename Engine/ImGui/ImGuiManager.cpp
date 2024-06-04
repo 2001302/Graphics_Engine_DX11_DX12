@@ -1,5 +1,7 @@
 ﻿#include "ImGuiManager.h"
 
+using namespace Engine;
+
 bool ImGuiManager::Initialize(HWND hWnd, Engine::Direct3D* d3d)
 {
 	//Setup Dear ImGui context
@@ -24,7 +26,7 @@ bool ImGuiManager::Initialize(HWND hWnd, Engine::Direct3D* d3d)
 	return true;
 }
 
-bool ImGuiManager::Prepare()
+bool ImGuiManager::Prepare(int screenWidth, int screenHeight)
 {
 	//Start the ImGui frame
 	ImGuiIO& io = ImGui::GetIO();
@@ -34,6 +36,7 @@ bool ImGuiManager::Prepare()
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	ImGui::SetWindowPos(ImVec2(0.0f, 0.0f));
+    Direct3D::GetInstance().SetViewPort(EnumViewType::eScene, ImGui::GetWindowSize().x, 0.0f, (float)screenWidth - ImGui::GetWindowSize().x, (float)screenHeight);
 
 	return true;
 }

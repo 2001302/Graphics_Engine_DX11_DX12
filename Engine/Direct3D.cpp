@@ -87,13 +87,14 @@ void Direct3D::SetViewPort(EnumViewType type,float x, float y, float width, floa
 	m_deviceContext->RSSetViewports(1, &Views[type].Viewport);
 
 	// Setup the projection matrix.
-	float fieldOfView = 3.141592654f / 4.0f;
+	float fieldOfView = M_PI / 4.0f;
 	float screenAspect = (float)width / (float)height;
 	
-	Views[type].ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, SCREEN_DEPTH, SCREEN_NEAR);
+	Views[type].ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
 	Views[type].WorldMatrix = XMMatrixIdentity();
-	Views[type].OrthoMatrix = XMMatrixOrthographicLH((float)width, (float)height, SCREEN_DEPTH, SCREEN_NEAR);
+	Views[type].OrthoMatrix = XMMatrixOrthographicLH((float)width, (float)height, SCREEN_NEAR, SCREEN_DEPTH);
 }
+
 bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 {
 	HRESULT result;
@@ -232,9 +233,7 @@ bool Direct3D::InitializeMainScene(int screenWidth, int screenHeight)
 	{
 		// Now set the rasterizer state.
 		m_deviceContext->RSSetState(view.RasterState);
-
 		SetViewPort(EnumViewType::eScene, 0.0f, 0.0f, (float)screenWidth, (float)screenHeight);
-
 	}
 
 	{

@@ -388,7 +388,7 @@ bool System::OnRightDragRequest()
 		//mouse move vector
 		Eigen::Vector2d vector = Eigen::Vector2d(-mouseState.lX, -mouseState.lY);
 
-		Eigen::Vector3d origin(m_application->GetManager()->Camera->GetPosition().x, m_application->GetManager()->Camera->GetPosition().y, m_application->GetManager()->Camera->GetPosition().z);
+		Eigen::Vector3d origin(m_application->GetManager()->Camera->position.x, m_application->GetManager()->Camera->position.y, m_application->GetManager()->Camera->position.z);
 
 		//convert to spherical coordinates
 		double r = origin.norm();
@@ -409,7 +409,7 @@ bool System::OnRightDragRequest()
 
 		Eigen::Vector3d origin_prime(x, y, z);
 
-		m_application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.y(), origin_prime.z());
+		m_application->GetManager()->Camera->position = DirectX::SimpleMath::Vector3(origin_prime.x(), origin_prime.y(), origin_prime.z());
 	}
 
 	return true;
@@ -426,7 +426,7 @@ bool System::OnMouseWheelRequest()
 	else
 	{
 		double wheel = -mouseState.lZ/(600.0);
-		Eigen::Vector3d origin(m_application->GetManager()->Camera->GetPosition().x, m_application->GetManager()->Camera->GetPosition().y, m_application->GetManager()->Camera->GetPosition().z);
+		Eigen::Vector3d origin(m_application->GetManager()->Camera->position.x, m_application->GetManager()->Camera->position.y, m_application->GetManager()->Camera->position.z);
 
 		Eigen::Matrix3d R1;
 		R1 <<	1.0 + wheel, 0.0, 0.0,
@@ -434,7 +434,7 @@ bool System::OnMouseWheelRequest()
 				0.0, 0.0, 1.0 + wheel;
 
 		Eigen::Vector3d origin_prime = R1* origin;
-		m_application->GetManager()->Camera->SetPosition(origin_prime.x(), origin_prime.y(), origin_prime.z());
+		m_application->GetManager()->Camera->position = DirectX::SimpleMath::Vector3(origin_prime.x(), origin_prime.y(), origin_prime.z());
 	}
 
 	return true;

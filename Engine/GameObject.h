@@ -16,7 +16,7 @@ namespace Engine
 
 		int GetIndexCount();
 
-		DirectX::XMMATRIX transform;
+		DirectX::SimpleMath::Matrix transform;
 
 		std::vector<std::shared_ptr<Bone>> bones;
 		std::vector<std::shared_ptr<Mesh>> meshes;

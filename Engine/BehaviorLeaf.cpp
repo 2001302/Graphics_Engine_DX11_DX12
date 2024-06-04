@@ -12,12 +12,12 @@ EnumBehaviorTreeStatus InitializeCamera::Invoke()
 	// Create and initialize the camera object.
 	manager->Camera = std::make_unique<Camera>();
 
-	manager->Camera->SetPosition(0.0f, 0.0f, -10.0f);
+	manager->Camera->position = DirectX::SimpleMath::Vector3(0.0f,0.0f,-10.0f);
 	manager->Camera->Render();
 
 	// Update the position and rotation of the camera for this scene.
-	manager->Camera->SetPosition(-200.0f, 0.0f, -200.0f);
-	manager->Camera->SetRotation(0.0f, 45.0f, 0.0f);
+	manager->Camera->position = DirectX::SimpleMath::Vector3(-200.0f, 0.0f, -200.0f);
+	manager->Camera->rotation = DirectX::SimpleMath::Vector3(0.0f, 45.0f, 0.0f);
 
 	return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -69,7 +69,7 @@ EnumBehaviorTreeStatus GetViewingPoint::Invoke()
 
 	// Get the world, view, and projection matrices from the camera and d3d objects.
 	Direct3D::GetInstance().GetWorldMatrix(EnumViewType::eScene, viewingPoint->WorldMatrix);
-	manager->Camera->GetViewMatrix(viewingPoint->ViewMatrix);
+	viewingPoint->ViewMatrix = manager->Camera->view;
 	Direct3D::GetInstance().GetProjectionMatrix(EnumViewType::eScene, viewingPoint->ProjectionMatrix);
 
 	return EnumBehaviorTreeStatus::eSuccess;

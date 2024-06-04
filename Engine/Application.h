@@ -16,7 +16,7 @@ namespace Engine
 	class Application
 	{
 	public:
-		bool Initialize(int, int, HWND);
+		bool Initialize(int screenWidth,int screenHeight, HWND mainWindow);
 		void Shutdown();
 		bool Frame(std::unique_ptr<Input>& input);
 

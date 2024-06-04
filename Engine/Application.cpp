@@ -2,7 +2,7 @@
 
 using namespace Engine;
 
-bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
+bool Application::Initialize(int screenWidth, int screenHeight, HWND mainWindow)
 {
 	m_screenWidth = screenWidth;
 	m_screenHeight = screenHeight;
@@ -15,7 +15,7 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		{EnumDataBlockType::eManager,m_manager},
 	};
 
-	Direct3D::GetInstance().Initialize(m_screenWidth, m_screenHeight, VSYNC_ENABLED, hwnd, FULL_SCREEN);
+	Direct3D::GetInstance().Initialize(m_screenWidth, m_screenHeight, VSYNC_ENABLED, mainWindow, FULL_SCREEN);
 
 	auto tree = new BehaviorTreeBuilder();
 
@@ -23,12 +23,12 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 			->Sequence()
 				->Excute(std::make_shared<InitializeCamera>())
 				->Excute(std::make_shared<InitializeLight>())
-				->Excute(std::make_shared<InitializeShader>(hwnd))
+				->Excute(std::make_shared<InitializeShader>(mainWindow))
 			->Close();
 
 	tree->Run();
 
-	m_imgui->Initialize(hwnd, &Direct3D::GetInstance());
+	m_imgui->Initialize(mainWindow, &Direct3D::GetInstance());
 
 	return true;
 }

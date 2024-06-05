@@ -20,12 +20,10 @@ namespace Engine
 		virtual ~IDataBlock() {};
 	};
 
-	class ViewingPoint : public IDataBlock
+	class Env : public IDataBlock
 	{
 	public:
-		XMMATRIX WorldMatrix;
-		XMMATRIX ViewMatrix;
-		XMMATRIX ProjectionMatrix;
+		float aspect;
 	};
 
 	/// <summary>
@@ -35,6 +33,7 @@ namespace Engine
 	{
 	public:
 		std::vector <GameObject*> Models;
+		std::vector <IShader*> Shaders;
 		std::unique_ptr<Light> Light;
 		std::unique_ptr<LightShader> LightShader;
 		std::unique_ptr<Camera> Camera;

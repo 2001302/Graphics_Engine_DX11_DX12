@@ -26,7 +26,7 @@ bool ImGuiManager::Initialize(HWND hWnd, Engine::Direct3D* d3d)
 	return true;
 }
 
-bool ImGuiManager::Prepare(int screenWidth, int screenHeight)
+bool ImGuiManager::Prepare(int screenWidth, int screenHeight, float& aspect)
 {
 	//Start the ImGui frame
 	ImGuiIO& io = ImGui::GetIO();
@@ -37,7 +37,7 @@ bool ImGuiManager::Prepare(int screenWidth, int screenHeight)
 	ImGui::NewFrame();
 	ImGui::SetWindowPos(ImVec2(0.0f, 0.0f));
     Direct3D::GetInstance().SetViewPort(EnumViewType::eScene, ImGui::GetWindowSize().x, 0.0f, (float)screenWidth - ImGui::GetWindowSize().x, (float)screenHeight);
-
+    aspect = ((float)screenWidth - ImGui::GetWindowSize().x) / (float)screenHeight;
 	return true;
 }
 

@@ -56,24 +56,23 @@ EnumBehaviorTreeStatus InitializeShader::Invoke()
 EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 {
 	IDataBlock* managerBlock = DataBlock[EnumDataBlockType::eManager];
-	IDataBlock* viewBlock = DataBlock[EnumDataBlockType::eViewingPoint];
+	IDataBlock* envBlock = DataBlock[EnumDataBlockType::eEnv];
 
 	auto manager = dynamic_cast<Engine::PipelineManager*>(managerBlock);
 	assert(manager != nullptr);
 
-	auto viewingPoint = dynamic_cast<Engine::ViewingPoint*>(viewBlock);
-	assert(viewingPoint != nullptr);
+	auto env = dynamic_cast<Engine::Env*>(envBlock);
+	assert(env != nullptr);
 
 	// Generate the view matrix based on the camera's position.
 	manager->Camera->Render();
 
-	// Get the world, view, and projection matrices from the camera and d3d objects.
-	Direct3D::GetInstance().GetWorldMatrix(EnumViewType::eScene, viewingPoint->WorldMatrix);
-	viewingPoint->ViewMatrix = manager->Camera->view;
-	Direct3D::GetInstance().GetProjectionMatrix(EnumViewType::eScene, viewingPoint->ProjectionMatrix);
-
 	for (auto& model : manager->Models)
 	{
+		const float SCREEN_DEPTH = 1000.0f;
+		const float SCREEN_NEAR = 0.3f;
+		float fieldOfView = M_PI / 4.0f;
+
 		unsigned int stride;
 		unsigned int offset;
 
@@ -88,8 +87,6 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 		Direct3D::GetInstance().GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		viewingPoint->WorldMatrix = model->transform;
-
 		HRESULT result;
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 		unsigned int bufferNumber;
@@ -97,9 +94,9 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		LightShader::LightBufferType* dataPtr2;
 
 		// Transpose the matrices to prepare them for the shader.
-		auto worldMatrix = XMMatrixTranspose(viewingPoint->WorldMatrix);
-		auto viewMatrix = XMMatrixTranspose(viewingPoint->ViewMatrix);
-		auto projectionMatrix = XMMatrixTranspose(viewingPoint->ProjectionMatrix);
+		auto worldMatrix = XMMatrixTranspose(model->transform);
+		auto viewMatrix = XMMatrixTranspose(manager->Camera->view);
+		auto projectionMatrix = XMMatrixTranspose(XMMatrixPerspectiveFovLH(fieldOfView, env->aspect, SCREEN_NEAR, SCREEN_DEPTH));
 
 		// Lock the constant buffer so it can be written to.
 		Direct3D::GetInstance().GetDeviceContext()->Map(manager->LightShader->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);

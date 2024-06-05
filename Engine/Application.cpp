@@ -4,11 +4,11 @@ using namespace Engine;
 
 bool Application::Initialize(int screenWidth, int screenHeight, HWND mainWindow)
 {
+	m_manager = new PipelineManager();
+	m_env = new Env();
+
 	m_screenWidth = screenWidth;
 	m_screenHeight = screenHeight;
-
-	m_manager = new PipelineManager();
-	m_viewingPoint = new ViewingPoint();
 
 	std::map<EnumDataBlockType, IDataBlock*> dataBlock =
 	{
@@ -38,14 +38,14 @@ bool Application::Render()
 	std::map<EnumDataBlockType, IDataBlock*> dataBlock =
 	{
 		{EnumDataBlockType::eManager, m_manager},
-		{EnumDataBlockType::eViewingPoint, m_viewingPoint},
+		{EnumDataBlockType::eEnv, m_env},
 	};
 
 	// Clear the buffers to begin the scene.
 	Direct3D::GetInstance().BeginScene(EnumViewType::eScene, 0.0f, 0.0f, 0.0f, 1.0f);
 
 	//ImGui
-	m_imgui->Prepare(m_screenWidth, m_screenHeight);
+	m_imgui->Prepare(m_screenWidth, m_screenHeight, m_env->aspect);
 
 	auto tree = std::make_unique<BehaviorTreeBuilder>();
 
@@ -101,10 +101,10 @@ void Application::Shutdown()
 		m_manager->Camera.reset();
 	}
 
-	if (m_viewingPoint)
+	if (m_env)
 	{
-		delete m_viewingPoint;
-		m_viewingPoint = 0;
+		delete m_env;
+		m_env = 0;
 	}
 
 	if (m_imgui)

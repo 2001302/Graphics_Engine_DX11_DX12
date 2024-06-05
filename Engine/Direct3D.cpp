@@ -318,24 +318,6 @@ ComPtr<ID3D11DeviceContext> Direct3D::GetDeviceContext()
 	return m_deviceContext;
 }
 
-void Direct3D::GetProjectionMatrix(EnumViewType type, XMMATRIX& projectionMatrix)
-{
-	projectionMatrix = Views[type].ProjectionMatrix;
-	return;
-}
-
-void Direct3D::GetWorldMatrix(EnumViewType type, XMMATRIX& worldMatrix)
-{
-	worldMatrix = Views[type].WorldMatrix;
-	return;
-}
-
-void Direct3D::GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix)
-{
-	orthoMatrix = Views[type].OrthoMatrix;
-	return;
-}
-
 void Direct3D::CreateVertexBuffer(std::vector<Engine::VertexType> vertices, ID3D11Buffer* vertexBuffer) {
 
 	// D3D11_USAGE enumeration (d3d11.h)

@@ -66,10 +66,6 @@ namespace Engine
 		ComPtr<ID3D11Device>  GetDevice();
 		ComPtr<ID3D11DeviceContext>  GetDeviceContext();
 
-		void GetProjectionMatrix(EnumViewType type, XMMATRIX& projectionMatrix);
-		void GetWorldMatrix(EnumViewType type, XMMATRIX& worldMatrix);
-		void GetOrthoMatrix(EnumViewType type, XMMATRIX& orthoMatrix);
-
 		void CreateVertexBuffer(std::vector<Engine::VertexType> vertices, ID3D11Buffer* vertexBuffer);
 		void CreateIndexBuffer(std::vector<int> indices, ID3D11Buffer* indexBuffer);
 

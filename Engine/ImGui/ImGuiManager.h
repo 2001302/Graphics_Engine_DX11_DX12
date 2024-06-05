@@ -13,7 +13,7 @@ namespace Engine
 		~ImGuiManager() {};
 
 		bool Initialize(HWND m_hWnd, Engine::Direct3D* d3d);
-		bool Prepare(int screenWidth, int screenHeight);
+		bool Prepare(int screenWidth, int screenHeight, float& aspect);
 		bool Render();
 		void Shutdown();
 

@@ -36,11 +36,6 @@ namespace Engine
 		ID3D11SamplerState* m_sampleState;
 		ID3D11Buffer* m_matrixBuffer;
 		ID3D11Buffer* m_lightBuffer;
-
-
-	private:
-		bool InitializeShader(ComPtr<ID3D11Device>, HWND, WCHAR*, WCHAR*);
-		void OutputShaderErrorMessage(ID3D10Blob*, HWND, WCHAR*);
 	};
 }
 #endif

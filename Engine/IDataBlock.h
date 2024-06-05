@@ -23,6 +23,10 @@ namespace Engine
 	class Env : public IDataBlock
 	{
 	public:
+		const float screenDepth = 1000.0f;
+		const float screenNear = 0.3f;
+		float fieldOfView = M_PI / 4.0f;
+
 		float aspect;
 	};
 

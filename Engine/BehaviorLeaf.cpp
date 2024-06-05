@@ -69,10 +69,6 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 
 	for (auto& model : manager->Models)
 	{
-		const float SCREEN_DEPTH = 1000.0f;
-		const float SCREEN_NEAR = 0.3f;
-		float fieldOfView = M_PI / 4.0f;
-
 		unsigned int stride;
 		unsigned int offset;
 
@@ -96,7 +92,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		// Transpose the matrices to prepare them for the shader.
 		auto worldMatrix = XMMatrixTranspose(model->transform);
 		auto viewMatrix = XMMatrixTranspose(manager->Camera->view);
-		auto projectionMatrix = XMMatrixTranspose(XMMatrixPerspectiveFovLH(fieldOfView, env->aspect, SCREEN_NEAR, SCREEN_DEPTH));
+		auto projectionMatrix = XMMatrixTranspose(XMMatrixPerspectiveFovLH(env->fieldOfView, env->aspect, env->screenNear, env->screenDepth));
 
 		// Lock the constant buffer so it can be written to.
 		Direct3D::GetInstance().GetDeviceContext()->Map(manager->LightShader->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);

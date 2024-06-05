@@ -55,9 +55,6 @@
     <ClInclude Include="LightShader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="ShaderFactory.h">
-      <Filter>DirectX\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="Direct3D.h">
       <Filter>DirectX</Filter>
     </ClInclude>
@@ -116,9 +113,6 @@
       <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="LightShader.cpp">
-      <Filter>DirectX\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="ShaderFactory.cpp">
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Direct3D.cpp">

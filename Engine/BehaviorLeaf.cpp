@@ -63,17 +63,6 @@ EnumBehaviorTreeStatus InitializeShader::Invoke()
 	// Create the Sample State
 	Direct3D::GetInstance().GetDevice()->CreateSamplerState(&sampDesc, manager->LightShader->sampleState.GetAddressOf());
 
-	// ConstantBuffer ¸¸µé±â
-	manager->LightShader->vertexConstantBufferData.world = DirectX::SimpleMath::Matrix();
-	manager->LightShader->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
-	manager->LightShader->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
-
-	manager->LightShader->CreateConstantBuffer(manager->LightShader->vertexConstantBufferData,
-		manager->LightShader->vertexConstantBuffer);
-
-	manager->LightShader->CreateConstantBuffer(manager->LightShader->pixelConstantBufferData,
-		manager->LightShader->pixelShaderConstantBuffer);
-
 	std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
 		 D3D11_INPUT_PER_VERTEX_DATA, 0},
@@ -83,9 +72,7 @@ EnumBehaviorTreeStatus InitializeShader::Invoke()
 		 D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 
-	manager->LightShader->CreateVertexShaderAndInputLayout(
-		L"LightVertexShader.hlsl", inputElements, manager->LightShader->vertexShader,
-		manager->LightShader->layout);
+	manager->LightShader->CreateVertexShaderAndInputLayout(L"LightVertexShader.hlsl", inputElements, manager->LightShader->vertexShader, manager->LightShader->layout);
 
 	manager->LightShader->CreatePixelShader(L"LightPixelShader.hlsl", manager->LightShader->pixelShader);
 
@@ -111,6 +98,25 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 
 	for (auto& model : manager->Models)
 	{
+		// Transpose the matrices to prepare them for the shader.
+		auto worldMatrix = XMMatrixTranspose(model->transform);
+		auto viewMatrix = XMMatrixTranspose(manager->Camera->view);
+		auto projectionMatrix = XMMatrixTranspose(XMMatrixPerspectiveFovLH(env->fieldOfView, env->aspect, env->screenNear, env->screenDepth));
+
+		// Copy the matrices into the constant buffer.
+		model->vertexConstantBufferData.world = worldMatrix;
+		model->vertexConstantBufferData.view = viewMatrix;
+		model->vertexConstantBufferData.projection = projectionMatrix;
+
+		// Copy the lighting variables into the constant buffer.
+		model->pixelConstantBufferData.ambientColor = manager->Light->GetAmbientColor();
+		model->pixelConstantBufferData.diffuseColor = manager->Light->GetDiffuseColor();
+		model->pixelConstantBufferData.lightDirection = manager->Light->GetDirection();
+		model->pixelConstantBufferData.padding = 0.0f;
+
+		manager->LightShader->UpdateBuffer(model->vertexConstantBufferData, model->vertexConstantBuffer);
+		manager->LightShader->UpdateBuffer(model->pixelConstantBufferData, model->pixelConstantBuffer);
+
 		// RS: Rasterizer stage
 		// OM: Output-Merger stage
 		// VS: Vertex Shader
@@ -120,37 +126,18 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		unsigned int stride = sizeof(VertexType);
 		unsigned int offset = 0;
 
-		// Transpose the matrices to prepare them for the shader.
-		auto worldMatrix = XMMatrixTranspose(model->transform);
-		auto viewMatrix = XMMatrixTranspose(manager->Camera->view);
-		auto projectionMatrix = XMMatrixTranspose(XMMatrixPerspectiveFovLH(env->fieldOfView, env->aspect, env->screenNear, env->screenDepth));
-
-		// Copy the matrices into the constant buffer.
-		manager->LightShader->vertexConstantBufferData.world = worldMatrix;
-		manager->LightShader->vertexConstantBufferData.view = viewMatrix;
-		manager->LightShader->vertexConstantBufferData.projection = projectionMatrix;
-
-		// Copy the lighting variables into the constant buffer.
-		manager->LightShader->pixelConstantBufferData.ambientColor = manager->Light->GetAmbientColor();
-		manager->LightShader->pixelConstantBufferData.diffuseColor = manager->Light->GetDiffuseColor();
-		manager->LightShader->pixelConstantBufferData.lightDirection = manager->Light->GetDirection();
-		manager->LightShader->pixelConstantBufferData.padding = 0.0f;
-
-		manager->LightShader->UpdateBuffer(manager->LightShader->vertexConstantBufferData, manager->LightShader->vertexConstantBuffer);
-		manager->LightShader->UpdateBuffer(manager->LightShader->pixelConstantBufferData, manager->LightShader->pixelShaderConstantBuffer);
-
 		float clearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 		context->ClearRenderTargetView(view.RenderTargetView, clearColor);
-		context->ClearDepthStencilView(view.DepthStencilView.Get(),D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		context->ClearDepthStencilView(view.DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		context->OMSetRenderTargets(1, &view.RenderTargetView, view.DepthStencilView.Get());
 
 		context->VSSetShader(manager->LightShader->vertexShader.Get(), 0, 0);
-		context->VSSetConstantBuffers(0, 1, manager->LightShader->vertexConstantBuffer.GetAddressOf());
+		context->VSSetConstantBuffers(0, 1, model->vertexConstantBuffer.GetAddressOf());
 
 		context->PSSetShaderResources(0, 1, model->textureResourceView.GetAddressOf());
 		context->PSSetSamplers(0, 1, &manager->LightShader->sampleState);
-		context->PSSetConstantBuffers(0, 1, manager->LightShader->pixelShaderConstantBuffer.GetAddressOf());
+		context->PSSetConstantBuffers(0, 1, model->pixelConstantBuffer.GetAddressOf());
 		context->PSSetShader(manager->LightShader->pixelShader.Get(), NULL, 0);
 		context->RSSetState(Direct3D::GetInstance().Views[EnumViewType::eScene].RasterState.Get());
 

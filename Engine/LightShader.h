@@ -10,8 +10,6 @@ namespace Engine
 	class LightShader : public IShader
 	{
 	public:
-        MatrixBufferType vertexConstantBufferData;
-        LightBufferType pixelConstantBufferData;
 	};
 }
 #endif

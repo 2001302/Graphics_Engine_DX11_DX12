@@ -310,13 +310,15 @@ bool System::OnModelLoadRequest()
 		{
 			m_application->GetManager()->Models.push_back(new GameObject());
 
-			ResourceHelper::ImportModel(m_application->GetManager()->Models.back(), modelFile[i].c_str());
-			ResourceHelper::CreateTexture(m_application->GetManager()->Models.back(), "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\crate2_diffuse.png");
+			auto model = m_application->GetManager()->Models.back();
+
+			ResourceHelper::ImportModel(model, modelFile[i].c_str());
+			ResourceHelper::CreateTexture(model, "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\crate2_diffuse.png");
 
 			std::vector<VertexType> vertices;
 			std::vector<int> indices;
 
-			for (auto mesh : m_application->GetManager()->Models.back()->meshes)
+			for (auto mesh : model->meshes)
 			{
 				vertices.insert(vertices.end(), mesh->vertices.begin(), mesh->vertices.end());
 				indices.insert(indices.end(), mesh->indices.begin(), mesh->indices.end());
@@ -338,7 +340,7 @@ bool System::OnModelLoadRequest()
 				vertexBufferData.SysMemSlicePitch = 0;
 
 				const HRESULT hr =
-					Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &m_application->GetManager()->Models.back()->vertexBuffer);
+					Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &model->vertexBuffer);
 				if (FAILED(hr)) {
 					std::cout << "CreateBuffer() failed. " << std::hex << hr << std::endl;
 				};
@@ -357,13 +359,20 @@ bool System::OnModelLoadRequest()
 				indexBufferData.SysMemPitch = 0;
 				indexBufferData.SysMemSlicePitch = 0;
 
-				Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &m_application->GetManager()->Models.back()->indexBuffer);
+				Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &model->indexBuffer);
 			}
 
-			//Direct3D::GetInstance().CreateVertexBuffer(vertices, m_application->GetManager()->Models.back()->vertexBuffer);
-			//Direct3D::GetInstance().CreateIndexBuffer(indices, m_application->GetManager()->Models.back()->indexBuffer);
+			//create constant buffer
+			model->vertexConstantBufferData.world = DirectX::SimpleMath::Matrix();
+			model->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
+			model->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
 
-			m_application->GetManager()->Models.back()->transform = matrix[i];
+			m_application->GetManager()->LightShader->CreateConstantBuffer(model->vertexConstantBufferData,
+				model->vertexConstantBuffer);
+			m_application->GetManager()->LightShader->CreateConstantBuffer(model->pixelConstantBufferData,
+				model->pixelConstantBuffer);
+
+			model->transform = matrix[i];
 		}
 	}
 	else

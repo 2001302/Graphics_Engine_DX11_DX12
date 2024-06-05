@@ -109,8 +109,6 @@ namespace Engine
         ComPtr<ID3D11InputLayout> layout;
         ComPtr<ID3D11SamplerState> sampleState;
 
-        ComPtr<ID3D11Buffer> vertexConstantBuffer;
-        ComPtr<ID3D11Buffer> pixelShaderConstantBuffer;
 	};
 }
 #endif

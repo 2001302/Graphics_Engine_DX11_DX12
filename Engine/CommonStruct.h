@@ -77,5 +77,21 @@ namespace Engine
 		aiString name;
 		std::vector<KeyframeData> keyframe;
 	};
+
+	struct MatrixBufferType
+	{
+		DirectX::XMMATRIX world;
+		DirectX::XMMATRIX view;
+		DirectX::XMMATRIX projection;
+	};
+
+	struct LightBufferType
+	{
+		DirectX::XMFLOAT4 ambientColor;
+		DirectX::XMFLOAT4 diffuseColor;
+		DirectX::XMFLOAT3 lightDirection;
+		float padding;
+	};
+
 }
 #endif

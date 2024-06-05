@@ -7,8 +7,6 @@ using namespace Engine;
 
 GameObject::GameObject()
 {
-	vertexBuffer = 0;
-	indexBuffer = 0;
 }
 
 GameObject::GameObject(const GameObject& other)

@@ -12,20 +12,6 @@ namespace Engine
 	class LightShader
 	{
 	public:
-		struct MatrixBufferType
-		{
-			XMMATRIX world;
-			XMMATRIX view;
-			XMMATRIX projection;
-		};
-
-		struct LightBufferType
-		{
-			XMFLOAT4 ambientColor;
-			XMFLOAT4 diffuseColor;
-			XMFLOAT3 lightDirection;
-			float padding;
-		};
 
 		bool Initialize(ComPtr<ID3D11Device>, HWND);
 		void Shutdown();

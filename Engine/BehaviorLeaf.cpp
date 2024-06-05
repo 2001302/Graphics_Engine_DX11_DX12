@@ -77,17 +77,17 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		offset = 0;
 
 		// Set the vertex buffer to active in the input assembler so it can be rendered.
-		Direct3D::GetInstance().GetDeviceContext()->IASetVertexBuffers(0, 1, &model->vertexBuffer, &stride, &offset);
+		Direct3D::GetInstance().GetDeviceContext()->IASetVertexBuffers(0, 1, model->vertexBuffer.GetAddressOf(), &stride, &offset);
 		// Set the index buffer to active in the input assembler so it can be rendered.
-		Direct3D::GetInstance().GetDeviceContext()->IASetIndexBuffer(model->indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+		Direct3D::GetInstance().GetDeviceContext()->IASetIndexBuffer(model->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 		// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
 		Direct3D::GetInstance().GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		HRESULT result;
 		D3D11_MAPPED_SUBRESOURCE mappedResource;
 		unsigned int bufferNumber;
-		LightShader::MatrixBufferType* dataPtr;
-		LightShader::LightBufferType* dataPtr2;
+		MatrixBufferType* dataPtr;
+		LightBufferType* dataPtr2;
 
 		// Transpose the matrices to prepare them for the shader.
 		auto worldMatrix = XMMatrixTranspose(model->transform);
@@ -98,7 +98,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		Direct3D::GetInstance().GetDeviceContext()->Map(manager->LightShader->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 		// Get a pointer to the data in the constant buffer.
-		dataPtr = (LightShader::MatrixBufferType*)mappedResource.pData;
+		dataPtr = (MatrixBufferType*)mappedResource.pData;
 
 		// Copy the matrices into the constant buffer.
 		dataPtr->world = worldMatrix;
@@ -119,7 +119,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		Direct3D::GetInstance().GetDeviceContext()->Map(manager->LightShader->m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
 
 		// Get a pointer to the data in the constant buffer.
-		dataPtr2 = (LightShader::LightBufferType*)mappedResource.pData;
+		dataPtr2 = (LightBufferType*)mappedResource.pData;
 
 		// Copy the lighting variables into the constant buffer.
 		dataPtr2->ambientColor = manager->Light->GetAmbientColor();

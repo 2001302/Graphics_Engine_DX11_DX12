@@ -27,10 +27,6 @@ namespace Engine
 		ComPtr<ID3D11Buffer> vertexBuffer;
 		ComPtr<ID3D11Buffer> indexBuffer;
 
-		ComPtr<ID3D11Buffer> vertexConstantBuffer;
-		ComPtr<ID3D11Buffer> pixelShaderConstantBuffer;
-		MatrixBufferType vertexConstantBufferData;
-		LightBufferType pixelConstantBufferData;
 	};
 }
 #endif

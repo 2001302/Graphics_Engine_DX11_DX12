@@ -48,7 +48,46 @@ EnumBehaviorTreeStatus InitializeShader::Invoke()
 
 	// Create and initialize the light shader object.
 	manager->LightShader = std::make_unique<LightShader>();
-	manager->LightShader->Initialize(Direct3D::GetInstance().GetDevice(), m_window);
+
+	// Texture sampler 만들기
+	D3D11_SAMPLER_DESC sampDesc;
+	ZeroMemory(&sampDesc, sizeof(sampDesc));
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create the Sample State
+	Direct3D::GetInstance().GetDevice()->CreateSamplerState(&sampDesc, manager->LightShader->sampleState.GetAddressOf());
+
+	// ConstantBuffer 만들기
+	manager->LightShader->vertexConstantBufferData.world = DirectX::SimpleMath::Matrix();
+	manager->LightShader->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
+	manager->LightShader->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
+
+	manager->LightShader->CreateConstantBuffer(manager->LightShader->vertexConstantBufferData,
+		manager->LightShader->vertexConstantBuffer);
+
+	manager->LightShader->CreateConstantBuffer(manager->LightShader->pixelConstantBufferData,
+		manager->LightShader->pixelShaderConstantBuffer);
+
+	std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+		 D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		 D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		 D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+
+	manager->LightShader->CreateVertexShaderAndInputLayout(
+		L"LightVertexShader.hlsl", inputElements, manager->LightShader->vertexShader,
+		manager->LightShader->layout);
+
+	manager->LightShader->CreatePixelShader(L"LightPixelShader.hlsl", manager->LightShader->pixelShader);
 
 	return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -64,90 +103,63 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 	auto env = dynamic_cast<Engine::Env*>(envBlock);
 	assert(env != nullptr);
 
+	auto context = Direct3D::GetInstance().GetDeviceContext();
+	auto view = Direct3D::GetInstance().Views[EnumViewType::eScene];
+
 	// Generate the view matrix based on the camera's position.
 	manager->Camera->Render();
 
 	for (auto& model : manager->Models)
 	{
-		unsigned int stride;
-		unsigned int offset;
+		// RS: Rasterizer stage
+		// OM: Output-Merger stage
+		// VS: Vertex Shader
+		// PS: Pixel Shader
+		// IA: Input-Assembler stage
 
-		// Set vertex buffer stride and offset.
-		stride = sizeof(VertexType);
-		offset = 0;
-
-		// Set the vertex buffer to active in the input assembler so it can be rendered.
-		Direct3D::GetInstance().GetDeviceContext()->IASetVertexBuffers(0, 1, model->vertexBuffer.GetAddressOf(), &stride, &offset);
-		// Set the index buffer to active in the input assembler so it can be rendered.
-		Direct3D::GetInstance().GetDeviceContext()->IASetIndexBuffer(model->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-		// Set the type of primitive that should be rendered from this vertex buffer, in this case triangles.
-		Direct3D::GetInstance().GetDeviceContext()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		HRESULT result;
-		D3D11_MAPPED_SUBRESOURCE mappedResource;
-		unsigned int bufferNumber;
-		MatrixBufferType* dataPtr;
-		LightBufferType* dataPtr2;
+		unsigned int stride = sizeof(VertexType);
+		unsigned int offset = 0;
 
 		// Transpose the matrices to prepare them for the shader.
 		auto worldMatrix = XMMatrixTranspose(model->transform);
 		auto viewMatrix = XMMatrixTranspose(manager->Camera->view);
 		auto projectionMatrix = XMMatrixTranspose(XMMatrixPerspectiveFovLH(env->fieldOfView, env->aspect, env->screenNear, env->screenDepth));
 
-		// Lock the constant buffer so it can be written to.
-		Direct3D::GetInstance().GetDeviceContext()->Map(manager->LightShader->m_matrixBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-
-		// Get a pointer to the data in the constant buffer.
-		dataPtr = (MatrixBufferType*)mappedResource.pData;
-
 		// Copy the matrices into the constant buffer.
-		dataPtr->world = worldMatrix;
-		dataPtr->view = viewMatrix;
-		dataPtr->projection = projectionMatrix;
-
-		// Unlock the constant buffer.
-		Direct3D::GetInstance().GetDeviceContext()->Unmap(manager->LightShader->m_matrixBuffer, 0);
-
-		// Set the position of the constant buffer in the vertex shader.
-		bufferNumber = 0;
-
-		// Now set the constant buffer in the vertex shader with the updated values.
-		Direct3D::GetInstance().GetDeviceContext()->VSSetConstantBuffers(bufferNumber, 1, &manager->LightShader->m_matrixBuffer);
-		// Set shader texture resource in the pixel shader.
-		Direct3D::GetInstance().GetDeviceContext()->PSSetShaderResources(0, 1, model->textureResourceView.GetAddressOf());
-		// Lock the light constant buffer so it can be written to.
-		Direct3D::GetInstance().GetDeviceContext()->Map(manager->LightShader->m_lightBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &mappedResource);
-
-		// Get a pointer to the data in the constant buffer.
-		dataPtr2 = (LightBufferType*)mappedResource.pData;
+		manager->LightShader->vertexConstantBufferData.world = worldMatrix;
+		manager->LightShader->vertexConstantBufferData.view = viewMatrix;
+		manager->LightShader->vertexConstantBufferData.projection = projectionMatrix;
 
 		// Copy the lighting variables into the constant buffer.
-		dataPtr2->ambientColor = manager->Light->GetAmbientColor();
-		dataPtr2->diffuseColor = manager->Light->GetDiffuseColor();
-		dataPtr2->lightDirection = manager->Light->GetDirection();
-		dataPtr2->padding = 0.0f;
+		manager->LightShader->pixelConstantBufferData.ambientColor = manager->Light->GetAmbientColor();
+		manager->LightShader->pixelConstantBufferData.diffuseColor = manager->Light->GetDiffuseColor();
+		manager->LightShader->pixelConstantBufferData.lightDirection = manager->Light->GetDirection();
+		manager->LightShader->pixelConstantBufferData.padding = 0.0f;
 
-		// Unlock the constant buffer.
-		Direct3D::GetInstance().GetDeviceContext()->Unmap(manager->LightShader->m_lightBuffer, 0);
+		manager->LightShader->UpdateBuffer(manager->LightShader->vertexConstantBufferData, manager->LightShader->vertexConstantBuffer);
+		manager->LightShader->UpdateBuffer(manager->LightShader->pixelConstantBufferData, manager->LightShader->pixelShaderConstantBuffer);
 
-		// Set the position of the light constant buffer in the pixel shader.
-		bufferNumber = 0;
+		float clearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		context->ClearRenderTargetView(view.RenderTargetView, clearColor);
+		context->ClearDepthStencilView(view.DepthStencilView.Get(),D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		// Finally set the light constant buffer in the pixel shader with the updated values.
-		Direct3D::GetInstance().GetDeviceContext()->PSSetConstantBuffers(bufferNumber, 1, &manager->LightShader->m_lightBuffer);
+		context->OMSetRenderTargets(1, &view.RenderTargetView, view.DepthStencilView.Get());
 
-		// Set the vertex input layout.
-		Direct3D::GetInstance().GetDeviceContext()->IASetInputLayout(manager->LightShader->m_layout);
+		context->VSSetShader(manager->LightShader->vertexShader.Get(), 0, 0);
+		context->VSSetConstantBuffers(0, 1, manager->LightShader->vertexConstantBuffer.GetAddressOf());
 
-		// Set the vertex and pixel shaders that will be used to render this triangle.
-		Direct3D::GetInstance().GetDeviceContext()->VSSetShader(manager->LightShader->m_vertexShader, NULL, 0);
-		Direct3D::GetInstance().GetDeviceContext()->PSSetShader(manager->LightShader->m_pixelShader, NULL, 0);
+		context->PSSetShaderResources(0, 1, model->textureResourceView.GetAddressOf());
+		context->PSSetSamplers(0, 1, &manager->LightShader->sampleState);
+		context->PSSetConstantBuffers(0, 1, manager->LightShader->pixelShaderConstantBuffer.GetAddressOf());
+		context->PSSetShader(manager->LightShader->pixelShader.Get(), NULL, 0);
+		context->RSSetState(Direct3D::GetInstance().Views[EnumViewType::eScene].RasterState.Get());
 
-		// Set the sampler state in the pixel shader.
-		Direct3D::GetInstance().GetDeviceContext()->PSSetSamplers(0, 1, &manager->LightShader->m_sampleState);
+		context->IASetInputLayout(manager->LightShader->layout.Get());
+		context->IASetVertexBuffers(0, 1, model->vertexBuffer.GetAddressOf(), &stride, &offset);
+		context->IASetIndexBuffer(model->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		// Render the triangle.
-		Direct3D::GetInstance().GetDeviceContext()->DrawIndexed(model->GetIndexCount(), 0, 0);
+		context->DrawIndexed(model->GetIndexCount(), 0, 0);
 	}
 
 	return EnumBehaviorTreeStatus::eSuccess;

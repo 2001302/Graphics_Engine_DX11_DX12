@@ -94,10 +94,7 @@ void Application::Shutdown()
 		}
 
 		m_manager->Light.reset();
-
-		m_manager->LightShader->Shutdown();
 		m_manager->LightShader.reset();
-
 		m_manager->Camera.reset();
 	}
 

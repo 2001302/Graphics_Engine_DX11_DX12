@@ -91,7 +91,6 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 	assert(env != nullptr);
 
 	auto context = Direct3D::GetInstance().GetDeviceContext();
-	auto view = Direct3D::GetInstance().Views[EnumViewType::eScene];
 
 	// Generate the view matrix based on the camera's position.
 	manager->Camera->Render();
@@ -127,10 +126,10 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		unsigned int offset = 0;
 
 		float clearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-		context->ClearRenderTargetView(view.RenderTargetView, clearColor);
-		context->ClearDepthStencilView(view.DepthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		context->ClearRenderTargetView(Direct3D::GetInstance().renderTargetView, clearColor);
+		context->ClearDepthStencilView(Direct3D::GetInstance().depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		context->OMSetRenderTargets(1, &view.RenderTargetView, view.DepthStencilView.Get());
+		context->OMSetRenderTargets(1, &Direct3D::GetInstance().renderTargetView, Direct3D::GetInstance().depthStencilView.Get());
 
 		context->VSSetShader(manager->LightShader->vertexShader.Get(), 0, 0);
 		context->VSSetConstantBuffers(0, 1, model->vertexConstantBuffer.GetAddressOf());
@@ -139,7 +138,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		context->PSSetSamplers(0, 1, &manager->LightShader->sampleState);
 		context->PSSetConstantBuffers(0, 1, model->pixelConstantBuffer.GetAddressOf());
 		context->PSSetShader(manager->LightShader->pixelShader.Get(), NULL, 0);
-		context->RSSetState(Direct3D::GetInstance().Views[EnumViewType::eScene].RasterState.Get());
+		context->RSSetState(Direct3D::GetInstance().rasterState.Get());
 
 		context->IASetInputLayout(manager->LightShader->layout.Get());
 		context->IASetVertexBuffers(0, 1, model->vertexBuffer.GetAddressOf(), &stride, &offset);

@@ -392,7 +392,7 @@ bool System::OnRightDragRequest()
 	}
 	else
 	{
-		auto viewPort = Direct3D::GetInstance().Views[EnumViewType::eScene].Viewport;
+		auto viewPort = Direct3D::GetInstance().viewport;
 
 		//mouse move vector
 		Eigen::Vector2d vector = Eigen::Vector2d(-mouseState.lX, -mouseState.lY);

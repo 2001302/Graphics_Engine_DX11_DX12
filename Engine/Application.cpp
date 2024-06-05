@@ -42,7 +42,7 @@ bool Application::Render()
 	};
 
 	// Clear the buffers to begin the scene.
-	Direct3D::GetInstance().BeginScene(EnumViewType::eScene, 0.0f, 0.0f, 0.0f, 1.0f);
+	Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//ImGui
 	m_imgui->Prepare(m_screenWidth, m_screenHeight, m_env->aspect);

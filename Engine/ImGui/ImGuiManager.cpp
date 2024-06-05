@@ -36,7 +36,7 @@ bool ImGuiManager::Prepare(int screenWidth, int screenHeight, float& aspect)
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
 	ImGui::SetWindowPos(ImVec2(0.0f, 0.0f));
-    Direct3D::GetInstance().SetViewPort(EnumViewType::eScene, ImGui::GetWindowSize().x, 0.0f, (float)screenWidth - ImGui::GetWindowSize().x, (float)screenHeight);
+    Direct3D::GetInstance().SetViewPort(ImGui::GetWindowSize().x, 0.0f, (float)screenWidth - ImGui::GetWindowSize().x, (float)screenHeight);
     aspect = ((float)screenWidth - ImGui::GetWindowSize().x) / (float)screenHeight;
 	return true;
 }

@@ -75,14 +75,12 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight)
 
 	float fieldOfView, screenAspect;
 
-	auto view = ViewInfo();
-
 	{
 		// Get the pointer to the back buffer.
 		ComPtr<ID3D11Texture2D> backBufferPtr;
 		m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)backBufferPtr.GetAddressOf());
 		// Create the render target view with the back buffer pointer.
-		m_device->CreateRenderTargetView(backBufferPtr.Get(), NULL, &view.RenderTargetView);
+		m_device->CreateRenderTargetView(backBufferPtr.Get(), NULL, &renderTargetView);
 		// Release pointer to the back buffer as we no longer need it.
 		backBufferPtr->Release();
 	}
@@ -105,7 +103,7 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight)
 		depthBufferDesc.CPUAccessFlags = 0;
 		depthBufferDesc.MiscFlags = 0;
 		//Create the texture for the depth buffer using the filled out description.
-		m_device->CreateTexture2D(&depthBufferDesc, NULL, view.DepthStencilBuffer.GetAddressOf());
+		m_device->CreateTexture2D(&depthBufferDesc, NULL, depthStencilBuffer.GetAddressOf());
 
 	}
 
@@ -136,13 +134,13 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight)
 		depthStencilDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
 		// Create the depth stencil state.
-		m_device->CreateDepthStencilState(&depthStencilDesc, view.DepthStencilState.GetAddressOf());
+		m_device->CreateDepthStencilState(&depthStencilDesc, depthStencilState.GetAddressOf());
 	}
 
 	{
 		// Set the depth stencil state.
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc;
-		m_deviceContext->OMSetDepthStencilState(view.DepthStencilState.Get(), 1);
+		m_deviceContext->OMSetDepthStencilState(depthStencilState.Get(), 1);
 
 		// Initialize the depth stencil view.
 		ZeroMemory(&depthStencilViewDesc, sizeof(depthStencilViewDesc));
@@ -153,12 +151,12 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight)
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 		// Create the depth stencil view.
-		m_device->CreateDepthStencilView(view.DepthStencilBuffer.Get(), &depthStencilViewDesc, &view.DepthStencilView);
+		m_device->CreateDepthStencilView(depthStencilBuffer.Get(), &depthStencilViewDesc, &depthStencilView);
 
 	}
 
 	// Bind the render target view and depth stencil buffer to the output render pipeline.
-	m_deviceContext->OMSetRenderTargets(1, &view.RenderTargetView, view.DepthStencilView.Get());
+	m_deviceContext->OMSetRenderTargets(1, &renderTargetView, depthStencilView.Get());
 
 	{
 		D3D11_RASTERIZER_DESC rasterDesc;
@@ -176,44 +174,34 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight)
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 		// Create the rasterizer state from the description we just filled out.
-		m_device->CreateRasterizerState(&rasterDesc, view.RasterState.GetAddressOf());
+		m_device->CreateRasterizerState(&rasterDesc, rasterState.GetAddressOf());
 		// Now set the rasterizer state.
-		m_deviceContext->RSSetState(view.RasterState.Get());
+		m_deviceContext->RSSetState(rasterState.Get());
 
 	}
 
 	{
-		SetViewPort(EnumViewType::eScene, 0.0f, 0.0f, (float)screenWidth, (float)screenHeight);
+		SetViewPort(0.0f, 0.0f, (float)screenWidth, (float)screenHeight);
 	}
-
-	Views[EnumViewType::eScene] = view;
 
 	return true;
 }
 
-void Direct3D::SetViewPort(EnumViewType type, float x, float y, float width, float height)
+void Direct3D::SetViewPort(float x, float y, float width, float height)
 {
 	const float SCREEN_DEPTH = 1000.0f;
 	const float SCREEN_NEAR = 0.3f;
 
 	// Setup the viewport for rendering.
-	Views[type].Viewport.Width = (float)width;
-	Views[type].Viewport.Height = (float)height;
-	Views[type].Viewport.MinDepth = 0.0f;
-	Views[type].Viewport.MaxDepth = 1.0f;
-	Views[type].Viewport.TopLeftX = x;
-	Views[type].Viewport.TopLeftY = y;
+	viewport.Width = (float)width;
+	viewport.Height = (float)height;
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+	viewport.TopLeftX = x;
+	viewport.TopLeftY = y;
 
 	// Create the viewport.
-	m_deviceContext->RSSetViewports(1, &Views[type].Viewport);
-
-	// Setup the projection matrix.
-	float fieldOfView = M_PI / 4.0f;
-	float screenAspect = (float)width / (float)height;
-
-	Views[type].ProjectionMatrix = XMMatrixPerspectiveFovLH(fieldOfView, screenAspect, SCREEN_NEAR, SCREEN_DEPTH);
-	Views[type].WorldMatrix = XMMatrixIdentity();
-	Views[type].OrthoMatrix = XMMatrixOrthographicLH((float)width, (float)height, SCREEN_NEAR, SCREEN_DEPTH);
+	m_deviceContext->RSSetViewports(1, &viewport);
 }
 
 void Direct3D::Shutdown()
@@ -239,40 +227,35 @@ void Direct3D::Shutdown()
 		m_swapChain->Release();
 	}
 
-	for (auto& view : Views)
+	if (rasterState)
 	{
-		auto info = view.second;
+		rasterState->Release();
+	}
 
-		if (info.RasterState)
-		{
-			info.RasterState->Release();
-		}
+	if (depthStencilView)
+	{
+		depthStencilView->Release();
+	}
 
-		if (info.DepthStencilView)
-		{
-			info.DepthStencilView->Release();
-		}
+	if (depthStencilState)
+	{
+		depthStencilState->Release();
+	}
 
-		if (info.DepthStencilState)
-		{
-			info.DepthStencilState->Release();
-		}
+	if (depthStencilBuffer)
+	{
+		depthStencilBuffer->Release();
+	}
 
-		if (info.DepthStencilBuffer)
-		{
-			info.DepthStencilBuffer->Release();
-		}
-
-		if (info.RenderTargetView)
-		{
-			info.RenderTargetView->Release();
-		}
+	if (renderTargetView)
+	{
+		renderTargetView->Release();
 	}
 
 	return;
 }
 
-void Direct3D::BeginScene(EnumViewType type, float red, float green, float blue, float alpha)
+void Direct3D::BeginScene(float red, float green, float blue, float alpha)
 {
 	float color[4];
 
@@ -283,10 +266,10 @@ void Direct3D::BeginScene(EnumViewType type, float red, float green, float blue,
 	color[3] = alpha;
 
 	// Clear the back buffer.
-	m_deviceContext->ClearRenderTargetView(Views[type].RenderTargetView, color);
+	m_deviceContext->ClearRenderTargetView(renderTargetView, color);
 
 	// Clear the depth buffer.
-	m_deviceContext->ClearDepthStencilView(Views[type].DepthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+	m_deviceContext->ClearDepthStencilView(depthStencilView.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
 	return;
 }

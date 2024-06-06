@@ -2,7 +2,7 @@
 #define _IShader
 
 #include "CommonStruct.h"
-#include "direct3D.h"
+#include "Direct3D.h"
 
 namespace Engine
 {

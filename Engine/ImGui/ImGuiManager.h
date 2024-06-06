@@ -1,4 +1,5 @@
 #include "../Direct3D.h"
+#include "../IDataBlock.h"
 #include "imgui.h"
 #include "imgui_impl_win32.h"
 #include "imgui_impl_dx11.h"
@@ -13,7 +14,7 @@ namespace Engine
 		~ImGuiManager() {};
 
 		bool Initialize(HWND m_hWnd, Engine::Direct3D* d3d);
-		bool Prepare(int screenWidth, int screenHeight, float& aspect);
+		bool Prepare(Env* aspect);
 		bool Render();
 		void Shutdown();
 

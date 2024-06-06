@@ -2,6 +2,7 @@
 #define _BehaviorLeaf
 
 #include "BehaviorTree.h"
+#include "PipelineManager.h"
 
 namespace Engine
 {

@@ -5,6 +5,8 @@
 #include "ImGui/ImGuiManager.h"
 #include "BehaviorTree.h"
 #include "BehaviorLeaf.h"
+#include "PipelineManager.h"
+#include "Env.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
@@ -29,7 +31,6 @@ namespace Engine
 		ImGuiManager* m_imgui;
 		PipelineManager* m_manager;
 		Env* m_env;
-		int m_screenWidth, m_screenHeight;
 	};
 }
 #endif

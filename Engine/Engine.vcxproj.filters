@@ -1,15 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="System.h" />
     <ClInclude Include="Light.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h" />
     <ClInclude Include="BehaviorTree.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
@@ -49,33 +46,45 @@
     <ClInclude Include="ResourceHelper.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="CommonStruct.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="LightShader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Direct3D.h">
       <Filter>DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="IDataBlock.h">
-      <Filter>BehaviorTree</Filter>
-    </ClInclude>
     <ClInclude Include="IShader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="IDataBlock.h">
+      <Filter>DataBlock</Filter>
+    </ClInclude>
+    <ClInclude Include="Env.h">
+      <Filter>DataBlock</Filter>
+    </ClInclude>
+    <ClInclude Include="PipelineManager.h">
+      <Filter>DataBlock</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Application.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonStruct.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="Input.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="System.cpp" />
     <ClCompile Include="Light.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp" />
     <ClCompile Include="BehaviorTree.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
@@ -118,6 +127,15 @@
     <ClCompile Include="Direct3D.cpp">
       <Filter>DirectX</Filter>
     </ClCompile>
+    <ClCompile Include="System.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Application.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="Input.cpp">
+      <Filter>Framework</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Model">
@@ -140,6 +158,12 @@
     </Filter>
     <Filter Include="DirectX\Shader\HLSL">
       <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DataBlock">
+      <UniqueIdentifier>{7a46ec5a-5b65-4605-a844-3164e238f8bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Framework">
+      <UniqueIdentifier>{954ae3a7-14c0-4d2d-8136-883fe33d142a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

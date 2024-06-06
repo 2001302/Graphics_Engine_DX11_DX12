@@ -2,6 +2,7 @@
 #define _D3DCLASS_H_
 
 #include "CommonStruct.h"
+#include "Env.h"
 
 using namespace DirectX;
 
@@ -28,7 +29,7 @@ namespace Engine
 			static Direct3D instance;
 			return instance;
 		}
-		bool Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen);
+		bool Init(Env* env, bool vsync, HWND hwnd, bool fullscreen);
 		bool InitDirect3D(int screenWidth, int screenHeight, HWND hwnd, bool fullscreen);
 		bool InitMainScene(int screenWidth, int screenHeight);
 
@@ -48,8 +49,6 @@ namespace Engine
 
 		ID3D11RenderTargetView* renderTargetView;
 		D3D11_VIEWPORT viewport;
-
-
 	};
 }
 #endif

@@ -2,10 +2,10 @@
 
 using namespace Engine;
 
-bool Direct3D::Init(int screenWidth, int screenHeight, bool vsync, HWND hwnd, bool fullscreen)
+bool Direct3D::Init(Env* env, bool vsync, HWND hwnd, bool fullscreen)
 {
-	InitDirect3D(screenWidth, screenHeight, hwnd, fullscreen);
-	InitMainScene(screenWidth, screenHeight);
+	InitDirect3D(env->screenWidth, env->screenHeight, hwnd, fullscreen);
+	InitMainScene(env->screenWidth, env->screenHeight);
 
 	return true;
 }

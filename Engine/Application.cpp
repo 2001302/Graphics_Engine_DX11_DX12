@@ -7,15 +7,15 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND mainWindow)
 	m_manager = new PipelineManager();
 	m_env = new Env();
 
-	m_screenWidth = screenWidth;
-	m_screenHeight = screenHeight;
+	m_env->screenWidth = screenWidth;
+	m_env->screenHeight = screenHeight;
 
 	std::map<EnumDataBlockType, IDataBlock*> dataBlock =
 	{
 		{EnumDataBlockType::eManager,m_manager},
 	};
 
-	Direct3D::GetInstance().Init(m_screenWidth, m_screenHeight, VSYNC_ENABLED, mainWindow, FULL_SCREEN);
+	Direct3D::GetInstance().Init(m_env, VSYNC_ENABLED, mainWindow, FULL_SCREEN);
 
 	auto tree = new BehaviorTreeBuilder();
 
@@ -45,7 +45,7 @@ bool Application::Render()
 	Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
 	//ImGui
-	m_imgui->Prepare(m_screenWidth, m_screenHeight, m_env->aspect);
+	m_imgui->Prepare(m_env);
 
 	auto tree = std::make_unique<BehaviorTreeBuilder>();
 

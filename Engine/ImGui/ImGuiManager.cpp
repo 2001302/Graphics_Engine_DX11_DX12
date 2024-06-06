@@ -59,10 +59,10 @@ bool ImGuiManager::Render(HWND mainWindow)
     ImGui::Checkbox("Use Texture", &m_useTexture /*&m_pixelConstantBufferData.useTexture*/);
     ImGui::Checkbox("Use BlinnPhong",&m_useBlinnPhong /*&m_pixelConstantBufferData.useBlinnPhong*/ );
 
-    ImGui::SliderFloat3("m_modelTranslation", &m_modelTranslation.x, -2.0f, 2.0f);
-    ImGui::SliderFloat("m_modelRotation", &m_modelRotation.y, -3.14f, 3.14f);
-    ImGui::SliderFloat3("m_modelScaling", &m_modelScaling.x, 0.1f, 4.0f);
-    ImGui::SliderFloat("m_viewRot", &m_viewRot, -3.14f, 3.14f);
+    ImGui::SliderFloat3("ModelTranslation", &m_modelTranslation.x, -2.0f, 2.0f);
+    ImGui::SliderFloat("ModelRotation", &m_modelRotation.y, -3.14f, 3.14f);
+    ImGui::SliderFloat3("ModelScaling", &m_modelScaling.x, 0.1f, 4.0f);
+    ImGui::SliderFloat("ViewRot", &m_viewRot, -3.14f, 3.14f);
 
     ImGui::SliderFloat("Material Shininess", &m_shininess/*&m_pixelConstantBufferData.material.shininess*/, 1.0f,256.0f);
 

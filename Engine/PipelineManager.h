@@ -7,6 +7,7 @@
 #include "Gameobject.h"
 #include "Light.h"
 #include "Lightshader.h"
+#include "PhongShader.h"
 #include "Direct3D.h"
 
 namespace Engine
@@ -21,6 +22,7 @@ namespace Engine
 		std::vector <IShader*> Shaders;
 		std::unique_ptr<Light> Light;
 		std::unique_ptr<LightShader> LightShader;
+		std::unique_ptr<PhongShader> PhongShader;
 		std::unique_ptr<Camera> Camera;
 	};
 }

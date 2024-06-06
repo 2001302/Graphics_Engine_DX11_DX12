@@ -39,7 +39,7 @@ EnumBehaviorTreeStatus InitializeLight::Invoke()
 	return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus InitializeShader::Invoke()
+EnumBehaviorTreeStatus InitializeLightShader::Invoke()
 {
 	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
 

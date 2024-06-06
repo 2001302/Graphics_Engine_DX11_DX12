@@ -14,6 +14,7 @@ bool Application::Initialize(int screenWidth, int screenHeight)
 	std::map<EnumDataBlockType, IDataBlock*> dataBlock =
 	{
 		{EnumDataBlockType::eManager,m_manager},
+		{EnumDataBlockType::eGui,m_imgui},
 	};
 
 	Direct3D::GetInstance().Init(m_env, VSYNC_ENABLED, m_mainWindow, FULL_SCREEN);
@@ -24,7 +25,7 @@ bool Application::Initialize(int screenWidth, int screenHeight)
 			->Sequence()
 				->Excute(std::make_shared<InitializeCamera>())
 				->Excute(std::make_shared<InitializeLight>())
-				->Excute(std::make_shared<InitializeShader>(m_mainWindow))
+				->Excute(std::make_shared<InitializeLightShader>(m_mainWindow))
 			->Close();
 
 	tree->Run();
@@ -40,6 +41,7 @@ bool Application::Render()
 	{
 		{EnumDataBlockType::eManager, m_manager},
 		{EnumDataBlockType::eEnv, m_env},
+		{EnumDataBlockType::eGui,m_imgui},
 	};
 
 	// Clear the buffers to begin the scene.

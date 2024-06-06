@@ -10,6 +10,7 @@ namespace Engine
 	{
 		eManager = 0,
 		eEnv=1,
+		eGui=2,
 	};
 
 	enum EnumBehaviorTreeStatus

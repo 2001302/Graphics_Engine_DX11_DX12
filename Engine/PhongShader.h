@@ -1,5 +1,5 @@
-#ifndef _LIGHTSHADER
-#define _LIGHTSHADER
+#ifndef _PHONGSHADER
+#define _PHONGSHADER
 
 #include "IShader.h"
 
@@ -7,7 +7,7 @@ using namespace DirectX;
 
 namespace Engine
 {
-	class LightShader : public IShader
+	class PhongShader : public IShader
 	{
 	public:
 	};

@@ -16,13 +16,13 @@ namespace Engine
 		EnumBehaviorTreeStatus Invoke() override;
 	};
 
-	class InitializeShader : public ActionNode
+	class InitializeLightShader : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;
 		HWND m_window;
 	public:
-		InitializeShader() { m_window = 0; };
-		InitializeShader(HWND hwnd) { m_window = hwnd; };
+		InitializeLightShader() { m_window = 0; };
+		InitializeLightShader(HWND hwnd) { m_window = hwnd; };
 	};
 
 	class RenderGameObjects : public ActionNode

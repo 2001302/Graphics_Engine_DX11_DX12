@@ -76,6 +76,9 @@
     <ClInclude Include="Input.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="PhongShader.h">
+      <Filter>DirectX\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -135,6 +138,9 @@
     </ClCompile>
     <ClCompile Include="Input.cpp">
       <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="PhongShader.cpp">
+      <Filter>DirectX\Shader</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -79,6 +79,46 @@ EnumBehaviorTreeStatus InitializeLightShader::Invoke()
 	return EnumBehaviorTreeStatus::eSuccess;
 }
 
+EnumBehaviorTreeStatus InitializePhongShader::Invoke()
+{
+	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
+
+	auto manager = dynamic_cast<Engine::PipelineManager*>(block);
+	assert(manager != nullptr);
+
+	// Create and initialize the light shader object.
+	manager->PhongShader = std::make_unique<PhongShader>();
+
+	// Texture sampler ¸¸µé±â
+	D3D11_SAMPLER_DESC sampDesc;
+	ZeroMemory(&sampDesc, sizeof(sampDesc));
+	sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
+	sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_WRAP;
+	sampDesc.ComparisonFunc = D3D11_COMPARISON_NEVER;
+	sampDesc.MinLOD = 0;
+	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
+
+	// Create the Sample State
+	Direct3D::GetInstance().GetDevice()->CreateSamplerState(&sampDesc, manager->PhongShader->sampleState.GetAddressOf());
+
+	std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
+		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+		 D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 4 * 3,
+		 D3D11_INPUT_PER_VERTEX_DATA, 0},
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 4 * 3 + 4 * 3,
+		 D3D11_INPUT_PER_VERTEX_DATA, 0},
+	};
+
+	manager->PhongShader->CreateVertexShaderAndInputLayout(L"BasicVertexShader.hlsl", inputElements, manager->PhongShader->vertexShader, manager->PhongShader->layout);
+
+	manager->PhongShader->CreatePixelShader(L"BasicPixelShader.hlsl", manager->PhongShader->pixelShader);
+
+	return EnumBehaviorTreeStatus::eSuccess;
+}
+
 EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 {
 	IDataBlock* managerBlock = DataBlock[EnumDataBlockType::eManager];
@@ -122,7 +162,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		// PS: Pixel Shader
 		// IA: Input-Assembler stage
 
-		unsigned int stride = sizeof(VertexType);
+		unsigned int stride = sizeof(Vertex);
 		unsigned int offset = 0;
 
 		float clearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
@@ -146,6 +186,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		context->DrawIndexed(model->GetIndexCount(), 0, 0);
+		
 	}
 
 	return EnumBehaviorTreeStatus::eSuccess;

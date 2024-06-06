@@ -138,7 +138,7 @@ void ResourceHelper::ReadMeshData(Engine::GameObject* gameObject, const aiScene*
 
 		for (unsigned int k = 0; k < srcMesh->mNumVertices; k++)
 		{
-			VertexType vertice;
+			Vertex vertice;
 
 			DirectX::XMFLOAT3 pos(&srcMesh->mVertices[k].x);
 			vertice.position = pos;
@@ -149,7 +149,7 @@ void ResourceHelper::ReadMeshData(Engine::GameObject* gameObject, const aiScene*
 			if (srcMesh->mTextureCoords[0])
 			{
 				DirectX::XMFLOAT2 tex = DirectX::XMFLOAT2(&srcMesh->mTextureCoords[0][k].x);
-				vertice.texture = tex;
+				vertice.texcoord = tex;
 			}
 
 			mesh->vertices.push_back(vertice);

@@ -315,7 +315,7 @@ bool System::OnModelLoadRequest()
 			ResourceHelper::ImportModel(model, modelFile[i].c_str());
 			ResourceHelper::CreateTexture(model, "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\crate2_diffuse.png");
 
-			std::vector<VertexType> vertices;
+			std::vector<Vertex> vertices;
 			std::vector<int> indices;
 
 			for (auto mesh : model->meshes)
@@ -328,10 +328,10 @@ bool System::OnModelLoadRequest()
 				D3D11_BUFFER_DESC bufferDesc;
 				ZeroMemory(&bufferDesc, sizeof(bufferDesc));
 				bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-				bufferDesc.ByteWidth = sizeof(Engine::VertexType) * vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
+				bufferDesc.ByteWidth = sizeof(Engine::Vertex) * vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
 				bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 				bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-				bufferDesc.StructureByteStride = sizeof(Engine::VertexType);
+				bufferDesc.StructureByteStride = sizeof(Engine::Vertex);
 				bufferDesc.MiscFlags = 0;
 
 				D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식

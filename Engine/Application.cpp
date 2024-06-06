@@ -26,6 +26,7 @@ bool Application::Initialize(int screenWidth, int screenHeight)
 				->Excute(std::make_shared<InitializeCamera>())
 				->Excute(std::make_shared<InitializeLight>())
 				->Excute(std::make_shared<InitializeLightShader>(m_mainWindow))
+				//->Excute(std::make_shared<InitializePhongShader>(m_mainWindow))
 			->Close();
 
 	tree->Run();

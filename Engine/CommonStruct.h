@@ -32,12 +32,18 @@ namespace Engine
 	using DirectX::SimpleMath::Vector3;
 	using DirectX::SimpleMath::Vector4;
 
-	struct VertexType
-	{
+	//TODO : XMFLOAT3 vs Vector3 차이는? 
+	struct Vertex {
+		//Vector3 position;
+		//Vector3 normal;
+		//Vector2 texcoord;
+		// Vector3 color;
+
 		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT2 texture;
+		DirectX::XMFLOAT2 texcoord;
 		DirectX::XMFLOAT3 normal;
 	};
+
 	struct Bone
 	{
 		int index;
@@ -50,7 +56,7 @@ namespace Engine
 		std::string name;
 		int boneIndex;
 		std::string materialName;
-		std::vector<VertexType> vertices;
+		std::vector<Vertex> vertices;
 		std::vector<int> indices;
 	};
 
@@ -99,14 +105,6 @@ namespace Engine
 	};
 
 
-	// 이 예제에서 사용하는 Vertex 정의
-	struct Vertex {
-		Vector3 position;
-		Vector3 normal;
-		Vector2 texcoord;
-		// Vector3 color;
-	};
-
 	// 재질
 	struct Material {
 		Vector3 ambient = Vector3(0.1f);  // 12
@@ -134,6 +132,17 @@ namespace Engine
 		Matrix invTranspose;
 		Matrix view;
 		Matrix projection;
+	};
+
+#define MAX_LIGHTS 3
+
+	struct PixelConstantBuffer {
+		Vector3 eyeWorld;        // 12
+		bool useTexture;         // 4
+		Material material;       // 48
+		LightInfo lights[MAX_LIGHTS]; // 48 * MAX_LIGHTS
+		bool useBlinnPhong = true;
+		Vector3 dummy;
 	};
 }
 #endif

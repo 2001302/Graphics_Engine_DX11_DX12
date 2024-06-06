@@ -37,7 +37,7 @@ namespace Engine
 		//Vector3 position;
 		//Vector3 normal;
 		//Vector2 texcoord;
-		// Vector3 color;
+		//Vector3 color;
 
 		DirectX::XMFLOAT3 position;
 		DirectX::XMFLOAT2 texcoord;

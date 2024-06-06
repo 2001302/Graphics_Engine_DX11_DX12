@@ -1,4 +1,6 @@
 #include "BehaviorLeaf.h"
+#include "PipelineManager.h"
+#include "ImGui/ImGuiManager.h"
 
 using namespace Engine;
 
@@ -123,6 +125,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 {
 	IDataBlock* managerBlock = DataBlock[EnumDataBlockType::eManager];
 	IDataBlock* envBlock = DataBlock[EnumDataBlockType::eEnv];
+	IDataBlock* guiBlock = DataBlock[EnumDataBlockType::eGui];
 
 	auto manager = dynamic_cast<Engine::PipelineManager*>(managerBlock);
 	assert(manager != nullptr);
@@ -130,10 +133,16 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 	auto env = dynamic_cast<Engine::Env*>(envBlock);
 	assert(env != nullptr);
 
+	auto gui = dynamic_cast<Engine::ImGuiManager*>(guiBlock);
+	assert(gui != nullptr);
+
 	auto context = Direct3D::GetInstance().GetDeviceContext();
 
 	// Generate the view matrix based on the camera's position.
 	manager->Camera->Render();
+
+	if (gui->m_phongShader)
+		return EnumBehaviorTreeStatus::eSuccess;
 
 	for (auto& model : manager->Models)
 	{
@@ -186,7 +195,125 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		context->DrawIndexed(model->GetIndexCount(), 0, 0);
-		
+	}
+
+	return EnumBehaviorTreeStatus::eSuccess;
+}
+
+EnumBehaviorTreeStatus RenderGameObjectsWithPhong::Invoke()
+{
+	IDataBlock* managerBlock = DataBlock[EnumDataBlockType::eManager];
+	IDataBlock* envBlock = DataBlock[EnumDataBlockType::eEnv];
+	IDataBlock* guiBlock = DataBlock[EnumDataBlockType::eGui];
+
+	auto manager = dynamic_cast<Engine::PipelineManager*>(managerBlock);
+	assert(manager != nullptr);
+
+	auto env = dynamic_cast<Engine::Env*>(envBlock);
+	assert(env != nullptr);
+
+	auto gui = dynamic_cast<Engine::ImGuiManager*>(guiBlock);
+	assert(gui != nullptr);
+
+	auto context = Direct3D::GetInstance().GetDeviceContext();
+
+	// Generate the view matrix based on the camera's position.
+	manager->Camera->Render();
+
+	if (!gui->m_phongShader)
+		return EnumBehaviorTreeStatus::eSuccess;
+
+	for (auto& model : manager->Models)
+	{
+		/*
+	    // 모델의 변환
+		m_vertexConstantBufferData.model =
+        Matrix::CreateScale(m_modelScaling) *
+        Matrix::CreateRotationX(m_modelRotation.x) *
+        Matrix::CreateRotationY(m_modelRotation.y) *
+        Matrix::CreateRotationZ(m_modelRotation.z) *
+        Matrix::CreateTranslation(m_modelTranslation);
+		*/
+
+		// Transpose the matrices to prepare them for the shader.
+		auto modelMatrix = model->transform.Transpose();
+		auto viewMatrix = manager->Camera->view.Transpose();
+
+		// Copy the matrices into the constant buffer.
+		model->vertexPhongConstantBufferData.model = modelMatrix;
+		model->vertexPhongConstantBufferData.view = viewMatrix;
+
+		model->vertexPhongConstantBufferData.invTranspose = model->vertexPhongConstantBufferData.model;
+		model->vertexPhongConstantBufferData.invTranspose.Translation(Vector3(0.0f));
+		model->vertexPhongConstantBufferData.invTranspose =
+			model->vertexPhongConstantBufferData.invTranspose.Transpose().Invert();
+
+		const float aspect = env->aspect;
+		if (gui->m_usePerspectiveProjection) {
+			model->vertexPhongConstantBufferData.projection = XMMatrixPerspectiveFovLH(
+				XMConvertToRadians(gui->m_projFovAngleY), aspect, gui->m_nearZ, gui->m_farZ);
+		}
+		else {
+			model->vertexPhongConstantBufferData.projection = XMMatrixOrthographicOffCenterLH(
+				-aspect, aspect, -1.0f, 1.0f, gui->m_nearZ, gui->m_farZ);
+		}
+		model->vertexPhongConstantBufferData.projection = model->vertexPhongConstantBufferData.projection.Transpose();
+
+		manager->PhongShader->UpdateBuffer(model->vertexPhongConstantBufferData, model->vertexConstantBuffer);
+
+		model->pixelPhongConstantBufferData.eyeWorld = Vector3::Transform(
+			Vector3(0.0f), model->vertexPhongConstantBufferData.view.Invert());
+
+		// Copy the lighting variables into the constant buffer.
+		model->pixelPhongConstantBufferData.material.diffuse = Vector3(gui->m_materialDiffuse);
+		model->pixelPhongConstantBufferData.material.specular = Vector3(gui->m_materialSpecular);
+		model->pixelPhongConstantBufferData.material.shininess = gui->m_shininess;
+
+		model->pixelPhongConstantBufferData.useTexture = gui->m_useTexture;
+		model->pixelPhongConstantBufferData.useBlinnPhong = gui->m_useBlinnPhong;
+
+		// 여러 개 조명 사용 예시
+		for (int i = 0; i < MAX_LIGHTS; i++) {
+			// 다른 조명 끄기
+			if (i != gui->m_lightType) {
+				model->pixelPhongConstantBufferData.lights[i].strength *= 0.0f;
+			}
+			else {
+				model->pixelPhongConstantBufferData.lights[i] = gui->m_lightFromGUI;
+			}
+		}
+		manager->PhongShader->UpdateBuffer(model->pixelPhongConstantBufferData, model->pixelConstantBuffer);
+
+		// RS: Rasterizer stage
+		// OM: Output-Merger stage
+		// VS: Vertex Shader
+		// PS: Pixel Shader
+		// IA: Input-Assembler stage
+
+		unsigned int stride = sizeof(Vertex);
+		unsigned int offset = 0;
+
+		float clearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
+		context->ClearRenderTargetView(Direct3D::GetInstance().renderTargetView, clearColor);
+		context->ClearDepthStencilView(Direct3D::GetInstance().depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+		context->OMSetRenderTargets(1, &Direct3D::GetInstance().renderTargetView, Direct3D::GetInstance().depthStencilView.Get());
+
+		context->VSSetShader(manager->PhongShader->vertexShader.Get(), 0, 0);
+		context->VSSetConstantBuffers(0, 1, model->vertexConstantBuffer.GetAddressOf());
+
+		context->PSSetShaderResources(0, 1, model->textureResourceView.GetAddressOf());
+		context->PSSetSamplers(0, 1, &manager->PhongShader->sampleState);
+		context->PSSetConstantBuffers(0, 1, model->pixelConstantBuffer.GetAddressOf());
+		context->PSSetShader(manager->PhongShader->pixelShader.Get(), NULL, 0);
+		context->RSSetState(Direct3D::GetInstance().rasterState.Get());
+
+		context->IASetInputLayout(manager->PhongShader->layout.Get());
+		context->IASetVertexBuffers(0, 1, model->vertexBuffer.GetAddressOf(), &stride, &offset);
+		context->IASetIndexBuffer(model->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+		context->DrawIndexed(model->GetIndexCount(), 0, 0);
 	}
 
 	return EnumBehaviorTreeStatus::eSuccess;

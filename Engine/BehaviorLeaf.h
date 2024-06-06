@@ -2,7 +2,6 @@
 #define _BehaviorLeaf
 
 #include "BehaviorTree.h"
-#include "PipelineManager.h"
 
 namespace Engine
 {
@@ -35,6 +34,11 @@ namespace Engine
 	};
 
 	class RenderGameObjects : public ActionNode
+	{
+		EnumBehaviorTreeStatus Invoke() override;
+	};
+
+	class RenderGameObjectsWithPhong : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;
 	};

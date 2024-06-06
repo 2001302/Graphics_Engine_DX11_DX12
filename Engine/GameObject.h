@@ -33,10 +33,10 @@ namespace Engine
 		//LightShader
 		MatrixBufferType vertexConstantBufferData;
 		LightBufferType pixelConstantBufferData;
-		//PhongShader
 
-		VertexConstantBuffer m_vertexConstantBufferData;
-		PixelConstantBuffer m_pixelConstantBufferData;
+		//PhongShader
+		VertexConstantBuffer vertexPhongConstantBufferData;
+		PixelConstantBuffer pixelPhongConstantBufferData;
 	};
 }
 #endif

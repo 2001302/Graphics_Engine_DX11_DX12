@@ -54,6 +54,8 @@ bool ImGuiManager::Render(HWND mainWindow)
         SendMessage(mainWindow, WM_MODEL_LOAD, 0, 0);
     }
 
+    ImGui::Checkbox("Use Phong Shader", &m_phongShader);
+
     ImGui::Checkbox("Use Texture", &m_useTexture /*&m_pixelConstantBufferData.useTexture*/);
     ImGui::Checkbox("Use BlinnPhong",&m_useBlinnPhong /*&m_pixelConstantBufferData.useBlinnPhong*/ );
 

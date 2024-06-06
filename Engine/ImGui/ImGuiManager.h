@@ -18,9 +18,7 @@ namespace Engine
 		bool Render(HWND mainWindow);
 		void Shutdown();
 
-	private:
-		void SetupImGuiStyle(bool styleDark, float alpha);
-
+		bool m_phongShader = false;
 		float m_shininess = 0.0f;
 		bool m_useBlinnPhong = false;
 		bool m_useTexture = false;
@@ -39,5 +37,9 @@ namespace Engine
 		LightInfo m_lightFromGUI;
 		float m_materialDiffuse = 1.0f;
 		float m_materialSpecular = 1.0f;
+
+	private:
+		void SetupImGuiStyle(bool styleDark, float alpha);
+
 	};
 }

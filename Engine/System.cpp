@@ -362,15 +362,26 @@ bool System::OnModelLoadRequest()
 				Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &model->indexBuffer);
 			}
 
-			//create constant buffer
-			model->vertexConstantBufferData.world = DirectX::SimpleMath::Matrix();
-			model->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
-			model->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
+			////create constant buffer(Light Shader)
+			//model->vertexConstantBufferData.world = DirectX::SimpleMath::Matrix();
+			//model->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
+			//model->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
 
-			m_application->GetManager()->LightShader->CreateConstantBuffer(model->vertexConstantBufferData,
+			//m_application->GetManager()->LightShader->CreateConstantBuffer(model->vertexConstantBufferData,
+			//	model->vertexConstantBuffer);
+			//m_application->GetManager()->LightShader->CreateConstantBuffer(model->pixelConstantBufferData,
+			//	model->pixelConstantBuffer);
+
+			//create constant buffer(Phong Shader)
+			model->vertexPhongConstantBufferData.model = DirectX::SimpleMath::Matrix();
+			model->vertexPhongConstantBufferData.view = DirectX::SimpleMath::Matrix();
+			model->vertexPhongConstantBufferData.projection = DirectX::SimpleMath::Matrix();
+
+			m_application->GetManager()->PhongShader->CreateConstantBuffer(model->vertexPhongConstantBufferData,
 				model->vertexConstantBuffer);
-			m_application->GetManager()->LightShader->CreateConstantBuffer(model->pixelConstantBufferData,
+			m_application->GetManager()->PhongShader->CreateConstantBuffer(model->pixelPhongConstantBufferData,
 				model->pixelConstantBuffer);
+
 
 			model->transform = matrix[i];
 		}

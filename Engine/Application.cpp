@@ -6,6 +6,7 @@ bool Application::Initialize(int screenWidth, int screenHeight)
 {
 	m_manager = new PipelineManager();
 	m_env = new Env();
+	m_imgui = new ImGuiManager();
 
 	m_env->screenWidth = screenWidth;
 	m_env->screenHeight = screenHeight;
@@ -107,6 +108,8 @@ void Application::Shutdown()
 	if (m_imgui)
 	{
 		m_imgui->Shutdown();
+		delete m_imgui;
+		m_imgui = 0;
 	}
 
 	Direct3D::GetInstance().Shutdown();

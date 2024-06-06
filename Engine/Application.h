@@ -18,7 +18,10 @@ namespace Engine
 	class Application
 	{
 	public:
-		bool Initialize(int screenWidth,int screenHeight, HWND mainWindow);
+		Application() : m_imgui(0), m_manager(0), m_env(0), m_mainWindow(0){};
+		Application(HWND mainWindow) : m_imgui(0), m_manager(0), m_env(0) { m_mainWindow = mainWindow; };
+
+		bool Initialize(int screenWidth,int screenHeight);
 		void Shutdown();
 		bool Frame(std::unique_ptr<Input>& input);
 
@@ -31,6 +34,7 @@ namespace Engine
 		ImGuiManager* m_imgui;
 		PipelineManager* m_manager;
 		Env* m_env;
+		HWND m_mainWindow;
 	};
 }
 #endif

@@ -13,36 +13,12 @@ namespace Engine
 		ImGuiManager(const ImGuiManager&) {};
 		~ImGuiManager() {};
 
-		bool Initialize(HWND m_hWnd, Engine::Direct3D* d3d);
+		bool Initialize(HWND mainWindow, Engine::Direct3D* d3d);
 		bool Prepare(Env* aspect);
-		bool Render();
+		bool Render(HWND mainWindow);
 		void Shutdown();
 
 	private:
 		void SetupImGuiStyle(bool styleDark, float alpha);
-	};
-
-	class WindowHandler
-	{
-	private:
-		WindowHandler() { x = 0; }
-		WindowHandler(const WindowHandler& ref) { x = ref.x; }
-		WindowHandler& operator=(const WindowHandler& ref) {}
-		~WindowHandler() {}
-
-		HWND x;
-
-	public:
-		static WindowHandler& GetInstance()
-		{
-			static WindowHandler instance;
-			return instance;
-		}
-		HWND GetHandle() { return x; }
-		void SetHandle(HWND hwnd)
-		{
-			if (x == nullptr)
-				x = hwnd;
-		}
 	};
 }

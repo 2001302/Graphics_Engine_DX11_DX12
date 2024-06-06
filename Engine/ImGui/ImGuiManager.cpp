@@ -2,23 +2,20 @@
 
 using namespace Engine;
 
-bool ImGuiManager::Initialize(HWND hWnd, Engine::Direct3D* d3d)
+bool ImGuiManager::Initialize(HWND mainWindow, Engine::Direct3D* d3d)
 {
-	//Setup Dear ImGui context
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    //Setup Dear ImGui context
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
-	auto font = io.Fonts->AddFontFromFileTTF("../Engine/data/Roboto-Medium.ttf", 16.0f);
+    auto font = io.Fonts->AddFontFromFileTTF("../Engine/data/Roboto-Medium.ttf", 16.0f);
 
     //Windows + DX11
-	ImGui_ImplWin32_Init(hWnd);
+    ImGui_ImplWin32_Init(mainWindow);
 	ImGui_ImplDX11_Init(d3d->GetDevice().Get(), d3d->GetDeviceContext().Get());
-
-    //Set window handle
-	WindowHandler::GetInstance().SetHandle(hWnd);
 
     //Set style
     SetupImGuiStyle(false, 1.0f);
@@ -41,12 +38,12 @@ bool ImGuiManager::Prepare(Env* env)
 	return true;
 }
 
-bool ImGuiManager::Render()
+bool ImGuiManager::Render(HWND mainWindow)
 {
     //Custom UI
     if (ImGui::Button("Asset"))
     {
-        SendMessage(WindowHandler::GetInstance().GetHandle(), WM_MODEL_LOAD, 0, 0);
+        SendMessage(mainWindow, WM_MODEL_LOAD, 0, 0);
     }
 
 	//Rendering

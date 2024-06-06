@@ -2,7 +2,7 @@
 
 using namespace Engine;
 
-bool Application::Initialize(int screenWidth, int screenHeight, HWND mainWindow)
+bool Application::Initialize(int screenWidth, int screenHeight)
 {
 	m_manager = new PipelineManager();
 	m_env = new Env();
@@ -15,7 +15,7 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND mainWindow)
 		{EnumDataBlockType::eManager,m_manager},
 	};
 
-	Direct3D::GetInstance().Init(m_env, VSYNC_ENABLED, mainWindow, FULL_SCREEN);
+	Direct3D::GetInstance().Init(m_env, VSYNC_ENABLED, m_mainWindow, FULL_SCREEN);
 
 	auto tree = new BehaviorTreeBuilder();
 
@@ -23,12 +23,12 @@ bool Application::Initialize(int screenWidth, int screenHeight, HWND mainWindow)
 			->Sequence()
 				->Excute(std::make_shared<InitializeCamera>())
 				->Excute(std::make_shared<InitializeLight>())
-				->Excute(std::make_shared<InitializeShader>(mainWindow))
+				->Excute(std::make_shared<InitializeShader>(m_mainWindow))
 			->Close();
 
 	tree->Run();
 
-	m_imgui->Initialize(mainWindow, &Direct3D::GetInstance());
+	m_imgui->Initialize(m_mainWindow, &Direct3D::GetInstance());
 
 	return true;
 }
@@ -56,7 +56,7 @@ bool Application::Render()
 
 	tree->Run();
 
-	m_imgui->Render();
+	m_imgui->Render(m_mainWindow);
 
 	// Present the rendered scene to the screen.
 	Direct3D::GetInstance().EndScene();

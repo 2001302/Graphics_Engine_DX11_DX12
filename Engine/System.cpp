@@ -65,9 +65,9 @@ bool System::Initialize()
 		return false;
 
 	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
-	m_application = std::make_unique<Application>();
+	m_application = std::make_unique<Application>(m_mainWindow);
 
-	if (!m_application->Initialize(m_screenWidth, m_screenHeight, m_mainWindow))
+	if (!m_application->Initialize(m_screenWidth, m_screenHeight))
 		return false;
 
 	return true;
@@ -286,7 +286,7 @@ bool System::OnModelLoadRequest()
 	// OPENFILENAME struct initialize
 	ZeroMemory(&ofn, sizeof(ofn));
 	ofn.lStructSize = sizeof(ofn);
-	ofn.hwndOwner = WindowHandler::GetInstance().GetHandle();
+	ofn.hwndOwner = m_mainWindow;
 	ofn.lpstrFile = szFile;
 	ofn.lpstrFile[0] = '\0';
 	ofn.nMaxFile = sizeof(szFile);

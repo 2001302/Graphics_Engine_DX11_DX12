@@ -21,9 +21,9 @@ namespace Engine
 	private:
 		void SetupImGuiStyle(bool styleDark, float alpha);
 
-		bool m_shininess = false;
+		float m_shininess = 0.0f;
 		bool m_useBlinnPhong = false;
-		float m_useTexture = 0.0f;
+		bool m_useTexture = false;
 
 		bool m_usePerspectiveProjection = true;
 		DirectX::SimpleMath::Vector3 m_modelTranslation = DirectX::SimpleMath::Vector3(0.0f);

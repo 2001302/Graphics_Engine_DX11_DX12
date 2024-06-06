@@ -62,7 +62,7 @@ bool ImGuiManager::Render(HWND mainWindow)
     ImGui::SliderFloat3("m_modelScaling", &m_modelScaling.x, 0.1f, 4.0f);
     ImGui::SliderFloat("m_viewRot", &m_viewRot, -3.14f, 3.14f);
 
-    ImGui::SliderFloat("Material Shininess",& m_shininess/*&m_pixelConstantBufferData.material.shininess*/, 1.0f,256.0f);
+    ImGui::SliderFloat("Material Shininess", &m_shininess/*&m_pixelConstantBufferData.material.shininess*/, 1.0f,256.0f);
 
     if (ImGui::RadioButton("Directional Light", m_lightType == 0)) {
         m_lightType = 0;

@@ -24,7 +24,6 @@ bool Application::Initialize(int screenWidth, int screenHeight)
 	tree->Build(dataBlock)
 			->Sequence()
 				->Excute(std::make_shared<InitializeCamera>())
-				->Excute(std::make_shared<InitializeLight>())
 				->Excute(std::make_shared<InitializeLightShader>(m_mainWindow))
 				->Excute(std::make_shared<InitializePhongShader>(m_mainWindow))
 			->Close();
@@ -98,7 +97,6 @@ void Application::Shutdown()
 			model = 0;
 		}
 
-		m_manager->Light.reset();
 		m_manager->LightShader.reset();
 		m_manager->Camera.reset();
 	}

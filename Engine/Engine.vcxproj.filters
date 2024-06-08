@@ -1,9 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="Light.h">
-      <Filter>Model</Filter>
-    </ClInclude>
     <ClInclude Include="GameObject.h">
       <Filter>Model</Filter>
     </ClInclude>
@@ -82,9 +79,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Light.cpp">
-      <Filter>Model</Filter>
-    </ClCompile>
     <ClCompile Include="GameObject.cpp">
       <Filter>Model</Filter>
     </ClCompile>
@@ -187,10 +181,10 @@
     <FxCompile Include="LightPixelShader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="BasicVertexShader.hlsl">
+    <FxCompile Include="PhongVertexShader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="BasicPixelShader.hlsl">
+    <FxCompile Include="PhongPixelShader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

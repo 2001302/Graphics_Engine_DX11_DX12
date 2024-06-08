@@ -153,7 +153,6 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="IShader.h" />
-    <ClInclude Include="Light.h" />
     <ClInclude Include="LightShader.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="IDataBlock.h" />
@@ -177,7 +176,6 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Input.cpp" />
-    <ClCompile Include="Light.cpp" />
     <ClCompile Include="LightShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameObject.cpp" />
@@ -190,11 +188,11 @@
     <None Include="ImGui\imgui.ini" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="BasicPixelShader.hlsl">
+    <FxCompile Include="PhongPixelShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="BasicVertexShader.hlsl">
+    <FxCompile Include="PhongVertexShader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>

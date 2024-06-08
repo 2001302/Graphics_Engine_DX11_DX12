@@ -32,16 +32,11 @@ namespace Engine
 	using DirectX::SimpleMath::Vector3;
 	using DirectX::SimpleMath::Vector4;
 
-	//TODO : XMFLOAT3 vs Vector3 차이는? 
 	struct Vertex {
-		//Vector3 position;
-		//Vector3 normal;
-		//Vector2 texcoord;
+		Vector3 position;
+		Vector3 normal;
+		Vector2 texcoord;
 		//Vector3 color;
-
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT2 texcoord;
-		DirectX::XMFLOAT3 normal;
 	};
 
 	struct Bone
@@ -91,21 +86,19 @@ namespace Engine
 
 	struct MatrixBufferType
 	{
-		DirectX::XMMATRIX world;
-		DirectX::XMMATRIX view;
-		DirectX::XMMATRIX projection;
+		Matrix world;
+		Matrix view;
+		Matrix projection;
 	};
 
 	struct LightBufferType
 	{
-		DirectX::XMFLOAT4 ambientColor;
-		DirectX::XMFLOAT4 diffuseColor;
-		DirectX::XMFLOAT3 lightDirection;
+		Vector4 ambientColor;
+		Vector4 diffuseColor;
+		Vector3 lightDirection;
 		float padding;
 	};
 
-
-	// 재질
 	struct Material {
 		Vector3 ambient = Vector3(0.1f);  // 12
 		float shininess = 1.0f;           // 4
@@ -115,9 +108,7 @@ namespace Engine
 		float dummy2;                     // 4
 	};
 
-	// 조명
-	struct LightInfo {
-		// 순서와 크기 관계 주의 (16 바이트 패딩)
+	struct Light {
 		Vector3 strength = Vector3(1.0f);              // 12
 		float fallOffStart = 0.0f;                     // 4
 		Vector3 direction = Vector3(0.0f, 0.0f, 1.0f); // 12
@@ -126,7 +117,6 @@ namespace Engine
 		float spotPower = 1.0f;                        // 4
 	};
 
-	// 이 예제에서 ConstantBuffer로 보낼 데이터
 	struct VertexConstantBuffer {
 		Matrix model;
 		Matrix invTranspose;
@@ -140,7 +130,7 @@ namespace Engine
 		Vector3 eyeWorld;        // 12
 		bool useTexture;         // 4
 		Material material;       // 48
-		LightInfo lights[MAX_LIGHTS]; // 48 * MAX_LIGHTS
+		Light lights[MAX_LIGHTS]; // 48 * MAX_LIGHTS
 		bool useBlinnPhong = true;
 		Vector3 dummy;
 	};

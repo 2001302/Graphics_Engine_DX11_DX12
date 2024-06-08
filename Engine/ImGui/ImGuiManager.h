@@ -19,7 +19,7 @@ namespace Engine
 		void Shutdown();
 
 		bool m_phongShader = false;
-		float m_shininess = 0.0f;
+		float m_shininess = 1.0f;
 		bool m_useBlinnPhong = false;
 		bool m_useTexture = false;
 
@@ -34,7 +34,7 @@ namespace Engine
 		float m_farZ = 100.0f;
 
 		int m_lightType = 0;
-		LightInfo m_lightFromGUI;
+		Light m_lightFromGUI;
 		float m_materialDiffuse = 1.0f;
 		float m_materialSpecular = 1.0f;
 

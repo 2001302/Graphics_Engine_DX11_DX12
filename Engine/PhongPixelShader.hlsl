@@ -1,4 +1,4 @@
-#include "Common.hlsli" // 쉐이더에서도 include 사용 가능
+#include "Common.hlsli"
 
 Texture2D g_texture0 : register(t0);
 SamplerState g_sampler : register(s0);
@@ -39,14 +39,12 @@ float3 ComputeDirectionalLight(Light L, Material mat, float3 normal,
     float ndotl = max(dot(lightVec, normal), 0.0f);
     float3 lightStrength = L.strength * ndotl;
 
-    // Luna DX12 책에서는 Specular 계산에도
-    // Lambert's law가 적용된 lightStrength를 사용합니다.
     return BlinnPhong(lightStrength, lightVec, normal, toEye, mat);
 }
 
 float CalcAttenuation(float d, float falloffStart, float falloffEnd)
 {
-    // Linear falloff
+    //Linear falloff
     return saturate((falloffEnd - d) / (falloffEnd - falloffStart));
 }
 
@@ -55,10 +53,10 @@ float3 ComputePointLight(Light L, Material mat, float3 pos, float3 normal,
 {
     float3 lightVec = L.position - pos;
 
-    // 쉐이딩할 지점부터 조명까지의 거리 계산
+    //Distance Calculation from Shading Point to Light
     float d = length(lightVec);
 
-    // 너무 멀면 조명이 적용되지 않음
+    //No lighting will be applied if the distance is too far.
     if (d > L.fallOffEnd)
     {
         return float3(0.0, 0.0, 0.0);
@@ -82,10 +80,10 @@ float3 ComputeSpotLight(Light L, Material mat, float3 pos, float3 normal,
 {
     float3 lightVec = L.position - pos;
 
-    // 쉐이딩할 지점부터 조명까지의 거리 계산
+    //Distance Calculation from Shading Point to Light
     float d = length(lightVec);
 
-    // 너무 멀면 조명이 적용되지 않음
+    //No lighting will be applied if the distance is too far.
     if (d > L.fallOffEnd)
     {
         return float3(0.0f, 0.0f, 0.0f);
@@ -106,7 +104,6 @@ float3 ComputeSpotLight(Light L, Material mat, float3 pos, float3 normal,
         return BlinnPhong(lightStrength, lightVec, normal, toEye, mat);
     }
 
-    // if에 else가 없을 경우 경고 발생
     // warning X4000: use of potentially uninitialized variable
 }
 

@@ -1,7 +1,7 @@
 Texture2D shaderTexture : register(t0);
 SamplerState SampleType : register(s0);
 
-cbuffer LightBuffer : register(b0)
+cbuffer LightPixelConstantBuffer : register(b0)
 {
     float4 ambientColor;
     float4 diffuseColor;
@@ -9,12 +9,12 @@ cbuffer LightBuffer : register(b0)
     float padding;
 };
 
-struct PixelShaderInput {
+struct LightPixelShaderInput {
     float4 pos : SV_POSITION;
     float2 texcoord : TEXCOORD;
     float3 normal : NORMAL;
 };
-float4 main(PixelShaderInput input) : SV_TARGET {
+float4 main(LightPixelShaderInput input) : SV_TARGET {
 
     float4 textureColor;
     float3 lightDir;

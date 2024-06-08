@@ -24,23 +24,6 @@ EnumBehaviorTreeStatus InitializeCamera::Invoke()
 	return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus InitializeLight::Invoke()
-{
-	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
-
-	auto manager = dynamic_cast<Engine::PipelineManager*>(block);
-	assert(manager != nullptr);
-
-	// Create and initialize the light object.
-	manager->Light = std::make_unique<Light>();
-
-	manager->Light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
-	manager->Light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);
-	manager->Light->SetDirection(0.0f, -1.0f, 0.5f);
-
-	return EnumBehaviorTreeStatus::eSuccess;
-}
-
 EnumBehaviorTreeStatus InitializeLightShader::Invoke()
 {
 	IDataBlock* block = DataBlock[EnumDataBlockType::eManager];
@@ -68,9 +51,9 @@ EnumBehaviorTreeStatus InitializeLightShader::Invoke()
 	std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
 		 D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 4 * 3,
 		 D3D11_INPUT_PER_VERTEX_DATA, 0},
-		{"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT,
+		{"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 4 * 3 + 4 * 3,
 		 D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 
@@ -114,9 +97,9 @@ EnumBehaviorTreeStatus InitializePhongShader::Invoke()
 		 D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 
-	manager->PhongShader->CreateVertexShaderAndInputLayout(L"BasicVertexShader.hlsl", inputElements, manager->PhongShader->vertexShader, manager->PhongShader->layout);
+	manager->PhongShader->CreateVertexShaderAndInputLayout(L"PhongVertexShader.hlsl", inputElements, manager->PhongShader->vertexShader, manager->PhongShader->layout);
 
-	manager->PhongShader->CreatePixelShader(L"BasicPixelShader.hlsl", manager->PhongShader->pixelShader);
+	manager->PhongShader->CreatePixelShader(L"PhongPixelShader.hlsl", manager->PhongShader->pixelShader);
 
 	return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -157,9 +140,9 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		model->vertexConstantBufferData.projection = projectionMatrix;
 
 		// Copy the lighting variables into the constant buffer.
-		model->pixelConstantBufferData.ambientColor = manager->Light->GetAmbientColor();
-		model->pixelConstantBufferData.diffuseColor = manager->Light->GetDiffuseColor();
-		model->pixelConstantBufferData.lightDirection = manager->Light->GetDirection();
+		model->pixelConstantBufferData.ambientColor = DirectX::SimpleMath::Vector4(0.15f, 0.15f, 0.15f, 1.0f);// gui-> manager->Light->GetAmbientColor();
+		model->pixelConstantBufferData.diffuseColor = DirectX::SimpleMath::Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+		model->pixelConstantBufferData.lightDirection = -gui->m_lightFromGUI.direction;
 		model->pixelConstantBufferData.padding = 0.0f;
 
 		manager->LightShader->UpdateBuffer(model->vertexConstantBufferData, model->vertexConstantBuffer);
@@ -245,8 +228,7 @@ EnumBehaviorTreeStatus RenderGameObjectsWithPhong::Invoke()
 
 		model->vertexPhongConstantBufferData.invTranspose = model->vertexPhongConstantBufferData.model;
 		model->vertexPhongConstantBufferData.invTranspose.Translation(Vector3(0.0f));
-		model->vertexPhongConstantBufferData.invTranspose =
-			model->vertexPhongConstantBufferData.invTranspose.Transpose().Invert();
+		model->vertexPhongConstantBufferData.invTranspose = model->vertexPhongConstantBufferData.invTranspose.Transpose().Invert();
 
 		const float aspect = env->aspect;
 		if (gui->m_usePerspectiveProjection) {

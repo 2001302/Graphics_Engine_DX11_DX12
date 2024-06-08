@@ -1,25 +1,21 @@
-cbuffer ModelViewProjectionConstantBuffer : register(b0) {
+#include "Common.hlsli"
+
+cbuffer LightVertexConstantBuffer : register(b0) {
     matrix model;
     matrix view;
     matrix projection;
 };
 
-struct VertexShaderInput {
-    float3 pos : POSITION;
-    float2 texcoord : TEXCOORD0;
-    float3 normal : NORMAL;
-};
-
-struct PixelShaderInput {
+struct LightPixelShaderInput {
     float4 pos : SV_POSITION;
     float2 texcoord : TEXCOORD;
     float3 normal : NORMAL;
 };
 
-PixelShaderInput main(VertexShaderInput input)
+LightPixelShaderInput main(VertexShaderInput input)
 {
-    PixelShaderInput output;
-    float4 pos = float4(input.pos, 1.0f);
+    LightPixelShaderInput output;
+    float4 pos = float4(input.posModel, 1.0f);
 
     pos = mul(pos, model);
     pos = mul(pos, view);
@@ -29,7 +25,7 @@ PixelShaderInput main(VertexShaderInput input)
 
     output.texcoord = input.texcoord;
 
-    output.normal = mul(input.normal, (float3x3)model);
+    output.normal = mul(input.normalModel, (float3x3)model);
     output.normal = normalize(output.normal);
 
     return output;

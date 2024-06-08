@@ -56,15 +56,15 @@ bool ImGuiManager::Render(HWND mainWindow)
 
     ImGui::Checkbox("Use Phong Shader", &m_phongShader);
 
-    ImGui::Checkbox("Use Texture", &m_useTexture /*&m_pixelConstantBufferData.useTexture*/);
-    ImGui::Checkbox("Use BlinnPhong",&m_useBlinnPhong /*&m_pixelConstantBufferData.useBlinnPhong*/ );
+    ImGui::Checkbox("Use Texture", &m_useTexture);
+    ImGui::Checkbox("Use BlinnPhong",&m_useBlinnPhong);
 
     ImGui::SliderFloat3("ModelTranslation", &m_modelTranslation.x, -2.0f, 2.0f);
     ImGui::SliderFloat("ModelRotation", &m_modelRotation.y, -3.14f, 3.14f);
     ImGui::SliderFloat3("ModelScaling", &m_modelScaling.x, 0.1f, 4.0f);
     ImGui::SliderFloat("ViewRot", &m_viewRot, -3.14f, 3.14f);
 
-    ImGui::SliderFloat("Material Shininess", &m_shininess/*&m_pixelConstantBufferData.material.shininess*/, 1.0f,256.0f);
+    ImGui::SliderFloat("Material Shininess", &m_shininess, 1.0f, 256.0f);
 
     if (ImGui::RadioButton("Directional Light", m_lightType == 0)) {
         m_lightType = 0;

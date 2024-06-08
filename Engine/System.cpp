@@ -301,10 +301,10 @@ bool System::OnModelLoadRequest()
 	if (GetOpenFileName(&ofn))
 	{
 		std::vector<std::string> modelFile;
-		std::vector<XMMATRIX> matrix;
+		std::vector<DirectX::SimpleMath::Matrix> matrix;
 
 		modelFile.push_back(ToString(ofn.lpstrFile));
-		matrix.push_back(XMMatrixTranslation(0.0f, 0.0f, 0.0f));
+		matrix.push_back(DirectX::SimpleMath::Matrix());
 
 		for (int i = 0; i < modelFile.size(); i++)
 		{

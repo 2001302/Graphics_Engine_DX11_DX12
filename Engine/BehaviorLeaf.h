@@ -10,11 +10,6 @@ namespace Engine
 		EnumBehaviorTreeStatus Invoke() override;
 	};
 
-	class InitializeLight : public ActionNode
-	{
-		EnumBehaviorTreeStatus Invoke() override;
-	};
-
 	class InitializeLightShader : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;

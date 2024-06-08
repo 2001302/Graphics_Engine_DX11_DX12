@@ -137,7 +137,16 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		// Copy the matrices into the constant buffer.
 		model->vertexConstantBufferData.world = worldMatrix;
 		model->vertexConstantBufferData.view = viewMatrix;
-		model->vertexConstantBufferData.projection = projectionMatrix;
+		const float aspect = env->aspect;
+		if (gui->m_usePerspectiveProjection) {
+			model->vertexConstantBufferData.projection = XMMatrixPerspectiveFovLH(
+				XMConvertToRadians(gui->m_projFovAngleY), aspect, gui->m_nearZ, gui->m_farZ);
+		}
+		else {
+			model->vertexConstantBufferData.projection = XMMatrixOrthographicOffCenterLH(
+				-aspect, aspect, -1.0f, 1.0f, gui->m_nearZ, gui->m_farZ);
+		}
+		model->vertexConstantBufferData.projection = model->vertexConstantBufferData.projection.Transpose();
 
 		// Copy the lighting variables into the constant buffer.
 		model->pixelConstantBufferData.ambientColor = DirectX::SimpleMath::Vector4(0.15f, 0.15f, 0.15f, 1.0f);// gui-> manager->Light->GetAmbientColor();

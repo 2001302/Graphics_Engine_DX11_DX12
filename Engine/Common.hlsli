@@ -1,31 +1,36 @@
-ï»¿// ì‰ì´ë”ì—ì„œ includeí•  ë‚´ìš©ë“¤ì€ .hlsli íŒŒì¼ì— ìž‘ì„±
-// Properties -> Item Type: Does not participate in buildìœ¼ë¡œ ì„¤ì •
+// ½¦ÀÌ´õ¿¡¼­ includeÇÒ ³»¿ëµéÀº .hlsli ÆÄÀÏ¿¡ ÀÛ¼º
+// Properties -> Item Type: Does not participate in buildÀ¸·Î ¼³Á¤
 
-/* ì°¸ê³ : C++ SimpleMath -> HLSL */
+// BlinnPhong ±¸ÇöÀÇ ÀüÃ¼ ±¸Á¶´Â Luna DX12 ±³Àç¿Í ºñ½ÁÇÏÁö¸¸ 
+// ¼¼ºÎ ±¸ÇöÀº ÀÌÇØÇÏ±â ÆíÇÏµµ·Ï ´ëÇÐ °­ÀÇ ½ºÅ¸ÀÏ·Î ´Ü¼øÈ­ÇÏ¿´½À´Ï´Ù.
+
+/* Âü°í: C++ SimpleMath -> HLSL */
 // Vector3 -> float3
 // float3 a = normalize(b);
 // float a = dot(v1, v2);
-// Satuarate() -> saturate() ì‚¬ìš©
+// Satuarate() -> saturate() »ç¿ë
 // float l = length(v);
-// struct A{ float a = 1.0f; }; <- êµ¬ì¡°ì²´ ì•ˆì—ì„œ ì´ˆê¸°í™” ë¶ˆê°€
+// struct A{ float a = 1.0f; }; <- ±¸Á¶Ã¼ ¾È¿¡¼­ ÃÊ±âÈ­ ºÒ°¡
 // Vector3(0.0f) -> float3(0.0f, 0.0f, 0.0f)
 // Vector4::Transform(v, M) -> mul(v, M)
 
-#define MAX_LIGHTS 3 
+#define MAX_LIGHTS 3 // ½¦ÀÌ´õ¿¡¼­µµ #define »ç¿ë °¡´É
 #define NUM_DIR_LIGHTS 1
 #define NUM_POINT_LIGHTS 1
 #define NUM_SPOT_LIGHTS 1
 
+// ÀçÁú
 struct Material
 {
     float3 ambient;
     float shininess;
     float3 diffuse;
-    float dummy1; 
+    float dummy1; // 16 bytes ¸ÂÃçÁÖ±â À§ÇØ Ãß°¡
     float3 specular;
     float dummy2;
 };
 
+// Á¶¸í
 struct Light
 {
     float3 strength;
@@ -38,15 +43,19 @@ struct Light
 
 struct VertexShaderInput
 {
-    float3 posModel : POSITION; 
-    float3 normalModel : NORMAL;   
-    float2 texcoord : TEXCOORD0; 
+    float3 posModel : POSITION; //¸ðµ¨ ÁÂÇ¥°èÀÇ À§Ä¡ position
+    float3 normalModel : NORMAL; // ¸ðµ¨ ÁÂÇ¥°èÀÇ normal    
+    float2 texcoord : TEXCOORD0; // <- ´ÙÀ½ ¿¹Á¦¿¡¼­ »ç¿ë
+    
+    // float3 color : COLOR0; <- ºÒÇÊ¿ä (½¦ÀÌµù)
 };
 
 struct PixelShaderInput
 {
-    float4 posProj : SV_POSITION; 
-    float3 posWorld : POSITION; 
+    float4 posProj : SV_POSITION; // Screen position
+    float3 posWorld : POSITION; // World position (Á¶¸í °è»ê¿¡ »ç¿ë)
     float3 normalWorld : NORMAL;
     float2 texcoord : TEXCOORD;
+    
+    // float3 color : COLOR; <- ºÒÇÊ¿ä (½¦ÀÌµù)
 };

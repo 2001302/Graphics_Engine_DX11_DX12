@@ -1,4 +1,4 @@
-ï»¿#include "Common.hlsli"
+#include "Common.hlsli"
 
 cbuffer VertexConstantBuffer : register(b0)
 {
@@ -11,9 +11,9 @@ cbuffer VertexConstantBuffer : register(b0)
 PixelShaderInput main(VertexShaderInput input)
 {
     //The model matrix transforms the object from its local origin to its position in world space.
-    // ëª¨ë¸ ì¢Œí‘œê³„ì˜ ìœ„ì¹˜ -> [ëª¨ë¸ í–‰ë ¬ ê³±í•˜ê¸°] -> ì›”ë“œ ì¢Œí‘œê³„ì˜ ìœ„ì¹˜
-    // -> [ë·° í–‰ë ¬ ê³±í•˜ê¸°] -> ë·° ì¢Œí‘œê³„ì˜ ìœ„ì¹˜ -> [í”„ë¡œì ì…˜ í–‰ë ¬ ê³±í•˜ê¸°]
-    // -> ìŠ¤í¬ë¦° ì¢Œí‘œê³„ì˜ ìœ„ì¹˜
+    // ¸ðµ¨ ÁÂÇ¥°èÀÇ À§Ä¡ -> [¸ðµ¨ Çà·Ä °öÇÏ±â] -> ¿ùµå ÁÂÇ¥°èÀÇ À§Ä¡
+    // -> [ºä Çà·Ä °öÇÏ±â] -> ºä ÁÂÇ¥°èÀÇ À§Ä¡ -> [ÇÁ·ÎÁ§¼Ç Çà·Ä °öÇÏ±â]
+    // -> ½ºÅ©¸° ÁÂÇ¥°èÀÇ À§Ä¡
 
     //Since the view coordinate system is NDC, lighting calculations are done using world coordinates.
 

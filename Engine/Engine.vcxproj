@@ -142,6 +142,7 @@
     <ClInclude Include="CommonStruct.h" />
     <ClInclude Include="Direct3D.h" />
     <ClInclude Include="Env.h" />
+    <ClInclude Include="GeometryGenerator.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\ImGuiManager.h" />
@@ -167,6 +168,7 @@
     <ClCompile Include="BehaviorTree.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Direct3D.cpp" />
+    <ClCompile Include="GeometryGenerator.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\ImGuiManager.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />

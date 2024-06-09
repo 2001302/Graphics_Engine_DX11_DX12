@@ -49,12 +49,21 @@ bool ImGuiManager::Render(HWND mainWindow)
         1000.0f / ImGui::GetIO().Framerate,
         ImGui::GetIO().Framerate);
 
-    if (ImGui::Button("Asset"))
-    {
-        SendMessage(mainWindow, WM_MODEL_LOAD, 0, 0);
+    if (ImGui::Button("Sphere")) {
+        SendMessage(mainWindow, WM_SPHERE_LOAD, 0, 0);
     }
     ImGui::SameLine();
-    if (ImGui::Button("Square")){}
+    if (ImGui::Button("Box")) {
+        SendMessage(mainWindow, WM_BOX_LOAD, 0, 0);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Cylinder")) {
+        SendMessage(mainWindow, WM_CYLINDER_LOAD, 0, 0);
+    }
+    ImGui::SameLine();
+    if (ImGui::Button("Search")) {
+        SendMessage(mainWindow, WM_MODEL_LOAD, 0, 0);
+    }
 
     ImGui::Checkbox("Wire Frame", &m_drawAsWire);
     ImGui::Checkbox("Use Texture", &m_useTexture);

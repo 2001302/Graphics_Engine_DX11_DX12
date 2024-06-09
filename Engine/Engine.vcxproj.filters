@@ -76,6 +76,9 @@
     <ClInclude Include="PhongShader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="GeometryGenerator.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -135,6 +138,9 @@
     </ClCompile>
     <ClCompile Include="PhongShader.cpp">
       <Filter>DirectX\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="GeometryGenerator.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

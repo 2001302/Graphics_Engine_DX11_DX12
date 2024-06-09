@@ -14,10 +14,15 @@ GameObject* ResourceHelper::CreateTexture(GameObject* gameObject, const std::str
 
 	// assert(channels == 4);
 
+	// 4채널로 만들어서 복사
 	std::vector<uint8_t> image;
-
-	image.resize(width * height * channels);
-	memcpy(image.data(), img, image.size() * sizeof(uint8_t));
+	image.resize(width * height * 4);
+	for (size_t i = 0; i < width * height; i++) {
+		for (size_t c = 0; c < 3; c++) {
+			image[4 * i + c] = img[i * channels + c];
+		}
+		image[4 * i + 3] = 255;
+	}
 
 	// Create texture.
 	D3D11_TEXTURE2D_DESC txtDesc = {};
@@ -32,7 +37,7 @@ GameObject* ResourceHelper::CreateTexture(GameObject* gameObject, const std::str
 	// Fill in the subresource data.
 	D3D11_SUBRESOURCE_DATA InitData;
 	InitData.pSysMem = image.data();
-	InitData.SysMemPitch = txtDesc.Width * sizeof(uint8_t) * channels;
+	InitData.SysMemPitch = txtDesc.Width * sizeof(uint8_t) * 4;
 	// InitData.SysMemSlicePitch = 0;
 
 	// ID3D11Device* pd3dDevice; // Don't forget to initialize this

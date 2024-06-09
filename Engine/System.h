@@ -6,6 +6,7 @@
 #include "input.h"
 #include "application.h"
 #include "resourcehelper.h"
+#include "geometrygenerator.h"
 
 namespace Engine
 {
@@ -19,10 +20,6 @@ namespace Engine
 		bool Initialize();
 		void Shutdown();
 		void Run();
-
-		bool OnModelLoadRequest();
-		bool OnRightDragRequest();
-		bool OnMouseWheelRequest();
 
 		LRESULT CALLBACK MessageHandler(HWND, UINT, WPARAM, LPARAM);
 
@@ -40,6 +37,14 @@ namespace Engine
 
 		std::unique_ptr<Input> m_input;
 		std::unique_ptr<Application> m_application;
+
+		bool OnModelLoadRequest();
+		bool OnSphereLoadRequest();
+		bool OnBoxLoadRequest();
+		bool OnCylinderLoadRequest();
+
+		bool OnRightDragRequest();
+		bool OnMouseWheelRequest();
 	};
 }
 #endif

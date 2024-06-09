@@ -5,7 +5,7 @@
 #include "Input.h"
 #include "Camera.h"
 #include "Gameobject.h"
-#include "Lightshader.h"
+#include "NormalShader.h"
 #include "PhongShader.h"
 #include "Direct3D.h"
 
@@ -19,7 +19,7 @@ namespace Engine
 	public:
 		std::vector <GameObject*> Models;
 		std::vector <IShader*> Shaders;
-		std::unique_ptr<LightShader> LightShader;
+		std::unique_ptr<NormalShader> NormalShader;
 		std::unique_ptr<PhongShader> PhongShader;
 		std::unique_ptr<Camera> Camera;
 	};

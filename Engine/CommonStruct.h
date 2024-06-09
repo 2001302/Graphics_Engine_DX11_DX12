@@ -123,5 +123,15 @@ namespace Engine
 		bool useBlinnPhong = true;
 		Vector3 dummy;
 	};
+
+	struct NormalVertexConstantBuffer {
+		Matrix model;
+		Matrix invTranspose;
+		Matrix view;
+		Matrix projection;
+		float scale = 0.1f;
+		float dummy[3];
+	};
+
 }
 #endif

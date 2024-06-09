@@ -7,6 +7,12 @@
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
+      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\NormalPixelShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\NormalVertexShader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\PhongPixelShader.cso</FullPath>
     </ContentFile>
     <ContentFile>

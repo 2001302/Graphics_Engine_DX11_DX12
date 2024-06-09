@@ -22,7 +22,7 @@ namespace Engine
 		bool m_drawAsWire = false;
 		bool m_useBlinnPhong = false;
 		bool m_useTexture = false;
-
+		
 		bool m_usePerspectiveProjection = true;
 		DirectX::SimpleMath::Vector3 m_modelTranslation = DirectX::SimpleMath::Vector3(0.0f);
 		DirectX::SimpleMath::Vector3 m_modelRotation = DirectX::SimpleMath::Vector3(0.0f);

@@ -1,5 +1,5 @@
-#ifndef _LIGHTSHADER
-#define _LIGHTSHADER
+#ifndef _NORMALSHADER
+#define _NORMALSHADER
 
 #include "IShader.h"
 
@@ -7,7 +7,7 @@ using namespace DirectX;
 
 namespace Engine
 {
-	class LightShader : public IShader
+	class NormalShader : public IShader
 	{
 	public:
 	};

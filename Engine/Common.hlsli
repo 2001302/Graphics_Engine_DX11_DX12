@@ -36,4 +36,5 @@ struct PixelShaderInput
     float3 posWorld : POSITION; 
     float3 normalWorld : NORMAL;
     float2 texcoord : TEXCOORD;
+    float3 color : COLOR;
 };

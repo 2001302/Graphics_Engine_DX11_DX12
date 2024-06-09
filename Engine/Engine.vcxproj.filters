@@ -43,7 +43,7 @@
     <ClInclude Include="ResourceHelper.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="LightShader.h">
+    <ClInclude Include="NormalShader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
     <ClInclude Include="Direct3D.h">
@@ -118,7 +118,7 @@
     <ClCompile Include="ResourceHelper.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="LightShader.cpp">
+    <ClCompile Include="NormalShader.cpp">
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
     <ClCompile Include="Direct3D.cpp">
@@ -179,6 +179,12 @@
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="PhongPixelShader.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="NormalVertexShader.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="NormalPixelShader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

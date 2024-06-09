@@ -1,8 +1,8 @@
-#include "../Direct3D.h"
-#include "../IDataBlock.h"
-#include "imgui.h"
-#include "imgui_impl_win32.h"
-#include "imgui_impl_dx11.h"
+#include "Direct3D.h"
+#include "IDataBlock.h"
+#include "ImGui/imgui.h"
+#include "ImGui/imgui_impl_win32.h"
+#include "ImGui/imgui_impl_dx11.h"
 
 namespace Engine
 {

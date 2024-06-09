@@ -2,7 +2,7 @@
 #define _APPLICATION
 
 #include "Direct3D.h"
-#include "ImGui/ImGuiManager.h"
+#include "ImGuiManager.h"
 #include "BehaviorTree.h"
 #include "BehaviorLeaf.h"
 #include "PipelineManager.h"

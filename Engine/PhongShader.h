@@ -19,7 +19,7 @@ namespace Engine
 	/// <summary>
 	/// Phong Shader에서 사용하는 공유되지 않는 Constant Buffer 정보
 	/// </summary>
-	class PhongShaderSource : public IShader
+	class PhongShaderSource 
 	{
 	public:		
 		ComPtr<ID3D11Buffer> vertexConstantBuffer;

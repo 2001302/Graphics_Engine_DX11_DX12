@@ -1,6 +1,6 @@
 #include "BehaviorLeaf.h"
 #include "PipelineManager.h"
-#include "ImGui/ImGuiManager.h"
+#include "ImGuiManager.h"
 
 using namespace Engine;
 
@@ -18,7 +18,7 @@ EnumBehaviorTreeStatus InitializeCamera::Invoke()
 	manager->camera->Render();
 
 	// Update the position and rotation of the camera for this scene.
-	manager->camera->position = DirectX::SimpleMath::Vector3(-200.0f, 0.0f, -200.0f);
+	manager->camera->position = DirectX::SimpleMath::Vector3(-50.0f, 0.0f, -50.0f);
 	manager->camera->rotation = DirectX::SimpleMath::Vector3(0.0f, 45.0f, 0.0f);
 
 	return EnumBehaviorTreeStatus::eSuccess;

@@ -281,8 +281,76 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 	}
 }
 
+bool System::OnRightDragRequest()
+{
+	DIMOUSESTATE mouseState;
+	if (FAILED(m_input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
+	{
+		//retry
+		m_input->Mouse()->Acquire();
+	}
+	else
+	{
+		auto viewPort = Direct3D::GetInstance().viewport;
+
+		//mouse move vector
+		Eigen::Vector2d vector = Eigen::Vector2d(-mouseState.lX, -mouseState.lY);
+
+		Eigen::Vector3d origin(m_application->GetManager()->camera->position.x, m_application->GetManager()->camera->position.y, m_application->GetManager()->camera->position.z);
+
+		//convert to spherical coordinates
+		double r = origin.norm();
+		double phi = acos(origin.y() / r);
+		double theta = atan2(origin.z(), origin.x());
+
+		//rotation
+		double deltaTheta = (2 * M_PI) * (vector.x() / viewPort.Width);
+		double deltaPhi = (2 * M_PI) * (vector.y() / viewPort.Width);
+
+		theta += deltaTheta;
+		phi += deltaPhi;
+
+		//convert to Cartesian coordinates after rotation
+		double x = r * sin(phi) * cos(theta);
+		double y = r * cos(phi);
+		double z = r * sin(phi) * sin(theta);
+
+		Eigen::Vector3d origin_prime(x, y, z);
+
+		if (0.0f < phi && phi < M_PI)
+			m_application->GetManager()->camera->position = DirectX::SimpleMath::Vector3(origin_prime.x(), origin_prime.y(), origin_prime.z());
+	}
+
+	return true;
+}
+
+bool System::OnMouseWheelRequest()
+{
+	DIMOUSESTATE mouseState;
+	if (FAILED(m_input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
+	{
+		//retry
+		m_input->Mouse()->Acquire();
+	}
+	else
+	{
+		double wheel = -mouseState.lZ/(600.0);
+		Eigen::Vector3d origin(m_application->GetManager()->camera->position.x, m_application->GetManager()->camera->position.y, m_application->GetManager()->camera->position.z);
+
+		Eigen::Matrix3d R1;
+		R1 <<	1.0 + wheel, 0.0, 0.0,
+				0.0, 1.0 + wheel, 0.0,
+				0.0, 0.0, 1.0 + wheel;
+
+		Eigen::Vector3d origin_prime = R1* origin;
+		m_application->GetManager()->camera->position = DirectX::SimpleMath::Vector3(origin_prime.x(), origin_prime.y(), origin_prime.z());
+	}
+
+	return true;
+}
+
 bool System::OnModelLoadRequest()
-{	
+{
 	auto ToString = [](LPWSTR lpwstr) -> std::string
 		{
 			if (!lpwstr)
@@ -321,7 +389,7 @@ bool System::OnModelLoadRequest()
 		std::string fullPath = ToString(ofn.lpstrFile);
 		size_t lastSlash = fullPath.find_last_of('\\');
 		std::string fileName = fullPath.substr(lastSlash + 1);
-		std::string directoryPath = fullPath.substr(0, lastSlash) +"\\";
+		std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
 		model = GeometryGenerator::ReadFromFile(model, directoryPath, fileName);
 
@@ -391,73 +459,6 @@ bool System::OnModelLoadRequest()
 	{
 		//need logger
 	}
-	return true;
-}
-
-bool System::OnRightDragRequest()
-{
-	DIMOUSESTATE mouseState;
-	if (FAILED(m_input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
-	{
-		//retry
-		m_input->Mouse()->Acquire();
-	}
-	else
-	{
-		auto viewPort = Direct3D::GetInstance().viewport;
-
-		//mouse move vector
-		Eigen::Vector2d vector = Eigen::Vector2d(-mouseState.lX, -mouseState.lY);
-
-		Eigen::Vector3d origin(m_application->GetManager()->camera->position.x, m_application->GetManager()->camera->position.y, m_application->GetManager()->camera->position.z);
-
-		//convert to spherical coordinates
-		double r = origin.norm();
-		double phi = acos(origin.y() / r);
-		double theta = atan2(origin.z(), origin.x());
-
-		//rotation
-		double deltaTheta = (2 * M_PI) * (vector.x() / viewPort.Width);
-		double deltaPhi = (2 * M_PI) * (vector.y() / viewPort.Width);
-
-		theta += deltaTheta;
-		phi += deltaPhi;
-
-		//convert to Cartesian coordinates after rotation
-		double x = r * sin(phi) * cos(theta);
-		double y = r * cos(phi);
-		double z = r * sin(phi) * sin(theta);
-
-		Eigen::Vector3d origin_prime(x, y, z);
-
-		m_application->GetManager()->camera->position = DirectX::SimpleMath::Vector3(origin_prime.x(), origin_prime.y(), origin_prime.z());
-	}
-
-	return true;
-}
-
-bool System::OnMouseWheelRequest()
-{
-	DIMOUSESTATE mouseState;
-	if (FAILED(m_input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE), &mouseState)))
-	{
-		//retry
-		m_input->Mouse()->Acquire();
-	}
-	else
-	{
-		double wheel = -mouseState.lZ/(600.0);
-		Eigen::Vector3d origin(m_application->GetManager()->camera->position.x, m_application->GetManager()->camera->position.y, m_application->GetManager()->camera->position.z);
-
-		Eigen::Matrix3d R1;
-		R1 <<	1.0 + wheel, 0.0, 0.0,
-				0.0, 1.0 + wheel, 0.0,
-				0.0, 0.0, 1.0 + wheel;
-
-		Eigen::Vector3d origin_prime = R1* origin;
-		m_application->GetManager()->camera->position = DirectX::SimpleMath::Vector3(origin_prime.x(), origin_prime.y(), origin_prime.z());
-	}
-
 	return true;
 }
 

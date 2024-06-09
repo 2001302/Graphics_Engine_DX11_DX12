@@ -2,6 +2,7 @@
 #define _GAMEOBJECT
 
 #include "CommonStruct.h"
+#include "PhongShader.h"
 
 namespace Engine
 {
@@ -27,12 +28,7 @@ namespace Engine
 		ComPtr<ID3D11Buffer> vertexBuffer;
 		ComPtr<ID3D11Buffer> indexBuffer;
 
-		//PhongShader
-		ComPtr<ID3D11Buffer> vertexConstantBuffer;
-		ComPtr<ID3D11Buffer> pixelConstantBuffer;
-
-		VertexConstantBuffer vertexPhongConstantBufferData;
-		PixelConstantBuffer pixelPhongConstantBufferData;
+		std::shared_ptr<PhongShaderSource> phongShader;
 	};
 }
 #endif

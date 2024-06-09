@@ -53,6 +53,8 @@ bool ImGuiManager::Render(HWND mainWindow)
     {
         SendMessage(mainWindow, WM_MODEL_LOAD, 0, 0);
     }
+    ImGui::SameLine();
+    if (ImGui::Button("Square")){}
 
     ImGui::Checkbox("Wire Frame", &m_drawAsWire);
     ImGui::Checkbox("Use Texture", &m_useTexture);

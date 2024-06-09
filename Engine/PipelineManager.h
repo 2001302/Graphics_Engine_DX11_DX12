@@ -17,11 +17,9 @@ namespace Engine
 	class PipelineManager : public IDataBlock
 	{
 	public:
-		std::vector <GameObject*> Models;
-		std::vector <IShader*> Shaders;
-		std::unique_ptr<NormalShader> NormalShader;
-		std::unique_ptr<PhongShader> PhongShader;
-		std::unique_ptr<Camera> Camera;
+		std::vector <GameObject*> models;
+		std::unique_ptr<PhongShader> phongShader;
+		std::unique_ptr<Camera> camera;
 	};
 }
 #endif

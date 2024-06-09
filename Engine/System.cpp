@@ -308,9 +308,9 @@ bool System::OnModelLoadRequest()
 
 		for (int i = 0; i < modelFile.size(); i++)
 		{
-			m_application->GetManager()->Models.push_back(new GameObject());
+			m_application->GetManager()->models.push_back(new GameObject());
 
-			auto model = m_application->GetManager()->Models.back();
+			auto model = m_application->GetManager()->models.back();
 
 			ResourceHelper::ImportModel(model, modelFile[i].c_str());
 			ResourceHelper::CreateTexture(model, "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\crate2_diffuse.png");
@@ -363,14 +363,15 @@ bool System::OnModelLoadRequest()
 			}
 
 			//create constant buffer(Phong Shader)
-			model->vertexPhongConstantBufferData.model = DirectX::SimpleMath::Matrix();
-			model->vertexPhongConstantBufferData.view = DirectX::SimpleMath::Matrix();
-			model->vertexPhongConstantBufferData.projection = DirectX::SimpleMath::Matrix();
+			model->phongShader = std::make_shared<PhongShaderSource>();
+			model->phongShader->vertexConstantBufferData.model = DirectX::SimpleMath::Matrix();
+			model->phongShader->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
+			model->phongShader->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
 
-			m_application->GetManager()->PhongShader->CreateConstantBuffer(model->vertexPhongConstantBufferData,
-				model->vertexConstantBuffer);
-			m_application->GetManager()->PhongShader->CreateConstantBuffer(model->pixelPhongConstantBufferData,
-				model->pixelConstantBuffer);
+			m_application->GetManager()->phongShader->CreateConstantBuffer(model->phongShader->vertexConstantBufferData,
+				model->phongShader->vertexConstantBuffer);
+			m_application->GetManager()->phongShader->CreateConstantBuffer(model->phongShader->pixelConstantBufferData,
+				model->phongShader->pixelConstantBuffer);
 
 			model->transform = matrix[i];
 		}
@@ -397,7 +398,7 @@ bool System::OnRightDragRequest()
 		//mouse move vector
 		Eigen::Vector2d vector = Eigen::Vector2d(-mouseState.lX, -mouseState.lY);
 
-		Eigen::Vector3d origin(m_application->GetManager()->Camera->position.x, m_application->GetManager()->Camera->position.y, m_application->GetManager()->Camera->position.z);
+		Eigen::Vector3d origin(m_application->GetManager()->camera->position.x, m_application->GetManager()->camera->position.y, m_application->GetManager()->camera->position.z);
 
 		//convert to spherical coordinates
 		double r = origin.norm();
@@ -418,7 +419,7 @@ bool System::OnRightDragRequest()
 
 		Eigen::Vector3d origin_prime(x, y, z);
 
-		m_application->GetManager()->Camera->position = DirectX::SimpleMath::Vector3(origin_prime.x(), origin_prime.y(), origin_prime.z());
+		m_application->GetManager()->camera->position = DirectX::SimpleMath::Vector3(origin_prime.x(), origin_prime.y(), origin_prime.z());
 	}
 
 	return true;
@@ -435,7 +436,7 @@ bool System::OnMouseWheelRequest()
 	else
 	{
 		double wheel = -mouseState.lZ/(600.0);
-		Eigen::Vector3d origin(m_application->GetManager()->Camera->position.x, m_application->GetManager()->Camera->position.y, m_application->GetManager()->Camera->position.z);
+		Eigen::Vector3d origin(m_application->GetManager()->camera->position.x, m_application->GetManager()->camera->position.y, m_application->GetManager()->camera->position.z);
 
 		Eigen::Matrix3d R1;
 		R1 <<	1.0 + wheel, 0.0, 0.0,
@@ -443,7 +444,7 @@ bool System::OnMouseWheelRequest()
 				0.0, 0.0, 1.0 + wheel;
 
 		Eigen::Vector3d origin_prime = R1* origin;
-		m_application->GetManager()->Camera->position = DirectX::SimpleMath::Vector3(origin_prime.x(), origin_prime.y(), origin_prime.z());
+		m_application->GetManager()->camera->position = DirectX::SimpleMath::Vector3(origin_prime.x(), origin_prime.y(), origin_prime.z());
 	}
 
 	return true;

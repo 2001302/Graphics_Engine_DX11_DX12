@@ -89,15 +89,14 @@ void Application::Shutdown()
 {
 	if (m_manager)
 	{
-		for (auto& model : m_manager->Models)
+		for (auto& model : m_manager->models)
 		{
 			delete model;
 			model = 0;
 		}
 
-		m_manager->PhongShader.reset();
-		m_manager->NormalShader.reset();
-		m_manager->Camera.reset();
+		m_manager->phongShader.reset();
+		m_manager->camera.reset();
 	}
 
 	if (m_env)

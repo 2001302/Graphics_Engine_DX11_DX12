@@ -106,6 +106,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)..\Eigen;$(SolutionDir)..\Boost\boost_1_85_0</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -124,6 +125,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(SolutionDir)..\Eigen;$(SolutionDir)..\Boost\boost_1_85_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
+      <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -154,6 +156,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="IShader.h" />
+    <ClInclude Include="ModelLoader.h" />
     <ClInclude Include="NormalShader.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="IDataBlock.h" />
@@ -178,6 +181,7 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="Input.cpp" />
+    <ClCompile Include="ModelLoader.cpp" />
     <ClCompile Include="NormalShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameObject.cpp" />

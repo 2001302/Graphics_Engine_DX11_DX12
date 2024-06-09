@@ -247,3 +247,44 @@ GameObject* GeometryGenerator::MakeCylinder(GameObject* gameObject, const float 
     gameObject->meshes.push_back(meshData);
     return gameObject;
 }
+GameObject* GeometryGenerator::ReadFromFile(GameObject* gameObject, std::string basePath, std::string filename)
+{
+    using namespace DirectX;
+
+    ModelLoader modelLoader;
+    modelLoader.Load(basePath, filename);
+
+    for (auto x : modelLoader.meshes)
+    {
+        gameObject->meshes.push_back(std::make_shared<Mesh>(x));
+    }
+
+    // Normalize vertices
+    Vector3 vmin(1000, 1000, 1000);
+    Vector3 vmax(-1000, -1000, -1000);
+    for (auto& mesh : gameObject->meshes) {
+        for (auto& v : mesh->vertices) {
+            vmin.x = XMMin(vmin.x, v.position.x);
+            vmin.y = XMMin(vmin.y, v.position.y);
+            vmin.z = XMMin(vmin.z, v.position.z);
+            vmax.x = XMMax(vmax.x, v.position.x);
+            vmax.y = XMMax(vmax.y, v.position.y);
+            vmax.z = XMMax(vmax.z, v.position.z);
+        }
+    }
+
+    float dx = vmax.x - vmin.x, dy = vmax.y - vmin.y, dz = vmax.z - vmin.z;
+    float dl = XMMax(XMMax(dx, dy), dz);
+    float cx = (vmax.x + vmin.x) * 0.5f, cy = (vmax.y + vmin.y) * 0.5f,
+        cz = (vmax.z + vmin.z) * 0.5f;
+
+    for (auto& mesh : gameObject->meshes) {
+        for (auto& v : mesh->vertices) {
+            v.position.x = (v.position.x - cx) / dl;
+            v.position.y = (v.position.y - cy) / dl;
+            v.position.z = (v.position.z - cz) / dl;
+        }
+    }
+
+    return gameObject;
+}

@@ -171,24 +171,29 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		context->OMSetDepthStencilState(Direct3D::GetInstance().depthStencilState.Get(), 0);
 
 		context->VSSetShader(manager->phongShader->vertexShader.Get(), 0, 0);
-		context->VSSetConstantBuffers(0, 1, model->phongShader->vertexConstantBuffer.GetAddressOf());
-
-		context->PSSetShaderResources(0, 1, model->textureResourceView.GetAddressOf());
 		context->PSSetSamplers(0, 1, &manager->phongShader->sampleState);
-		context->PSSetConstantBuffers(0, 1, model->phongShader->pixelConstantBuffer.GetAddressOf());
-		context->PSSetShader(manager->phongShader->pixelShader.Get(), NULL, 0);
-		
-		if(gui->m_drawAsWire)
+
+		if (gui->m_drawAsWire)
 			context->RSSetState(Direct3D::GetInstance().wireRasterizerSate.Get());
-		else 
+		else
 			context->RSSetState(Direct3D::GetInstance().solidRasterizerSate.Get());
 
-		context->IASetInputLayout(manager->phongShader->layout.Get());
-		context->IASetVertexBuffers(0, 1, model->vertexBuffer.GetAddressOf(), &stride, &offset);
-		context->IASetIndexBuffer(model->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-		context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		context->VSSetConstantBuffers(0, 1, model->phongShader->vertexConstantBuffer.GetAddressOf());
 
-		context->DrawIndexed(model->GetIndexCount(), 0, 0);
+		for (const auto& mesh : model->meshes)
+		{
+			context->PSSetShaderResources(0, 1, mesh->textureResourceView.GetAddressOf());
+
+			context->PSSetConstantBuffers(0, 1, model->phongShader->pixelConstantBuffer.GetAddressOf());
+			context->PSSetShader(manager->phongShader->pixelShader.Get(), NULL, 0);
+
+			context->IASetInputLayout(manager->phongShader->layout.Get());
+			context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(), &stride, &offset);
+			context->IASetIndexBuffer(mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+			context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+			context->DrawIndexed(model->GetIndexCount(), 0, 0);
+		}
 	}
 
 	return EnumBehaviorTreeStatus::eSuccess;

@@ -34,6 +34,7 @@ namespace Engine
 	using DirectX::SimpleMath::Vector2;
 	using DirectX::SimpleMath::Vector3;
 	using DirectX::SimpleMath::Vector4;
+	using Microsoft::WRL::ComPtr;
 
 	struct Vertex {
 		Vector3 position;
@@ -55,8 +56,14 @@ namespace Engine
 		std::string name;
 		int boneIndex;
 		std::string materialName;
+		std::string textureFilename;
 		std::vector<Vertex> vertices;
 		std::vector<int> indices;
+
+		ComPtr<ID3D11Texture2D> texture;
+		ComPtr<ID3D11ShaderResourceView> textureResourceView;
+		ComPtr<ID3D11Buffer> vertexBuffer;
+		ComPtr<ID3D11Buffer> indexBuffer;
 	};
 
 	struct KeyframeData

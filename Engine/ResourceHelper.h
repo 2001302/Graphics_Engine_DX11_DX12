@@ -18,7 +18,8 @@ namespace Engine
 		ResourceHelper() {};
 		~ResourceHelper() {};
 
-		static GameObject* CreateTexture(GameObject* gameObject, const std::string filename);
+		static void CreateTexture(const std::string filename, ComPtr<ID3D11Texture2D>& texture,
+			ComPtr<ID3D11ShaderResourceView>& textureResourceView);
 		static GameObject* ImportModel(GameObject* gameObject, const char* filename);
 		static void ReadModelData(GameObject* gameObject, const aiScene* scene, aiNode* node, int index, int parent);
 		static void ReadMeshData(GameObject* gameObject, const aiScene* scene, aiNode* node, int bone);

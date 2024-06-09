@@ -23,11 +23,6 @@ namespace Engine
 		std::vector<std::shared_ptr<Mesh>> meshes;
 		std::shared_ptr<Animation> animation;
 
-		ComPtr<ID3D11Texture2D> texture;
-		ComPtr<ID3D11ShaderResourceView> textureResourceView;
-		ComPtr<ID3D11Buffer> vertexBuffer;
-		ComPtr<ID3D11Buffer> indexBuffer;
-
 		std::shared_ptr<PhongShaderSource> phongShader;
 	};
 }

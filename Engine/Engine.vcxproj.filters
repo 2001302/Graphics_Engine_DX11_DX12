@@ -79,6 +79,9 @@
     <ClInclude Include="GeometryGenerator.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="ModelLoader.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -140,6 +143,9 @@
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
     <ClCompile Include="GeometryGenerator.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="ModelLoader.cpp">
       <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>

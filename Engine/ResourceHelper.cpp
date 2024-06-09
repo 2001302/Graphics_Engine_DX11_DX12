@@ -5,7 +5,8 @@
 
 using namespace Engine;
 
-GameObject* ResourceHelper::CreateTexture(GameObject* gameObject, const std::string filename)
+void ResourceHelper::CreateTexture(const std::string filename, ComPtr<ID3D11Texture2D>& texture,
+	ComPtr<ID3D11ShaderResourceView>& textureResourceView)
 {
 	int width, height, channels;
 
@@ -44,11 +45,9 @@ GameObject* ResourceHelper::CreateTexture(GameObject* gameObject, const std::str
 	// TODO: You should really consider using a COM smart-pointer like
 	// Microsoft::WRL::ComPtr instead
 
-	Direct3D::GetInstance().GetDevice()->CreateTexture2D(&txtDesc, &InitData, gameObject->texture.GetAddressOf());
-	Direct3D::GetInstance().GetDevice()->CreateShaderResourceView(gameObject->texture.Get(), nullptr,
-		gameObject->textureResourceView.GetAddressOf());
-
-	return gameObject;
+	Direct3D::GetInstance().GetDevice()->CreateTexture2D(&txtDesc, &InitData, texture.GetAddressOf());
+	Direct3D::GetInstance().GetDevice()->CreateShaderResourceView(texture.Get(), nullptr,
+		textureResourceView.GetAddressOf());
 }
 
 GameObject* ResourceHelper::ImportModel(Engine::GameObject* gameObject, const char* filename)

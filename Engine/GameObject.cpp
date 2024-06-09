@@ -15,28 +15,6 @@ GameObject::GameObject(const GameObject& other)
 
 GameObject::~GameObject()
 {		
-	// Release the texture object.
-	if (texture)
-	{
-		texture->Release();
-	}
-
-	if (textureResourceView)
-	{
-		textureResourceView->Release();
-	}
-
-	// Shutdown the vertex and index buffers.	
-	if (indexBuffer)
-	{
-		indexBuffer->Release();
-	}
-
-	// Release the vertex buffer.
-	if (vertexBuffer)
-	{
-		vertexBuffer->Release();
-	}
 }
 
 int GameObject::GetIndexCount()

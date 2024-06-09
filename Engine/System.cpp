@@ -282,7 +282,7 @@ LRESULT CALLBACK System::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPA
 }
 
 bool System::OnModelLoadRequest()
-{
+{	
 	auto ToString = [](LPWSTR lpwstr) -> std::string
 		{
 			if (!lpwstr)
@@ -315,47 +315,48 @@ bool System::OnModelLoadRequest()
 	//show file explorer
 	if (GetOpenFileName(&ofn))
 	{
-		std::vector<std::string> modelFile;
-		std::vector<DirectX::SimpleMath::Matrix> matrix;
+		m_application->GetManager()->models.push_back(new GameObject());
+		auto model = m_application->GetManager()->models.back();
 
-		modelFile.push_back(ToString(ofn.lpstrFile));
-		matrix.push_back(DirectX::SimpleMath::Matrix());
+		std::string fullPath = ToString(ofn.lpstrFile);
+		size_t lastSlash = fullPath.find_last_of('\\');
+		std::string fileName = fullPath.substr(lastSlash + 1);
+		std::string directoryPath = fullPath.substr(0, lastSlash) +"\\";
 
-		for (int i = 0; i < modelFile.size(); i++)
+		model = GeometryGenerator::ReadFromFile(model, directoryPath, fileName);
+
+		//create constant buffer(Phong Shader)
+		model->phongShader = std::make_shared<PhongShaderSource>();
+		model->phongShader->vertexConstantBufferData.model = DirectX::SimpleMath::Matrix();
+		model->phongShader->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
+		model->phongShader->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
+
+		m_application->GetManager()->phongShader->CreateConstantBuffer(model->phongShader->vertexConstantBufferData,
+			model->phongShader->vertexConstantBuffer);
+		m_application->GetManager()->phongShader->CreateConstantBuffer(model->phongShader->pixelConstantBufferData,
+			model->phongShader->pixelConstantBuffer);
+
+		model->transform = DirectX::SimpleMath::Matrix();
+
+		for (const auto& meshData : model->meshes)
 		{
-			m_application->GetManager()->models.push_back(new GameObject());
-
-			auto model = m_application->GetManager()->models.back();
-
-			ResourceHelper::ImportModel(model, modelFile[i].c_str());
-			ResourceHelper::CreateTexture(model, "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\red_Base_Color.png");
-
-			std::vector<Vertex> vertices;
-			std::vector<int> indices;
-
-			for (auto mesh : model->meshes)
-			{
-				vertices.insert(vertices.end(), mesh->vertices.begin(), mesh->vertices.end());
-				indices.insert(indices.end(), mesh->indices.begin(), mesh->indices.end());
-			}
-
 			{
 				D3D11_BUFFER_DESC bufferDesc;
 				ZeroMemory(&bufferDesc, sizeof(bufferDesc));
 				bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-				bufferDesc.ByteWidth = sizeof(Engine::Vertex) * vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
+				bufferDesc.ByteWidth = sizeof(Engine::Vertex) * meshData->vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
 				bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 				bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
 				bufferDesc.StructureByteStride = sizeof(Engine::Vertex);
 				bufferDesc.MiscFlags = 0;
 
 				D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
-				vertexBufferData.pSysMem = vertices.data();
+				vertexBufferData.pSysMem = meshData->vertices.data();
 				vertexBufferData.SysMemPitch = 0;
 				vertexBufferData.SysMemSlicePitch = 0;
 
 				const HRESULT hr =
-					Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &model->vertexBuffer);
+					Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &meshData->vertexBuffer);
 				if (FAILED(hr)) {
 					std::cout << "CreateBuffer() failed. " << std::hex << hr << std::endl;
 				};
@@ -363,33 +364,28 @@ bool System::OnModelLoadRequest()
 			{
 				D3D11_BUFFER_DESC bufferDesc;
 				bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-				bufferDesc.ByteWidth = sizeof(unsigned long) * indices.size();
+				bufferDesc.ByteWidth = sizeof(unsigned long) * meshData->indices.size();
 				bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 				bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
 				bufferDesc.StructureByteStride = sizeof(int);
 				bufferDesc.MiscFlags = 0;
 
 				D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-				indexBufferData.pSysMem = indices.data();
+				indexBufferData.pSysMem = meshData->indices.data();
 				indexBufferData.SysMemPitch = 0;
 				indexBufferData.SysMemSlicePitch = 0;
 
-				Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &model->indexBuffer);
+				Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &meshData->indexBuffer);
 			}
 
-			//create constant buffer(Phong Shader)
-			model->phongShader = std::make_shared<PhongShaderSource>();
-			model->phongShader->vertexConstantBufferData.model = DirectX::SimpleMath::Matrix();
-			model->phongShader->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
-			model->phongShader->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
+			if (!meshData->textureFilename.empty()) {
 
-			m_application->GetManager()->phongShader->CreateConstantBuffer(model->phongShader->vertexConstantBufferData,
-				model->phongShader->vertexConstantBuffer);
-			m_application->GetManager()->phongShader->CreateConstantBuffer(model->phongShader->pixelConstantBufferData,
-				model->phongShader->pixelConstantBuffer);
+				std::cout << meshData->textureFilename << std::endl;
 
-			model->transform = matrix[i];
+				ResourceHelper::CreateTexture(meshData->textureFilename, meshData->texture, meshData->textureResourceView);
+			}
 		}
+
 	}
 	else
 	{
@@ -467,61 +463,53 @@ bool System::OnMouseWheelRequest()
 
 bool System::OnSphereLoadRequest()
 {
-	std::vector<DirectX::SimpleMath::Matrix> matrix;
-	matrix.push_back(DirectX::SimpleMath::Matrix());
-
 	m_application->GetManager()->models.push_back(new GameObject());
 
 	auto model = m_application->GetManager()->models.back();
 
 	GeometryGenerator::MakeSphere(model, 1.5f, 15, 13);
-	ResourceHelper::CreateTexture(model, "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\ojwD8.jpg");
-
-	std::vector<Vertex> vertices;
-	std::vector<int> indices;
 
 	for (auto mesh : model->meshes)
 	{
-		vertices.insert(vertices.end(), mesh->vertices.begin(), mesh->vertices.end());
-		indices.insert(indices.end(), mesh->indices.begin(), mesh->indices.end());
-	}
+		ResourceHelper::CreateTexture("C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\ojwD8.jpg", mesh->texture, mesh->textureResourceView);
 
-	{
-		D3D11_BUFFER_DESC bufferDesc;
-		ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-		bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-		bufferDesc.ByteWidth = sizeof(Engine::Vertex) * vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
-		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-		bufferDesc.StructureByteStride = sizeof(Engine::Vertex);
-		bufferDesc.MiscFlags = 0;
+		{
+			D3D11_BUFFER_DESC bufferDesc;
+			ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+			bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+			bufferDesc.ByteWidth = sizeof(Engine::Vertex) * mesh->vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
+			bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+			bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+			bufferDesc.StructureByteStride = sizeof(Engine::Vertex);
+			bufferDesc.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
-		vertexBufferData.pSysMem = vertices.data();
-		vertexBufferData.SysMemPitch = 0;
-		vertexBufferData.SysMemSlicePitch = 0;
+			D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
+			vertexBufferData.pSysMem = mesh->vertices.data();
+			vertexBufferData.SysMemPitch = 0;
+			vertexBufferData.SysMemSlicePitch = 0;
 
-		const HRESULT hr =
-			Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &model->vertexBuffer);
-		if (FAILED(hr)) {
-			std::cout << "CreateBuffer() failed. " << std::hex << hr << std::endl;
-		};
-	}
-	{
-		D3D11_BUFFER_DESC bufferDesc;
-		bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-		bufferDesc.ByteWidth = sizeof(unsigned long) * indices.size();
-		bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-		bufferDesc.StructureByteStride = sizeof(int);
-		bufferDesc.MiscFlags = 0;
+			const HRESULT hr =
+				Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+			if (FAILED(hr)) {
+				std::cout << "CreateBuffer() failed. " << std::hex << hr << std::endl;
+			};
+		}
+		{
+			D3D11_BUFFER_DESC bufferDesc;
+			bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+			bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
+			bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+			bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+			bufferDesc.StructureByteStride = sizeof(int);
+			bufferDesc.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-		indexBufferData.pSysMem = indices.data();
-		indexBufferData.SysMemPitch = 0;
-		indexBufferData.SysMemSlicePitch = 0;
+			D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+			indexBufferData.pSysMem = mesh->indices.data();
+			indexBufferData.SysMemPitch = 0;
+			indexBufferData.SysMemSlicePitch = 0;
 
-		Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &model->indexBuffer);
+			Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &mesh->indexBuffer);
+		}
 	}
 
 	//create constant buffer(Phong Shader)
@@ -535,68 +523,60 @@ bool System::OnSphereLoadRequest()
 	m_application->GetManager()->phongShader->CreateConstantBuffer(model->phongShader->pixelConstantBufferData,
 		model->phongShader->pixelConstantBuffer);
 
-	model->transform = matrix.front();
+	model->transform = DirectX::SimpleMath::Matrix();
 	
 	return true;
 }
 
 bool System::OnBoxLoadRequest()
 {
-	std::vector<DirectX::SimpleMath::Matrix> matrix;
-	matrix.push_back(DirectX::SimpleMath::Matrix());
-
 	m_application->GetManager()->models.push_back(new GameObject());
 
 	auto model = m_application->GetManager()->models.back();
 
 	GeometryGenerator::MakeBox(model);
-	ResourceHelper::CreateTexture(model, "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\crate2_diffuse.png");
-
-	std::vector<Vertex> vertices;
-	std::vector<int> indices;
 
 	for (auto mesh : model->meshes)
 	{
-		vertices.insert(vertices.end(), mesh->vertices.begin(), mesh->vertices.end());
-		indices.insert(indices.end(), mesh->indices.begin(), mesh->indices.end());
-	}
+		ResourceHelper::CreateTexture("C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\crate2_diffuse.png", mesh->texture	, mesh->textureResourceView);
 
-	{
-		D3D11_BUFFER_DESC bufferDesc;
-		ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-		bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-		bufferDesc.ByteWidth = sizeof(Engine::Vertex) * vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
-		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-		bufferDesc.StructureByteStride = sizeof(Engine::Vertex);
-		bufferDesc.MiscFlags = 0;
+		{
+			D3D11_BUFFER_DESC bufferDesc;
+			ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+			bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+			bufferDesc.ByteWidth = sizeof(Engine::Vertex) * mesh->vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
+			bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+			bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+			bufferDesc.StructureByteStride = sizeof(Engine::Vertex);
+			bufferDesc.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
-		vertexBufferData.pSysMem = vertices.data();
-		vertexBufferData.SysMemPitch = 0;
-		vertexBufferData.SysMemSlicePitch = 0;
+			D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
+			vertexBufferData.pSysMem = mesh->vertices.data();
+			vertexBufferData.SysMemPitch = 0;
+			vertexBufferData.SysMemSlicePitch = 0;
 
-		const HRESULT hr =
-			Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &model->vertexBuffer);
-		if (FAILED(hr)) {
-			std::cout << "CreateBuffer() failed. " << std::hex << hr << std::endl;
-		};
-	}
-	{
-		D3D11_BUFFER_DESC bufferDesc;
-		bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-		bufferDesc.ByteWidth = sizeof(unsigned long) * indices.size();
-		bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-		bufferDesc.StructureByteStride = sizeof(int);
-		bufferDesc.MiscFlags = 0;
+			const HRESULT hr =
+				Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+			if (FAILED(hr)) {
+				std::cout << "CreateBuffer() failed. " << std::hex << hr << std::endl;
+			};
+		}
+		{
+			D3D11_BUFFER_DESC bufferDesc;
+			bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+			bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
+			bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+			bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+			bufferDesc.StructureByteStride = sizeof(int);
+			bufferDesc.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-		indexBufferData.pSysMem = indices.data();
-		indexBufferData.SysMemPitch = 0;
-		indexBufferData.SysMemSlicePitch = 0;
+			D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+			indexBufferData.pSysMem = mesh->indices.data();
+			indexBufferData.SysMemPitch = 0;
+			indexBufferData.SysMemSlicePitch = 0;
 
-		Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &model->indexBuffer);
+			Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &mesh->indexBuffer);
+		}
 	}
 
 	//create constant buffer(Phong Shader)
@@ -610,68 +590,61 @@ bool System::OnBoxLoadRequest()
 	m_application->GetManager()->phongShader->CreateConstantBuffer(model->phongShader->pixelConstantBufferData,
 		model->phongShader->pixelConstantBuffer);
 
-	model->transform = matrix.front();
+	model->transform = DirectX::SimpleMath::Matrix();
 
 	return true;
 }
 
 bool System::OnCylinderLoadRequest()
 {
-	std::vector<DirectX::SimpleMath::Matrix> matrix;
-	matrix.push_back(DirectX::SimpleMath::Matrix());
-
 	m_application->GetManager()->models.push_back(new GameObject());
 
 	auto model = m_application->GetManager()->models.back();
 
 	GeometryGenerator::MakeCylinder(model,5.0f, 5.0f, 15.0f, 30);
-	ResourceHelper::CreateTexture(model, "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\wall.jpg");
-
-	std::vector<Vertex> vertices;
-	std::vector<int> indices;
-
+	
 	for (auto mesh : model->meshes)
 	{
-		vertices.insert(vertices.end(), mesh->vertices.begin(), mesh->vertices.end());
-		indices.insert(indices.end(), mesh->indices.begin(), mesh->indices.end());
-	}
+		ResourceHelper::CreateTexture("C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\wall.jpg",mesh->texture, mesh->textureResourceView);
 
-	{
-		D3D11_BUFFER_DESC bufferDesc;
-		ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-		bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-		bufferDesc.ByteWidth = sizeof(Engine::Vertex) * vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
-		bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-		bufferDesc.StructureByteStride = sizeof(Engine::Vertex);
-		bufferDesc.MiscFlags = 0;
+		{
+			D3D11_BUFFER_DESC bufferDesc;
+			ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+			bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+			bufferDesc.ByteWidth = sizeof(Engine::Vertex) * mesh->vertices.size(); //UINT(sizeof(T_VERTEX) * vertices.size());
+			bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+			bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+			bufferDesc.StructureByteStride = sizeof(Engine::Vertex);
+			bufferDesc.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
-		vertexBufferData.pSysMem = vertices.data();
-		vertexBufferData.SysMemPitch = 0;
-		vertexBufferData.SysMemSlicePitch = 0;
+			D3D11_SUBRESOURCE_DATA vertexBufferData = { 0 }; // MS 예제에서 초기화하는 방식
+			vertexBufferData.pSysMem = mesh->vertices.data();
+			vertexBufferData.SysMemPitch = 0;
+			vertexBufferData.SysMemSlicePitch = 0;
 
-		const HRESULT hr =
-			Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &model->vertexBuffer);
-		if (FAILED(hr)) {
-			std::cout << "CreateBuffer() failed. " << std::hex << hr << std::endl;
-		};
-	}
-	{
-		D3D11_BUFFER_DESC bufferDesc;
-		bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-		bufferDesc.ByteWidth = sizeof(unsigned long) * indices.size();
-		bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-		bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-		bufferDesc.StructureByteStride = sizeof(int);
-		bufferDesc.MiscFlags = 0;
+			const HRESULT hr =
+				Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+			if (FAILED(hr)) {
+				std::cout << "CreateBuffer() failed. " << std::hex << hr << std::endl;
+			};
+		}
+		{
+			D3D11_BUFFER_DESC bufferDesc;
+			bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+			bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
+			bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+			bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+			bufferDesc.StructureByteStride = sizeof(int);
+			bufferDesc.MiscFlags = 0;
 
-		D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
-		indexBufferData.pSysMem = indices.data();
-		indexBufferData.SysMemPitch = 0;
-		indexBufferData.SysMemSlicePitch = 0;
+			D3D11_SUBRESOURCE_DATA indexBufferData = { 0 };
+			indexBufferData.pSysMem = mesh->indices.data();
+			indexBufferData.SysMemPitch = 0;
+			indexBufferData.SysMemSlicePitch = 0;
 
-		Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &model->indexBuffer);
+			Direct3D::GetInstance().GetDevice()->CreateBuffer(&bufferDesc, &indexBufferData, &mesh->indexBuffer);
+		}
+
 	}
 
 	//create constant buffer(Phong Shader)
@@ -685,7 +658,7 @@ bool System::OnCylinderLoadRequest()
 	m_application->GetManager()->phongShader->CreateConstantBuffer(model->phongShader->pixelConstantBufferData,
 		model->phongShader->pixelConstantBuffer);
 
-	model->transform = matrix.front();
+	model->transform = DirectX::SimpleMath::Matrix();
 
 	return true;
 }

@@ -46,6 +46,7 @@ namespace Engine
 		int parent;
 		DirectX::XMMATRIX transform;
 	};
+
 	struct Mesh
 	{
 		std::string name;
@@ -62,12 +63,14 @@ namespace Engine
 		DirectX::XMVECTOR rotation;
 		DirectX::XMVECTOR translation;
 	};
+
 	//a frame of animation
 	struct Keyframe
 	{
 		std::string boneName;
 		std::vector<KeyframeData> transforms;
 	};
+
 	//contains information on how the joints change in each frame.
 	struct Animation
 	{
@@ -77,6 +80,7 @@ namespace Engine
 		float duration;
 		std::vector<Keyframe> keyframes;// 매 프레임마다 어떠한 정보로 틀어주면 되는지
 	};
+
 	//for cache
 	struct AnimationNode
 	{

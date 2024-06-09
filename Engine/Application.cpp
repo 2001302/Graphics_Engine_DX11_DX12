@@ -97,6 +97,7 @@ void Application::Shutdown()
 			model = 0;
 		}
 
+		m_manager->PhongShader.reset();
 		m_manager->LightShader.reset();
 		m_manager->Camera.reset();
 	}

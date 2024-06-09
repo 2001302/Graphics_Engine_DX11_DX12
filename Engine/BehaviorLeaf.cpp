@@ -217,62 +217,72 @@ EnumBehaviorTreeStatus RenderGameObjectsWithPhong::Invoke()
 
 	for (auto& model : manager->Models)
 	{
-		/*
-	    // 모델의 변환
-		m_vertexConstantBufferData.model =
-        Matrix::CreateScale(m_modelScaling) *
-        Matrix::CreateRotationX(m_modelRotation.x) *
-        Matrix::CreateRotationY(m_modelRotation.y) *
-        Matrix::CreateRotationZ(m_modelRotation.z) *
-        Matrix::CreateTranslation(m_modelTranslation);
-		*/
+		//model
+		{
+			model->vertexPhongConstantBufferData.model = Matrix::CreateScale(gui->m_modelScaling) *
+				Matrix::CreateRotationX(gui->m_modelRotation.x) *
+				Matrix::CreateRotationY(gui->m_modelRotation.y) *
+				Matrix::CreateRotationZ(gui->m_modelRotation.z) *
+				Matrix::CreateTranslation(gui->m_modelTranslation);
 
-		// Transpose the matrices to prepare them for the shader.
-		auto modelMatrix = model->transform.Transpose();
-		auto viewMatrix = manager->Camera->view.Transpose();
-
-		// Copy the matrices into the constant buffer.
-		model->vertexPhongConstantBufferData.model = modelMatrix;
-		model->vertexPhongConstantBufferData.view = viewMatrix;
-
-		model->vertexPhongConstantBufferData.invTranspose = model->vertexPhongConstantBufferData.model;
-		model->vertexPhongConstantBufferData.invTranspose.Translation(Vector3(0.0f));
-		model->vertexPhongConstantBufferData.invTranspose = model->vertexPhongConstantBufferData.invTranspose.Transpose().Invert();
-
-		const float aspect = env->aspect;
-		if (gui->m_usePerspectiveProjection) {
-			model->vertexPhongConstantBufferData.projection = XMMatrixPerspectiveFovLH(
-				XMConvertToRadians(gui->m_projFovAngleY), aspect, gui->m_nearZ, gui->m_farZ);
+			model->vertexPhongConstantBufferData.model = model->vertexPhongConstantBufferData.model.Transpose();
 		}
-		else {
-			model->vertexPhongConstantBufferData.projection = XMMatrixOrthographicOffCenterLH(
-				-aspect, aspect, -1.0f, 1.0f, gui->m_nearZ, gui->m_farZ);
+		//view
+		{
+			model->vertexPhongConstantBufferData.view = manager->Camera->view.Transpose();
 		}
-		model->vertexPhongConstantBufferData.projection = model->vertexPhongConstantBufferData.projection.Transpose();
-
+		//inverse transpose
+		{
+			model->vertexPhongConstantBufferData.invTranspose = model->vertexPhongConstantBufferData.model;
+			model->vertexPhongConstantBufferData.invTranspose.Translation(Vector3(0.0f));
+			model->vertexPhongConstantBufferData.invTranspose = model->vertexPhongConstantBufferData.invTranspose.Transpose().Invert();
+		}
+		//projection
+		{
+			const float aspect = env->aspect;
+			if (gui->m_usePerspectiveProjection) {
+				model->vertexPhongConstantBufferData.projection = XMMatrixPerspectiveFovLH(
+					XMConvertToRadians(gui->m_projFovAngleY), aspect, gui->m_nearZ, gui->m_farZ);
+			}
+			else {
+				model->vertexPhongConstantBufferData.projection = XMMatrixOrthographicOffCenterLH(
+					-aspect, aspect, -1.0f, 1.0f, gui->m_nearZ, gui->m_farZ);
+			}
+			model->vertexPhongConstantBufferData.projection = model->vertexPhongConstantBufferData.projection.Transpose();
+		}
+		
 		manager->PhongShader->UpdateBuffer(model->vertexPhongConstantBufferData, model->vertexConstantBuffer);
 
-		model->pixelPhongConstantBufferData.eyeWorld = Vector3::Transform(
-			Vector3(0.0f), model->vertexPhongConstantBufferData.view.Invert());
-
-		// Copy the lighting variables into the constant buffer.
-		model->pixelPhongConstantBufferData.material.diffuse = Vector3(gui->m_materialDiffuse);
-		model->pixelPhongConstantBufferData.material.specular = Vector3(gui->m_materialSpecular);
-		model->pixelPhongConstantBufferData.material.shininess = gui->m_shininess;
+		//eye
+		{
+			model->pixelPhongConstantBufferData.eyeWorld = Vector3::Transform(
+				Vector3(0.0f), model->vertexPhongConstantBufferData.view.Invert());
+		}
+		//material
+		{
+			model->pixelPhongConstantBufferData.material.diffuse = Vector3(gui->m_materialDiffuse);
+			model->pixelPhongConstantBufferData.material.specular = Vector3(gui->m_materialSpecular);
+			model->pixelPhongConstantBufferData.material.shininess = gui->m_shininess;
+		}
+		//light
+		{
+			for (int i = 0; i < MAX_LIGHTS; i++) 
+			{
+				if (i != gui->m_lightType) 
+				{
+					model->pixelPhongConstantBufferData.lights[i].strength *= 0.0f;
+				}
+				else 
+				{	
+					//turn off another light
+					model->pixelPhongConstantBufferData.lights[i] = gui->m_lightFromGUI;
+				}
+			}
+		}
 
 		model->pixelPhongConstantBufferData.useTexture = gui->m_useTexture;
 		model->pixelPhongConstantBufferData.useBlinnPhong = gui->m_useBlinnPhong;
 
-		// 여러 개 조명 사용 예시
-		for (int i = 0; i < MAX_LIGHTS; i++) {
-			// 다른 조명 끄기
-			if (i != gui->m_lightType) {
-				model->pixelPhongConstantBufferData.lights[i].strength *= 0.0f;
-			}
-			else {
-				model->pixelPhongConstantBufferData.lights[i] = gui->m_lightFromGUI;
-			}
-		}
 		manager->PhongShader->UpdateBuffer(model->pixelPhongConstantBufferData, model->pixelConstantBuffer);
 
 		// RS: Rasterizer stage

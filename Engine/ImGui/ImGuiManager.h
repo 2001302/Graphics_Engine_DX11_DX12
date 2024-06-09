@@ -18,15 +18,15 @@ namespace Engine
 		bool Render(HWND mainWindow);
 		void Shutdown();
 
-		bool m_phongShader = false;
 		float m_shininess = 1.0f;
+		bool m_drawAsWire = false;
 		bool m_useBlinnPhong = false;
 		bool m_useTexture = false;
 
 		bool m_usePerspectiveProjection = true;
 		DirectX::SimpleMath::Vector3 m_modelTranslation = DirectX::SimpleMath::Vector3(0.0f);
 		DirectX::SimpleMath::Vector3 m_modelRotation = DirectX::SimpleMath::Vector3(0.0f);
-		DirectX::SimpleMath::Vector3 m_modelScaling = DirectX::SimpleMath::Vector3(0.5f);
+		DirectX::SimpleMath::Vector3 m_modelScaling = DirectX::SimpleMath::Vector3(1.0f);
 		float m_viewRot = 0.0f;
 
 		float m_projFovAngleY = 70.0f;

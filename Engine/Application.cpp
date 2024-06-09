@@ -24,7 +24,6 @@ bool Application::Initialize(int screenWidth, int screenHeight)
 	tree->Build(dataBlock)
 			->Sequence()
 				->Excute(std::make_shared<InitializeCamera>())
-				->Excute(std::make_shared<InitializeLightShader>(m_mainWindow))
 				->Excute(std::make_shared<InitializePhongShader>(m_mainWindow))
 			->Close();
 
@@ -55,7 +54,6 @@ bool Application::Render()
 	tree->Build(dataBlock)
 			->Sequence()
 				->Excute(std::make_shared<RenderGameObjects>())
-				->Excute(std::make_shared<RenderGameObjectsWithPhong>())
 			->Close();
 	
 	tree->Run();

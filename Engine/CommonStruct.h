@@ -88,21 +88,6 @@ namespace Engine
 		std::vector<KeyframeData> keyframe;
 	};
 
-	struct MatrixBufferType
-	{
-		Matrix world;
-		Matrix view;
-		Matrix projection;
-	};
-
-	struct LightBufferType
-	{
-		Vector4 ambientColor;
-		Vector4 diffuseColor;
-		Vector3 lightDirection;
-		float padding;
-	};
-
 	struct Material {
 		Vector3 ambient = Vector3(0.1f);  // 12
 		float shininess = 1.0f;           // 4

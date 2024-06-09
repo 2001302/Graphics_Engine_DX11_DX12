@@ -13,12 +13,13 @@ namespace Engine
 	class Direct3D
 	{
 	private:
-		Direct3D() : m_vsync_enabled(false), m_swapChain(0), m_device(0), m_deviceContext(0) {}
-		Direct3D(const Direct3D& x) : m_vsync_enabled(x.m_vsync_enabled), m_swapChain(x.m_swapChain), m_device(x.m_device), m_deviceContext(x.m_deviceContext) {}
+		Direct3D() : m_vsync_enabled(false), m_swapChain(0), m_device(0), m_deviceContext(0), viewport(D3D11_VIEWPORT()) {}
+		Direct3D(const Direct3D& x) : m_vsync_enabled(x.m_vsync_enabled), m_swapChain(x.m_swapChain), m_device(x.m_device), m_deviceContext(x.m_deviceContext), viewport(x.viewport){}
 		Direct3D& operator=(const Direct3D& ref) {}
 		~Direct3D() {}
 
 		bool m_vsync_enabled;
+		UINT numQualityLevels = 0;
 
 		ComPtr<ID3D11Device> m_device;
 		ComPtr<IDXGISwapChain> m_swapChain;
@@ -45,7 +46,9 @@ namespace Engine
 		ComPtr<ID3D11Texture2D> depthStencilBuffer;
 		ComPtr<ID3D11DepthStencilState> depthStencilState;
 		ComPtr<ID3D11DepthStencilView> depthStencilView;
-		ComPtr<ID3D11RasterizerState> rasterState;
+
+		ComPtr<ID3D11RasterizerState> solidRasterizerSate;
+		ComPtr<ID3D11RasterizerState> wireRasterizerSate;
 
 		ID3D11RenderTargetView* renderTargetView;
 		D3D11_VIEWPORT viewport;

@@ -12,12 +12,6 @@
     <ContentFile>
       <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\PhongVertexShader.cso</FullPath>
     </ContentFile>
-    <ContentFile>
-      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\LightPixelShader.cso</FullPath>
-    </ContentFile>
-    <ContentFile>
-      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\LightVertexShader.cso</FullPath>
-    </ContentFile>
   </ContentFiles>
   <SatelliteDlls />
   <NonRecipeFileRefs />

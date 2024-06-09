@@ -10,15 +10,6 @@ namespace Engine
 		EnumBehaviorTreeStatus Invoke() override;
 	};
 
-	class InitializeLightShader : public ActionNode
-	{
-		EnumBehaviorTreeStatus Invoke() override;
-		HWND m_window;
-	public:
-		InitializeLightShader() { m_window = 0; };
-		InitializeLightShader(HWND hwnd) { m_window = hwnd; };
-	};
-
 	class InitializePhongShader : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;
@@ -29,11 +20,6 @@ namespace Engine
 	};
 
 	class RenderGameObjects : public ActionNode
-	{
-		EnumBehaviorTreeStatus Invoke() override;
-	};
-
-	class RenderGameObjectsWithPhong : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;
 	};

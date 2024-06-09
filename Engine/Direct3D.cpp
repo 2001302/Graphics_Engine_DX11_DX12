@@ -174,9 +174,23 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight)
 		rasterDesc.SlopeScaledDepthBias = 0.0f;
 
 		// Create the rasterizer state from the description we just filled out.
-		m_device->CreateRasterizerState(&rasterDesc, rasterState.GetAddressOf());
+		m_device->CreateRasterizerState(&rasterDesc, solidRasterizerSate.GetAddressOf());
 		// Now set the rasterizer state.
-		m_deviceContext->RSSetState(rasterState.Get());
+		m_deviceContext->RSSetState(solidRasterizerSate.Get());
+	}
+
+	{
+		// Create a rasterizer state
+		D3D11_RASTERIZER_DESC rastDescWire;
+		ZeroMemory(&rastDescWire, sizeof(D3D11_RASTERIZER_DESC)); // Need this
+		rastDescWire.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
+		// rastDescWire.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
+		rastDescWire.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
+		rastDescWire.FrontCounterClockwise = false;
+		rastDescWire.DepthClipEnable = true; // <- zNear, zFar 확인에 필요
+
+		m_device->CreateRasterizerState(&rastDescWire,
+			wireRasterizerSate.GetAddressOf());
 
 	}
 
@@ -227,9 +241,14 @@ void Direct3D::Shutdown()
 		m_swapChain->Release();
 	}
 
-	if (rasterState)
+	if (solidRasterizerSate)
 	{
-		rasterState->Release();
+		solidRasterizerSate->Release();
+	}
+
+	if (wireRasterizerSate)
+	{
+		wireRasterizerSate->Release();
 	}
 
 	if (depthStencilView)

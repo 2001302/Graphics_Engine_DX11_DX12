@@ -32,7 +32,7 @@ bool ImGuiManager::Prepare(Env* env)
 	ImGui_ImplWin32_NewFrame();
     //Frame
 	ImGui::NewFrame();
-    ImGui::Begin("Hello!");
+    ImGui::Begin("Engine");
     ImGui::SetWindowPos(ImVec2(0.0f, 0.0f));
     //Viewport
     Direct3D::GetInstance().SetViewPort(ImGui::GetWindowSize().x, 0.0f, (float)env->screenWidth - ImGui::GetWindowSize().x, (float)env->screenHeight);
@@ -42,13 +42,7 @@ bool ImGuiManager::Prepare(Env* env)
 
 bool ImGuiManager::Render(HWND mainWindow)
 {
-    //Custom UI
-    
-    // ImGui가 측정해주는 Framerate 출력
-    ImGui::Text("Average %.3f ms/frame (%.1f FPS)",
-        1000.0f / ImGui::GetIO().Framerate,
-        ImGui::GetIO().Framerate);
-
+    //Add Object
     if (ImGui::Button("Sphere")) {
         SendMessage(mainWindow, WM_SPHERE_LOAD, 0, 0);
     }
@@ -64,51 +58,67 @@ bool ImGuiManager::Render(HWND mainWindow)
     if (ImGui::Button("Search")) {
         SendMessage(mainWindow, WM_MODEL_LOAD, 0, 0);
     }
+    ImGui::Separator();
 
-    ImGui::Checkbox("Wire Frame", &m_drawAsWire);
-    ImGui::Checkbox("Use Texture", &m_useTexture);
-    ImGui::Checkbox("Use BlinnPhong",&m_useBlinnPhong);
+    //Framerate
+    ImGui::Text("Average %.3f ms/frame (%.1f FPS)",
+        1000.0f / ImGui::GetIO().Framerate,
+        ImGui::GetIO().Framerate);
+    ImGui::Separator();
 
-    ImGui::SliderFloat3("ModelTranslation", &m_modelTranslation.x, -2.0f, 2.0f);
-    ImGui::SliderFloat("ModelRotation", &m_modelRotation.y, -3.14f, 3.14f);
-    ImGui::SliderFloat3("ModelScaling", &m_modelScaling.x, 0.1f, 4.0f);
-    ImGui::SliderFloat("ViewRot", &m_viewRot, -3.14f, 3.14f);
-
-    ImGui::SliderFloat("Material Shininess", &m_shininess, 1.0f, 256.0f);
-
-    if (ImGui::RadioButton("Directional Light", m_lightType == 0)) {
-        m_lightType = 0;
+    ImGui::BeginTabBar("TabBar");
+    if (ImGui::BeginTabItem("Hierarchy"))
+    {
+        ImGui::EndTabItem();
     }
-    ImGui::SameLine();
-    if (ImGui::RadioButton("Point Light", m_lightType == 1)) {
-        m_lightType = 1;
+    if (ImGui::BeginTabItem("Inspector"))
+    {
+        ImGui::Checkbox("Wire Frame", &m_drawAsWire);
+        ImGui::Checkbox("Use Texture", &m_useTexture);
+        ImGui::Checkbox("Use BlinnPhong", &m_useBlinnPhong);
+
+        ImGui::Text("Transform");
+        ImGui::SliderFloat3("Translation", &m_modelTranslation.x, -2.0f, 2.0f);
+        ImGui::SliderFloat("Rotation", &m_modelRotation.y, -3.14f, 3.14f);
+        ImGui::SliderFloat3("Scaling", &m_modelScaling.x, 0.1f, 4.0f);
+
+        ImGui::Text("Material");
+        ImGui::SliderFloat("Shininess", &m_shininess, 1.0f, 256.0f);
+        ImGui::SliderFloat("Diffuse", &m_materialDiffuse, 0.0f, 1.0f);
+        ImGui::SliderFloat("Specular", &m_materialSpecular, 0.0f, 1.0f);
+
+        ImGui::EndTabItem();
     }
-    ImGui::SameLine();
-    if (ImGui::RadioButton("Spot Light", m_lightType == 2)) {
-        m_lightType = 2;
+    if (ImGui::BeginTabItem("Light"))
+    {
+        if (ImGui::RadioButton("Directional Light", m_lightType == 0)) {
+            m_lightType = 0;
+        }
+        ImGui::SameLine();
+        if (ImGui::RadioButton("Point Light", m_lightType == 1)) {
+            m_lightType = 1;
+        }
+        ImGui::SameLine();
+        if (ImGui::RadioButton("Spot Light", m_lightType == 2)) {
+            m_lightType = 2;
+        }
+
+        ImGui::SliderFloat3("Position", &m_lightFromGUI.position.x, -5.0f, 5.0f);
+        ImGui::SliderFloat("Fall Off Start", &m_lightFromGUI.fallOffStart, 0.0f, 5.0f);
+        ImGui::SliderFloat("Fall Of fEnd", &m_lightFromGUI.fallOffEnd, 0.0f, 10.0f);
+        ImGui::SliderFloat("Spot Power", &m_lightFromGUI.spotPower, 1.0f, 512.0f);
+
+        ImGui::EndTabItem();
     }
 
-    ImGui::SliderFloat("Material Diffuse", &m_materialDiffuse, 0.0f, 1.0f);
-    ImGui::SliderFloat("Material Specular", &m_materialSpecular, 0.0f, 1.0f);
+    ImGui::EndTabBar();
 
-    ImGui::SliderFloat3("Light Position", &m_lightFromGUI.position.x, -5.0f,
-        5.0f);
-
-    ImGui::SliderFloat("Light fallOffStart", &m_lightFromGUI.fallOffStart, 0.0f,
-        5.0f);
-
-    ImGui::SliderFloat("Light fallOffEnd", &m_lightFromGUI.fallOffEnd, 0.0f,
-        10.0f);
-
-    ImGui::SliderFloat("Light spotPower", &m_lightFromGUI.spotPower, 1.0f,
-        512.0f);
-
-	//Rendering
+    //Rendering
     ImGui::End();
-	ImGui::Render();
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+    ImGui::Render();
+    ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-	return true;
+    return true;
 }
 
 void ImGuiManager::SetupImGuiStyle(bool styleDark, float alpha)
@@ -155,6 +165,8 @@ void ImGuiManager::SetupImGuiStyle(bool styleDark, float alpha)
     style.Colors[ImGuiCol_PlotHistogram] = ImVec4(0.90f, 0.70f, 0.00f, 1.00f);
     style.Colors[ImGuiCol_PlotHistogramHovered] = ImVec4(1.00f, 0.60f, 0.00f, 1.00f);
     style.Colors[ImGuiCol_TextSelectedBg] = ImVec4(0.26f, 0.59f, 0.98f, 0.35f);
+    style.Colors[ImGuiCol_Tab] = ImVec4(0.26f, 0.59f, 0.98f, 0.95f);
+    style.Colors[ImGuiCol_TabActive] = ImVec4(1.0f, 0.5f, 0.0f, 1.0f);
 
     if (styleDark)
     {

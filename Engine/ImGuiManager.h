@@ -27,7 +27,6 @@ namespace Engine
 		DirectX::SimpleMath::Vector3 m_modelTranslation = DirectX::SimpleMath::Vector3(0.0f);
 		DirectX::SimpleMath::Vector3 m_modelRotation = DirectX::SimpleMath::Vector3(0.0f);
 		DirectX::SimpleMath::Vector3 m_modelScaling = DirectX::SimpleMath::Vector3(1.0f);
-		float m_viewRot = 0.0f;
 
 		float m_projFovAngleY = 70.0f;
 		float m_nearZ = 0.01f;

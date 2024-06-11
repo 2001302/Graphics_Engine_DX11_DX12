@@ -3,6 +3,9 @@
 #include "ImGui/imgui.h"
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_impl_dx11.h"
+#include "ImGui/imgui_node_editor.h"
+
+namespace ed = ax::NodeEditor;
 
 namespace Engine
 {
@@ -40,5 +43,6 @@ namespace Engine
 	private:
 		void SetupImGuiStyle(bool styleDark, float alpha);
 
+		ed::EditorContext* m_Context = nullptr;
 	};
 }

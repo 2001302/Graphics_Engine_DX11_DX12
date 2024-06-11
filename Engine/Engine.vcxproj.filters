@@ -13,30 +13,6 @@
     <ClInclude Include="Camera.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\imconfig.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_dx11.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_win32.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_internal.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_rectpack.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_textedit.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_truetype.h">
-      <Filter>ImGui</Filter>
-    </ClInclude>
     <ClInclude Include="ResourceHelper.h">
       <Filter>Util</Filter>
     </ClInclude>
@@ -64,9 +40,6 @@
     <ClInclude Include="Application.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="CommonStruct.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="Input.h">
       <Filter>Framework</Filter>
     </ClInclude>
@@ -82,10 +55,13 @@
     <ClInclude Include="ImGuiManager.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\imgui_node_editor.h">
+    <ClInclude Include="CommonStruct.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\crude_json.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\imgui_node_editor_internal.h">
+    <ClInclude Include="ImGui\imgui.h">
       <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_bezier_math.h">
@@ -94,10 +70,37 @@
     <ClInclude Include="ImGui\imgui_canvas.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="ImGui\imgui_extra_keys.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="ImGui\imgui_extra_math.h">
       <Filter>ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="ImGui\crude_json.h">
+    <ClInclude Include="ImGui\imgui_impl_dx11.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_win32.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_node_editor.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_node_editor_internal.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_rectpack.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_textedit.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imstb_truetype.h">
+      <Filter>ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imconfig.h">
       <Filter>ImGui</Filter>
     </ClInclude>
   </ItemGroup>
@@ -114,27 +117,6 @@
     </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Model</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_demo.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_tables.cpp">
-      <Filter>ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_widgets.cpp">
-      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ResourceHelper.cpp">
       <Filter>Util</Filter>
@@ -166,16 +148,37 @@
     <ClCompile Include="ImGuiManager.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\imgui_node_editor.cpp">
+    <ClCompile Include="ImGui\crude_json.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_canvas.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\imgui_draw.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_node_editor.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="ImGui\imgui_node_editor_api.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="ImGui\crude_json.cpp">
+    <ClCompile Include="ImGui\imgui_tables.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_widgets.cpp">
+      <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="ImGui\imgui_demo.cpp">
       <Filter>ImGui</Filter>
     </ClCompile>
   </ItemGroup>
@@ -209,11 +212,20 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ImGui\imgui.ini">
-      <Filter>ImGui</Filter>
-    </None>
     <None Include="Common.hlsli">
       <Filter>DirectX\Shader\HLSL</Filter>
+    </None>
+    <None Include="ImGui\imgui_bezier_math.inl">
+      <Filter>ImGui</Filter>
+    </None>
+    <None Include="ImGui\imgui_extra_math.inl">
+      <Filter>ImGui</Filter>
+    </None>
+    <None Include="ImGui\imgui_node_editor_internal.inl">
+      <Filter>ImGui</Filter>
+    </None>
+    <None Include="ImGui\config.h.in">
+      <Filter>ImGui</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

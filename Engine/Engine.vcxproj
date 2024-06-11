@@ -151,6 +151,7 @@
     <ClInclude Include="ImGui\imgui.h" />
     <ClInclude Include="ImGui\imgui_bezier_math.h" />
     <ClInclude Include="ImGui\imgui_canvas.h" />
+    <ClInclude Include="ImGui\imgui_extra_keys.h" />
     <ClInclude Include="ImGui\imgui_extra_math.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
     <ClInclude Include="ImGui\imgui_impl_win32.h" />
@@ -201,7 +202,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Common.hlsli" />
-    <None Include="ImGui\imgui.ini" />
+    <None Include="ImGui\config.h.in" />
+    <None Include="ImGui\imgui_bezier_math.inl" />
+    <None Include="ImGui\imgui_extra_math.inl" />
+    <None Include="ImGui\imgui_node_editor_internal.inl" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="NormalPixelShader.hlsl">

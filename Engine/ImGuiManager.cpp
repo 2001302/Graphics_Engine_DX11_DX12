@@ -20,6 +20,10 @@ bool ImGuiManager::Initialize(HWND mainWindow, Engine::Direct3D* d3d)
     //Set style
     SetupImGuiStyle(false, 1.0f);
 
+    ed::Config config;
+    config.SettingsFile = "Simple.json";
+    m_Context = ed::CreateEditor(&config);
+
 	return true;
 }
 
@@ -112,6 +116,23 @@ bool ImGuiManager::Render(HWND mainWindow)
     }
 
     ImGui::EndTabBar();
+
+    ed::SetCurrentEditor(m_Context);
+    ed::Begin("My Editor", ImVec2(0.0, 0.0f));
+    int uniqueId = 1;
+    // Start drawing nodes.
+    ed::BeginNode(uniqueId++);
+    ImGui::Text("Node A");
+    ed::BeginPin(uniqueId++, ed::PinKind::Input);
+    ImGui::Text("-> In");
+    ed::EndPin();
+    ImGui::SameLine();
+    ed::BeginPin(uniqueId++, ed::PinKind::Output);
+    ImGui::Text("Out ->");
+    ed::EndPin();
+    ed::EndNode();
+    ed::End();
+    ed::SetCurrentEditor(nullptr);
 
     //Rendering
     ImGui::End();

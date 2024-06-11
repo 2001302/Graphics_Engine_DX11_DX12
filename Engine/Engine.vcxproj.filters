@@ -58,7 +58,7 @@
     <ClInclude Include="PipelineManager.h">
       <Filter>DataBlock</Filter>
     </ClInclude>
-    <ClInclude Include="System.h">
+    <ClInclude Include="Platform.h">
       <Filter>Framework</Filter>
     </ClInclude>
     <ClInclude Include="Application.h">
@@ -127,7 +127,7 @@
     <ClCompile Include="Direct3D.cpp">
       <Filter>DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="System.cpp">
+    <ClCompile Include="Platform.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="Application.cpp">

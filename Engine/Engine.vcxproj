@@ -162,7 +162,7 @@
     <ClInclude Include="IDataBlock.h" />
     <ClInclude Include="PhongShader.h" />
     <ClInclude Include="PipelineManager.h" />
-    <ClInclude Include="System.h" />
+    <ClInclude Include="Platform.h" />
     <ClInclude Include="ResourceHelper.h" />
   </ItemGroup>
   <ItemGroup>
@@ -186,7 +186,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="PhongShader.cpp" />
-    <ClCompile Include="System.cpp" />
+    <ClCompile Include="Platform.cpp" />
     <ClCompile Include="ResourceHelper.cpp" />
   </ItemGroup>
   <ItemGroup>

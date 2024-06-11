@@ -1,25 +1,22 @@
-#include "system.h"
+#include "Platform.h"
 
 
 int main()
 {
-	Engine::System* System;
+	Engine::Platform* Platform;
 	bool result;
-	
+
 	// Create the system object.
-	System = new Engine::System;
+	Platform = new Engine::Platform;
 
 	// Initialize and run the system object.
-	result = System->Initialize();
-	if(result)
+	if (Platform->Initialize())
 	{
-		System->Run();
+		Platform->Run();
 	}
 
-	// Shutdown and release the system object.
-	System->Shutdown();
-	delete System;
-	System = 0;
+	delete Platform;
+	Platform = 0;
 
 	return 0;
 }

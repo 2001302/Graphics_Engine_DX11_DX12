@@ -87,17 +87,17 @@ namespace Engine
 	public:
 		std::shared_ptr<BehaviorTreeRootNode> Build(std::map<EnumDataBlockType, IDataBlock*> dataBlock)
 		{
-			m_Tree = std::make_shared<SequenceNode>(dataBlock);
-			return m_Tree;
+			tree = std::make_shared<SequenceNode>(dataBlock);
+			return tree;
 		}
 		void Run()
 		{
-			m_Tree->Invoke();
-			m_Tree->Dispose();
-			m_Tree.reset();
+			tree->Invoke();
+			tree->Dispose();
+			tree.reset();
 		}
 	private:
-		std::shared_ptr<BehaviorTreeRootNode> m_Tree;
+		std::shared_ptr<BehaviorTreeRootNode> tree;
 	};
 }
 #endif

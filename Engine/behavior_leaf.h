@@ -13,10 +13,10 @@ namespace Engine
 	class InitializePhongShader : public ActionNode
 	{
 		EnumBehaviorTreeStatus Invoke() override;
-		HWND m_window;
+		HWND window;
 	public:
-		InitializePhongShader() { m_window = 0; };
-		InitializePhongShader(HWND hwnd) { m_window = hwnd; };
+		InitializePhongShader() { window = 0; };
+		InitializePhongShader(HWND hwnd) { window = hwnd; };
 	};
 
 	class RenderGameObjects : public ActionNode

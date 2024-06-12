@@ -237,14 +237,14 @@ bool Application::OnModelLoadRequest()
 
 		//create constant buffer(Phong Shader)
 		model->phongShader = std::make_shared<PhongShaderSource>();
-		model->phongShader->vertexConstantBufferData.model = DirectX::SimpleMath::Matrix();
-		model->phongShader->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
-		model->phongShader->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
+		model->phongShader->vertex_constant_buffer_data.model = DirectX::SimpleMath::Matrix();
+		model->phongShader->vertex_constant_buffer_data.view = DirectX::SimpleMath::Matrix();
+		model->phongShader->vertex_constant_buffer_data.projection = DirectX::SimpleMath::Matrix();
 
-		m_manager->phongShader->CreateConstantBuffer(model->phongShader->vertexConstantBufferData,
-			model->phongShader->vertexConstantBuffer);
-		m_manager->phongShader->CreateConstantBuffer(model->phongShader->pixelConstantBufferData,
-			model->phongShader->pixelConstantBuffer);
+		m_manager->phongShader->CreateConstantBuffer(model->phongShader->vertex_constant_buffer_data,
+			model->phongShader->vertex_constant_buffer);
+		m_manager->phongShader->CreateConstantBuffer(model->phongShader->pixel_constant_buffer_data,
+			model->phongShader->pixel_constant_buffer);
 
 		model->transform = DirectX::SimpleMath::Matrix();
 
@@ -357,14 +357,14 @@ bool Application::OnSphereLoadRequest()
 
 	//create constant buffer(Phong Shader)
 	model->phongShader = std::make_shared<PhongShaderSource>();
-	model->phongShader->vertexConstantBufferData.model = DirectX::SimpleMath::Matrix();
-	model->phongShader->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
-	model->phongShader->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
+	model->phongShader->vertex_constant_buffer_data.model = DirectX::SimpleMath::Matrix();
+	model->phongShader->vertex_constant_buffer_data.view = DirectX::SimpleMath::Matrix();
+	model->phongShader->vertex_constant_buffer_data.projection = DirectX::SimpleMath::Matrix();
 
-	m_manager->phongShader->CreateConstantBuffer(model->phongShader->vertexConstantBufferData,
-		model->phongShader->vertexConstantBuffer);
-	m_manager->phongShader->CreateConstantBuffer(model->phongShader->pixelConstantBufferData,
-		model->phongShader->pixelConstantBuffer);
+	m_manager->phongShader->CreateConstantBuffer(model->phongShader->vertex_constant_buffer_data,
+		model->phongShader->vertex_constant_buffer);
+	m_manager->phongShader->CreateConstantBuffer(model->phongShader->pixel_constant_buffer_data,
+		model->phongShader->pixel_constant_buffer);
 
 	model->transform = DirectX::SimpleMath::Matrix();
 
@@ -424,14 +424,14 @@ bool Application::OnBoxLoadRequest()
 
 	//create constant buffer(Phong Shader)
 	model->phongShader = std::make_shared<PhongShaderSource>();
-	model->phongShader->vertexConstantBufferData.model = DirectX::SimpleMath::Matrix();
-	model->phongShader->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
-	model->phongShader->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
+	model->phongShader->vertex_constant_buffer_data.model = DirectX::SimpleMath::Matrix();
+	model->phongShader->vertex_constant_buffer_data.view = DirectX::SimpleMath::Matrix();
+	model->phongShader->vertex_constant_buffer_data.projection = DirectX::SimpleMath::Matrix();
 
-	m_manager->phongShader->CreateConstantBuffer(model->phongShader->vertexConstantBufferData,
-		model->phongShader->vertexConstantBuffer);
-	m_manager->phongShader->CreateConstantBuffer(model->phongShader->pixelConstantBufferData,
-		model->phongShader->pixelConstantBuffer);
+	m_manager->phongShader->CreateConstantBuffer(model->phongShader->vertex_constant_buffer_data,
+		model->phongShader->vertex_constant_buffer);
+	m_manager->phongShader->CreateConstantBuffer(model->phongShader->pixel_constant_buffer_data,
+		model->phongShader->pixel_constant_buffer);
 
 	model->transform = DirectX::SimpleMath::Matrix();
 
@@ -492,14 +492,14 @@ bool Application::OnCylinderLoadRequest()
 
 	//create constant buffer(Phong Shader)
 	model->phongShader = std::make_shared<PhongShaderSource>();
-	model->phongShader->vertexConstantBufferData.model = DirectX::SimpleMath::Matrix();
-	model->phongShader->vertexConstantBufferData.view = DirectX::SimpleMath::Matrix();
-	model->phongShader->vertexConstantBufferData.projection = DirectX::SimpleMath::Matrix();
+	model->phongShader->vertex_constant_buffer_data.model = DirectX::SimpleMath::Matrix();
+	model->phongShader->vertex_constant_buffer_data.view = DirectX::SimpleMath::Matrix();
+	model->phongShader->vertex_constant_buffer_data.projection = DirectX::SimpleMath::Matrix();
 
-	m_manager->phongShader->CreateConstantBuffer(model->phongShader->vertexConstantBufferData,
-		model->phongShader->vertexConstantBuffer);
-	m_manager->phongShader->CreateConstantBuffer(model->phongShader->pixelConstantBufferData,
-		model->phongShader->pixelConstantBuffer);
+	m_manager->phongShader->CreateConstantBuffer(model->phongShader->vertex_constant_buffer_data,
+		model->phongShader->vertex_constant_buffer);
+	m_manager->phongShader->CreateConstantBuffer(model->phongShader->pixel_constant_buffer_data,
+		model->phongShader->pixel_constant_buffer);
 
 	model->transform = DirectX::SimpleMath::Matrix();
 

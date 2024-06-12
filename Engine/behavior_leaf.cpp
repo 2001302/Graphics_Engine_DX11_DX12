@@ -46,7 +46,7 @@ EnumBehaviorTreeStatus InitializePhongShader::Invoke()
 	sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
 	// Create the Sample State
-	Direct3D::GetInstance().GetDevice()->CreateSamplerState(&sampDesc, manager->phongShader->sampleState.GetAddressOf());
+	Direct3D::GetInstance().GetDevice()->CreateSamplerState(&sampDesc, manager->phongShader->sample_state.GetAddressOf());
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
 		{"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
@@ -57,9 +57,9 @@ EnumBehaviorTreeStatus InitializePhongShader::Invoke()
 		 D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 
-	manager->phongShader->CreateVertexShaderAndInputLayout(L"phong_vertex_shader.hlsl", inputElements, manager->phongShader->vertexShader, manager->phongShader->layout);
+	manager->phongShader->CreateVertexShaderAndInputLayout(L"phong_vertex_shader.hlsl", inputElements, manager->phongShader->vertex_shader, manager->phongShader->layout);
 
-	manager->phongShader->CreatePixelShader(L"phong_pixel_shader.hlsl", manager->phongShader->pixelShader);
+	manager->phongShader->CreatePixelShader(L"phong_pixel_shader.hlsl", manager->phongShader->pixel_shader);
 
 	return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -88,71 +88,71 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 	{
 		//model
 		{
-			model->phongShader->vertexConstantBufferData.model = Matrix::CreateScale(gui->m_modelScaling) *
+			model->phongShader->vertex_constant_buffer_data.model = Matrix::CreateScale(gui->m_modelScaling) *
 				Matrix::CreateRotationX(gui->m_modelRotation.x) *
 				Matrix::CreateRotationY(gui->m_modelRotation.y) *
 				Matrix::CreateRotationZ(gui->m_modelRotation.z) *
 				Matrix::CreateTranslation(gui->m_modelTranslation);
 
-			model->phongShader->vertexConstantBufferData.model = model->phongShader->vertexConstantBufferData.model.Transpose();
+			model->phongShader->vertex_constant_buffer_data.model = model->phongShader->vertex_constant_buffer_data.model.Transpose();
 		}
 		//view
 		{
-			model->phongShader->vertexConstantBufferData.view = manager->camera->view.Transpose();
+			model->phongShader->vertex_constant_buffer_data.view = manager->camera->view.Transpose();
 		}
 		//inverse transpose
 		{
-			model->phongShader->vertexConstantBufferData.invTranspose = model->phongShader->vertexConstantBufferData.model;
-			model->phongShader->vertexConstantBufferData.invTranspose.Translation(Vector3(0.0f));
-			model->phongShader->vertexConstantBufferData.invTranspose = model->phongShader->vertexConstantBufferData.invTranspose.Transpose().Invert();
+			model->phongShader->vertex_constant_buffer_data.invTranspose = model->phongShader->vertex_constant_buffer_data.model;
+			model->phongShader->vertex_constant_buffer_data.invTranspose.Translation(Vector3(0.0f));
+			model->phongShader->vertex_constant_buffer_data.invTranspose = model->phongShader->vertex_constant_buffer_data.invTranspose.Transpose().Invert();
 		}
 		//projection
 		{
 			const float aspect = env->aspect;
 			if (gui->m_usePerspectiveProjection) {
-				model->phongShader->vertexConstantBufferData.projection = XMMatrixPerspectiveFovLH(
+				model->phongShader->vertex_constant_buffer_data.projection = XMMatrixPerspectiveFovLH(
 					XMConvertToRadians(gui->m_projFovAngleY), aspect, gui->m_nearZ, gui->m_farZ);
 			}
 			else {
-				model->phongShader->vertexConstantBufferData.projection = XMMatrixOrthographicOffCenterLH(
+				model->phongShader->vertex_constant_buffer_data.projection = XMMatrixOrthographicOffCenterLH(
 					-aspect, aspect, -1.0f, 1.0f, gui->m_nearZ, gui->m_farZ);
 			}
-			model->phongShader->vertexConstantBufferData.projection = model->phongShader->vertexConstantBufferData.projection.Transpose();
+			model->phongShader->vertex_constant_buffer_data.projection = model->phongShader->vertex_constant_buffer_data.projection.Transpose();
 		}
-		
-		manager->phongShader->UpdateBuffer(model->phongShader->vertexConstantBufferData, model->phongShader->vertexConstantBuffer);
+
+		manager->phongShader->UpdateBuffer(model->phongShader->vertex_constant_buffer_data, model->phongShader->vertex_constant_buffer);
 
 		//eye
 		{
-			model->phongShader->pixelConstantBufferData.eyeWorld = Vector3::Transform(
-				Vector3(0.0f), model->phongShader->vertexConstantBufferData.view.Invert());
+			model->phongShader->pixel_constant_buffer_data.eyeWorld = Vector3::Transform(
+				Vector3(0.0f), model->phongShader->vertex_constant_buffer_data.view.Invert());
 		}
 		//material
 		{
-			model->phongShader->pixelConstantBufferData.material.diffuse = Vector3(gui->m_materialDiffuse);
-			model->phongShader->pixelConstantBufferData.material.specular = Vector3(gui->m_materialSpecular);
-			model->phongShader->pixelConstantBufferData.material.shininess = gui->m_shininess;
+			model->phongShader->pixel_constant_buffer_data.material.diffuse = Vector3(gui->m_materialDiffuse);
+			model->phongShader->pixel_constant_buffer_data.material.specular = Vector3(gui->m_materialSpecular);
+			model->phongShader->pixel_constant_buffer_data.material.shininess = gui->m_shininess;
 		}
 		//light
 		{
-			for (int i = 0; i < MAX_LIGHTS; i++) 
+			for (int i = 0; i < MAX_LIGHTS; i++)
 			{
-				if (i != gui->m_lightType) 
+				if (i != gui->m_lightType)
 				{
-					model->phongShader->pixelConstantBufferData.lights[i].strength *= 0.0f;
+					model->phongShader->pixel_constant_buffer_data.lights[i].strength *= 0.0f;
 				}
-				else 
-				{	
+				else
+				{
 					//turn off another light
-					model->phongShader->pixelConstantBufferData.lights[i] = gui->m_lightFromGUI;
+					model->phongShader->pixel_constant_buffer_data.lights[i] = gui->m_lightFromGUI;
 				}
 			}
 		}
 
-		model->phongShader->pixelConstantBufferData.useTexture = gui->m_useTexture;
-		model->phongShader->pixelConstantBufferData.useBlinnPhong = gui->m_useBlinnPhong;
+		model->phongShader->pixel_constant_buffer_data.useTexture = gui->m_useTexture;
+		model->phongShader->pixel_constant_buffer_data.useBlinnPhong = gui->m_useBlinnPhong;
 
-		manager->phongShader->UpdateBuffer(model->phongShader->pixelConstantBufferData, model->phongShader->pixelConstantBuffer);
+		manager->phongShader->UpdateBuffer(model->phongShader->pixel_constant_buffer_data, model->phongShader->pixel_constant_buffer);
 
 		// RS: Rasterizer stage
 		// OM: Output-Merger stage
@@ -164,28 +164,28 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke()
 		unsigned int offset = 0;
 
 		float clearColor[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
-		context->ClearRenderTargetView(Direct3D::GetInstance().renderTargetView, clearColor);
-		context->ClearDepthStencilView(Direct3D::GetInstance().depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		context->ClearRenderTargetView(Direct3D::GetInstance().render_target_view, clearColor);
+		context->ClearDepthStencilView(Direct3D::GetInstance().depth_stencil_view.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		context->OMSetRenderTargets(1, &Direct3D::GetInstance().renderTargetView, Direct3D::GetInstance().depthStencilView.Get());
-		context->OMSetDepthStencilState(Direct3D::GetInstance().depthStencilState.Get(), 0);
+		context->OMSetRenderTargets(1, &Direct3D::GetInstance().render_target_view, Direct3D::GetInstance().depth_stencil_view.Get());
+		context->OMSetDepthStencilState(Direct3D::GetInstance().depth_stencil_state.Get(), 0);
 
-		context->VSSetShader(manager->phongShader->vertexShader.Get(), 0, 0);
-		context->PSSetSamplers(0, 1, &manager->phongShader->sampleState);
+		context->VSSetShader(manager->phongShader->vertex_shader.Get(), 0, 0);
+		context->PSSetSamplers(0, 1, &manager->phongShader->sample_state);
 
 		if (gui->m_drawAsWire)
-			context->RSSetState(Direct3D::GetInstance().wireRasterizerSate.Get());
+			context->RSSetState(Direct3D::GetInstance().wire_rasterizer_state.Get());
 		else
-			context->RSSetState(Direct3D::GetInstance().solidRasterizerSate.Get());
+			context->RSSetState(Direct3D::GetInstance().solid_rasterizer_state.Get());
 
-		context->VSSetConstantBuffers(0, 1, model->phongShader->vertexConstantBuffer.GetAddressOf());
+		context->VSSetConstantBuffers(0, 1, model->phongShader->vertex_constant_buffer.GetAddressOf());
 
 		for (const auto& mesh : model->meshes)
 		{
 			context->PSSetShaderResources(0, 1, mesh->textureResourceView.GetAddressOf());
 
-			context->PSSetConstantBuffers(0, 1, model->phongShader->pixelConstantBuffer.GetAddressOf());
-			context->PSSetShader(manager->phongShader->pixelShader.Get(), NULL, 0);
+			context->PSSetConstantBuffers(0, 1, model->phongShader->pixel_constant_buffer.GetAddressOf());
+			context->PSSetShader(manager->phongShader->pixel_shader.Get(), NULL, 0);
 
 			context->IASetInputLayout(manager->phongShader->layout.Get());
 			context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(), &stride, &offset);

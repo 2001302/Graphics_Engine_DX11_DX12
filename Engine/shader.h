@@ -104,10 +104,10 @@ namespace Engine
             Direct3D::GetInstance().GetDeviceContext()->Unmap(buffer.Get(), NULL);
         }
 
-        ComPtr<ID3D11VertexShader> vertexShader;
-        ComPtr<ID3D11PixelShader> pixelShader;
+        ComPtr<ID3D11VertexShader> vertex_shader;
+        ComPtr<ID3D11PixelShader> pixel_shader;
         ComPtr<ID3D11InputLayout> layout;
-        ComPtr<ID3D11SamplerState> sampleState;
+        ComPtr<ID3D11SamplerState> sample_state;
 
 	};
 }

@@ -22,10 +22,10 @@ namespace Engine
 	class PhongShaderSource 
 	{
 	public:		
-		ComPtr<ID3D11Buffer> vertexConstantBuffer;
-		ComPtr<ID3D11Buffer> pixelConstantBuffer;
-		VertexConstantBuffer vertexConstantBufferData;
-		PixelConstantBuffer pixelConstantBufferData;
+		ComPtr<ID3D11Buffer> vertex_constant_buffer;
+		ComPtr<ID3D11Buffer> pixel_constant_buffer;
+		VertexConstantBuffer vertex_constant_buffer_data;
+		PixelConstantBuffer pixel_constant_buffer_data;
 	};
 }
 #endif

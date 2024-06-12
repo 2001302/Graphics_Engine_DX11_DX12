@@ -5,11 +5,9 @@
 
 using namespace DirectX;
 
-namespace Engine
-{
-	class NormalShader : public IShader
-	{
-	public:
-	};
-}
+namespace Engine {
+class NormalShader : public IShader {
+  public:
+};
+} // namespace Engine
 #endif

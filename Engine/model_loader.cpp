@@ -9,7 +9,7 @@ void ModelLoader::Load(std::string basePath, std::string filename) {
 
     Assimp::Importer importer;
 
-    const aiScene* pScene = importer.ReadFile(
+    const aiScene *pScene = importer.ReadFile(
         this->basePath + filename,
         aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
 
@@ -53,14 +53,14 @@ void ModelLoader::Load(std::string basePath, std::string filename) {
     }*/
 }
 
-void ModelLoader::ProcessNode(aiNode* node, const aiScene* scene, Matrix tr) {
+void ModelLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
 
     // std::cout << node->mName.C_Str() << " : " << node->mNumMeshes << " "
     //           << node->mNumChildren << std::endl;
 
     Matrix m;
-    ai_real* temp = &node->mTransformation.a1;
-    float* mTemp = &m._11;
+    ai_real *temp = &node->mTransformation.a1;
+    float *mTemp = &m._11;
     for (int t = 0; t < 16; t++) {
         mTemp[t] = float(temp[t]);
     }
@@ -68,13 +68,10 @@ void ModelLoader::ProcessNode(aiNode* node, const aiScene* scene, Matrix tr) {
 
     for (UINT i = 0; i < node->mNumMeshes; i++) {
 
-
-        aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+        aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
         auto newMesh = this->ProcessMesh(mesh, scene);
 
-
-
-        for (auto& v : newMesh.vertices) {
+        for (auto &v : newMesh.vertices) {
             v.position = DirectX::SimpleMath::Vector3::Transform(v.position, m);
         }
 
@@ -86,7 +83,7 @@ void ModelLoader::ProcessNode(aiNode* node, const aiScene* scene, Matrix tr) {
     }
 }
 
-Mesh ModelLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
+Mesh ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
     // Data to fill
     std::vector<Vertex> vertices;
     std::vector<int> indices;
@@ -124,7 +121,7 @@ Mesh ModelLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
 
     // http://assimp.sourceforge.net/lib_html/materials.html
     if (mesh->mMaterialIndex >= 0) {
-        aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
+        aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
         if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
             aiString filepath;
@@ -133,8 +130,8 @@ Mesh ModelLoader::ProcessMesh(aiMesh* mesh, const aiScene* scene) {
             std::string fullPath =
                 this->basePath +
                 std::string(std::filesystem::path(filepath.C_Str())
-                    .filename()
-                    .string());
+                                .filename()
+                                .string());
 
             newMesh.textureFilename = fullPath;
         }

@@ -2,8 +2,10 @@
 
 using namespace Engine;
 
-GameObject* GeometryGenerator::MakeSphere(GameObject* gameObject, const float radius, const int numSlices, const int numStacks) 
-{
+GameObject *GeometryGenerator::MakeSphere(GameObject *gameObject,
+                                          const float radius,
+                                          const int numSlices,
+                                          const int numStacks) {
     const float dTheta = -XM_2PI / float(numSlices);
     const float dPhi = -XM_PI / float(numStacks);
 
@@ -31,7 +33,7 @@ GameObject* GeometryGenerator::MakeSphere(GameObject* gameObject, const float ra
         }
     }
 
-    std::vector<int>& indices = meshData->indices;
+    std::vector<int> &indices = meshData->indices;
 
     for (int j = 0; j < numStacks; j++) {
 
@@ -54,8 +56,7 @@ GameObject* GeometryGenerator::MakeSphere(GameObject* gameObject, const float ra
     return gameObject;
 }
 
-GameObject* GeometryGenerator::MakeBox(GameObject* gameObject)
-{
+GameObject *GeometryGenerator::MakeBox(GameObject *gameObject) {
 
     std::vector<Vector3> positions;
     std::vector<Vector3> colors;
@@ -196,19 +197,21 @@ GameObject* GeometryGenerator::MakeBox(GameObject* gameObject)
     return gameObject;
 }
 
-GameObject* GeometryGenerator::MakeCylinder(GameObject* gameObject, const float bottomRadius, const float topRadius, float height, int numSlices)
-{
+GameObject *GeometryGenerator::MakeCylinder(GameObject *gameObject,
+                                            const float bottomRadius,
+                                            const float topRadius, float height,
+                                            int numSlices) {
     const float dTheta = -XM_2PI / float(numSlices);
 
     std::shared_ptr<Mesh> meshData = std::make_shared<Mesh>();
-    std::vector<Vertex>& vertices = meshData->vertices;
+    std::vector<Vertex> &vertices = meshData->vertices;
 
     // 옆면의 바닥 버텍스들 (인덱스 0 이상 numSlices 미만)
     for (int i = 0; i <= numSlices; i++) {
         Vertex v;
         v.position =
             Vector3::Transform(Vector3(bottomRadius, -0.5f * height, 0.0f),
-                Matrix::CreateRotationY(dTheta * float(i)));
+                               Matrix::CreateRotationY(dTheta * float(i)));
 
         // std::cout << v.position.x << " " << v.position.z << std::endl;
 
@@ -224,7 +227,7 @@ GameObject* GeometryGenerator::MakeCylinder(GameObject* gameObject, const float 
         Vertex v;
         v.position =
             Vector3::Transform(Vector3(topRadius, 0.5f * height, 0.0f),
-                Matrix::CreateRotationY(dTheta * float(i)));
+                               Matrix::CreateRotationY(dTheta * float(i)));
         v.normal = v.position - Vector3(0.0f, 0.5f * height, 0.0f);
         v.normal.Normalize();
         v.texcoord = Vector2(float(i) / numSlices, 0.0f);
@@ -232,7 +235,7 @@ GameObject* GeometryGenerator::MakeCylinder(GameObject* gameObject, const float 
         vertices.push_back(v);
     }
 
-    std::vector<int>& indices = meshData->indices;
+    std::vector<int> &indices = meshData->indices;
 
     for (int i = 0; i < numSlices; i++) {
         indices.push_back(i);
@@ -247,23 +250,23 @@ GameObject* GeometryGenerator::MakeCylinder(GameObject* gameObject, const float 
     gameObject->meshes.push_back(meshData);
     return gameObject;
 }
-GameObject* GeometryGenerator::ReadFromFile(GameObject* gameObject, std::string basePath, std::string filename)
-{
+GameObject *GeometryGenerator::ReadFromFile(GameObject *gameObject,
+                                            std::string basePath,
+                                            std::string filename) {
     using namespace DirectX;
 
     ModelLoader modelLoader;
     modelLoader.Load(basePath, filename);
 
-    for (auto x : modelLoader.meshes)
-    {
+    for (auto x : modelLoader.meshes) {
         gameObject->meshes.push_back(std::make_shared<Mesh>(x));
     }
 
     // Normalize vertices
     Vector3 vmin(1000, 1000, 1000);
     Vector3 vmax(-1000, -1000, -1000);
-    for (auto& mesh : gameObject->meshes) {
-        for (auto& v : mesh->vertices) {
+    for (auto &mesh : gameObject->meshes) {
+        for (auto &v : mesh->vertices) {
             vmin.x = XMMin(vmin.x, v.position.x);
             vmin.y = XMMin(vmin.y, v.position.y);
             vmin.z = XMMin(vmin.z, v.position.z);
@@ -276,10 +279,10 @@ GameObject* GeometryGenerator::ReadFromFile(GameObject* gameObject, std::string 
     float dx = vmax.x - vmin.x, dy = vmax.y - vmin.y, dz = vmax.z - vmin.z;
     float dl = XMMax(XMMax(dx, dy), dz);
     float cx = (vmax.x + vmin.x) * 0.5f, cy = (vmax.y + vmin.y) * 0.5f,
-        cz = (vmax.z + vmin.z) * 0.5f;
+          cz = (vmax.z + vmin.z) * 0.5f;
 
-    for (auto& mesh : gameObject->meshes) {
-        for (auto& v : mesh->vertices) {
+    for (auto &mesh : gameObject->meshes) {
+        for (auto &v : mesh->vertices) {
             v.position.x = (v.position.x - cx) / dl;
             v.position.y = (v.position.y - cy) / dl;
             v.position.z = (v.position.z - cz) / dl;

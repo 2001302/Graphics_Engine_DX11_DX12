@@ -11,19 +11,19 @@
 
 namespace Engine {
 
-    using namespace DirectX::SimpleMath; 
+using namespace DirectX::SimpleMath;
 
-    class ModelLoader {
-    public:
-        void Load(std::string basePath, std::string filename);
+class ModelLoader {
+  public:
+    void Load(std::string basePath, std::string filename);
 
-        void ProcessNode(aiNode* node, const aiScene* scene,
-            DirectX::SimpleMath::Matrix tr);
+    void ProcessNode(aiNode *node, const aiScene *scene,
+                     DirectX::SimpleMath::Matrix tr);
 
-        Mesh ProcessMesh(aiMesh* mesh, const aiScene* scene);
+    Mesh ProcessMesh(aiMesh *mesh, const aiScene *scene);
 
-    public:
-        std::string basePath;
-        std::vector<Mesh> meshes;
-    };
-}
+  public:
+    std::string basePath;
+    std::vector<Mesh> meshes;
+};
+} // namespace Engine

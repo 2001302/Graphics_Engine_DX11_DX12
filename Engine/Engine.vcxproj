@@ -137,15 +137,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Application.h" />
-    <ClInclude Include="BehaviorLeaf.h" />
-    <ClInclude Include="BehaviorTree.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="CommonStruct.h" />
-    <ClInclude Include="Direct3D.h" />
-    <ClInclude Include="Env.h" />
-    <ClInclude Include="GeometryGenerator.h" />
-    <ClInclude Include="ImGuiManager.h" />
+    <ClInclude Include="application.h" />
+    <ClInclude Include="behavior_leaf.h" />
+    <ClInclude Include="behavior_tree.h" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="common_struct.h" />
+    <ClInclude Include="direct3D.h" />
+    <ClInclude Include="env.h" />
+    <ClInclude Include="geometry_generator.h" />
+    <ClInclude Include="imgui_manager.h" />
     <ClInclude Include="ImGui\crude_json.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -161,25 +161,25 @@
     <ClInclude Include="ImGui\imstb_rectpack.h" />
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
-    <ClInclude Include="Input.h" />
-    <ClInclude Include="IShader.h" />
-    <ClInclude Include="ModelLoader.h" />
-    <ClInclude Include="NormalShader.h" />
-    <ClInclude Include="GameObject.h" />
-    <ClInclude Include="IDataBlock.h" />
-    <ClInclude Include="PhongShader.h" />
-    <ClInclude Include="PipelineManager.h" />
-    <ClInclude Include="Platform.h" />
-    <ClInclude Include="ResourceHelper.h" />
+    <ClInclude Include="input.h" />
+    <ClInclude Include="shader.h" />
+    <ClInclude Include="model_loader.h" />
+    <ClInclude Include="normal_shader.h" />
+    <ClInclude Include="game_object.h" />
+    <ClInclude Include="dataBlock.h" />
+    <ClInclude Include="phong_shader.h" />
+    <ClInclude Include="pipeline_manager.h" />
+    <ClInclude Include="platform.h" />
+    <ClInclude Include="resource_helper.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Application.cpp" />
-    <ClCompile Include="BehaviorLeaf.cpp" />
-    <ClCompile Include="BehaviorTree.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Direct3D.cpp" />
-    <ClCompile Include="GeometryGenerator.cpp" />
-    <ClCompile Include="ImGuiManager.cpp" />
+    <ClCompile Include="application.cpp" />
+    <ClCompile Include="behavior_leaf.cpp" />
+    <ClCompile Include="behavior_tree.cpp" />
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="direct3D.cpp" />
+    <ClCompile Include="geometry_generator.cpp" />
+    <ClCompile Include="imgui_manager.cpp" />
     <ClCompile Include="ImGui\crude_json.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_canvas.cpp" />
@@ -191,36 +191,36 @@
     <ClCompile Include="ImGui\imgui_node_editor_api.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="Input.cpp" />
-    <ClCompile Include="ModelLoader.cpp" />
-    <ClCompile Include="NormalShader.cpp" />
+    <ClCompile Include="input.cpp" />
+    <ClCompile Include="model_loader.cpp" />
+    <ClCompile Include="normal_shader.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="GameObject.cpp" />
-    <ClCompile Include="PhongShader.cpp" />
-    <ClCompile Include="Platform.cpp" />
-    <ClCompile Include="ResourceHelper.cpp" />
+    <ClCompile Include="game_object.cpp" />
+    <ClCompile Include="phong_shader.cpp" />
+    <ClCompile Include="platform.cpp" />
+    <ClCompile Include="resource_helper.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Common.hlsli" />
+    <None Include="common.hlsli" />
     <None Include="ImGui\config.h.in" />
     <None Include="ImGui\imgui_bezier_math.inl" />
     <None Include="ImGui\imgui_extra_math.inl" />
     <None Include="ImGui\imgui_node_editor_internal.inl" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="NormalPixelShader.hlsl">
+    <FxCompile Include="normal_pixel_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="NormalVertexShader.hlsl">
+    <FxCompile Include="normal_vertex_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="PhongPixelShader.hlsl">
+    <FxCompile Include="phong_pixel_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="PhongVertexShader.hlsl">
+    <FxCompile Include="phong_vertex_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>

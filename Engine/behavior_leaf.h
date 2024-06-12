@@ -1,7 +1,7 @@
 #ifndef _BehaviorLeaf
 #define _BehaviorLeaf
 
-#include "BehaviorTree.h"
+#include "behavior_tree.h"
 
 namespace Engine
 {

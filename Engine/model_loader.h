@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#include "CommonStruct.h"
+#include "common_struct.h"
 
 namespace Engine {
 

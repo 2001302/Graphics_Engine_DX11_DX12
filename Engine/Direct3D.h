@@ -1,8 +1,8 @@
 #ifndef _D3DCLASS_H_
 #define _D3DCLASS_H_
 
-#include "CommonStruct.h"
-#include "Env.h"
+#include "common_struct.h"
+#include "env.h"
 
 using namespace DirectX;
 

@@ -1,9 +1,9 @@
 #ifndef _GEOMETRYGENERATOR
 #define _GEOMETRYGENERATOR	
 
-#include "GameObject.h"
-#include "Direct3D.h"
-#include "ModelLoader.h"
+#include "game_object.h"
+#include "direct3D.h"
+#include "model_loader.h"
 
 namespace Engine
 {

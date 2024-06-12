@@ -1,4 +1,4 @@
-#include "GeometryGenerator.h"
+#include "geometry_generator.h"
 
 using namespace Engine;
 

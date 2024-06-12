@@ -1,61 +1,61 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="GameObject.h">
+    <ClInclude Include="game_object.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="BehaviorTree.h">
+    <ClInclude Include="behavior_tree.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="BehaviorLeaf.h">
+    <ClInclude Include="behavior_leaf.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.h">
+    <ClInclude Include="camera.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="ResourceHelper.h">
+    <ClInclude Include="resource_helper.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="NormalShader.h">
+    <ClInclude Include="normal_shader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="Direct3D.h">
+    <ClInclude Include="direct3D.h">
       <Filter>DirectX</Filter>
     </ClInclude>
-    <ClInclude Include="IShader.h">
+    <ClInclude Include="shader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="IDataBlock.h">
+    <ClInclude Include="dataBlock.h">
       <Filter>DataBlock</Filter>
     </ClInclude>
-    <ClInclude Include="Env.h">
+    <ClInclude Include="env.h">
       <Filter>DataBlock</Filter>
     </ClInclude>
-    <ClInclude Include="PipelineManager.h">
+    <ClInclude Include="pipeline_manager.h">
       <Filter>DataBlock</Filter>
     </ClInclude>
-    <ClInclude Include="Platform.h">
+    <ClInclude Include="platform.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Application.h">
+    <ClInclude Include="application.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="Input.h">
+    <ClInclude Include="input.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="PhongShader.h">
+    <ClInclude Include="phong_shader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="GeometryGenerator.h">
+    <ClInclude Include="geometry_generator.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="ModelLoader.h">
+    <ClInclude Include="model_loader.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="ImGuiManager.h">
+    <ClInclude Include="imgui_manager.h">
       <Filter>Framework</Filter>
     </ClInclude>
-    <ClInclude Include="CommonStruct.h">
+    <ClInclude Include="common_struct.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\crude_json.h">
@@ -106,46 +106,46 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="GameObject.cpp">
+    <ClCompile Include="game_object.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="BehaviorTree.cpp">
+    <ClCompile Include="behavior_tree.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="BehaviorLeaf.cpp">
+    <ClCompile Include="behavior_leaf.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="Camera.cpp">
+    <ClCompile Include="camera.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="ResourceHelper.cpp">
+    <ClCompile Include="resource_helper.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="NormalShader.cpp">
+    <ClCompile Include="normal_shader.cpp">
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="Direct3D.cpp">
+    <ClCompile Include="direct3D.cpp">
       <Filter>DirectX</Filter>
     </ClCompile>
-    <ClCompile Include="Platform.cpp">
+    <ClCompile Include="platform.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Application.cpp">
+    <ClCompile Include="application.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="Input.cpp">
+    <ClCompile Include="input.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
-    <ClCompile Include="PhongShader.cpp">
+    <ClCompile Include="phong_shader.cpp">
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="GeometryGenerator.cpp">
+    <ClCompile Include="geometry_generator.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="ModelLoader.cpp">
+    <ClCompile Include="model_loader.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="ImGuiManager.cpp">
+    <ClCompile Include="imgui_manager.cpp">
       <Filter>Framework</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\crude_json.cpp">
@@ -212,7 +212,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Common.hlsli">
+    <None Include="common.hlsli">
       <Filter>DirectX\Shader\HLSL</Filter>
     </None>
     <None Include="ImGui\imgui_bezier_math.inl">
@@ -229,16 +229,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="PhongVertexShader.hlsl">
+    <FxCompile Include="phong_vertex_shader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="PhongPixelShader.hlsl">
+    <FxCompile Include="phong_pixel_shader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="NormalVertexShader.hlsl">
+    <FxCompile Include="normal_vertex_shader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="NormalPixelShader.hlsl">
+    <FxCompile Include="normal_pixel_shader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

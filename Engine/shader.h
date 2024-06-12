@@ -1,8 +1,8 @@
 #ifndef _IShader
 #define _IShader
 
-#include "CommonStruct.h"
-#include "Direct3D.h"
+#include "common_struct.h"
+#include "direct3D.h"
 
 namespace Engine
 {

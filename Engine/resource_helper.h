@@ -1,8 +1,8 @@
 ﻿#ifndef _RESOURCEHELPER
 #define _RESOURCEHELPER	
 
-#include "GameObject.h"
-#include "Direct3D.h"
+#include "game_object.h"
+#include "direct3D.h"
 
 namespace Engine
 {

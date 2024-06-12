@@ -1,7 +1,7 @@
 #pragma warning(disable:6385)
 #pragma warning(disable:6386)
 
-#include "GameObject.h"
+#include "game_object.h"
 
 using namespace Engine;
 

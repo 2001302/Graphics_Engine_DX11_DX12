@@ -1,7 +1,8 @@
 #ifndef _ENV
 #define _ENV
 
-#include "IDataBlock.h"
+#include "dataBlock.h"
+#include "common_struct.h"
 
 namespace Engine
 {

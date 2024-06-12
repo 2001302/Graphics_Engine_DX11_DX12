@@ -1,4 +1,4 @@
-#include "Direct3D.h"
+#include "direct3D.h"
 
 using namespace Engine;
 

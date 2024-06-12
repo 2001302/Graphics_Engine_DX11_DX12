@@ -1,4 +1,4 @@
-#include "Common.hlsli"
+#include "common.hlsli"
 
 cbuffer VertexConstantBuffer : register(b0)
 {

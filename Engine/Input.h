@@ -8,7 +8,7 @@
 
 #include <dinput.h>
 
-#include "CommonStruct.h"
+#include "common_struct.h"
 
 class Input
 {

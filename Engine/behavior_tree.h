@@ -1,8 +1,8 @@
 #ifndef _BehaviorTree
 #define _BehaviorTree
 
-#include "CommonStruct.h"
-#include "IDataBlock.h"
+#include "common_struct.h"
+#include "dataBlock.h"
 
 namespace Engine
 {

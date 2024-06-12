@@ -1,7 +1,7 @@
 #ifndef _NORMALSHADER
 #define _NORMALSHADER
 
-#include "IShader.h"
+#include "shader.h"
 
 using namespace DirectX;
 

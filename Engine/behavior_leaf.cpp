@@ -1,6 +1,6 @@
-#include "BehaviorLeaf.h"
-#include "PipelineManager.h"
-#include "ImGuiManager.h"
+#include "behavior_leaf.h"
+#include "pipeline_manager.h"
+#include "imgui_manager.h"
 
 using namespace Engine;
 
@@ -57,9 +57,9 @@ EnumBehaviorTreeStatus InitializePhongShader::Invoke()
 		 D3D11_INPUT_PER_VERTEX_DATA, 0},
 	};
 
-	manager->phongShader->CreateVertexShaderAndInputLayout(L"PhongVertexShader.hlsl", inputElements, manager->phongShader->vertexShader, manager->phongShader->layout);
+	manager->phongShader->CreateVertexShaderAndInputLayout(L"phong_vertex_shader.hlsl", inputElements, manager->phongShader->vertexShader, manager->phongShader->layout);
 
-	manager->phongShader->CreatePixelShader(L"PhongPixelShader.hlsl", manager->phongShader->pixelShader);
+	manager->phongShader->CreatePixelShader(L"phong_pixel_shader.hlsl", manager->phongShader->pixelShader);
 
 	return EnumBehaviorTreeStatus::eSuccess;
 }

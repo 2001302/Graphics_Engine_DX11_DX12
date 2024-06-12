@@ -1,7 +1,7 @@
 ﻿#ifndef _PHONGSHADER
 #define _PHONGSHADER
 
-#include "IShader.h"
+#include "shader.h"
 
 using namespace DirectX;
 

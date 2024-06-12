@@ -1,7 +1,7 @@
 #ifndef CAMERA
 #define CAMERA
 
-#include "CommonStruct.h"
+#include "common_struct.h"
 
 class Camera
 {

@@ -1,13 +1,13 @@
 #ifndef _PIPELINEMANAGER
 #define _PIPELINEMANAGER
 
-#include "IDataBlock.h"
-#include "Input.h"
-#include "Camera.h"
-#include "Gameobject.h"
-#include "NormalShader.h"
-#include "PhongShader.h"
-#include "Direct3D.h"
+#include "dataBlock.h"
+#include "input.h"
+#include "camera.h"
+#include "game_object.h"
+#include "normal_shader.h"
+#include "phong_shader.h"
+#include "direct3D.h"
 
 namespace Engine
 {

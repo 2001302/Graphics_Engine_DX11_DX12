@@ -1,14 +1,14 @@
 #ifndef _APPLICATION
 #define _APPLICATION
 
-#include "Direct3D.h"
-#include "ImGuiManager.h"
-#include "BehaviorTree.h"
-#include "BehaviorLeaf.h"
-#include "PipelineManager.h"
-#include "Env.h"
-#include "ResourceHelper.h"
-#include "GeometryGenerator.h"
+#include "env.h"
+#include "direct3D.h"
+#include "imgui_manager.h"
+#include "behavior_tree.h"
+#include "behavior_leaf.h"
+#include "pipeline_manager.h"
+#include "resource_helper.h"
+#include "geometry_generator.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;

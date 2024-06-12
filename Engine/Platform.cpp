@@ -1,4 +1,4 @@
-﻿#include "Platform.h"
+﻿#include "platform.h"
 
 using namespace Engine;
 

@@ -1,8 +1,8 @@
 #ifndef _GAMEOBJECT
 #define _GAMEOBJECT
 
-#include "CommonStruct.h"
-#include "PhongShader.h"
+#include "common_struct.h"
+#include "phong_shader.h"
 
 namespace Engine
 {

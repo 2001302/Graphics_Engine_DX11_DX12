@@ -5,156 +5,141 @@ using namespace Engine;
 /// <summary>
 /// NOTE : Global
 /// </summary>
-static Platform* g_system = nullptr;
+static Platform *g_system = nullptr;
 
 Platform::Platform()
-	: m_screenWidth(1280), m_screenHeight(960), m_mainWindow(0), m_applicationName(0), m_hinstance(0)
-{
-	g_system = this;
+    : screen_width_(1280), screen_height_(960), main_window_(0),
+      application_name_(0), hinstance_(0) {
+    g_system = this;
 }
 
-Platform::~Platform()
-{
+Platform::~Platform() {}
+
+static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam,
+                                LPARAM lparam) {
+    switch (umessage) {
+        // Check if the window is being destroyed.
+    case WM_DESTROY: {
+        PostQuitMessage(0);
+        return 0;
+    }
+
+    // Check if the window is being closed.
+    case WM_CLOSE: {
+        PostQuitMessage(0);
+        return 0;
+    }
+
+    // All other messages pass to the message handler in the system class.
+    default: {
+        return g_system->MessageHandler(hwnd, umessage, wparam, lparam);
+    }
+    }
 }
 
-static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
-{
-	switch (umessage)
-	{
-		// Check if the window is being destroyed.
-	case WM_DESTROY:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
+bool Platform::OnStart() {
+    hinstance_ = GetModuleHandle(NULL);
 
-	// Check if the window is being closed.
-	case WM_CLOSE:
-	{
-		PostQuitMessage(0);
-		return 0;
-	}
+    WNDCLASSEX wc = {sizeof(WNDCLASSEX),
+                     CS_CLASSDC,
+                     WndProc,
+                     0L,
+                     0L,
+                     hinstance_,
+                     NULL,
+                     NULL,
+                     NULL,
+                     NULL,
+                     L"Engine", // lpszClassName, L-string
+                     NULL};
 
-	// All other messages pass to the message handler in the system class.
-	default:
-	{
-		return g_system->MessageHandler(hwnd, umessage, wparam, lparam);
-	}
-	}
+    // The RegisterClass function has been superseded by the RegisterClassEx
+    // function.
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassa?redirectedfrom=MSDN
+    if (!RegisterClassEx(&wc)) {
+        std::cout << "RegisterClassEx() failed." << std::endl;
+        return false;
+    }
+
+    // 툴바까지 포함한 윈도우 전체 해상도가 아니라
+    // 우리가 실제로 그리는 해상도가 width x height가 되도록
+    // 윈도우를 만들 해상도를 다시 계산해서 CreateWindow()에서 사용
+
+    // 우리가 원하는 그림이 그려질 부분의 해상도
+    RECT wr = {0, 0, screen_width_, screen_height_};
+
+    // 필요한 윈도우 크기(해상도) 계산
+    // wr의 값이 바뀜
+    AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
+
+    // 윈도우를 만들때 위에서 계산한 wr 사용
+    main_window_ = CreateWindow(wc.lpszClassName, L"HongLabGraphics Example",
+                                WS_OVERLAPPEDWINDOW,
+                                10, // 윈도우 좌측 상단의 x 좌표
+                                10, // 윈도우 좌측 상단의 y 좌표
+                                wr.right - wr.left, // 윈도우 가로 방향 해상도
+                                wr.bottom - wr.top, // 윈도우 세로 방향 해상도
+                                NULL, NULL, wc.hInstance, NULL);
+
+    if (!main_window_) {
+        std::cout << "CreateWindow() failed." << std::endl;
+        return false;
+    }
+
+    ShowWindow(main_window_, SW_SHOWDEFAULT);
+    UpdateWindow(main_window_);
+
+    return true;
 }
 
-bool Platform::OnStart()
-{
-	m_hinstance = GetModuleHandle(NULL);
+bool Platform::OnFrame() { return true; }
 
-	WNDCLASSEX wc = { sizeof(WNDCLASSEX),
-					 CS_CLASSDC,
-					 WndProc,
-					 0L,
-					 0L,
-					 m_hinstance,
-					 NULL,
-					 NULL,
-					 NULL,
-					 NULL,
-					 L"Engine",// lpszClassName, L-string
-					 NULL };
+void Platform::Run() {
+    MSG msg;
+    bool done, result;
 
-	// The RegisterClass function has been superseded by the RegisterClassEx function.
-	// https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassa?redirectedfrom=MSDN
-	if (!RegisterClassEx(&wc)) {
-		std::cout << "RegisterClassEx() failed." << std::endl;
-		return false;
-	}
+    // Initialize the message structure.
+    ZeroMemory(&msg, sizeof(MSG));
 
-	// 툴바까지 포함한 윈도우 전체 해상도가 아니라
-	// 우리가 실제로 그리는 해상도가 width x height가 되도록
-	// 윈도우를 만들 해상도를 다시 계산해서 CreateWindow()에서 사용
+    // Loop until there is a quit message from the window or the user.
+    done = false;
+    while (!done) {
+        // Handle the windows messages.
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
 
-	// 우리가 원하는 그림이 그려질 부분의 해상도
-	RECT wr = { 0, 0, m_screenWidth, m_screenHeight };
+        // If windows signals to end the application then exit out.
+        if (msg.message == WM_QUIT) {
+            done = true;
+        } else {
+            // Otherwise do the frame processing.
+            result = OnFrame();
+            if (!result) {
+                done = true;
+            }
+        }
+    }
 
-	// 필요한 윈도우 크기(해상도) 계산
-	// wr의 값이 바뀜
-	AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
-
-	// 윈도우를 만들때 위에서 계산한 wr 사용
-	m_mainWindow = CreateWindow(wc.lpszClassName, L"HongLabGraphics Example", WS_OVERLAPPEDWINDOW,
-		10,                // 윈도우 좌측 상단의 x 좌표
-		10,                // 윈도우 좌측 상단의 y 좌표
-		wr.right - wr.left, // 윈도우 가로 방향 해상도
-		wr.bottom - wr.top, // 윈도우 세로 방향 해상도
-		NULL, NULL, wc.hInstance, NULL);
-
-	if (!m_mainWindow) {
-		std::cout << "CreateWindow() failed." << std::endl;
-		return false;
-	}
-
-	ShowWindow(m_mainWindow, SW_SHOWDEFAULT);
-	UpdateWindow(m_mainWindow);
-
-	return true;
-}
-
-bool Platform::OnFrame() {
-	return true;
-}
-
-void Platform::Run()
-{
-	MSG msg;
-	bool done, result;
-
-	// Initialize the message structure.
-	ZeroMemory(&msg, sizeof(MSG));
-
-	// Loop until there is a quit message from the window or the user.
-	done = false;
-	while (!done)
-	{
-		// Handle the windows messages.
-		if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-
-		// If windows signals to end the application then exit out.
-		if (msg.message == WM_QUIT)
-		{
-			done = true;
-		}
-		else
-		{
-			// Otherwise do the frame processing.
-			result = OnFrame();
-			if (!result)
-			{
-				done = true;
-			}
-		}
-	}
-
-	return;
+    return;
 }
 
 bool Platform::OnStop() {
-	// Shutdown the window.
-	if (FULL_SCREEN)
-	{
-		ChangeDisplaySettings(NULL, 0);
-	}
+    // Shutdown the window.
+    if (FULL_SCREEN) {
+        ChangeDisplaySettings(NULL, 0);
+    }
 
-	// Remove the window.
-	DestroyWindow(m_mainWindow);
-	m_mainWindow = NULL;
+    // Remove the window.
+    DestroyWindow(main_window_);
+    main_window_ = NULL;
 
-	// Remove the application instance.
-	UnregisterClass(m_applicationName, m_hinstance);
-	m_hinstance = NULL;
+    // Remove the application instance.
+    UnregisterClass(application_name_, hinstance_);
+    hinstance_= NULL;
 
-	// Release the pointer to this class.
-	g_system = NULL;
-	return true;
+    // Release the pointer to this class.
+    g_system = NULL;
+    return true;
 }

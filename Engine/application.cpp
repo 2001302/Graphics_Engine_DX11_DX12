@@ -2,34 +2,29 @@
 
 using namespace Engine;
 
-Application::~Application() {
-
-    return;
-}
-
 bool Application::OnStart() {
-    
-    Platform::OnStart();
-    
-    m_manager = new PipelineManager();
-    m_env = new Env();
-    m_imgui = new ImGuiManager();
 
-    m_env->screenWidth = m_screenWidth;
-    m_env->screenHeight = m_screenHeight;
+    Platform::OnStart();
+
+    manager_= new PipelineManager();
+    env_= new Env();
+    imgui_= new ImGuiManager();
+
+    env_->screenWidth = screen_width_;
+    env_->screenHeight = screen_height_;
 
     // Create and initialize the input object.  This object will be used to
     // handle reading the keyboard input from the user.
-    m_input = std::make_unique<Input>();
+    input_= std::make_unique<Input>();
 
-    m_input->Initialize(m_hinstance, m_mainWindow, m_screenWidth, m_screenHeight);
+    input_->Initialize(hinstance_, main_window_, screen_width_, screen_height_);
 
     std::map<EnumDataBlockType, IDataBlock *> dataBlock = {
-        {EnumDataBlockType::eManager, m_manager},
-        {EnumDataBlockType::eGui, m_imgui},
+        {EnumDataBlockType::eManager, manager_},
+        {EnumDataBlockType::eGui, imgui_},
     };
 
-    Direct3D::GetInstance().Init(m_env, VSYNC_ENABLED, m_mainWindow,
+    Direct3D::GetInstance().Init(env_, VSYNC_ENABLED, main_window_,
                                  FULL_SCREEN);
 
     auto tree = new BehaviorTreeBuilder();
@@ -37,32 +32,32 @@ bool Application::OnStart() {
     tree->Build(dataBlock)
         ->Sequence()
         ->Excute(std::make_shared<InitializeCamera>())
-        ->Excute(std::make_shared<InitializePhongShader>(m_mainWindow))
+        ->Excute(std::make_shared<InitializePhongShader>(main_window_))
         ->Close();
 
     tree->Run();
 
-    m_imgui->Initialize(m_mainWindow, &Direct3D::GetInstance());
+    imgui_->Initialize(main_window_, &Direct3D::GetInstance());
 
     return true;
 }
 
 bool Application::OnFrame() {
 
-    std::map<EnumDataBlockType, IDataBlock*> dataBlock = {
-    {EnumDataBlockType::eManager, m_manager},
-    {EnumDataBlockType::eEnv, m_env},
-    {EnumDataBlockType::eGui, m_imgui},
+    std::map<EnumDataBlockType, IDataBlock *> dataBlock = {
+        {EnumDataBlockType::eManager, manager_},
+        {EnumDataBlockType::eEnv, env_},
+        {EnumDataBlockType::eGui, imgui_},
     };
 
     // Clear the buffers to begin the scene.
     Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
-    if (!m_input->Frame()) {
+    if (!input_->Frame()) {
         return false;
     }
     // ImGui
-    m_imgui->Prepare(m_env);
+    imgui_->Prepare(env_);
 
     auto tree = std::make_unique<BehaviorTreeBuilder>();
 
@@ -73,7 +68,7 @@ bool Application::OnFrame() {
 
     tree->Run();
 
-    m_imgui->Render(m_mainWindow);
+    imgui_->Render(main_window_);
 
     // Present the rendered scene to the screen.
     Direct3D::GetInstance().EndScene();
@@ -81,44 +76,43 @@ bool Application::OnFrame() {
     return true;
 }
 
-bool Application::OnStop() 
-{
+bool Application::OnStop() {
     Platform::OnStop();
 
-    if (m_manager) {
-        for (auto& model : m_manager->models) {
+    if (manager_) {
+        for (auto &model : manager_->models) {
             delete model;
             model = 0;
         }
 
-        m_manager->phongShader.reset();
-        m_manager->camera.reset();
+        manager_->phongShader.reset();
+        manager_->camera.reset();
     }
 
-    if (m_env) {
-        delete m_env;
-        m_env = 0;
+    if (env_) {
+        delete env_;
+        env_= 0;
     }
 
-    if (m_imgui) {
-        m_imgui->Shutdown();
-        delete m_imgui;
-        m_imgui = 0;
+    if (imgui_) {
+        imgui_->Shutdown();
+        delete imgui_;
+        imgui_= 0;
     }
 
-    if (m_input) {
-        m_input->Shutdown();
-        m_input.reset();
+    if (input_) {
+        input_->Shutdown();
+        input_.reset();
     }
 
     return true;
 }
 bool Application::OnRightDragRequest() {
     DIMOUSESTATE mouseState;
-    if (FAILED(m_input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
+    if (FAILED(input_->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
                                                 &mouseState))) {
         // retry
-        m_input->Mouse()->Acquire();
+        input_->Mouse()->Acquire();
     } else {
         auto viewPort = Direct3D::GetInstance().viewport;
 
@@ -126,9 +120,9 @@ bool Application::OnRightDragRequest() {
         Eigen::Vector2d vector =
             Eigen::Vector2d(-mouseState.lX, -mouseState.lY);
 
-        Eigen::Vector3d origin(m_manager->camera->position.x,
-                               m_manager->camera->position.y,
-                               m_manager->camera->position.z);
+        Eigen::Vector3d origin(manager_->camera->position.x,
+                               manager_->camera->position.y,
+                               manager_->camera->position.z);
 
         // convert to spherical coordinates
         double r = origin.norm();
@@ -150,7 +144,7 @@ bool Application::OnRightDragRequest() {
         Eigen::Vector3d origin_prime(x, y, z);
 
         if (0.0f < phi && phi < M_PI)
-            m_manager->camera->position = DirectX::SimpleMath::Vector3(
+            manager_->camera->position = DirectX::SimpleMath::Vector3(
                 origin_prime.x(), origin_prime.y(), origin_prime.z());
     }
 
@@ -159,22 +153,22 @@ bool Application::OnRightDragRequest() {
 
 bool Application::OnMouseWheelRequest() {
     DIMOUSESTATE mouseState;
-    if (FAILED(m_input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
+    if (FAILED(input_->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
                                                 &mouseState))) {
         // retry
-        m_input->Mouse()->Acquire();
+        input_->Mouse()->Acquire();
     } else {
         double wheel = -mouseState.lZ / (600.0);
-        Eigen::Vector3d origin(m_manager->camera->position.x,
-                               m_manager->camera->position.y,
-                               m_manager->camera->position.z);
+        Eigen::Vector3d origin(manager_->camera->position.x,
+                               manager_->camera->position.y,
+                               manager_->camera->position.z);
 
         Eigen::Matrix3d R1;
         R1 << 1.0 + wheel, 0.0, 0.0, 0.0, 1.0 + wheel, 0.0, 0.0, 0.0,
             1.0 + wheel;
 
         Eigen::Vector3d origin_prime = R1 * origin;
-        m_manager->camera->position = DirectX::SimpleMath::Vector3(
+        manager_->camera->position = DirectX::SimpleMath::Vector3(
             origin_prime.x(), origin_prime.y(), origin_prime.z());
     }
 
@@ -200,7 +194,7 @@ bool Application::OnModelLoadRequest() {
     // OPENFILENAME struct initialize
     ZeroMemory(&ofn, sizeof(ofn));
     ofn.lStructSize = sizeof(ofn);
-    ofn.hwndOwner = m_mainWindow;
+    ofn.hwndOwner = main_window_;
     ofn.lpstrFile = szFile;
     ofn.lpstrFile[0] = '\0';
     ofn.nMaxFile = sizeof(szFile);
@@ -213,8 +207,8 @@ bool Application::OnModelLoadRequest() {
 
     // show file explorer
     if (GetOpenFileName(&ofn)) {
-        m_manager->models.push_back(new GameObject());
-        auto model = m_manager->models.back();
+        manager_->models.push_back(new GameObject());
+        auto model = manager_->models.back();
 
         std::string fullPath = ToString(ofn.lpstrFile);
         size_t lastSlash = fullPath.find_last_of('\\');
@@ -232,10 +226,10 @@ bool Application::OnModelLoadRequest() {
         model->phongShader->vertex_constant_buffer_data.projection =
             DirectX::SimpleMath::Matrix();
 
-        m_manager->phongShader->CreateConstantBuffer(
+        manager_->phongShader->CreateConstantBuffer(
             model->phongShader->vertex_constant_buffer_data,
             model->phongShader->vertex_constant_buffer);
-        m_manager->phongShader->CreateConstantBuffer(
+        manager_->phongShader->CreateConstantBuffer(
             model->phongShader->pixel_constant_buffer_data,
             model->phongShader->pixel_constant_buffer);
 
@@ -308,9 +302,9 @@ bool Application::OnModelLoadRequest() {
 }
 
 bool Application::OnSphereLoadRequest() {
-    m_manager->models.push_back(new GameObject());
+    manager_->models.push_back(new GameObject());
 
-    auto model = m_manager->models.back();
+    auto model = manager_->models.back();
 
     GeometryGenerator::MakeSphere(model, 1.5f, 15, 13);
 
@@ -374,10 +368,10 @@ bool Application::OnSphereLoadRequest() {
     model->phongShader->vertex_constant_buffer_data.projection =
         DirectX::SimpleMath::Matrix();
 
-    m_manager->phongShader->CreateConstantBuffer(
+    manager_->phongShader->CreateConstantBuffer(
         model->phongShader->vertex_constant_buffer_data,
         model->phongShader->vertex_constant_buffer);
-    m_manager->phongShader->CreateConstantBuffer(
+    manager_->phongShader->CreateConstantBuffer(
         model->phongShader->pixel_constant_buffer_data,
         model->phongShader->pixel_constant_buffer);
 
@@ -387,9 +381,9 @@ bool Application::OnSphereLoadRequest() {
 }
 
 bool Application::OnBoxLoadRequest() {
-    m_manager->models.push_back(new GameObject());
+    manager_->models.push_back(new GameObject());
 
-    auto model = m_manager->models.back();
+    auto model = manager_->models.back();
 
     GeometryGenerator::MakeBox(model);
 
@@ -454,10 +448,10 @@ bool Application::OnBoxLoadRequest() {
     model->phongShader->vertex_constant_buffer_data.projection =
         DirectX::SimpleMath::Matrix();
 
-    m_manager->phongShader->CreateConstantBuffer(
+    manager_->phongShader->CreateConstantBuffer(
         model->phongShader->vertex_constant_buffer_data,
         model->phongShader->vertex_constant_buffer);
-    m_manager->phongShader->CreateConstantBuffer(
+    manager_->phongShader->CreateConstantBuffer(
         model->phongShader->pixel_constant_buffer_data,
         model->phongShader->pixel_constant_buffer);
 
@@ -467,9 +461,9 @@ bool Application::OnBoxLoadRequest() {
 }
 
 bool Application::OnCylinderLoadRequest() {
-    m_manager->models.push_back(new GameObject());
+    manager_->models.push_back(new GameObject());
 
-    auto model = m_manager->models.back();
+    auto model = manager_->models.back();
 
     GeometryGenerator::MakeCylinder(model, 5.0f, 5.0f, 15.0f, 30);
 
@@ -533,10 +527,10 @@ bool Application::OnCylinderLoadRequest() {
     model->phongShader->vertex_constant_buffer_data.projection =
         DirectX::SimpleMath::Matrix();
 
-    m_manager->phongShader->CreateConstantBuffer(
+    manager_->phongShader->CreateConstantBuffer(
         model->phongShader->vertex_constant_buffer_data,
         model->phongShader->vertex_constant_buffer);
-    m_manager->phongShader->CreateConstantBuffer(
+    manager_->phongShader->CreateConstantBuffer(
         model->phongShader->pixel_constant_buffer_data,
         model->phongShader->pixel_constant_buffer);
 
@@ -545,59 +539,49 @@ bool Application::OnCylinderLoadRequest() {
     return true;
 }
 
-LRESULT CALLBACK Application::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
-{
-    extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
+                                             WPARAM wparam, LPARAM lparam) {
+    extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
+        HWND main_window, UINT msg, WPARAM wParam, LPARAM lParam);
 
-    ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam);
+    ImGui_ImplWin32_WndProcHandler(main_window, umsg, wparam, lparam);
 
-    switch (umsg)
-    {
-    case WM_MOUSEMOVE:
-    {
-        if (wparam & MK_RBUTTON)
-        {
+    switch (umsg) {
+    case WM_MOUSEMOVE: {
+        if (wparam & MK_RBUTTON) {
             return OnRightDragRequest();
         }
         break;
     }
-    case WM_MOUSEWHEEL:
-    {
+    case WM_MOUSEWHEEL: {
         return OnMouseWheelRequest();
         break;
     }
-    case WM_RBUTTONDOWN:
-    {
-        //return OnRightClickRequest();
+    case WM_RBUTTONDOWN: {
+        // return OnRightClickRequest();
         break;
     }
-    case WM_LBUTTONUP:
-    {
+    case WM_LBUTTONUP: {
         break;
     }
-    case WM_MODEL_LOAD:
-    {
+    case WM_MODEL_LOAD: {
         return OnModelLoadRequest();
         break;
     }
-    case WM_SPHERE_LOAD:
-    {
+    case WM_SPHERE_LOAD: {
         return OnSphereLoadRequest();
         break;
     }
-    case WM_BOX_LOAD:
-    {
+    case WM_BOX_LOAD: {
         return OnBoxLoadRequest();
         break;
     }
-    case WM_CYLINDER_LOAD:
-    {
+    case WM_CYLINDER_LOAD: {
         return OnCylinderLoadRequest();
         break;
     }
-    default:
-    {
-        return DefWindowProc(hwnd, umsg, wparam, lparam);
+    default: {
+        return DefWindowProc(main_window, umsg, wparam, lparam);
     }
     }
 }

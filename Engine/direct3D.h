@@ -13,11 +13,11 @@ class Direct3D {
   private:
     Direct3D()
         : vsync_enabled(false), swap_chain(0), device(0), device_context(0),
-          viewport(D3D11_VIEWPORT()) {}
+          viewport(D3D11_VIEWPORT()), render_target_view(0) {}
     Direct3D(const Direct3D &x)
         : vsync_enabled(x.vsync_enabled), swap_chain(x.swap_chain),
           device(x.device), device_context(x.device_context),
-          viewport(x.viewport) {}
+          viewport(x.viewport), render_target_view(0) {}
     Direct3D &operator=(const Direct3D &ref) {}
     ~Direct3D() {}
 

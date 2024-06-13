@@ -1,17 +1,14 @@
 #include "application.h"
 
+int main() {
+    std::unique_ptr<Engine::Application> application =
+        std::make_unique<Engine::Application>();
 
-int main()
-{
-	std::unique_ptr<Engine::Application> application = std::make_unique<Engine::Application>();
+    if (application->OnStart()) {
+        application->Run();
+    }
 
-	// Initialize and run the system object.
-	if (application->OnStart())
-	{
-		application->Run();
-	}
+    application->OnStop();
 
-	application->OnStop();
-
-	return 0;
+    return 0;
 }

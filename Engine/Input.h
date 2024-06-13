@@ -27,8 +27,8 @@ class Input {
     void SetMouseLocation(int x, int y);
     bool IsMousePressed();
 
-    IDirectInputDevice8 *Mouse() { return m_mouse; }
-    IDirectInputDevice8 *Keyboard() { return m_keyboard; }
+    IDirectInputDevice8 *Mouse() { return mouse_; }
+    IDirectInputDevice8 *Keyboard() { return keyboard_; }
 
   private:
     bool ReadKeyboard();
@@ -36,11 +36,11 @@ class Input {
     void ProcessInput();
 
   private:
-    IDirectInput8 *m_directInput;
-    IDirectInputDevice8 *m_keyboard;
-    IDirectInputDevice8 *m_mouse;
-    unsigned char m_keyboardState[256];
-    DIMOUSESTATE m_mouseState;
-    int m_screenWidth, m_screenHeight, m_mouseX, m_mouseY;
+    IDirectInput8 *direct_input_;
+    IDirectInputDevice8 *keyboard_;
+    IDirectInputDevice8 *mouse_;
+    unsigned char keyboard_state_[256];
+    DIMOUSESTATE mouse_state_;
+    int screen_width, screen_height, mouse_x, mouse_y;
 };
 #endif

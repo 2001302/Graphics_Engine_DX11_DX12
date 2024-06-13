@@ -7,6 +7,16 @@ using namespace Engine;
 /// </summary>
 static Platform* g_system = nullptr;
 
+Platform::Platform()
+	: m_screenWidth(1280), m_screenHeight(960), m_mainWindow(0), m_applicationName(0), m_hinstance(0)
+{
+	g_system = this;
+}
+
+Platform::~Platform()
+{
+}
+
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM lparam)
 {
 	switch (umessage)
@@ -33,60 +43,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam, LPARAM 
 	}
 }
 
-Platform::Platform()
-	: m_screenWidth(1280), m_screenHeight(960), m_mainWindow(0), m_applicationName(0), m_hinstance(0)
-{
-	g_system = this;
-}
-
-Platform::Platform(const Platform& other)
-	: m_screenWidth(other.m_screenWidth), m_screenHeight(other.m_screenHeight)
-{
-	g_system = this;
-
-	m_mainWindow = other.m_mainWindow;
-	m_applicationName = other.m_applicationName;
-	m_hinstance = other.m_hinstance;
-}
-
-Platform::~Platform()
-{
-	// Release the application class object.
-	m_application.reset();
-
-	// Shutdown the window.
-	if (FULL_SCREEN)
-	{
-		ChangeDisplaySettings(NULL, 0);
-	}
-
-	// Remove the window.
-	DestroyWindow(m_mainWindow);
-	m_mainWindow = NULL;
-
-	// Remove the application instance.
-	UnregisterClass(m_applicationName, m_hinstance);
-	m_hinstance = NULL;
-
-	// Release the pointer to this class.
-	g_system = NULL;
-}
-
-bool Platform::Initialize()
-{
-	// Initialize the windows api.
-	InitMainWindow();
-
-	// Create and initialize the application class object.  This object will handle rendering all the graphics for this application.
-	m_application = std::make_unique<Application>(m_mainWindow,m_hinstance);
-
-	if (!m_application->Initialize(m_screenWidth, m_screenHeight))
-		return false;
-
-	return true;
-}
-
-bool Platform::InitMainWindow()
+bool Platform::OnStart()
 {
 	m_hinstance = GetModuleHandle(NULL);
 
@@ -140,11 +97,14 @@ bool Platform::InitMainWindow()
 	return true;
 }
 
+bool Platform::OnFrame() {
+	return true;
+}
+
 void Platform::Run()
 {
 	MSG msg;
 	bool done, result;
-
 
 	// Initialize the message structure.
 	ZeroMemory(&msg, sizeof(MSG));
@@ -168,7 +128,7 @@ void Platform::Run()
 		else
 		{
 			// Otherwise do the frame processing.
-			result = Frame();
+			result = OnFrame();
 			if (!result)
 			{
 				done = true;
@@ -179,69 +139,22 @@ void Platform::Run()
 	return;
 }
 
-bool Platform::Frame()
-{
-	if (!m_application->Frame())
+bool Platform::OnStop() {
+	// Shutdown the window.
+	if (FULL_SCREEN)
 	{
-		return false;
+		ChangeDisplaySettings(NULL, 0);
 	}
 
+	// Remove the window.
+	DestroyWindow(m_mainWindow);
+	m_mainWindow = NULL;
+
+	// Remove the application instance.
+	UnregisterClass(m_applicationName, m_hinstance);
+	m_hinstance = NULL;
+
+	// Release the pointer to this class.
+	g_system = NULL;
 	return true;
-}
-
-LRESULT CALLBACK Platform::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
-{
-	extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-	ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam);
-
-	switch (umsg)
-	{
-	case WM_MOUSEMOVE:
-	{
-		if (wparam & MK_RBUTTON)
-		{
-			return m_application->OnRightDragRequest();
-		}
-		break;
-	}
-	case WM_MOUSEWHEEL:
-	{
-		return m_application->OnMouseWheelRequest();
-		break;
-	}
-	case WM_RBUTTONDOWN:
-	{
-		//return OnRightClickRequest();
-		break;
-	}
-	case WM_LBUTTONUP:
-	{
-		break;
-	}
-	case WM_MODEL_LOAD:
-	{
-		return m_application->OnModelLoadRequest();
-		break;
-	}
-	case WM_SPHERE_LOAD:
-	{
-		return m_application->OnSphereLoadRequest();
-		break;
-	}
-	case WM_BOX_LOAD:
-	{
-		return m_application->OnBoxLoadRequest();
-		break;
-	}
-	case WM_CYLINDER_LOAD:
-	{
-		return m_application->OnCylinderLoadRequest();
-		break;
-	}
-	default:
-	{
-		return DefWindowProc(hwnd, umsg, wparam, lparam);
-	}
-	}
 }

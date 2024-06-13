@@ -2,19 +2,27 @@
 
 using namespace Engine;
 
-bool Application::Initialize(int screenWidth, int screenHeight) {
+Application::~Application() {
+
+    return;
+}
+
+bool Application::OnStart() {
+    
+    Platform::OnStart();
+    
     m_manager = new PipelineManager();
     m_env = new Env();
     m_imgui = new ImGuiManager();
 
-    m_env->screenWidth = screenWidth;
-    m_env->screenHeight = screenHeight;
+    m_env->screenWidth = m_screenWidth;
+    m_env->screenHeight = m_screenHeight;
 
     // Create and initialize the input object.  This object will be used to
     // handle reading the keyboard input from the user.
     m_input = std::make_unique<Input>();
 
-    m_input->Initialize(m_hinstance, m_mainWindow, screenWidth, screenHeight);
+    m_input->Initialize(m_hinstance, m_mainWindow, m_screenWidth, m_screenHeight);
 
     std::map<EnumDataBlockType, IDataBlock *> dataBlock = {
         {EnumDataBlockType::eManager, m_manager},
@@ -39,16 +47,20 @@ bool Application::Initialize(int screenWidth, int screenHeight) {
     return true;
 }
 
-bool Application::Render() {
-    std::map<EnumDataBlockType, IDataBlock *> dataBlock = {
-        {EnumDataBlockType::eManager, m_manager},
-        {EnumDataBlockType::eEnv, m_env},
-        {EnumDataBlockType::eGui, m_imgui},
+bool Application::OnFrame() {
+
+    std::map<EnumDataBlockType, IDataBlock*> dataBlock = {
+    {EnumDataBlockType::eManager, m_manager},
+    {EnumDataBlockType::eEnv, m_env},
+    {EnumDataBlockType::eGui, m_imgui},
     };
 
     // Clear the buffers to begin the scene.
     Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
+    if (!m_input->Frame()) {
+        return false;
+    }
     // ImGui
     m_imgui->Prepare(m_env);
 
@@ -69,20 +81,12 @@ bool Application::Render() {
     return true;
 }
 
-bool Application::Frame() {
-    if (!m_input->Frame()) {
-        return false;
-    }
+bool Application::OnStop() 
+{
+    Platform::OnStop();
 
-    if (!Render()) {
-        return false;
-    }
-    return true;
-}
-
-void Application::Shutdown() {
     if (m_manager) {
-        for (auto &model : m_manager->models) {
+        for (auto& model : m_manager->models) {
             delete model;
             model = 0;
         }
@@ -107,11 +111,8 @@ void Application::Shutdown() {
         m_input.reset();
     }
 
-    Direct3D::GetInstance().Shutdown();
-
-    return;
+    return true;
 }
-
 bool Application::OnRightDragRequest() {
     DIMOUSESTATE mouseState;
     if (FAILED(m_input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
@@ -542,4 +543,61 @@ bool Application::OnCylinderLoadRequest() {
     model->transform = DirectX::SimpleMath::Matrix();
 
     return true;
+}
+
+LRESULT CALLBACK Application::MessageHandler(HWND hwnd, UINT umsg, WPARAM wparam, LPARAM lparam)
+{
+    extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+    ImGui_ImplWin32_WndProcHandler(hwnd, umsg, wparam, lparam);
+
+    switch (umsg)
+    {
+    case WM_MOUSEMOVE:
+    {
+        if (wparam & MK_RBUTTON)
+        {
+            return OnRightDragRequest();
+        }
+        break;
+    }
+    case WM_MOUSEWHEEL:
+    {
+        return OnMouseWheelRequest();
+        break;
+    }
+    case WM_RBUTTONDOWN:
+    {
+        //return OnRightClickRequest();
+        break;
+    }
+    case WM_LBUTTONUP:
+    {
+        break;
+    }
+    case WM_MODEL_LOAD:
+    {
+        return OnModelLoadRequest();
+        break;
+    }
+    case WM_SPHERE_LOAD:
+    {
+        return OnSphereLoadRequest();
+        break;
+    }
+    case WM_BOX_LOAD:
+    {
+        return OnBoxLoadRequest();
+        break;
+    }
+    case WM_CYLINDER_LOAD:
+    {
+        return OnCylinderLoadRequest();
+        break;
+    }
+    default:
+    {
+        return DefWindowProc(hwnd, umsg, wparam, lparam);
+    }
+    }
 }

@@ -220,52 +220,6 @@ void Direct3D::SetViewPort(float x, float y, float width, float height) {
     device_context->RSSetViewports(1, &viewport);
 }
 
-void Direct3D::Shutdown() {
-    // Before shutting down set to windowed mode or when you release the swap
-    // chain it will throw an exception.
-    if (swap_chain) {
-        swap_chain->SetFullscreenState(false, NULL);
-    }
-
-    if (device_context) {
-        device_context->Release();
-    }
-
-    if (device) {
-        device->Release();
-    }
-
-    if (swap_chain) {
-        swap_chain->Release();
-    }
-
-    if (solid_rasterizer_state) {
-        solid_rasterizer_state->Release();
-    }
-
-    if (wire_rasterizer_state) {
-        wire_rasterizer_state->Release();
-    }
-
-    if (depth_stencil_view) {
-        depth_stencil_view->Release();
-    }
-
-    if (depth_stencil_state) {
-        depth_stencil_state->Release();
-    }
-
-    if (depth_stencil_buffer) {
-        depth_stencil_buffer->Release();
-    }
-
-    if (render_target_view) {
-        render_target_view->Release();
-    }
-
-    return;
-}
-
 void Direct3D::BeginScene(float red, float green, float blue, float alpha) {
     float color[4];
 

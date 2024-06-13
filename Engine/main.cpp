@@ -1,22 +1,17 @@
-#include "Platform.h"
+#include "application.h"
 
 
 int main()
 {
-	Engine::Platform* Platform;
-	bool result;
-
-	// Create the system object.
-	Platform = new Engine::Platform;
+	std::unique_ptr<Engine::Application> application = std::make_unique<Engine::Application>();
 
 	// Initialize and run the system object.
-	if (Platform->Initialize())
+	if (application->OnStart())
 	{
-		Platform->Run();
+		application->Run();
 	}
 
-	delete Platform;
-	Platform = 0;
+	application->OnStop();
 
 	return 0;
 }

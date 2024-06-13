@@ -39,7 +39,6 @@ class Direct3D {
     bool InitMainScene(int screenWidth, int screenHeight);
 
     void SetViewPort(float x, float y, float width, float height);
-    void Shutdown();
 
     void BeginScene(float, float, float, float);
     void EndScene();

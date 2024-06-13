@@ -190,26 +190,26 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke() {
 
         float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
         context->ClearRenderTargetView(
-            Direct3D::GetInstance().render_target_view, clearColor);
+            Direct3D::GetInstance().render_target_view_, clearColor);
         context->ClearDepthStencilView(
-            Direct3D::GetInstance().depth_stencil_view.Get(),
+            Direct3D::GetInstance().depth_stencil_view_.Get(),
             D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
         context->OMSetRenderTargets(
-            1, &Direct3D::GetInstance().render_target_view,
-            Direct3D::GetInstance().depth_stencil_view.Get());
+            1, &Direct3D::GetInstance().render_target_view_,
+            Direct3D::GetInstance().depth_stencil_view_.Get());
         context->OMSetDepthStencilState(
-            Direct3D::GetInstance().depth_stencil_state.Get(), 0);
+            Direct3D::GetInstance().depth_stencil_state_.Get(), 0);
 
         context->VSSetShader(manager->phongShader->vertex_shader.Get(), 0, 0);
         context->PSSetSamplers(0, 1, &manager->phongShader->sample_state);
 
         if (gui->m_drawAsWire)
             context->RSSetState(
-                Direct3D::GetInstance().wire_rasterizer_state.Get());
+                Direct3D::GetInstance().wire_rasterizer_state_.Get());
         else
             context->RSSetState(
-                Direct3D::GetInstance().solid_rasterizer_state.Get());
+                Direct3D::GetInstance().solid_rasterizer_state_.Get());
 
         context->VSSetConstantBuffers(
             0, 1, model->phongShader->vertex_constant_buffer.GetAddressOf());

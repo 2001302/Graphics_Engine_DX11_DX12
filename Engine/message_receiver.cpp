@@ -10,7 +10,7 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         // retry
         input->Mouse()->Acquire();
     } else {
-        auto viewPort = Direct3D::GetInstance().viewport;
+        auto viewPort = Direct3D::GetInstance().viewport_;
 
         // mouse move vector
         Eigen::Vector2d vector =

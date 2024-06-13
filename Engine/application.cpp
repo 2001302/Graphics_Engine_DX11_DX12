@@ -2,29 +2,29 @@
 
 using namespace Engine;
 
+Application::Application() : imgui_(0), manager_(0), env_(0) {
+    input_ = std::make_unique<Input>();
+    imgui_ = std::make_shared<ImGuiManager>();
+    manager_ = std::make_shared<PipelineManager>();
+    env_ = std::make_shared<Env>();
+    message_receiver_ = std::make_unique<MessageReceiver>();
+};
+
 bool Application::OnStart() {
 
     Platform::OnStart();
 
-    manager_= new PipelineManager();
-    env_= new Env();
-    imgui_= new ImGuiManager();
-
     env_->screen_width_ = screen_width_;
     env_->screen_height_ = screen_height_;
-
-    // Create and initialize the input object.  This object will be used to
-    // handle reading the keyboard input from the user.
-    input_= std::make_unique<Input>();
 
     input_->Initialize(hinstance_, main_window_, screen_width_, screen_height_);
 
     std::map<EnumDataBlockType, IDataBlock *> dataBlock = {
-        {EnumDataBlockType::eManager, manager_},
-        {EnumDataBlockType::eGui, imgui_},
+        {EnumDataBlockType::eManager, manager_.get()},
+        {EnumDataBlockType::eGui, imgui_.get()},
     };
 
-    Direct3D::GetInstance().Init(env_, VSYNC_ENABLED, main_window_,
+    Direct3D::GetInstance().Init(env_.get(), VSYNC_ENABLED, main_window_,
                                  FULL_SCREEN);
 
     auto tree = new BehaviorTreeBuilder();
@@ -45,9 +45,9 @@ bool Application::OnStart() {
 bool Application::OnFrame() {
 
     std::map<EnumDataBlockType, IDataBlock *> dataBlock = {
-        {EnumDataBlockType::eManager, manager_},
-        {EnumDataBlockType::eEnv, env_},
-        {EnumDataBlockType::eGui, imgui_},
+        {EnumDataBlockType::eManager, manager_.get()},
+        {EnumDataBlockType::eEnv, env_.get()},
+        {EnumDataBlockType::eGui, imgui_.get()},
     };
 
     // Clear the buffers to begin the scene.
@@ -57,7 +57,7 @@ bool Application::OnFrame() {
         return false;
     }
     // ImGui
-    imgui_->Prepare(env_);
+    imgui_->Prepare(env_.get());
 
     auto tree = std::make_unique<BehaviorTreeBuilder>();
 
@@ -90,14 +90,12 @@ bool Application::OnStop() {
     }
 
     if (env_) {
-        delete env_;
-        env_= 0;
+        env_.reset();
     }
 
     if (imgui_) {
         imgui_->Shutdown();
-        delete imgui_;
-        imgui_= 0;
+        imgui_.reset();
     }
 
     if (input_) {
@@ -117,12 +115,13 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
     switch (umsg) {
     case WM_MOUSEMOVE: {
         if (wparam & MK_RBUTTON) {
-            return message_receiver_->OnRightDragRequest(manager_, input_);
+            return message_receiver_->OnRightDragRequest(manager_.get(),
+                                                         input_);
         }
         break;
     }
     case WM_MOUSEWHEEL: {
-        return message_receiver_->OnMouseWheelRequest(manager_, input_);
+        return message_receiver_->OnMouseWheelRequest(manager_.get(), input_);
         break;
     }
     case WM_RBUTTONDOWN: {
@@ -133,19 +132,20 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
         break;
     }
     case WM_MODEL_LOAD: {
-        return message_receiver_->OnModelLoadRequest(manager_, main_window);
+        return message_receiver_->OnModelLoadRequest(manager_.get(),
+                                                     main_window);
         break;
     }
     case WM_SPHERE_LOAD: {
-        return message_receiver_->OnSphereLoadRequest(manager_);
+        return message_receiver_->OnSphereLoadRequest(manager_.get());
         break;
     }
     case WM_BOX_LOAD: {
-        return message_receiver_->OnBoxLoadRequest(manager_);
+        return message_receiver_->OnBoxLoadRequest(manager_.get());
         break;
     }
     case WM_CYLINDER_LOAD: {
-        return message_receiver_->OnCylinderLoadRequest(manager_);
+        return message_receiver_->OnCylinderLoadRequest(manager_.get());
         break;
     }
     default: {

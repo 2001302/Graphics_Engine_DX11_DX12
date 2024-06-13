@@ -1,16 +1,13 @@
 #ifndef _APPLICATION
 #define _APPLICATION
 
-#include "platform.h"
 #include "message_receiver.h"
+#include "platform.h"
 
 namespace Engine {
 class Application : public Platform {
   public:
-    Application()
-        : imgui_(0), manager_(0), env_(0) {
-        message_receiver_ = std::make_unique<MessageReceiver>();
-    };
+    Application();
 
     bool OnStart() override final;
     bool OnFrame() override final;
@@ -20,9 +17,9 @@ class Application : public Platform {
 
   private:
     std::shared_ptr<Input> input_;
-    ImGuiManager *imgui_;
-    PipelineManager *manager_;
-    Env *env_;
+    std::shared_ptr<ImGuiManager> imgui_;
+    std::shared_ptr<PipelineManager> manager_;
+    std::shared_ptr<Env> env_;
     std::unique_ptr<MessageReceiver> message_receiver_;
 };
 } // namespace Engine

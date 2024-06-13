@@ -61,8 +61,8 @@ bool Direct3D::InitDirect3D(int screenWidth, int screenHeight, HWND hwnd,
     // Create the swap chain, Direct3D device, and Direct3D device context.
     result = D3D11CreateDeviceAndSwapChain(
         NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, &feature_level, 1,
-        D3D11_SDK_VERSION, &swap_chain_desc, &swap_chain, &device, NULL,
-        &device_context);
+        D3D11_SDK_VERSION, &swap_chain_desc, &swap_chain_, &device_, NULL,
+        &device_context_);
     if (FAILED(result)) {
         return false;
     }
@@ -75,11 +75,11 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
     {
         // Get the pointer to the back buffer.
         ComPtr<ID3D11Texture2D> backBufferPtr;
-        swap_chain->GetBuffer(0, __uuidof(ID3D11Texture2D),
+        swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D),
                               (LPVOID *)backBufferPtr.GetAddressOf());
         // Create the render target view with the back buffer pointer.
-        device->CreateRenderTargetView(backBufferPtr.Get(), NULL,
-                                       &render_target_view);
+        device_->CreateRenderTargetView(backBufferPtr.Get(), NULL,
+                                       &render_target_view_);
         // Release pointer to the back buffer as we no longer need it.
         backBufferPtr->Release();
     }
@@ -103,8 +103,8 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
         depth_buffer_desc.MiscFlags = 0;
         // Create the texture for the depth buffer using the filled out
         // description.
-        device->CreateTexture2D(&depth_buffer_desc, NULL,
-                                depth_stencil_buffer.GetAddressOf());
+        device_->CreateTexture2D(&depth_buffer_desc, NULL,
+                                depth_stencil_buffer_.GetAddressOf());
     }
 
     {
@@ -134,14 +134,14 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
         depth_stencil_desc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
         // Create the depth stencil state.
-        device->CreateDepthStencilState(&depth_stencil_desc,
-                                        depth_stencil_state.GetAddressOf());
+        device_->CreateDepthStencilState(&depth_stencil_desc,
+                                        depth_stencil_state_.GetAddressOf());
     }
 
     {
         // Set the depth stencil state.
         D3D11_DEPTH_STENCIL_VIEW_DESC depth_stencil_view_desc;
-        device_context->OMSetDepthStencilState(depth_stencil_state.Get(), 1);
+        device_context_->OMSetDepthStencilState(depth_stencil_state_.Get(), 1);
 
         // Initialize the depth stencil view.
         ZeroMemory(&depth_stencil_view_desc, sizeof(depth_stencil_view_desc));
@@ -152,15 +152,15 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
         depth_stencil_view_desc.Texture2D.MipSlice = 0;
 
         // Create the depth stencil view.
-        device->CreateDepthStencilView(depth_stencil_buffer.Get(),
+        device_->CreateDepthStencilView(depth_stencil_buffer_.Get(),
                                        &depth_stencil_view_desc,
-                                       &depth_stencil_view);
+                                       &depth_stencil_view_);
     }
 
     // Bind the render target view and depth stencil buffer to the output render
     // pipeline.
-    device_context->OMSetRenderTargets(1, &render_target_view,
-                                       depth_stencil_view.Get());
+    device_context_->OMSetRenderTargets(1, &render_target_view_,
+                                       depth_stencil_view_.Get());
 
     {
         D3D11_RASTERIZER_DESC raster_desc;
@@ -179,10 +179,10 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
         raster_desc.SlopeScaledDepthBias = 0.0f;
 
         // Create the rasterizer state from the description we just filled out.
-        device->CreateRasterizerState(&raster_desc,
-                                      solid_rasterizer_state.GetAddressOf());
+        device_->CreateRasterizerState(&raster_desc,
+                                      solid_rasterizer_state_.GetAddressOf());
         // Now set the rasterizer state.
-        device_context->RSSetState(solid_rasterizer_state.Get());
+        device_context_->RSSetState(solid_rasterizer_state_.Get());
     }
 
     {
@@ -195,8 +195,8 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
         rast_desc_wire.FrontCounterClockwise = false;
         rast_desc_wire.DepthClipEnable = true; // <- zNear, zFar 확인에 필요
 
-        device->CreateRasterizerState(&rast_desc_wire,
-                                      wire_rasterizer_state.GetAddressOf());
+        device_->CreateRasterizerState(&rast_desc_wire,
+                                      wire_rasterizer_state_.GetAddressOf());
     }
 
     { SetViewPort(0.0f, 0.0f, (float)screenWidth, (float)screenHeight); }
@@ -209,15 +209,15 @@ void Direct3D::SetViewPort(float x, float y, float width, float height) {
     const float SCREEN_NEAR = 0.3f;
 
     // Setup the viewport for rendering.
-    viewport.Width = (float)width;
-    viewport.Height = (float)height;
-    viewport.MinDepth = 0.0f;
-    viewport.MaxDepth = 1.0f;
-    viewport.TopLeftX = x;
-    viewport.TopLeftY = y;
+    viewport_.Width = (float)width;
+    viewport_.Height = (float)height;
+    viewport_.MinDepth = 0.0f;
+    viewport_.MaxDepth = 1.0f;
+    viewport_.TopLeftX = x;
+    viewport_.TopLeftY = y;
 
     // Create the viewport.
-    device_context->RSSetViewports(1, &viewport);
+    device_context_->RSSetViewports(1, &viewport_);
 }
 
 void Direct3D::BeginScene(float red, float green, float blue, float alpha) {
@@ -230,10 +230,10 @@ void Direct3D::BeginScene(float red, float green, float blue, float alpha) {
     color[3] = alpha;
 
     // Clear the back buffer.
-    device_context->ClearRenderTargetView(render_target_view, color);
+    device_context_->ClearRenderTargetView(render_target_view_, color);
 
     // Clear the depth buffer.
-    device_context->ClearDepthStencilView(depth_stencil_view.Get(),
+    device_context_->ClearDepthStencilView(depth_stencil_view_.Get(),
                                           D3D11_CLEAR_DEPTH, 1.0f, 0);
 
     return;
@@ -241,19 +241,19 @@ void Direct3D::BeginScene(float red, float green, float blue, float alpha) {
 
 void Direct3D::EndScene() {
     // Present the back buffer to the screen since rendering is complete.
-    if (vsync_enabled) {
+    if (vsync_enabled_) {
         // Lock to screen refresh rate.
-        swap_chain->Present(1, 0);
+        swap_chain_->Present(1, 0);
     } else {
         // Present as fast as possible.
-        swap_chain->Present(0, 0);
+        swap_chain_->Present(0, 0);
     }
 
     return;
 }
 
-ComPtr<ID3D11Device> Direct3D::GetDevice() { return device; }
+ComPtr<ID3D11Device> Direct3D::GetDevice() { return device_; }
 
 ComPtr<ID3D11DeviceContext> Direct3D::GetDeviceContext() {
-    return device_context;
+    return device_context_;
 }

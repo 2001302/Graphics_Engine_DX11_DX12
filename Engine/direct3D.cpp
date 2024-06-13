@@ -3,8 +3,8 @@
 using namespace Engine;
 
 bool Direct3D::Init(Env *env, bool vsync, HWND hwnd, bool fullscreen) {
-    InitDirect3D(env->screenWidth, env->screenHeight, hwnd, fullscreen);
-    InitMainScene(env->screenWidth, env->screenHeight);
+    InitDirect3D(env->screen_width_, env->screen_height_, hwnd, fullscreen);
+    InitMainScene(env->screen_width_, env->screen_height_);
 
     return true;
 }

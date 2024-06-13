@@ -103,6 +103,9 @@
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="message_receiver.h">
+      <Filter>Framework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -180,6 +183,9 @@
     </ClCompile>
     <ClCompile Include="ImGui\imgui_demo.cpp">
       <Filter>ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="message_receiver.cpp">
+      <Filter>Framework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

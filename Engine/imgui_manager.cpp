@@ -41,11 +41,11 @@ bool ImGuiManager::Prepare(Env *env) {
     ImGui::SetWindowPos(ImVec2(0.0f, 0.0f));
     // Viewport
     Direct3D::GetInstance().SetViewPort(ImGui::GetWindowSize().x, 0.0f,
-                                        (float)env->screenWidth -
+                                        (float)env->screen_width_ -
                                             ImGui::GetWindowSize().x,
-                                        (float)env->screenHeight);
-    env->aspect = ((float)env->screenWidth - ImGui::GetWindowSize().x) /
-                  (float)env->screenHeight;
+                                        (float)env->screen_height_);
+    env->aspect_ = ((float)env->screen_width_ - ImGui::GetWindowSize().x) /
+                  (float)env->screen_height_;
     return true;
 }
 

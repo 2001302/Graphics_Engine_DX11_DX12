@@ -119,7 +119,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke() {
         }
         // projection
         {
-            const float aspect = env->aspect;
+            const float aspect = env->aspect_;
             if (gui->m_usePerspectiveProjection) {
                 model->phongShader->vertex_constant_buffer_data.projection =
                     XMMatrixPerspectiveFovLH(

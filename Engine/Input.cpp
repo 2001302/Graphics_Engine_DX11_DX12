@@ -1,5 +1,7 @@
 #include "input.h"
 
+using namespace Engine;
+
 Input::Input() {
     direct_input_ = 0;
     keyboard_ = 0;

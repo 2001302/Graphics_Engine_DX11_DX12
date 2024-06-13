@@ -10,6 +10,7 @@
 
 #include "common_struct.h"
 
+namespace Engine {
 class Input {
   public:
     Input();
@@ -43,4 +44,5 @@ class Input {
     DIMOUSESTATE mouse_state_;
     int screen_width, screen_height, mouse_x, mouse_y;
 };
+} // namespace Engine
 #endif

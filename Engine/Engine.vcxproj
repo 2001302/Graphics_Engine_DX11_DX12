@@ -162,6 +162,7 @@
     <ClInclude Include="ImGui\imstb_textedit.h" />
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="input.h" />
+    <ClInclude Include="message_receiver.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="model_loader.h" />
     <ClInclude Include="normal_shader.h" />
@@ -192,6 +193,7 @@
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
     <ClCompile Include="input.cpp" />
+    <ClCompile Include="message_receiver.cpp" />
     <ClCompile Include="model_loader.cpp" />
     <ClCompile Include="normal_shader.cpp" />
     <ClCompile Include="main.cpp" />

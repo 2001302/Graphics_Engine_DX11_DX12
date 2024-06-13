@@ -17,8 +17,6 @@ bool Application::OnStart() {
     env_->screen_width_ = screen_width_;
     env_->screen_height_ = screen_height_;
 
-    input_->Initialize(hinstance_, main_window_, screen_width_, screen_height_);
-
     std::map<EnumDataBlockType, IDataBlock *> dataBlock = {
         {EnumDataBlockType::eManager, manager_.get()},
         {EnumDataBlockType::eGui, imgui_.get()},
@@ -37,6 +35,7 @@ bool Application::OnStart() {
 
     tree->Run();
 
+    input_->Initialize(hinstance_, main_window_, screen_width_, screen_height_);
     imgui_->Initialize(main_window_, &Direct3D::GetInstance());
 
     return true;
@@ -53,12 +52,6 @@ bool Application::OnFrame() {
     // Clear the buffers to begin the scene.
     Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
-    if (!input_->Frame()) {
-        return false;
-    }
-    // ImGui
-    imgui_->Prepare(env_.get());
-
     auto tree = std::make_unique<BehaviorTreeBuilder>();
 
     tree->Build(dataBlock)
@@ -68,7 +61,8 @@ bool Application::OnFrame() {
 
     tree->Run();
 
-    imgui_->Render(main_window_);
+    input_->Frame();
+    imgui_->Frame(main_window_, env_.get());
 
     // Present the rendered scene to the screen.
     Direct3D::GetInstance().EndScene();

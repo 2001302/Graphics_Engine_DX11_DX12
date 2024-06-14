@@ -1,5 +1,5 @@
 #include "behavior_leaf.h"
-#include "imgui_manager.h"
+#include "panel.h"
 #include "pipeline_manager.h"
 
 using namespace Engine;
@@ -79,7 +79,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke() {
     auto env = dynamic_cast<Engine::Env *>(envBlock);
     assert(env != nullptr);
 
-    auto gui = dynamic_cast<Engine::ImGuiManager *>(guiBlock);
+    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::GetInstance().GetDeviceContext();

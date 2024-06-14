@@ -3,6 +3,7 @@
 
 #include "message_receiver.h"
 #include "platform.h"
+#include "panel.h"
 
 namespace Engine {
 class Application : public Platform {
@@ -17,7 +18,7 @@ class Application : public Platform {
 
   private:
     std::shared_ptr<Input> input_;
-    std::shared_ptr<ImGuiManager> imgui_;
+    std::shared_ptr<Panel> imgui_;
     std::shared_ptr<PipelineManager> manager_;
     std::shared_ptr<Env> env_;
     std::unique_ptr<MessageReceiver> message_receiver_;

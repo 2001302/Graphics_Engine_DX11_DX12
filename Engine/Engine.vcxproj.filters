@@ -52,59 +52,62 @@
     <ClInclude Include="model_loader.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="imgui_manager.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
     <ClInclude Include="common_struct.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\crude_json.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_bezier_math.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_canvas.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_extra_keys.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_extra_math.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_impl_dx11.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_impl_win32.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_internal.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_node_editor.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_node_editor_internal.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_rectpack.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_textedit.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_truetype.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="message_receiver.h">
       <Filter>Framework</Filter>
+    </ClInclude>
+    <ClInclude Include="base_gui.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="panel.h">
+      <Filter>Gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -148,44 +151,47 @@
     <ClCompile Include="model_loader.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="imgui_manager.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\crude_json.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_canvas.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_win32.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_node_editor.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_node_editor_api.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_tables.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_widgets.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_demo.cpp">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="message_receiver.cpp">
       <Filter>Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="base_gui.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="panel.cpp">
+      <Filter>Gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -194,9 +200,6 @@
     </Filter>
     <Filter Include="BehaviorTree">
       <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ImGui">
-      <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{0e42b4f6-d6f5-44fe-bceb-6a275b568a85}</UniqueIdentifier>
@@ -216,22 +219,28 @@
     <Filter Include="Framework">
       <UniqueIdentifier>{954ae3a7-14c0-4d2d-8136-883fe33d142a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Gui">
+      <UniqueIdentifier>{9eb6ce6c-e8f1-4912-bd9c-acf6ddd4f248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gui\ImGui">
+      <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hlsli">
       <Filter>DirectX\Shader\HLSL</Filter>
     </None>
     <None Include="ImGui\imgui_bezier_math.inl">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </None>
     <None Include="ImGui\imgui_extra_math.inl">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </None>
     <None Include="ImGui\imgui_node_editor_internal.inl">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </None>
     <None Include="ImGui\config.h.in">
-      <Filter>ImGui</Filter>
+      <Filter>Gui\ImGui</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

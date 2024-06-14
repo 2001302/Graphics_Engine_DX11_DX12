@@ -18,19 +18,14 @@ Platform::~Platform() {}
 static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam,
                                 LPARAM lparam) {
     switch (umessage) {
-        // Check if the window is being destroyed.
     case WM_DESTROY: {
         PostQuitMessage(0);
         return 0;
     }
-
-    // Check if the window is being closed.
     case WM_CLOSE: {
         PostQuitMessage(0);
         return 0;
     }
-
-    // All other messages pass to the message handler in the system class.
     default: {
         return g_system->MessageHandler(hwnd, umessage, wparam, lparam);
     }
@@ -73,7 +68,7 @@ bool Platform::OnStart() {
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
 
     // 윈도우를 만들때 위에서 계산한 wr 사용
-    main_window_ = CreateWindow(wc.lpszClassName, L"HongLabGraphics Example",
+    main_window_ = CreateWindow(wc.lpszClassName, L"Engine",
                                 WS_OVERLAPPEDWINDOW,
                                 10, // 윈도우 좌측 상단의 x 좌표
                                 10, // 윈도우 좌측 상단의 y 좌표

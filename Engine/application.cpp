@@ -1,10 +1,10 @@
-#include "Application.h"
+#include "application.h"
 
 using namespace Engine;
 
 Application::Application() : imgui_(0), manager_(0), env_(0) {
     input_ = std::make_unique<Input>();
-    imgui_ = std::make_shared<ImGuiManager>();
+    imgui_ = std::make_shared<Panel>();
     manager_ = std::make_shared<PipelineManager>();
     env_ = std::make_shared<Env>();
     message_receiver_ = std::make_unique<MessageReceiver>();
@@ -36,7 +36,9 @@ bool Application::OnStart() {
     tree->Run();
 
     input_->Initialize(hinstance_, main_window_, screen_width_, screen_height_);
-    imgui_->Initialize(main_window_, &Direct3D::GetInstance());
+    imgui_->Initialize(main_window_, env_.get());
+
+    OnFrame();
 
     return true;
 }
@@ -62,7 +64,7 @@ bool Application::OnFrame() {
     tree->Run();
 
     input_->Frame();
-    imgui_->Frame(main_window_, env_.get());
+    imgui_->Frame();
 
     // Present the rendered scene to the screen.
     Direct3D::GetInstance().EndScene();

@@ -8,7 +8,7 @@
 #include "direct3D.h"
 #include "env.h"
 #include "geometry_generator.h"
-#include "imgui_manager.h"
+#include "panel.h"
 #include "pipeline_manager.h"
 #include "resource_helper.h"
 

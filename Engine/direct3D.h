@@ -25,7 +25,6 @@ class Direct3D {
     UINT num_quality_levels_ = 0;
 
     ComPtr<ID3D11Device> device_;
-    ComPtr<IDXGISwapChain> swap_chain_;
     ComPtr<ID3D11DeviceContext> device_context_;
 
   public:
@@ -45,6 +44,8 @@ class Direct3D {
 
     ComPtr<ID3D11Device> GetDevice();
     ComPtr<ID3D11DeviceContext> GetDeviceContext();
+
+    ComPtr<IDXGISwapChain> swap_chain_;
 
     ComPtr<ID3D11Texture2D> depth_stencil_buffer_;
     ComPtr<ID3D11DepthStencilState> depth_stencil_state_;

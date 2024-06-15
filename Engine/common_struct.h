@@ -23,7 +23,6 @@
 #include <d3dcompiler.h>
 #include <directxtk/SimpleMath.h>
 
-#include <eigen/dense>
 #include <assimp/importer.hpp>
 #include <assimp/scene.h>           
 #include <assimp/postprocess.h>     

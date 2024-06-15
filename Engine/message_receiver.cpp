@@ -1,6 +1,7 @@
 #include "message_receiver.h"
 
 using namespace Engine;
+using namespace DirectX::SimpleMath;
 
 bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
                                          std::shared_ptr<Input> input) {
@@ -13,21 +14,20 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         auto viewPort = Direct3D::GetInstance().viewport_;
 
         // mouse move vector
-        Eigen::Vector2d vector =
-            Eigen::Vector2d(-mouseState.lX, -mouseState.lY);
+        Vector2 vector = Vector2(-mouseState.lX, -mouseState.lY);
 
-        Eigen::Vector3d origin(manager->camera->position.x,
+        Vector3 origin(manager->camera->position.x,
                                manager->camera->position.y,
                                manager->camera->position.z);
 
         // convert to spherical coordinates
-        double r = origin.norm();
-        double phi = acos(origin.y() / r);
-        double theta = atan2(origin.z(), origin.x());
+        double r = origin.Length();
+        double phi = acos(origin.y / r);
+        double theta = atan2(origin.z, origin.x);
 
         // rotation
-        double deltaTheta = (2 * M_PI) * (vector.x() / viewPort.Width);
-        double deltaPhi = (2 * M_PI) * (vector.y() / viewPort.Width);
+        double deltaTheta = (2 * M_PI) * (vector.x / viewPort.Width);
+        double deltaPhi = (2 * M_PI) * (vector.y / viewPort.Width);
 
         theta += deltaTheta;
         phi += deltaPhi;
@@ -37,11 +37,11 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         double y = r * cos(phi);
         double z = r * sin(phi) * sin(theta);
 
-        Eigen::Vector3d origin_prime(x, y, z);
+        Vector3 origin_prime(x, y, z);
 
         if (0.0f < phi && phi < M_PI)
-            manager->camera->position = DirectX::SimpleMath::Vector3(
-                origin_prime.x(), origin_prime.y(), origin_prime.z());
+            manager->camera->position = Vector3(
+                origin_prime.x, origin_prime.y, origin_prime.z);
     }
 
     return true;
@@ -55,18 +55,19 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
         // retry
         input->Mouse()->Acquire();
     } else {
-        double wheel = -mouseState.lZ / (600.0);
-        Eigen::Vector3d origin(manager->camera->position.x,
+        float wheel = -mouseState.lZ / (600.0);
+        Vector3 origin(manager->camera->position.x,
                                manager->camera->position.y,
                                manager->camera->position.z);
 
-        Eigen::Matrix3d R1;
-        R1 << 1.0 + wheel, 0.0, 0.0, 0.0, 1.0 + wheel, 0.0, 0.0, 0.0,
-            1.0 + wheel;
+        Matrix R1(1.0f + wheel, 0.0f, 0.0f, 0.0f, 
+                0.0f, 1.0f + wheel, 0.0f, 0.0f, 
+                0.0f, 0.0f, 1.0f + wheel ,0.0f, 
+                0.0f, 0.0f, 0.0f, 1.0f);
 
-        Eigen::Vector3d origin_prime = R1 * origin;
-        manager->camera->position = DirectX::SimpleMath::Vector3(
-            origin_prime.x(), origin_prime.y(), origin_prime.z());
+        auto origin_prime = Vector3::Transform(origin, R1);
+        manager->camera->position = Vector3(
+            origin_prime.x, origin_prime.y, origin_prime.z);
     }
 
     return true;
@@ -118,11 +119,11 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
         // create constant buffer(Phong Shader)
         model->phongShader = std::make_shared<PhongShaderSource>();
         model->phongShader->vertex_constant_buffer_data.model =
-            DirectX::SimpleMath::Matrix();
+            Matrix();
         model->phongShader->vertex_constant_buffer_data.view =
-            DirectX::SimpleMath::Matrix();
+            Matrix();
         model->phongShader->vertex_constant_buffer_data.projection =
-            DirectX::SimpleMath::Matrix();
+            Matrix();
 
         manager->phongShader->CreateConstantBuffer(
             model->phongShader->vertex_constant_buffer_data,
@@ -131,7 +132,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
             model->phongShader->pixel_constant_buffer_data,
             model->phongShader->pixel_constant_buffer);
 
-        model->transform = DirectX::SimpleMath::Matrix();
+        model->transform = Matrix();
 
         for (const auto &meshData : model->meshes) {
             {
@@ -260,11 +261,11 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
     // create constant buffer(Phong Shader)
     model->phongShader = std::make_shared<PhongShaderSource>();
     model->phongShader->vertex_constant_buffer_data.model =
-        DirectX::SimpleMath::Matrix();
+        Matrix();
     model->phongShader->vertex_constant_buffer_data.view =
-        DirectX::SimpleMath::Matrix();
+        Matrix();
     model->phongShader->vertex_constant_buffer_data.projection =
-        DirectX::SimpleMath::Matrix();
+        Matrix();
 
     manager->phongShader->CreateConstantBuffer(
         model->phongShader->vertex_constant_buffer_data,
@@ -273,7 +274,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
         model->phongShader->pixel_constant_buffer_data,
         model->phongShader->pixel_constant_buffer);
 
-    model->transform = DirectX::SimpleMath::Matrix();
+    model->transform = Matrix();
 
     return true;
 }
@@ -340,11 +341,11 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
     // create constant buffer(Phong Shader)
     model->phongShader = std::make_shared<PhongShaderSource>();
     model->phongShader->vertex_constant_buffer_data.model =
-        DirectX::SimpleMath::Matrix();
+        Matrix();
     model->phongShader->vertex_constant_buffer_data.view =
-        DirectX::SimpleMath::Matrix();
+        Matrix();
     model->phongShader->vertex_constant_buffer_data.projection =
-        DirectX::SimpleMath::Matrix();
+        Matrix();
 
     manager->phongShader->CreateConstantBuffer(
         model->phongShader->vertex_constant_buffer_data,
@@ -353,7 +354,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
         model->phongShader->pixel_constant_buffer_data,
         model->phongShader->pixel_constant_buffer);
 
-    model->transform = DirectX::SimpleMath::Matrix();
+    model->transform = Matrix();
 
     return true;
 }
@@ -419,11 +420,11 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
     // create constant buffer(Phong Shader)
     model->phongShader = std::make_shared<PhongShaderSource>();
     model->phongShader->vertex_constant_buffer_data.model =
-        DirectX::SimpleMath::Matrix();
+        Matrix();
     model->phongShader->vertex_constant_buffer_data.view =
-        DirectX::SimpleMath::Matrix();
+        Matrix();
     model->phongShader->vertex_constant_buffer_data.projection =
-        DirectX::SimpleMath::Matrix();
+        Matrix();
 
     manager->phongShader->CreateConstantBuffer(
         model->phongShader->vertex_constant_buffer_data,
@@ -432,7 +433,7 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
         model->phongShader->pixel_constant_buffer_data,
         model->phongShader->pixel_constant_buffer);
 
-    model->transform = DirectX::SimpleMath::Matrix();
+    model->transform = Matrix();
 
     return true;
 }

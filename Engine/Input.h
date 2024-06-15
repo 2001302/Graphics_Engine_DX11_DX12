@@ -24,7 +24,7 @@ class Input {
     bool IsEscapePressed();
     bool IsLeftArrowPressed();
     bool IsRightArrowPressed();
-    Eigen::Vector2d GetMouseLocation();
+    DirectX::SimpleMath::Vector2 GetMouseLocation();
     void SetMouseLocation(int x, int y);
     bool IsMousePressed();
 

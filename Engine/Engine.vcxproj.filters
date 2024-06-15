@@ -242,6 +242,7 @@
     <None Include="ImGui\config.h.in">
       <Filter>Gui\ImGui</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="phong_vertex_shader.hlsl">

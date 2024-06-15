@@ -104,7 +104,8 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Eigen;$(SolutionDir)..\Boost\boost_1_85_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -123,7 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\Eigen;$(SolutionDir)..\Boost\boost_1_85_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <OpenMPSupport>true</OpenMPSupport>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
@@ -210,6 +211,7 @@
     <None Include="ImGui\imgui_bezier_math.inl" />
     <None Include="ImGui\imgui_extra_math.inl" />
     <None Include="ImGui\imgui_node_editor_internal.inl" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="normal_pixel_shader.hlsl">
@@ -231,5 +233,14 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\googletest.redist.1.8.3\build\native\googletest.redist.targets" Condition="Exists('..\packages\googletest.redist.1.8.3\build\native\googletest.redist.targets')" />
+    <Import Project="..\packages\googletest.1.8.3\build\native\googletest.targets" Condition="Exists('..\packages\googletest.1.8.3\build\native\googletest.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\googletest.redist.1.8.3\build\native\googletest.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\googletest.redist.1.8.3\build\native\googletest.redist.targets'))" />
+    <Error Condition="!Exists('..\packages\googletest.1.8.3\build\native\googletest.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\googletest.1.8.3\build\native\googletest.targets'))" />
+  </Target>
 </Project>

@@ -197,8 +197,8 @@ bool Input::IsRightArrowPressed() {
     return false;
 }
 
-Eigen::Vector2d Input::GetMouseLocation() {
-    return Eigen::Vector2d(mouse_x, mouse_y);
+DirectX::SimpleMath::Vector2 Input::GetMouseLocation() {
+    return DirectX::SimpleMath::Vector2(mouse_x, mouse_y);
 }
 
 void Input::SetMouseLocation(int x, int y) {

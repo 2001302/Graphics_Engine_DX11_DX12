@@ -24,10 +24,10 @@ class BaseGui : public IDataBlock {
   protected:
     HWND main_window_;
     Env *env_;
-    ImGuiContext *m_Context = nullptr;
-    std::string m_IniFilename;
-    ImFont *m_DefaultFont = nullptr;
-    ImFont *m_HeaderFont = nullptr;
+    ImGuiContext *context_ = nullptr;
+    std::string ini_file_name_;
+    ImFont *default_font_ = nullptr;
+    ImFont *header_font = nullptr;
 
   private:
     void RecreateFontAtlas();

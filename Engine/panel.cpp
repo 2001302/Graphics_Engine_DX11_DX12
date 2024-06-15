@@ -5,7 +5,7 @@ using namespace Engine;
 void Panel::OnStart() {
     ed::Config config;
     config.SettingsFile = "Widgets.json";
-    m_Context = ed::CreateEditor(&config);
+    context_ = ed::CreateEditor(&config);
 }
 
 void Panel::OnFrame(float deltaTime) {
@@ -49,7 +49,7 @@ void Panel::OnFrame(float deltaTime) {
         static bool firstframe = true; // Used to position the nodes on startup
 
         // Node Editor Widget
-        ed::SetCurrentEditor(m_Context);
+        ed::SetCurrentEditor(context_);
         ed::Begin("My Editor", ImVec2(0.0, ImGui::GetWindowHeight() / 2.0f));
         int uniqueId = 1;
 
@@ -389,7 +389,7 @@ void Panel::OnFrame(float deltaTime) {
         // ==================================================================================================
         // Link Drawing Section
 
-        for (auto &linkInfo : m_Links)
+        for (auto &linkInfo : links_)
             ed::Link(linkInfo.Id, linkInfo.InputId, linkInfo.OutputId);
 
         // ==================================================================================================
@@ -404,10 +404,10 @@ void Panel::OnFrame(float deltaTime) {
             if (ed::QueryNewLink(&inputPinId, &outputPinId)) {
                 if (inputPinId && outputPinId) {
                     if (ed::AcceptNewItem()) {
-                        m_Links.push_back({ed::LinkId(m_NextLinkId++),
+                        links_.push_back({ed::LinkId(next_link_Id++),
                                            inputPinId, outputPinId});
-                        ed::Link(m_Links.back().Id, m_Links.back().InputId,
-                                 m_Links.back().OutputId);
+                        ed::Link(links_.back().Id, links_.back().InputId,
+                                 links_.back().OutputId);
                     }
                 }
             }
@@ -420,9 +420,9 @@ void Panel::OnFrame(float deltaTime) {
             ed::LinkId deletedLinkId;
             while (ed::QueryDeletedLink(&deletedLinkId)) {
                 if (ed::AcceptDeletedItem()) {
-                    for (auto &link : m_Links) {
+                    for (auto &link : links_) {
                         if (link.Id == deletedLinkId) {
-                            m_Links.erase(&link);
+                            links_.erase(&link);
                             break;
                         }
                     }
@@ -453,7 +453,7 @@ void Panel::OnFrame(float deltaTime) {
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Inspector")) {
-            ImGui::Checkbox("Wire Frame", &m_drawAsWire);
+            ImGui::Checkbox("Wire Frame", &draw_as_wire_);
             ImGui::Checkbox("Use Texture", &m_useTexture);
             ImGui::Checkbox("Use BlinnPhong", &m_useBlinnPhong);
 
@@ -464,7 +464,7 @@ void Panel::OnFrame(float deltaTime) {
             ImGui::SliderFloat3("Scaling", &m_modelScaling.x, 0.1f, 4.0f);
 
             ImGui::Text("Material");
-            ImGui::SliderFloat("Shininess", &m_shininess, 1.0f, 256.0f);
+            ImGui::SliderFloat("Shininess", &shininess_, 1.0f, 256.0f);
             ImGui::SliderFloat("Diffuse", &m_materialDiffuse, 0.0f, 1.0f);
             ImGui::SliderFloat("Specular", &m_materialSpecular, 0.0f, 1.0f);
 

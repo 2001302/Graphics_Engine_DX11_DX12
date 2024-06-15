@@ -22,8 +22,8 @@ bool BaseGui::Initialize(HWND main_window, Env *env) {
     main_window_ = main_window;
     env_ = env;
     // Setup Dear ImGui context
-    m_Context = ImGui::CreateContext();
-    ImGui::SetCurrentContext(m_Context);
+    context_ = ImGui::CreateContext();
+    ImGui::SetCurrentContext(context_);
 
     ImGui_ImplWin32_Init(main_window_);
     ImGui_ImplDX11_Init(Direct3D::GetInstance().GetDevice().Get(),
@@ -100,9 +100,9 @@ void BaseGui::RecreateFontAtlas() {
     config.OversampleV = 4;
     config.PixelSnapH = false;
 
-    m_DefaultFont = io.Fonts->AddFontFromFileTTF(
+    default_font_ = io.Fonts->AddFontFromFileTTF(
         "../Engine/data/Play-Regular.ttf", 18.0f, &config);
-    m_HeaderFont = io.Fonts->AddFontFromFileTTF(
+    header_font = io.Fonts->AddFontFromFileTTF(
         "../Engine/data/Cuprum-Bold.ttf", 20.0f, &config);
 
     io.Fonts->Build();

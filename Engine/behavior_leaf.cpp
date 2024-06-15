@@ -154,7 +154,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke() {
             model->phongShader->pixel_constant_buffer_data.material.specular =
                 Vector3(gui->m_materialSpecular);
             model->phongShader->pixel_constant_buffer_data.material.shininess =
-                gui->m_shininess;
+                gui->shininess_;
         }
         // light
         {
@@ -204,7 +204,7 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke() {
         context->VSSetShader(manager->phongShader->vertex_shader.Get(), 0, 0);
         context->PSSetSamplers(0, 1, &manager->phongShader->sample_state);
 
-        if (gui->m_drawAsWire)
+        if (gui->draw_as_wire_)
             context->RSSetState(
                 Direct3D::GetInstance().wire_rasterizer_state_.Get());
         else

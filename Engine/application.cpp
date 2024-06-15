@@ -101,6 +101,18 @@ bool Application::OnStop() {
 
     return true;
 }
+
+bool CheckIfMouseInViewport() {
+    auto cursor = ImGui::GetMousePos();
+    auto view_port = Direct3D::GetInstance().viewport_;
+    if (view_port.TopLeftX < cursor.x && view_port.TopLeftY < cursor.y &&
+        cursor.x < view_port.TopLeftX + view_port.Width &&
+        cursor.y < view_port.TopLeftY + view_port.Height) {
+        return true;
+    }
+    return false;
+}
+
 LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
                                              WPARAM wparam, LPARAM lparam) {
     extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
@@ -110,14 +122,19 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
 
     switch (umsg) {
     case WM_MOUSEMOVE: {
-        if (wparam & MK_RBUTTON) {
-            return message_receiver_->OnRightDragRequest(manager_.get(),
-                                                         input_);
+        if (CheckIfMouseInViewport()) {
+            if (wparam & MK_RBUTTON) {
+                return message_receiver_->OnRightDragRequest(manager_.get(),
+                                                             input_);
+            }
         }
         break;
     }
     case WM_MOUSEWHEEL: {
-        return message_receiver_->OnMouseWheelRequest(manager_.get(), input_);
+        if (CheckIfMouseInViewport()) {
+            return message_receiver_->OnMouseWheelRequest(manager_.get(),
+                                                          input_);
+        }
         break;
     }
     case WM_RBUTTONDOWN: {

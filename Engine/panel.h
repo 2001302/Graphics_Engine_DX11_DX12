@@ -26,8 +26,8 @@ class Panel : public BaseGui {
     void OnStart() override;
     void OnFrame(float deltaTime) override;
 
-    float m_shininess = 1.0f;
-    bool m_drawAsWire = false;
+    float shininess_ = 1.0f;
+    bool draw_as_wire_ = false;
     bool m_useBlinnPhong = false;
     bool m_useTexture = false;
 
@@ -49,10 +49,10 @@ class Panel : public BaseGui {
     float m_materialSpecular = 1.0f;
 
     
-    ed::EditorContext *m_Context = nullptr;
-    ImVector<LinkInfo> m_Links; // List of live links. It is dynamic unless you
+    ed::EditorContext *context_ = nullptr;
+    ImVector<LinkInfo> links_; // List of live links. It is dynamic unless you
                                 // want to create read-only view over nodes.
-    int m_NextLinkId =
+    int next_link_Id =
         100; // Counter to help generate link ids. In real application this will
              // probably based on pointer to user data structure.
 };

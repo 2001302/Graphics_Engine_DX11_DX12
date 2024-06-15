@@ -56,7 +56,7 @@ bool BaseGui::Frame() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     //ImGui::Begin("Content", nullptr, GetWindowFlags());
-    ImGui::Begin("Content");
+    ImGui::Begin("Menu");
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, windowBorderSize);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
 

@@ -12,6 +12,14 @@ void Panel::OnFrame(float deltaTime) {
     auto &io = ImGui::GetIO();
 
     {
+        ImGuiStyle &style = ImGui::GetStyle();
+        style.Alpha = 1.0f;
+        style.WindowRounding = 5.3f;
+        style.FrameRounding = 2.3f;
+        style.ScrollbarRounding = 0;
+    }
+
+    {
         // FPS Counter Ribbon
         ImGui::Text("FPS: %.2f (%.2gms)", io.Framerate,
                     io.Framerate ? 1000.0f / io.Framerate : 0.0f);

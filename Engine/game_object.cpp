@@ -2,12 +2,11 @@
 #pragma warning(disable : 6386)
 
 #include "game_object.h"
+#include "id_generator.h"
 
 using namespace Engine;
 
-GameObject::GameObject() {}
-
-GameObject::GameObject(const GameObject &other) {}
+GameObject::GameObject() { entity_id_ = IdGenerator::GetId(); }
 
 GameObject::~GameObject() {}
 

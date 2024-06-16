@@ -109,6 +109,9 @@
     <ClInclude Include="panel.h">
       <Filter>Gui</Filter>
     </ClInclude>
+    <ClInclude Include="id_generator.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -144,9 +147,6 @@
     </ClCompile>
     <ClCompile Include="phong_shader.cpp">
       <Filter>DirectX\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="geometry_generator.cpp">
-      <Filter>Util</Filter>
     </ClCompile>
     <ClCompile Include="model_loader.cpp">
       <Filter>Util</Filter>
@@ -192,6 +192,12 @@
     </ClCompile>
     <ClCompile Include="panel.cpp">
       <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry_generator.cpp">
+      <Filter>Util</Filter>
+    </ClCompile>
+    <ClCompile Include="id_generator.cpp">
+      <Filter>Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

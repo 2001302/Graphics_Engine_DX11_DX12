@@ -10,10 +10,11 @@ using Microsoft::WRL::ComPtr;
 class GameObject {
   public:
     GameObject();
-    GameObject(const GameObject &);
     ~GameObject();
 
     int GetIndexCount();
+
+    int entity_id_;
 
     DirectX::SimpleMath::Matrix transform;
 

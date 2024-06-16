@@ -147,6 +147,7 @@
     <ClInclude Include="env.h" />
     <ClInclude Include="geometry_generator.h" />
     <ClInclude Include="base_gui.h" />
+    <ClInclude Include="id_generator.h" />
     <ClInclude Include="ImGui\crude_json.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -181,8 +182,9 @@
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="direct3D.cpp" />
-    <ClCompile Include="geometry_generator.cpp" />
     <ClCompile Include="base_gui.cpp" />
+    <ClCompile Include="geometry_generator.cpp" />
+    <ClCompile Include="id_generator.cpp" />
     <ClCompile Include="ImGui\crude_json.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
     <ClCompile Include="ImGui\imgui_canvas.cpp" />

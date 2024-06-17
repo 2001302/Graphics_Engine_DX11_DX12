@@ -68,7 +68,19 @@ EnumBehaviorTreeStatus InitializePhongShader::Invoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus RenderGameObjects::Invoke() {
+EnumBehaviorTreeStatus UpdateCamera::Invoke() {
+    IDataBlock *managerBlock = DataBlock[EnumDataBlockType::eManager];
+
+    auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
+    assert(manager != nullptr);
+
+    // Generate the view matrix based on the camera's position.
+    manager->camera->Render();
+
+    return EnumBehaviorTreeStatus::eSuccess;
+}
+
+EnumBehaviorTreeStatus UpdateGameObjects::Invoke() {
     IDataBlock *managerBlock = DataBlock[EnumDataBlockType::eManager];
     IDataBlock *envBlock = DataBlock[EnumDataBlockType::eEnv];
     IDataBlock *guiBlock = DataBlock[EnumDataBlockType::eGui];
@@ -83,9 +95,6 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke() {
     assert(gui != nullptr);
 
     auto context = Direct3D::GetInstance().GetDeviceContext();
-
-    // Generate the view matrix based on the camera's position.
-    manager->camera->Render();
 
     for (auto &model : manager->models) {
         // model
@@ -178,7 +187,27 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke() {
         manager->phongShader->UpdateBuffer(
             model->phongShader->pixel_constant_buffer_data,
             model->phongShader->pixel_constant_buffer);
+    }
+    return EnumBehaviorTreeStatus::eSuccess;
+}
 
+EnumBehaviorTreeStatus RenderGameObjects::Invoke() {
+    IDataBlock *managerBlock = DataBlock[EnumDataBlockType::eManager];
+    IDataBlock *envBlock = DataBlock[EnumDataBlockType::eEnv];
+    IDataBlock *guiBlock = DataBlock[EnumDataBlockType::eGui];
+
+    auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
+    assert(manager != nullptr);
+
+    auto env = dynamic_cast<Engine::Env *>(envBlock);
+    assert(env != nullptr);
+
+    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    assert(gui != nullptr);
+
+    auto context = Direct3D::GetInstance().GetDeviceContext();
+
+    for (auto &model : manager->models) {
         // RS: Rasterizer stage
         // OM: Output-Merger stage
         // VS: Vertex Shader

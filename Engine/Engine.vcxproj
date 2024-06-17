@@ -143,7 +143,9 @@
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="common_struct.h" />
+    <ClInclude Include="cube_map.h" />
     <ClInclude Include="direct3D.h" />
+    <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="geometry_generator.h" />
     <ClInclude Include="base_gui.h" />
@@ -181,8 +183,10 @@
     <ClCompile Include="behavior_leaf.cpp" />
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="cube_map.cpp" />
     <ClCompile Include="direct3D.cpp" />
     <ClCompile Include="base_gui.cpp" />
+    <ClCompile Include="entity.cpp" />
     <ClCompile Include="geometry_generator.cpp" />
     <ClCompile Include="id_generator.cpp" />
     <ClCompile Include="ImGui\crude_json.cpp" />

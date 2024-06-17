@@ -17,6 +17,14 @@ class InitializePhongShader : public ActionNode {
     InitializePhongShader(HWND hwnd) { window = hwnd; };
 };
 
+class UpdateCamera : public ActionNode {
+    EnumBehaviorTreeStatus Invoke() override;
+};
+
+class UpdateGameObjects : public ActionNode {
+    EnumBehaviorTreeStatus Invoke() override;
+};
+
 class RenderGameObjects : public ActionNode {
     EnumBehaviorTreeStatus Invoke() override;
 };

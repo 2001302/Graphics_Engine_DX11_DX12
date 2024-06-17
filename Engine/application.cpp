@@ -29,8 +29,8 @@ bool Application::OnStart() {
 
     tree->Build(dataBlock)
         ->Sequence()
-        ->Excute(std::make_shared<InitializeCamera>())
-        ->Excute(std::make_shared<InitializePhongShader>(main_window_))
+            ->Excute(std::make_shared<InitializeCamera>())
+            ->Excute(std::make_shared<InitializePhongShader>(main_window_))
         ->Close();
 
     tree->Run();
@@ -54,14 +54,24 @@ bool Application::OnFrame() {
     // Clear the buffers to begin the scene.
     Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
-    auto tree = std::make_unique<BehaviorTreeBuilder>();
+    auto update_tree = std::make_unique<BehaviorTreeBuilder>();
 
-    tree->Build(dataBlock)
+    update_tree->Build(dataBlock)
         ->Sequence()
-        ->Excute(std::make_shared<RenderGameObjects>())
+            ->Excute(std::make_shared<UpdateCamera>())
+            ->Excute(std::make_shared<UpdateGameObjects>())
         ->Close();
 
-    tree->Run();
+    update_tree->Run();
+
+    auto render_tree = std::make_unique<BehaviorTreeBuilder>();
+
+    render_tree->Build(dataBlock)
+        ->Sequence()
+            ->Excute(std::make_shared<RenderGameObjects>())
+        ->Close();
+
+    render_tree->Run();
 
     input_->Frame();
     imgui_->Frame();

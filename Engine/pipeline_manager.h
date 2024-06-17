@@ -8,6 +8,7 @@
 #include "input.h"
 #include "normal_shader.h"
 #include "phong_shader.h"
+#include "cube_map.h"
 
 namespace Engine {
 /// <summary>
@@ -16,6 +17,7 @@ namespace Engine {
 class PipelineManager : public IDataBlock {
   public:
     std::vector<GameObject *> models;
+    std::unique_ptr<CubeMap> cubeMap;
     std::unique_ptr<PhongShader> phongShader;
     std::unique_ptr<Camera> camera;
 };

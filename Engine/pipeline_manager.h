@@ -16,7 +16,7 @@ namespace Engine {
 /// </summary>
 class PipelineManager : public IDataBlock {
   public:
-    std::vector<GameObject *> models;
+    std::map<int, std::shared_ptr<GameObject>> models;
     std::unique_ptr<CubeMap> cubeMap;
     std::unique_ptr<PhongShader> phongShader;
     std::unique_ptr<Camera> camera;

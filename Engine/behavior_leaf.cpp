@@ -96,7 +96,8 @@ EnumBehaviorTreeStatus UpdateGameObjects::Invoke() {
 
     auto context = Direct3D::GetInstance().GetDeviceContext();
 
-    for (auto &model : manager->models) {
+    for (auto &model_amp : manager->models) {
+        auto &model = model_amp.second;
         // model
         {
             model->phongShader->vertex_constant_buffer_data.model =
@@ -207,12 +208,13 @@ EnumBehaviorTreeStatus RenderGameObjects::Invoke() {
 
     auto context = Direct3D::GetInstance().GetDeviceContext();
 
-    for (auto &model : manager->models) {
+    for (auto &model_map : manager->models) {
         // RS: Rasterizer stage
         // OM: Output-Merger stage
         // VS: Vertex Shader
         // PS: Pixel Shader
         // IA: Input-Assembler stage
+        auto model = model_map.second;
 
         unsigned int stride = sizeof(Vertex);
         unsigned int offset = 0;

@@ -87,8 +87,7 @@ bool Application::OnStop() {
 
     if (manager_) {
         for (auto &model : manager_->models) {
-            delete model;
-            model = 0;
+            model.second.reset();
         }
 
         manager_->phongShader.reset();

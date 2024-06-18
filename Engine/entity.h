@@ -11,8 +11,10 @@ class IEntity {
   public:
     IEntity();
     ~IEntity();
+    int GetEntityId() const;
 
-    int entity_id_;
+  private:
+    int entity_id_ = 10000;
 };
 } // namespace Engine
 #endif

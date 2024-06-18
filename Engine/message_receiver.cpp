@@ -106,15 +106,17 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
     // show file explorer
     if (GetOpenFileName(&ofn)) {
-        manager->models.push_back(new GameObject());
-        auto model = manager->models.back();
+
+        auto model = std::make_shared<GameObject>();
+        manager->models[model->GetEntityId()] = model;
 
         std::string fullPath = ToString(ofn.lpstrFile);
         size_t lastSlash = fullPath.find_last_of('\\');
         std::string fileName = fullPath.substr(lastSlash + 1);
         std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
-        model = GeometryGenerator::ReadFromFile(model, directoryPath, fileName);
+        GeometryGenerator::ReadFromFile(model.get(), directoryPath,
+                                                fileName);
 
         // create constant buffer(Phong Shader)
         model->phongShader = std::make_shared<PhongShaderSource>();
@@ -201,11 +203,11 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 }
 
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
-    manager->models.push_back(new GameObject());
+    
+    auto model = std::make_shared<GameObject>();
+    manager->models[model->GetEntityId()] = model;
 
-    auto model = manager->models.back();
-
-    GeometryGenerator::MakeSphere(model, 1.5f, 15, 13);
+    GeometryGenerator::MakeSphere(model.get(), 1.5f, 15, 13);
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(
@@ -280,11 +282,11 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 }
 
 bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
-    manager->models.push_back(new GameObject());
 
-    auto model = manager->models.back();
+    auto model = std::make_shared<GameObject>();
+    manager->models[model->GetEntityId()] = model;
 
-    GeometryGenerator::MakeBox(model);
+    GeometryGenerator::MakeBox(model.get());
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(
@@ -360,11 +362,11 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 }
 
 bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
-    manager->models.push_back(new GameObject());
 
-    auto model = manager->models.back();
+    auto model = std::make_shared<GameObject>();
+    manager->models[model->GetEntityId()] = model;
 
-    GeometryGenerator::MakeCylinder(model, 5.0f, 5.0f, 15.0f, 30);
+    GeometryGenerator::MakeCylinder(model.get(), 5.0f, 5.0f, 15.0f, 30);
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(

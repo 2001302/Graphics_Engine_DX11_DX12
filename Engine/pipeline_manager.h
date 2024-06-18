@@ -20,6 +20,7 @@ class PipelineManager : public IDataBlock {
     std::unique_ptr<CubeMap> cubeMap;
     std::unique_ptr<PhongShader> phongShader;
     std::unique_ptr<Camera> camera;
+    //std::map<int, graph> graph_;
 };
 } // namespace Engine
 #endif

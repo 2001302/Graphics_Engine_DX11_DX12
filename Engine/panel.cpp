@@ -1,6 +1,9 @@
 #include "panel.h"
 
 using namespace Engine;
+Panel::Panel(std::shared_ptr<PipelineManager> pipeline_manager) {
+    pipeline_manager_ = pipeline_manager;
+}
 
 void Panel::OnStart() {
     ed::Config config;
@@ -405,7 +408,7 @@ void Panel::OnFrame(float deltaTime) {
                 if (inputPinId && outputPinId) {
                     if (ed::AcceptNewItem()) {
                         links_.push_back({ed::LinkId(next_link_Id++),
-                                           inputPinId, outputPinId});
+                                          inputPinId, outputPinId});
                         ed::Link(links_.back().Id, links_.back().InputId,
                                  links_.back().OutputId);
                     }
@@ -449,7 +452,41 @@ void Panel::OnFrame(float deltaTime) {
 
     {
         ImGui::BeginTabBar("TabBar");
+
         if (ImGui::BeginTabItem("Hierarchy")) {
+            ImGui::BeginTable("MyTable", ImGuiTableFlags_Resizable |
+                                             ImGuiTableFlags_Reorderable);
+            // headers
+            ImGui::TableNextRow();
+            ImGui::TableSetColumnIndex(0);
+            ImGui::Text("ID");
+            ImGui::TableSetColumnIndex(1);
+            ImGui::Text("Name");
+
+            for (auto &model : pipeline_manager_->models) {
+
+                ImGui::TableNextRow();
+
+                ImGui::TableSetColumnIndex(0);
+                if (ImGui::Selectable(
+                        std::to_string(model.second.get()->GetEntityId())
+                            .c_str(),
+                        model.second->GetEntityId() == selected_object_id_,
+                        ImGuiSelectableFlags_SpanAllColumns)) {
+                    selected_object_id_ = model.second.get()->GetEntityId();
+                }
+
+                ImGui::TableSetColumnIndex(1);
+                ImGui::Text(model.second.get()->GetName().c_str());
+
+                if (selected_object_id_ == model.second->GetEntityId()) {
+                    ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,
+                                           ImGui::GetColorU32(ImGuiCol_Header));
+                }
+            }
+
+            ImGui::EndTable();
+
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Inspector")) {

@@ -2,6 +2,7 @@
 #define _PANEL
 
 #include "base_gui.h"
+#include "pipeline_manager.h"
 
 namespace ed = ax::NodeEditor;
 
@@ -23,6 +24,7 @@ class Panel : public BaseGui {
     };
 
   public:
+    Panel(std::shared_ptr<PipelineManager> pipeline_manager);
     void OnStart() override;
     void OnFrame(float deltaTime) override;
 
@@ -48,13 +50,17 @@ class Panel : public BaseGui {
     float m_materialDiffuse = 1.0f;
     float m_materialSpecular = 1.0f;
 
-    
     ed::EditorContext *context_ = nullptr;
     ImVector<LinkInfo> links_; // List of live links. It is dynamic unless you
-                                // want to create read-only view over nodes.
+                               // want to create read-only view over nodes.
     int next_link_Id =
         100; // Counter to help generate link ids. In real application this will
              // probably based on pointer to user data structure.
+
+  private:
+    std::shared_ptr<PipelineManager> pipeline_manager_;
+    int selected_object_id_;
+    // selected object의 graph를 참조하여 render 수행, graph 의 node를 추가
 };
 } // namespace Engine
 #endif

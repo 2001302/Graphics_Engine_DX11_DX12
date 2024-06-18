@@ -12,9 +12,12 @@ class IEntity {
     IEntity();
     ~IEntity();
     int GetEntityId() const;
+    std::string GetName() const;
+    void SetName(std::string name);
 
   private:
-    int entity_id_ = 10000;
+    int entity_id_;
+    std::string name_ = "";
 };
 } // namespace Engine
 #endif

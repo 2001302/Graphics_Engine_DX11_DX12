@@ -3,7 +3,7 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include "behavior_leaf.h"
+#include "render_node.h"
 #include "behavior_tree.h"
 #include "direct3D.h"
 #include "env.h"

@@ -1,5 +1,5 @@
-#ifndef _BehaviorLeaf
-#define _BehaviorLeaf
+#ifndef _RENDERNODE
+#define _RENDERNODE
 
 #include "behavior_tree.h"
 

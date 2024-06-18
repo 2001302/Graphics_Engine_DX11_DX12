@@ -205,6 +205,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
     
     auto model = std::make_shared<GameObject>();
+    model->SetName("Sphere");
     manager->models[model->GetEntityId()] = model;
 
     GeometryGenerator::MakeSphere(model.get(), 1.5f, 15, 13);

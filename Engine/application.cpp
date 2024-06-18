@@ -4,10 +4,10 @@ using namespace Engine;
 
 Application::Application() : imgui_(0), manager_(0), env_(0) {
     input_ = std::make_unique<Input>();
-    imgui_ = std::make_shared<Panel>();
     manager_ = std::make_shared<PipelineManager>();
     env_ = std::make_shared<Env>();
     message_receiver_ = std::make_unique<MessageReceiver>();
+    imgui_ = std::make_shared<Panel>(manager_);
 };
 
 bool Application::OnStart() {

@@ -2,9 +2,8 @@
 #define _APPLICATION
 
 #include "message_receiver.h"
-#include "platform.h"
 #include "panel.h"
-
+#include "platform.h"
 
 namespace Engine {
 class Application : public Platform {
@@ -18,10 +17,10 @@ class Application : public Platform {
                                     LPARAM lparam) override final;
 
   private:
+    std::shared_ptr<Env> env_;
     std::shared_ptr<Input> input_;
     std::shared_ptr<Panel> imgui_;
     std::shared_ptr<PipelineManager> manager_;
-    std::shared_ptr<Env> env_;
     std::unique_ptr<MessageReceiver> message_receiver_;
 };
 } // namespace Engine

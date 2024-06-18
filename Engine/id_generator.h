@@ -11,7 +11,7 @@ class IdGenerator {
     static void Reset();
 
   private:
-    static inline int entity_id_ = 0;
+    static inline int entity_id_ = 10000;
 };
 
 } // namespace Engine

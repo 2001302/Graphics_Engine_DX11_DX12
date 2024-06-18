@@ -7,7 +7,7 @@
     <ClInclude Include="behavior_tree.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="behavior_leaf.h">
+    <ClInclude Include="render_node.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
@@ -118,6 +118,9 @@
     <ClInclude Include="cube_map.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="game_object_node.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -127,7 +130,7 @@
     <ClCompile Include="behavior_tree.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="behavior_leaf.cpp">
+    <ClCompile Include="render_node.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
@@ -210,6 +213,9 @@
     </ClCompile>
     <ClCompile Include="cube_map.cpp">
       <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object_node.cpp">
+      <Filter>BehaviorTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

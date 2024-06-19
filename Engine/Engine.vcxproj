@@ -140,7 +140,6 @@
   <ItemGroup>
     <ClInclude Include="application.h" />
     <ClInclude Include="graph.h" />
-    <ClInclude Include="graph_node.h" />
     <ClInclude Include="render_node.h" />
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
@@ -184,7 +183,6 @@
   <ItemGroup>
     <ClCompile Include="application.cpp" />
     <ClCompile Include="graph.cpp" />
-    <ClCompile Include="graph_node.cpp" />
     <ClCompile Include="render_node.cpp" />
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />

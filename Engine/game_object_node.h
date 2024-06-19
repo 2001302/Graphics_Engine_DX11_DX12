@@ -1,10 +1,24 @@
 #ifndef _GAMEOBJECTNODE
 #define _GAMEOBJECTNODE
 
-#include "graph_node.h"
-#include "panel.h"
+#ifdef _MSC_VER
+#define portable_strcpy strcpy_s
+#define portable_sprintf sprintf_s
+#else
+#define portable_strcpy strcpy
+#define portable_sprintf sprintf
+#endif
+
+#include "base_gui.h"
+#include "graph.h"
 
 namespace Engine {
+struct LinkInfo {
+    ed::LinkId Id;
+    ed::PinId InputId;
+    ed::PinId OutputId;
+};
+
 class GameObjectDetailNode : public GraphNode {
   public:
     EnumBehaviorTreeStatus OnInvoke() override;

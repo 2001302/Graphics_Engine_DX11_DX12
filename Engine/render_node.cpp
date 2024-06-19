@@ -140,13 +140,13 @@ EnumBehaviorTreeStatus UpdateGameObjects::OnInvoke() {
             if (detail->use_perspective_projection) {
                 model->phongShader->vertex_constant_buffer_data.projection =
                     XMMatrixPerspectiveFovLH(
-                        XMConvertToRadians(gui->m_projFovAngleY), aspect,
-                        gui->m_nearZ, gui->m_farZ);
+                        XMConvertToRadians(gui->projection_fov_angle_y), aspect,
+                        gui->near_z, gui->far_z);
             } else {
                 model->phongShader->vertex_constant_buffer_data.projection =
                     XMMatrixOrthographicOffCenterLH(-aspect, aspect, -1.0f,
-                                                    1.0f, gui->m_nearZ,
-                                                    gui->m_farZ);
+                                                    1.0f, gui->near_z,
+                                                    gui->far_z);
             }
             model->phongShader->vertex_constant_buffer_data.projection =
                 model->phongShader->vertex_constant_buffer_data.projection
@@ -176,13 +176,13 @@ EnumBehaviorTreeStatus UpdateGameObjects::OnInvoke() {
         // light
         {
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                if (i != gui->m_lightType) {
+                if (i != gui->light_type) {
                     model->phongShader->pixel_constant_buffer_data.lights[i]
                         .strength *= 0.0f;
                 } else {
                     // turn off another light
                     model->phongShader->pixel_constant_buffer_data.lights[i] =
-                        gui->m_lightFromGUI;
+                        gui->light_from_gui;
                 }
             }
         }

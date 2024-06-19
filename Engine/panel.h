@@ -15,13 +15,14 @@ namespace ed = ax::NodeEditor;
 #endif
 
 namespace Engine {
-class Panel : public BaseGui {
 
-    struct LinkInfo {
-        ed::LinkId Id;
-        ed::PinId InputId;
-        ed::PinId OutputId;
-    };
+struct LinkInfo {
+    ed::LinkId Id;
+    ed::PinId InputId;
+    ed::PinId OutputId;
+};
+
+class Panel : public BaseGui {
 
   public:
     Panel(std::shared_ptr<PipelineManager> pipeline_manager);
@@ -51,16 +52,14 @@ class Panel : public BaseGui {
     float m_materialSpecular = 1.0f;
 
     ed::EditorContext *context_ = nullptr;
-    ImVector<LinkInfo> links_; // List of live links. It is dynamic unless you
-                               // want to create read-only view over nodes.
-    int next_link_Id =
-        100; // Counter to help generate link ids. In real application this will
-             // probably based on pointer to user data structure.
 
   private:
+    void DefaultEditor();
+    ImVector<LinkInfo> links_;
+    int next_link_Id = 100;
+
     std::shared_ptr<PipelineManager> pipeline_manager_;
-    int selected_object_id_;
-    // selected object의 graph를 참조하여 render 수행, graph 의 node를 추가
+    int selected_object_id_ = -99999;
 };
 } // namespace Engine
 #endif

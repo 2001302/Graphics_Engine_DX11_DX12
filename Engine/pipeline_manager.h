@@ -2,14 +2,14 @@
 #define _PIPELINEMANAGER
 
 #include "camera.h"
+#include "cube_map.h"
 #include "dataBlock.h"
 #include "direct3D.h"
 #include "game_object.h"
+#include "graph.h"
 #include "input.h"
 #include "normal_shader.h"
 #include "phong_shader.h"
-#include "cube_map.h"
-#include "graph.h"
 
 namespace Engine {
 /// <summary>
@@ -17,7 +17,7 @@ namespace Engine {
 /// </summary>
 class PipelineManager : public IDataBlock {
   public:
-    std::map<int/*id*/, std::shared_ptr<GameObject>> models;
+    std::map<int /*id*/, std::shared_ptr<GameObject>> models;
     std::map<int /*id*/, std::shared_ptr<Graph>> behaviors_;
     std::unique_ptr<CubeMap> cubeMap;
     std::unique_ptr<PhongShader> phongShader;

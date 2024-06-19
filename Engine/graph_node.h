@@ -8,7 +8,9 @@ namespace Engine {
 
 class GraphNode : public ActionNode {
   public:
-    virtual EnumBehaviorTreeStatus OnShow(){};
+    virtual EnumBehaviorTreeStatus OnShow() {
+        return EnumBehaviorTreeStatus::eSuccess;
+    };
 };
 
 } // namespace Engine

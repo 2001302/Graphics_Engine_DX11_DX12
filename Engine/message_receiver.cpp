@@ -1,4 +1,5 @@
 #include "message_receiver.h"
+#include "game_object_node.h"
 
 using namespace Engine;
 using namespace DirectX::SimpleMath;
@@ -117,6 +118,10 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
         GeometryGenerator::ReadFromFile(model.get(), directoryPath, fileName);
         model->SetName(fileName);
 
+        auto graph = std::make_shared<Graph>();
+        graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
+        manager->behaviors_[model->GetEntityId()] = graph;
+
         // create constant buffer(Phong Shader)
         model->phongShader = std::make_shared<PhongShaderSource>();
         model->phongShader->vertex_constant_buffer_data.model =
@@ -207,6 +212,10 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
     model->SetName("sphere");
     manager->models[model->GetEntityId()] = model;
 
+    auto graph = std::make_shared<Graph>();
+    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
+    manager->behaviors_[model->GetEntityId()] = graph;
+
     GeometryGenerator::MakeSphere(model.get(), 1.5f, 15, 13);
 
     for (auto mesh : model->meshes) {
@@ -286,6 +295,10 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
     auto model = std::make_shared<GameObject>();
     model->SetName("box");
     manager->models[model->GetEntityId()] = model;
+
+    auto graph = std::make_shared<Graph>();
+    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
+    manager->behaviors_[model->GetEntityId()] = graph;
 
     GeometryGenerator::MakeBox(model.get());
 
@@ -367,6 +380,10 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
     auto model = std::make_shared<GameObject>();
     model->SetName("cylinder");
     manager->models[model->GetEntityId()] = model;
+
+    auto graph = std::make_shared<Graph>();
+    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
+    manager->behaviors_[model->GetEntityId()] = graph;
 
     GeometryGenerator::MakeCylinder(model.get(), 5.0f, 5.0f, 15.0f, 30);
 

@@ -124,12 +124,9 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
         // create constant buffer(Phong Shader)
         model->phongShader = std::make_shared<PhongShaderSource>();
-        model->phongShader->vertex_constant_buffer_data.model =
-            Matrix();
-        model->phongShader->vertex_constant_buffer_data.view =
-            Matrix();
-        model->phongShader->vertex_constant_buffer_data.projection =
-            Matrix();
+        model->phongShader->vertex_constant_buffer_data.model = Matrix();
+        model->phongShader->vertex_constant_buffer_data.view = Matrix();
+        model->phongShader->vertex_constant_buffer_data.projection = Matrix();
 
         manager->phongShader->CreateConstantBuffer(
             model->phongShader->vertex_constant_buffer_data,
@@ -207,7 +204,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 }
 
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
-    
+
     auto model = std::make_shared<GameObject>();
     model->SetName("sphere");
     manager->models[model->GetEntityId()] = model;
@@ -271,12 +268,9 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
     // create constant buffer(Phong Shader)
     model->phongShader = std::make_shared<PhongShaderSource>();
-    model->phongShader->vertex_constant_buffer_data.model =
-        Matrix();
-    model->phongShader->vertex_constant_buffer_data.view =
-        Matrix();
-    model->phongShader->vertex_constant_buffer_data.projection =
-        Matrix();
+    model->phongShader->vertex_constant_buffer_data.model = Matrix();
+    model->phongShader->vertex_constant_buffer_data.view = Matrix();
+    model->phongShader->vertex_constant_buffer_data.projection = Matrix();
 
     manager->phongShader->CreateConstantBuffer(
         model->phongShader->vertex_constant_buffer_data,
@@ -356,12 +350,9 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
     // create constant buffer(Phong Shader)
     model->phongShader = std::make_shared<PhongShaderSource>();
-    model->phongShader->vertex_constant_buffer_data.model =
-        Matrix();
-    model->phongShader->vertex_constant_buffer_data.view =
-        Matrix();
-    model->phongShader->vertex_constant_buffer_data.projection =
-        Matrix();
+    model->phongShader->vertex_constant_buffer_data.model = Matrix();
+    model->phongShader->vertex_constant_buffer_data.view = Matrix();
+    model->phongShader->vertex_constant_buffer_data.projection = Matrix();
 
     manager->phongShader->CreateConstantBuffer(
         model->phongShader->vertex_constant_buffer_data,

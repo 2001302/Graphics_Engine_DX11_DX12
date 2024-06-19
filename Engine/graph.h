@@ -1,10 +1,21 @@
 #ifndef GRAPH
 #define GRAPH
 
+#include "behavior_tree.h"
 #include "common_struct.h"
 #include "graph_node.h"
 
 namespace Engine {
+
+class GraphNode {
+  public:
+    virtual EnumBehaviorTreeStatus OnInvoke() {
+        return EnumBehaviorTreeStatus::eSuccess;
+    };
+    virtual EnumBehaviorTreeStatus OnShow() {
+        return EnumBehaviorTreeStatus::eSuccess;
+    };
+};
 
 class Graph {
   public:

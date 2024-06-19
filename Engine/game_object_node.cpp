@@ -4,10 +4,6 @@
 using namespace Engine;
 
 EnumBehaviorTreeStatus GameObjectDetailNode::OnInvoke() {
-    IDataBlock *block = DataBlock[EnumDataBlockType::eManager];
-
-    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
-    assert(manager != nullptr);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -182,10 +178,6 @@ EnumBehaviorTreeStatus GameObjectDetailNode::OnShow() {
 }
 
 EnumBehaviorTreeStatus DefaultGraphNode::OnInvoke() {
-    IDataBlock *block = DataBlock[EnumDataBlockType::eManager];
-
-    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
-    assert(manager != nullptr);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }

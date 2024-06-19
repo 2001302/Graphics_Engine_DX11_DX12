@@ -118,14 +118,14 @@
     <ClInclude Include="cube_map.h">
       <Filter>Model</Filter>
     </ClInclude>
-    <ClInclude Include="game_object_node.h">
-      <Filter>BehaviorTree</Filter>
+    <ClInclude Include="graph.h">
+      <Filter>BehaviorGraph</Filter>
     </ClInclude>
     <ClInclude Include="graph_node.h">
-      <Filter>BehaviorTree</Filter>
+      <Filter>BehaviorGraph</Filter>
     </ClInclude>
-    <ClInclude Include="graph.h">
-      <Filter>BehaviorTree</Filter>
+    <ClInclude Include="game_object_node.h">
+      <Filter>BehaviorGraph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -220,14 +220,14 @@
     <ClCompile Include="cube_map.cpp">
       <Filter>Model</Filter>
     </ClCompile>
-    <ClCompile Include="game_object_node.cpp">
-      <Filter>BehaviorTree</Filter>
+    <ClCompile Include="graph.cpp">
+      <Filter>BehaviorGraph</Filter>
     </ClCompile>
     <ClCompile Include="graph_node.cpp">
-      <Filter>BehaviorTree</Filter>
+      <Filter>BehaviorGraph</Filter>
     </ClCompile>
-    <ClCompile Include="graph.cpp">
-      <Filter>BehaviorTree</Filter>
+    <ClCompile Include="game_object_node.cpp">
+      <Filter>BehaviorGraph</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -260,6 +260,9 @@
     </Filter>
     <Filter Include="Gui\ImGui">
       <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="BehaviorGraph">
+      <UniqueIdentifier>{dd885491-628a-4699-bf68-ccd7e4610344}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

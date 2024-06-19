@@ -2,7 +2,7 @@
 
 using namespace Engine;
 
-EnumBehaviorTreeStatus IBehaviorTreeNode::Invoke() {
+EnumBehaviorTreeStatus IBehaviorTreeNode::OnInvoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
@@ -41,17 +41,17 @@ BehaviorTreeRootNode *BehaviorTreeRootNode::Close() {
     return dynamic_cast<BehaviorTreeRootNode *>(parentNode);
 }
 
-EnumBehaviorTreeStatus SequenceNode::Invoke() {
+EnumBehaviorTreeStatus SequenceNode::OnInvoke() {
     for (auto &child : childNodes) {
-        if (child->Invoke() == EnumBehaviorTreeStatus::eFail)
+        if (child->OnInvoke() == EnumBehaviorTreeStatus::eFail)
             return EnumBehaviorTreeStatus::eFail;
     }
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus SelectorNode::Invoke() {
+EnumBehaviorTreeStatus SelectorNode::OnInvoke() {
     for (auto &child : childNodes) {
-        if (child->Invoke() == EnumBehaviorTreeStatus::eSuccess)
+        if (child->OnInvoke() == EnumBehaviorTreeStatus::eSuccess)
             return EnumBehaviorTreeStatus::eSuccess;
     }
     return EnumBehaviorTreeStatus::eSuccess;

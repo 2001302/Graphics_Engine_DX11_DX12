@@ -4,7 +4,7 @@
 
 using namespace Engine;
 
-EnumBehaviorTreeStatus GameObjectDetailNode::Invoke() {
+EnumBehaviorTreeStatus GameObjectDetailNode::OnInvoke() {
     IDataBlock *block = DataBlock[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<Engine::PipelineManager *>(block);
@@ -12,7 +12,7 @@ EnumBehaviorTreeStatus GameObjectDetailNode::Invoke() {
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
-EnumBehaviorTreeStatus GameObjectDetailNode::Render() {
+EnumBehaviorTreeStatus GameObjectDetailNode::OnShow() {
     IDataBlock *block = DataBlock[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<Engine::PipelineManager *>(block);

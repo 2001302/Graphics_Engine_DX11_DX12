@@ -4,7 +4,7 @@
 
 using namespace Engine;
 
-EnumBehaviorTreeStatus InitializeCamera::Invoke() {
+EnumBehaviorTreeStatus InitializeCamera::OnInvoke() {
     IDataBlock *block = DataBlock[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<Engine::PipelineManager *>(block);
@@ -25,7 +25,7 @@ EnumBehaviorTreeStatus InitializeCamera::Invoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus InitializePhongShader::Invoke() {
+EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
     IDataBlock *block = DataBlock[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<Engine::PipelineManager *>(block);
@@ -68,7 +68,7 @@ EnumBehaviorTreeStatus InitializePhongShader::Invoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus UpdateCamera::Invoke() {
+EnumBehaviorTreeStatus UpdateCamera::OnInvoke() {
     IDataBlock *managerBlock = DataBlock[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
@@ -80,7 +80,7 @@ EnumBehaviorTreeStatus UpdateCamera::Invoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus UpdateGameObjects::Invoke() {
+EnumBehaviorTreeStatus UpdateGameObjects::OnInvoke() {
     IDataBlock *managerBlock = DataBlock[EnumDataBlockType::eManager];
     IDataBlock *envBlock = DataBlock[EnumDataBlockType::eEnv];
     IDataBlock *guiBlock = DataBlock[EnumDataBlockType::eGui];
@@ -192,7 +192,7 @@ EnumBehaviorTreeStatus UpdateGameObjects::Invoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus RenderGameObjects::Invoke() {
+EnumBehaviorTreeStatus RenderGameObjects::OnInvoke() {
     IDataBlock *managerBlock = DataBlock[EnumDataBlockType::eManager];
     IDataBlock *envBlock = DataBlock[EnumDataBlockType::eEnv];
     IDataBlock *guiBlock = DataBlock[EnumDataBlockType::eGui];

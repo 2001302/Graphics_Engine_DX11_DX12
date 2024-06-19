@@ -27,7 +27,7 @@ class IDisposable {
 
 class IBehaviorTreeNode : public IDisposable {
   public:
-    virtual EnumBehaviorTreeStatus Invoke();
+    virtual EnumBehaviorTreeStatus OnInvoke();
     void SetParent(IBehaviorTreeNode *node);
     std::map<EnumDataBlockType, IDataBlock *> DataBlock;
 
@@ -58,12 +58,12 @@ class SequenceNode : public BehaviorTreeRootNode {
     SequenceNode(std::map<EnumDataBlockType, IDataBlock *> dataBlock) {
         DataBlock = dataBlock;
     };
-    EnumBehaviorTreeStatus Invoke() override;
+    EnumBehaviorTreeStatus OnInvoke() override;
 };
 
 class SelectorNode : public BehaviorTreeRootNode {
   public:
-    EnumBehaviorTreeStatus Invoke() override;
+    EnumBehaviorTreeStatus OnInvoke() override;
 };
 
 class ActionNode : public IBehaviorTreeNode {};
@@ -76,7 +76,7 @@ class BehaviorTreeBuilder {
         return tree;
     }
     void Run() {
-        tree->Invoke();
+        tree->OnInvoke();
         tree->Dispose();
         tree.reset();
     }

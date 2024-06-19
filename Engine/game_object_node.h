@@ -5,8 +5,8 @@
 
 namespace Engine {
 class GameObjectDetailNode : public GraphNode {
-    EnumBehaviorTreeStatus Invoke() override;
-    EnumBehaviorTreeStatus Render() override;
+    EnumBehaviorTreeStatus OnInvoke() override;
+    EnumBehaviorTreeStatus OnShow() override;
 };
 
 } // namespace Engine

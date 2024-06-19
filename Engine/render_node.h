@@ -5,11 +5,11 @@
 
 namespace Engine {
 class InitializeCamera : public ActionNode {
-    EnumBehaviorTreeStatus Invoke() override;
+    EnumBehaviorTreeStatus OnInvoke() override;
 };
 
 class InitializePhongShader : public ActionNode {
-    EnumBehaviorTreeStatus Invoke() override;
+    EnumBehaviorTreeStatus OnInvoke() override;
     HWND window;
 
   public:
@@ -18,15 +18,15 @@ class InitializePhongShader : public ActionNode {
 };
 
 class UpdateCamera : public ActionNode {
-    EnumBehaviorTreeStatus Invoke() override;
+    EnumBehaviorTreeStatus OnInvoke() override;
 };
 
 class UpdateGameObjects : public ActionNode {
-    EnumBehaviorTreeStatus Invoke() override;
+    EnumBehaviorTreeStatus OnInvoke() override;
 };
 
 class RenderGameObjects : public ActionNode {
-    EnumBehaviorTreeStatus Invoke() override;
+    EnumBehaviorTreeStatus OnInvoke() override;
 };
 } // namespace Engine
 #endif

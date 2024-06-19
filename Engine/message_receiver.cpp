@@ -107,16 +107,15 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
     // show file explorer
     if (GetOpenFileName(&ofn)) {
 
-        auto model = std::make_shared<GameObject>();
-        manager->models[model->GetEntityId()] = model;
-
         std::string fullPath = ToString(ofn.lpstrFile);
         size_t lastSlash = fullPath.find_last_of('\\');
         std::string fileName = fullPath.substr(lastSlash + 1);
         std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
-        GeometryGenerator::ReadFromFile(model.get(), directoryPath,
-                                                fileName);
+        auto model = std::make_shared<GameObject>();
+        manager->models[model->GetEntityId()] = model;
+        GeometryGenerator::ReadFromFile(model.get(), directoryPath, fileName);
+        model->SetName(fileName);
 
         // create constant buffer(Phong Shader)
         model->phongShader = std::make_shared<PhongShaderSource>();
@@ -205,7 +204,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
     
     auto model = std::make_shared<GameObject>();
-    model->SetName("Sphere");
+    model->SetName("sphere");
     manager->models[model->GetEntityId()] = model;
 
     GeometryGenerator::MakeSphere(model.get(), 1.5f, 15, 13);
@@ -285,6 +284,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
     auto model = std::make_shared<GameObject>();
+    model->SetName("box");
     manager->models[model->GetEntityId()] = model;
 
     GeometryGenerator::MakeBox(model.get());
@@ -365,6 +365,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
     auto model = std::make_shared<GameObject>();
+    model->SetName("cylinder");
     manager->models[model->GetEntityId()] = model;
 
     GeometryGenerator::MakeCylinder(model.get(), 5.0f, 5.0f, 15.0f, 30);

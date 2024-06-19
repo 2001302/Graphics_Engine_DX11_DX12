@@ -121,6 +121,12 @@
     <ClInclude Include="game_object_node.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
+    <ClInclude Include="graph_node.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="graph.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -215,6 +221,12 @@
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="game_object_node.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="graph_node.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="graph.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
   </ItemGroup>

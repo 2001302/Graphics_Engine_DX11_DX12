@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -139,6 +139,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
+    <ClInclude Include="graph.h" />
+    <ClInclude Include="graph_node.h" />
     <ClInclude Include="render_node.h" />
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
@@ -181,6 +183,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="application.cpp" />
+    <ClCompile Include="graph.cpp" />
+    <ClCompile Include="graph_node.cpp" />
     <ClCompile Include="render_node.cpp" />
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />

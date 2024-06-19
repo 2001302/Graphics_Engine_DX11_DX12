@@ -1,11 +1,12 @@
 #ifndef _GAMEOBJECTNODE
 #define _GAMEOBJECTNODE
 
-#include "behavior_tree.h"
+#include "graph_node.h"
 
 namespace Engine {
-class InspectorNode : public ActionNode {
+class GameObjectDetailNode : public GraphNode {
     EnumBehaviorTreeStatus Invoke() override;
+    EnumBehaviorTreeStatus Render() override;
 };
 
 } // namespace Engine

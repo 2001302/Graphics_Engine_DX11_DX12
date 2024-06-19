@@ -29,18 +29,6 @@ class Panel : public BaseGui {
     void OnStart() override;
     void OnFrame(float deltaTime) override;
 
-    bool m_useBlinnPhong = false;
-    bool m_useTexture = false;
-
-    bool m_usePerspectiveProjection = true;
-    DirectX::SimpleMath::Vector3 m_modelTranslation =
-        DirectX::SimpleMath::Vector3(0.0f);
-    DirectX::SimpleMath::Vector3 m_modelRotation =
-        DirectX::SimpleMath::Vector3(0.0f);
-    DirectX::SimpleMath::Vector3 m_modelScaling =
-        DirectX::SimpleMath::Vector3(1.0f);
-
-    float shininess_ = 1.0f;
     bool draw_as_wire_ = false;
 
     float m_projFovAngleY = 70.0f;
@@ -49,9 +37,6 @@ class Panel : public BaseGui {
 
     int m_lightType = 0;
     Light m_lightFromGUI;
-    float m_materialDiffuse = 1.0f;
-    float m_materialSpecular = 1.0f;
-
 
     private:
     ed::EditorContext *context_ = nullptr;

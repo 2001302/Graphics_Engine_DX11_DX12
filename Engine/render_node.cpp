@@ -1,4 +1,5 @@
 #include "render_node.h"
+#include "game_object_node.h"
 #include "panel.h"
 #include "pipeline_manager.h"
 
@@ -98,14 +99,20 @@ EnumBehaviorTreeStatus UpdateGameObjects::OnInvoke() {
 
     for (auto &model_amp : manager->models) {
         auto &model = model_amp.second;
+        auto graph = manager->behaviors[model->GetEntityId()];
+
+        auto detail = dynamic_cast<Engine::GameObjectDetailNode *>(
+            graph->GetDetailNode().get());
+        assert(detail != nullptr);
+
         // model
         {
             model->phongShader->vertex_constant_buffer_data.model =
-                Matrix::CreateScale(gui->m_modelScaling) *
-                Matrix::CreateRotationX(gui->m_modelRotation.x) *
-                Matrix::CreateRotationY(gui->m_modelRotation.y) *
-                Matrix::CreateRotationZ(gui->m_modelRotation.z) *
-                Matrix::CreateTranslation(gui->m_modelTranslation);
+                Matrix::CreateScale(detail->scaling) *
+                Matrix::CreateRotationX(detail->rotation.x) *
+                Matrix::CreateRotationY(detail->rotation.y) *
+                Matrix::CreateRotationZ(detail->rotation.z) *
+                Matrix::CreateTranslation(detail->translation);
 
             model->phongShader->vertex_constant_buffer_data.model =
                 model->phongShader->vertex_constant_buffer_data.model
@@ -130,7 +137,7 @@ EnumBehaviorTreeStatus UpdateGameObjects::OnInvoke() {
         // projection
         {
             const float aspect = env->aspect_;
-            if (gui->m_usePerspectiveProjection) {
+            if (detail->use_perspective_projection) {
                 model->phongShader->vertex_constant_buffer_data.projection =
                     XMMatrixPerspectiveFovLH(
                         XMConvertToRadians(gui->m_projFovAngleY), aspect,
@@ -160,11 +167,11 @@ EnumBehaviorTreeStatus UpdateGameObjects::OnInvoke() {
         // material
         {
             model->phongShader->pixel_constant_buffer_data.material.diffuse =
-                Vector3(gui->m_materialDiffuse);
+                Vector3(detail->diffuse);
             model->phongShader->pixel_constant_buffer_data.material.specular =
-                Vector3(gui->m_materialSpecular);
+                Vector3(detail->specular);
             model->phongShader->pixel_constant_buffer_data.material.shininess =
-                gui->shininess_;
+                detail->shininess;
         }
         // light
         {
@@ -181,9 +188,9 @@ EnumBehaviorTreeStatus UpdateGameObjects::OnInvoke() {
         }
 
         model->phongShader->pixel_constant_buffer_data.useTexture =
-            gui->m_useTexture;
+            detail->use_texture;
         model->phongShader->pixel_constant_buffer_data.useBlinnPhong =
-            gui->m_useBlinnPhong;
+            detail->use_blinn_phong;
 
         manager->phongShader->UpdateBuffer(
             model->phongShader->pixel_constant_buffer_data,
@@ -208,6 +215,13 @@ EnumBehaviorTreeStatus RenderGameObjects::OnInvoke() {
 
     auto context = Direct3D::GetInstance().GetDeviceContext();
 
+    float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+    context->ClearRenderTargetView(Direct3D::GetInstance().render_target_view_,
+                                   clearColor);
+    context->ClearDepthStencilView(
+        Direct3D::GetInstance().depth_stencil_view_.Get(),
+        D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
     for (auto &model_map : manager->models) {
         // RS: Rasterizer stage
         // OM: Output-Merger stage
@@ -218,13 +232,6 @@ EnumBehaviorTreeStatus RenderGameObjects::OnInvoke() {
 
         unsigned int stride = sizeof(Vertex);
         unsigned int offset = 0;
-
-        float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-        context->ClearRenderTargetView(
-            Direct3D::GetInstance().render_target_view_, clearColor);
-        context->ClearDepthStencilView(
-            Direct3D::GetInstance().depth_stencil_view_.Get(),
-            D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
         context->OMSetRenderTargets(
             1, &Direct3D::GetInstance().render_target_view_,

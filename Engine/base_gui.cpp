@@ -11,11 +11,9 @@ using namespace Engine;
 #endif
 
 ImGuiWindowFlags GetWindowFlags() {
-    return ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
-           ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar |
-           ImGuiWindowFlags_NoScrollWithMouse |
-           ImGuiWindowFlags_NoSavedSettings |
-           ImGuiWindowFlags_NoBringToFrontOnFocus;
+    return ImGuiWindowFlags_NoTitleBar |
+           ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove |
+           ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
 }
 
 bool BaseGui::Initialize(HWND main_window, Env *env) {
@@ -49,14 +47,12 @@ bool BaseGui::Frame() {
     ImGui::NewFrame();
 
     ImGui::SetNextWindowPos(ImVec2(0, 0));
-    //ImGui::SetNextWindowSize(io.DisplaySize);
 
     const auto windowBorderSize = ImGui::GetStyle().WindowBorderSize;
     const auto windowRounding = ImGui::GetStyle().WindowRounding;
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-    //ImGui::Begin("Content", nullptr, GetWindowFlags());
-    ImGui::Begin("Menu");
+    ImGui::Begin("Menu", nullptr, GetWindowFlags());
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, windowBorderSize);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
 
@@ -102,8 +98,8 @@ void BaseGui::RecreateFontAtlas() {
 
     default_font_ = io.Fonts->AddFontFromFileTTF(
         "../Engine/data/Play-Regular.ttf", 18.0f, &config);
-    header_font = io.Fonts->AddFontFromFileTTF(
-        "../Engine/data/Cuprum-Bold.ttf", 20.0f, &config);
+    header_font = io.Fonts->AddFontFromFileTTF("../Engine/data/Cuprum-Bold.ttf",
+                                               20.0f, &config);
 
     io.Fonts->Build();
 }

@@ -8,7 +8,7 @@ Panel::Panel(std::shared_ptr<PipelineManager> pipeline_manager) {
 
 void Panel::OnStart() {
     ed::Config config;
-    config.SettingsFile = "Widgets.json";
+    config.SettingsFile = "widgets.json";
     context_ = ed::CreateEditor(&config);
 }
 
@@ -49,11 +49,11 @@ void Panel::OnFrame(float deltaTime) {
     }
 
     {
-        // Node Editor Widget
+        //Node Editor Widget
         ed::SetCurrentEditor(context_);
-        ed::Begin("My Editor", ImVec2(0.0, ImGui::GetWindowHeight() / 2.0f));
-        
-        // Start drawing nodes.
+        ed::Begin("My Editor", ImVec2(0.0, ImGui::GetWindowHeight() / 1.5f));
+
+        //Start drawing nodes.
         if (selected_object_id_ == -99999) {
             auto graph = std::make_shared<DefaultGraphNode>();
             graph->OnShow();
@@ -61,16 +61,15 @@ void Panel::OnFrame(float deltaTime) {
             auto graph = pipeline_manager_->behaviors[selected_object_id_];
             graph->Show();
         }
-        
+
         ed::End();
         ed::SetCurrentEditor(nullptr);
-        
+
         ed::EditorContext *m_Context = nullptr;
     }
 
-    {
-        ImGui::BeginTabBar("TabBar");
-
+    // Tab Bar
+    if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_FittingPolicyScroll)) {
         if (ImGui::BeginTabItem("Hierarchy")) {
             ImGui::BeginTable("MyTable", ImGuiTableFlags_Resizable |
                                              ImGuiTableFlags_Reorderable);
@@ -107,25 +106,10 @@ void Panel::OnFrame(float deltaTime) {
 
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Inspector")) {
-            ImGui::Checkbox("Wire Frame", &draw_as_wire_);
-            ImGui::Checkbox("Use Texture", &m_useTexture);
-            ImGui::Checkbox("Use BlinnPhong", &m_useBlinnPhong);
-
-            ImGui::Text("Transform");
-            ImGui::SliderFloat3("Translation", &m_modelTranslation.x, -2.0f,
-                                2.0f);
-            ImGui::SliderFloat("Rotation", &m_modelRotation.y, -3.14f, 3.14f);
-            ImGui::SliderFloat3("Scaling", &m_modelScaling.x, 0.1f, 4.0f);
-
-            ImGui::Text("Material");
-            ImGui::SliderFloat("Shininess", &shininess_, 1.0f, 256.0f);
-            ImGui::SliderFloat("Diffuse", &m_materialDiffuse, 0.0f, 1.0f);
-            ImGui::SliderFloat("Specular", &m_materialSpecular, 0.0f, 1.0f);
-
-            ImGui::EndTabItem();
-        }
         if (ImGui::BeginTabItem("Light")) {
+
+            ImGui::Checkbox("Wire Frame", &draw_as_wire_);
+
             if (ImGui::RadioButton("Directional Light", m_lightType == 0)) {
                 m_lightType = 0;
             }

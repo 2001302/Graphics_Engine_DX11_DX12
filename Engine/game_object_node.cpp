@@ -18,8 +18,7 @@ EnumBehaviorTreeStatus GameObjectDetailNode::OnShow() {
 
     int uniqueId = 1;
 
-    // Basic Widgets Demo
-    // ==============================================================================================
+    //Pin
     auto basic_id = uniqueId++;
     ed::BeginNode(basic_id);
     ImGui::Text("Detail");
@@ -34,7 +33,6 @@ EnumBehaviorTreeStatus GameObjectDetailNode::OnShow() {
     ImGui::Text("Out ->");
     ed::EndPin();
 
-    // Widget Demo from imgui_demo.cpp...
     // Normal Button
     static int clicked = 0;
     if (ImGui::Button("Button"))
@@ -43,6 +41,19 @@ EnumBehaviorTreeStatus GameObjectDetailNode::OnShow() {
         ImGui::SameLine();
         ImGui::Text("Thanks for clicking me!");
     }
+
+    ImGui::Checkbox("Use Texture", &use_texture);
+    ImGui::Checkbox("Use BlinnPhong", &use_blinn_phong);
+
+    ImGui::Text("Transform");
+    ImGui::SliderFloat3("Translation", &translation.x, -2.0f, 2.0f);
+    ImGui::SliderFloat("Rotation", &rotation.y, -3.14f, 3.14f);
+    ImGui::SliderFloat3("Scaling", &scaling.x, 0.1f, 4.0f);
+
+    ImGui::Text("Material");
+    ImGui::SliderFloat("Shininess", &shininess, 1.0f, 256.0f);
+    ImGui::SliderFloat("Diffuse", &diffuse, 0.0f, 1.0f);
+    ImGui::SliderFloat("Specular", &specular, 0.0f, 1.0f);
 
     // Checkbox
     static bool check = true;

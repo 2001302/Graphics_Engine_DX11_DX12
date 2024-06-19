@@ -29,8 +29,6 @@ class Panel : public BaseGui {
     void OnStart() override;
     void OnFrame(float deltaTime) override;
 
-    float shininess_ = 1.0f;
-    bool draw_as_wire_ = false;
     bool m_useBlinnPhong = false;
     bool m_useTexture = false;
 
@@ -42,6 +40,9 @@ class Panel : public BaseGui {
     DirectX::SimpleMath::Vector3 m_modelScaling =
         DirectX::SimpleMath::Vector3(1.0f);
 
+    float shininess_ = 1.0f;
+    bool draw_as_wire_ = false;
+
     float m_projFovAngleY = 70.0f;
     float m_nearZ = 0.01f;
     float m_farZ = 100.0f;
@@ -51,13 +52,9 @@ class Panel : public BaseGui {
     float m_materialDiffuse = 1.0f;
     float m_materialSpecular = 1.0f;
 
+
+    private:
     ed::EditorContext *context_ = nullptr;
-
-  private:
-    void DefaultEditor();
-    ImVector<LinkInfo> links_;
-    int next_link_Id = 100;
-
     std::shared_ptr<PipelineManager> pipeline_manager_;
     int selected_object_id_ = -99999;
 };

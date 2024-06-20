@@ -93,7 +93,7 @@ bool Application::OnStop() {
             model.second.reset();
         }
 
-        manager_->phongShader.reset();
+        manager_->phong_shader.reset();
         manager_->camera.reset();
     }
 

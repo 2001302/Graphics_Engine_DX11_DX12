@@ -17,9 +17,9 @@ class CubeMap : public IEntity{
 
     DirectX::SimpleMath::Matrix transform;
     std::shared_ptr<Mesh> mesh;
-    ComPtr<ID3D11ShaderResourceView> diffuseResView;
-    ComPtr<ID3D11ShaderResourceView> specularResView;
-    std::shared_ptr<CubeMapShaderSource> cube_map_shader;
+    ComPtr<ID3D11ShaderResourceView> diffuse_resource_view;
+    ComPtr<ID3D11ShaderResourceView> specular_resource_view;
+    std::shared_ptr<CubeMapShaderSource> cube_map_shader_source;
 };
 } // namespace Engine
 #endif \

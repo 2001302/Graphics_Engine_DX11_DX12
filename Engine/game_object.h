@@ -21,7 +21,7 @@ class GameObject : public IEntity {
     std::vector<std::shared_ptr<Mesh>> meshes;
     std::shared_ptr<Animation> animation;
 
-    std::shared_ptr<PhongShaderSource> phong_shader;
+    std::shared_ptr<PhongShaderSource> phong_shader_source;
 };
 } // namespace Engine
 #endif

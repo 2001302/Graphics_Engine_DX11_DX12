@@ -20,10 +20,9 @@ class PipelineManager : public IDataBlock {
   public:
     std::map<int /*id*/, std::shared_ptr<GameObject>> models;
     std::map<int /*id*/, std::shared_ptr<Graph>> behaviors;
+    std::map<EnumShaderType, std::shared_ptr<IShader>> shaders;
     std::shared_ptr<CubeMap> cube_map;
     std::unique_ptr<Camera> camera;
-    std::unique_ptr<PhongShader> phong_shader;
-    std::unique_ptr<CubeMapShader> cube_map_shader;
 };
 } // namespace Engine
 #endif

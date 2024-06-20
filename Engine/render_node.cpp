@@ -34,7 +34,8 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
     assert(manager != nullptr);
 
     // Create and initialize the light shader object.
-    manager->phong_shader = std::make_unique<PhongShader>();
+    auto phong_shader = std::make_shared<PhongShader>();
+    manager->shaders[EnumShaderType::ePhong] = phong_shader;
 
     // Texture sampler ¸¸µé±â
     D3D11_SAMPLER_DESC sampDesc;
@@ -49,7 +50,7 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
 
     // Create the Sample State
     Direct3D::GetInstance().GetDevice()->CreateSamplerState(
-        &sampDesc, manager->phong_shader->sample_state.GetAddressOf());
+        &sampDesc, phong_shader->sample_state.GetAddressOf());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
@@ -60,12 +61,12 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    manager->phong_shader->CreateVertexShaderAndInputLayout(
-        L"phong_vertex_shader.hlsl", inputElements,
-        manager->phong_shader->vertex_shader, manager->phong_shader->layout);
+    phong_shader->CreateVertexShaderAndInputLayout(
+        L"phong_vertex_shader.hlsl", inputElements, phong_shader->vertex_shader,
+        phong_shader->layout);
 
-    manager->phong_shader->CreatePixelShader(
-        L"phong_pixel_shader.hlsl", manager->phong_shader->pixel_shader);
+    phong_shader->CreatePixelShader(L"phong_pixel_shader.hlsl",
+                                    phong_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -106,8 +107,8 @@ EnumBehaviorTreeStatus UpdateGameObjects::OnInvoke() {
             graph->GetDetailNode().get());
         assert(detail != nullptr);
 
-        auto phong_shader_source = model->phong_shader;
-
+        auto phong_shader_source = model->phong_shader_source;
+        auto phong_shader = manager->shaders[EnumShaderType::ePhong];
         // model
         {
             phong_shader_source->vertex_constant_buffer_data.model =
@@ -158,7 +159,7 @@ EnumBehaviorTreeStatus UpdateGameObjects::OnInvoke() {
                     .Transpose();
         }
 
-        manager->phong_shader->UpdateBuffer(
+        phong_shader->UpdateBuffer(
             phong_shader_source->vertex_constant_buffer_data,
             phong_shader_source->vertex_constant_buffer);
 
@@ -197,7 +198,7 @@ EnumBehaviorTreeStatus UpdateGameObjects::OnInvoke() {
         phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
             detail->use_blinn_phong;
 
-        manager->phong_shader->UpdateBuffer(
+        phong_shader->UpdateBuffer(
             phong_shader_source->pixel_constant_buffer_data,
             phong_shader_source->pixel_constant_buffer);
     }
@@ -234,7 +235,8 @@ EnumBehaviorTreeStatus RenderGameObjects::OnInvoke() {
         // PS: Pixel Shader
         // IA: Input-Assembler stage
         auto model = model_map.second;
-        auto phong_shader_source = model->phong_shader;
+        auto phong_shader_source = model->phong_shader_source;
+        auto phong_shader = manager->shaders[EnumShaderType::ePhong];
 
         unsigned int stride = sizeof(Vertex);
         unsigned int offset = 0;
@@ -245,8 +247,8 @@ EnumBehaviorTreeStatus RenderGameObjects::OnInvoke() {
         context->OMSetDepthStencilState(
             Direct3D::GetInstance().depth_stencil_state_.Get(), 0);
 
-        context->VSSetShader(manager->phong_shader->vertex_shader.Get(), 0, 0);
-        context->PSSetSamplers(0, 1, &manager->phong_shader->sample_state);
+        context->VSSetShader(phong_shader->vertex_shader.Get(), 0, 0);
+        context->PSSetSamplers(0, 1, &phong_shader->sample_state);
 
         if (gui->GetLightTab().draw_as_wire_)
             context->RSSetState(
@@ -265,10 +267,9 @@ EnumBehaviorTreeStatus RenderGameObjects::OnInvoke() {
             context->PSSetConstantBuffers(
                 0, 1,
                 phong_shader_source->pixel_constant_buffer.GetAddressOf());
-            context->PSSetShader(manager->phong_shader->pixel_shader.Get(),
-                                 NULL, 0);
+            context->PSSetShader(phong_shader->pixel_shader.Get(), NULL, 0);
 
-            context->IASetInputLayout(manager->phong_shader->layout.Get());
+            context->IASetInputLayout(phong_shader->layout.Get());
             context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
                                         &stride, &offset);
             context->IASetIndexBuffer(mesh->indexBuffer.Get(),
@@ -279,6 +280,78 @@ EnumBehaviorTreeStatus RenderGameObjects::OnInvoke() {
             context->DrawIndexed(model->GetIndexCount(), 0, 0);
         }
     }
+
+    return EnumBehaviorTreeStatus::eSuccess;
+}
+
+EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
+    IDataBlock *block = DataBlock[EnumDataBlockType::eManager];
+
+    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+    assert(manager != nullptr);
+
+    manager->cube_map = std::make_shared<CubeMap>();
+    GeometryGenerator::MakeSphere(manager->cube_map.get(), 20.0f, 15, 13);
+
+    auto graph = std::make_shared<Graph>();
+    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
+    manager->behaviors[manager->cube_map->GetEntityId()] = graph;
+
+    auto cube_map_shader = std::make_shared<CubeMapShader>();
+    manager->shaders[EnumShaderType::eCube] = cube_map_shader;
+
+    std::reverse(manager->cube_map->mesh->indices.begin(),
+                 manager->cube_map->mesh->indices.end());
+
+    auto skyboxFilename = L"./CubemapTextures/skybox.dds";
+    auto nightPathFilename = L"./CubemapTextures/HumusTextures/NightPath.dds";
+    auto atribumDiffuseFilename = L"./CubemapTextures/Atrium_diffuseIBL.dds";
+    auto atribumSpecularFilename = L"./CubemapTextures/Atrium_specularIBL.dds";
+    auto stonewallSpecularFilename =
+        L"./CubemapTextures/Stonewall_specularIBL.dds";
+    auto stonewallDiffuseFilename =
+        L"./CubemapTextures/Stonewall_diffuseIBL.dds";
+
+    cube_map_shader->CreateCubemapTexture(
+        atribumDiffuseFilename, manager->cube_map->diffuse_resource_view);
+    cube_map_shader->CreateCubemapTexture(
+        skyboxFilename, manager->cube_map->specular_resource_view);
+
+    manager->cube_map->cube_map_shader_source =
+        std::make_shared<CubeMapShaderSource>();
+    auto cube_map_shader_source = manager->cube_map->cube_map_shader_source;
+
+    cube_map_shader_source->vertex_constant_buffer_data.model = Matrix();
+    cube_map_shader_source->vertex_constant_buffer_data.view = Matrix();
+    cube_map_shader_source->vertex_constant_buffer_data.projection = Matrix();
+
+    cube_map_shader->CreateConstantBuffer(
+        cube_map_shader_source->vertex_constant_buffer_data,
+        cube_map_shader_source->vertex_constant_buffer);
+    cube_map_shader->CreateConstantBuffer(
+        cube_map_shader_source->pixel_constant_buffer_data,
+        cube_map_shader_source->pixel_constant_buffer);
+
+    cube_map_shader->CreateVertexBuffer(manager->cube_map->mesh->vertices,
+                                        manager->cube_map->mesh->vertexBuffer);
+    cube_map_shader->CreateIndexBuffer(manager->cube_map->mesh->indices,
+                                       manager->cube_map->mesh->indexBuffer);
+
+    std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 4 * 3,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 4 * 3 + 4 * 3,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+    };
+
+    cube_map_shader->CreateVertexShaderAndInputLayout(
+        L"cube_mapping_vertex_shader.hlsl", basicInputElements,
+        cube_map_shader->vertex_shader, cube_map_shader->layout);
+
+    cube_map_shader->CreatePixelShader(L"cube_mapping_pixel_shader.hlsl",
+                                       cube_map_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -306,7 +379,8 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
         graph->GetDetailNode().get());
     assert(detail != nullptr);
 
-    auto cube_shader_source = cube_map->cube_map_shader;
+    auto cube_shader_source = cube_map->cube_map_shader_source;
+    auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
     {
         cube_shader_source->vertex_constant_buffer_data.view =
             manager->camera->view.Transpose();
@@ -330,86 +404,13 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
                 .Transpose();
     }
 
-    manager->cube_map_shader->UpdateBuffer(
+    cube_map_shader->UpdateBuffer(
         cube_shader_source->vertex_constant_buffer_data,
         cube_shader_source->vertex_constant_buffer);
 
-    manager->cube_map_shader->UpdateBuffer(
+    cube_map_shader->UpdateBuffer(
         cube_shader_source->pixel_constant_buffer_data,
         cube_shader_source->pixel_constant_buffer);
-
-    return EnumBehaviorTreeStatus::eSuccess;
-}
-
-EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
-    IDataBlock *block = DataBlock[EnumDataBlockType::eManager];
-
-    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
-    assert(manager != nullptr);
-
-    manager->cube_map = std::make_shared<CubeMap>();
-    GeometryGenerator::MakeSphere(manager->cube_map.get(), 20.0f, 15, 13);
-
-    auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
-    manager->behaviors[manager->cube_map->GetEntityId()] = graph;
-
-    manager->cube_map_shader = std::make_unique<CubeMapShader>();
-    std::reverse(manager->cube_map->mesh->indices.begin(),
-                 manager->cube_map->mesh->indices.end());
-
-    auto skyboxFilename = L"./CubemapTextures/skybox.dds";
-    auto nightPathFilename = L"./CubemapTextures/HumusTextures/NightPath.dds";
-    auto atribumDiffuseFilename = L"./CubemapTextures/Atrium_diffuseIBL.dds";
-    auto atribumSpecularFilename = L"./CubemapTextures/Atrium_specularIBL.dds";
-    auto stonewallSpecularFilename =
-        L"./CubemapTextures/Stonewall_specularIBL.dds";
-    auto stonewallDiffuseFilename =
-        L"./CubemapTextures/Stonewall_diffuseIBL.dds";
-
-    auto cube_map_shader_source = manager->cube_map->cube_map_shader;
-
-    manager->cube_map_shader->CreateCubemapTexture(
-        atribumDiffuseFilename, manager->cube_map->diffuseResView);
-    manager->cube_map_shader->CreateCubemapTexture(
-        skyboxFilename, manager->cube_map->specularResView);
-
-    cube_map_shader_source = std::make_shared<CubeMapShaderSource>();
-
-    cube_map_shader_source->vertex_constant_buffer_data.model = Matrix();
-    cube_map_shader_source->vertex_constant_buffer_data.view = Matrix();
-    cube_map_shader_source->vertex_constant_buffer_data.projection = Matrix();
-
-    manager->cube_map_shader->CreateConstantBuffer(
-        cube_map_shader_source->vertex_constant_buffer_data,
-        cube_map_shader_source->vertex_constant_buffer);
-    manager->cube_map_shader->CreateConstantBuffer(
-        cube_map_shader_source->pixel_constant_buffer_data,
-        cube_map_shader_source->pixel_constant_buffer);
-
-    manager->cube_map_shader->CreateVertexBuffer(
-        manager->cube_map->mesh->vertices,
-        manager->cube_map->mesh->vertexBuffer);
-    manager->cube_map_shader->CreateIndexBuffer(
-        manager->cube_map->mesh->indices, manager->cube_map->mesh->indexBuffer);
-
-    std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
-        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
-         D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 4 * 3,
-         D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 4 * 3 + 4 * 3,
-         D3D11_INPUT_PER_VERTEX_DATA, 0},
-    };
-
-    manager->cube_map_shader->CreateVertexShaderAndInputLayout(
-        L"cube_mapping_vertex_shader.hlsl", basicInputElements,
-        manager->cube_map_shader->vertex_shader,
-        manager->cube_map_shader->layout);
-
-    manager->cube_map_shader->CreatePixelShader(
-        L"cube_mapping_pixel_shader.hlsl",
-        manager->cube_map_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -430,6 +431,7 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
 
     auto context = Direct3D::GetInstance().GetDeviceContext();
     auto cube_map = manager->cube_map;
+    auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
 
     unsigned int stride = sizeof(Vertex);
     unsigned int offset = 0;
@@ -439,22 +441,23 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     // VS: Vertex Shader
     // PS: Pixel Shader
     // IA: Input-Assembler stage
-    context->IASetInputLayout(manager->cube_map_shader->layout.Get());
+    context->IASetInputLayout(cube_map_shader->layout.Get());
     context->IASetVertexBuffers(
         0, 1, cube_map->mesh->vertexBuffer.GetAddressOf(), &stride, &offset);
     context->IASetIndexBuffer(cube_map->mesh->indexBuffer.Get(),
                               DXGI_FORMAT_R32_UINT, 0);
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-    context->VSSetShader(manager->cube_map_shader->vertex_shader.Get(), 0, 0);
-    context->VSSetConstantBuffers(
-        0, 1, cube_map->cube_map_shader->vertex_constant_buffer.GetAddressOf());
-    ID3D11ShaderResourceView *views[2] = {cube_map->diffuseResView.Get(),
-                                          cube_map->specularResView.Get()};
+    context->VSSetShader(cube_map_shader->vertex_shader.Get(), 0, 0);
+    context->VSSetConstantBuffers(0, 1,
+                                  cube_map->cube_map_shader_source
+                                      ->vertex_constant_buffer.GetAddressOf());
+    ID3D11ShaderResourceView *views[2] = {
+        cube_map->diffuse_resource_view.Get(),
+        cube_map->specular_resource_view.Get()};
     context->PSSetShaderResources(0, 2, views);
-    context->PSSetShader(manager->cube_map_shader->pixel_shader.Get(), 0, 0);
-    context->PSSetSamplers(
-        0, 1, manager->cube_map_shader->sample_state.GetAddressOf());
+    context->PSSetShader(cube_map_shader->pixel_shader.Get(), 0, 0);
+    context->PSSetSamplers(0, 1, cube_map_shader->sample_state.GetAddressOf());
 
     context->DrawIndexed(cube_map->GetIndexCount(), 0, 0);
 

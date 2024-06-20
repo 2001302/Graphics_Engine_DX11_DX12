@@ -35,6 +35,11 @@ namespace Engine
 	using DirectX::SimpleMath::Vector4;
 	using Microsoft::WRL::ComPtr;
 
+    enum EnumShaderType {
+        ePhong = 0,
+        eCube = 1,
+    };
+
 	struct Vertex {
 		Vector3 position;
 		Vector3 normal;

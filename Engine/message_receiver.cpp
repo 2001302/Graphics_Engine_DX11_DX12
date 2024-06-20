@@ -123,17 +123,17 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
         manager->behaviors[model->GetEntityId()] = graph;
 
         // create constant buffer(Phong Shader)
-        model->phong_shader = std::make_shared<PhongShaderSource>();
-        model->phong_shader->vertex_constant_buffer_data.model = Matrix();
-        model->phong_shader->vertex_constant_buffer_data.view = Matrix();
-        model->phong_shader->vertex_constant_buffer_data.projection = Matrix();
+        model->phong_shader_source = std::make_shared<PhongShaderSource>();
+        model->phong_shader_source->vertex_constant_buffer_data.model = Matrix();
+        model->phong_shader_source->vertex_constant_buffer_data.view = Matrix();
+        model->phong_shader_source->vertex_constant_buffer_data.projection = Matrix();
 
-        manager->phong_shader->CreateConstantBuffer(
-            model->phong_shader->vertex_constant_buffer_data,
-            model->phong_shader->vertex_constant_buffer);
-        manager->phong_shader->CreateConstantBuffer(
-            model->phong_shader->pixel_constant_buffer_data,
-            model->phong_shader->pixel_constant_buffer);
+        manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
+            model->phong_shader_source->vertex_constant_buffer_data,
+            model->phong_shader_source->vertex_constant_buffer);
+        manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
+            model->phong_shader_source->pixel_constant_buffer_data,
+            model->phong_shader_source->pixel_constant_buffer);
 
         model->transform = Matrix();
 
@@ -267,17 +267,17 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
     }
 
     // create constant buffer(Phong Shader)
-    model->phong_shader = std::make_shared<PhongShaderSource>();
-    model->phong_shader->vertex_constant_buffer_data.model = Matrix();
-    model->phong_shader->vertex_constant_buffer_data.view = Matrix();
-    model->phong_shader->vertex_constant_buffer_data.projection = Matrix();
+    model->phong_shader_source = std::make_shared<PhongShaderSource>();
+    model->phong_shader_source->vertex_constant_buffer_data.model = Matrix();
+    model->phong_shader_source->vertex_constant_buffer_data.view = Matrix();
+    model->phong_shader_source->vertex_constant_buffer_data.projection = Matrix();
 
-    manager->phong_shader->CreateConstantBuffer(
-        model->phong_shader->vertex_constant_buffer_data,
-        model->phong_shader->vertex_constant_buffer);
-    manager->phong_shader->CreateConstantBuffer(
-        model->phong_shader->pixel_constant_buffer_data,
-        model->phong_shader->pixel_constant_buffer);
+    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
+        model->phong_shader_source->vertex_constant_buffer_data,
+        model->phong_shader_source->vertex_constant_buffer);
+    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
+        model->phong_shader_source->pixel_constant_buffer_data,
+        model->phong_shader_source->pixel_constant_buffer);
 
     model->transform = Matrix();
 
@@ -349,17 +349,17 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
     }
 
     // create constant buffer(Phong Shader)
-    model->phong_shader = std::make_shared<PhongShaderSource>();
-    model->phong_shader->vertex_constant_buffer_data.model = Matrix();
-    model->phong_shader->vertex_constant_buffer_data.view = Matrix();
-    model->phong_shader->vertex_constant_buffer_data.projection = Matrix();
+    model->phong_shader_source = std::make_shared<PhongShaderSource>();
+    model->phong_shader_source->vertex_constant_buffer_data.model = Matrix();
+    model->phong_shader_source->vertex_constant_buffer_data.view = Matrix();
+    model->phong_shader_source->vertex_constant_buffer_data.projection = Matrix();
 
-    manager->phong_shader->CreateConstantBuffer(
-        model->phong_shader->vertex_constant_buffer_data,
-        model->phong_shader->vertex_constant_buffer);
-    manager->phong_shader->CreateConstantBuffer(
-        model->phong_shader->pixel_constant_buffer_data,
-        model->phong_shader->pixel_constant_buffer);
+    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
+        model->phong_shader_source->vertex_constant_buffer_data,
+        model->phong_shader_source->vertex_constant_buffer);
+    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
+        model->phong_shader_source->pixel_constant_buffer_data,
+        model->phong_shader_source->pixel_constant_buffer);
 
     model->transform = Matrix();
 
@@ -430,20 +430,20 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
     }
 
     // create constant buffer(Phong Shader)
-    model->phong_shader = std::make_shared<PhongShaderSource>();
-    model->phong_shader->vertex_constant_buffer_data.model =
+    model->phong_shader_source = std::make_shared<PhongShaderSource>();
+    model->phong_shader_source->vertex_constant_buffer_data.model =
         Matrix();
-    model->phong_shader->vertex_constant_buffer_data.view =
+    model->phong_shader_source->vertex_constant_buffer_data.view =
         Matrix();
-    model->phong_shader->vertex_constant_buffer_data.projection =
+    model->phong_shader_source->vertex_constant_buffer_data.projection =
         Matrix();
 
-    manager->phong_shader->CreateConstantBuffer(
-        model->phong_shader->vertex_constant_buffer_data,
-        model->phong_shader->vertex_constant_buffer);
-    manager->phong_shader->CreateConstantBuffer(
-        model->phong_shader->pixel_constant_buffer_data,
-        model->phong_shader->pixel_constant_buffer);
+    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
+        model->phong_shader_source->vertex_constant_buffer_data,
+        model->phong_shader_source->vertex_constant_buffer);
+    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
+        model->phong_shader_source->pixel_constant_buffer_data,
+        model->phong_shader_source->pixel_constant_buffer);
 
     model->transform = Matrix();
 

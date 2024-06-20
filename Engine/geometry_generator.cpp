@@ -291,3 +291,195 @@ GameObject *GeometryGenerator::ReadFromFile(GameObject *gameObject,
 
     return gameObject;
 }
+
+CubeMap *GeometryGenerator::MakeBox(CubeMap* cube_map) {
+    const float scale = 40.0f;
+
+    std::vector<Vector3> positions;
+    std::vector<Vector3> colors;
+    std::vector<Vector3> normals;
+    std::vector<Vector2> texcoords; // ÅØ½ºÃç ÁÂÇ¥
+
+    // À­¸é
+    positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
+    positions.push_back(Vector3(-1.0f, 1.0f, 1.0f) * scale);
+    positions.push_back(Vector3(1.0f, 1.0f, 1.0f) * scale);
+    positions.push_back(Vector3(1.0f, 1.0f, -1.0f) * scale);
+    colors.push_back(Vector3(1.0f, 0.0f, 0.0f));
+    colors.push_back(Vector3(1.0f, 0.0f, 0.0f));
+    colors.push_back(Vector3(1.0f, 0.0f, 0.0f));
+    colors.push_back(Vector3(1.0f, 0.0f, 0.0f));
+    normals.push_back(Vector3(0.0f, 1.0f, 0.0f));
+    normals.push_back(Vector3(0.0f, 1.0f, 0.0f));
+    normals.push_back(Vector3(0.0f, 1.0f, 0.0f));
+    normals.push_back(Vector3(0.0f, 1.0f, 0.0f));
+    texcoords.push_back(Vector2(0.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 1.0f));
+    texcoords.push_back(Vector2(0.0f, 1.0f));
+
+    // ¾Æ·§¸é
+    positions.push_back(Vector3(-1.0f, -1.0f, -1.0f) * scale);
+    positions.push_back(Vector3(1.0f, -1.0f, -1.0f) * scale);
+    positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
+    positions.push_back(Vector3(-1.0f, -1.0f, 1.0f) * scale);
+    colors.push_back(Vector3(0.0f, 1.0f, 0.0f));
+    colors.push_back(Vector3(0.0f, 1.0f, 0.0f));
+    colors.push_back(Vector3(0.0f, 1.0f, 0.0f));
+    colors.push_back(Vector3(0.0f, 1.0f, 0.0f));
+    normals.push_back(Vector3(0.0f, -1.0f, 0.0f));
+    normals.push_back(Vector3(0.0f, -1.0f, 0.0f));
+    normals.push_back(Vector3(0.0f, -1.0f, 0.0f));
+    normals.push_back(Vector3(0.0f, -1.0f, 0.0f));
+    texcoords.push_back(Vector2(0.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 1.0f));
+    texcoords.push_back(Vector2(0.0f, 1.0f));
+
+    // ¾Õ¸é
+    positions.push_back(Vector3(-1.0f, -1.0f, -1.0f) * scale);
+    positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
+    positions.push_back(Vector3(1.0f, 1.0f, -1.0f) * scale);
+    positions.push_back(Vector3(1.0f, -1.0f, -1.0f) * scale);
+    colors.push_back(Vector3(0.0f, 0.0f, 1.0f));
+    colors.push_back(Vector3(0.0f, 0.0f, 1.0f));
+    colors.push_back(Vector3(0.0f, 0.0f, 1.0f));
+    colors.push_back(Vector3(0.0f, 0.0f, 1.0f));
+    normals.push_back(Vector3(0.0f, 0.0f, -1.0f));
+    normals.push_back(Vector3(0.0f, 0.0f, -1.0f));
+    normals.push_back(Vector3(0.0f, 0.0f, -1.0f));
+    normals.push_back(Vector3(0.0f, 0.0f, -1.0f));
+    texcoords.push_back(Vector2(0.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 1.0f));
+    texcoords.push_back(Vector2(0.0f, 1.0f));
+
+    // µÞ¸é
+    positions.push_back(Vector3(-1.0f, -1.0f, 1.0f) * scale);
+    positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
+    positions.push_back(Vector3(1.0f, 1.0f, 1.0f) * scale);
+    positions.push_back(Vector3(-1.0f, 1.0f, 1.0f) * scale);
+    colors.push_back(Vector3(0.0f, 1.0f, 1.0f));
+    colors.push_back(Vector3(0.0f, 1.0f, 1.0f));
+    colors.push_back(Vector3(0.0f, 1.0f, 1.0f));
+    colors.push_back(Vector3(0.0f, 1.0f, 1.0f));
+    normals.push_back(Vector3(0.0f, 0.0f, 1.0f));
+    normals.push_back(Vector3(0.0f, 0.0f, 1.0f));
+    normals.push_back(Vector3(0.0f, 0.0f, 1.0f));
+    normals.push_back(Vector3(0.0f, 0.0f, 1.0f));
+    texcoords.push_back(Vector2(0.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 1.0f));
+    texcoords.push_back(Vector2(0.0f, 1.0f));
+
+    // ¿ÞÂÊ
+    positions.push_back(Vector3(-1.0f, -1.0f, 1.0f) * scale);
+    positions.push_back(Vector3(-1.0f, 1.0f, 1.0f) * scale);
+    positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
+    positions.push_back(Vector3(-1.0f, -1.0f, -1.0f) * scale);
+    colors.push_back(Vector3(1.0f, 1.0f, 0.0f));
+    colors.push_back(Vector3(1.0f, 1.0f, 0.0f));
+    colors.push_back(Vector3(1.0f, 1.0f, 0.0f));
+    colors.push_back(Vector3(1.0f, 1.0f, 0.0f));
+    normals.push_back(Vector3(-1.0f, 0.0f, 0.0f));
+    normals.push_back(Vector3(-1.0f, 0.0f, 0.0f));
+    normals.push_back(Vector3(-1.0f, 0.0f, 0.0f));
+    normals.push_back(Vector3(-1.0f, 0.0f, 0.0f));
+    texcoords.push_back(Vector2(0.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 1.0f));
+    texcoords.push_back(Vector2(0.0f, 1.0f));
+
+    // ¿À¸¥ÂÊ
+    positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
+    positions.push_back(Vector3(1.0f, -1.0f, -1.0f) * scale);
+    positions.push_back(Vector3(1.0f, 1.0f, -1.0f) * scale);
+    positions.push_back(Vector3(1.0f, 1.0f, 1.0f) * scale);
+    colors.push_back(Vector3(1.0f, 0.0f, 1.0f));
+    colors.push_back(Vector3(1.0f, 0.0f, 1.0f));
+    colors.push_back(Vector3(1.0f, 0.0f, 1.0f));
+    colors.push_back(Vector3(1.0f, 0.0f, 1.0f));
+    normals.push_back(Vector3(1.0f, 0.0f, 0.0f));
+    normals.push_back(Vector3(1.0f, 0.0f, 0.0f));
+    normals.push_back(Vector3(1.0f, 0.0f, 0.0f));
+    normals.push_back(Vector3(1.0f, 0.0f, 0.0f));
+    texcoords.push_back(Vector2(0.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 0.0f));
+    texcoords.push_back(Vector2(1.0f, 1.0f));
+    texcoords.push_back(Vector2(0.0f, 1.0f));
+
+    cube_map->mesh = std::make_shared<Mesh>();
+
+    for (size_t i = 0; i < positions.size(); i++) {
+        Vertex v;
+        v.position = positions[i];
+        v.normal = normals[i];
+        v.texcoord = texcoords[i];
+        cube_map->mesh->vertices.push_back(v);
+    }
+
+    cube_map->mesh->indices = {
+        0,  1,  2,  0,  2,  3,  // À­¸é
+        4,  5,  6,  4,  6,  7,  // ¾Æ·§¸é
+        8,  9,  10, 8,  10, 11, // ¾Õ¸é
+        12, 13, 14, 12, 14, 15, // µÞ¸é
+        16, 17, 18, 16, 18, 19, // ¿ÞÂÊ
+        20, 21, 22, 20, 22, 23  // ¿À¸¥ÂÊ
+    };
+    cube_map->SetName("CubeMap");
+
+    return cube_map;
+}
+
+CubeMap *GeometryGenerator::MakeSphere(CubeMap *cube_map,
+                                          const float radius,
+                                          const int numSlices,
+                                          const int numStacks) {
+    const float dTheta = -XM_2PI / float(numSlices);
+    const float dPhi = -XM_PI / float(numStacks);
+
+    cube_map->mesh = std::make_shared<Mesh>();
+
+    std::vector<Vertex> &vertices = cube_map->mesh->vertices;
+
+    for (int j = 0; j <= numStacks; j++) {
+
+        Vector3 stackStartPoint = Vector3::Transform(
+            Vector3(0.0f, -radius, 0.0f), Matrix::CreateRotationZ(dPhi * j));
+
+        for (int i = 0; i <= numSlices; i++) {
+            Vertex v;
+
+            v.position = Vector3::Transform(
+                stackStartPoint, Matrix::CreateRotationY(dTheta * float(i)));
+
+            v.normal = v.position;
+            v.normal.Normalize();
+            v.texcoord =
+                Vector2(float(i) / numSlices, 1.0f - float(j) / numStacks);
+
+            vertices.push_back(v);
+        }
+    }
+
+    std::vector<int> &indices = cube_map->mesh->indices;
+
+    for (int j = 0; j < numStacks; j++) {
+
+        const int offset = (numSlices + 1) * j;
+
+        for (int i = 0; i < numSlices; i++) {
+
+            indices.push_back(offset + i);
+            indices.push_back(offset + i + numSlices + 1);
+            indices.push_back(offset + i + 1 + numSlices + 1);
+
+            indices.push_back(offset + i);
+            indices.push_back(offset + i + 1 + numSlices + 1);
+            indices.push_back(offset + i + 1);
+        }
+    }
+    cube_map->SetName("CubeMap");
+
+    return cube_map;
+}

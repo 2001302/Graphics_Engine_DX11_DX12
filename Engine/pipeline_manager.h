@@ -10,6 +10,7 @@
 #include "input.h"
 #include "normal_shader.h"
 #include "phong_shader.h"
+#include "cube_map_shader.h"
 
 namespace Engine {
 /// <summary>
@@ -19,9 +20,10 @@ class PipelineManager : public IDataBlock {
   public:
     std::map<int /*id*/, std::shared_ptr<GameObject>> models;
     std::map<int /*id*/, std::shared_ptr<Graph>> behaviors;
-    std::unique_ptr<CubeMap> cubeMap;
-    std::unique_ptr<PhongShader> phongShader;
+    std::shared_ptr<CubeMap> cubeMap;
     std::unique_ptr<Camera> camera;
+    std::unique_ptr<PhongShader> phongShader;
+    std::unique_ptr<CubeMapShader> cube_map_shader;
 };
 } // namespace Engine
 #endif

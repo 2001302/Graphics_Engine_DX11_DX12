@@ -1,23 +1,30 @@
 #ifndef _GEOMETRYGENERATOR
-#define _GEOMETRYGENERATOR	
+#define _GEOMETRYGENERATOR
 
-#include "game_object.h"
+#include "cube_map.h"
 #include "direct3D.h"
+#include "game_object.h"
 #include "model_loader.h"
 
-namespace Engine
-{
-	class GeometryGenerator
-	{
+namespace Engine {
+class GeometryGenerator {
 
-	public:
-		GeometryGenerator() {};
-		~GeometryGenerator() {};
+  public:
+    GeometryGenerator(){};
+    ~GeometryGenerator(){};
 
-		static GameObject* MakeSphere(GameObject* gameObject, const float radius, const int numSlices, const int numStacks);
-		static GameObject* MakeBox(GameObject* gameObject);
-		static GameObject* MakeCylinder(GameObject* gameObject, const float bottomRadius,const float topRadius, float height,int numSlices);
-		static GameObject* ReadFromFile(GameObject* gameObject, std::string basePath, std::string filename);
-	};
-}
+    static CubeMap *MakeBox(CubeMap *gameObject);
+    static CubeMap *MakeSphere(CubeMap *gameObject, const float radius,
+                               const int numSlices, const int numStacks);
+    static GameObject *MakeSphere(GameObject *gameObject, const float radius,
+                                  const int numSlices, const int numStacks);
+    static GameObject *MakeBox(GameObject *gameObject);
+    static GameObject *MakeCylinder(GameObject *gameObject,
+                                    const float bottomRadius,
+                                    const float topRadius, float height,
+                                    int numSlices);
+    static GameObject *ReadFromFile(GameObject *gameObject,
+                                    std::string basePath, std::string filename);
+};
+} // namespace Engine
 #endif

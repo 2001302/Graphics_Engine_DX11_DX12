@@ -6,10 +6,6 @@ CubeMap::CubeMap() {}
 
 CubeMap::~CubeMap() {}
 
-
 int CubeMap::GetIndexCount() {
-    int count = 0;
-    for (auto mesh : meshes)
-        count += mesh->indices.size();
-    return count;
+    return mesh->indices.size();
 }

@@ -142,5 +142,24 @@ namespace Engine
 		float dummy[3];
 	};
 
+    struct BasicVertexConstantBuffer {
+        Matrix model;
+        Matrix invTranspose;
+        Matrix view;
+        Matrix projection;
+    };
+
+    struct BasicPixelConstantBuffer {
+        Vector3 eyeWorld;         // 12
+        bool useTexture;          // 4
+        Material material;        // 48
+        Light lights[MAX_LIGHTS]; // 48 * MAX_LIGHTS
+        Vector3 rimColor = Vector3(1.0f);
+        float rimPower;
+        float rimStrength = 0.0f;
+        bool useSmoothstep = false;
+        float dummy[2];
+    };
+
 }
 #endif

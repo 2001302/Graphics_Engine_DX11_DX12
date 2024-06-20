@@ -124,6 +124,9 @@
     <ClInclude Include="game_object_node.h">
       <Filter>BehaviorGraph</Filter>
     </ClInclude>
+    <ClInclude Include="cube_map_shader.h">
+      <Filter>DirectX\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -223,6 +226,9 @@
     <ClCompile Include="game_object_node.cpp">
       <Filter>BehaviorGraph</Filter>
     </ClCompile>
+    <ClCompile Include="cube_map_shader.cpp">
+      <Filter>DirectX\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Model">
@@ -288,6 +294,12 @@
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="normal_pixel_shader.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="cube_mapping_vertex_shader.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="cube_mapping_pixel_shader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

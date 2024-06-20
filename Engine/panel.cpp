@@ -66,8 +66,6 @@ void Panel::NodeEditor() {
 
     ed::End();
     ed::SetCurrentEditor(nullptr);
-
-    ed::EditorContext *m_Context = nullptr;
 }
 void Panel::TabBar() { // Tab Bar
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_FittingPolicyScroll)) {
@@ -80,6 +78,32 @@ void Panel::TabBar() { // Tab Bar
             ImGui::Text("ID");
             ImGui::TableSetColumnIndex(1);
             ImGui::Text("Name");
+
+            {
+                ImGui::TableNextRow();
+
+                ImGui::TableSetColumnIndex(0);
+                if (ImGui::Selectable(
+                        std::to_string(
+                            pipeline_manager_->cubeMap.get()->GetEntityId())
+                            .c_str(),
+                        pipeline_manager_->cubeMap->GetEntityId() ==
+                            selected_object_id_,
+                        ImGuiSelectableFlags_SpanAllColumns)) {
+                    selected_object_id_ =
+                        pipeline_manager_->cubeMap.get()->GetEntityId();
+                }
+
+                ImGui::TableSetColumnIndex(1);
+                ImGui::Text(
+                    pipeline_manager_->cubeMap.get()->GetName().c_str());
+
+                if (selected_object_id_ ==
+                    pipeline_manager_->cubeMap->GetEntityId()) {
+                    ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,
+                                           ImGui::GetColorU32(ImGuiCol_Header));
+                }
+            }
 
             for (auto &model : pipeline_manager_->models) {
 
@@ -109,27 +133,32 @@ void Panel::TabBar() { // Tab Bar
         }
         if (ImGui::BeginTabItem("Light")) {
 
-            ImGui::Checkbox("Wire Frame", &draw_as_wire_);
+            ImGui::Checkbox("Wire Frame", &light_tab_.draw_as_wire_);
 
-            if (ImGui::RadioButton("Directional Light", light_type == 0)) {
-                light_type = 0;
+            if (ImGui::RadioButton("Directional Light",
+                                   light_tab_.light_type == 0)) {
+                light_tab_.light_type = 0;
             }
             ImGui::SameLine();
-            if (ImGui::RadioButton("Point Light", light_type == 1)) {
-                light_type = 1;
+            if (ImGui::RadioButton("Point Light", light_tab_.light_type == 1)) {
+                light_tab_.light_type = 1;
             }
             ImGui::SameLine();
-            if (ImGui::RadioButton("Spot Light", light_type == 2)) {
-                light_type = 2;
+            if (ImGui::RadioButton("Spot Light", light_tab_.light_type == 2)) {
+                light_tab_.light_type = 2;
             }
 
-            ImGui::SliderFloat3("Position", &light_from_gui.position.x, -5.0f,
+            ImGui::SliderFloat3(
+                "Position", &light_tab_.light_from_gui.position.x, -5.0f,
                                 5.0f);
-            ImGui::SliderFloat("Fall Off Start", &light_from_gui.fallOffStart,
+            ImGui::SliderFloat("Fall Off Start",
+                               &light_tab_.light_from_gui.fallOffStart,
                                0.0f, 5.0f);
-            ImGui::SliderFloat("Fall Of fEnd", &light_from_gui.fallOffEnd, 0.0f,
+            ImGui::SliderFloat("Fall Of fEnd",
+                               &light_tab_.light_from_gui.fallOffEnd, 0.0f,
                                10.0f);
-            ImGui::SliderFloat("Spot Power", &light_from_gui.spotPower, 1.0f,
+            ImGui::SliderFloat("Spot Power",
+                               &light_tab_.light_from_gui.spotPower, 1.0f,
                                512.0f);
 
             ImGui::EndTabItem();

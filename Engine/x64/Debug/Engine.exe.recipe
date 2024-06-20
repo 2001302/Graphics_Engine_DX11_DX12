@@ -7,6 +7,12 @@
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
+      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\cube_mapping_pixel_shader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\cube_mapping_vertex_shader.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\normal_pixel_shader.cso</FullPath>
     </ContentFile>
     <ContentFile>

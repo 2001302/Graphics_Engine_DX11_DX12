@@ -101,6 +101,52 @@ class IShader {
         memcpy(ms.pData, &bufferData, sizeof(bufferData));
         Direct3D::GetInstance().GetDeviceContext()->Unmap(buffer.Get(), NULL);
     }
+    template <typename T_VERTEX>
+    void CreateVertexBuffer(const std::vector<T_VERTEX> &vertices,
+                            ComPtr<ID3D11Buffer> &vertexBuffer) {
+
+        // D3D11_USAGE enumeration (d3d11.h)
+        // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_usage
+
+        D3D11_BUFFER_DESC bufferDesc;
+        ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+        bufferDesc.ByteWidth = UINT(sizeof(T_VERTEX) * vertices.size());
+        bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+        bufferDesc.StructureByteStride = sizeof(T_VERTEX);
+
+        D3D11_SUBRESOURCE_DATA vertexBufferData = {
+            0}; // MS 예제에서 초기화하는 방식
+        vertexBufferData.pSysMem = vertices.data();
+        vertexBufferData.SysMemPitch = 0;
+        vertexBufferData.SysMemSlicePitch = 0;
+
+        const HRESULT hr = Direct3D::GetInstance().GetDevice()->CreateBuffer(
+            &bufferDesc, &vertexBufferData, vertexBuffer.GetAddressOf());
+        if (FAILED(hr)) {
+            std::cout << "CreateBuffer() failed. " << std::hex << hr
+                      << std::endl;
+        };
+    }
+    void CreateIndexBuffer(const std::vector<int> &indices,
+                                    ComPtr<ID3D11Buffer> &indexBuffer) {
+        D3D11_BUFFER_DESC bufferDesc = {};
+        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+        bufferDesc.ByteWidth = UINT(sizeof(int) * indices.size());
+        bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+        bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+        bufferDesc.StructureByteStride = sizeof(int);
+
+        D3D11_SUBRESOURCE_DATA indexBufferData = {0};
+        indexBufferData.pSysMem = indices.data();
+        indexBufferData.SysMemPitch = 0;
+        indexBufferData.SysMemSlicePitch = 0;
+
+        Direct3D::GetInstance().GetDevice()->CreateBuffer(
+            &bufferDesc, &indexBufferData,
+                               indexBuffer.GetAddressOf());
+    }
 
     ComPtr<ID3D11VertexShader> vertex_shader;
     ComPtr<ID3D11PixelShader> pixel_shader;

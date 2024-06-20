@@ -79,32 +79,6 @@ void Panel::TabBar() { // Tab Bar
             ImGui::TableSetColumnIndex(1);
             ImGui::Text("Name");
 
-            {
-                ImGui::TableNextRow();
-
-                ImGui::TableSetColumnIndex(0);
-                if (ImGui::Selectable(
-                        std::to_string(
-                            pipeline_manager_->cubeMap.get()->GetEntityId())
-                            .c_str(),
-                        pipeline_manager_->cubeMap->GetEntityId() ==
-                            selected_object_id_,
-                        ImGuiSelectableFlags_SpanAllColumns)) {
-                    selected_object_id_ =
-                        pipeline_manager_->cubeMap.get()->GetEntityId();
-                }
-
-                ImGui::TableSetColumnIndex(1);
-                ImGui::Text(
-                    pipeline_manager_->cubeMap.get()->GetName().c_str());
-
-                if (selected_object_id_ ==
-                    pipeline_manager_->cubeMap->GetEntityId()) {
-                    ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,
-                                           ImGui::GetColorU32(ImGuiCol_Header));
-                }
-            }
-
             for (auto &model : pipeline_manager_->models) {
 
                 ImGui::TableNextRow();

@@ -1,8 +1,8 @@
 #include "render_node.h"
 #include "game_object_node.h"
+#include "geometry_generator.h"
 #include "panel.h"
 #include "pipeline_manager.h"
-#include "geometry_generator.h"
 
 using namespace Engine;
 
@@ -70,85 +70,6 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
-    IDataBlock *block = DataBlock[EnumDataBlockType::eManager];
-
-    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
-    assert(manager != nullptr);
-
-    manager->cubeMap = std::make_shared<CubeMap>();
-    GeometryGenerator::MakeSphere(manager->cubeMap.get(),80.0f, 15, 13);
-
-    auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
-    manager->behaviors[manager->cubeMap->GetEntityId()] = graph;
-
-
-    manager->cube_map_shader = std::make_unique<CubeMapShader>();
-
-    std::reverse(manager->cubeMap->mesh->indices.begin(),
-                 manager->cubeMap->mesh->indices.end());
-
-    auto skyboxFilename = L"./CubemapTextures/skybox.dds";
-    auto nightPathFilename = L"./CubemapTextures/HumusTextures/NightPath.dds";
-    auto atribumDiffuseFilename = L"./CubemapTextures/Atrium_diffuseIBL.dds";
-    auto atribumSpecularFilename = L"./CubemapTextures/Atrium_specularIBL.dds";
-    auto stonewallSpecularFilename =
-        L"./CubemapTextures/Stonewall_specularIBL.dds";
-    auto stonewallDiffuseFilename =
-        L"./CubemapTextures/Stonewall_diffuseIBL.dds";
-
-    // .dds 파일 읽어들여서 초기화
-    manager->cube_map_shader->CreateCubemapTexture(atribumDiffuseFilename,
-                                                 manager->cubeMap->diffuseResView);
-    manager->cube_map_shader->CreateCubemapTexture(
-        atribumSpecularFilename, manager->cubeMap->specularResView);
-    
-    manager->cubeMap->cube_map_shader = std::make_shared<CubeMapShaderSource>();
-
-    manager->cubeMap->cube_map_shader->vertex_constant_buffer_data.model =
-        Matrix();
-    manager->cubeMap->cube_map_shader->vertex_constant_buffer_data.view =
-        Matrix();
-    manager->cubeMap->cube_map_shader->vertex_constant_buffer_data.projection =
-        Matrix();
-
-    ComPtr<ID3D11Buffer> vertexConstantBuffer;
-    ComPtr<ID3D11Buffer> pixelConstantBuffer;
-
-    manager->cube_map_shader->CreateConstantBuffer(
-        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data,
-        manager->cubeMap->cube_map_shader->vertex_constant_buffer);
-    manager->cube_map_shader->CreateConstantBuffer(
-        manager->cubeMap->cube_map_shader->pixel_constant_buffer_data,
-        manager->cubeMap->cube_map_shader->pixel_constant_buffer);
-
-    manager->cube_map_shader->CreateVertexBuffer(
-        manager->cubeMap->mesh->vertices,
-        manager->cubeMap->mesh->vertexBuffer);
-    manager->cube_map_shader->CreateIndexBuffer(
-        manager->cubeMap->mesh->indices, manager->cubeMap->mesh->indexBuffer);
-
-
-    std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
-        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
-         D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 4 * 3,
-         D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 4 * 3 + 4 * 3,
-         D3D11_INPUT_PER_VERTEX_DATA, 0},
-    };
-
-    manager->cube_map_shader->CreateVertexShaderAndInputLayout(
-        L"cube_mapping_vertex_shader.hlsl", basicInputElements,
-        manager->cube_map_shader->vertex_shader,
-        manager->cube_map_shader->layout);
-
-    manager->cube_map_shader->CreatePixelShader(L"cube_mapping_pixel_shader.hlsl", manager->cube_map_shader->pixel_shader);
-
-    return EnumBehaviorTreeStatus::eSuccess;
-}
-
 EnumBehaviorTreeStatus UpdateCamera::OnInvoke() {
     IDataBlock *managerBlock = DataBlock[EnumDataBlockType::eManager];
 
@@ -157,117 +78,6 @@ EnumBehaviorTreeStatus UpdateCamera::OnInvoke() {
 
     // Generate the view matrix based on the camera's position.
     manager->camera->Render();
-
-    return EnumBehaviorTreeStatus::eSuccess;
-}
-
-EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
-    IDataBlock *managerBlock = DataBlock[EnumDataBlockType::eManager];
-    IDataBlock *envBlock = DataBlock[EnumDataBlockType::eEnv];
-    IDataBlock *guiBlock = DataBlock[EnumDataBlockType::eGui];
-
-    auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
-    assert(manager != nullptr);
-
-    auto env = dynamic_cast<Engine::Env *>(envBlock);
-    assert(env != nullptr);
-
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
-    assert(gui != nullptr);
-
-    auto context = Direct3D::GetInstance().GetDeviceContext();
-
-    auto graph = manager->behaviors[manager->cubeMap->GetEntityId()];
-
-    auto detail = dynamic_cast<Engine::GameObjectDetailNode *>(
-        graph->GetDetailNode().get());
-    assert(detail != nullptr);
-
-    // model
-    {
-        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data.model =
-            Matrix();
-    }
-    // view
-    {
-        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data.view =
-            manager->camera->view.Transpose();
-    }
-    // inverse transpose
-    {
-        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
-            .invTranspose = manager->cubeMap->cube_map_shader
-                                ->vertex_constant_buffer_data.model;
-        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
-            .invTranspose.Translation(Vector3(0.0f));
-        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
-            .invTranspose =
-            manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
-                .invTranspose.Transpose()
-                .Invert();
-    }
-    // projection
-    {
-        const float aspect = env->aspect_;
-        if (detail->use_perspective_projection) {
-            manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
-                .projection = XMMatrixPerspectiveFovLH(
-                XMConvertToRadians(gui->GetLightTab().projection_fov_angle_y),
-                aspect, gui->GetLightTab().near_z, gui->GetLightTab().far_z);
-        } else {
-            manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
-                .projection = XMMatrixOrthographicOffCenterLH(
-                -aspect, aspect, -1.0f, 1.0f, gui->GetLightTab().near_z,
-                gui->GetLightTab().far_z);
-        }
-        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
-            .projection =
-            manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
-                .projection
-                .Transpose();
-    }
-
-    manager->cube_map_shader->UpdateBuffer(
-        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data,
-        manager->cubeMap->cube_map_shader->vertex_constant_buffer);
-
-    // eye
-    {
-        manager->cubeMap->cube_map_shader->pixel_constant_buffer_data.eyeWorld =
-            Vector3::Transform(Vector3(0.0f),
-                               manager->cubeMap->cube_map_shader
-                                   ->vertex_constant_buffer_data.view.Invert());
-    }
-    // material
-    {
-        manager->cubeMap->cube_map_shader->pixel_constant_buffer_data.material
-            .diffuse = Vector3(detail->diffuse);
-        manager->cubeMap->cube_map_shader->pixel_constant_buffer_data.material
-            .specular = Vector3(detail->specular);
-        manager->cubeMap->cube_map_shader->pixel_constant_buffer_data.material
-            .shininess = detail->shininess;
-    }
-    // light
-    {
-        for (int i = 0; i < MAX_LIGHTS; i++) {
-            if (i != gui->GetLightTab().light_type) {
-                manager->cubeMap->cube_map_shader->pixel_constant_buffer_data
-                    .lights[i]
-                    .strength *= 0.0f;
-            } else {
-                // turn off another light
-                manager->cubeMap->cube_map_shader->pixel_constant_buffer_data
-                    .lights[i] = gui->GetLightTab().light_from_gui;
-            }
-        }
-    }
-
-    manager->cubeMap->cube_map_shader->pixel_constant_buffer_data.useTexture =
-        detail->use_texture;
-
-    manager->cube_map_shader->UpdateBuffer(
-        manager->cubeMap->cube_map_shader->pixel_constant_buffer_data,
-        manager->cubeMap->cube_map_shader->pixel_constant_buffer);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -469,6 +279,135 @@ EnumBehaviorTreeStatus RenderGameObjects::OnInvoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
+EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
+    IDataBlock *managerBlock = DataBlock[EnumDataBlockType::eManager];
+    IDataBlock *envBlock = DataBlock[EnumDataBlockType::eEnv];
+    IDataBlock *guiBlock = DataBlock[EnumDataBlockType::eGui];
+
+    auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
+    assert(manager != nullptr);
+
+    auto env = dynamic_cast<Engine::Env *>(envBlock);
+    assert(env != nullptr);
+
+    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    assert(gui != nullptr);
+
+    auto context = Direct3D::GetInstance().GetDeviceContext();
+
+    auto graph = manager->behaviors[manager->cubeMap->GetEntityId()];
+
+    auto detail = dynamic_cast<Engine::GameObjectDetailNode *>(
+        graph->GetDetailNode().get());
+    assert(detail != nullptr);
+
+    {
+        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data.view =
+            manager->camera->view.Transpose();
+
+        const float aspect = env->aspect_;
+        if (detail->use_perspective_projection) {
+            manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
+                .projection = XMMatrixPerspectiveFovLH(
+                XMConvertToRadians(gui->GetLightTab().projection_fov_angle_y),
+                aspect, gui->GetLightTab().near_z, gui->GetLightTab().far_z);
+        } else {
+            manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
+                .projection = XMMatrixOrthographicOffCenterLH(
+                -aspect, aspect, -1.0f, 1.0f, gui->GetLightTab().near_z,
+                gui->GetLightTab().far_z);
+        }
+        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
+            .projection =
+            manager->cubeMap->cube_map_shader->vertex_constant_buffer_data
+                .projection.Transpose();
+    }
+
+    manager->cube_map_shader->UpdateBuffer(
+        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data,
+        manager->cubeMap->cube_map_shader->vertex_constant_buffer);
+
+    manager->cube_map_shader->UpdateBuffer(
+        manager->cubeMap->cube_map_shader->pixel_constant_buffer_data,
+        manager->cubeMap->cube_map_shader->pixel_constant_buffer);
+
+    return EnumBehaviorTreeStatus::eSuccess;
+}
+
+EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
+    IDataBlock *block = DataBlock[EnumDataBlockType::eManager];
+
+    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+    assert(manager != nullptr);
+
+    manager->cubeMap = std::make_shared<CubeMap>();
+    GeometryGenerator::MakeSphere(manager->cubeMap.get(), 20.0f, 15, 13);
+
+    auto graph = std::make_shared<Graph>();
+    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
+    manager->behaviors[manager->cubeMap->GetEntityId()] = graph;
+
+    manager->cube_map_shader = std::make_unique<CubeMapShader>();
+
+    std::reverse(manager->cubeMap->mesh->indices.begin(),
+                 manager->cubeMap->mesh->indices.end());
+
+    auto skyboxFilename = L"./CubemapTextures/skybox.dds";
+    auto nightPathFilename = L"./CubemapTextures/HumusTextures/NightPath.dds";
+    auto atribumDiffuseFilename = L"./CubemapTextures/Atrium_diffuseIBL.dds";
+    auto atribumSpecularFilename = L"./CubemapTextures/Atrium_specularIBL.dds";
+    auto stonewallSpecularFilename =
+        L"./CubemapTextures/Stonewall_specularIBL.dds";
+    auto stonewallDiffuseFilename =
+        L"./CubemapTextures/Stonewall_diffuseIBL.dds";
+
+    manager->cube_map_shader->CreateCubemapTexture(
+        atribumDiffuseFilename, manager->cubeMap->diffuseResView);
+    manager->cube_map_shader->CreateCubemapTexture(
+        skyboxFilename, manager->cubeMap->specularResView);
+
+    manager->cubeMap->cube_map_shader = std::make_shared<CubeMapShaderSource>();
+
+    manager->cubeMap->cube_map_shader->vertex_constant_buffer_data.model =
+        Matrix();
+    manager->cubeMap->cube_map_shader->vertex_constant_buffer_data.view =
+        Matrix();
+    manager->cubeMap->cube_map_shader->vertex_constant_buffer_data.projection =
+        Matrix();
+
+    manager->cube_map_shader->CreateConstantBuffer(
+        manager->cubeMap->cube_map_shader->vertex_constant_buffer_data,
+        manager->cubeMap->cube_map_shader->vertex_constant_buffer);
+    manager->cube_map_shader->CreateConstantBuffer(
+        manager->cubeMap->cube_map_shader->pixel_constant_buffer_data,
+        manager->cubeMap->cube_map_shader->pixel_constant_buffer);
+
+    manager->cube_map_shader->CreateVertexBuffer(
+        manager->cubeMap->mesh->vertices, manager->cubeMap->mesh->vertexBuffer);
+    manager->cube_map_shader->CreateIndexBuffer(
+        manager->cubeMap->mesh->indices, manager->cubeMap->mesh->indexBuffer);
+
+    std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 4 * 3,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 4 * 3 + 4 * 3,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+    };
+
+    manager->cube_map_shader->CreateVertexShaderAndInputLayout(
+        L"cube_mapping_vertex_shader.hlsl", basicInputElements,
+        manager->cube_map_shader->vertex_shader,
+        manager->cube_map_shader->layout);
+
+    manager->cube_map_shader->CreatePixelShader(
+        L"cube_mapping_pixel_shader.hlsl",
+        manager->cube_map_shader->pixel_shader);
+
+    return EnumBehaviorTreeStatus::eSuccess;
+}
+
 EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     IDataBlock *managerBlock = DataBlock[EnumDataBlockType::eManager];
     IDataBlock *envBlock = DataBlock[EnumDataBlockType::eEnv];
@@ -494,18 +433,19 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     // PS: Pixel Shader
     // IA: Input-Assembler stage
     context->IASetInputLayout(manager->cube_map_shader->layout.Get());
-    context->IASetVertexBuffers(0, 1, manager->cubeMap->mesh->vertexBuffer.GetAddressOf(),
-                                &stride,
+    context->IASetVertexBuffers(
+        0, 1, manager->cubeMap->mesh->vertexBuffer.GetAddressOf(), &stride,
         &offset);
-    context->IASetIndexBuffer(
-        manager->cubeMap->mesh->indexBuffer.Get(),
+    context->IASetIndexBuffer(manager->cubeMap->mesh->indexBuffer.Get(),
                               DXGI_FORMAT_R32_UINT, 0);
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     context->VSSetShader(manager->cube_map_shader->vertex_shader.Get(), 0, 0);
     context->VSSetConstantBuffers(0, 1,
-                                  manager->cubeMap->cube_map_shader->vertex_constant_buffer.GetAddressOf());
-    ID3D11ShaderResourceView *views[2] = {manager->cubeMap->diffuseResView.Get(),
+                                  manager->cubeMap->cube_map_shader
+                                      ->vertex_constant_buffer.GetAddressOf());
+    ID3D11ShaderResourceView *views[2] = {
+        manager->cubeMap->diffuseResView.Get(),
         manager->cubeMap->specularResView.Get()};
     context->PSSetShaderResources(0, 2, views);
     context->PSSetShader(manager->cube_map_shader->pixel_shader.Get(), 0, 0);

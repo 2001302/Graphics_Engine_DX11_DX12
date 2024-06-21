@@ -34,11 +34,13 @@ class Direct3D {
         static Direct3D instance;
         return instance;
     }
-    bool Initialize(Env *env, bool vsync, HWND hwnd, bool fullscreen);
-    void BeginScene(float, float, float, float);
+    bool Initialize(Env *env, bool vsync, HWND main_window, bool fullscreen);
+    void BeginScene(float red, float green, float blue, float alpha);
     void EndScene();
 
     void SetViewPort(float x, float y, float width, float height);
+    bool CreateRenderTargetView();
+    bool CreateDepthBuffer(Env *env);
 
     ComPtr<ID3D11Device> device();
     ComPtr<ID3D11DeviceContext> device_context();
@@ -48,7 +50,7 @@ class Direct3D {
     ComPtr<ID3D11DepthStencilView> depth_stencil_view();
     ComPtr<ID3D11RasterizerState> solid_rasterizer_state();
     ComPtr<ID3D11RasterizerState> wire_rasterizer_state();
-    ID3D11RenderTargetView** render_target_view();
+    ID3D11RenderTargetView **render_target_view();
     D3D11_VIEWPORT viewport();
 };
 } // namespace Engine

@@ -23,7 +23,7 @@ bool Application::OnStart() {
     };
 
     Direct3D::GetInstance().Initialize(env_.get(), VSYNC_ENABLED, main_window_,
-                                 FULL_SCREEN);
+                                       FULL_SCREEN);
 
     auto tree = new BehaviorTreeBuilder();
 
@@ -149,6 +149,36 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
     ImGui_ImplWin32_WndProcHandler(main_window, umsg, wparam, lparam);
 
     switch (umsg) {
+    //case WM_SIZE: {
+    //    if (Direct3D::GetInstance().swap_chain()) {
+
+    //        screen_width_ = int(LOWORD(lparam));
+    //        screen_height_ = int(HIWORD(lparam));
+    //        env_->screen_width_ = screen_width_;
+    //        env_->screen_height_ = screen_height_;
+
+    //        auto render = *Direct3D::GetInstance().render_target_view();
+    //        render->Release();
+
+    //        Direct3D::GetInstance().swap_chain()->ResizeBuffers(
+    //            0, (UINT)LOWORD(lparam), (UINT)HIWORD(lparam),
+    //            DXGI_FORMAT_UNKNOWN, 0);
+    //        Direct3D::GetInstance().CreateRenderTargetView();
+    //        Direct3D::GetInstance().CreateDepthBuffer(env_.get());
+
+    //        if (ImGui::GetCurrentWindow()) {
+    //            Direct3D::GetInstance().SetViewPort(
+    //                ImGui::GetWindowSize().x, 0.0f,
+    //                (float)env_->screen_width_ - ImGui::GetWindowSize().x,
+    //                (float)env_->screen_height_);
+    //            env_->aspect_ =
+    //                ((float)env_->screen_width_ - ImGui::GetWindowSize().x) /
+    //                (float)env_->screen_height_;
+    //        }
+    //    }
+
+    //    break;
+    //}
     case WM_MOUSEMOVE: {
         if (CheckIfMouseInViewport()) {
             if (wparam & MK_RBUTTON) {

@@ -59,40 +59,9 @@ bool Direct3D::Initialize(Env *env, bool vsync, HWND hwnd, bool fullscreen) {
         return false;
     }
 
-    {
-        // Get the pointer to the back buffer.
-        ComPtr<ID3D11Texture2D> backBufferPtr;
-        swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D),
-                               (LPVOID *)backBufferPtr.GetAddressOf());
-        // Create the render target view with the back buffer pointer.
-        device_->CreateRenderTargetView(backBufferPtr.Get(), NULL,
-                                        &render_target_view_);
-        // Release pointer to the back buffer as we no longer need it.
-        backBufferPtr->Release();
-    }
+    CreateRenderTargetView();
 
-    {
-        // Initialize the description of the depth buffer.
-        D3D11_TEXTURE2D_DESC depth_buffer_desc;
-        ZeroMemory(&depth_buffer_desc, sizeof(depth_buffer_desc));
-
-        // Set up the description of the depth buffer.
-        depth_buffer_desc.Width = env->screen_width_;
-        depth_buffer_desc.Height = env->screen_height_;
-        depth_buffer_desc.MipLevels = 1;
-        depth_buffer_desc.ArraySize = 1;
-        depth_buffer_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-        depth_buffer_desc.SampleDesc.Count = 1;
-        depth_buffer_desc.SampleDesc.Quality = 0;
-        depth_buffer_desc.Usage = D3D11_USAGE_DEFAULT;
-        depth_buffer_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-        depth_buffer_desc.CPUAccessFlags = 0;
-        depth_buffer_desc.MiscFlags = 0;
-        // Create the texture for the depth buffer using the filled out
-        // description.
-        device_->CreateTexture2D(&depth_buffer_desc, NULL,
-                                 depth_stencil_buffer_.GetAddressOf());
-    }
+    CreateDepthBuffer(env);
 
     {
         D3D11_DEPTH_STENCIL_DESC depth_stencil_desc;
@@ -194,6 +163,46 @@ bool Direct3D::Initialize(Env *env, bool vsync, HWND hwnd, bool fullscreen) {
     return true;
 }
 
+bool Direct3D::CreateRenderTargetView() {
+    
+        // Get the pointer to the back buffer.
+        ComPtr<ID3D11Texture2D> backBufferPtr;
+        swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D),
+                               (LPVOID *)backBufferPtr.GetAddressOf());
+        // Create the render target view with the back buffer pointer.
+        device_->CreateRenderTargetView(backBufferPtr.Get(), NULL,
+                                        &render_target_view_);
+        // Release pointer to the back buffer as we no longer need it.
+        backBufferPtr->Release();
+
+        return true;
+}
+
+bool Direct3D::CreateDepthBuffer(Env *env) {
+    
+        // Initialize the description of the depth buffer.
+        D3D11_TEXTURE2D_DESC depth_buffer_desc;
+        ZeroMemory(&depth_buffer_desc, sizeof(depth_buffer_desc));
+
+        // Set up the description of the depth buffer.
+        depth_buffer_desc.Width = env->screen_width_;
+        depth_buffer_desc.Height = env->screen_height_;
+        depth_buffer_desc.MipLevels = 1;
+        depth_buffer_desc.ArraySize = 1;
+        depth_buffer_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        depth_buffer_desc.SampleDesc.Count = 1;
+        depth_buffer_desc.SampleDesc.Quality = 0;
+        depth_buffer_desc.Usage = D3D11_USAGE_DEFAULT;
+        depth_buffer_desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+        depth_buffer_desc.CPUAccessFlags = 0;
+        depth_buffer_desc.MiscFlags = 0;
+        // Create the texture for the depth buffer using the filled out
+        // description.
+        device_->CreateTexture2D(&depth_buffer_desc, NULL,
+                                 depth_stencil_buffer_.GetAddressOf());
+        return true;
+}
+
 void Direct3D::SetViewPort(float x, float y, float width, float height) {
     const float SCREEN_DEPTH = 1000.0f;
     const float SCREEN_NEAR = 0.3f;
@@ -270,7 +279,7 @@ ComPtr<ID3D11RasterizerState> Direct3D::wire_rasterizer_state() {
     return wire_rasterizer_state_;
 }
 
-ID3D11RenderTargetView** Direct3D::render_target_view() {
+ID3D11RenderTargetView **Direct3D::render_target_view() {
     return &render_target_view_;
 }
 

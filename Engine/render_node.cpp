@@ -314,9 +314,9 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
         L"./CubemapTextures/Stonewall_diffuseIBL.dds";
 
     cube_map_shader->CreateCubemapTexture(
-        atribumDiffuseFilename, manager->cube_map->diffuse_resource_view);
+        stonewallDiffuseFilename, manager->cube_map->diffuse_resource_view);
     cube_map_shader->CreateCubemapTexture(
-        skyboxFilename, manager->cube_map->specular_resource_view);
+        stonewallSpecularFilename, manager->cube_map->specular_resource_view);
 
     manager->cube_map->cube_map_shader_source =
         std::make_shared<CubeMapShaderSource>();
@@ -665,9 +665,13 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
             0, 1, image_based_shader_source->vertex_constant_buffer.GetAddressOf());
 
         for (const auto &mesh : model->meshes) {
-            context->PSSetShaderResources(
-                0, 1, mesh->textureResourceView.GetAddressOf());
 
+        ID3D11ShaderResourceView *resViews[3] = {
+                mesh->textureResourceView.Get(),
+                manager->cube_map->diffuse_resource_view.Get(),
+                manager->cube_map->specular_resource_view.Get()};
+            context->PSSetShaderResources(0, 3, resViews);
+            
             context->PSSetConstantBuffers(
                 0, 1, image_based_shader_source->pixel_constant_buffer.GetAddressOf());
             context->PSSetShader(image_based_shader->pixel_shader.Get(), NULL,

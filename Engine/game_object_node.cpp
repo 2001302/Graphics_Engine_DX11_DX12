@@ -46,7 +46,7 @@ EnumBehaviorTreeStatus GameObjectDetailNode::OnShow() {
     ImGui::SliderFloat3("Scaling", &scaling.x, 0.1f, 4.0f);
 
     ImGui::Text("Material");
-    ImGui::SliderFloat("Shininess", &shininess, 1.0f, 256.0f);
+    ImGui::SliderFloat("Shininess", &shininess, 0.01f, 1.0f);
     ImGui::SliderFloat("Diffuse", &diffuse, 0.0f, 1.0f);
     ImGui::SliderFloat("Specular", &specular, 0.0f, 1.0f);
 

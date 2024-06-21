@@ -24,12 +24,23 @@ class ImageBasedShader : public IShader {
   public:
 };
 
-class ImageBasedShaderSource {
+class ImageBasedShaderSource : public IShaderSource {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
     ImageBasedVertexConstantBuffer vertex_constant_buffer_data;
     ImageBasedPixelConstantBuffer pixel_constant_buffer_data;
+
+    void InitializeThis() override {
+        vertex_constant_buffer_data.model = Matrix();
+        vertex_constant_buffer_data.view = Matrix();
+        vertex_constant_buffer_data.projection = Matrix();
+
+        shader_->CreateConstantBuffer(vertex_constant_buffer_data,
+                                      vertex_constant_buffer);
+        shader_->CreateConstantBuffer(pixel_constant_buffer_data,
+                                      pixel_constant_buffer);
+    }
 };
 } // namespace Engine
 #endif

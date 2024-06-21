@@ -56,15 +56,16 @@ bool Application::OnFrame() {
     // Clear the buffers to begin the scene.
     Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
+    //clang-format off
     if (imgui_->GetGlobalTab().render_mode == EnumRenderMode::eCubeMapping &&
         imgui_->GetGlobalTab().cube_map_setting.use_image_based_lighting) {
         auto tree = std::make_unique<BehaviorTreeBuilder>();
 
         tree->Build(dataBlock)
             ->Sequence()
-            ->Excute(std::make_shared<UpdateCamera>())
-            ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
-            ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
+                ->Excute(std::make_shared<UpdateCamera>())
+                ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
+                ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
             ->Close();
 
         tree->Run();
@@ -74,9 +75,9 @@ bool Application::OnFrame() {
 
         tree->Build(dataBlock)
             ->Sequence()
-            ->Excute(std::make_shared<UpdateCamera>())
-            ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
-            ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
+                ->Excute(std::make_shared<UpdateCamera>())
+                ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
+                ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
             ->Close();
 
         tree->Run();
@@ -87,12 +88,13 @@ bool Application::OnFrame() {
 
         cube_tree->Build(dataBlock)
             ->Sequence()
-            ->Excute(std::make_shared<UpdateCubeMap>())
-            ->Excute(std::make_shared<RenderCubeMap>())
+                ->Excute(std::make_shared<UpdateCubeMap>())
+                ->Excute(std::make_shared<RenderCubeMap>())
             ->Close();
 
         cube_tree->Run();
     }
+    //clang-format on
 
     input_->Frame();
     imgui_->Frame();
@@ -149,8 +151,8 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
     ImGui_ImplWin32_WndProcHandler(main_window, umsg, wparam, lparam);
 
     switch (umsg) {
-    //case WM_SIZE: {
-    //    if (Direct3D::GetInstance().swap_chain()) {
+    // case WM_SIZE: {
+    //     if (Direct3D::GetInstance().swap_chain()) {
 
     //        screen_width_ = int(LOWORD(lparam));
     //        screen_height_ = int(HIWORD(lparam));

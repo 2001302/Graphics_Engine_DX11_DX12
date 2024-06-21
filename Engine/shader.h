@@ -16,9 +16,6 @@ class IShader {
 #if defined(DEBUG) || defined(_DEBUG)
         compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
-
-        // 쉐이더의 시작점의 이름이 "main"인 함수로 지정
-        // D3D_COMPILE_STANDARD_FILE_INCLUDE 추가: 쉐이더에서 include 사용
         HRESULT hr = D3DCompileFromFile(
             filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
             "ps_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
@@ -40,9 +37,6 @@ class IShader {
 #if defined(DEBUG) || defined(_DEBUG)
         compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
-
-        // 쉐이더의 시작점의 이름이 "main"인 함수로 지정
-        // D3D_COMPILE_STANDARD_FILE_INCLUDE 추가: 쉐이더에서 include 사용
         HRESULT hr = D3DCompileFromFile(
             filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
             "vs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
@@ -60,7 +54,6 @@ class IShader {
     template <typename T_CONSTANT>
     void CreateConstantBuffer(const T_CONSTANT &constantBufferData,
                               ComPtr<ID3D11Buffer> &constantBuffer) {
-        // 주의:
         // For a constant buffer (BindFlags of D3D11_BUFFER_DESC set to
         // D3D11_BIND_CONSTANT_BUFFER), you must set the ByteWidth value of
         // D3D11_BUFFER_DESC in multiples of 16, and less than or equal to
@@ -110,14 +103,13 @@ class IShader {
 
         D3D11_BUFFER_DESC bufferDesc;
         ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
         bufferDesc.ByteWidth = UINT(sizeof(T_VERTEX) * vertices.size());
         bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
         bufferDesc.StructureByteStride = sizeof(T_VERTEX);
 
-        D3D11_SUBRESOURCE_DATA vertexBufferData = {
-            0}; // MS 예제에서 초기화하는 방식
+        D3D11_SUBRESOURCE_DATA vertexBufferData = {0};
         vertexBufferData.pSysMem = vertices.data();
         vertexBufferData.SysMemPitch = 0;
         vertexBufferData.SysMemSlicePitch = 0;
@@ -130,9 +122,9 @@ class IShader {
         };
     }
     void CreateIndexBuffer(const std::vector<int> &indices,
-                                    ComPtr<ID3D11Buffer> &indexBuffer) {
+                           ComPtr<ID3D11Buffer> &indexBuffer) {
         D3D11_BUFFER_DESC bufferDesc = {};
-        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
         bufferDesc.ByteWidth = UINT(sizeof(int) * indices.size());
         bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
         bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
@@ -144,14 +136,25 @@ class IShader {
         indexBufferData.SysMemSlicePitch = 0;
 
         Direct3D::GetInstance().device()->CreateBuffer(
-            &bufferDesc, &indexBufferData,
-                               indexBuffer.GetAddressOf());
+            &bufferDesc, &indexBufferData, indexBuffer.GetAddressOf());
     }
 
     ComPtr<ID3D11VertexShader> vertex_shader;
     ComPtr<ID3D11PixelShader> pixel_shader;
     ComPtr<ID3D11InputLayout> layout;
     ComPtr<ID3D11SamplerState> sample_state;
+};
+
+class IShaderSource {
+  public:
+    void Initialize(std::shared_ptr<IShader> shader) {
+        this->shader_ = shader;
+        InitializeThis();
+    }
+    virtual void InitializeThis() {}
+
+  protected:
+    std::shared_ptr<IShader> shader_;
 };
 } // namespace Engine
 #endif

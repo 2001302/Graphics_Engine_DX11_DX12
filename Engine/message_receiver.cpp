@@ -16,9 +16,8 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         // mouse move vector
         Vector2 vector = Vector2(-mouseState.lX, -mouseState.lY);
 
-        Vector3 origin(manager->camera->position.x,
-                               manager->camera->position.y,
-                               manager->camera->position.z);
+        Vector3 origin(manager->camera->position.x, manager->camera->position.y,
+                       manager->camera->position.z);
 
         // convert to spherical coordinates
         double r = origin.Length();
@@ -40,8 +39,8 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         Vector3 origin_prime(x, y, z);
 
         if (0.0f < phi && phi < M_PI)
-            manager->camera->position = Vector3(
-                origin_prime.x, origin_prime.y, origin_prime.z);
+            manager->camera->position =
+                Vector3(origin_prime.x, origin_prime.y, origin_prime.z);
     }
 
     return true;
@@ -56,18 +55,15 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
         input->Mouse()->Acquire();
     } else {
         float wheel = -mouseState.lZ / (600.0);
-        Vector3 origin(manager->camera->position.x,
-                               manager->camera->position.y,
-                               manager->camera->position.z);
+        Vector3 origin(manager->camera->position.x, manager->camera->position.y,
+                       manager->camera->position.z);
 
-        Matrix R1(1.0f + wheel, 0.0f, 0.0f, 0.0f, 
-                0.0f, 1.0f + wheel, 0.0f, 0.0f, 
-                0.0f, 0.0f, 1.0f + wheel ,0.0f, 
-                0.0f, 0.0f, 0.0f, 1.0f);
+        Matrix R1(1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f,
+                  0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
         auto origin_prime = Vector3::Transform(origin, R1);
-        manager->camera->position = Vector3(
-            origin_prime.x, origin_prime.y, origin_prime.z);
+        manager->camera->position =
+            Vector3(origin_prime.x, origin_prime.y, origin_prime.z);
     }
 
     return true;
@@ -123,33 +119,14 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
         // create constant buffer(Phong Shader)
         model->phong_shader_source = std::make_shared<PhongShaderSource>();
-        model->phong_shader_source->vertex_constant_buffer_data.model = Matrix();
-        model->phong_shader_source->vertex_constant_buffer_data.view = Matrix();
-        model->phong_shader_source->vertex_constant_buffer_data.projection = Matrix();
-
-        manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
-            model->phong_shader_source->vertex_constant_buffer_data,
-            model->phong_shader_source->vertex_constant_buffer);
-        manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
-            model->phong_shader_source->pixel_constant_buffer_data,
-            model->phong_shader_source->pixel_constant_buffer);
+        model->phong_shader_source->Initialize(
+            manager->shaders[EnumShaderType::ePhong]);
 
         // create constant buffer(Image Based Shader)
         model->image_based_shader_source =
             std::make_shared<ImageBasedShaderSource>();
-        model->image_based_shader_source->vertex_constant_buffer_data.model =
-            Matrix();
-        model->image_based_shader_source->vertex_constant_buffer_data.view =
-            Matrix();
-        model->image_based_shader_source->vertex_constant_buffer_data
-            .projection = Matrix();
-
-        manager->shaders[EnumShaderType::eImageBased]->CreateConstantBuffer(
-            model->image_based_shader_source->vertex_constant_buffer_data,
-            model->image_based_shader_source->vertex_constant_buffer);
-        manager->shaders[EnumShaderType::eImageBased]->CreateConstantBuffer(
-            model->image_based_shader_source->pixel_constant_buffer_data,
-            model->image_based_shader_source->pixel_constant_buffer);
+        model->image_based_shader_source->Initialize(
+            manager->shaders[EnumShaderType::eImageBased]);
 
         model->transform = Matrix();
 
@@ -255,9 +232,8 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
 
-            const HRESULT hr =
-                Direct3D::GetInstance().device()->CreateBuffer(
-                    &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+            const HRESULT hr = Direct3D::GetInstance().device()->CreateBuffer(
+                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
                           << std::endl;
@@ -284,31 +260,14 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
     // create constant buffer(Phong Shader)
     model->phong_shader_source = std::make_shared<PhongShaderSource>();
-    model->phong_shader_source->vertex_constant_buffer_data.model = Matrix();
-    model->phong_shader_source->vertex_constant_buffer_data.view = Matrix();
-    model->phong_shader_source->vertex_constant_buffer_data.projection = Matrix();
+    model->phong_shader_source->Initialize(
+        manager->shaders[EnumShaderType::ePhong]);
 
-    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
-        model->phong_shader_source->vertex_constant_buffer_data,
-        model->phong_shader_source->vertex_constant_buffer);
-    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
-        model->phong_shader_source->pixel_constant_buffer_data,
-        model->phong_shader_source->pixel_constant_buffer);
-
-    
     // create constant buffer(Image Based Shader)
-    model->image_based_shader_source = std::make_shared<ImageBasedShaderSource>();
-    model->image_based_shader_source->vertex_constant_buffer_data.model = Matrix();
-    model->image_based_shader_source->vertex_constant_buffer_data.view = Matrix();
-    model->image_based_shader_source->vertex_constant_buffer_data.projection =
-        Matrix();
-
-    manager->shaders[EnumShaderType::eImageBased]->CreateConstantBuffer(
-        model->image_based_shader_source->vertex_constant_buffer_data,
-        model->image_based_shader_source->vertex_constant_buffer);
-    manager->shaders[EnumShaderType::eImageBased]->CreateConstantBuffer(
-        model->image_based_shader_source->pixel_constant_buffer_data,
-        model->image_based_shader_source->pixel_constant_buffer);
+    model->image_based_shader_source =
+        std::make_shared<ImageBasedShaderSource>();
+    model->image_based_shader_source->Initialize(
+        manager->shaders[EnumShaderType::eImageBased]);
 
     model->transform = Matrix();
 
@@ -352,9 +311,8 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
 
-            const HRESULT hr =
-                Direct3D::GetInstance().device()->CreateBuffer(
-                    &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+            const HRESULT hr = Direct3D::GetInstance().device()->CreateBuffer(
+                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
                           << std::endl;
@@ -381,33 +339,14 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
     // create constant buffer(Phong Shader)
     model->phong_shader_source = std::make_shared<PhongShaderSource>();
-    model->phong_shader_source->vertex_constant_buffer_data.model = Matrix();
-    model->phong_shader_source->vertex_constant_buffer_data.view = Matrix();
-    model->phong_shader_source->vertex_constant_buffer_data.projection = Matrix();
-
-    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
-        model->phong_shader_source->vertex_constant_buffer_data,
-        model->phong_shader_source->vertex_constant_buffer);
-    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
-        model->phong_shader_source->pixel_constant_buffer_data,
-        model->phong_shader_source->pixel_constant_buffer);
+    model->phong_shader_source->Initialize(
+        manager->shaders[EnumShaderType::ePhong]);
 
     // create constant buffer(Image Based Shader)
     model->image_based_shader_source =
         std::make_shared<ImageBasedShaderSource>();
-    model->image_based_shader_source->vertex_constant_buffer_data.model =
-        Matrix();
-    model->image_based_shader_source->vertex_constant_buffer_data.view =
-        Matrix();
-    model->image_based_shader_source->vertex_constant_buffer_data.projection =
-        Matrix();
-
-    manager->shaders[EnumShaderType::eImageBased]->CreateConstantBuffer(
-        model->image_based_shader_source->vertex_constant_buffer_data,
-        model->image_based_shader_source->vertex_constant_buffer);
-    manager->shaders[EnumShaderType::eImageBased]->CreateConstantBuffer(
-        model->image_based_shader_source->pixel_constant_buffer_data,
-        model->image_based_shader_source->pixel_constant_buffer);
+    model->image_based_shader_source->Initialize(
+        manager->shaders[EnumShaderType::eImageBased]);
 
     model->transform = Matrix();
 
@@ -450,9 +389,8 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
 
-            const HRESULT hr =
-                Direct3D::GetInstance().device()->CreateBuffer(
-                    &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+            const HRESULT hr = Direct3D::GetInstance().device()->CreateBuffer(
+                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
                           << std::endl;
@@ -479,36 +417,14 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
     // create constant buffer(Phong Shader)
     model->phong_shader_source = std::make_shared<PhongShaderSource>();
-    model->phong_shader_source->vertex_constant_buffer_data.model =
-        Matrix();
-    model->phong_shader_source->vertex_constant_buffer_data.view =
-        Matrix();
-    model->phong_shader_source->vertex_constant_buffer_data.projection =
-        Matrix();
-
-    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
-        model->phong_shader_source->vertex_constant_buffer_data,
-        model->phong_shader_source->vertex_constant_buffer);
-    manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
-        model->phong_shader_source->pixel_constant_buffer_data,
-        model->phong_shader_source->pixel_constant_buffer);
+    model->phong_shader_source->Initialize(
+        manager->shaders[EnumShaderType::ePhong]);
 
     // create constant buffer(Image Based Shader)
     model->image_based_shader_source =
         std::make_shared<ImageBasedShaderSource>();
-    model->image_based_shader_source->vertex_constant_buffer_data.model =
-        Matrix();
-    model->image_based_shader_source->vertex_constant_buffer_data.view =
-        Matrix();
-    model->image_based_shader_source->vertex_constant_buffer_data.projection =
-        Matrix();
-
-    manager->shaders[EnumShaderType::eImageBased]->CreateConstantBuffer(
-        model->image_based_shader_source->vertex_constant_buffer_data,
-        model->image_based_shader_source->vertex_constant_buffer);
-    manager->shaders[EnumShaderType::eImageBased]->CreateConstantBuffer(
-        model->image_based_shader_source->pixel_constant_buffer_data,
-        model->image_based_shader_source->pixel_constant_buffer);
+    model->image_based_shader_source->Initialize(
+        manager->shaders[EnumShaderType::eImageBased]);
 
     model->transform = Matrix();
 

@@ -56,13 +56,10 @@ void Panel::NodeEditor() {
     ed::Begin("My Editor", ImVec2(0.0, ImGui::GetWindowHeight() / 1.5f));
 
     // Start drawing nodes.
-    if (selected_object_id_ == -99999) {
-        auto graph = std::make_shared<DefaultGraphNode>();
-        graph->OnShow();
-    } else {
+    if (selected_object_id_ != -99999) {
         auto graph = pipeline_manager_->behaviors[selected_object_id_];
         graph->Show();
-    }
+    } 
 
     ed::End();
     ed::SetCurrentEditor(nullptr);

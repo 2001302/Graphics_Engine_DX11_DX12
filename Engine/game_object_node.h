@@ -41,11 +41,6 @@ class GameObjectDetailNode : public GraphNode {
     float diffuse = 1.0f;
     float specular = 1.0f;
 };
-class DefaultGraphNode : public GraphNode {
-  public:
-    EnumBehaviorTreeStatus OnInvoke() override;
-    EnumBehaviorTreeStatus OnShow() override;
-};
 
 } // namespace Engine
 #endif

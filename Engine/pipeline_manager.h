@@ -8,7 +8,6 @@
 #include "game_object.h"
 #include "graph.h"
 #include "input.h"
-#include "normal_shader.h"
 #include "phong_shader.h"
 #include "cube_map_shader.h"
 

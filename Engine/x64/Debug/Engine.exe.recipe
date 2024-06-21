@@ -13,10 +13,10 @@
       <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\cube_mapping_vertex_shader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\normal_pixel_shader.cso</FullPath>
+      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\image_based_pixel_shader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\normal_vertex_shader.cso</FullPath>
+      <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\image_based_vertex_shader.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\user\Source\repos\Engine\x64\Debug\phong_pixel_shader.cso</FullPath>

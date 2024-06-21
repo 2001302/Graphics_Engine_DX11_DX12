@@ -1,12 +1,12 @@
-#ifndef _NORMALSHADER
-#define _NORMALSHADER
+#ifndef _IMAGEBASEDSHADER
+#define _IMAGEBASEDSHADER
 
 #include "shader.h"
 
 using namespace DirectX;
 
 namespace Engine {
-class NormalShader : public IShader {
+class ImageBasedShader : public IShader {
   public:
 };
 } // namespace Engine

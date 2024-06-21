@@ -173,7 +173,7 @@
     <ClInclude Include="panel.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="model_loader.h" />
-    <ClInclude Include="normal_shader.h" />
+    <ClInclude Include="image_based_shader.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="dataBlock.h" />
     <ClInclude Include="phong_shader.h" />
@@ -209,7 +209,7 @@
     <ClCompile Include="input.cpp" />
     <ClCompile Include="message_receiver.cpp" />
     <ClCompile Include="model_loader.cpp" />
-    <ClCompile Include="normal_shader.cpp" />
+    <ClCompile Include="image_based_shader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="panel.cpp" />
@@ -234,11 +234,11 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
     </FxCompile>
-    <FxCompile Include="normal_pixel_shader.hlsl">
+    <FxCompile Include="image_based_pixel_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
     </FxCompile>
-    <FxCompile Include="normal_vertex_shader.hlsl">
+    <FxCompile Include="image_based_vertex_shader.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>

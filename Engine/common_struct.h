@@ -120,51 +120,5 @@ namespace Engine
 		float spotPower = 1.0f;                        // 4
 	};
 
-	struct VertexConstantBuffer {
-		Matrix model;
-		Matrix invTranspose;
-		Matrix view;
-		Matrix projection;
-	};
-
-#define MAX_LIGHTS 3
-
-	struct PixelConstantBuffer {
-		Vector3 eyeWorld;        // 12
-		bool useTexture;         // 4
-		Material material;       // 48
-		Light lights[MAX_LIGHTS]; // 48 * MAX_LIGHTS
-		bool useBlinnPhong = true;
-		Vector3 dummy;
-	};
-
-	struct NormalVertexConstantBuffer {
-		Matrix model;
-		Matrix invTranspose;
-		Matrix view;
-		Matrix projection;
-		float scale = 0.1f;
-		float dummy[3];
-	};
-
-    struct BasicVertexConstantBuffer {
-        Matrix model;
-        Matrix invTranspose;
-        Matrix view;
-        Matrix projection;
-    };
-
-    struct BasicPixelConstantBuffer {
-        Vector3 eyeWorld;         // 12
-        bool useTexture;          // 4
-        Material material;        // 48
-        Light lights[MAX_LIGHTS]; // 48 * MAX_LIGHTS
-        Vector3 rimColor = Vector3(1.0f);
-        float rimPower;
-        float rimStrength = 0.0f;
-        bool useSmoothstep = false;
-        float dummy[2];
-    };
-
 }
 #endif

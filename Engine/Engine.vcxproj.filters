@@ -16,7 +16,7 @@
     <ClInclude Include="resource_helper.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="normal_shader.h">
+    <ClInclude Include="image_based_shader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
     <ClInclude Include="direct3D.h">
@@ -145,7 +145,7 @@
     <ClCompile Include="resource_helper.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="normal_shader.cpp">
+    <ClCompile Include="image_based_shader.cpp">
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
     <ClCompile Include="direct3D.cpp">
@@ -290,10 +290,10 @@
     <FxCompile Include="phong_pixel_shader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="normal_vertex_shader.hlsl">
+    <FxCompile Include="image_based_vertex_shader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="normal_pixel_shader.hlsl">
+    <FxCompile Include="image_based_pixel_shader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="cube_mapping_vertex_shader.hlsl">

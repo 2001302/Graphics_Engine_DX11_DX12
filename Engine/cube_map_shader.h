@@ -7,6 +7,17 @@
 using namespace DirectX;
 
 namespace Engine {
+struct BasicVertexConstantBuffer {
+    Matrix model;
+    Matrix invTranspose;
+    Matrix view;
+    Matrix projection;
+};
+
+struct BasicPixelConstantBuffer {
+    float dummy[4];
+};
+
 class CubeMapShader : public IShader {
   public:
     void CreateCubemapTexture(const wchar_t *filename,

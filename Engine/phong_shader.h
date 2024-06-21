@@ -6,6 +6,24 @@
 using namespace DirectX;
 
 namespace Engine {
+struct VertexConstantBuffer {
+    Matrix model;
+    Matrix invTranspose;
+    Matrix view;
+    Matrix projection;
+};
+
+#define MAX_LIGHTS 3
+
+struct PixelConstantBuffer {
+    Vector3 eyeWorld;         // 12
+    bool useTexture;          // 4
+    Material material;        // 48
+    Light lights[MAX_LIGHTS]; // 48 * MAX_LIGHTS
+    bool useBlinnPhong = true;
+    Vector3 dummy;
+};
+
 /// <summary>
 /// 공유되어 사용되는 Phong Shader
 /// </summary>

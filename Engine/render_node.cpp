@@ -367,38 +367,19 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     auto env = dynamic_cast<Engine::Env *>(envBlock);
     assert(env != nullptr);
 
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
-    assert(gui != nullptr);
-
-    auto context = Direct3D::GetInstance().GetDeviceContext();
-
     auto cube_map = manager->cube_map;
-    auto graph = manager->behaviors[cube_map->GetEntityId()];
-
-    auto detail = dynamic_cast<Engine::GameObjectDetailNode *>(
-        graph->GetDetailNode().get());
-    assert(detail != nullptr);
 
     auto cube_shader_source = cube_map->cube_map_shader_source;
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
+
     {
         cube_shader_source->vertex_constant_buffer_data.view =
             manager->camera->view.Transpose();
 
         const float aspect = env->aspect_;
-        if (detail->use_perspective_projection) {
-            cube_shader_source->vertex_constant_buffer_data.projection =
-                XMMatrixPerspectiveFovLH(
-                    XMConvertToRadians(
-                        gui->GetLightTab().projection_fov_angle_y),
-                    aspect, gui->GetLightTab().near_z,
-                    gui->GetLightTab().far_z);
-        } else {
-            cube_shader_source->vertex_constant_buffer_data.projection =
-                XMMatrixOrthographicOffCenterLH(-aspect, aspect, -1.0f, 1.0f,
-                                                gui->GetLightTab().near_z,
-                                                gui->GetLightTab().far_z);
-        }
+        cube_shader_source->vertex_constant_buffer_data.projection =
+            XMMatrixPerspectiveFovLH(70.0f, aspect, 0.01f, 100.0f);
+
         cube_shader_source->vertex_constant_buffer_data.projection =
             cube_shader_source->vertex_constant_buffer_data.projection
                 .Transpose();

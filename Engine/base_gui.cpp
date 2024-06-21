@@ -24,8 +24,8 @@ bool BaseGui::Initialize(HWND main_window, Env *env) {
     ImGui::SetCurrentContext(context_);
 
     ImGui_ImplWin32_Init(main_window_);
-    ImGui_ImplDX11_Init(Direct3D::GetInstance().GetDevice().Get(),
-                        Direct3D::GetInstance().GetDeviceContext().Get());
+    ImGui_ImplDX11_Init(Direct3D::GetInstance().device().Get(),
+                        Direct3D::GetInstance().device_context().Get());
 
     ImGui::StyleColorsDark();
     RecreateFontAtlas();

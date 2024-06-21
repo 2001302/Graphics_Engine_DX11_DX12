@@ -10,7 +10,7 @@ void CubeMapShader::CreateCubemapTexture(
 
     // https://github.com/microsoft/DirectXTK/wiki/DDSTextureLoader
     auto hr = CreateDDSTextureFromFileEx(
-        Direct3D::GetInstance().GetDevice().Get(), filename, 0,
+        Direct3D::GetInstance().device().Get(), filename, 0,
         D3D11_USAGE_DEFAULT,
         D3D11_BIND_SHADER_RESOURCE, 0,
         D3D11_RESOURCE_MISC_TEXTURECUBE, // Å¥ºê¸Ê¿ë ÅØ½ºÃç

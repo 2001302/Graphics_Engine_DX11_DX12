@@ -2,15 +2,7 @@
 
 using namespace Engine;
 
-bool Direct3D::Init(Env *env, bool vsync, HWND hwnd, bool fullscreen) {
-    InitDirect3D(env->screen_width_, env->screen_height_, hwnd, fullscreen);
-    InitMainScene(env->screen_width_, env->screen_height_);
-
-    return true;
-}
-
-bool Direct3D::InitDirect3D(int screenWidth, int screenHeight, HWND hwnd,
-                            bool fullscreen) {
+bool Direct3D::Initialize(Env *env, bool vsync, HWND hwnd, bool fullscreen) {
     HRESULT result;
     DXGI_SWAP_CHAIN_DESC swap_chain_desc;
     D3D_FEATURE_LEVEL feature_level;
@@ -22,8 +14,8 @@ bool Direct3D::InitDirect3D(int screenWidth, int screenHeight, HWND hwnd,
     swap_chain_desc.BufferCount = 1;
 
     // Set the width and height of the back buffer.
-    swap_chain_desc.BufferDesc.Width = screenWidth;
-    swap_chain_desc.BufferDesc.Height = screenHeight;
+    swap_chain_desc.BufferDesc.Width = env->screen_width_;
+    swap_chain_desc.BufferDesc.Height = env->screen_height_;
 
     // Set regular 32-bit surface for the back buffer.
     swap_chain_desc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -66,20 +58,15 @@ bool Direct3D::InitDirect3D(int screenWidth, int screenHeight, HWND hwnd,
     if (FAILED(result)) {
         return false;
     }
-}
-
-bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
-
-    float fieldOfView, screenAspect;
 
     {
         // Get the pointer to the back buffer.
         ComPtr<ID3D11Texture2D> backBufferPtr;
         swap_chain_->GetBuffer(0, __uuidof(ID3D11Texture2D),
-                              (LPVOID *)backBufferPtr.GetAddressOf());
+                               (LPVOID *)backBufferPtr.GetAddressOf());
         // Create the render target view with the back buffer pointer.
         device_->CreateRenderTargetView(backBufferPtr.Get(), NULL,
-                                       &render_target_view_);
+                                        &render_target_view_);
         // Release pointer to the back buffer as we no longer need it.
         backBufferPtr->Release();
     }
@@ -90,8 +77,8 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
         ZeroMemory(&depth_buffer_desc, sizeof(depth_buffer_desc));
 
         // Set up the description of the depth buffer.
-        depth_buffer_desc.Width = screenWidth;
-        depth_buffer_desc.Height = screenHeight;
+        depth_buffer_desc.Width = env->screen_width_;
+        depth_buffer_desc.Height = env->screen_height_;
         depth_buffer_desc.MipLevels = 1;
         depth_buffer_desc.ArraySize = 1;
         depth_buffer_desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -104,7 +91,7 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
         // Create the texture for the depth buffer using the filled out
         // description.
         device_->CreateTexture2D(&depth_buffer_desc, NULL,
-                                depth_stencil_buffer_.GetAddressOf());
+                                 depth_stencil_buffer_.GetAddressOf());
     }
 
     {
@@ -135,7 +122,7 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
 
         // Create the depth stencil state.
         device_->CreateDepthStencilState(&depth_stencil_desc,
-                                        depth_stencil_state_.GetAddressOf());
+                                         depth_stencil_state_.GetAddressOf());
     }
 
     {
@@ -153,14 +140,14 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
 
         // Create the depth stencil view.
         device_->CreateDepthStencilView(depth_stencil_buffer_.Get(),
-                                       &depth_stencil_view_desc,
-                                       &depth_stencil_view_);
+                                        &depth_stencil_view_desc,
+                                        &depth_stencil_view_);
     }
 
     // Bind the render target view and depth stencil buffer to the output render
     // pipeline.
     device_context_->OMSetRenderTargets(1, &render_target_view_,
-                                       depth_stencil_view_.Get());
+                                        depth_stencil_view_.Get());
 
     {
         D3D11_RASTERIZER_DESC raster_desc;
@@ -180,7 +167,7 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
 
         // Create the rasterizer state from the description we just filled out.
         device_->CreateRasterizerState(&raster_desc,
-                                      solid_rasterizer_state_.GetAddressOf());
+                                       solid_rasterizer_state_.GetAddressOf());
         // Now set the rasterizer state.
         device_context_->RSSetState(solid_rasterizer_state_.Get());
     }
@@ -196,10 +183,13 @@ bool Direct3D::InitMainScene(int screenWidth, int screenHeight) {
         rast_desc_wire.DepthClipEnable = true; // <- zNear, zFar 확인에 필요
 
         device_->CreateRasterizerState(&rast_desc_wire,
-                                      wire_rasterizer_state_.GetAddressOf());
+                                       wire_rasterizer_state_.GetAddressOf());
     }
 
-    { SetViewPort(0.0f, 0.0f, (float)screenWidth, (float)screenHeight); }
+    {
+        SetViewPort(0.0f, 0.0f, (float)env->screen_width_,
+                    (float)env->screen_height_);
+    }
 
     return true;
 }
@@ -234,7 +224,7 @@ void Direct3D::BeginScene(float red, float green, float blue, float alpha) {
 
     // Clear the depth buffer.
     device_context_->ClearDepthStencilView(depth_stencil_view_.Get(),
-                                          D3D11_CLEAR_DEPTH, 1.0f, 0);
+                                           D3D11_CLEAR_DEPTH, 1.0f, 0);
 
     return;
 }
@@ -252,8 +242,36 @@ void Direct3D::EndScene() {
     return;
 }
 
-ComPtr<ID3D11Device> Direct3D::GetDevice() { return device_; }
+ComPtr<ID3D11Device> Direct3D::device() { return device_; }
 
-ComPtr<ID3D11DeviceContext> Direct3D::GetDeviceContext() {
+ComPtr<ID3D11DeviceContext> Direct3D::device_context() {
     return device_context_;
 }
+
+ComPtr<IDXGISwapChain> Direct3D::swap_chain() { return swap_chain_; }
+
+ComPtr<ID3D11Texture2D> Direct3D::depth_stencil_buffer() {
+    return depth_stencil_buffer_;
+};
+
+ComPtr<ID3D11DepthStencilState> Direct3D::depth_stencil_state() {
+    return depth_stencil_state_;
+}
+
+ComPtr<ID3D11DepthStencilView> Direct3D::depth_stencil_view() {
+    return depth_stencil_view_;
+}
+
+ComPtr<ID3D11RasterizerState> Direct3D::solid_rasterizer_state() {
+    return solid_rasterizer_state_;
+}
+
+ComPtr<ID3D11RasterizerState> Direct3D::wire_rasterizer_state() {
+    return wire_rasterizer_state_;
+}
+
+ID3D11RenderTargetView** Direct3D::render_target_view() {
+    return &render_target_view_;
+}
+
+D3D11_VIEWPORT Direct3D::viewport() { return viewport_; }

@@ -45,9 +45,9 @@ void ResourceHelper::CreateTexture(
     // TODO: You should really consider using a COM smart-pointer like
     // Microsoft::WRL::ComPtr instead
 
-    Direct3D::GetInstance().GetDevice()->CreateTexture2D(
+    Direct3D::GetInstance().device()->CreateTexture2D(
         &txtDesc, &InitData, texture.GetAddressOf());
-    Direct3D::GetInstance().GetDevice()->CreateShaderResourceView(
+    Direct3D::GetInstance().device()->CreateShaderResourceView(
         texture.Get(), nullptr, textureResourceView.GetAddressOf());
 }
 

@@ -23,7 +23,7 @@ class IShader {
             filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
             "ps_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
 
-        Direct3D::GetInstance().GetDevice()->CreatePixelShader(
+        Direct3D::GetInstance().device()->CreatePixelShader(
             shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL,
             &pixelShader);
     }
@@ -47,11 +47,11 @@ class IShader {
             filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
             "vs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
 
-        Direct3D::GetInstance().GetDevice()->CreateVertexShader(
+        Direct3D::GetInstance().device()->CreateVertexShader(
             shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(), NULL,
             &vertexShader);
 
-        Direct3D::GetInstance().GetDevice()->CreateInputLayout(
+        Direct3D::GetInstance().device()->CreateInputLayout(
             inputElements.data(), UINT(inputElements.size()),
             shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
             &inputLayout);
@@ -80,7 +80,7 @@ class IShader {
         initData.SysMemPitch = 0;
         initData.SysMemSlicePitch = 0;
 
-        auto hr = Direct3D::GetInstance().GetDevice()->CreateBuffer(
+        auto hr = Direct3D::GetInstance().device()->CreateBuffer(
             &cbDesc, &initData, constantBuffer.GetAddressOf());
         if (FAILED(hr)) {
             std::cout << "CreateConstantBuffer() CreateBuffer failed()."
@@ -96,10 +96,10 @@ class IShader {
         }
 
         D3D11_MAPPED_SUBRESOURCE ms;
-        Direct3D::GetInstance().GetDeviceContext()->Map(
+        Direct3D::GetInstance().device_context()->Map(
             buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
         memcpy(ms.pData, &bufferData, sizeof(bufferData));
-        Direct3D::GetInstance().GetDeviceContext()->Unmap(buffer.Get(), NULL);
+        Direct3D::GetInstance().device_context()->Unmap(buffer.Get(), NULL);
     }
     template <typename T_VERTEX>
     void CreateVertexBuffer(const std::vector<T_VERTEX> &vertices,
@@ -122,7 +122,7 @@ class IShader {
         vertexBufferData.SysMemPitch = 0;
         vertexBufferData.SysMemSlicePitch = 0;
 
-        const HRESULT hr = Direct3D::GetInstance().GetDevice()->CreateBuffer(
+        const HRESULT hr = Direct3D::GetInstance().device()->CreateBuffer(
             &bufferDesc, &vertexBufferData, vertexBuffer.GetAddressOf());
         if (FAILED(hr)) {
             std::cout << "CreateBuffer() failed. " << std::hex << hr
@@ -143,7 +143,7 @@ class IShader {
         indexBufferData.SysMemPitch = 0;
         indexBufferData.SysMemSlicePitch = 0;
 
-        Direct3D::GetInstance().GetDevice()->CreateBuffer(
+        Direct3D::GetInstance().device()->CreateBuffer(
             &bufferDesc, &indexBufferData,
                                indexBuffer.GetAddressOf());
     }

@@ -22,7 +22,7 @@ bool Application::OnStart() {
         {EnumDataBlockType::eGui, imgui_.get()},
     };
 
-    Direct3D::GetInstance().Init(env_.get(), VSYNC_ENABLED, main_window_,
+    Direct3D::GetInstance().Initialize(env_.get(), VSYNC_ENABLED, main_window_,
                                  FULL_SCREEN);
 
     auto tree = new BehaviorTreeBuilder();
@@ -132,7 +132,7 @@ bool Application::OnStop() {
 
 bool CheckIfMouseInViewport() {
     auto cursor = ImGui::GetMousePos();
-    auto view_port = Direct3D::GetInstance().viewport_;
+    auto view_port = Direct3D::GetInstance().viewport();
     if (view_port.TopLeftX < cursor.x && view_port.TopLeftY < cursor.y &&
         cursor.x < view_port.TopLeftX + view_port.Width &&
         cursor.y < view_port.TopLeftY + view_port.Height) {

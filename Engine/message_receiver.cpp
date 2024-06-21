@@ -11,7 +11,7 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         // retry
         input->Mouse()->Acquire();
     } else {
-        auto viewPort = Direct3D::GetInstance().viewport_;
+        auto viewPort = Direct3D::GetInstance().viewport();
 
         // mouse move vector
         Vector2 vector = Vector2(-mouseState.lX, -mouseState.lY);
@@ -175,7 +175,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
                 vertexBufferData.SysMemSlicePitch = 0;
 
                 const HRESULT hr =
-                    Direct3D::GetInstance().GetDevice()->CreateBuffer(
+                    Direct3D::GetInstance().device()->CreateBuffer(
                         &bufferDesc, &vertexBufferData,
                         &meshData->vertexBuffer);
                 if (FAILED(hr)) {
@@ -199,7 +199,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
                 indexBufferData.SysMemPitch = 0;
                 indexBufferData.SysMemSlicePitch = 0;
 
-                Direct3D::GetInstance().GetDevice()->CreateBuffer(
+                Direct3D::GetInstance().device()->CreateBuffer(
                     &bufferDesc, &indexBufferData, &meshData->indexBuffer);
             }
 
@@ -256,7 +256,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemSlicePitch = 0;
 
             const HRESULT hr =
-                Direct3D::GetInstance().GetDevice()->CreateBuffer(
+                Direct3D::GetInstance().device()->CreateBuffer(
                     &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
@@ -277,7 +277,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
             indexBufferData.SysMemPitch = 0;
             indexBufferData.SysMemSlicePitch = 0;
 
-            Direct3D::GetInstance().GetDevice()->CreateBuffer(
+            Direct3D::GetInstance().device()->CreateBuffer(
                 &bufferDesc, &indexBufferData, &mesh->indexBuffer);
         }
     }
@@ -353,7 +353,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemSlicePitch = 0;
 
             const HRESULT hr =
-                Direct3D::GetInstance().GetDevice()->CreateBuffer(
+                Direct3D::GetInstance().device()->CreateBuffer(
                     &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
@@ -374,7 +374,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
             indexBufferData.SysMemPitch = 0;
             indexBufferData.SysMemSlicePitch = 0;
 
-            Direct3D::GetInstance().GetDevice()->CreateBuffer(
+            Direct3D::GetInstance().device()->CreateBuffer(
                 &bufferDesc, &indexBufferData, &mesh->indexBuffer);
         }
     }
@@ -451,7 +451,7 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemSlicePitch = 0;
 
             const HRESULT hr =
-                Direct3D::GetInstance().GetDevice()->CreateBuffer(
+                Direct3D::GetInstance().device()->CreateBuffer(
                     &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
@@ -472,7 +472,7 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
             indexBufferData.SysMemPitch = 0;
             indexBufferData.SysMemSlicePitch = 0;
 
-            Direct3D::GetInstance().GetDevice()->CreateBuffer(
+            Direct3D::GetInstance().device()->CreateBuffer(
                 &bufferDesc, &indexBufferData, &mesh->indexBuffer);
         }
     }

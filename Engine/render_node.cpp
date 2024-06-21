@@ -61,7 +61,7 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     // Create the Sample State
-    Direct3D::GetInstance().GetDevice()->CreateSamplerState(
+    Direct3D::GetInstance().device()->CreateSamplerState(
         &sampDesc, phong_shader->sample_state.GetAddressOf());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
@@ -97,7 +97,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::GetInstance().GetDeviceContext();
+    auto context = Direct3D::GetInstance().device_context();
 
     for (auto &model_amp : manager->models) {
         auto &model = model_amp.second;
@@ -220,13 +220,13 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::GetInstance().GetDeviceContext();
+    auto context = Direct3D::GetInstance().device_context();
 
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    context->ClearRenderTargetView(Direct3D::GetInstance().render_target_view_,
+    context->ClearRenderTargetView(*Direct3D::GetInstance().render_target_view(),
                                    clearColor);
     context->ClearDepthStencilView(
-        Direct3D::GetInstance().depth_stencil_view_.Get(),
+        Direct3D::GetInstance().depth_stencil_view().Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     for (auto &model_map : manager->models) {
@@ -243,20 +243,20 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
         unsigned int offset = 0;
 
         context->OMSetRenderTargets(
-            1, &Direct3D::GetInstance().render_target_view_,
-            Direct3D::GetInstance().depth_stencil_view_.Get());
+            1, Direct3D::GetInstance().render_target_view(),
+            Direct3D::GetInstance().depth_stencil_view().Get());
         context->OMSetDepthStencilState(
-            Direct3D::GetInstance().depth_stencil_state_.Get(), 0);
+            Direct3D::GetInstance().depth_stencil_state().Get(), 0);
 
         context->VSSetShader(phong_shader->vertex_shader.Get(), 0, 0);
         context->PSSetSamplers(0, 1, &phong_shader->sample_state);
 
         if (gui->GetGlobalTab().draw_as_wire_)
             context->RSSetState(
-                Direct3D::GetInstance().wire_rasterizer_state_.Get());
+                Direct3D::GetInstance().wire_rasterizer_state().Get());
         else
             context->RSSetState(
-                Direct3D::GetInstance().solid_rasterizer_state_.Get());
+                Direct3D::GetInstance().solid_rasterizer_state().Get());
 
         context->VSSetConstantBuffers(
             0, 1, phong_shader_source->vertex_constant_buffer.GetAddressOf());
@@ -411,7 +411,7 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::GetInstance().GetDeviceContext();
+    auto context = Direct3D::GetInstance().device_context();
     auto cube_map = manager->cube_map;
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
 
@@ -468,7 +468,7 @@ EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     // Create the Sample State
-    Direct3D::GetInstance().GetDevice()->CreateSamplerState(
+    Direct3D::GetInstance().device()->CreateSamplerState(
         &sampDesc, image_based_shader->sample_state.GetAddressOf());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
@@ -504,7 +504,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::GetInstance().GetDeviceContext();
+    auto context = Direct3D::GetInstance().device_context();
 
     for (auto &model_amp : manager->models) {
         auto &model = model_amp.second;
@@ -622,13 +622,13 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::GetInstance().GetDeviceContext();
+    auto context = Direct3D::GetInstance().device_context();
 
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    context->ClearRenderTargetView(Direct3D::GetInstance().render_target_view_,
+    context->ClearRenderTargetView(*Direct3D::GetInstance().render_target_view(),
                                    clearColor);
     context->ClearDepthStencilView(
-        Direct3D::GetInstance().depth_stencil_view_.Get(),
+        Direct3D::GetInstance().depth_stencil_view().Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     for (auto &model_map : manager->models) {
@@ -646,20 +646,20 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
         unsigned int offset = 0;
 
         context->OMSetRenderTargets(
-            1, &Direct3D::GetInstance().render_target_view_,
-            Direct3D::GetInstance().depth_stencil_view_.Get());
+            1, Direct3D::GetInstance().render_target_view(),
+            Direct3D::GetInstance().depth_stencil_view().Get());
         context->OMSetDepthStencilState(
-            Direct3D::GetInstance().depth_stencil_state_.Get(), 0);
+            Direct3D::GetInstance().depth_stencil_state().Get(), 0);
 
         context->VSSetShader(image_based_shader->vertex_shader.Get(), 0, 0);
         context->PSSetSamplers(0, 1, &image_based_shader->sample_state);
 
         if (gui->GetGlobalTab().draw_as_wire_)
             context->RSSetState(
-                Direct3D::GetInstance().wire_rasterizer_state_.Get());
+                Direct3D::GetInstance().wire_rasterizer_state().Get());
         else
             context->RSSetState(
-                Direct3D::GetInstance().solid_rasterizer_state_.Get());
+                Direct3D::GetInstance().solid_rasterizer_state().Get());
 
         context->VSSetConstantBuffers(
             0, 1, image_based_shader_source->vertex_constant_buffer.GetAddressOf());

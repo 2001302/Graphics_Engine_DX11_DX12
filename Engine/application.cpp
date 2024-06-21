@@ -32,6 +32,7 @@ bool Application::OnStart() {
         ->Excute(std::make_shared<InitializeCamera>())
         ->Excute(std::make_shared<InitializeCubeMapShader>())
         ->Excute(std::make_shared<InitializePhongShader>())
+        ->Excute(std::make_shared<InitializeImageBasedShader>())
         ->Close();
 
     tree->Run();
@@ -55,26 +56,43 @@ bool Application::OnFrame() {
     // Clear the buffers to begin the scene.
     Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
-    auto tree = std::make_unique<BehaviorTreeBuilder>();
+    if (imgui_->GetGlobalTab().render_mode == EnumRenderMode::eCubeMapping &&
+        imgui_->GetGlobalTab().cube_map_setting.use_image_based_lighting) {
+        auto tree = std::make_unique<BehaviorTreeBuilder>();
 
-    tree->Build(dataBlock)
-        ->Sequence()
-        ->Excute(std::make_shared<UpdateCamera>())
-        ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
-        ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
-        ->Close();
+        tree->Build(dataBlock)
+            ->Sequence()
+            ->Excute(std::make_shared<UpdateCamera>())
+            ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
+            ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
+            ->Close();
 
-    tree->Run();
+        tree->Run();
+    } else {
 
-    auto cube_tree = std::make_unique<BehaviorTreeBuilder>();
+        auto tree = std::make_unique<BehaviorTreeBuilder>();
 
-    cube_tree->Build(dataBlock)
-        ->Sequence()
-        ->Excute(std::make_shared<UpdateCubeMap>())
-        ->Excute(std::make_shared<RenderCubeMap>())
-        ->Close();
+        tree->Build(dataBlock)
+            ->Sequence()
+            ->Excute(std::make_shared<UpdateCamera>())
+            ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
+            ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
+            ->Close();
 
-    cube_tree->Run();
+        tree->Run();
+    }
+
+    if (imgui_->GetGlobalTab().render_mode == EnumRenderMode::eCubeMapping) {
+        auto cube_tree = std::make_unique<BehaviorTreeBuilder>();
+
+        cube_tree->Build(dataBlock)
+            ->Sequence()
+            ->Excute(std::make_shared<UpdateCubeMap>())
+            ->Excute(std::make_shared<RenderCubeMap>())
+            ->Close();
+
+        cube_tree->Run();
+    }
 
     input_->Frame();
     imgui_->Frame();

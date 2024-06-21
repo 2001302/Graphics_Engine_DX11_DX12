@@ -145,14 +145,15 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
                 phong_shader_source->vertex_constant_buffer_data.projection =
                     XMMatrixPerspectiveFovLH(
                         XMConvertToRadians(
-                            gui->GetLightTab().projection_fov_angle_y),
-                        aspect, gui->GetLightTab().near_z,
-                        gui->GetLightTab().far_z);
+                            gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
+                        aspect, gui->GetGlobalTab().projection_setting.near_z,
+                        gui->GetGlobalTab().projection_setting.far_z);
             } else {
                 phong_shader_source->vertex_constant_buffer_data.projection =
                     XMMatrixOrthographicOffCenterLH(
-                        -aspect, aspect, -1.0f, 1.0f, gui->GetLightTab().near_z,
-                        gui->GetLightTab().far_z);
+                        -aspect, aspect, -1.0f, 1.0f,
+                        gui->GetGlobalTab().projection_setting.near_z,
+                        gui->GetGlobalTab().projection_setting.far_z);
             }
             phong_shader_source->vertex_constant_buffer_data.projection =
                 phong_shader_source->vertex_constant_buffer_data.projection
@@ -182,13 +183,13 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
         // light
         {
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                if (i != gui->GetLightTab().light_type) {
+                if (i != gui->GetGlobalTab().light_setting.light_type) {
                     phong_shader_source->pixel_constant_buffer_data.lights[i]
                         .strength *= 0.0f;
                 } else {
                     // turn off another light
                     phong_shader_source->pixel_constant_buffer_data.lights[i] =
-                        gui->GetLightTab().light_from_gui;
+                        gui->GetGlobalTab().light_setting.light_from_gui;
                 }
             }
         }
@@ -196,7 +197,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
         phong_shader_source->pixel_constant_buffer_data.useTexture =
             detail->use_texture;
         phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
-            detail->use_blinn_phong;
+            gui->GetGlobalTab().light_setting.use_blinn_phong;
 
         phong_shader->UpdateBuffer(
             phong_shader_source->pixel_constant_buffer_data,
@@ -250,7 +251,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
         context->VSSetShader(phong_shader->vertex_shader.Get(), 0, 0);
         context->PSSetSamplers(0, 1, &phong_shader->sample_state);
 
-        if (gui->GetLightTab().draw_as_wire_)
+        if (gui->GetGlobalTab().draw_as_wire_)
             context->RSSetState(
                 Direct3D::GetInstance().wire_rasterizer_state_.Get());
         else
@@ -554,15 +555,17 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
                     .projection =
                     XMMatrixPerspectiveFovLH(
                         XMConvertToRadians(
-                            gui->GetLightTab().projection_fov_angle_y),
-                        aspect, gui->GetLightTab().near_z,
-                        gui->GetLightTab().far_z);
+                        gui->GetGlobalTab()
+                            .projection_setting.projection_fov_angle_y),
+                    aspect, gui->GetGlobalTab().projection_setting.near_z,
+                    gui->GetGlobalTab().projection_setting.far_z);
             } else {
                 image_based_shader_source->vertex_constant_buffer_data
                     .projection =
                     XMMatrixOrthographicOffCenterLH(
-                        -aspect, aspect, -1.0f, 1.0f, gui->GetLightTab().near_z,
-                        gui->GetLightTab().far_z);
+                    -aspect, aspect, -1.0f, 1.0f,
+                    gui->GetGlobalTab().projection_setting.near_z,
+                    gui->GetGlobalTab().projection_setting.far_z);
             }
             image_based_shader_source->vertex_constant_buffer_data.projection =
                 image_based_shader_source->vertex_constant_buffer_data
@@ -651,7 +654,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
         context->VSSetShader(image_based_shader->vertex_shader.Get(), 0, 0);
         context->PSSetSamplers(0, 1, &image_based_shader->sample_state);
 
-        if (gui->GetLightTab().draw_as_wire_)
+        if (gui->GetGlobalTab().draw_as_wire_)
             context->RSSetState(
                 Direct3D::GetInstance().wire_rasterizer_state_.Get());
         else

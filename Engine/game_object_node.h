@@ -27,7 +27,6 @@ class GameObjectDetailNode : public GraphNode {
     ImVector<LinkInfo> links_;
     int next_link_Id = 100;
 
-    bool use_blinn_phong = false;
     bool use_texture = false;
 
     bool use_perspective_projection = true;

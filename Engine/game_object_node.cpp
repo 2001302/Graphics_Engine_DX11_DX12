@@ -39,7 +39,6 @@ EnumBehaviorTreeStatus GameObjectDetailNode::OnShow() {
     }
 
     ImGui::Checkbox("Use Texture", &use_texture);
-    ImGui::Checkbox("Use BlinnPhong", &use_blinn_phong);
 
     ImGui::Text("Transform");
     ImGui::SliderFloat3("Translation", &translation.x, -2.0f, 2.0f);

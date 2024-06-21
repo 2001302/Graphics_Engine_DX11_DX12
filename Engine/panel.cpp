@@ -105,35 +105,65 @@ void Panel::TabBar() { // Tab Bar
 
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Light")) {
+        if (ImGui::BeginTabItem("Setting")) {
 
-            ImGui::Checkbox("Wire Frame", &light_tab_.draw_as_wire_);
+            ImGui::Checkbox("Wire Frame", &global_setting.draw_as_wire_);
 
-            if (ImGui::RadioButton("Directional Light",
-                                   light_tab_.light_type == 0)) {
-                light_tab_.light_type = 0;
+            if (ImGui::RadioButton("Use Light", global_setting.render_mode ==
+                                                    EnumRenderMode::eLight)) {
+                global_setting.render_mode = EnumRenderMode::eLight;
             }
             ImGui::SameLine();
-            if (ImGui::RadioButton("Point Light", light_tab_.light_type == 1)) {
-                light_tab_.light_type = 1;
-            }
-            ImGui::SameLine();
-            if (ImGui::RadioButton("Spot Light", light_tab_.light_type == 2)) {
-                light_tab_.light_type = 2;
+            if (ImGui::RadioButton("Use CubeMapping",
+                                   global_setting.render_mode ==
+                                       EnumRenderMode::eCubeMapping)) {
+                global_setting.render_mode = EnumRenderMode::eCubeMapping;
             }
 
-            ImGui::SliderFloat3(
-                "Position", &light_tab_.light_from_gui.position.x, -5.0f,
-                                5.0f);
-            ImGui::SliderFloat("Fall Off Start",
-                               &light_tab_.light_from_gui.fallOffStart,
-                               0.0f, 5.0f);
-            ImGui::SliderFloat("Fall Of fEnd",
-                               &light_tab_.light_from_gui.fallOffEnd, 0.0f,
-                               10.0f);
-            ImGui::SliderFloat("Spot Power",
-                               &light_tab_.light_from_gui.spotPower, 1.0f,
-                               512.0f);
+            if (global_setting.render_mode == EnumRenderMode::eLight) {
+                ImGui::Checkbox("Use BlinnPhong",
+                                &global_setting.light_setting.use_blinn_phong);
+
+                if (ImGui::RadioButton(
+                        "Directional Light",
+                        global_setting.light_setting.light_type == 0)) {
+                    global_setting.light_setting.light_type = 0;
+                }
+                ImGui::SameLine();
+                if (ImGui::RadioButton(
+                        "Point Light",
+                        global_setting.light_setting.light_type == 1)) {
+                    global_setting.light_setting.light_type = 1;
+                }
+                ImGui::SameLine();
+                if (ImGui::RadioButton(
+                        "Spot Light",
+                        global_setting.light_setting.light_type == 2)) {
+                    global_setting.light_setting.light_type = 2;
+                }
+
+                ImGui::SliderFloat3(
+                    "Position",
+                    &global_setting.light_setting.light_from_gui.position.x,
+                    -5.0f, 5.0f);
+                ImGui::SliderFloat(
+                    "Fall Off Start",
+                    &global_setting.light_setting.light_from_gui.fallOffStart,
+                    0.0f, 5.0f);
+                ImGui::SliderFloat(
+                    "Fall Of fEnd",
+                    &global_setting.light_setting.light_from_gui.fallOffEnd,
+                    0.0f, 10.0f);
+                ImGui::SliderFloat(
+                    "Spot Power",
+                    &global_setting.light_setting.light_from_gui.spotPower,
+                    1.0f, 512.0f);
+            } else if (global_setting.render_mode ==
+                       EnumRenderMode::eCubeMapping) {
+                ImGui::Checkbox(
+                    "Use Image Based Lighting",
+                    &global_setting.cube_map_setting.use_image_based_lighting);
+            }
 
             ImGui::EndTabItem();
         }

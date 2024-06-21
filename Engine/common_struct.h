@@ -38,6 +38,7 @@ namespace Engine
     enum EnumShaderType {
         ePhong = 0,
         eCube = 1,
+        eImageBased = 2,
     };
 
 	struct Vertex {

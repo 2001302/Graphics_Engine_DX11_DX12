@@ -8,34 +8,36 @@ class InitializeCamera : public ActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class InitializePhongShader : public ActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override;
-    HWND window;
-
-  public:
-    InitializePhongShader() { window = 0; };
-    InitializePhongShader(HWND hwnd) { window = hwnd; };
-};
-
 class UpdateCamera : public ActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class UpdateGameObjects : public ActionNode {
+class InitializeImageBasedShader : public ActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class RenderGameObjects : public ActionNode {
+class UpdateGameObjectsUsingImageBasedShader : public ActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class RenderGameObjectsUsingImageBasedShader : public ActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class InitializePhongShader : public ActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class UpdateGameObjectsUsingPhongShader : public ActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class RenderGameObjectsUsingPhongShader : public ActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
 class InitializeCubeMapShader : public ActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
-    HWND window;
-
-  public:
-    InitializeCubeMapShader() { window = 0; };
-    InitializeCubeMapShader(HWND hwnd) { window = hwnd; };
 };
 
 class UpdateCubeMap : public ActionNode {

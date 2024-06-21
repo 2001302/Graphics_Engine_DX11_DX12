@@ -30,8 +30,8 @@ bool Application::OnStart() {
     tree->Build(dataBlock)
         ->Sequence()
         ->Excute(std::make_shared<InitializeCamera>())
-        ->Excute(std::make_shared<InitializeCubeMapShader>(main_window_))
-        ->Excute(std::make_shared<InitializePhongShader>(main_window_))
+        ->Excute(std::make_shared<InitializeCubeMapShader>())
+        ->Excute(std::make_shared<InitializePhongShader>())
         ->Close();
 
     tree->Run();
@@ -60,8 +60,8 @@ bool Application::OnFrame() {
     tree->Build(dataBlock)
         ->Sequence()
         ->Excute(std::make_shared<UpdateCamera>())
-        ->Excute(std::make_shared<UpdateGameObjects>())
-        ->Excute(std::make_shared<RenderGameObjects>())
+        ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
+        ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
         ->Close();
 
     tree->Run();

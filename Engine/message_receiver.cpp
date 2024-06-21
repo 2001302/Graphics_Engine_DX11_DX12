@@ -1,5 +1,4 @@
 #include "message_receiver.h"
-#include "game_object_node.h"
 
 using namespace Engine;
 using namespace DirectX::SimpleMath;
@@ -278,6 +277,21 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
     manager->shaders[EnumShaderType::ePhong]->CreateConstantBuffer(
         model->phong_shader_source->pixel_constant_buffer_data,
         model->phong_shader_source->pixel_constant_buffer);
+
+    
+    // create constant buffer(Image Based Shader)
+    model->image_based_shader_source = std::make_shared<ImageBasedShaderSource>();
+    model->image_based_shader_source->vertex_constant_buffer_data.model = Matrix();
+    model->image_based_shader_source->vertex_constant_buffer_data.view = Matrix();
+    model->image_based_shader_source->vertex_constant_buffer_data.projection =
+        Matrix();
+
+    manager->shaders[EnumShaderType::eImageBased]->CreateConstantBuffer(
+        model->image_based_shader_source->vertex_constant_buffer_data,
+        model->image_based_shader_source->vertex_constant_buffer);
+    manager->shaders[EnumShaderType::eImageBased]->CreateConstantBuffer(
+        model->image_based_shader_source->pixel_constant_buffer_data,
+        model->image_based_shader_source->pixel_constant_buffer);
 
     model->transform = Matrix();
 

@@ -10,6 +10,7 @@
 #include "input.h"
 #include "phong_shader.h"
 #include "cube_map_shader.h"
+#include "image_based_shader.h"
 
 namespace Engine {
 /// <summary>

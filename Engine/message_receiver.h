@@ -5,6 +5,7 @@
 #include "geometry_generator.h"
 #include "pipeline_manager.h"
 #include "resource_helper.h"
+#include "game_object_node.h"
 
 namespace Engine {
 class MessageReceiver {

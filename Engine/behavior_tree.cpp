@@ -8,8 +8,11 @@ EnumBehaviorTreeStatus BehaviorActionNode::OnInvoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
-void BehaviorActionNode::SetParent(BehaviorActionNode *node) {
+void BehaviorActionNode::Set(
+    BehaviorActionNode *node,
+    std::map<EnumDataBlockType, IDataBlock *> data) {
     parent_node = node;
+    data_block = data;
 }
 
 void BehaviorRootNode::Dispose() {
@@ -21,8 +24,7 @@ void BehaviorRootNode::Dispose() {
 
 BehaviorRootNode *
 BehaviorRootNode::Excute(std::shared_ptr<BehaviorActionNode> node) {
-    node->SetParent(this);
-    node->data_block = data_block;
+    node->Set(this, data_block);
     child_nodes.emplace_back(node);
 
     return this;
@@ -32,7 +34,7 @@ BehaviorRootNode *BehaviorRootNode::Sequence() {
     child_nodes.emplace_back(std::make_shared<SequenceNode>());
 
     auto node = dynamic_cast<BehaviorRootNode *>(child_nodes.back().get());
-    node->data_block = data_block;
+    node->Set(this, data_block);
 
     return node;
 }
@@ -41,7 +43,7 @@ BehaviorRootNode *BehaviorRootNode::Selector() {
     child_nodes.emplace_back(std::make_shared<SelectorNode>());
 
     auto node = dynamic_cast<BehaviorRootNode *>(child_nodes.back().get());
-    node->data_block = data_block;
+    node->Set(this, data_block);
 
     return node;
 }

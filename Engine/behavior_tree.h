@@ -16,9 +16,6 @@ enum EnumBehaviorTreeStatus {
     eFail = 1,
 };
 
-/// <summary>
-/// Dispose Pattern
-/// </summary>
 class IDisposable {
   public:
     ~IDisposable() { Dispose(); };
@@ -27,13 +24,14 @@ class IDisposable {
 
 class BehaviorActionNode : public IDisposable {
   public:
-    void SetParent(BehaviorActionNode *node);
-    std::map<EnumDataBlockType, IDataBlock *> data_block;
     EnumBehaviorTreeStatus Invoke();
+    void Set(BehaviorActionNode *node,
+             std::map<EnumDataBlockType, IDataBlock *> data);
 
   protected:
     virtual EnumBehaviorTreeStatus OnInvoke();
     BehaviorActionNode *parent_node = 0;
+    std::map<EnumDataBlockType, IDataBlock *> data_block;
 };
 
 class BehaviorRootNode : public BehaviorActionNode {

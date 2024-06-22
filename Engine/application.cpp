@@ -26,18 +26,17 @@ bool Application::OnStart() {
     Direct3D::GetInstance().Initialize(env_.get(), VSYNC_ENABLED, main_window_,
                                        FULL_SCREEN);
 
+    // clang-format off
     auto tree = new BehaviorTreeBuilder();
-
-    //clang-format off
     tree->Build(dataBlock)
         ->Sequence()
-        ->Excute(std::make_shared<InitializeCamera>())
-        ->Excute(std::make_shared<InitializeCubeMapShader>())
-        ->Excute(std::make_shared<InitializePhongShader>())
-        ->Excute(std::make_shared<InitializeImageBasedShader>())
+            ->Excute(std::make_shared<InitializeCamera>())
+            ->Excute(std::make_shared<InitializeCubeMapShader>())
+            ->Excute(std::make_shared<InitializePhongShader>())
+            ->Excute(std::make_shared<InitializeImageBasedShader>())
         ->Close()
-        ->Run();
-    //clang-format on
+    ->Run();
+    // clang-format on
 
     input_->Initialize(hinstance_, main_window_, screen_width_, screen_height_);
     imgui_->Initialize(main_window_, env_.get());
@@ -58,7 +57,7 @@ bool Application::OnFrame() {
     // Clear the buffers to begin the scene.
     Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
-    //clang-format off
+    // clang-format off
     auto tree = std::make_unique<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
     ->Conditional(std::make_shared<CheckImageBasedShader>())
@@ -82,7 +81,7 @@ bool Application::OnFrame() {
         ->Close()
     ->End()
     ->Run();
-    //clang-format on
+    // clang-format on
 
     input_->Frame();
     imgui_->Frame();

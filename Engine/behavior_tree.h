@@ -25,64 +25,44 @@ class IDisposable {
     virtual void Dispose(){};
 };
 
-class IBehaviorTreeNode : public IDisposable {
+class BehaviorActionNode : public IDisposable {
   public:
+    void SetParent(BehaviorActionNode *node);
+    std::map<EnumDataBlockType, IDataBlock *> data_block;
+    EnumBehaviorTreeStatus Invoke();
+
+  protected:
     virtual EnumBehaviorTreeStatus OnInvoke();
-    void SetParent(IBehaviorTreeNode *node);
-    std::map<EnumDataBlockType, IDataBlock *> DataBlock;
-
-  protected:
-    IBehaviorTreeNode *parentNode = 0;
+    BehaviorActionNode *parent_node = 0;
 };
 
-class BehaviorTreeRootNode : public IBehaviorTreeNode {
+class BehaviorRootNode : public BehaviorActionNode {
   public:
-    void Dispose() override {
-        for (auto &child : childNodes) {
-            child->Dispose();
-            child.reset();
-        }
-    };
-    BehaviorTreeRootNode *Excute(std::shared_ptr<IBehaviorTreeNode> node);
-    BehaviorTreeRootNode *Sequence();
-    BehaviorTreeRootNode *Selector();
-    BehaviorTreeRootNode *Close();
+    void Dispose() override;
+    BehaviorRootNode *Excute(std::shared_ptr<BehaviorActionNode> node);
+    BehaviorRootNode *Sequence();
+    BehaviorRootNode *Selector();
+    BehaviorRootNode *Close();
 
   protected:
-    std::vector<std::shared_ptr<IBehaviorTreeNode>> childNodes;
+    std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
 };
 
-class SequenceNode : public BehaviorTreeRootNode {
+class SequenceNode : public BehaviorRootNode {
   public:
     SequenceNode(){};
     SequenceNode(std::map<EnumDataBlockType, IDataBlock *> dataBlock) {
-        DataBlock = dataBlock;
+        data_block = dataBlock;
     };
+
+  protected:
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class SelectorNode : public BehaviorTreeRootNode {
-  public:
+class SelectorNode : public BehaviorRootNode {
+  protected:
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class ActionNode : public IBehaviorTreeNode {};
-
-class BehaviorTreeBuilder {
-  public:
-    std::shared_ptr<BehaviorTreeRootNode>
-    Build(std::map<EnumDataBlockType, IDataBlock *> dataBlock) {
-        tree = std::make_shared<SequenceNode>(dataBlock);
-        return tree;
-    }
-    void Run() {
-        tree->OnInvoke();
-        tree->Dispose();
-        tree.reset();
-    }
-
-  private:
-    std::shared_ptr<BehaviorTreeRootNode> tree;
-};
 } // namespace Engine
 #endif

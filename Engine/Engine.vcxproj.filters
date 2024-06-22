@@ -127,6 +127,9 @@
     <ClInclude Include="cube_map_shader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="behavior_tree_builder.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

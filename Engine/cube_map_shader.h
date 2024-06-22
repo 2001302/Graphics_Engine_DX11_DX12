@@ -30,6 +30,7 @@ class CubeMapShaderSource : public IShaderSource {
     BasicVertexConstantBuffer vertex_constant_buffer_data;
     BasicPixelConstantBuffer pixel_constant_buffer_data;
 
+  private:
     void InitializeThis() override {
         vertex_constant_buffer_data.model = Matrix();
         vertex_constant_buffer_data.view = Matrix();

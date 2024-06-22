@@ -1,4 +1,5 @@
 #include "application.h"
+#include "behavior_tree_builder.h"
 
 using namespace Engine;
 

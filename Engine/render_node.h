@@ -4,47 +4,47 @@
 #include "behavior_tree.h"
 
 namespace Engine {
-class InitializeCamera : public ActionNode {
+class InitializeCamera : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class UpdateCamera : public ActionNode {
+class UpdateCamera : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class InitializeImageBasedShader : public ActionNode {
+class InitializeImageBasedShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class UpdateGameObjectsUsingImageBasedShader : public ActionNode {
+class UpdateGameObjectsUsingImageBasedShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class RenderGameObjectsUsingImageBasedShader : public ActionNode {
+class RenderGameObjectsUsingImageBasedShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class InitializePhongShader : public ActionNode {
+class InitializePhongShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class UpdateGameObjectsUsingPhongShader : public ActionNode {
+class UpdateGameObjectsUsingPhongShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class RenderGameObjectsUsingPhongShader : public ActionNode {
+class RenderGameObjectsUsingPhongShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class InitializeCubeMapShader : public ActionNode {
+class InitializeCubeMapShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class UpdateCubeMap : public ActionNode {
+class UpdateCubeMap : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class RenderCubeMap : public ActionNode {
+class RenderCubeMap : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 } // namespace Engine

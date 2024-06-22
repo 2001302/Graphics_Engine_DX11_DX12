@@ -2,56 +2,65 @@
 
 using namespace Engine;
 
-EnumBehaviorTreeStatus IBehaviorTreeNode::OnInvoke() {
+EnumBehaviorTreeStatus BehaviorActionNode::Invoke() { return OnInvoke(); }
+
+EnumBehaviorTreeStatus BehaviorActionNode::OnInvoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
-void IBehaviorTreeNode::SetParent(IBehaviorTreeNode *node) {
-    parentNode = node;
+void BehaviorActionNode::SetParent(BehaviorActionNode *node) {
+    parent_node = node;
 }
 
-BehaviorTreeRootNode *
-BehaviorTreeRootNode::Excute(std::shared_ptr<IBehaviorTreeNode> node) {
+void BehaviorRootNode::Dispose() {
+    for (auto &child : child_nodes) {
+        child->Dispose();
+        child.reset();
+    }
+};
+
+BehaviorRootNode *
+BehaviorRootNode::Excute(std::shared_ptr<BehaviorActionNode> node) {
     node->SetParent(this);
-    node->DataBlock = DataBlock;
-    childNodes.emplace_back(node);
+    node->data_block = data_block;
+    child_nodes.emplace_back(node);
 
     return this;
 }
 
-BehaviorTreeRootNode *BehaviorTreeRootNode::Sequence() {
-    childNodes.emplace_back(std::make_shared<SequenceNode>());
+BehaviorRootNode *BehaviorRootNode::Sequence() {
+    child_nodes.emplace_back(std::make_shared<SequenceNode>());
 
-    auto node = dynamic_cast<BehaviorTreeRootNode *>(childNodes.back().get());
-    node->DataBlock = DataBlock;
-
-    return node;
-}
-
-BehaviorTreeRootNode *BehaviorTreeRootNode::Selector() {
-    childNodes.emplace_back(std::make_shared<SelectorNode>());
-
-    auto node = dynamic_cast<BehaviorTreeRootNode *>(childNodes.back().get());
-    node->DataBlock = DataBlock;
+    auto node = dynamic_cast<BehaviorRootNode *>(child_nodes.back().get());
+    node->data_block = data_block;
 
     return node;
 }
 
-BehaviorTreeRootNode *BehaviorTreeRootNode::Close() {
-    return dynamic_cast<BehaviorTreeRootNode *>(parentNode);
+BehaviorRootNode *BehaviorRootNode::Selector() {
+    child_nodes.emplace_back(std::make_shared<SelectorNode>());
+
+    auto node = dynamic_cast<BehaviorRootNode *>(child_nodes.back().get());
+    node->data_block = data_block;
+
+    return node;
+}
+
+BehaviorRootNode *BehaviorRootNode::Close() {
+    return dynamic_cast<BehaviorRootNode *>(parent_node);
 }
 
 EnumBehaviorTreeStatus SequenceNode::OnInvoke() {
-    for (auto &child : childNodes) {
-        if (child->OnInvoke() == EnumBehaviorTreeStatus::eFail)
+    for (auto &child : child_nodes) {
+        if (child->Invoke() == EnumBehaviorTreeStatus::eFail)
             return EnumBehaviorTreeStatus::eFail;
     }
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
 EnumBehaviorTreeStatus SelectorNode::OnInvoke() {
-    for (auto &child : childNodes) {
-        if (child->OnInvoke() == EnumBehaviorTreeStatus::eSuccess)
+    for (auto &child : child_nodes) {
+        if (child->Invoke() == EnumBehaviorTreeStatus::eSuccess)
             return EnumBehaviorTreeStatus::eSuccess;
     }
     return EnumBehaviorTreeStatus::eSuccess;

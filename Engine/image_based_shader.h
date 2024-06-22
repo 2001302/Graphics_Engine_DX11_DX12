@@ -31,6 +31,7 @@ class ImageBasedShaderSource : public IShaderSource {
     ImageBasedVertexConstantBuffer vertex_constant_buffer_data;
     ImageBasedPixelConstantBuffer pixel_constant_buffer_data;
 
+  private:
     void InitializeThis() override {
         vertex_constant_buffer_data.model = Matrix();
         vertex_constant_buffer_data.view = Matrix();

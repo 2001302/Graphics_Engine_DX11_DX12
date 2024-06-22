@@ -139,6 +139,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="application.h" />
+    <ClInclude Include="behavior_tree_builder.h" />
     <ClInclude Include="cube_map_shader.h" />
     <ClInclude Include="graph.h" />
     <ClInclude Include="render_node.h" />

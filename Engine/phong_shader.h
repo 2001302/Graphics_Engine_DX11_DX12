@@ -41,6 +41,7 @@ class PhongShaderSource : public IShaderSource {
     VertexConstantBuffer vertex_constant_buffer_data;
     PixelConstantBuffer pixel_constant_buffer_data;
 
+  private:
     void InitializeThis() override {
         // create constant buffer(Phong Shader)
         vertex_constant_buffer_data.model = Matrix();

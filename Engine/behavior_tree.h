@@ -16,6 +16,11 @@ enum EnumBehaviorTreeStatus {
     eFail = 1,
 };
 
+enum EnumConditionalStatus {
+    ePass = 0,
+    eSkip = 1,
+};
+
 class IDisposable {
   public:
     ~IDisposable() { Dispose(); };
@@ -25,42 +30,16 @@ class IDisposable {
 class BehaviorActionNode : public IDisposable {
   public:
     EnumBehaviorTreeStatus Invoke();
-    void Set(BehaviorActionNode *node,
-             std::map<EnumDataBlockType, IDataBlock *> data);
+    BehaviorActionNode *GetParent();
+    void Dispose() override;
+    void PushNode(std::shared_ptr<BehaviorActionNode> node);
+    void PopNode();
 
   protected:
     virtual EnumBehaviorTreeStatus OnInvoke();
-    BehaviorActionNode *parent_node = 0;
+    BehaviorActionNode *parent_node;
+    std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
     std::map<EnumDataBlockType, IDataBlock *> data_block;
 };
-
-class BehaviorRootNode : public BehaviorActionNode {
-  public:
-    void Dispose() override;
-    BehaviorRootNode *Excute(std::shared_ptr<BehaviorActionNode> node);
-    BehaviorRootNode *Sequence();
-    BehaviorRootNode *Selector();
-    BehaviorRootNode *Close();
-
-  protected:
-    std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
-};
-
-class SequenceNode : public BehaviorRootNode {
-  public:
-    SequenceNode(){};
-    SequenceNode(std::map<EnumDataBlockType, IDataBlock *> dataBlock) {
-        data_block = dataBlock;
-    };
-
-  protected:
-    EnumBehaviorTreeStatus OnInvoke() override;
-};
-
-class SelectorNode : public BehaviorRootNode {
-  protected:
-    EnumBehaviorTreeStatus OnInvoke() override;
-};
-
 } // namespace Engine
 #endif

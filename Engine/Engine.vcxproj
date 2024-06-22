@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="application.h" />
     <ClInclude Include="behavior_tree_builder.h" />
+    <ClInclude Include="conditional_node.h" />
     <ClInclude Include="cube_map_shader.h" />
     <ClInclude Include="graph.h" />
     <ClInclude Include="render_node.h" />
@@ -172,6 +173,8 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="message_receiver.h" />
     <ClInclude Include="panel.h" />
+    <ClInclude Include="selector_node.h" />
+    <ClInclude Include="sequence_node.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="model_loader.h" />
     <ClInclude Include="image_based_shader.h" />
@@ -184,6 +187,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="application.cpp" />
+    <ClCompile Include="behavior_tree_builder.cpp" />
+    <ClCompile Include="conditional_node.h.cpp" />
     <ClCompile Include="cube_map_shader.cpp" />
     <ClCompile Include="graph.cpp" />
     <ClCompile Include="render_node.cpp" />
@@ -217,6 +222,8 @@
     <ClCompile Include="phong_shader.cpp" />
     <ClCompile Include="platform.cpp" />
     <ClCompile Include="resource_helper.cpp" />
+    <ClCompile Include="selector_node.cpp" />
+    <ClCompile Include="sequence_node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hlsli" />

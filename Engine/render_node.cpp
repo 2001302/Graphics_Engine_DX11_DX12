@@ -145,7 +145,8 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
                 phong_shader_source->vertex_constant_buffer_data.projection =
                     XMMatrixPerspectiveFovLH(
                         XMConvertToRadians(
-                            gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
+                            gui->GetGlobalTab()
+                                .projection_setting.projection_fov_angle_y),
                         aspect, gui->GetGlobalTab().projection_setting.near_z,
                         gui->GetGlobalTab().projection_setting.far_z);
             } else {
@@ -223,8 +224,8 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     auto context = Direct3D::GetInstance().device_context();
 
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    context->ClearRenderTargetView(*Direct3D::GetInstance().render_target_view(),
-                                   clearColor);
+    context->ClearRenderTargetView(
+        *Direct3D::GetInstance().render_target_view(), clearColor);
     context->ClearDepthStencilView(
         Direct3D::GetInstance().depth_stencil_view().Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -552,25 +553,22 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
             const float aspect = env->aspect_;
             if (detail->use_perspective_projection) {
                 image_based_shader_source->vertex_constant_buffer_data
-                    .projection =
-                    XMMatrixPerspectiveFovLH(
-                        XMConvertToRadians(
+                    .projection = XMMatrixPerspectiveFovLH(
+                    XMConvertToRadians(
                         gui->GetGlobalTab()
                             .projection_setting.projection_fov_angle_y),
                     aspect, gui->GetGlobalTab().projection_setting.near_z,
                     gui->GetGlobalTab().projection_setting.far_z);
             } else {
                 image_based_shader_source->vertex_constant_buffer_data
-                    .projection =
-                    XMMatrixOrthographicOffCenterLH(
+                    .projection = XMMatrixOrthographicOffCenterLH(
                     -aspect, aspect, -1.0f, 1.0f,
                     gui->GetGlobalTab().projection_setting.near_z,
                     gui->GetGlobalTab().projection_setting.far_z);
             }
             image_based_shader_source->vertex_constant_buffer_data.projection =
                 image_based_shader_source->vertex_constant_buffer_data
-                    .projection
-                    .Transpose();
+                    .projection.Transpose();
         }
 
         image_based_shader->UpdateBuffer(
@@ -579,23 +577,20 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
 
         // eye
         {
-            image_based_shader_source->pixel_constant_buffer_data
-                .eyeWorld = Vector3::Transform(
-                Vector3(0.0f),
+            image_based_shader_source->pixel_constant_buffer_data.eyeWorld =
+                Vector3::Transform(
+                    Vector3(0.0f),
                     image_based_shader_source->vertex_constant_buffer_data.view
                         .Invert());
         }
         // material
         {
             image_based_shader_source->pixel_constant_buffer_data.material
-                .diffuse =
-                Vector3(detail->diffuse);
+                .diffuse = Vector3(detail->diffuse);
             image_based_shader_source->pixel_constant_buffer_data.material
-                .specular =
-                Vector3(detail->specular);
+                .specular = Vector3(detail->specular);
             image_based_shader_source->pixel_constant_buffer_data.material
-                .shininess =
-                detail->shininess;
+                .shininess = detail->shininess;
         }
 
         image_based_shader_source->pixel_constant_buffer_data.useTexture =
@@ -625,8 +620,8 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
     auto context = Direct3D::GetInstance().device_context();
 
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    context->ClearRenderTargetView(*Direct3D::GetInstance().render_target_view(),
-                                   clearColor);
+    context->ClearRenderTargetView(
+        *Direct3D::GetInstance().render_target_view(), clearColor);
     context->ClearDepthStencilView(
         Direct3D::GetInstance().depth_stencil_view().Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -639,8 +634,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
         // IA: Input-Assembler stage
         auto model = model_map.second;
         auto image_based_shader_source = model->image_based_shader_source;
-        auto image_based_shader =
-            manager->shaders[EnumShaderType::eImageBased];
+        auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
 
         unsigned int stride = sizeof(Vertex);
         unsigned int offset = 0;
@@ -662,18 +656,21 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
                 Direct3D::GetInstance().solid_rasterizer_state().Get());
 
         context->VSSetConstantBuffers(
-            0, 1, image_based_shader_source->vertex_constant_buffer.GetAddressOf());
+            0, 1,
+            image_based_shader_source->vertex_constant_buffer.GetAddressOf());
 
         for (const auto &mesh : model->meshes) {
 
-        ID3D11ShaderResourceView *resViews[3] = {
+            ID3D11ShaderResourceView *resViews[3] = {
                 mesh->textureResourceView.Get(),
                 manager->cube_map->diffuse_resource_view.Get(),
                 manager->cube_map->specular_resource_view.Get()};
             context->PSSetShaderResources(0, 3, resViews);
-            
+
             context->PSSetConstantBuffers(
-                0, 1, image_based_shader_source->pixel_constant_buffer.GetAddressOf());
+                0, 1,
+                image_based_shader_source->pixel_constant_buffer
+                    .GetAddressOf());
             context->PSSetShader(image_based_shader->pixel_shader.Get(), NULL,
                                  0);
 
@@ -690,4 +687,42 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
     }
 
     return EnumBehaviorTreeStatus::eSuccess;
+}
+
+EnumBehaviorTreeStatus CheckImageBasedShader::CheckCondition() {
+    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    assert(gui != nullptr);
+
+    if (gui->GetGlobalTab().render_mode == EnumRenderMode::eCubeMapping &&
+        gui->GetGlobalTab().cube_map_setting.use_image_based_lighting) {
+        return EnumBehaviorTreeStatus::eSuccess;
+    }
+
+    return EnumBehaviorTreeStatus::eFail;
+}
+
+EnumBehaviorTreeStatus CheckImagePhongShader::CheckCondition() {
+    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    assert(gui != nullptr);
+
+    if (!gui->GetGlobalTab().render_mode || EnumRenderMode::eCubeMapping &&
+        !gui->GetGlobalTab().cube_map_setting.use_image_based_lighting) {
+        return EnumBehaviorTreeStatus::eSuccess;
+    }
+
+    return EnumBehaviorTreeStatus::eFail;
+}
+
+EnumBehaviorTreeStatus CheckImageCubeMapShader::CheckCondition() {
+    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    assert(gui != nullptr);
+
+    if (gui->GetGlobalTab().render_mode == EnumRenderMode::eCubeMapping) {
+        return EnumBehaviorTreeStatus::eSuccess;
+    }
+
+    return EnumBehaviorTreeStatus::eFail;
 }

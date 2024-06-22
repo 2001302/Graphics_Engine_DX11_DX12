@@ -130,6 +130,15 @@
     <ClInclude Include="behavior_tree_builder.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
+    <ClInclude Include="conditional_node.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="sequence_node.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="selector_node.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -231,6 +240,18 @@
     </ClCompile>
     <ClCompile Include="cube_map_shader.cpp">
       <Filter>DirectX\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="conditional_node.h.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="sequence_node.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="behavior_tree_builder.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="selector_node.cpp">
+      <Filter>BehaviorTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

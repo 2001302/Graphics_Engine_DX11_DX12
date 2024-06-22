@@ -28,15 +28,16 @@ bool Application::OnStart() {
 
     auto tree = new BehaviorTreeBuilder();
 
+    //clang-format off
     tree->Build(dataBlock)
         ->Sequence()
         ->Excute(std::make_shared<InitializeCamera>())
         ->Excute(std::make_shared<InitializeCubeMapShader>())
         ->Excute(std::make_shared<InitializePhongShader>())
         ->Excute(std::make_shared<InitializeImageBasedShader>())
-        ->Close();
-
-    tree->Run();
+        ->Close()
+        ->Run();
+    //clang-format on
 
     input_->Initialize(hinstance_, main_window_, screen_width_, screen_height_);
     imgui_->Initialize(main_window_, env_.get());
@@ -58,43 +59,29 @@ bool Application::OnFrame() {
     Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
     //clang-format off
-    if (imgui_->GetGlobalTab().render_mode == EnumRenderMode::eCubeMapping &&
-        imgui_->GetGlobalTab().cube_map_setting.use_image_based_lighting) {
-        auto tree = std::make_unique<BehaviorTreeBuilder>();
-
-        tree->Build(dataBlock)
-            ->Sequence()
-                ->Excute(std::make_shared<UpdateCamera>())
-                ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
-                ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
-            ->Close();
-
-        tree->Run();
-    } else {
-
-        auto tree = std::make_unique<BehaviorTreeBuilder>();
-
-        tree->Build(dataBlock)
-            ->Sequence()
-                ->Excute(std::make_shared<UpdateCamera>())
-                ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
-                ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
-            ->Close();
-
-        tree->Run();
-    }
-
-    if (imgui_->GetGlobalTab().render_mode == EnumRenderMode::eCubeMapping) {
-        auto cube_tree = std::make_unique<BehaviorTreeBuilder>();
-
-        cube_tree->Build(dataBlock)
-            ->Sequence()
-                ->Excute(std::make_shared<UpdateCubeMap>())
-                ->Excute(std::make_shared<RenderCubeMap>())
-            ->Close();
-
-        cube_tree->Run();
-    }
+    auto tree = std::make_unique<BehaviorTreeBuilder>();
+    tree->Build(dataBlock)
+    ->Conditional(std::make_shared<CheckImageBasedShader>())
+        ->Sequence()
+            ->Excute(std::make_shared<UpdateCamera>())
+            ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
+            ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
+        ->Close()
+    ->End()
+    ->Conditional(std::make_shared<CheckImagePhongShader>())
+        ->Sequence()
+            ->Excute(std::make_shared<UpdateCamera>())
+            ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
+            ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
+        ->Close()
+    ->End()
+    ->Conditional(std::make_shared<CheckImageCubeMapShader>())
+        ->Sequence()
+            ->Excute(std::make_shared<UpdateCubeMap>())
+            ->Excute(std::make_shared<RenderCubeMap>())
+        ->Close()
+    ->End()
+    ->Run();
     //clang-format on
 
     input_->Frame();

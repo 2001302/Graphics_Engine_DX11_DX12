@@ -210,7 +210,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(
-            "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\ojwD8.jpg",
+            "C:\\Users\\user\\Source\\Engine\\Engine\\data\\ojwD8.jpg",
             mesh->texture, mesh->textureResourceView);
 
         {
@@ -288,7 +288,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(
-            "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\crate2_"
+            "C:\\Users\\user\\Source\\Engine\\Engine\\data\\crate2_"
             "diffuse.png",
             mesh->texture, mesh->textureResourceView);
 
@@ -367,7 +367,7 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(
-            "C:\\Users\\user\\Source\\repos\\Engine\\Engine\\data\\wall.jpg",
+            "C:\\Users\\user\\Source\\Engine\\Engine\\data\\wall.jpg",
             mesh->texture, mesh->textureResourceView);
 
         {

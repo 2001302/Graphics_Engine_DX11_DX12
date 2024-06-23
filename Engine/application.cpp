@@ -60,16 +60,15 @@ bool Application::OnFrame() {
     // clang-format off
     auto tree = std::make_unique<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
+    ->Excute(std::make_shared<UpdateCamera>())
     ->Conditional(std::make_shared<CheckImageBasedShader>())
         ->Sequence()
-            ->Excute(std::make_shared<UpdateCamera>())
             ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
             ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
         ->Close()
     ->End()
     ->Conditional(std::make_shared<CheckImagePhongShader>())
         ->Sequence()
-            ->Excute(std::make_shared<UpdateCamera>())
             ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
             ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
         ->Close()

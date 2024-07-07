@@ -29,7 +29,7 @@ class RenderGameObjectsUsingImageBasedShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class CheckImagePhongShader : public ConditionalNode {
+class CheckPhongShader : public ConditionalNode {
     EnumBehaviorTreeStatus CheckCondition() override;
 };
 
@@ -43,10 +43,6 @@ class UpdateGameObjectsUsingPhongShader : public BehaviorActionNode {
 
 class RenderGameObjectsUsingPhongShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
-};
-
-class CheckImageCubeMapShader : public ConditionalNode {
-    EnumBehaviorTreeStatus CheckCondition() override;
 };
 
 class InitializeCubeMapShader : public BehaviorActionNode {

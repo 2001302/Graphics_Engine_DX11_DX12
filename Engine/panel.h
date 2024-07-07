@@ -14,7 +14,6 @@ struct LightSetting {
     Light light_from_gui;
 };
 struct CubeMapSetting {
-    bool use_image_based_lighting = false;
     int textureToDraw = 0;
 };
 struct ProjectionSetting {
@@ -25,7 +24,8 @@ struct ProjectionSetting {
 enum EnumRenderMode 
 { 
     eLight = 0, 
-    eCubeMapping = 1 
+    eImageBasedLighting = 1,
+    ePhysicallyBasedRendering = 2
 };
 
 struct GlobalTab {

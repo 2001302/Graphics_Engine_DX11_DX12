@@ -714,34 +714,19 @@ EnumBehaviorTreeStatus CheckImageBasedShader::CheckCondition() {
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
 
-    if (gui->GetGlobalTab().render_mode == EnumRenderMode::eCubeMapping &&
-        gui->GetGlobalTab().cube_map_setting.use_image_based_lighting) {
+    if (gui->GetGlobalTab().render_mode == EnumRenderMode::eImageBasedLighting) {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 
     return EnumBehaviorTreeStatus::eFail;
 }
 
-EnumBehaviorTreeStatus CheckImagePhongShader::CheckCondition() {
+EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
 
-    if (!gui->GetGlobalTab().render_mode ||
-        EnumRenderMode::eCubeMapping &&
-            !gui->GetGlobalTab().cube_map_setting.use_image_based_lighting) {
-        return EnumBehaviorTreeStatus::eSuccess;
-    }
-
-    return EnumBehaviorTreeStatus::eFail;
-}
-
-EnumBehaviorTreeStatus CheckImageCubeMapShader::CheckCondition() {
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
-    assert(gui != nullptr);
-
-    if (gui->GetGlobalTab().render_mode == EnumRenderMode::eCubeMapping) {
+    if (gui->GetGlobalTab().render_mode == EnumRenderMode::eLight) {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 

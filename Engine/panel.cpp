@@ -59,7 +59,7 @@ void Panel::NodeEditor() {
     if (selected_object_id_ != -99999) {
         auto graph = pipeline_manager_->behaviors[selected_object_id_];
         graph->Show();
-    } 
+    }
 
     ed::End();
     ed::SetCurrentEditor(nullptr);
@@ -111,10 +111,11 @@ void Panel::TabBar() { // Tab Bar
                 global_setting.render_mode = EnumRenderMode::eLight;
             }
             ImGui::SameLine();
-            if (ImGui::RadioButton("Use CubeMapping",
+            if (ImGui::RadioButton("Use Image Based Lighting",
                                    global_setting.render_mode ==
-                                       EnumRenderMode::eCubeMapping)) {
-                global_setting.render_mode = EnumRenderMode::eCubeMapping;
+                                       EnumRenderMode::eImageBasedLighting)) {
+                global_setting.render_mode =
+                    EnumRenderMode::eImageBasedLighting;
             }
 
             if (global_setting.render_mode == EnumRenderMode::eLight) {
@@ -156,12 +157,10 @@ void Panel::TabBar() { // Tab Bar
                     &global_setting.light_setting.light_from_gui.spotPower,
                     1.0f, 512.0f);
             } else if (global_setting.render_mode ==
-                       EnumRenderMode::eCubeMapping) {
-                ImGui::Checkbox(
-                    "Use Image Based Lighting",
-                    &global_setting.cube_map_setting.use_image_based_lighting);
-
-
+                       EnumRenderMode::eImageBasedLighting) {
+                // ImGui::Checkbox(
+                //     "Texture to draw",
+                //     &global_setting.cube_map_setting.textureToDraw);
             }
 
             ImGui::EndTabItem();

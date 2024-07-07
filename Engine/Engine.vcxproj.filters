@@ -139,6 +139,12 @@
     <ClInclude Include="selector_node.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
+    <ClInclude Include="physically_based_shader.h">
+      <Filter>DirectX\Shader</Filter>
+    </ClInclude>
+    <ClInclude Include="normal_geometry_shader.h">
+      <Filter>DirectX\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -253,6 +259,12 @@
     <ClCompile Include="selector_node.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
+    <ClCompile Include="physically_based_shader.cpp">
+      <Filter>DirectX\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="normal_geometry_shader.cpp">
+      <Filter>DirectX\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Model">
@@ -306,6 +318,9 @@
       <Filter>Gui\ImGui</Filter>
     </None>
     <None Include="packages.config" />
+    <None Include="physically_common.hlsli">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="phong_vertex_shader.hlsl">
@@ -324,6 +339,12 @@
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="cube_mapping_pixel_shader.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="physically_based_vertex_shader.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="physically_based_pixel_shader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

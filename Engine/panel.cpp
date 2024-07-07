@@ -117,6 +117,13 @@ void Panel::TabBar() { // Tab Bar
                 global_setting.render_mode =
                     EnumRenderMode::eImageBasedLighting;
             }
+            ImGui::SameLine();
+            if (ImGui::RadioButton("Use Physically Based Lighting",
+                                   global_setting.render_mode ==
+                                       EnumRenderMode::ePhysicallyBasedRendering)) {
+                global_setting.render_mode =
+                    EnumRenderMode::ePhysicallyBasedRendering;
+            }
 
             if (global_setting.render_mode == EnumRenderMode::eLight) {
                 ImGui::Checkbox("Use BlinnPhong",
@@ -161,7 +168,24 @@ void Panel::TabBar() { // Tab Bar
                 // ImGui::Checkbox(
                 //     "Texture to draw",
                 //     &global_setting.cube_map_setting.textureToDraw);
+            } else if (global_setting.render_mode ==
+                       EnumRenderMode::ePhysicallyBasedRendering) {
+                ImGui::Checkbox("useAlbedoMap",
+                                &global_setting.pbr_setting.useAlbedoMap);
+                ImGui::Checkbox("useNormalMap",
+                                &global_setting.pbr_setting.useNormalMap);
+                ImGui::Checkbox("useAOMap",
+                                &global_setting.pbr_setting.useAOMap);
+                ImGui::Checkbox("invertNormalMapY",
+                                &global_setting.pbr_setting.invertNormalMapY);
+                ImGui::Checkbox("useMetallicMap",
+                                &global_setting.pbr_setting.useMetallicMap);
+                ImGui::Checkbox("useRoughnessMap",
+                                &global_setting.pbr_setting.useRoughnessMap);
+                ImGui::Checkbox("useEmissiveMap",
+                                &global_setting.pbr_setting.useEmissiveMap);
             }
+
 
             ImGui::EndTabItem();
         }

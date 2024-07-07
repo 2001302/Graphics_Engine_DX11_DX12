@@ -13,8 +13,6 @@ struct VertexConstantBuffer {
     Matrix projection;
 };
 
-#define MAX_LIGHTS 3
-
 struct PixelConstantBuffer {
     Vector3 eyeWorld;         // 12
     bool useTexture;          // 4

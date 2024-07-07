@@ -34,6 +34,7 @@ bool Application::OnStart() {
             ->Excute(std::make_shared<InitializeCubeMapShader>())
             ->Excute(std::make_shared<InitializePhongShader>())
             ->Excute(std::make_shared<InitializeImageBasedShader>())
+            ->Excute(std::make_shared<InitializePhysicallyBasedShader>())
         ->Close()
     ->Run();
     // clang-format on
@@ -75,9 +76,16 @@ bool Application::OnFrame() {
             ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
         ->Close()
     ->End()
+    ->Conditional(std::make_shared<CheckPhysicallyBasedShader>())
+        ->Sequence()
+            ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
+            ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
+            ->Excute(std::make_shared<UpdateCubeMap>())
+            ->Excute(std::make_shared<RenderCubeMap>())
+        ->Close()
+    ->End()
     ->Run();
     // clang-format on
-
     input_->Frame();
     imgui_->Frame();
 

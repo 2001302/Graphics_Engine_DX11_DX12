@@ -7,6 +7,7 @@
 #define WM_CYLINDER_LOAD (WM_APP + 3)
 #define WM_SPHERE_LOAD (WM_APP + 4)
 
+// clang-format off
 #include <map>
 #include <vector>
 #include <windows.h>
@@ -17,6 +18,7 @@
 #include <omp.h>		//for omp parallel
 #include <commdlg.h>	//for file open
 #include <wrl.h>
+#include <memory>
 
 #include <d3d11.h>
 #include <directxmath.h>
@@ -25,101 +27,135 @@
 
 #include <assimp/importer.hpp>
 #include <assimp/scene.h>           
-#include <assimp/postprocess.h>     
+#include <assimp/postprocess.h>
+// clang-format on
 
-namespace Engine
-{
-	using DirectX::SimpleMath::Matrix;
-	using DirectX::SimpleMath::Vector2;
-	using DirectX::SimpleMath::Vector3;
-	using DirectX::SimpleMath::Vector4;
-	using Microsoft::WRL::ComPtr;
-
-    enum EnumShaderType {
-        ePhong = 0,
-        eCube = 1,
-        eImageBased = 2,
-    };
-
-	struct Vertex {
-		Vector3 position;
-		Vector3 normal;
-		Vector2 texcoord;
-		//Vector3 color;
-	};
-
-	struct Bone
-	{
-		int index;
-		std::string name;
-		int parent;
-		DirectX::XMMATRIX transform;
-	};
-
-	struct Mesh
-	{
-		std::string name;
-		int boneIndex;
-		std::string materialName;
-		std::string textureFilename;
-		std::vector<Vertex> vertices;
-		std::vector<int> indices;
-
-		ComPtr<ID3D11Texture2D> texture;
-		ComPtr<ID3D11ShaderResourceView> textureResourceView;
-		ComPtr<ID3D11Buffer> vertexBuffer;
-		ComPtr<ID3D11Buffer> indexBuffer;
-	};
-
-	struct KeyframeData
-	{
-		float time;
-		DirectX::XMVECTOR scale;
-		DirectX::XMVECTOR rotation;
-		DirectX::XMVECTOR translation;
-	};
-
-	//a frame of animation
-	struct Keyframe
-	{
-		std::string boneName;
-		std::vector<KeyframeData> transforms;
-	};
-
-	//contains information on how the joints change in each frame.
-	struct Animation
-	{
-		std::string name;
-		int frameCount;
-		float frameRate;//30 이라면 1/30초마다 다음 그림으로 넘어감
-		float duration;
-		std::vector<Keyframe> keyframes;// 매 프레임마다 어떠한 정보로 틀어주면 되는지
-	};
-
-	//for cache
-	struct AnimationNode
-	{
-		aiString name;
-		std::vector<KeyframeData> keyframe;
-	};
-
-	struct Material {
-		Vector3 ambient = Vector3(0.1f);  // 12
-		float shininess = 1.0f;           // 4
-		Vector3 diffuse = Vector3(0.5f);  // 12
-		float dummy1;                     // 4
-		Vector3 specular = Vector3(0.5f); // 12
-		float dummy2;                     // 4
-	};
-
-	struct Light {
-		Vector3 strength = Vector3(1.0f);              // 12
-		float fallOffStart = 0.0f;                     // 4
-		Vector3 direction = Vector3(0.0f, 0.0f, 1.0f); // 12
-		float fallOffEnd = 10.0f;                      // 4
-		Vector3 position = Vector3(0.0f, 0.0f, -2.0f); // 12
-		float spotPower = 1.0f;                        // 4
-	};
-
+namespace Engine {
+inline void ThrowIfFailed(HRESULT hr) {
+    if (FAILED(hr)) {
+        throw std::exception();
+    }
 }
+
+using DirectX::SimpleMath::Matrix;
+using DirectX::SimpleMath::Vector2;
+using DirectX::SimpleMath::Vector3;
+using DirectX::SimpleMath::Vector4;
+using Microsoft::WRL::ComPtr;
+
+enum EnumShaderType {
+    ePhong = 0,
+    eCube = 1,
+    eImageBased = 2,
+    ePhysicallyBased = 3,
+    eNormalGeometry = 4,
+};
+
+struct Vertex {
+    Vector3 position;
+    Vector3 normal;
+    Vector2 texcoord;
+    Vector3 tangent;
+};
+
+struct Bone {
+    int index;
+    std::string name;
+    int parent;
+    DirectX::XMMATRIX transform;
+};
+
+struct Mesh {
+    std::string name;
+    int boneIndex;
+    std::string materialName;
+    std::string textureFilename;
+    std::vector<Vertex> vertices;
+    std::vector<uint32_t> indices;
+
+    ComPtr<ID3D11Texture2D> texture;
+    ComPtr<ID3D11ShaderResourceView> textureResourceView;
+    ComPtr<ID3D11Buffer> vertexBuffer;
+    ComPtr<ID3D11Buffer> indexBuffer;
+
+    ComPtr<ID3D11Texture2D> albedoTexture;
+    ComPtr<ID3D11Texture2D> emissiveTexture;
+    ComPtr<ID3D11Texture2D> normalTexture;
+    ComPtr<ID3D11Texture2D> heightTexture;
+    ComPtr<ID3D11Texture2D> aoTexture;
+    ComPtr<ID3D11Texture2D> metallicTexture;
+    ComPtr<ID3D11Texture2D> roughnessTexture;
+
+    std::string albedoTextureFilename;
+    std::string emissiveTextureFilename;
+    std::string normalTextureFilename;
+    std::string heightTextureFilename;
+    std::string aoTextureFilename; // Ambient Occlusion
+    std::string metallicTextureFilename;
+    std::string roughnessTextureFilename;
+
+    ComPtr<ID3D11ShaderResourceView> albedoSRV;
+    ComPtr<ID3D11ShaderResourceView> emissiveSRV;
+    ComPtr<ID3D11ShaderResourceView> normalSRV;
+    ComPtr<ID3D11ShaderResourceView> heightSRV;
+    ComPtr<ID3D11ShaderResourceView> aoSRV;
+    ComPtr<ID3D11ShaderResourceView> metallicSRV;
+    ComPtr<ID3D11ShaderResourceView> roughnessSRV;
+};
+
+struct KeyframeData {
+    float time;
+    DirectX::XMVECTOR scale;
+    DirectX::XMVECTOR rotation;
+    DirectX::XMVECTOR translation;
+};
+
+// a frame of animation
+struct Keyframe {
+    std::string boneName;
+    std::vector<KeyframeData> transforms;
+};
+
+// contains information on how the joints change in each frame.
+struct Animation {
+    std::string name;
+    int frameCount;
+    float frameRate; // 30 이라면 1/30초마다 다음 그림으로 넘어감
+    float duration;
+    std::vector<Keyframe>
+        keyframes; // 매 프레임마다 어떠한 정보로 틀어주면 되는지
+};
+
+// for cache
+struct AnimationNode {
+    aiString name;
+    std::vector<KeyframeData> keyframe;
+};
+
+struct Material {
+    Vector3 ambient = Vector3(0.1f);  // 12
+    float shininess = 1.0f;           // 4
+    Vector3 diffuse = Vector3(0.5f);  // 12
+    float dummy1;                     // 4
+    Vector3 specular = Vector3(0.5f); // 12
+    float dummy2;                     // 4
+};
+
+struct PhysicallyMatrial {
+    Vector3 albedo = Vector3(1.0f); // 12
+    float roughness = 0.0f;
+    float metallic = 0.0f;
+    Vector3 dummy;
+};
+
+struct Light {
+    Vector3 strength = Vector3(1.0f);              // 12
+    float fallOffStart = 0.0f;                     // 4
+    Vector3 direction = Vector3(0.0f, 0.0f, 1.0f); // 12
+    float fallOffEnd = 10.0f;                      // 4
+    Vector3 position = Vector3(0.0f, 0.0f, -2.0f); // 12
+    float spotPower = 1.0f;                        // 4
+};
+
+} // namespace Engine
 #endif

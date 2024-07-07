@@ -56,5 +56,26 @@ class UpdateCubeMap : public BehaviorActionNode {
 class RenderCubeMap : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
+
+class CheckPhysicallyBasedShader : public ConditionalNode {
+    EnumBehaviorTreeStatus CheckCondition() override;
+};
+
+class InitializePhysicallyBasedShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class UpdateGameObjectsUsingPhysicallyBasedShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class RenderGameObjectsUsingPhysicallyBasedShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class InitializeNormalGeometryShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
 } // namespace Engine
 #endif

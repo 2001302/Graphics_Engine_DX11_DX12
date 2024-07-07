@@ -1,8 +1,11 @@
 ﻿#include "model_loader.h"
 
 #include <filesystem>
+#include <DirectXMesh.h>
+#include <vector>
 
 using namespace Engine;
+using namespace DirectX::SimpleMath;
 
 void ModelLoader::Load(std::string basePath, std::string filename) {
     this->basePath = basePath;
@@ -51,6 +54,41 @@ void ModelLoader::Load(std::string basePath, std::string filename) {
             }
         }
     }*/
+
+    UpdateTangents();
+}
+
+void ModelLoader::UpdateTangents() {
+
+    using namespace std;
+    using namespace DirectX;
+
+    // https://github.com/microsoft/DirectXMesh/wiki/ComputeTangentFrame
+
+    for (auto &m : this->meshes) {
+
+        vector<XMFLOAT3> positions(m.vertices.size());
+        vector<XMFLOAT3> normals(m.vertices.size());
+        vector<XMFLOAT2> texcoords(m.vertices.size());
+        vector<XMFLOAT3> tangents(m.vertices.size());
+        vector<XMFLOAT3> bitangents(m.vertices.size());
+
+        for (size_t i = 0; i < m.vertices.size(); i++) {
+            auto &v = m.vertices[i];
+            positions[i] = v.position;
+            normals[i] = v.normal;
+            texcoords[i] = v.texcoord;
+        }
+
+        ComputeTangentFrame(m.indices.data(), m.indices.size() / 3,
+                            positions.data(), normals.data(), texcoords.data(),
+                            m.vertices.size(), tangents.data(),
+                            bitangents.data());
+
+        for (size_t i = 0; i < m.vertices.size(); i++) {
+            m.vertices[i].tangent = tangents[i];
+        }
+    }
 }
 
 void ModelLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
@@ -86,7 +124,7 @@ void ModelLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
 Mesh ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
     // Data to fill
     std::vector<Vertex> vertices;
-    std::vector<int> indices;
+    std::vector<uint32_t> indices;
 
     // Walk through each of the mesh's vertices
     for (UINT i = 0; i < mesh->mNumVertices; i++) {

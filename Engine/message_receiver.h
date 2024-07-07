@@ -10,7 +10,7 @@
 namespace Engine {
 class MessageReceiver {
   public:
-    bool OnModelLoadRequest(PipelineManager *manager,HWND main_window);
+    bool OnModelLoadRequest(PipelineManager *manager, HWND main_window);
     bool OnSphereLoadRequest(PipelineManager *manager);
     bool OnBoxLoadRequest(PipelineManager *manager);
     bool OnCylinderLoadRequest(PipelineManager *manager);

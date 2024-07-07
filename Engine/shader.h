@@ -4,6 +4,8 @@
 #include "common_struct.h"
 #include "direct3D.h"
 
+#define MAX_LIGHTS 3
+
 namespace Engine {
 class IShader {
   public:
@@ -121,7 +123,7 @@ class IShader {
                       << std::endl;
         };
     }
-    void CreateIndexBuffer(const std::vector<int> &indices,
+    void CreateIndexBuffer(const std::vector<uint32_t> &indices,
                            ComPtr<ID3D11Buffer> &indexBuffer) {
         D3D11_BUFFER_DESC bufferDesc = {};
         bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;

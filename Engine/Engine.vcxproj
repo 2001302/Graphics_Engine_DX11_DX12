@@ -143,6 +143,8 @@
     <ClInclude Include="conditional_node.h" />
     <ClInclude Include="cube_map_shader.h" />
     <ClInclude Include="graph.h" />
+    <ClInclude Include="normal_geometry_shader.h" />
+    <ClInclude Include="physically_based_shader.h" />
     <ClInclude Include="render_node.h" />
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
@@ -191,6 +193,8 @@
     <ClCompile Include="conditional_node.h.cpp" />
     <ClCompile Include="cube_map_shader.cpp" />
     <ClCompile Include="graph.cpp" />
+    <ClCompile Include="normal_geometry_shader.cpp" />
+    <ClCompile Include="physically_based_shader.cpp" />
     <ClCompile Include="render_node.cpp" />
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />
@@ -260,6 +264,21 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
     </FxCompile>
+    <FxCompile Include="physically_based_pixel_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="physically_based_vertex_shader.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <None Include="physically_common.hlsli">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

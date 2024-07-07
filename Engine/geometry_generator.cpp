@@ -33,7 +33,7 @@ GameObject *GeometryGenerator::MakeSphere(GameObject *gameObject,
         }
     }
 
-    std::vector<int> &indices = meshData->indices;
+    std::vector<uint32_t> &indices = meshData->indices;
 
     for (int j = 0; j < numStacks; j++) {
 
@@ -235,7 +235,7 @@ GameObject *GeometryGenerator::MakeCylinder(GameObject *gameObject,
         vertices.push_back(v);
     }
 
-    std::vector<int> &indices = meshData->indices;
+    std::vector<uint32_t> &indices = meshData->indices;
 
     for (int i = 0; i < numSlices; i++) {
         indices.push_back(i);
@@ -462,7 +462,7 @@ CubeMap *GeometryGenerator::MakeSphere(CubeMap *cube_map,
         }
     }
 
-    std::vector<int> &indices = cube_map->mesh->indices;
+    std::vector<uint32_t> &indices = cube_map->mesh->indices;
 
     for (int j = 0; j < numStacks; j++) {
 

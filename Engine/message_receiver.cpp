@@ -128,6 +128,12 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
         model->image_based_shader_source->Initialize(
             manager->shaders[EnumShaderType::eImageBased]);
 
+        // create constant buffer(Physically Based Shader)
+        model->physically_based_shader_source =
+            std::make_shared<PhsicallyBasedShaderSource>();
+        model->physically_based_shader_source->Initialize(
+            manager->shaders[EnumShaderType::ePhysicallyBased]);
+
         model->transform = Matrix();
 
         for (const auto &meshData : model->meshes) {
@@ -188,6 +194,63 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
                                               meshData->texture,
                                               meshData->textureResourceView);
             }
+            {
+                meshData->albedoTextureFilename =
+                    directoryPath + "Default_albedo.jpg";
+                meshData->emissiveTextureFilename =
+                    directoryPath + "Default_emissive.jpg";
+                meshData->metallicTextureFilename =
+                    directoryPath + "Default_metalRoughness.jpg";
+                meshData->normalTextureFilename =
+                    directoryPath + "Default_normal.jpg";
+                meshData->roughnessTextureFilename =
+                    directoryPath + "Default_metalRoughness.jpg";
+
+
+                if (!meshData->albedoTextureFilename.empty()) {
+
+                    ResourceHelper::CreateTexture(
+                        meshData->albedoTextureFilename,
+                        meshData->albedoTexture, meshData->albedoSRV,true);
+                }
+
+                if (!meshData->emissiveTextureFilename.empty()) {
+                    ResourceHelper::CreateTexture(
+                        meshData->emissiveTextureFilename,
+                        meshData->emissiveTexture, meshData->emissiveSRV, true);
+                }
+
+                if (!meshData->normalTextureFilename.empty()) {
+                    ResourceHelper::CreateTexture(
+                        meshData->normalTextureFilename,
+                        meshData->normalTexture, meshData->normalSRV, true);
+                }
+
+                if (!meshData->heightTextureFilename.empty()) {
+                    ResourceHelper::CreateTexture(
+                        meshData->heightTextureFilename,
+                        meshData->heightTexture, meshData->heightSRV, true);
+                }
+
+                if (!meshData->aoTextureFilename.empty()) {
+                    ResourceHelper::CreateTexture(meshData->aoTextureFilename,
+                                                  meshData->aoTexture,
+                                                  meshData->aoSRV, true);
+                }
+
+                if (!meshData->metallicTextureFilename.empty()) {
+                    ResourceHelper::CreateTexture(
+                        meshData->metallicTextureFilename,
+                        meshData->metallicTexture, meshData->metallicSRV, true);
+                }
+
+                if (!meshData->roughnessTextureFilename.empty()) {
+                    ResourceHelper::CreateTexture(
+                        meshData->roughnessTextureFilename,
+                        meshData->roughnessTexture, meshData->roughnessSRV,
+                        true);
+                }
+            }
         }
 
     } else {
@@ -195,6 +258,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
     }
     return true;
 }
+
 
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
@@ -268,6 +332,12 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
         std::make_shared<ImageBasedShaderSource>();
     model->image_based_shader_source->Initialize(
         manager->shaders[EnumShaderType::eImageBased]);
+
+    // create constant buffer(Physically Based Shader)
+    model->physically_based_shader_source =
+        std::make_shared<PhsicallyBasedShaderSource>();
+    model->physically_based_shader_source->Initialize(
+        manager->shaders[EnumShaderType::ePhysicallyBased]);
 
     model->transform = Matrix();
 
@@ -347,6 +417,12 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
     model->image_based_shader_source->Initialize(
         manager->shaders[EnumShaderType::eImageBased]);
 
+    // create constant buffer(Physically Based Shader)
+    model->physically_based_shader_source =
+        std::make_shared<PhsicallyBasedShaderSource>();
+    model->physically_based_shader_source->Initialize(
+        manager->shaders[EnumShaderType::ePhysicallyBased]);
+
     model->transform = Matrix();
 
     return true;
@@ -424,6 +500,12 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
         std::make_shared<ImageBasedShaderSource>();
     model->image_based_shader_source->Initialize(
         manager->shaders[EnumShaderType::eImageBased]);
+
+    // create constant buffer(Physically Based Shader)
+    model->physically_based_shader_source =
+        std::make_shared<PhsicallyBasedShaderSource>();
+    model->physically_based_shader_source->Initialize(
+        manager->shaders[EnumShaderType::ePhysicallyBased]);
 
     model->transform = Matrix();
 

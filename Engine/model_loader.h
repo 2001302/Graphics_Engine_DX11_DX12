@@ -22,6 +22,7 @@ class ModelLoader {
 
     Mesh ProcessMesh(aiMesh *mesh, const aiScene *scene);
 
+    void UpdateTangents();
   public:
     std::string basePath;
     std::vector<Mesh> meshes;

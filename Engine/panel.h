@@ -21,6 +21,15 @@ struct ProjectionSetting {
     float near_z = 0.01f;
     float far_z = 100.0f;
 };
+struct PhysicallyBasedRenderingSetting {
+     bool useAlbedoMap = 0;
+     bool useNormalMap = 0;
+     bool useAOMap = 0;         // Ambient Occlusion
+     bool invertNormalMapY = 0; // 16
+     bool useMetallicMap = 0;
+     bool useRoughnessMap = 0;
+     bool useEmissiveMap = 0;
+};
 enum EnumRenderMode 
 { 
     eLight = 0, 
@@ -34,6 +43,7 @@ struct GlobalTab {
     LightSetting light_setting;
     CubeMapSetting cube_map_setting;
     ProjectionSetting projection_setting;
+    PhysicallyBasedRenderingSetting pbr_setting;
 };
 class Panel : public BaseGui {
 

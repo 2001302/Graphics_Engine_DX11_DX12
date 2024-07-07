@@ -18,7 +18,14 @@ class ResourceHelper {
 
     static void
     CreateTexture(const std::string filename, ComPtr<ID3D11Texture2D> &texture,
-                  ComPtr<ID3D11ShaderResourceView> &textureResourceView);
+                  ComPtr<ID3D11ShaderResourceView> &textureResourceView,
+                  bool usSRGB = false);
+
+    static void
+    CreateTextureArray(const std::vector<std::string> filenames,
+                       ComPtr<ID3D11Texture2D> &texture,
+                       ComPtr<ID3D11ShaderResourceView> &textureResourceView);
+
     static GameObject *ImportModel(GameObject *gameObject,
                                    const char *filename);
     static void ReadModelData(GameObject *gameObject, const aiScene *scene,

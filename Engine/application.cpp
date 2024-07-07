@@ -26,21 +26,21 @@ bool Application::OnStart() {
     Direct3D::GetInstance().Initialize(env_.get(), VSYNC_ENABLED, main_window_,
                                        FULL_SCREEN);
 
-    // clang-format off
-    auto tree = new BehaviorTreeBuilder();
-    tree->Build(dataBlock)
-        ->Sequence()
-            ->Excute(std::make_shared<InitializeCamera>())
-            ->Excute(std::make_shared<InitializeCubeMapShader>())
-            ->Excute(std::make_shared<InitializePhongShader>())
-            ->Excute(std::make_shared<InitializeImageBasedShader>())
-            ->Excute(std::make_shared<InitializePhysicallyBasedShader>())
-        ->Close()
-    ->Run();
-    // clang-format on
-
     input_->Initialize(hinstance_, main_window_, screen_width_, screen_height_);
     imgui_->Initialize(main_window_, env_.get());
+
+    // clang-format off
+    //auto tree = new BehaviorTreeBuilder();
+    //tree->Build(dataBlock)
+    //    ->Sequence()
+    //        ->Excute(std::make_shared<InitializeCamera>())
+    //        ->Excute(std::make_shared<InitializeCubeMapShader>())
+    //        ->Excute(std::make_shared<InitializePhongShader>())
+    //        ->Excute(std::make_shared<InitializeImageBasedShader>())
+    //        ->Excute(std::make_shared<InitializePhysicallyBasedShader>())
+    //    ->Close()
+    //->Run();
+    // clang-format on
 
     OnFrame();
 
@@ -54,40 +54,49 @@ bool Application::OnFrame() {
         {EnumDataBlockType::eEnv, env_.get()},
         {EnumDataBlockType::eGui, imgui_.get()},
     };
+    
+    input_->Frame();
+    imgui_->Frame();
 
     // Clear the buffers to begin the scene.
     Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
     // clang-format off
-    auto tree = std::make_unique<BehaviorTreeBuilder>();
-    tree->Build(dataBlock)
-    ->Excute(std::make_shared<UpdateCamera>())
-    ->Conditional(std::make_shared<CheckImageBasedShader>())
-        ->Sequence()
-            ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
-            ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
-            ->Excute(std::make_shared<UpdateCubeMap>())
-            ->Excute(std::make_shared<RenderCubeMap>())
-        ->Close()
-    ->End()
-    ->Conditional(std::make_shared<CheckPhongShader>())
-        ->Sequence()
-            ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
-            ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
-        ->Close()
-    ->End()
-    ->Conditional(std::make_shared<CheckPhysicallyBasedShader>())
-        ->Sequence()
-            ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
-            ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
-            ->Excute(std::make_shared<UpdateCubeMap>())
-            ->Excute(std::make_shared<RenderCubeMap>())
-        ->Close()
-    ->End()
-    ->Run();
+    //auto tree = std::make_unique<BehaviorTreeBuilder>();
+    //tree->Build(dataBlock)
+    //->Excute(std::make_shared<UpdateCamera>())
+    //->Conditional(std::make_shared<CheckImageBasedShader>())
+    //    ->Sequence()
+    //        ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
+    //        ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
+    //        ->Excute(std::make_shared<UpdateCubeMap>())
+    //        ->Excute(std::make_shared<RenderCubeMap>())
+    //    ->Close()
+    //->End()
+    //->Conditional(std::make_shared<CheckPhongShader>())
+    //    ->Sequence()
+    //        ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
+    //        ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
+    //    ->Close()
+    //->End()
+    //->Conditional(std::make_shared<CheckPhysicallyBasedShader>())
+    //    ->Sequence()
+    //        ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
+    //        ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
+    //        ->Excute(std::make_shared<UpdateCubeMap>())
+    //        ->Excute(std::make_shared<RenderCubeMap>())
+    //    ->Close()
+    //->End()
+    //->Run();
     // clang-format on
-    input_->Frame();
-    imgui_->Frame();
+
+    /*Todo
+    m_context->ResolveSubresource(m_resolvedBuffer.Get(), 0,
+                                  m_floatBuffer.Get(), 0,
+                                  DXGI_FORMAT_R16G16B16A16_FLOAT);
+
+    m_postProcess.Render(m_context);*/
+
 
     // Present the rendered scene to the screen.
     Direct3D::GetInstance().EndScene();

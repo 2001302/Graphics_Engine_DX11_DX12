@@ -225,7 +225,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
 
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     context->ClearRenderTargetView(
-        *Direct3D::GetInstance().render_target_view(), clearColor);
+        Direct3D::GetInstance().render_target_view().Get(), clearColor);
     context->ClearDepthStencilView(
         Direct3D::GetInstance().depth_stencil_view().Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -243,8 +243,9 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
         unsigned int stride = sizeof(Vertex);
         unsigned int offset = 0;
 
+
         context->OMSetRenderTargets(
-            1, Direct3D::GetInstance().render_target_view(),
+            1, Direct3D::GetInstance().render_target_view().GetAddressOf(),
             Direct3D::GetInstance().depth_stencil_view().Get());
         context->OMSetDepthStencilState(
             Direct3D::GetInstance().depth_stencil_state().Get(), 0);
@@ -632,7 +633,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
 
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     context->ClearRenderTargetView(
-        *Direct3D::GetInstance().render_target_view(), clearColor);
+        Direct3D::GetInstance().render_target_view().Get(), clearColor);
     context->ClearDepthStencilView(
         Direct3D::GetInstance().depth_stencil_view().Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -651,7 +652,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
         unsigned int offset = 0;
 
         context->OMSetRenderTargets(
-            1, Direct3D::GetInstance().render_target_view(),
+            1, Direct3D::GetInstance().render_target_view().GetAddressOf(),
             Direct3D::GetInstance().depth_stencil_view().Get());
         context->OMSetDepthStencilState(
             Direct3D::GetInstance().depth_stencil_state().Get(), 0);
@@ -1013,7 +1014,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     context->ClearRenderTargetView(
-        *Direct3D::GetInstance().render_target_view(), clearColor);
+        Direct3D::GetInstance().render_target_view().Get(), clearColor);
     context->ClearDepthStencilView(
         Direct3D::GetInstance().depth_stencil_view().Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -1035,7 +1036,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         unsigned int offset = 0;
 
         std::vector<ID3D11RenderTargetView *> renderTargetViews = {
-            *Direct3D::GetInstance().render_target_view()};
+            Direct3D::GetInstance().render_target_view().Get()};
 
         context->OMSetRenderTargets(
             UINT(renderTargetViews.size()), renderTargetViews.data(),

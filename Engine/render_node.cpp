@@ -370,10 +370,16 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     auto env = dynamic_cast<Engine::Env *>(envBlock);
     assert(env != nullptr);
 
+    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    assert(gui != nullptr);
+
     auto cube_map = manager->cube_map;
 
     auto cube_shader_source = cube_map->cube_map_shader_source;
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
+
+    cube_shader_source->pixel_constant_buffer_data.textureToDraw =
+        gui->GetGlobalTab().cube_map_setting.textureToDraw;
 
     {
         cube_shader_source->vertex_constant_buffer_data.view =
@@ -665,10 +671,10 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
         for (const auto &mesh : model->meshes) {
 
             std::vector<ID3D11ShaderResourceView *> resViews = {
+                mesh->textureResourceView.Get(),
                 manager->cube_map->specular_SRV.Get(),
                 manager->cube_map->irradiance_SRV.Get(),
-                manager->cube_map->brdf_SRV.Get(),
-                mesh->textureResourceView.Get(),};
+            };
             context->PSSetShaderResources(0, UINT(resViews.size()),
                                           resViews.data());
 

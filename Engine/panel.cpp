@@ -160,6 +160,8 @@ void Panel::TabBar() { // Tab Bar
                 ImGui::Checkbox(
                     "Use Image Based Lighting",
                     &global_setting.cube_map_setting.use_image_based_lighting);
+
+
             }
 
             ImGui::EndTabItem();

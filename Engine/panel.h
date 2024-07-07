@@ -15,6 +15,7 @@ struct LightSetting {
 };
 struct CubeMapSetting {
     bool use_image_based_lighting = false;
+    int textureToDraw = 0;
 };
 struct ProjectionSetting {
     float projection_fov_angle_y = 70.0f;

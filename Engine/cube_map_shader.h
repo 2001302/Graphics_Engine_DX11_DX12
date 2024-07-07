@@ -7,14 +7,14 @@
 using namespace DirectX;
 
 namespace Engine {
-struct BasicVertexConstantBuffer {
+struct CubeMapVertexConstantBuffer {
     Matrix model;
     Matrix invTranspose;
     Matrix view;
     Matrix projection;
 };
 
-struct BasicPixelConstantBuffer {
+struct CubeMapPixelConstantBuffer {
     int textureToDraw = 0; // 0: Env, 1: Specular, 2: Irradiance
     float mipLevel = 0.0f;
     float dummy1;
@@ -30,8 +30,8 @@ class CubeMapShaderSource : public IShaderSource {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
-    BasicVertexConstantBuffer vertex_constant_buffer_data;
-    BasicPixelConstantBuffer pixel_constant_buffer_data;
+    CubeMapVertexConstantBuffer vertex_constant_buffer_data;
+    CubeMapPixelConstantBuffer pixel_constant_buffer_data;
 
   private:
     void InitializeThis() override {

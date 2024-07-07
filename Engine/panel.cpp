@@ -148,7 +148,7 @@ void Panel::TabBar() { // Tab Bar
                     &global_setting.light_setting.light_from_gui.fallOffStart,
                     0.0f, 5.0f);
                 ImGui::SliderFloat(
-                    "Fall Of fEnd",
+                    "Fall Off End",
                     &global_setting.light_setting.light_from_gui.fallOffEnd,
                     0.0f, 10.0f);
                 ImGui::SliderFloat(

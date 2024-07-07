@@ -97,8 +97,8 @@ void BaseGui::RecreateFontAtlas() {
     config.PixelSnapH = false;
 
     default_font_ = io.Fonts->AddFontFromFileTTF(
-        "../Engine/data/Play-Regular.ttf", 18.0f, &config);
-    header_font = io.Fonts->AddFontFromFileTTF("../Engine/data/Cuprum-Bold.ttf",
+        "../Engine/Assets/Fonts/Play-Regular.ttf", 18.0f, &config);
+    header_font = io.Fonts->AddFontFromFileTTF("../Engine/Assets/Fonts/Cuprum-Bold.ttf",
                                                20.0f, &config);
 
     io.Fonts->Build();

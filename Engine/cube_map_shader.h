@@ -15,12 +15,15 @@ struct BasicVertexConstantBuffer {
 };
 
 struct BasicPixelConstantBuffer {
-    float dummy[4];
+    int textureToDraw = 0; // 0: Env, 1: Specular, 2: Irradiance
+    float mipLevel = 0.0f;
+    float dummy1;
+    float dummy2;
 };
 
 class CubeMapShader : public IShader {
   public:
-    void CreateCubemapTexture(const wchar_t *filename,
+    void CreateDDSTexture(const wchar_t *filename,
                               ComPtr<ID3D11ShaderResourceView> &texResView);
 };
 class CubeMapShaderSource : public IShaderSource {

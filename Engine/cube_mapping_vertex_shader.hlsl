@@ -7,26 +7,22 @@ cbuffer BasicVertexConstantBuffer : register(b0) {
     matrix projection;
 };
 
-PixelShaderInput main(VertexShaderInput input) {
+struct CubeMappingPixelShaderInput {
+    float4 posProj : SV_POSITION;
+    float3 posModel : POSITION;
+};
 
-    PixelShaderInput output;
+CubeMappingPixelShaderInput main(VertexShaderInput input) {
+
+    CubeMappingPixelShaderInput output;
     float4 pos = float4(input.posModel, 1.0f);
 
     pos = mul(pos, model); // Identity
-
-    output.posWorld = pos.xyz;
-
-    float4 normal = float4(input.normalModel, 0.0f);
-    output.normalWorld = mul(normal, invTranspose).xyz;
-    output.normalWorld = normalize(output.normalWorld);
-
     pos = mul(pos, view);
-
     pos = mul(pos, projection);
-    output.posProj = pos;
 
-    output.texcoord = input.texcoord;
-    output.color = float3(1.0, 1.0, 0.0);
+    output.posProj = pos;
+    output.posModel = input.posModel;
 
     return output;
 }

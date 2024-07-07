@@ -293,7 +293,7 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     assert(manager != nullptr);
 
     manager->cube_map = std::make_shared<CubeMap>();
-    GeometryGenerator::MakeSphere(manager->cube_map.get(), 20.0f, 15, 13);
+    GeometryGenerator::MakeBox(manager->cube_map.get());
 
     auto graph = std::make_shared<Graph>();
     graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
@@ -305,19 +305,20 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     std::reverse(manager->cube_map->mesh->indices.begin(),
                  manager->cube_map->mesh->indices.end());
 
-    auto skyboxFilename = L"./CubemapTextures/skybox.dds";
-    auto nightPathFilename = L"./CubemapTextures/HumusTextures/NightPath.dds";
-    auto atribumDiffuseFilename = L"./CubemapTextures/Atrium_diffuseIBL.dds";
-    auto atribumSpecularFilename = L"./CubemapTextures/Atrium_specularIBL.dds";
-    auto stonewallSpecularFilename =
-        L"./CubemapTextures/Stonewall_specularIBL.dds";
-    auto stonewallDiffuseFilename =
-        L"./CubemapTextures/Stonewall_diffuseIBL.dds";
+    auto envFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
+    auto specularFilename =
+        L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
+    auto irradianceFilename =
+        L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
+    auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-    cube_map_shader->CreateCubemapTexture(
-        stonewallDiffuseFilename, manager->cube_map->diffuse_resource_view);
-    cube_map_shader->CreateCubemapTexture(
-        stonewallSpecularFilename, manager->cube_map->specular_resource_view);
+    cube_map_shader->CreateDDSTexture(envFilename, manager->cube_map->env_SRV);
+    cube_map_shader->CreateDDSTexture(specularFilename,
+                                      manager->cube_map->specular_SRV);
+    cube_map_shader->CreateDDSTexture(irradianceFilename,
+                                      manager->cube_map->irradiance_SRV);
+    cube_map_shader->CreateDDSTexture(brdfFilename,
+                                      manager->cube_map->brdf_SRV);
 
     manager->cube_map->cube_map_shader_source =
         std::make_shared<CubeMapShaderSource>();
@@ -435,10 +436,12 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     context->VSSetConstantBuffers(0, 1,
                                   cube_map->cube_map_shader_source
                                       ->vertex_constant_buffer.GetAddressOf());
-    ID3D11ShaderResourceView *views[2] = {
-        cube_map->diffuse_resource_view.Get(),
-        cube_map->specular_resource_view.Get()};
-    context->PSSetShaderResources(0, 2, views);
+
+    std::vector<ID3D11ShaderResourceView *> srvs = {
+        cube_map->env_SRV.Get(), cube_map->specular_SRV.Get(),
+        cube_map->irradiance_SRV.Get()};
+    context->PSSetShaderResources(0, UINT(srvs.size()), srvs.data());
+
     context->PSSetShader(cube_map_shader->pixel_shader.Get(), 0, 0);
     context->PSSetSamplers(0, 1, cube_map_shader->sample_state.GetAddressOf());
 
@@ -661,11 +664,22 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
 
         for (const auto &mesh : model->meshes) {
 
-            ID3D11ShaderResourceView *resViews[3] = {
-                mesh->textureResourceView.Get(),
-                manager->cube_map->diffuse_resource_view.Get(),
-                manager->cube_map->specular_resource_view.Get()};
-            context->PSSetShaderResources(0, 3, resViews);
+            std::vector<ID3D11ShaderResourceView *> resViews = {
+                manager->cube_map->specular_SRV.Get(),
+                manager->cube_map->irradiance_SRV.Get(),
+                manager->cube_map->brdf_SRV.Get(),
+                mesh->textureResourceView.Get(),};
+            context->PSSetShaderResources(0, UINT(resViews.size()),
+                                          resViews.data());
+
+            /*std::vector<ID3D11ShaderResourceView *> resViews = {
+                m_specularSRV.Get(),     m_irradianceSRV.Get(),
+                m_brdfSRV.Get(),         mesh->albedoSRV.Get(),
+                mesh->normalSRV.Get(),   mesh->aoSRV.Get(),
+                mesh->metallicSRV.Get(), mesh->roughnessSRV.Get(),
+                mesh->emissiveSRV.Get()};
+            context->PSSetShaderResources(0, UINT(resViews.size()),
+                                          resViews.data());*/
 
             context->PSSetConstantBuffers(
                 0, 1,
@@ -707,8 +721,9 @@ EnumBehaviorTreeStatus CheckImagePhongShader::CheckCondition() {
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
 
-    if (!gui->GetGlobalTab().render_mode || EnumRenderMode::eCubeMapping &&
-        !gui->GetGlobalTab().cube_map_setting.use_image_based_lighting) {
+    if (!gui->GetGlobalTab().render_mode ||
+        EnumRenderMode::eCubeMapping &&
+            !gui->GetGlobalTab().cube_map_setting.use_image_based_lighting) {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 

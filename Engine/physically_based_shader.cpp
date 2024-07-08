@@ -296,9 +296,9 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
             context->PSSetShader(physically_shader->pixel_shader.Get(), 0, 0);
 
             std::vector<ID3D11ShaderResourceView *> resViews = {
-                manager->cube_map->specular_SRV.Get(),
-                manager->cube_map->irradiance_SRV.Get(),
-                manager->cube_map->brdf_SRV.Get(),
+                manager->cube_map->cube_map_shader_source->specular_SRV.Get(),
+                manager->cube_map->cube_map_shader_source->irradiance_SRV.Get(),
+                manager->cube_map->cube_map_shader_source->brdf_SRV.Get(),
                 mesh->albedoSRV.Get(),
                 mesh->normalSRV.Get(),
                 mesh->aoSRV.Get(),

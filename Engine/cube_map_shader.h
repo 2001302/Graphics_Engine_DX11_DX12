@@ -31,6 +31,10 @@ struct CubeMapShaderSource : public IShaderSource {
     CubeMapShader::CubeMapVertexConstantBuffer vertex_constant_buffer_data;
     CubeMapShader::CubeMapPixelConstantBuffer pixel_constant_buffer_data;
 
+    ComPtr<ID3D11ShaderResourceView> env_SRV;
+    ComPtr<ID3D11ShaderResourceView> specular_SRV;   // Radiance
+    ComPtr<ID3D11ShaderResourceView> irradiance_SRV; // Diffuse
+    ComPtr<ID3D11ShaderResourceView> brdf_SRV;       // BRDF LookUpTable
   private:
     void InitializeThis() override;
 };

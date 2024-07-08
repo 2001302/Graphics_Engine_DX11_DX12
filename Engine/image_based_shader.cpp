@@ -244,8 +244,8 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
 
             std::vector<ID3D11ShaderResourceView *> resViews = {
                 mesh->textureResourceView.Get(),
-                manager->cube_map->specular_SRV.Get(),
-                manager->cube_map->irradiance_SRV.Get(),
+                manager->cube_map->cube_map_shader_source->specular_SRV.Get(),
+                manager->cube_map->cube_map_shader_source->irradiance_SRV.Get(),
             };
             context->PSSetShaderResources(0, UINT(resViews.size()),
                                           resViews.data());

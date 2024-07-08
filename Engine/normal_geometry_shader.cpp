@@ -5,6 +5,13 @@
 
 using namespace Engine;
 
+void NormalGeometryShaderSource::InitializeThis() {
+    Direct3D::GetInstance().CreateConstantBuffer(vertex_constant_buffer_data,
+                                                 vertex_constant_buffer);
+    Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
+                                                 pixel_constant_buffer);
+}
+
 EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 

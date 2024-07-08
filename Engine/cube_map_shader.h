@@ -7,42 +7,32 @@
 using namespace DirectX;
 
 namespace Engine {
-struct CubeMapVertexConstantBuffer {
-    Matrix model;
-    Matrix invTranspose;
-    Matrix view;
-    Matrix projection;
-};
-
-struct CubeMapPixelConstantBuffer {
-    int textureToDraw = 0; // 0: Env, 1: Specular, 2: Irradiance
-    float mipLevel = 0.0f;
-    float dummy1;
-    float dummy2;
-};
 
 class CubeMapShader : public IShader {
   public:
+    struct CubeMapVertexConstantBuffer {
+        Matrix model;
+        Matrix invTranspose;
+        Matrix view;
+        Matrix projection;
+    };
+
+    struct CubeMapPixelConstantBuffer {
+        int textureToDraw = 0; // 0: Env, 1: Specular, 2: Irradiance
+        float mipLevel = 0.0f;
+        float dummy1;
+        float dummy2;
+    };
 };
 class CubeMapShaderSource : public IShaderSource {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
-    CubeMapVertexConstantBuffer vertex_constant_buffer_data;
-    CubeMapPixelConstantBuffer pixel_constant_buffer_data;
+    CubeMapShader::CubeMapVertexConstantBuffer vertex_constant_buffer_data;
+    CubeMapShader::CubeMapPixelConstantBuffer pixel_constant_buffer_data;
 
   private:
-    void InitializeThis() override {
-        vertex_constant_buffer_data.model = Matrix();
-        vertex_constant_buffer_data.view = Matrix();
-        vertex_constant_buffer_data.projection = Matrix();
-
-        Direct3D::GetInstance().CreateConstantBuffer(
-            vertex_constant_buffer_data,
-                                      vertex_constant_buffer);
-        Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
-                                      pixel_constant_buffer);
-    }
+    void InitializeThis() override;
 };
 
 class InitializeCubeMapShader : public BehaviorActionNode {

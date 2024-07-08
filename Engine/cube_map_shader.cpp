@@ -5,6 +5,17 @@
 
 using namespace Engine;
 
+void CubeMapShaderSource::InitializeThis() {
+    vertex_constant_buffer_data.model = Matrix();
+    vertex_constant_buffer_data.view = Matrix();
+    vertex_constant_buffer_data.projection = Matrix();
+
+    Direct3D::GetInstance().CreateConstantBuffer(vertex_constant_buffer_data,
+                                                 vertex_constant_buffer);
+    Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
+                                                 pixel_constant_buffer);
+}
+
 EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 
@@ -32,13 +43,13 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
     Direct3D::GetInstance().CreateDDSTexture(envFilename,
-                                              manager->cube_map->env_SRV);
+                                             manager->cube_map->env_SRV);
     Direct3D::GetInstance().CreateDDSTexture(specularFilename,
-                                      manager->cube_map->specular_SRV);
+                                             manager->cube_map->specular_SRV);
     Direct3D::GetInstance().CreateDDSTexture(irradianceFilename,
-                                      manager->cube_map->irradiance_SRV);
+                                             manager->cube_map->irradiance_SRV);
     Direct3D::GetInstance().CreateDDSTexture(brdfFilename,
-                                      manager->cube_map->brdf_SRV);
+                                             manager->cube_map->brdf_SRV);
 
     manager->cube_map->cube_map_shader_source =
         std::make_shared<CubeMapShaderSource>();

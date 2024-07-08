@@ -8,16 +8,12 @@ using namespace DirectX;
 
 namespace Engine {
 
-struct NormalGeometryVertexConstantBuffer {
-
-};
-
-struct NormalGeometryPixelConstantBuffer {
-
-};
-
 class NormalGeometryShader : public IShader {
   public:
+    struct NormalGeometryVertexConstantBuffer {};
+
+    struct NormalGeometryPixelConstantBuffer {};
+
     ComPtr<ID3D11GeometryShader> normalGeometryShader;
 };
 
@@ -25,17 +21,13 @@ class NormalGeometryShaderSource : public IShaderSource {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
-    NormalGeometryVertexConstantBuffer vertex_constant_buffer_data;
-    NormalGeometryPixelConstantBuffer pixel_constant_buffer_data;
+    NormalGeometryShader::NormalGeometryVertexConstantBuffer
+        vertex_constant_buffer_data;
+    NormalGeometryShader::NormalGeometryPixelConstantBuffer
+        pixel_constant_buffer_data;
 
   private:
-    void InitializeThis() override {
-        Direct3D::GetInstance().CreateConstantBuffer(
-            vertex_constant_buffer_data,
-                                      vertex_constant_buffer);
-        Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
-                                      pixel_constant_buffer);
-    }
+    void InitializeThis() override;
 };
 
 class InitializeNormalGeometryShader : public BehaviorActionNode {

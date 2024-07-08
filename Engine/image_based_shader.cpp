@@ -5,6 +5,17 @@
 
 using namespace Engine;
 
+void ImageBasedShaderSource::InitializeThis() {
+    vertex_constant_buffer_data.model = Matrix();
+    vertex_constant_buffer_data.view = Matrix();
+    vertex_constant_buffer_data.projection = Matrix();
+
+    Direct3D::GetInstance().CreateConstantBuffer(vertex_constant_buffer_data,
+                                                 vertex_constant_buffer);
+    Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
+                                                 pixel_constant_buffer);
+}
+
 EnumBehaviorTreeStatus CheckImageBasedShader::CheckCondition() {
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);

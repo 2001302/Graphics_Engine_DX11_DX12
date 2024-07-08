@@ -8,7 +8,7 @@ using namespace Engine;
 static Platform *g_system = nullptr;
 
 Platform::Platform()
-    : screen_width_(1280), screen_height_(960), main_window_(0),
+    : screen_width_(1920), screen_height_(1080), main_window_(0),
       application_name_(0), hinstance_(0) {
     g_system = this;
 }

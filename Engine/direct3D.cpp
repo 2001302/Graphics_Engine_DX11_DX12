@@ -204,9 +204,6 @@ void Direct3D::CreateDepthBuffer(
 }
 
 void Direct3D::SetViewPort(float x, float y, float width, float height) {
-    const float SCREEN_DEPTH = 1000.0f;
-    const float SCREEN_NEAR = 0.3f;
-
     // Setup the viewport for rendering.
     viewport_.Width = (float)width;
     viewport_.Height = (float)height;

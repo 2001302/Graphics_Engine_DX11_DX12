@@ -42,12 +42,13 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
     Direct3D::GetInstance().CreateDDSTexture(envFilename,
-                                             manager->cube_map->cube_map_shader_source->env_SRV);
+                                             manager->cube_map->env_SRV);
     Direct3D::GetInstance().CreateDDSTexture(specularFilename,
-        manager->cube_map->cube_map_shader_source->specular_SRV);
+                                             manager->cube_map->specular_SRV);
     Direct3D::GetInstance().CreateDDSTexture(irradianceFilename,
-        manager->cube_map->cube_map_shader_source->irradiance_SRV);
-    Direct3D::GetInstance().CreateDDSTexture(brdfFilename, manager->cube_map->cube_map_shader_source->brdf_SRV);
+                                             manager->cube_map->irradiance_SRV);
+    Direct3D::GetInstance().CreateDDSTexture(brdfFilename,
+                                             manager->cube_map->brdf_SRV);
 
     manager->cube_map->cube_map_shader_source =
         std::make_shared<CubeMapShaderSource>();
@@ -176,9 +177,8 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
                                       ->vertex_constant_buffer.GetAddressOf());
 
     std::vector<ID3D11ShaderResourceView *> srvs = {
-        cube_map->cube_map_shader_source->env_SRV.Get(),
-        cube_map->cube_map_shader_source->specular_SRV.Get(),
-        cube_map->cube_map_shader_source->irradiance_SRV.Get()};
+        cube_map->env_SRV.Get(), cube_map->specular_SRV.Get(),
+        cube_map->irradiance_SRV.Get()};
     context->PSSetShaderResources(0, UINT(srvs.size()), srvs.data());
 
     context->PSSetShader(cube_map_shader->pixel_shader.Get(), 0, 0);

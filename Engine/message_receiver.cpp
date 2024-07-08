@@ -108,13 +108,13 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
         std::string fileName = fullPath.substr(lastSlash + 1);
         std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
-        auto model = std::make_shared<GameObject>();
+        auto model = std::make_shared<Model>();
         manager->models[model->GetEntityId()] = model;
         GeometryGenerator::ReadFromFile(model.get(), directoryPath, fileName);
         model->SetName(fileName);
 
         auto graph = std::make_shared<Graph>();
-        graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
+        graph->SetDetailNode(std::make_shared<ModelDetailNode>());
         manager->behaviors[model->GetEntityId()] = graph;
 
         model->transform = Matrix();
@@ -233,12 +233,12 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
-    auto model = std::make_shared<GameObject>();
+    auto model = std::make_shared<Model>();
     model->SetName("sphere");
     manager->models[model->GetEntityId()] = model;
 
     auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
+    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
     manager->behaviors[model->GetEntityId()] = graph;
 
     GeometryGenerator::MakeSphere(model.get(), 1.5f, 15, 13);
@@ -302,12 +302,12 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
 bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
-    auto model = std::make_shared<GameObject>();
+    auto model = std::make_shared<Model>();
     model->SetName("box");
     manager->models[model->GetEntityId()] = model;
 
     auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
+    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
     manager->behaviors[model->GetEntityId()] = graph;
 
     GeometryGenerator::MakeBox(model.get());
@@ -371,12 +371,12 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
 bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
-    auto model = std::make_shared<GameObject>();
+    auto model = std::make_shared<Model>();
     model->SetName("cylinder");
     manager->models[model->GetEntityId()] = model;
 
     auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
+    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
     manager->behaviors[model->GetEntityId()] = graph;
 
     GeometryGenerator::MakeCylinder(model.get(), 5.0f, 5.0f, 15.0f, 30);

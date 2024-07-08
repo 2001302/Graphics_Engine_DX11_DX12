@@ -7,7 +7,7 @@
 using namespace DirectX;
 
 namespace Engine {
-class ImageBasedShader : public IShader {
+struct ImageBasedShader : public IShader {
   public:
     struct ImageBasedVertexConstantBuffer {
         Matrix model;
@@ -23,7 +23,7 @@ class ImageBasedShader : public IShader {
     };
 };
 
-class ImageBasedShaderSource : public IShaderSource {
+struct ImageBasedShaderSource : public IShaderSource {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;

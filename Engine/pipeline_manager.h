@@ -5,7 +5,7 @@
 #include "cube_map.h"
 #include "dataBlock.h"
 #include "direct3D.h"
-#include "game_object.h"
+#include "model.h"
 #include "graph.h"
 #include "input.h"
 #include "phong_shader.h"
@@ -20,7 +20,7 @@ namespace Engine {
 /// </summary>
 class PipelineManager : public IDataBlock {
   public:
-    std::map<int /*id*/, std::shared_ptr<GameObject>> models;
+    std::map<int /*id*/, std::shared_ptr<Model>> models;
     std::map<int /*id*/, std::shared_ptr<Graph>> behaviors;
     std::map<EnumShaderType, std::shared_ptr<IShader>> shaders;
     std::shared_ptr<CubeMap> cube_map;

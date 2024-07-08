@@ -8,8 +8,7 @@ using namespace DirectX;
 
 namespace Engine {
 
-class PhsicallyBasedShader : public IShader {
-  public:
+struct PhsicallyBasedShader : public IShader {
     struct PhsicallyBasedVertexConstantBuffer {
         Matrix modelWorld;
         Matrix invTranspose;
@@ -42,7 +41,7 @@ class PhsicallyBasedShader : public IShader {
     ComPtr<ID3D11SamplerState> clampSamplerState;
 };
 
-class PhsicallyBasedShaderSource : public IShaderSource {
+struct PhsicallyBasedShaderSource : public IShaderSource {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;

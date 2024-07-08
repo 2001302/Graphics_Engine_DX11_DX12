@@ -1,5 +1,4 @@
 #include "physically_based_shader.h"
-#include "game_object_node.h"
 #include "geometry_generator.h"
 #include "panel.h"
 
@@ -104,7 +103,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         auto &model = model_amp.second;
         auto graph = manager->behaviors[model->GetEntityId()];
 
-        auto detail = dynamic_cast<Engine::GameObjectDetailNode *>(
+        auto detail = dynamic_cast<Engine::ModelDetailNode *>(
             graph->GetDetailNode().get());
         assert(detail != nullptr);
 

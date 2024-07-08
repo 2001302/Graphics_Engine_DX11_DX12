@@ -8,7 +8,7 @@ using namespace DirectX;
 
 namespace Engine {
 
-class CubeMapShader : public IShader {
+struct CubeMapShader : public IShader {
   public:
     struct CubeMapVertexConstantBuffer {
         Matrix model;
@@ -24,7 +24,7 @@ class CubeMapShader : public IShader {
         float dummy2;
     };
 };
-class CubeMapShaderSource : public IShaderSource {
+struct CubeMapShaderSource : public IShaderSource {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;

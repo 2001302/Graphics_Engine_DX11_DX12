@@ -11,8 +11,7 @@ namespace Engine {
 /// <summary>
 /// 공유되어 사용되는 Phong Shader
 /// </summary>
-class PhongShader : public IShader {
-  public:
+struct PhongShader : public IShader {
     struct VertexConstantBuffer {
         Matrix model;
         Matrix invTranspose;
@@ -33,7 +32,7 @@ class PhongShader : public IShader {
 /// <summary>
 /// Phong Shader에서 사용하는 공유되지 않는 Constant Buffer 정보
 /// </summary>
-class PhongShaderSource : public IShaderSource {
+struct PhongShaderSource : public IShaderSource {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;

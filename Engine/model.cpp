@@ -1,20 +1,41 @@
-#include "pipeline_manager.h"
-#include "game_object_node.h"
+#pragma warning(disable : 6385)
+#pragma warning(disable : 6386)
+
+#include "model.h"
 
 using namespace Engine;
 
-EnumBehaviorTreeStatus GameObjectDetailNode::OnInvoke() {
+Model::Model() {
+    phong_shader_source = std::make_shared<PhongShaderSource>();
+    phong_shader_source->Initialize();
+    image_based_shader_source = std::make_shared<ImageBasedShaderSource>();
+    image_based_shader_source->Initialize();
+    physically_based_shader_source =
+        std::make_shared<PhsicallyBasedShaderSource>();
+    physically_based_shader_source->Initialize();
+}
+
+Model::~Model() {}
+
+int Model::GetIndexCount() {
+    int count = 0;
+    for (auto mesh : meshes)
+        count += mesh->indices.size();
+    return count;
+}
+
+EnumBehaviorTreeStatus ModelDetailNode::OnInvoke() {
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
-EnumBehaviorTreeStatus GameObjectDetailNode::OnShow() {
+EnumBehaviorTreeStatus ModelDetailNode::OnShow() {
 
     static bool firstframe = true; // Used to position the nodes on startup
     auto &io = ImGui::GetIO();
 
     int uniqueId = 1;
 
-    //Pin
+    // Pin
     auto basic_id = uniqueId++;
     ed::BeginNode(basic_id);
     ImGui::Text("Detail");

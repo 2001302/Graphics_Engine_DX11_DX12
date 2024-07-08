@@ -3,9 +3,10 @@
 
 #include "common_struct.h"
 #include "behavior_tree_builder.h"
+#include "game_object.h"
 
 namespace Engine {
-class Camera {
+class Camera : public GameObject{
   public:
     void Render();
 

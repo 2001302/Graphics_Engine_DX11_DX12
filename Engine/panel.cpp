@@ -1,5 +1,4 @@
 #include "panel.h"
-#include "game_object_node.h"
 
 using namespace Engine;
 Panel::Panel(std::shared_ptr<PipelineManager> pipeline_manager) {

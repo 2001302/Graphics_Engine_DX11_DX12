@@ -7,15 +7,14 @@
 #define MAX_LIGHTS 3
 
 namespace Engine {
-class IShader {
-  public:
+struct IShader {
     ComPtr<ID3D11VertexShader> vertex_shader;
     ComPtr<ID3D11PixelShader> pixel_shader;
     ComPtr<ID3D11InputLayout> layout;
     ComPtr<ID3D11SamplerState> sample_state;
 };
 
-class IShaderSource {
+struct IShaderSource {
   public:
     void Initialize() {
         InitializeThis();

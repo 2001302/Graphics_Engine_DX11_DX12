@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="game_object.h">
+    <ClInclude Include="model.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="behavior_tree.h">
@@ -118,9 +118,6 @@
     <ClInclude Include="graph.h">
       <Filter>BehaviorGraph</Filter>
     </ClInclude>
-    <ClInclude Include="game_object_node.h">
-      <Filter>BehaviorGraph</Filter>
-    </ClInclude>
     <ClInclude Include="cube_map_shader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
@@ -151,10 +148,13 @@
     <ClInclude Include="image_fliter_shader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="game_object.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="game_object.cpp">
+    <ClCompile Include="model.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="behavior_tree.cpp">
@@ -244,9 +244,6 @@
     <ClCompile Include="graph.cpp">
       <Filter>BehaviorGraph</Filter>
     </ClCompile>
-    <ClCompile Include="game_object_node.cpp">
-      <Filter>BehaviorGraph</Filter>
-    </ClCompile>
     <ClCompile Include="cube_map_shader.cpp">
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
@@ -276,6 +273,9 @@
     </ClCompile>
     <ClCompile Include="image_fliter_shader.cpp">
       <Filter>DirectX\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="game_object.cpp">
+      <Filter>Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

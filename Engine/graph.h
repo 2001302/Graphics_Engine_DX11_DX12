@@ -3,8 +3,15 @@
 
 #include "behavior_tree.h"
 #include "common_struct.h"
+#include "base_gui.h"
 
 namespace Engine {
+
+struct LinkInfo {
+    ed::LinkId Id;
+    ed::PinId InputId;
+    ed::PinId OutputId;
+};
 
 class GraphNode {
   public:

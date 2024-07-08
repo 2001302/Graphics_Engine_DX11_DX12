@@ -1,5 +1,4 @@
 #include "image_based_shader.h"
-#include "game_object_node.h"
 #include "geometry_generator.h"
 #include "panel.h"
 
@@ -89,11 +88,11 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    for (auto &model_amp : manager->models) {
-        auto &model = model_amp.second;
+    for (auto &model_map : manager->models) {
+        auto &model = model_map.second;
         auto graph = manager->behaviors[model->GetEntityId()];
 
-        auto detail = dynamic_cast<Engine::GameObjectDetailNode *>(
+        auto detail = dynamic_cast<Engine::ModelDetailNode *>(
             graph->GetDetailNode().get());
         assert(detail != nullptr);
 

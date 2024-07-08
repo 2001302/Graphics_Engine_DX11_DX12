@@ -1,5 +1,4 @@
 #include "cube_map_shader.h"
-#include "game_object_node.h"
 #include "geometry_generator.h"
 #include "panel.h"
 
@@ -26,7 +25,7 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     GeometryGenerator::MakeBox(manager->cube_map.get());
 
     auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
+    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
     manager->behaviors[manager->cube_map->GetEntityId()] = graph;
 
     auto cube_map_shader = std::make_shared<CubeMapShader>();

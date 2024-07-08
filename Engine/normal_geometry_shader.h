@@ -8,7 +8,7 @@ using namespace DirectX;
 
 namespace Engine {
 
-class NormalGeometryShader : public IShader {
+struct NormalGeometryShader : public IShader {
   public:
     struct NormalGeometryVertexConstantBuffer {};
 
@@ -17,7 +17,7 @@ class NormalGeometryShader : public IShader {
     ComPtr<ID3D11GeometryShader> normalGeometryShader;
 };
 
-class NormalGeometryShaderSource : public IShaderSource {
+struct NormalGeometryShaderSource : public IShaderSource {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;

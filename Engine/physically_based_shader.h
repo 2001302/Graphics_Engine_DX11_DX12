@@ -56,9 +56,10 @@ class PhsicallyBasedShaderSource : public IShaderSource {
         vertex_constant_buffer_data.useHeightMap = 0;
         vertex_constant_buffer_data.heightScale = 0.0f;
 
-        shader_->CreateConstantBuffer(vertex_constant_buffer_data,
+        Direct3D::GetInstance().CreateConstantBuffer(
+            vertex_constant_buffer_data,
                                       vertex_constant_buffer);
-        shader_->CreateConstantBuffer(pixel_constant_buffer_data,
+        Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
                                       pixel_constant_buffer);
     }
 };

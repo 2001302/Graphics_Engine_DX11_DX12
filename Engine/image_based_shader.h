@@ -37,9 +37,10 @@ class ImageBasedShaderSource : public IShaderSource {
         vertex_constant_buffer_data.view = Matrix();
         vertex_constant_buffer_data.projection = Matrix();
 
-        shader_->CreateConstantBuffer(vertex_constant_buffer_data,
+        Direct3D::GetInstance().CreateConstantBuffer(
+            vertex_constant_buffer_data,
                                       vertex_constant_buffer);
-        shader_->CreateConstantBuffer(pixel_constant_buffer_data,
+        Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
                                       pixel_constant_buffer);
     }
 };

@@ -10,10 +10,10 @@ void PostProcess::Initialize(
 
     image_filter_shader = std::make_shared<ImageFilterShader>();
 
-    image_filter_shader->CreateVertexBuffer(m_mesh->vertices,
+    Direct3D::GetInstance().CreateVertexBuffer(m_mesh->vertices,
                                    m_mesh->vertexBuffer);
     //m_mesh->m_indexCount = UINT(m_mesh->indices.size());
-    image_filter_shader->CreateIndexBuffer(m_mesh->indices,
+    Direct3D::GetInstance().CreateIndexBuffer(m_mesh->indices,
                                   m_mesh->indexBuffer);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
@@ -26,16 +26,16 @@ void PostProcess::Initialize(
     };
 
     // 모든 이미지 필터들이 VS 공유
-    image_filter_shader->CreateVertexShaderAndInputLayout(
+    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
         L"SamplingVS.hlsl",
                                                  basicInputElements,
                                                  m_vertexShader, m_inputLayout);
 
-    image_filter_shader->CreatePixelShader(L"CombinePS.hlsl",
+    Direct3D::GetInstance().CreatePixelShader(L"CombinePS.hlsl",
                                            m_combinePixelShader);
-    image_filter_shader->CreatePixelShader(L"BloomDownPS.hlsl",
+    Direct3D::GetInstance().CreatePixelShader(L"BloomDownPS.hlsl",
                                            m_bloomDownPixelShader);
-    image_filter_shader->CreatePixelShader(L"BloomUpPS.hlsl",
+    Direct3D::GetInstance().CreatePixelShader(L"BloomUpPS.hlsl",
                                   m_bloomUpPixelShader);
 
     // Sampler도 공유

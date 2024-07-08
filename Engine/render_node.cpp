@@ -73,12 +73,12 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    phong_shader->CreateVertexShaderAndInputLayout(
+    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
         L"phong_vertex_shader.hlsl", inputElements, phong_shader->vertex_shader,
         phong_shader->layout);
 
-    phong_shader->CreatePixelShader(L"phong_pixel_shader.hlsl",
-                                    phong_shader->pixel_shader);
+    Direct3D::GetInstance().CreatePixelShader(L"phong_pixel_shader.hlsl",
+                                              phong_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -161,7 +161,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
                     .Transpose();
         }
 
-        phong_shader->UpdateBuffer(
+        Direct3D::GetInstance().UpdateBuffer(
             phong_shader_source->vertex_constant_buffer_data,
             phong_shader_source->vertex_constant_buffer);
 
@@ -200,7 +200,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
         phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
             gui->GetGlobalTab().light_setting.use_blinn_phong;
 
-        phong_shader->UpdateBuffer(
+        Direct3D::GetInstance().UpdateBuffer(
             phong_shader_source->pixel_constant_buffer_data,
             phong_shader_source->pixel_constant_buffer);
     }
@@ -242,7 +242,6 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
 
         unsigned int stride = sizeof(Vertex);
         unsigned int offset = 0;
-
 
         context->OMSetRenderTargets(
             1, Direct3D::GetInstance().render_target_view().GetAddressOf(),
@@ -329,17 +328,18 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     cube_map_shader_source->vertex_constant_buffer_data.view = Matrix();
     cube_map_shader_source->vertex_constant_buffer_data.projection = Matrix();
 
-    cube_map_shader->CreateConstantBuffer(
+    Direct3D::GetInstance().CreateConstantBuffer(
         cube_map_shader_source->vertex_constant_buffer_data,
         cube_map_shader_source->vertex_constant_buffer);
-    cube_map_shader->CreateConstantBuffer(
+    Direct3D::GetInstance().CreateConstantBuffer(
         cube_map_shader_source->pixel_constant_buffer_data,
         cube_map_shader_source->pixel_constant_buffer);
 
-    cube_map_shader->CreateVertexBuffer(manager->cube_map->mesh->vertices,
-                                        manager->cube_map->mesh->vertexBuffer);
-    cube_map_shader->CreateIndexBuffer(manager->cube_map->mesh->indices,
-                                       manager->cube_map->mesh->indexBuffer);
+    Direct3D::GetInstance().CreateVertexBuffer(
+        manager->cube_map->mesh->vertices,
+        manager->cube_map->mesh->vertexBuffer);
+    Direct3D::GetInstance().CreateIndexBuffer(
+        manager->cube_map->mesh->indices, manager->cube_map->mesh->indexBuffer);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
@@ -352,12 +352,12 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    cube_map_shader->CreateVertexShaderAndInputLayout(
+    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
         L"cube_mapping_vertex_shader.hlsl", basicInputElements,
         cube_map_shader->vertex_shader, cube_map_shader->layout);
 
-    cube_map_shader->CreatePixelShader(L"cube_mapping_pixel_shader.hlsl",
-                                       cube_map_shader->pixel_shader);
+    Direct3D::GetInstance().CreatePixelShader(L"cube_mapping_pixel_shader.hlsl",
+                                              cube_map_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -397,11 +397,11 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
                 .Transpose();
     }
 
-    cube_map_shader->UpdateBuffer(
+    Direct3D::GetInstance().UpdateBuffer(
         cube_shader_source->vertex_constant_buffer_data,
         cube_shader_source->vertex_constant_buffer);
 
-    cube_map_shader->UpdateBuffer(
+    Direct3D::GetInstance().UpdateBuffer(
         cube_shader_source->pixel_constant_buffer_data,
         cube_shader_source->pixel_constant_buffer);
 
@@ -493,12 +493,12 @@ EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    image_based_shader->CreateVertexShaderAndInputLayout(
+    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
         L"image_based_vertex_shader.hlsl", inputElements,
         image_based_shader->vertex_shader, image_based_shader->layout);
 
-    image_based_shader->CreatePixelShader(L"image_based_pixel_shader.hlsl",
-                                          image_based_shader->pixel_shader);
+    Direct3D::GetInstance().CreatePixelShader(L"image_based_pixel_shader.hlsl",
+                                              image_based_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -583,7 +583,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
                     .projection.Transpose();
         }
 
-        image_based_shader->UpdateBuffer(
+        Direct3D::GetInstance().UpdateBuffer(
             image_based_shader_source->vertex_constant_buffer_data,
             image_based_shader_source->vertex_constant_buffer);
 
@@ -608,7 +608,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
         image_based_shader_source->pixel_constant_buffer_data.useTexture =
             detail->use_texture;
 
-        image_based_shader->UpdateBuffer(
+        Direct3D::GetInstance().UpdateBuffer(
             image_based_shader_source->pixel_constant_buffer_data,
             image_based_shader_source->pixel_constant_buffer);
     }
@@ -793,12 +793,12 @@ EnumBehaviorTreeStatus InitializePhysicallyBasedShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    physical_shader->CreateVertexShaderAndInputLayout(
+    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
         L"physically_based_vertex_shader.hlsl", inputElements,
         physical_shader->vertex_shader, physical_shader->layout);
 
-    physical_shader->CreatePixelShader(L"physically_based_pixel_shader.hlsl",
-                                       physical_shader->pixel_shader);
+    Direct3D::GetInstance().CreatePixelShader(
+        L"physically_based_pixel_shader.hlsl", physical_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -839,20 +839,20 @@ EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    geometry_shader->CreateVertexShaderAndInputLayout(
+    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
         L"physically_vertex_shader.hlsl", inputElements,
         geometry_shader->vertex_shader, geometry_shader->layout);
 
     // Geometry shader 초기화하기
-    geometry_shader->CreateGeometryShader(
+    Direct3D::GetInstance().CreateGeometryShader(
         L"NormalGS.hlsl", geometry_shader->normalGeometryShader);
 
-    geometry_shader->CreateVertexShaderAndInputLayout(
+    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
         L"NormalVS.hlsl", inputElements, geometry_shader->vertex_shader,
         geometry_shader->layout);
 
-    geometry_shader->CreatePixelShader(L"NormalPS.hlsl",
-                                       geometry_shader->pixel_shader);
+    Direct3D::GetInstance().CreatePixelShader(L"NormalPS.hlsl",
+                                              geometry_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -937,7 +937,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
                     .Transpose();
         }
 
-        physically_shader->UpdateBuffer(
+        Direct3D::GetInstance().UpdateBuffer(
             physically_shader_source->vertex_constant_buffer_data,
             physically_shader_source->vertex_constant_buffer);
 
@@ -987,7 +987,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         physically_shader_source->pixel_constant_buffer_data.useEmissiveMap =
             gui->GetGlobalTab().pbr_setting.useEmissiveMap;
 
-        physically_shader->UpdateBuffer(
+        Direct3D::GetInstance().UpdateBuffer(
             physically_shader_source->pixel_constant_buffer_data,
             physically_shader_source->pixel_constant_buffer);
     }

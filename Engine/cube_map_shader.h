@@ -1,6 +1,7 @@
 #ifndef _CUBEMAPSHADER
 #define _CUBEMAPSHADER
 
+#include <directxtk/DDSTextureLoader.h> 
 #include "shader.h"
 
 using namespace DirectX;
@@ -22,10 +23,11 @@ struct CubeMapPixelConstantBuffer {
 
 class CubeMapShader : public IShader {
   public:
+    void CreateDDSTexture(const wchar_t *filename,
+                              ComPtr<ID3D11ShaderResourceView> &texResView);
 };
 class CubeMapShaderSource : public IShaderSource {
   public:
-    CubeMapShaderSource() { InitializeThis(); };
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
     CubeMapVertexConstantBuffer vertex_constant_buffer_data;
@@ -37,10 +39,10 @@ class CubeMapShaderSource : public IShaderSource {
         vertex_constant_buffer_data.view = Matrix();
         vertex_constant_buffer_data.projection = Matrix();
 
-        Direct3D::GetInstance().CreateConstantBuffer(
-            vertex_constant_buffer_data, vertex_constant_buffer);
-        Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
-                                                     pixel_constant_buffer);
+        shader_->CreateConstantBuffer(vertex_constant_buffer_data,
+                                      vertex_constant_buffer);
+        shader_->CreateConstantBuffer(pixel_constant_buffer_data,
+                                      pixel_constant_buffer);
     }
 };
 } // namespace Engine

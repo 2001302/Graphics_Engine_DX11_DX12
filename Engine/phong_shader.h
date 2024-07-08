@@ -15,7 +15,7 @@ struct VertexConstantBuffer {
 
 struct PixelConstantBuffer {
     Vector3 eyeWorld;         // 12
-    bool useTexture = false;          // 4
+    bool useTexture;          // 4
     Material material;        // 48
     Light lights[MAX_LIGHTS]; // 48 * MAX_LIGHTS
     bool useBlinnPhong = true;
@@ -34,7 +34,6 @@ class PhongShader : public IShader {
 /// </summary>
 class PhongShaderSource : public IShaderSource {
   public:
-    PhongShaderSource() { InitializeThis(); };
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
     VertexConstantBuffer vertex_constant_buffer_data;
@@ -47,10 +46,9 @@ class PhongShaderSource : public IShaderSource {
         vertex_constant_buffer_data.view = Matrix();
         vertex_constant_buffer_data.projection = Matrix();
 
-        Direct3D::GetInstance().CreateConstantBuffer(
-            vertex_constant_buffer_data,
+        shader_->CreateConstantBuffer(vertex_constant_buffer_data,
                                       vertex_constant_buffer);
-        Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
+        shader_->CreateConstantBuffer(pixel_constant_buffer_data,
                                       pixel_constant_buffer);
     }
 };

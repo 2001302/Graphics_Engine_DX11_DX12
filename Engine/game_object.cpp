@@ -5,14 +5,7 @@
 
 using namespace Engine;
 
-GameObject::GameObject() {
-
-    phong_shader_source = std::make_shared<PhongShaderSource>();
-    image_based_shader_source =
-        std::make_shared<ImageBasedShaderSource>();
-    physically_based_shader_source =
-        std::make_shared<PhsicallyBasedShaderSource>();
-}
+GameObject::GameObject() {}
 
 GameObject::~GameObject() {}
 

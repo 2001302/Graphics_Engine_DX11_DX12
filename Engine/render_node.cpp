@@ -73,11 +73,11 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-   Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
+    phong_shader->CreateVertexShaderAndInputLayout(
         L"phong_vertex_shader.hlsl", inputElements, phong_shader->vertex_shader,
         phong_shader->layout);
 
-   Direct3D::GetInstance().CreatePixelShader(L"phong_pixel_shader.hlsl",
+    phong_shader->CreatePixelShader(L"phong_pixel_shader.hlsl",
                                     phong_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -99,9 +99,8 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    for (auto &model_map : manager->models) {
-
-        auto &model = model_map.second;
+    for (auto &model_amp : manager->models) {
+        auto &model = model_amp.second;
         auto graph = manager->behaviors[model->GetEntityId()];
 
         auto detail = dynamic_cast<Engine::GameObjectDetailNode *>(
@@ -162,7 +161,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
                     .Transpose();
         }
 
-       Direct3D::GetInstance().UpdateBuffer(
+        phong_shader->UpdateBuffer(
             phong_shader_source->vertex_constant_buffer_data,
             phong_shader_source->vertex_constant_buffer);
 
@@ -201,7 +200,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
         phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
             gui->GetGlobalTab().light_setting.use_blinn_phong;
 
-        Direct3D::GetInstance().UpdateBuffer(
+        phong_shader->UpdateBuffer(
             phong_shader_source->pixel_constant_buffer_data,
             phong_shader_source->pixel_constant_buffer);
     }
@@ -226,7 +225,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
 
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     context->ClearRenderTargetView(
-        Direct3D::GetInstance().float_RTV().Get(), clearColor);
+        Direct3D::GetInstance().render_target_view().Get(), clearColor);
     context->ClearDepthStencilView(
         Direct3D::GetInstance().depth_stencil_view().Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -244,13 +243,10 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
         unsigned int stride = sizeof(Vertex);
         unsigned int offset = 0;
 
-        std::vector<ID3D11RenderTargetView *> renderTargetViews = {
-            Direct3D::GetInstance().float_RTV().Get()};
 
         context->OMSetRenderTargets(
-            UINT(renderTargetViews.size()), renderTargetViews.data(),
+            1, Direct3D::GetInstance().render_target_view().GetAddressOf(),
             Direct3D::GetInstance().depth_stencil_view().Get());
-
         context->OMSetDepthStencilState(
             Direct3D::GetInstance().depth_stencil_state().Get(), 0);
 
@@ -317,13 +313,12 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
         L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
     auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-    Direct3D::GetInstance().CreateDDSTexture(envFilename,
-                                             manager->cube_map->env_SRV);
-    Direct3D::GetInstance().CreateDDSTexture(specularFilename,
+    cube_map_shader->CreateDDSTexture(envFilename, manager->cube_map->env_SRV);
+    cube_map_shader->CreateDDSTexture(specularFilename,
                                       manager->cube_map->specular_SRV);
-    Direct3D::GetInstance().CreateDDSTexture(irradianceFilename,
+    cube_map_shader->CreateDDSTexture(irradianceFilename,
                                       manager->cube_map->irradiance_SRV);
-    Direct3D::GetInstance().CreateDDSTexture(brdfFilename,
+    cube_map_shader->CreateDDSTexture(brdfFilename,
                                       manager->cube_map->brdf_SRV);
 
     manager->cube_map->cube_map_shader_source =
@@ -334,18 +329,16 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     cube_map_shader_source->vertex_constant_buffer_data.view = Matrix();
     cube_map_shader_source->vertex_constant_buffer_data.projection = Matrix();
 
-    Direct3D::GetInstance().CreateConstantBuffer(
+    cube_map_shader->CreateConstantBuffer(
         cube_map_shader_source->vertex_constant_buffer_data,
         cube_map_shader_source->vertex_constant_buffer);
-    Direct3D::GetInstance().CreateConstantBuffer(
+    cube_map_shader->CreateConstantBuffer(
         cube_map_shader_source->pixel_constant_buffer_data,
         cube_map_shader_source->pixel_constant_buffer);
 
-    Direct3D::GetInstance().CreateVertexBuffer(
-        manager->cube_map->mesh->vertices,
+    cube_map_shader->CreateVertexBuffer(manager->cube_map->mesh->vertices,
                                         manager->cube_map->mesh->vertexBuffer);
-    Direct3D::GetInstance().CreateIndexBuffer(
-        manager->cube_map->mesh->indices,
+    cube_map_shader->CreateIndexBuffer(manager->cube_map->mesh->indices,
                                        manager->cube_map->mesh->indexBuffer);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
@@ -359,11 +352,11 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
+    cube_map_shader->CreateVertexShaderAndInputLayout(
         L"cube_mapping_vertex_shader.hlsl", basicInputElements,
         cube_map_shader->vertex_shader, cube_map_shader->layout);
 
-    Direct3D::GetInstance().CreatePixelShader(L"cube_mapping_pixel_shader.hlsl",
+    cube_map_shader->CreatePixelShader(L"cube_mapping_pixel_shader.hlsl",
                                        cube_map_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -384,6 +377,7 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     assert(gui != nullptr);
 
     auto cube_map = manager->cube_map;
+
     auto cube_shader_source = cube_map->cube_map_shader_source;
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
 
@@ -403,11 +397,11 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
                 .Transpose();
     }
 
-    Direct3D::GetInstance().UpdateBuffer(
+    cube_map_shader->UpdateBuffer(
         cube_shader_source->vertex_constant_buffer_data,
         cube_shader_source->vertex_constant_buffer);
 
-    Direct3D::GetInstance().UpdateBuffer(
+    cube_map_shader->UpdateBuffer(
         cube_shader_source->pixel_constant_buffer_data,
         cube_shader_source->pixel_constant_buffer);
 
@@ -499,11 +493,11 @@ EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
+    image_based_shader->CreateVertexShaderAndInputLayout(
         L"image_based_vertex_shader.hlsl", inputElements,
         image_based_shader->vertex_shader, image_based_shader->layout);
 
-    Direct3D::GetInstance().CreatePixelShader(L"image_based_pixel_shader.hlsl",
+    image_based_shader->CreatePixelShader(L"image_based_pixel_shader.hlsl",
                                           image_based_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -525,9 +519,8 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    for (auto &model_map : manager->models) {
-
-        auto &model = model_map.second;
+    for (auto &model_amp : manager->models) {
+        auto &model = model_amp.second;
         auto graph = manager->behaviors[model->GetEntityId()];
 
         auto detail = dynamic_cast<Engine::GameObjectDetailNode *>(
@@ -590,7 +583,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
                     .projection.Transpose();
         }
 
-        Direct3D::GetInstance().UpdateBuffer(
+        image_based_shader->UpdateBuffer(
             image_based_shader_source->vertex_constant_buffer_data,
             image_based_shader_source->vertex_constant_buffer);
 
@@ -615,7 +608,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
         image_based_shader_source->pixel_constant_buffer_data.useTexture =
             detail->use_texture;
 
-        Direct3D::GetInstance().UpdateBuffer(
+        image_based_shader->UpdateBuffer(
             image_based_shader_source->pixel_constant_buffer_data,
             image_based_shader_source->pixel_constant_buffer);
     }
@@ -640,33 +633,27 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
 
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     context->ClearRenderTargetView(
-        Direct3D::GetInstance().float_RTV().Get(), clearColor);
+        Direct3D::GetInstance().render_target_view().Get(), clearColor);
     context->ClearDepthStencilView(
         Direct3D::GetInstance().depth_stencil_view().Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
     for (auto &model_map : manager->models) {
-
         // RS: Rasterizer stage
         // OM: Output-Merger stage
         // VS: Vertex Shader
         // PS: Pixel Shader
-        // IA: Input-Assembler stage 
-
-        auto &model = model_map.second;
+        // IA: Input-Assembler stage
+        auto model = model_map.second;
         auto image_based_shader_source = model->image_based_shader_source;
         auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
 
         unsigned int stride = sizeof(Vertex);
         unsigned int offset = 0;
 
-        std::vector<ID3D11RenderTargetView *> renderTargetViews = {
-            Direct3D::GetInstance().float_RTV().Get()};
-
         context->OMSetRenderTargets(
-            UINT(renderTargetViews.size()), renderTargetViews.data(),
+            1, Direct3D::GetInstance().render_target_view().GetAddressOf(),
             Direct3D::GetInstance().depth_stencil_view().Get());
-
         context->OMSetDepthStencilState(
             Direct3D::GetInstance().depth_stencil_state().Get(), 0);
 
@@ -806,12 +793,11 @@ EnumBehaviorTreeStatus InitializePhysicallyBasedShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
+    physical_shader->CreateVertexShaderAndInputLayout(
         L"physically_based_vertex_shader.hlsl", inputElements,
         physical_shader->vertex_shader, physical_shader->layout);
 
-    Direct3D::GetInstance().CreatePixelShader(
-        L"physically_based_pixel_shader.hlsl",
+    physical_shader->CreatePixelShader(L"physically_based_pixel_shader.hlsl",
                                        physical_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -853,19 +839,19 @@ EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
+    geometry_shader->CreateVertexShaderAndInputLayout(
         L"physically_vertex_shader.hlsl", inputElements,
         geometry_shader->vertex_shader, geometry_shader->layout);
 
     // Geometry shader 초기화하기
-    Direct3D::GetInstance().CreateGeometryShader(
+    geometry_shader->CreateGeometryShader(
         L"NormalGS.hlsl", geometry_shader->normalGeometryShader);
 
-    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
+    geometry_shader->CreateVertexShaderAndInputLayout(
         L"NormalVS.hlsl", inputElements, geometry_shader->vertex_shader,
         geometry_shader->layout);
 
-    Direct3D::GetInstance().CreatePixelShader(L"NormalPS.hlsl",
+    geometry_shader->CreatePixelShader(L"NormalPS.hlsl",
                                        geometry_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -887,9 +873,8 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    for (auto &model_map : manager->models) {
-
-        auto &model = model_map.second;
+    for (auto &model_amp : manager->models) {
+        auto &model = model_amp.second;
         auto graph = manager->behaviors[model->GetEntityId()];
 
         auto detail = dynamic_cast<Engine::GameObjectDetailNode *>(
@@ -952,7 +937,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
                     .Transpose();
         }
 
-        Direct3D::GetInstance().UpdateBuffer(
+        physically_shader->UpdateBuffer(
             physically_shader_source->vertex_constant_buffer_data,
             physically_shader_source->vertex_constant_buffer);
 
@@ -1002,7 +987,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         physically_shader_source->pixel_constant_buffer_data.useEmissiveMap =
             gui->GetGlobalTab().pbr_setting.useEmissiveMap;
 
-       Direct3D::GetInstance().UpdateBuffer(
+        physically_shader->UpdateBuffer(
             physically_shader_source->pixel_constant_buffer_data,
             physically_shader_source->pixel_constant_buffer);
     }
@@ -1027,7 +1012,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
     context->ClearRenderTargetView(
-        Direct3D::GetInstance().float_RTV().Get(), clearColor);
+        Direct3D::GetInstance().render_target_view().Get(), clearColor);
     context->ClearDepthStencilView(
         Direct3D::GetInstance().depth_stencil_view().Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
@@ -1049,7 +1034,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         unsigned int offset = 0;
 
         std::vector<ID3D11RenderTargetView *> renderTargetViews = {
-            Direct3D::GetInstance().float_RTV().Get()};
+            Direct3D::GetInstance().render_target_view().Get()};
 
         context->OMSetRenderTargets(
             UINT(renderTargetViews.size()), renderTargetViews.data(),

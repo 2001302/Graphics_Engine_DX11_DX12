@@ -234,7 +234,6 @@
     <ClCompile Include="resource_helper.cpp" />
     <ClCompile Include="selector_node.cpp" />
     <ClCompile Include="sequence_node.cpp" />
-    <ClCompile Include="shader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hlsli" />

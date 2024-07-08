@@ -145,6 +145,15 @@
     <ClInclude Include="normal_geometry_shader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
+    <ClInclude Include="post_process.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="image_filter.h">
+      <Filter>Model</Filter>
+    </ClInclude>
+    <ClInclude Include="image_fliter_shader.h">
+      <Filter>DirectX\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -265,6 +274,15 @@
     <ClCompile Include="normal_geometry_shader.cpp">
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="post_process.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="image_filter.cpp">
+      <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="image_fliter_shader.cpp">
+      <Filter>DirectX\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Model">
@@ -345,6 +363,21 @@
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="physically_based_pixel_shader.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="CombinePS.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="BloomUpPS.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="BloomDownPS.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="SamplingVS.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="SamplingPS.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

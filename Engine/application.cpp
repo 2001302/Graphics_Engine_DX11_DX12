@@ -9,6 +9,7 @@ Application::Application() : imgui_(0), manager_(0), env_(0) {
     env_ = std::make_shared<Env>();
     message_receiver_ = std::make_unique<MessageReceiver>();
     imgui_ = std::make_shared<Panel>(manager_);
+    post_process_ = std::make_unique<PostProcess>();
 };
 
 bool Application::OnStart() {
@@ -23,23 +24,32 @@ bool Application::OnStart() {
         {EnumDataBlockType::eGui, imgui_.get()},
     };
 
+    GeometryGenerator::MakeSquare(post_process_.get());
     Direct3D::GetInstance().Initialize(env_.get(), VSYNC_ENABLED, main_window_,
                                        FULL_SCREEN);
+
+    auto device = Direct3D::GetInstance().device();
+    auto context = Direct3D::GetInstance().device_context();
+
+    post_process_->Initialize(device, context,
+                              {Direct3D::GetInstance().resolved_SRV()},
+                              {Direct3D::GetInstance().back_buffer_RTV()},
+                              screen_width_, screen_height_, 4);
 
     input_->Initialize(hinstance_, main_window_, screen_width_, screen_height_);
     imgui_->Initialize(main_window_, env_.get());
 
     // clang-format off
-    //auto tree = new BehaviorTreeBuilder();
-    //tree->Build(dataBlock)
-    //    ->Sequence()
-    //        ->Excute(std::make_shared<InitializeCamera>())
-    //        ->Excute(std::make_shared<InitializeCubeMapShader>())
-    //        ->Excute(std::make_shared<InitializePhongShader>())
-    //        ->Excute(std::make_shared<InitializeImageBasedShader>())
-    //        ->Excute(std::make_shared<InitializePhysicallyBasedShader>())
-    //    ->Close()
-    //->Run();
+    auto tree = new BehaviorTreeBuilder();
+    tree->Build(dataBlock)
+        ->Sequence()
+            ->Excute(std::make_shared<InitializeCamera>())
+            ->Excute(std::make_shared<InitializeCubeMapShader>())
+            ->Excute(std::make_shared<InitializePhongShader>())
+            ->Excute(std::make_shared<InitializeImageBasedShader>())
+            ->Excute(std::make_shared<InitializePhysicallyBasedShader>())
+        ->Close()
+    ->Run();
     // clang-format on
 
     OnFrame();
@@ -54,49 +64,49 @@ bool Application::OnFrame() {
         {EnumDataBlockType::eEnv, env_.get()},
         {EnumDataBlockType::eGui, imgui_.get()},
     };
-    
-    input_->Frame();
-    imgui_->Frame();
 
     // Clear the buffers to begin the scene.
     Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
     // clang-format off
-    //auto tree = std::make_unique<BehaviorTreeBuilder>();
-    //tree->Build(dataBlock)
-    //->Excute(std::make_shared<UpdateCamera>())
-    //->Conditional(std::make_shared<CheckImageBasedShader>())
-    //    ->Sequence()
-    //        ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
-    //        ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
-    //        ->Excute(std::make_shared<UpdateCubeMap>())
-    //        ->Excute(std::make_shared<RenderCubeMap>())
-    //    ->Close()
-    //->End()
-    //->Conditional(std::make_shared<CheckPhongShader>())
-    //    ->Sequence()
-    //        ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
-    //        ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
-    //    ->Close()
-    //->End()
-    //->Conditional(std::make_shared<CheckPhysicallyBasedShader>())
-    //    ->Sequence()
-    //        ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
-    //        ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
-    //        ->Excute(std::make_shared<UpdateCubeMap>())
-    //        ->Excute(std::make_shared<RenderCubeMap>())
-    //    ->Close()
-    //->End()
-    //->Run();
+    auto tree = std::make_unique<BehaviorTreeBuilder>();
+    tree->Build(dataBlock)
+    ->Excute(std::make_shared<UpdateCamera>())
+    ->Conditional(std::make_shared<CheckImageBasedShader>())
+        ->Sequence()
+            ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
+            ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
+            ->Excute(std::make_shared<UpdateCubeMap>())
+            ->Excute(std::make_shared<RenderCubeMap>())
+        ->Close()
+    ->End()
+    ->Conditional(std::make_shared<CheckPhongShader>())
+        ->Sequence()
+            ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
+            ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
+        ->Close()
+    ->End()
+    ->Conditional(std::make_shared<CheckPhysicallyBasedShader>())
+        ->Sequence()
+            ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
+            ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
+            ->Excute(std::make_shared<UpdateCubeMap>())
+            ->Excute(std::make_shared<RenderCubeMap>())
+        ->Close()
+    ->End()
+    ->Run();
     // clang-format on
 
-    /*Todo
-    m_context->ResolveSubresource(m_resolvedBuffer.Get(), 0,
-                                  m_floatBuffer.Get(), 0,
-                                  DXGI_FORMAT_R16G16B16A16_FLOAT);
+    Direct3D::GetInstance().device_context()->ResolveSubresource(
+        Direct3D::GetInstance().resolved_buffer().Get(), 0,
+        Direct3D::GetInstance().float_buffer().Get(), 0,
+        DXGI_FORMAT_R16G16B16A16_FLOAT);
 
-    m_postProcess.Render(m_context);*/
+    auto context = Direct3D::GetInstance().device_context();
+    post_process_->Render(context);
 
+    input_->Frame();
+    imgui_->Frame();
 
     // Present the rendered scene to the screen.
     Direct3D::GetInstance().EndScene();

@@ -22,6 +22,7 @@ class Application : public Platform {
     std::shared_ptr<Panel> imgui_;
     std::shared_ptr<PipelineManager> manager_;
     std::unique_ptr<MessageReceiver> message_receiver_;
+    std::unique_ptr<PostProcess> post_process_;
 };
 } // namespace Engine
 #endif

@@ -57,10 +57,11 @@ bool BaseGui::Frame() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
 
     if (ImGui::GetCurrentWindow()) {
-        Direct3D::GetInstance().SetViewPort(ImGui::GetWindowSize().x, 0.0f,
-                                            (float)env_->screen_width_ -
-                                                ImGui::GetWindowSize().x,
-                                            (float)env_->screen_height_);
+         Direct3D::GetInstance().SetViewPort(ImGui::GetWindowSize().x, 0.0f,
+                                             (float)env_->screen_width_ -
+                                                 ImGui::GetWindowSize().x,
+                                             (float)env_->screen_height_);
+
         env_->aspect_ =
             ((float)env_->screen_width_ - ImGui::GetWindowSize().x) /
             (float)env_->screen_height_;
@@ -98,8 +99,8 @@ void BaseGui::RecreateFontAtlas() {
 
     default_font_ = io.Fonts->AddFontFromFileTTF(
         "../Engine/Assets/Fonts/Play-Regular.ttf", 18.0f, &config);
-    header_font = io.Fonts->AddFontFromFileTTF("../Engine/Assets/Fonts/Cuprum-Bold.ttf",
-                                               20.0f, &config);
+    header_font = io.Fonts->AddFontFromFileTTF(
+        "../Engine/Assets/Fonts/Cuprum-Bold.ttf", 20.0f, &config);
 
     io.Fonts->Build();
 }

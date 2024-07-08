@@ -11,6 +11,7 @@
 #include "panel.h"
 #include "pipeline_manager.h"
 #include "resource_helper.h"
+#include "post_process.h"
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;

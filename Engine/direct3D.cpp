@@ -79,7 +79,7 @@ bool Direct3D::CreateBuffer(Env *env) {
     ThrowIfFailed(
         swap_chain_->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf())));
     ThrowIfFailed(device_->CreateRenderTargetView(
-        backBuffer.Get(), NULL, back_buffer_RTV.GetAddressOf()));
+        backBuffer.Get(), NULL, back_buffer_RTV_.GetAddressOf()));
 
     // FLOAT MSAA RenderTargetView/ShaderResourceView
     ThrowIfFailed(device_->CheckMultisampleQualityLevels(
@@ -102,12 +102,12 @@ bool Direct3D::CreateBuffer(Env *env) {
     }
 
     ThrowIfFailed(
-        device_->CreateTexture2D(&desc, NULL, float_buffer.GetAddressOf()));
+        device_->CreateTexture2D(&desc, NULL, float_buffer_.GetAddressOf()));
 
-    ThrowIfFailed(device_->CreateShaderResourceView(float_buffer.Get(), NULL,
+    ThrowIfFailed(device_->CreateShaderResourceView(float_buffer_.Get(), NULL,
                                                     float_SRV.GetAddressOf()));
 
-    ThrowIfFailed(device_->CreateRenderTargetView(float_buffer.Get(), NULL,
+    ThrowIfFailed(device_->CreateRenderTargetView(float_buffer_.Get(), NULL,
                                                   float_RTV.GetAddressOf()));
 
     CreateDepthBuffer(device_, env->screen_width_, env->screen_height_,
@@ -118,10 +118,10 @@ bool Direct3D::CreateBuffer(Env *env) {
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;
     ThrowIfFailed(
-        device_->CreateTexture2D(&desc, NULL, resolved_buffer.GetAddressOf()));
+        device_->CreateTexture2D(&desc, NULL, resolved_buffer_.GetAddressOf()));
     ThrowIfFailed(device_->CreateShaderResourceView(
-        resolved_buffer.Get(), NULL, resolved_SRV.GetAddressOf()));
-    ThrowIfFailed(device_->CreateRenderTargetView(resolved_buffer.Get(), NULL,
+        resolved_buffer_.Get(), NULL, resolved_SRV_.GetAddressOf()));
+    ThrowIfFailed(device_->CreateRenderTargetView(resolved_buffer_.Get(), NULL,
                                                   resolved_RTV.GetAddressOf()));
 
     // Todo
@@ -227,7 +227,7 @@ ComPtr<ID3D11DeviceContext> Direct3D::device_context() {
 ComPtr<IDXGISwapChain> Direct3D::swap_chain() { return swap_chain_; }
 
 ComPtr<ID3D11Texture2D> Direct3D::depth_stencil_buffer() {
-    return float_buffer;
+    return float_buffer_;
 };
 
 ComPtr<ID3D11DepthStencilState> Direct3D::depth_stencil_state() {
@@ -251,3 +251,14 @@ ComPtr<ID3D11RenderTargetView> Direct3D::render_target_view() {
 }
 
 D3D11_VIEWPORT Direct3D::viewport() { return viewport_; }
+
+ComPtr<ID3D11Texture2D> Direct3D::float_buffer() { return float_buffer_; }
+
+ComPtr<ID3D11Texture2D> Direct3D::resolved_buffer() { return resolved_buffer_; }
+
+ComPtr<ID3D11RenderTargetView> Direct3D::back_buffer_RTV() {
+    return back_buffer_RTV_;
+}
+ComPtr<ID3D11ShaderResourceView> Direct3D::resolved_SRV() {
+    return resolved_SRV_;
+}

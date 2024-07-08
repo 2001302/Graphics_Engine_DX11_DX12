@@ -36,6 +36,10 @@ class Direct3D {
     ComPtr<ID3D11RasterizerState> wire_rasterizer_state();
     ComPtr<ID3D11RenderTargetView> render_target_view();
     D3D11_VIEWPORT viewport();
+    ComPtr<ID3D11Texture2D> float_buffer();
+    ComPtr<ID3D11Texture2D> resolved_buffer();
+    ComPtr<ID3D11RenderTargetView> back_buffer_RTV();
+    ComPtr<ID3D11ShaderResourceView> resolved_SRV();
 
   private:
     Direct3D()
@@ -49,16 +53,16 @@ class Direct3D {
     ComPtr<ID3D11Device> device_;
     ComPtr<ID3D11DeviceContext> device_context_;
     ComPtr<IDXGISwapChain> swap_chain_;
-    ComPtr<ID3D11RenderTargetView> back_buffer_RTV;
+    ComPtr<ID3D11RenderTargetView> back_buffer_RTV_;
 
     // 삼각형 레스터화 -> float(MSAA) -> resolved(No MSAA)
     // -> 후처리(블룸, 톤매핑) -> backBuffer(최종 SwapChain Present)
-    ComPtr<ID3D11Texture2D> float_buffer;
-    ComPtr<ID3D11Texture2D> resolved_buffer;
+    ComPtr<ID3D11Texture2D> float_buffer_;
+    ComPtr<ID3D11Texture2D> resolved_buffer_;
     ComPtr<ID3D11RenderTargetView> float_RTV;
     ComPtr<ID3D11RenderTargetView> resolved_RTV;
     ComPtr<ID3D11ShaderResourceView> float_SRV;
-    ComPtr<ID3D11ShaderResourceView> resolved_SRV;
+    ComPtr<ID3D11ShaderResourceView> resolved_SRV_;
 
     ComPtr<ID3D11RasterizerState> solid_rasterizer_state_;
     ComPtr<ID3D11RasterizerState> wire_rasterizer_state_;

@@ -2,7 +2,7 @@
 #define _NORMALGEOMETRYSHADER
 
 #include "shader.h"
-#include "render_node.h"
+#include "behavior_tree_builder.h"
 
 using namespace DirectX;
 

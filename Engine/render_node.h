@@ -13,6 +13,5 @@ class UpdateCamera : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-
 } // namespace Engine
 #endif

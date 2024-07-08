@@ -1,6 +1,7 @@
 #ifndef _D3DCLASS_H_
 #define _D3DCLASS_H_
 
+#include <directxtk/DDSTextureLoader.h> 
 #include "common_struct.h"
 #include "env.h"
 
@@ -30,6 +31,8 @@ class Direct3D {
                               ComPtr<ID3D11GeometryShader> &geometryShader);
     void CreatePixelShader(const std::wstring &filename,
                            ComPtr<ID3D11PixelShader> &pixelShader);
+    void CreateDDSTexture(const wchar_t *filename,
+                          ComPtr<ID3D11ShaderResourceView> &texResView);
 
     void CreateVertexShaderAndInputLayout(
         const std::wstring &filename,

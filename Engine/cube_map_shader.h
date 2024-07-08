@@ -1,9 +1,8 @@
 #ifndef _CUBEMAPSHADER
 #define _CUBEMAPSHADER
 
-#include <directxtk/DDSTextureLoader.h> 
 #include "shader.h"
-#include "render_node.h"
+#include "behavior_tree_builder.h"
 
 using namespace DirectX;
 
@@ -24,8 +23,6 @@ struct CubeMapPixelConstantBuffer {
 
 class CubeMapShader : public IShader {
   public:
-    void CreateDDSTexture(const wchar_t *filename,
-                              ComPtr<ID3D11ShaderResourceView> &texResView);
 };
 class CubeMapShaderSource : public IShaderSource {
   public:

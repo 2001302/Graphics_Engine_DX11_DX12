@@ -5,28 +5,6 @@
 
 using namespace Engine;
 
-void CubeMapShader::CreateDDSTexture(
-    const wchar_t *filename,
-    ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
-
-    ComPtr<ID3D11Texture2D> texture;
-
-    UINT miscFlags = 0;
-    if (true) {
-        miscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
-    }
-
-    auto hr = CreateDDSTextureFromFileEx(
-        Direct3D::GetInstance().device().Get(), filename, 0,
-        D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, miscFlags,
-        DDS_LOADER_FLAGS(false), (ID3D11Resource **)texture.GetAddressOf(),
-        textureResourceView.GetAddressOf(), NULL);
-
-    if (FAILED(hr)) {
-        std::cout << "CreateDDSTextureFromFileEx() failed" << std::endl;
-    }
-}
-
 EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 
@@ -53,12 +31,13 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
         L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
     auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-    cube_map_shader->CreateDDSTexture(envFilename, manager->cube_map->env_SRV);
-    cube_map_shader->CreateDDSTexture(specularFilename,
+    Direct3D::GetInstance().CreateDDSTexture(envFilename,
+                                              manager->cube_map->env_SRV);
+    Direct3D::GetInstance().CreateDDSTexture(specularFilename,
                                       manager->cube_map->specular_SRV);
-    cube_map_shader->CreateDDSTexture(irradianceFilename,
+    Direct3D::GetInstance().CreateDDSTexture(irradianceFilename,
                                       manager->cube_map->irradiance_SRV);
-    cube_map_shader->CreateDDSTexture(brdfFilename,
+    Direct3D::GetInstance().CreateDDSTexture(brdfFilename,
                                       manager->cube_map->brdf_SRV);
 
     manager->cube_map->cube_map_shader_source =

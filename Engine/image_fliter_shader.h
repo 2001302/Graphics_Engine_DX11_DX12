@@ -2,6 +2,7 @@
 #define _IMAGEFLITERSHADER
 
 #include "shader.h"
+#include "render_node.h"
 
 using namespace DirectX;
 

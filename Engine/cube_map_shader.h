@@ -3,6 +3,7 @@
 
 #include <directxtk/DDSTextureLoader.h> 
 #include "shader.h"
+#include "render_node.h"
 
 using namespace DirectX;
 
@@ -46,5 +47,18 @@ class CubeMapShaderSource : public IShaderSource {
                                       pixel_constant_buffer);
     }
 };
+
+class InitializeCubeMapShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class UpdateCubeMap : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class RenderCubeMap : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
 } // namespace Engine
 #endif

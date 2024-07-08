@@ -2,6 +2,7 @@
 #define _NORMALGEOMETRYSHADER
 
 #include "shader.h"
+#include "render_node.h"
 
 using namespace DirectX;
 
@@ -35,6 +36,10 @@ class NormalGeometryShaderSource : public IShaderSource {
         Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
                                       pixel_constant_buffer);
     }
+};
+
+class InitializeNormalGeometryShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
 };
 } // namespace Engine
 #endif

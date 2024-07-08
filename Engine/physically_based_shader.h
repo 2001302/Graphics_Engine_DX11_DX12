@@ -2,6 +2,7 @@
 #define _PHYSICALLYBASEDSHADER
 
 #include "shader.h"
+#include "render_node.h"
 
 using namespace DirectX;
 
@@ -63,5 +64,22 @@ class PhsicallyBasedShaderSource : public IShaderSource {
                                       pixel_constant_buffer);
     }
 };
+
+class CheckPhysicallyBasedShader : public ConditionalNode {
+    EnumBehaviorTreeStatus CheckCondition() override;
+};
+
+class InitializePhysicallyBasedShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class UpdateGameObjectsUsingPhysicallyBasedShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class RenderGameObjectsUsingPhysicallyBasedShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
 } // namespace Engine
 #endif

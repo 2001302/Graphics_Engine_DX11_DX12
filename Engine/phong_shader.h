@@ -2,6 +2,7 @@
 #define _PHONGSHADER
 
 #include "shader.h"
+#include "render_node.h"
 
 using namespace DirectX;
 
@@ -53,5 +54,22 @@ class PhongShaderSource : public IShaderSource {
                                       pixel_constant_buffer);
     }
 };
+
+class CheckPhongShader : public ConditionalNode {
+    EnumBehaviorTreeStatus CheckCondition() override;
+};
+
+class InitializePhongShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class UpdateGameObjectsUsingPhongShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class RenderGameObjectsUsingPhongShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
 } // namespace Engine
 #endif

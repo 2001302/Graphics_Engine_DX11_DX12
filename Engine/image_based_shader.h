@@ -2,6 +2,7 @@
 #define _IMAGEBASEDSHADER
 
 #include "shader.h"
+#include "render_node.h"
 
 using namespace DirectX;
 
@@ -44,5 +45,22 @@ class ImageBasedShaderSource : public IShaderSource {
                                       pixel_constant_buffer);
     }
 };
+
+class CheckImageBasedShader : public ConditionalNode {
+    EnumBehaviorTreeStatus CheckCondition() override;
+};
+
+class InitializeImageBasedShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class UpdateGameObjectsUsingImageBasedShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class RenderGameObjectsUsingImageBasedShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
 } // namespace Engine
 #endif

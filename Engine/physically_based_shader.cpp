@@ -101,7 +101,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     for (auto &model_amp : manager->models) {
         auto &model = model_amp.second;
-        auto graph = manager->behaviors[model->GetEntityId()];
+        auto graph = manager->models[model->GetEntityId()]->behavior;
 
         auto detail = dynamic_cast<Engine::ModelDetailNode *>(
             graph->GetDetailNode().get());

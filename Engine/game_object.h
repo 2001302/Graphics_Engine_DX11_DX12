@@ -6,6 +6,7 @@
 #include "image_based_shader.h"
 #include "phong_shader.h"
 #include "physically_based_shader.h"
+#include "graph.h"
 
 namespace Engine {
 using Microsoft::WRL::ComPtr;
@@ -16,6 +17,8 @@ class GameObject : public IEntity {
     ~GameObject(){};
     void Update(){};
     void Render(){};
+
+    std::shared_ptr<Graph> behavior;
 
   private:
     virtual void OnUpdate(){};

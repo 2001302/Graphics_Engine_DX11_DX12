@@ -56,7 +56,7 @@ void Panel::NodeEditor() {
 
     // Start drawing nodes.
     if (selected_object_id_ != -99999) {
-        auto graph = pipeline_manager_->behaviors[selected_object_id_];
+        auto graph = pipeline_manager_->models[selected_object_id_]->behavior;
         graph->Show();
     }
 

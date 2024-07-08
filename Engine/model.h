@@ -7,7 +7,6 @@
 #include "physically_based_shader.h"
 #include "entity.h"
 #include "game_object.h"
-#include "graph.h"
 
 namespace Engine {
 using Microsoft::WRL::ComPtr;
@@ -20,7 +19,6 @@ class Model : public GameObject {
     int GetIndexCount();
 
     DirectX::SimpleMath::Matrix transform;
-
     std::vector<std::shared_ptr<Bone>> bones;
     std::vector<std::shared_ptr<Mesh>> meshes;
     //std::shared_ptr<Animation> animation;

@@ -115,7 +115,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
         auto graph = std::make_shared<Graph>();
         graph->SetDetailNode(std::make_shared<ModelDetailNode>());
-        manager->behaviors[model->GetEntityId()] = graph;
+        model->behavior = graph;
 
         model->transform = Matrix();
 
@@ -239,7 +239,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
     auto graph = std::make_shared<Graph>();
     graph->SetDetailNode(std::make_shared<ModelDetailNode>());
-    manager->behaviors[model->GetEntityId()] = graph;
+    model->behavior = graph;
 
     GeometryGenerator::MakeSphere(model.get(), 1.5f, 15, 13);
 
@@ -308,7 +308,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
     auto graph = std::make_shared<Graph>();
     graph->SetDetailNode(std::make_shared<ModelDetailNode>());
-    manager->behaviors[model->GetEntityId()] = graph;
+    model->behavior = graph;
 
     GeometryGenerator::MakeBox(model.get());
 
@@ -377,7 +377,7 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
     auto graph = std::make_shared<Graph>();
     graph->SetDetailNode(std::make_shared<ModelDetailNode>());
-    manager->behaviors[model->GetEntityId()] = graph;
+    model->behavior = graph;
 
     GeometryGenerator::MakeCylinder(model.get(), 5.0f, 5.0f, 15.0f, 30);
 

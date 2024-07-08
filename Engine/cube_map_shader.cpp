@@ -26,7 +26,7 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
 
     auto graph = std::make_shared<Graph>();
     graph->SetDetailNode(std::make_shared<ModelDetailNode>());
-    manager->behaviors[manager->cube_map->GetEntityId()] = graph;
+    manager->cube_map->behavior = graph;
 
     auto cube_map_shader = std::make_shared<CubeMapShader>();
     manager->shaders[EnumShaderType::eCube] = cube_map_shader;

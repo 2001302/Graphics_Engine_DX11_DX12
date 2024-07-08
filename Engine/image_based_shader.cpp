@@ -90,7 +90,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
 
     for (auto &model_map : manager->models) {
         auto &model = model_map.second;
-        auto graph = manager->behaviors[model->GetEntityId()];
+        auto graph = model->behavior;
 
         auto detail = dynamic_cast<Engine::ModelDetailNode *>(
             graph->GetDetailNode().get());

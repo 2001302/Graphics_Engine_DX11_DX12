@@ -192,65 +192,53 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
                 ResourceHelper::CreateTexture(meshData->textureFilename,
                                               meshData->texture,
-                                              meshData->textureResourceView);
+                                              meshData->textureResourceView,true);
             }
-            {
-                meshData->albedoTextureFilename =
-                    directoryPath + "Default_albedo.jpg";
-                meshData->emissiveTextureFilename =
-                    directoryPath + "Default_emissive.jpg";
-                meshData->metallicTextureFilename =
-                    directoryPath + "Default_metalRoughness.jpg";
-                meshData->normalTextureFilename =
-                    directoryPath + "Default_normal.jpg";
-                meshData->roughnessTextureFilename =
-                    directoryPath + "Default_metalRoughness.jpg";
+            if (!meshData->albedoTextureFilename.empty()) {
 
-
-                if (!meshData->albedoTextureFilename.empty()) {
-
-                    ResourceHelper::CreateTexture(
-                        meshData->albedoTextureFilename,
-                        meshData->albedoTexture, meshData->albedoSRV,true);
-                }
-
-                if (!meshData->emissiveTextureFilename.empty()) {
-                    ResourceHelper::CreateTexture(
-                        meshData->emissiveTextureFilename,
-                        meshData->emissiveTexture, meshData->emissiveSRV, true);
-                }
-
-                if (!meshData->normalTextureFilename.empty()) {
-                    ResourceHelper::CreateTexture(
-                        meshData->normalTextureFilename,
-                        meshData->normalTexture, meshData->normalSRV, true);
-                }
-
-                if (!meshData->heightTextureFilename.empty()) {
-                    ResourceHelper::CreateTexture(
-                        meshData->heightTextureFilename,
-                        meshData->heightTexture, meshData->heightSRV, true);
-                }
-
-                if (!meshData->aoTextureFilename.empty()) {
-                    ResourceHelper::CreateTexture(meshData->aoTextureFilename,
-                                                  meshData->aoTexture,
-                                                  meshData->aoSRV, true);
-                }
-
-                if (!meshData->metallicTextureFilename.empty()) {
-                    ResourceHelper::CreateTexture(
-                        meshData->metallicTextureFilename,
-                        meshData->metallicTexture, meshData->metallicSRV, true);
-                }
-
-                if (!meshData->roughnessTextureFilename.empty()) {
-                    ResourceHelper::CreateTexture(
-                        meshData->roughnessTextureFilename,
-                        meshData->roughnessTexture, meshData->roughnessSRV,
-                        true);
-                }
+                ResourceHelper::CreateTexture(
+                    meshData->albedoTextureFilename,
+                    meshData->albedoTexture, meshData->albedoSRV,true);
             }
+
+            if (!meshData->emissiveTextureFilename.empty()) {
+                ResourceHelper::CreateTexture(
+                    meshData->emissiveTextureFilename,
+                    meshData->emissiveTexture, meshData->emissiveSRV, true);
+            }
+
+            if (!meshData->normalTextureFilename.empty()) {
+                ResourceHelper::CreateTexture(
+                    meshData->normalTextureFilename,
+                    meshData->normalTexture, meshData->normalSRV, false);
+            }
+
+            if (!meshData->heightTextureFilename.empty()) {
+                ResourceHelper::CreateTexture(
+                    meshData->heightTextureFilename,
+                    meshData->heightTexture, meshData->heightSRV, false);
+            }
+
+            if (!meshData->aoTextureFilename.empty()) {
+                ResourceHelper::CreateTexture(meshData->aoTextureFilename,
+                                                meshData->aoTexture,
+                                                meshData->aoSRV, false);
+            }
+
+            if (!meshData->metallicTextureFilename.empty()) {
+                ResourceHelper::CreateTexture(
+                    meshData->metallicTextureFilename,
+                    meshData->metallicTexture, meshData->metallicSRV,
+                    false);
+            }
+
+            if (!meshData->roughnessTextureFilename.empty()) {
+                ResourceHelper::CreateTexture(
+                    meshData->roughnessTextureFilename,
+                    meshData->roughnessTexture, meshData->roughnessSRV,
+                    false);
+            }
+            
         }
 
     } else {

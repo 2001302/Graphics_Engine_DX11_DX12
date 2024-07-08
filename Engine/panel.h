@@ -29,7 +29,17 @@ struct PhysicallyBasedRenderingSetting {
      bool useMetallicMap = 0;
      bool useRoughnessMap = 0;
      bool useEmissiveMap = 0;
+
+     float metallic = 0.0f;
+     float roughness = 0.0f;
 };
+
+struct PostProcessSetting {
+    float bloom_strength = 0.0f;
+    float bloom_exposure = 0.0f;
+    float bloom_gamma = 0.0f;
+};
+
 enum EnumRenderMode 
 { 
     eLight = 0, 
@@ -44,6 +54,7 @@ struct GlobalTab {
     CubeMapSetting cube_map_setting;
     ProjectionSetting projection_setting;
     PhysicallyBasedRenderingSetting pbr_setting;
+    PostProcessSetting post_process_setting;
 };
 class Panel : public BaseGui {
 

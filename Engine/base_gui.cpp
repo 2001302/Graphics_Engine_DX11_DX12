@@ -12,8 +12,7 @@ using namespace Engine;
 
 ImGuiWindowFlags GetWindowFlags() {
     return ImGuiWindowFlags_NoTitleBar |
-           ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove |
-           ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse;
+           ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove;
 }
 
 bool BaseGui::Initialize(HWND main_window, Env *env) {

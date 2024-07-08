@@ -161,19 +161,40 @@ Mesh ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
     if (mesh->mMaterialIndex >= 0) {
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-        if (material->GetTextureCount(aiTextureType_DIFFUSE) > 0) {
-            aiString filepath;
-            material->GetTexture(aiTextureType_DIFFUSE, 0, &filepath);
-
-            std::string fullPath =
-                this->basePath +
-                std::string(std::filesystem::path(filepath.C_Str())
-                                .filename()
-                                .string());
-
-            newMesh.textureFilename = fullPath;
-        }
+        newMesh.textureFilename =
+            ReadFilename(material, aiTextureType_DIFFUSE);
+        newMesh.albedoTextureFilename =
+            ReadFilename(material, aiTextureType_BASE_COLOR);
+        newMesh.emissiveTextureFilename =
+            ReadFilename(material, aiTextureType_EMISSIVE);
+        newMesh.heightTextureFilename =
+            ReadFilename(material, aiTextureType_HEIGHT);
+        newMesh.normalTextureFilename =
+            ReadFilename(material, aiTextureType_NORMALS);
+        newMesh.metallicTextureFilename =
+            ReadFilename(material, aiTextureType_METALNESS);
+        newMesh.roughnessTextureFilename =
+            ReadFilename(material, aiTextureType_DIFFUSE_ROUGHNESS);
+        newMesh.aoTextureFilename =
+            ReadFilename(material, aiTextureType_AMBIENT_OCCLUSION);
     }
 
     return newMesh;
+}
+
+std::string ModelLoader::ReadFilename(aiMaterial *material, aiTextureType type) {
+
+    if (material->GetTextureCount(type) > 0) {
+        aiString filepath;
+        material->GetTexture(type, 0, &filepath);
+
+        std::string fullPath =
+            this->basePath +
+            std::string(
+                std::filesystem::path(filepath.C_Str()).filename().string());
+
+        return fullPath;
+    } else {
+        return "";
+    }
 }

@@ -124,10 +124,6 @@ bool Direct3D::CreateBuffer(Env *env) {
     ThrowIfFailed(device_->CreateRenderTargetView(resolved_buffer_.Get(), NULL,
                                                   resolved_RTV.GetAddressOf()));
 
-    // Todo
-    // m_postProcess.Initialize(m_device, m_context, {m_resolvedSRV},
-    //                          {m_backBufferRTV}, m_screenWidth,
-    //                          m_screenHeight, 4);
     return true;
 }
 

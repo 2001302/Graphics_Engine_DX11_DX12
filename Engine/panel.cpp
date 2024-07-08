@@ -118,9 +118,10 @@ void Panel::TabBar() { // Tab Bar
                     EnumRenderMode::eImageBasedLighting;
             }
             ImGui::SameLine();
-            if (ImGui::RadioButton("Use Physically Based Lighting",
-                                   global_setting.render_mode ==
-                                       EnumRenderMode::ePhysicallyBasedRendering)) {
+            if (ImGui::RadioButton(
+                    "Use Physically Based Lighting",
+                    global_setting.render_mode ==
+                        EnumRenderMode::ePhysicallyBasedRendering)) {
                 global_setting.render_mode =
                     EnumRenderMode::ePhysicallyBasedRendering;
             }
@@ -184,7 +185,14 @@ void Panel::TabBar() { // Tab Bar
                                 &global_setting.pbr_setting.useRoughnessMap);
                 ImGui::Checkbox("useEmissiveMap",
                                 &global_setting.pbr_setting.useEmissiveMap);
+                ImGui::SliderFloat("Metallic",
+                                   &global_setting.pbr_setting.metallic, 0.0f,
+                                   1.0f);
+                ImGui::SliderFloat("Roughness",
+                                   &global_setting.pbr_setting.roughness, 0.0f,
+                                   1.0f);
             }
+
 
 
             ImGui::EndTabItem();

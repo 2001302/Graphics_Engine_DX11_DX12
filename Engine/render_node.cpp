@@ -949,15 +949,13 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
                     physically_shader_source->vertex_constant_buffer_data.view
                         .Invert());
         }
-        //// material
-        //{
-        //    physically_shader_source->pixel_constant_buffer_data.material
-        //        .diffuse = Vector3(detail->diffuse);
-        //    physically_shader_source->pixel_constant_buffer_data.material
-        //        .specular = Vector3(detail->specular);
-        //    physically_shader_source->pixel_constant_buffer_data.material
-        //        .shininess = detail->shininess;
-        //}
+        // material
+        {
+            physically_shader_source->pixel_constant_buffer_data.material
+                .roughness = gui->GetGlobalTab().pbr_setting.roughness;
+            physically_shader_source->pixel_constant_buffer_data.material
+                .metallic = gui->GetGlobalTab().pbr_setting.metallic;
+        }
         // light
         {
             for (int i = 0; i < MAX_LIGHTS; i++) {
@@ -1045,9 +1043,6 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         context->OMSetDepthStencilState(
             Direct3D::GetInstance().depth_stencil_state().Get(), 0);
 
-        context->VSSetShader(physically_shader->vertex_shader.Get(), 0, 0);
-        context->PSSetSamplers(0, 1, &physically_shader->sample_state);
-
         if (gui->GetGlobalTab().draw_as_wire_)
             context->RSSetState(
                 Direct3D::GetInstance().wire_rasterizer_state().Get());
@@ -1058,6 +1053,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         for (const auto &mesh : model->meshes) {
 
             // VertexShader에서도 Texture 사용
+            context->VSSetShader(physically_shader->vertex_shader.Get(), 0, 0);
             context->VSSetShaderResources(0, 1, mesh->heightSRV.GetAddressOf());
             context->VSSetSamplers(
                 0, 1, physically_shader->sample_state.GetAddressOf());

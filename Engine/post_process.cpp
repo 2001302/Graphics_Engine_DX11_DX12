@@ -126,13 +126,13 @@ void PostProcess::Render(ComPtr<ID3D11DeviceContext> &context) {
     context->VSSetShader(m_vertexShader.Get(), 0, 0);
     context->PSSetSamplers(0, 1, m_samplerState.GetAddressOf());
 
-    //for (int i = 0; i < m_bloomDownFilters.size(); i++) {
-    //    RenderImageFilter(context, m_bloomDownFilters[i]);
-    //}
+    for (int i = 0; i < m_bloomDownFilters.size(); i++) {
+        RenderImageFilter(context, m_bloomDownFilters[i]);
+    }
 
-    //for (int i = 0; i < m_bloomUpFilters.size(); i++) {
-    //    RenderImageFilter(context, m_bloomUpFilters[i]);
-    //}
+    for (int i = 0; i < m_bloomUpFilters.size(); i++) {
+        RenderImageFilter(context, m_bloomUpFilters[i]);
+    }
 
     RenderImageFilter(context, m_combineFilter);
 }

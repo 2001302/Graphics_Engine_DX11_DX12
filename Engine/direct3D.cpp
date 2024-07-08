@@ -2,6 +2,51 @@
 
 using namespace Engine;
 
+ComPtr<ID3D11Device> Direct3D::device() { return device_; }
+
+ComPtr<ID3D11DeviceContext> Direct3D::device_context() {
+    return device_context_;
+}
+
+ComPtr<IDXGISwapChain> Direct3D::swap_chain() { return swap_chain_; }
+
+ComPtr<ID3D11Texture2D> Direct3D::depth_stencil_buffer() {
+    return float_buffer_;
+};
+
+ComPtr<ID3D11DepthStencilState> Direct3D::depth_stencil_state() {
+    return depth_stencil_state_;
+}
+
+ComPtr<ID3D11DepthStencilView> Direct3D::depth_stencil_view() {
+    return depth_stencil_view_;
+}
+
+ComPtr<ID3D11RasterizerState> Direct3D::solid_rasterizer_state() {
+    return solid_rasterizer_state_;
+}
+
+ComPtr<ID3D11RasterizerState> Direct3D::wire_rasterizer_state() {
+    return wire_rasterizer_state_;
+}
+
+ComPtr<ID3D11RenderTargetView> Direct3D::render_target_view() {
+    return float_RTV;
+}
+
+D3D11_VIEWPORT Direct3D::viewport() { return viewport_; }
+
+ComPtr<ID3D11Texture2D> Direct3D::float_buffer() { return float_buffer_; }
+
+ComPtr<ID3D11Texture2D> Direct3D::resolved_buffer() { return resolved_buffer_; }
+
+ComPtr<ID3D11RenderTargetView> Direct3D::back_buffer_RTV() {
+    return back_buffer_RTV_;
+}
+ComPtr<ID3D11ShaderResourceView> Direct3D::resolved_SRV() {
+    return resolved_SRV_;
+}
+
 bool Direct3D::Initialize(Env *env, bool vsync, HWND main_window,
                           bool fullscreen) {
     const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
@@ -201,7 +246,7 @@ void Direct3D::BeginScene(float red, float green, float blue, float alpha) {
 }
 
 void Direct3D::EndScene() {
-    
+
     // Present the back buffer to the screen since rendering is complete.
     if (vsync_enabled_) {
         // Lock to screen refresh rate.
@@ -214,47 +259,85 @@ void Direct3D::EndScene() {
     return;
 }
 
-ComPtr<ID3D11Device> Direct3D::device() { return device_; }
+void Direct3D::CreateIndexBuffer(const std::vector<uint32_t> &indices,
+                                 ComPtr<ID3D11Buffer> &indexBuffer) {
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+    bufferDesc.ByteWidth = UINT(sizeof(int) * indices.size());
+    bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+    bufferDesc.StructureByteStride = sizeof(int);
 
-ComPtr<ID3D11DeviceContext> Direct3D::device_context() {
-    return device_context_;
+    D3D11_SUBRESOURCE_DATA indexBufferData = {0};
+    indexBufferData.pSysMem = indices.data();
+    indexBufferData.SysMemPitch = 0;
+    indexBufferData.SysMemSlicePitch = 0;
+
+    device_->CreateBuffer(&bufferDesc, &indexBufferData,
+                          indexBuffer.GetAddressOf());
+}
+void Direct3D::CreateGeometryShader(
+    const std::wstring &filename,
+    ComPtr<ID3D11GeometryShader> &geometryShader) {
+
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    // 쉐이더의 시작점의 이름이 "main"인 함수로 지정
+    // D3D_COMPILE_STANDARD_FILE_INCLUDE 추가: 쉐이더에서 include 사용
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "gs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
+
+    // CheckResult(hr, errorBlob.Get());
+
+    device_->CreateGeometryShader(shaderBlob->GetBufferPointer(),
+                                  shaderBlob->GetBufferSize(), NULL,
+                                  &geometryShader);
+}
+void Direct3D::CreatePixelShader(const std::wstring &filename,
+                                 ComPtr<ID3D11PixelShader> &pixelShader) {
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "ps_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
+
+    device_->CreatePixelShader(shaderBlob->GetBufferPointer(),
+                               shaderBlob->GetBufferSize(), NULL, &pixelShader);
 }
 
-ComPtr<IDXGISwapChain> Direct3D::swap_chain() { return swap_chain_; }
+void Direct3D::CreateVertexShaderAndInputLayout(
+    const std::wstring &filename,
+    const std::vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
+    ComPtr<ID3D11VertexShader> &vertexShader,
+    ComPtr<ID3D11InputLayout> &inputLayout) {
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
 
-ComPtr<ID3D11Texture2D> Direct3D::depth_stencil_buffer() {
-    return float_buffer_;
-};
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "vs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
 
-ComPtr<ID3D11DepthStencilState> Direct3D::depth_stencil_state() {
-    return depth_stencil_state_;
-}
+    device_->CreateVertexShader(shaderBlob->GetBufferPointer(),
+                                shaderBlob->GetBufferSize(), NULL,
+                                &vertexShader);
 
-ComPtr<ID3D11DepthStencilView> Direct3D::depth_stencil_view() {
-    return depth_stencil_view_;
-}
-
-ComPtr<ID3D11RasterizerState> Direct3D::solid_rasterizer_state() {
-    return solid_rasterizer_state_;
-}
-
-ComPtr<ID3D11RasterizerState> Direct3D::wire_rasterizer_state() {
-    return wire_rasterizer_state_;
-}
-
-ComPtr<ID3D11RenderTargetView> Direct3D::render_target_view() {
-    return float_RTV;
-}
-
-D3D11_VIEWPORT Direct3D::viewport() { return viewport_; }
-
-ComPtr<ID3D11Texture2D> Direct3D::float_buffer() { return float_buffer_; }
-
-ComPtr<ID3D11Texture2D> Direct3D::resolved_buffer() { return resolved_buffer_; }
-
-ComPtr<ID3D11RenderTargetView> Direct3D::back_buffer_RTV() {
-    return back_buffer_RTV_;
-}
-ComPtr<ID3D11ShaderResourceView> Direct3D::resolved_SRV() {
-    return resolved_SRV_;
+    device_->CreateInputLayout(inputElements.data(), UINT(inputElements.size()),
+                               shaderBlob->GetBufferPointer(),
+                               shaderBlob->GetBufferSize(), &inputLayout);
 }

@@ -9,7 +9,6 @@
 namespace Engine {
 class IShader {
   public:
-
     ComPtr<ID3D11VertexShader> vertex_shader;
     ComPtr<ID3D11PixelShader> pixel_shader;
     ComPtr<ID3D11InputLayout> layout;
@@ -18,14 +17,10 @@ class IShader {
 
 class IShaderSource {
   public:
-    void Initialize(std::shared_ptr<IShader> shader) {
-        this->shader_ = shader;
+    void Initialize() {
         InitializeThis();
     }
     virtual void InitializeThis() {}
-
-  protected:
-    std::shared_ptr<IShader> shader_;
 };
 } // namespace Engine
 #endif

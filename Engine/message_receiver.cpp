@@ -117,25 +117,8 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
         graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
         manager->behaviors[model->GetEntityId()] = graph;
 
-        // create constant buffer(Phong Shader)
-        model->phong_shader_source = std::make_shared<PhongShaderSource>();
-        model->phong_shader_source->Initialize(
-            manager->shaders[EnumShaderType::ePhong]);
-
-        // create constant buffer(Image Based Shader)
-        model->image_based_shader_source =
-            std::make_shared<ImageBasedShaderSource>();
-        model->image_based_shader_source->Initialize(
-            manager->shaders[EnumShaderType::eImageBased]);
-
-        // create constant buffer(Physically Based Shader)
-        model->physically_based_shader_source =
-            std::make_shared<PhsicallyBasedShaderSource>();
-        model->physically_based_shader_source->Initialize(
-            manager->shaders[EnumShaderType::ePhysicallyBased]);
-
         model->transform = Matrix();
-
+        
         for (const auto &meshData : model->meshes) {
             {
                 D3D11_BUFFER_DESC bufferDesc;
@@ -310,23 +293,6 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
         }
     }
 
-    // create constant buffer(Phong Shader)
-    model->phong_shader_source = std::make_shared<PhongShaderSource>();
-    model->phong_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhong]);
-
-    // create constant buffer(Image Based Shader)
-    model->image_based_shader_source =
-        std::make_shared<ImageBasedShaderSource>();
-    model->image_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::eImageBased]);
-
-    // create constant buffer(Physically Based Shader)
-    model->physically_based_shader_source =
-        std::make_shared<PhsicallyBasedShaderSource>();
-    model->physically_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhysicallyBased]);
-
     model->transform = Matrix();
 
     return true;
@@ -394,23 +360,6 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
         }
     }
 
-    // create constant buffer(Phong Shader)
-    model->phong_shader_source = std::make_shared<PhongShaderSource>();
-    model->phong_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhong]);
-
-    // create constant buffer(Image Based Shader)
-    model->image_based_shader_source =
-        std::make_shared<ImageBasedShaderSource>();
-    model->image_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::eImageBased]);
-
-    // create constant buffer(Physically Based Shader)
-    model->physically_based_shader_source =
-        std::make_shared<PhsicallyBasedShaderSource>();
-    model->physically_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhysicallyBased]);
-
     model->transform = Matrix();
 
     return true;
@@ -477,23 +426,6 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
                 &bufferDesc, &indexBufferData, &mesh->indexBuffer);
         }
     }
-
-    // create constant buffer(Phong Shader)
-    model->phong_shader_source = std::make_shared<PhongShaderSource>();
-    model->phong_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhong]);
-
-    // create constant buffer(Image Based Shader)
-    model->image_based_shader_source =
-        std::make_shared<ImageBasedShaderSource>();
-    model->image_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::eImageBased]);
-
-    // create constant buffer(Physically Based Shader)
-    model->physically_based_shader_source =
-        std::make_shared<PhsicallyBasedShaderSource>();
-    model->physically_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhysicallyBased]);
 
     model->transform = Matrix();
 

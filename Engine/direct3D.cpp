@@ -105,10 +105,10 @@ bool Direct3D::CreateBuffer(Env *env) {
         device_->CreateTexture2D(&desc, NULL, float_buffer_.GetAddressOf()));
 
     ThrowIfFailed(device_->CreateShaderResourceView(float_buffer_.Get(), NULL,
-                                                    float_SRV.GetAddressOf()));
+                                                    float_SRV_.GetAddressOf()));
 
     ThrowIfFailed(device_->CreateRenderTargetView(float_buffer_.Get(), NULL,
-                                                  float_RTV.GetAddressOf()));
+                                                  float_RTV_.GetAddressOf()));
 
     CreateDepthBuffer(device_, env->screen_width_, env->screen_height_,
                       UINT(useMSAA ? num_quality_levels_ : 0),
@@ -122,7 +122,7 @@ bool Direct3D::CreateBuffer(Env *env) {
     ThrowIfFailed(device_->CreateShaderResourceView(
         resolved_buffer_.Get(), NULL, resolved_SRV_.GetAddressOf()));
     ThrowIfFailed(device_->CreateRenderTargetView(resolved_buffer_.Get(), NULL,
-                                                  resolved_RTV.GetAddressOf()));
+                                                  resolved_RTV_.GetAddressOf()));
 
     return true;
 }
@@ -183,7 +183,7 @@ void Direct3D::BeginScene(float red, float green, float blue, float alpha) {
     color[2] = blue;
     color[3] = alpha;
 
-    std::vector<ID3D11RenderTargetView *> renderTargetViews = {float_RTV.Get()};
+    std::vector<ID3D11RenderTargetView *> renderTargetViews = {float_RTV_.Get()};
     // Clear the back buffer.
     for (size_t i = 0; i < renderTargetViews.size(); i++) {
         device_context_->ClearRenderTargetView(renderTargetViews[i], color);
@@ -222,7 +222,7 @@ ComPtr<ID3D11DeviceContext> Direct3D::device_context() {
 
 ComPtr<IDXGISwapChain> Direct3D::swap_chain() { return swap_chain_; }
 
-ComPtr<ID3D11Texture2D> Direct3D::depth_stencil_buffer() {
+ComPtr<ID3D11Texture2D> Direct3D::float_buffer() {
     return float_buffer_;
 };
 
@@ -242,13 +242,11 @@ ComPtr<ID3D11RasterizerState> Direct3D::wire_rasterizer_state() {
     return wire_rasterizer_state_;
 }
 
-ComPtr<ID3D11RenderTargetView> Direct3D::render_target_view() {
-    return float_RTV;
+ComPtr<ID3D11RenderTargetView> Direct3D::float_RTV() {
+    return float_RTV_;
 }
 
 D3D11_VIEWPORT Direct3D::viewport() { return viewport_; }
-
-ComPtr<ID3D11Texture2D> Direct3D::float_buffer() { return float_buffer_; }
 
 ComPtr<ID3D11Texture2D> Direct3D::resolved_buffer() { return resolved_buffer_; }
 
@@ -257,4 +255,27 @@ ComPtr<ID3D11RenderTargetView> Direct3D::back_buffer_RTV() {
 }
 ComPtr<ID3D11ShaderResourceView> Direct3D::resolved_SRV() {
     return resolved_SRV_;
+}
+
+
+void Direct3D::CreateDDSTexture(
+    const wchar_t *filename,
+    ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
+
+    ComPtr<ID3D11Texture2D> texture;
+
+    UINT miscFlags = 0;
+    if (true) {
+        miscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
+    }
+
+    auto hr = CreateDDSTextureFromFileEx(
+        Direct3D::GetInstance().device().Get(), filename, 0,
+        D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, miscFlags,
+        DDS_LOADER_FLAGS(false), (ID3D11Resource **)texture.GetAddressOf(),
+        textureResourceView.GetAddressOf(), NULL);
+
+    if (FAILED(hr)) {
+        std::cout << "CreateDDSTextureFromFileEx() failed" << std::endl;
+    }
 }

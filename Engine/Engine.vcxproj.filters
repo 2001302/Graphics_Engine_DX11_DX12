@@ -283,6 +283,9 @@
     <ClCompile Include="image_fliter_shader.cpp">
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>DirectX\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Model">

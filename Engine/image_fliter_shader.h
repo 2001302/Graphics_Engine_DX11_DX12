@@ -11,7 +11,7 @@ class ImageFilterShader : public IShader {
 };
 class ImageFilterShaderSource : public IShaderSource {
   public:
-
+    ImageFilterShaderSource() {}
 };
 } // namespace Engine
 #endif

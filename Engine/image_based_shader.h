@@ -15,9 +15,9 @@ struct ImageBasedVertexConstantBuffer {
 };
 
 struct ImageBasedPixelConstantBuffer {
-    Vector3 eyeWorld;         // 12
-    bool useTexture;          // 4
-    Material material;        // 48
+    Vector3 eyeWorld;  // 12
+    bool useTexture;   // 4
+    Material material; // 48
 };
 
 class ImageBasedShader : public IShader {
@@ -26,6 +26,7 @@ class ImageBasedShader : public IShader {
 
 class ImageBasedShaderSource : public IShaderSource {
   public:
+    ImageBasedShaderSource() { InitializeThis(); };
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
     ImageBasedVertexConstantBuffer vertex_constant_buffer_data;
@@ -37,10 +38,10 @@ class ImageBasedShaderSource : public IShaderSource {
         vertex_constant_buffer_data.view = Matrix();
         vertex_constant_buffer_data.projection = Matrix();
 
-        shader_->CreateConstantBuffer(vertex_constant_buffer_data,
-                                      vertex_constant_buffer);
-        shader_->CreateConstantBuffer(pixel_constant_buffer_data,
-                                      pixel_constant_buffer);
+        Direct3D::GetInstance().CreateConstantBuffer(
+            vertex_constant_buffer_data, vertex_constant_buffer);
+        Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
+                                                     pixel_constant_buffer);
     }
 };
 } // namespace Engine

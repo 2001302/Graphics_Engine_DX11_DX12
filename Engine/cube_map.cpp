@@ -2,7 +2,9 @@
 
 using namespace Engine;
 
-CubeMap::CubeMap() {}
+CubeMap::CubeMap() {
+    cube_map_shader_source = std::make_shared<CubeMapShaderSource>();
+}
 
 CubeMap::~CubeMap() {}
 

@@ -2,7 +2,7 @@
 
 using namespace Engine;
 
-GameObject *GeometryGenerator::MakeSphere(GameObject *gameObject,
+Model *GeometryGenerator::MakeSphere(Model *gameObject,
                                           const float radius,
                                           const int numSlices,
                                           const int numStacks) {
@@ -56,7 +56,7 @@ GameObject *GeometryGenerator::MakeSphere(GameObject *gameObject,
     return gameObject;
 }
 
-GameObject *GeometryGenerator::MakeBox(GameObject *gameObject) {
+Model *GeometryGenerator::MakeBox(Model *gameObject) {
 
     std::vector<Vector3> positions;
     std::vector<Vector3> colors;
@@ -197,7 +197,7 @@ GameObject *GeometryGenerator::MakeBox(GameObject *gameObject) {
     return gameObject;
 }
 
-GameObject *GeometryGenerator::MakeCylinder(GameObject *gameObject,
+Model *GeometryGenerator::MakeCylinder(Model *gameObject,
                                             const float bottomRadius,
                                             const float topRadius, float height,
                                             int numSlices) {
@@ -250,7 +250,7 @@ GameObject *GeometryGenerator::MakeCylinder(GameObject *gameObject,
     gameObject->meshes.push_back(meshData);
     return gameObject;
 }
-GameObject *GeometryGenerator::ReadFromFile(GameObject *gameObject,
+Model *GeometryGenerator::ReadFromFile(Model *gameObject,
                                             std::string basePath,
                                             std::string filename) {
     using namespace DirectX;

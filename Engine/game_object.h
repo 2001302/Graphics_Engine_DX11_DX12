@@ -2,30 +2,30 @@
 #define _GAMEOBJECT
 
 #include "common_struct.h"
-#include "phong_shader.h"
-#include "image_based_shader.h"
-#include "physically_based_shader.h"
 #include "entity.h"
+#include "image_based_shader.h"
+#include "phong_shader.h"
+#include "physically_based_shader.h"
+#include "graph.h"
 
 namespace Engine {
 using Microsoft::WRL::ComPtr;
 
 class GameObject : public IEntity {
   public:
-    GameObject();
-    ~GameObject();
+    GameObject(){};
+    ~GameObject(){};
+    void Update(){};
+    void Render(){};
 
-    int GetIndexCount();
+    std::shared_ptr<Graph> behavior;
 
+  private:
+    virtual void OnUpdate(){};
+    virtual void OnUpdateGui(){};
+    virtual void OnRender(){};
     DirectX::SimpleMath::Matrix transform;
-
-    std::vector<std::shared_ptr<Bone>> bones;
     std::vector<std::shared_ptr<Mesh>> meshes;
-    std::shared_ptr<Animation> animation;
-
-    std::shared_ptr<PhongShaderSource> phong_shader_source;
-    std::shared_ptr<ImageBasedShaderSource> image_based_shader_source;
-    std::shared_ptr<PhsicallyBasedShaderSource> physically_based_shader_source;
 };
 } // namespace Engine
 #endif

@@ -2,14 +2,15 @@
 #define _IMAGEFLITERSHADER
 
 #include "shader.h"
+#include "behavior_tree_builder.h"
 
 using namespace DirectX;
 
 namespace Engine {
-class ImageFilterShader : public IShader {
+struct ImageFilterShader : public IShader {
   public:
 };
-class ImageFilterShaderSource : public IShaderSource {
+struct ImageFilterShaderSource : public IShaderSource {
   public:
 
 };

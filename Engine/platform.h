@@ -3,7 +3,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include "render_node.h"
 #include "behavior_tree.h"
 #include "direct3D.h"
 #include "env.h"
@@ -15,8 +14,6 @@
 
 const bool FULL_SCREEN = false;
 const bool VSYNC_ENABLED = true;
-const float SCREEN_DEPTH = 1000.0f;
-const float SCREEN_NEAR = 0.3f;
 
 namespace Engine {
 class Platform {

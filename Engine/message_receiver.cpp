@@ -108,31 +108,14 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
         std::string fileName = fullPath.substr(lastSlash + 1);
         std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
-        auto model = std::make_shared<GameObject>();
+        auto model = std::make_shared<Model>();
         manager->models[model->GetEntityId()] = model;
         GeometryGenerator::ReadFromFile(model.get(), directoryPath, fileName);
         model->SetName(fileName);
 
         auto graph = std::make_shared<Graph>();
-        graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
-        manager->behaviors[model->GetEntityId()] = graph;
-
-        // create constant buffer(Phong Shader)
-        model->phong_shader_source = std::make_shared<PhongShaderSource>();
-        model->phong_shader_source->Initialize(
-            manager->shaders[EnumShaderType::ePhong]);
-
-        // create constant buffer(Image Based Shader)
-        model->image_based_shader_source =
-            std::make_shared<ImageBasedShaderSource>();
-        model->image_based_shader_source->Initialize(
-            manager->shaders[EnumShaderType::eImageBased]);
-
-        // create constant buffer(Physically Based Shader)
-        model->physically_based_shader_source =
-            std::make_shared<PhsicallyBasedShaderSource>();
-        model->physically_based_shader_source->Initialize(
-            manager->shaders[EnumShaderType::ePhysicallyBased]);
+        graph->SetDetailNode(std::make_shared<ModelDetailNode>());
+        model->behavior = graph;
 
         model->transform = Matrix();
 
@@ -250,13 +233,13 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
-    auto model = std::make_shared<GameObject>();
+    auto model = std::make_shared<Model>();
     model->SetName("sphere");
     manager->models[model->GetEntityId()] = model;
 
     auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
-    manager->behaviors[model->GetEntityId()] = graph;
+    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
+    model->behavior = graph;
 
     GeometryGenerator::MakeSphere(model.get(), 1.5f, 15, 13);
 
@@ -310,22 +293,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
         }
     }
 
-    // create constant buffer(Phong Shader)
-    model->phong_shader_source = std::make_shared<PhongShaderSource>();
-    model->phong_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhong]);
 
-    // create constant buffer(Image Based Shader)
-    model->image_based_shader_source =
-        std::make_shared<ImageBasedShaderSource>();
-    model->image_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::eImageBased]);
-
-    // create constant buffer(Physically Based Shader)
-    model->physically_based_shader_source =
-        std::make_shared<PhsicallyBasedShaderSource>();
-    model->physically_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhysicallyBased]);
 
     model->transform = Matrix();
 
@@ -334,13 +302,13 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
 bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
-    auto model = std::make_shared<GameObject>();
+    auto model = std::make_shared<Model>();
     model->SetName("box");
     manager->models[model->GetEntityId()] = model;
 
     auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
-    manager->behaviors[model->GetEntityId()] = graph;
+    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
+    model->behavior = graph;
 
     GeometryGenerator::MakeBox(model.get());
 
@@ -394,22 +362,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
         }
     }
 
-    // create constant buffer(Phong Shader)
-    model->phong_shader_source = std::make_shared<PhongShaderSource>();
-    model->phong_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhong]);
 
-    // create constant buffer(Image Based Shader)
-    model->image_based_shader_source =
-        std::make_shared<ImageBasedShaderSource>();
-    model->image_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::eImageBased]);
-
-    // create constant buffer(Physically Based Shader)
-    model->physically_based_shader_source =
-        std::make_shared<PhsicallyBasedShaderSource>();
-    model->physically_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhysicallyBased]);
 
     model->transform = Matrix();
 
@@ -418,13 +371,13 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
 bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
-    auto model = std::make_shared<GameObject>();
+    auto model = std::make_shared<Model>();
     model->SetName("cylinder");
     manager->models[model->GetEntityId()] = model;
 
     auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<GameObjectDetailNode>());
-    manager->behaviors[model->GetEntityId()] = graph;
+    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
+    model->behavior = graph;
 
     GeometryGenerator::MakeCylinder(model.get(), 5.0f, 5.0f, 15.0f, 30);
 
@@ -478,22 +431,7 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
         }
     }
 
-    // create constant buffer(Phong Shader)
-    model->phong_shader_source = std::make_shared<PhongShaderSource>();
-    model->phong_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhong]);
 
-    // create constant buffer(Image Based Shader)
-    model->image_based_shader_source =
-        std::make_shared<ImageBasedShaderSource>();
-    model->image_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::eImageBased]);
-
-    // create constant buffer(Physically Based Shader)
-    model->physically_based_shader_source =
-        std::make_shared<PhsicallyBasedShaderSource>();
-    model->physically_based_shader_source->Initialize(
-        manager->shaders[EnumShaderType::ePhysicallyBased]);
 
     model->transform = Matrix();
 

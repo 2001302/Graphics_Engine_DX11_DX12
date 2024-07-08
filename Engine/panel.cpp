@@ -1,5 +1,4 @@
 #include "panel.h"
-#include "game_object_node.h"
 
 using namespace Engine;
 Panel::Panel(std::shared_ptr<PipelineManager> pipeline_manager) {
@@ -57,7 +56,7 @@ void Panel::NodeEditor() {
 
     // Start drawing nodes.
     if (selected_object_id_ != -99999) {
-        auto graph = pipeline_manager_->behaviors[selected_object_id_];
+        auto graph = pipeline_manager_->models[selected_object_id_]->behavior;
         graph->Show();
     }
 

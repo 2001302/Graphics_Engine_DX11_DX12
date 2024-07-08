@@ -4,11 +4,12 @@
 #include "entity.h"
 #include "common_struct.h"
 #include "cube_map_shader.h"
+#include "game_object.h"
 
 namespace Engine {
 using Microsoft::WRL::ComPtr;
 
-class CubeMap : public IEntity{
+class CubeMap : public GameObject {
   public:
     CubeMap();
     ~CubeMap();

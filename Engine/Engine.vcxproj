@@ -148,7 +148,6 @@
     <ClInclude Include="normal_geometry_shader.h" />
     <ClInclude Include="physically_based_shader.h" />
     <ClInclude Include="post_process.h" />
-    <ClInclude Include="render_node.h" />
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="common_struct.h" />
@@ -201,7 +200,6 @@
     <ClCompile Include="normal_geometry_shader.cpp" />
     <ClCompile Include="physically_based_shader.cpp" />
     <ClCompile Include="post_process.cpp" />
-    <ClCompile Include="render_node.cpp" />
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="cube_map.cpp" />

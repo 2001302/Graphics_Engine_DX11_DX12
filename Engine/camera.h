@@ -2,7 +2,9 @@
 #define CAMERA
 
 #include "common_struct.h"
+#include "behavior_tree_builder.h"
 
+namespace Engine {
 class Camera {
   public:
     void Render();
@@ -12,4 +14,12 @@ class Camera {
     DirectX::SimpleMath::Vector3 rotation;
 };
 
+class InitializeCamera : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class UpdateCamera : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+} // namespace Engine
 #endif

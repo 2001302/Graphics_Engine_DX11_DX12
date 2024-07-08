@@ -7,9 +7,6 @@
     <ClInclude Include="behavior_tree.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="render_node.h">
-      <Filter>BehaviorTree</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>Model</Filter>
     </ClInclude>
@@ -161,9 +158,6 @@
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="behavior_tree.cpp">
-      <Filter>BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="render_node.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">

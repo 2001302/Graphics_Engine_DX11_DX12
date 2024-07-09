@@ -1,4 +1,4 @@
-﻿#ifndef _IDATABLOCK
+#ifndef _IDATABLOCK
 #define _IDATABLOCK
 
 namespace Engine {
@@ -10,5 +10,6 @@ class IDataBlock {
   public:
     virtual ~IDataBlock(){};
 };
+
 } // namespace Engine
 #endif

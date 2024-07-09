@@ -151,6 +151,12 @@
     <ClInclude Include="env.h">
       <Filter>Framework</Filter>
     </ClInclude>
+    <ClInclude Include="parallel_node.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="target_objects_block.h">
+      <Filter>DataBlock</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -276,6 +282,9 @@
     </ClCompile>
     <ClCompile Include="game_object.cpp">
       <Filter>Model</Filter>
+    </ClCompile>
+    <ClCompile Include="parallel_node.cpp">
+      <Filter>BehaviorTree</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

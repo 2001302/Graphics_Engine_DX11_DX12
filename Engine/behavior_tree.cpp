@@ -1,8 +1,11 @@
-﻿#include "behavior_tree.h"
+#include "behavior_tree.h"
 
 using namespace Engine;
 
-EnumBehaviorTreeStatus BehaviorActionNode::Invoke() { return OnInvoke(); }
+EnumBehaviorTreeStatus BehaviorActionNode::Invoke() {
+    this->target_id = parent_node->target_id;
+    return OnInvoke();
+}
 
 BehaviorActionNode *BehaviorActionNode::GetParent() { return parent_node; }
 

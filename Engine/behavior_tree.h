@@ -3,6 +3,8 @@
 
 #include "common_struct.h"
 #include "dataBlock.h"
+#include "target_objects_block.h"
+
 
 namespace Engine {
 enum EnumDataBlockType {
@@ -39,6 +41,7 @@ class BehaviorActionNode : public IDisposable {
     BehaviorActionNode *parent_node;
     std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
     std::map<EnumDataBlockType, IDataBlock *> data_block;
+    int target_id;
 };
 } // namespace Engine
 #endif

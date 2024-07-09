@@ -1,4 +1,4 @@
-﻿#include "behavior_tree_builder.h"
+#include "behavior_tree_builder.h"
 
 using namespace Engine;
 
@@ -47,5 +47,14 @@ BehaviorTreeBuilder *BehaviorTreeBuilder::End() {
 
 BehaviorTreeBuilder *BehaviorTreeBuilder::Close() {
     current = current->GetParent();
+    return this;
+}
+
+BehaviorTreeBuilder *
+BehaviorTreeBuilder::Parallel(std::vector<int> target_ids) {
+    auto node = std::make_shared<ParallelNode>(target_ids);
+    current->PushNode(node);
+    current = node.get();
+
     return this;
 }

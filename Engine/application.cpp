@@ -59,6 +59,7 @@ bool Application::OnFrame() {
     auto tree = std::make_unique<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
     ->Excute(std::make_shared<UpdateCamera>())
+        //clear rtv, dsv
     ->Conditional(std::make_shared<CheckImageBasedShader>())
         ->Sequence()
             ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())

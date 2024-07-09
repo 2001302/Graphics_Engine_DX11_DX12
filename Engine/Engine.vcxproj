@@ -147,6 +147,7 @@
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="image_fliter_shader.h" />
     <ClInclude Include="normal_geometry_shader.h" />
+    <ClInclude Include="parallel_node.h" />
     <ClInclude Include="physically_based_shader.h" />
     <ClInclude Include="board_map.h" />
     <ClInclude Include="behavior_tree.h" />
@@ -188,6 +189,7 @@
     <ClInclude Include="pipeline_manager.h" />
     <ClInclude Include="platform.h" />
     <ClInclude Include="resource_helper.h" />
+    <ClInclude Include="target_objects_block.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="application.cpp" />
@@ -199,6 +201,7 @@
     <ClCompile Include="image_filter.cpp" />
     <ClCompile Include="image_fliter_shader.cpp" />
     <ClCompile Include="normal_geometry_shader.cpp" />
+    <ClCompile Include="parallel_node.cpp" />
     <ClCompile Include="physically_based_shader.cpp" />
     <ClCompile Include="board_map.cpp" />
     <ClCompile Include="behavior_tree.cpp" />

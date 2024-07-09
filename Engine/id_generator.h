@@ -1,4 +1,4 @@
-#ifndef _IDGENERATOR
+﻿#ifndef _IDGENERATOR
 #define _IDGENERATOR
 
 namespace Engine {

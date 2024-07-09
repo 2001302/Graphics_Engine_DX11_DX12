@@ -1,4 +1,4 @@
-#include "phong_shader.h"
+ï»¿#include "phong_shader.h"
 #include "panel.h"
 
 using namespace Engine;
@@ -37,7 +37,7 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
     auto phong_shader = std::make_shared<PhongShader>();
     manager->shaders[EnumShaderType::ePhong] = phong_shader;
 
-    // Texture sampler ¸¸µé±â
+    // Texture sampler ë§Œë“¤ê¸°
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
     sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

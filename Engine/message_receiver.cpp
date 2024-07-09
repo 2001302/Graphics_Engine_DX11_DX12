@@ -1,4 +1,4 @@
-#include "message_receiver.h"
+ï»¿#include "message_receiver.h"
 
 using namespace Engine;
 using namespace DirectX::SimpleMath;
@@ -123,7 +123,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
             {
                 D3D11_BUFFER_DESC bufferDesc;
                 ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-                bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ÃÊ±âÈ­ ÈÄ º¯°æX
+                bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ì´ˆê¸°í™” í›„ ë³€ê²½X
                 bufferDesc.ByteWidth =
                     sizeof(Engine::Vertex) *
                     meshData->vertices
@@ -135,7 +135,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
                 bufferDesc.MiscFlags = 0;
 
                 D3D11_SUBRESOURCE_DATA vertexBufferData = {
-                    0}; // MS ¿¹Á¦¿¡¼­ ÃÊ±âÈ­ÇÏ´Â ¹æ½Ä
+                    0}; // MS ì˜ˆì œì—ì„œ ì´ˆê¸°í™”í•˜ëŠ” ë°©ì‹
                 vertexBufferData.pSysMem = meshData->vertices.data();
                 vertexBufferData.SysMemPitch = 0;
                 vertexBufferData.SysMemSlicePitch = 0;
@@ -151,7 +151,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
             }
             {
                 D3D11_BUFFER_DESC bufferDesc;
-                bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ÃÊ±âÈ­ ÈÄ º¯°æX
+                bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ì´ˆê¸°í™” í›„ ë³€ê²½X
                 bufferDesc.ByteWidth =
                     sizeof(unsigned long) * meshData->indices.size();
                 bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
@@ -251,7 +251,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
         {
             D3D11_BUFFER_DESC bufferDesc;
             ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ÃÊ±âÈ­ ÈÄ º¯°æX
+            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ì´ˆê¸°í™” í›„ ë³€ê²½X
             bufferDesc.ByteWidth =
                 sizeof(Engine::Vertex) *
                 mesh->vertices
@@ -262,7 +262,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
             bufferDesc.MiscFlags = 0;
 
             D3D11_SUBRESOURCE_DATA vertexBufferData = {
-                0}; // MS ¿¹Á¦¿¡¼­ ÃÊ±âÈ­ÇÏ´Â ¹æ½Ä
+                0}; // MS ì˜ˆì œì—ì„œ ì´ˆê¸°í™”í•˜ëŠ” ë°©ì‹
             vertexBufferData.pSysMem = mesh->vertices.data();
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
@@ -276,7 +276,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
         }
         {
             D3D11_BUFFER_DESC bufferDesc;
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ÃÊ±âÈ­ ÈÄ º¯°æX
+            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ì´ˆê¸°í™” í›„ ë³€ê²½X
             bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
             bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
             bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
@@ -320,7 +320,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
         {
             D3D11_BUFFER_DESC bufferDesc;
             ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ÃÊ±âÈ­ ÈÄ º¯°æX
+            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ì´ˆê¸°í™” í›„ ë³€ê²½X
             bufferDesc.ByteWidth =
                 sizeof(Engine::Vertex) *
                 mesh->vertices
@@ -331,7 +331,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
             bufferDesc.MiscFlags = 0;
 
             D3D11_SUBRESOURCE_DATA vertexBufferData = {
-                0}; // MS ¿¹Á¦¿¡¼­ ÃÊ±âÈ­ÇÏ´Â ¹æ½Ä
+                0}; // MS ì˜ˆì œì—ì„œ ì´ˆê¸°í™”í•˜ëŠ” ë°©ì‹
             vertexBufferData.pSysMem = mesh->vertices.data();
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
@@ -345,7 +345,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
         }
         {
             D3D11_BUFFER_DESC bufferDesc;
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ÃÊ±âÈ­ ÈÄ º¯°æX
+            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ì´ˆê¸°í™” í›„ ë³€ê²½X
             bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
             bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
             bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
@@ -389,7 +389,7 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
         {
             D3D11_BUFFER_DESC bufferDesc;
             ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ÃÊ±âÈ­ ÈÄ º¯°æX
+            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ì´ˆê¸°í™” í›„ ë³€ê²½X
             bufferDesc.ByteWidth =
                 sizeof(Engine::Vertex) *
                 mesh->vertices
@@ -400,7 +400,7 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
             bufferDesc.MiscFlags = 0;
 
             D3D11_SUBRESOURCE_DATA vertexBufferData = {
-                0}; // MS ¿¹Á¦¿¡¼­ ÃÊ±âÈ­ÇÏ´Â ¹æ½Ä
+                0}; // MS ì˜ˆì œì—ì„œ ì´ˆê¸°í™”í•˜ëŠ” ë°©ì‹
             vertexBufferData.pSysMem = mesh->vertices.data();
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
@@ -414,7 +414,7 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
         }
         {
             D3D11_BUFFER_DESC bufferDesc;
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ÃÊ±âÈ­ ÈÄ º¯°æX
+            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // ì´ˆê¸°í™” í›„ ë³€ê²½X
             bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
             bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
             bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.

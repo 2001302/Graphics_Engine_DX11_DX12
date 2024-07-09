@@ -1,4 +1,4 @@
-#ifndef _CUBEMAPSHADER
+﻿#ifndef _CUBEMAPSHADER
 #define _CUBEMAPSHADER
 
 #include "shader.h"

@@ -1,4 +1,4 @@
-#ifndef _TEST_BEHAVIORTREE
+﻿#ifndef _TEST_BEHAVIORTREE
 #define _TEST_BEHAVIORTREE
 
 #include "gtest/gtest.h"

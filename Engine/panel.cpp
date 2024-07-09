@@ -1,4 +1,4 @@
-#include "panel.h"
+﻿#include "panel.h"
 
 using namespace Engine;
 Panel::Panel(std::shared_ptr<PipelineManager> pipeline_manager) {

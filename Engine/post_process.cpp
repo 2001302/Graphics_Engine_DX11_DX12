@@ -1,4 +1,4 @@
-#include "post_process.h"
+ï»¿#include "post_process.h"
 
 using namespace Engine;
 
@@ -25,7 +25,7 @@ void PostProcess::Initialize(
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    // ¸ğµç ÀÌ¹ÌÁö ÇÊÅÍµéÀÌ VS °øÀ¯
+    // ï§â‘¤ë±º ?ëŒ€?ï§Â€ ?ê¾ªê½£?ã…¼ì”  VS æ€¨ë“­ì‘€
     Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
         L"sampling_vs.hlsl",
                                                  basicInputElements,
@@ -38,7 +38,7 @@ void PostProcess::Initialize(
     Direct3D::GetInstance().CreatePixelShader(L"bloom_up_ps.hlsl",
                                   m_bloomUpPixelShader);
 
-    // Samplerµµ °øÀ¯
+    // Sampler??æ€¨ë“­ì‘€
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
     sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -101,14 +101,14 @@ void PostProcess::Initialize(
     m_combineFilter.SetShaderResources({resources[0], m_bloomSRVs[0]});
     m_combineFilter.SetRenderTargets(targets);
     m_combineFilter.m_constData.strength = 0.0f; // Bloom strength
-    m_combineFilter.m_constData.option1 = 1.0f;  // Exposure·Î »ç¿ë
-    m_combineFilter.m_constData.option2 = 2.2f;  // Gamma·Î »ç¿ë
+    m_combineFilter.m_constData.option1 = 1.0f;  // Exposureæ¿¡??ÑŠìŠœ
+    m_combineFilter.m_constData.option2 = 2.2f;  // Gammaæ¿¡??ÑŠìŠœ
     m_combineFilter.UpdateConstantBuffers(device, context);
 }
 
 void PostProcess::Render(ComPtr<ID3D11DeviceContext> &context) {
 
-    // ¿©·¯ ÇÊÅÍµé °øÅë
+    // ?Ñ‰ìœ­ ?ê¾ªê½£??æ€¨ë“¯ë„»
     context->RSSetState(m_rasterizerSate.Get());
 
     UINT stride = sizeof(Vertex);
@@ -156,7 +156,7 @@ void PostProcess::CreateBuffer(ComPtr<ID3D11Device> &device,
     txtDesc.Width = width;
     txtDesc.Height = height;
     txtDesc.MipLevels = txtDesc.ArraySize = 1;
-    txtDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT; //  ÀÌ¹ÌÁö Ã³¸®¿ëµµ
+    txtDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT; //  ?ëŒ€?ï§Â€ ï§£ì„â”?â‘¸ë£„
     txtDesc.SampleDesc.Count = 1;
     txtDesc.Usage = D3D11_USAGE_DEFAULT;
     txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;

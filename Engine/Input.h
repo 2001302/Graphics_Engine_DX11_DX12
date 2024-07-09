@@ -1,4 +1,4 @@
-#ifndef _INPUT
+﻿#ifndef _INPUT
 #define _INPUT
 
 #define DIRECTINPUT_VERSION 0x0800

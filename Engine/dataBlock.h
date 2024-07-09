@@ -1,10 +1,10 @@
-#ifndef _IDATABLOCK
+ï»¿#ifndef _IDATABLOCK
 #define _IDATABLOCK
 
 namespace Engine {
 /// <summary>
 /// Abstract class
-/// BehaviorTree traversal ¼öÇà ½Ã »ç¿ëµÇ´Â DataBlock ´ÜÀ§.
+/// BehaviorTree traversal ìˆ˜í–‰ ì‹œ ì‚¬ìš©ë˜ëŠ” DataBlock ë‹¨ìœ„.
 /// </summary>
 class IDataBlock {
   public:

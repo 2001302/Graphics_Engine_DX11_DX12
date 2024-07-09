@@ -1,4 +1,4 @@
-#ifndef _PIPELINEMANAGER
+ï»¿#ifndef _PIPELINEMANAGER
 #define _PIPELINEMANAGER
 
 #include "camera.h"
@@ -16,7 +16,7 @@
 
 namespace Engine {
 /// <summary>
-/// Rendering¿¡ ÇÊ¿äÇÑ shared objectÀÇ ÁıÇÕ.
+/// Renderingì— í•„ìš”í•œ shared objectì˜ ì§‘í•©.
 /// </summary>
 class PipelineManager : public IDataBlock {
   public:

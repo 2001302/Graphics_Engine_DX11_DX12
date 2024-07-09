@@ -1,4 +1,4 @@
-#ifndef CAMERA
+﻿#ifndef CAMERA
 #define CAMERA
 
 #include "common_struct.h"

@@ -1,4 +1,4 @@
-#ifndef _IShader
+﻿#ifndef _IShader
 #define _IShader
 
 #include "common_struct.h"

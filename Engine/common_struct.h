@@ -1,4 +1,4 @@
-#ifndef _CommonStruct
+﻿#ifndef _CommonStruct
 #define _CommonStruct
 
 #define _USE_MATH_DEFINES

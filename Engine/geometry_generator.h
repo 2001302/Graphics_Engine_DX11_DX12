@@ -1,4 +1,4 @@
-#ifndef _GEOMETRYGENERATOR
+﻿#ifndef _GEOMETRYGENERATOR
 #define _GEOMETRYGENERATOR
 
 #include "cube_map.h"

@@ -1,4 +1,4 @@
-#include "direct3D.h"
+ï»¿#include "direct3D.h"
 
 using namespace Engine;
 
@@ -60,7 +60,7 @@ bool Direct3D::Initialize(Env *env, bool vsync, HWND main_window,
     ComPtr<ID3D11DeviceContext> context;
 
     const D3D_FEATURE_LEVEL featureLevels[2] = {
-        D3D_FEATURE_LEVEL_11_0, // ´õ ³ôÀº ¹öÀüÀÌ ¸ÕÀú ¿Àµµ·Ï ¼³Á¤
+        D3D_FEATURE_LEVEL_11_0, // ë” ë†’ì€ ë²„ì „ì´ ë¨¼ì € ì˜¤ë„ë¡ ì„¤ì •
         D3D_FEATURE_LEVEL_9_3};
     D3D_FEATURE_LEVEL featureLevel;
 
@@ -77,9 +77,9 @@ bool Direct3D::Initialize(Env *env, bool vsync, HWND main_window,
     sd.Windowed = TRUE;
     sd.Flags =
         DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // allow full-screen switching
-    // sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; //ImGui ÆùÆ®°¡ µÎ²¨¿öÁü
+    // sd.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD; //ImGui í°íŠ¸ê°€ ë‘êº¼ì›Œì§
     sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-    sd.SampleDesc.Count = 1; // _FLIP_Àº MSAA ¹ÌÁö¿ø
+    sd.SampleDesc.Count = 1; // _FLIP_ì€ MSAA ë¯¸ì§€ì›
     sd.SampleDesc.Quality = 0;
 
     ThrowIfFailed(D3D11CreateDeviceAndSwapChain(
@@ -117,9 +117,9 @@ bool Direct3D::Initialize(Env *env, bool vsync, HWND main_window,
 
 bool Direct3D::CreateBuffer(Env *env) {
 
-    // ·¹½ºÅÍÈ­ -> float/depthBuffer(MSAA) -> resolved -> backBuffer
+    // ë ˆìŠ¤í„°í™” -> float/depthBuffer(MSAA) -> resolved -> backBuffer
 
-    // BackBuffer´Â È­¸éÀ¸·Î ÃÖÁ¾ Ãâ·ÂµÇ±â ¶§¹®¿¡  RTV¸¸ ÇÊ¿äÇÏ°í SRV´Â ºÒÇÊ¿ä
+    // BackBufferëŠ” í™”ë©´ìœ¼ë¡œ ìµœì¢… ì¶œë ¥ë˜ê¸° ë•Œë¬¸ì—  RTVë§Œ í•„ìš”í•˜ê³  SRVëŠ” ë¶ˆí•„ìš”
     ComPtr<ID3D11Texture2D> backBuffer;
     ThrowIfFailed(
         swap_chain_->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf())));
@@ -135,7 +135,7 @@ bool Direct3D::CreateBuffer(Env *env) {
     desc.MipLevels = desc.ArraySize = 1;
     desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
     desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-    desc.Usage = D3D11_USAGE_DEFAULT; // ½ºÅ×ÀÌÂ¡ ÅØ½ºÃç·ÎºÎÅÍ º¹»ç °¡´É
+    desc.Usage = D3D11_USAGE_DEFAULT; // ìŠ¤í…Œì´ì§• í…ìŠ¤ì¶°ë¡œë¶€í„° ë³µì‚¬ ê°€ëŠ¥
     desc.MiscFlags = 0;
     desc.CPUAccessFlags = 0;
     if (useMSAA && num_quality_levels_) {
@@ -159,7 +159,7 @@ bool Direct3D::CreateBuffer(Env *env) {
                       UINT(useMSAA ? num_quality_levels_ : 0),
                       depth_stencil_view_);
 
-    // FLOAT MSAA¸¦ RelsolveÇØ¼­ ÀúÀåÇÒ SRV/RTV
+    // FLOAT MSAAë¥¼ Relsolveí•´ì„œ ì €ì¥í•  SRV/RTV
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;
     ThrowIfFailed(
@@ -285,8 +285,8 @@ void Direct3D::CreateGeometryShader(
     compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
-    // ½¦ÀÌ´õÀÇ ½ÃÀÛÁ¡ÀÇ ÀÌ¸§ÀÌ "main"ÀÎ ÇÔ¼ö·Î ÁöÁ¤
-    // D3D_COMPILE_STANDARD_FILE_INCLUDE Ãß°¡: ½¦ÀÌ´õ¿¡¼­ include »ç¿ë
+    // ì‰ì´ë”ì˜ ì‹œì‘ì ì˜ ì´ë¦„ì´ "main"ì¸ í•¨ìˆ˜ë¡œ ì§€ì •
+    // D3D_COMPILE_STANDARD_FILE_INCLUDE ì¶”ê°€: ì‰ì´ë”ì—ì„œ include ì‚¬ìš©
     HRESULT hr = D3DCompileFromFile(
         filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
         "gs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);

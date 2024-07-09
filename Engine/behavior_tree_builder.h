@@ -1,4 +1,4 @@
-#ifndef BEHAVIORTREEBUILDER
+﻿#ifndef BEHAVIORTREEBUILDER
 #define BEHAVIORTREEBUILDER
 
 #include "common_struct.h"

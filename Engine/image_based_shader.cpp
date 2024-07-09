@@ -1,4 +1,4 @@
-#include "image_based_shader.h"
+ï»¿#include "image_based_shader.h"
 #include "geometry_generator.h"
 #include "panel.h"
 
@@ -38,7 +38,7 @@ EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
     auto image_based_shader = std::make_shared<ImageBasedShader>();
     manager->shaders[EnumShaderType::eImageBased] = image_based_shader;
 
-    // Texture sampler ¸¸µé±â
+    // Texture sampler ë§Œë“¤ê¸°
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
     sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;

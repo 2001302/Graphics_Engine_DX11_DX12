@@ -1,4 +1,4 @@
-#include "geometry_generator.h"
+ï»¿#include "geometry_generator.h"
 
 using namespace Engine;
 
@@ -61,11 +61,11 @@ Model *GeometryGenerator::MakeBox(Model *gameObject) {
     std::vector<Vector3> positions;
     std::vector<Vector3> colors;
     std::vector<Vector3> normals;
-    std::vector<Vector2> texcoords; // ÅØ½ºÃç ÁÂÇ¥
+    std::vector<Vector2> texcoords; // í…ìŠ¤ì¶° ì¢Œí‘œ
 
     const float scale = 1.0f;
 
-    // À­¸é
+    // ìœ—ë©´
     positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, 1.0f) * scale);
@@ -83,7 +83,7 @@ Model *GeometryGenerator::MakeBox(Model *gameObject) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // ¾Æ·§¸é
+    // ì•„ë«ë©´
     positions.push_back(Vector3(-1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
@@ -101,7 +101,7 @@ Model *GeometryGenerator::MakeBox(Model *gameObject) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // ¾Õ¸é
+    // ì•ë©´
     positions.push_back(Vector3(-1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, -1.0f) * scale);
@@ -119,7 +119,7 @@ Model *GeometryGenerator::MakeBox(Model *gameObject) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // µŞ¸é
+    // ë’·ë©´
     positions.push_back(Vector3(-1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, 1.0f) * scale);
@@ -137,7 +137,7 @@ Model *GeometryGenerator::MakeBox(Model *gameObject) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // ¿ŞÂÊ
+    // ì™¼ìª½
     positions.push_back(Vector3(-1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, 1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
@@ -155,7 +155,7 @@ Model *GeometryGenerator::MakeBox(Model *gameObject) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // ¿À¸¥ÂÊ
+    // ì˜¤ë¥¸ìª½
     positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, -1.0f) * scale);
@@ -184,12 +184,12 @@ Model *GeometryGenerator::MakeBox(Model *gameObject) {
     }
 
     meshData->indices = {
-        0,  1,  2,  0,  2,  3,  // À­¸é
-        4,  5,  6,  4,  6,  7,  // ¾Æ·§¸é
-        8,  9,  10, 8,  10, 11, // ¾Õ¸é
-        12, 13, 14, 12, 14, 15, // µŞ¸é
-        16, 17, 18, 16, 18, 19, // ¿ŞÂÊ
-        20, 21, 22, 20, 22, 23  // ¿À¸¥ÂÊ
+        0,  1,  2,  0,  2,  3,  // ìœ—ë©´
+        4,  5,  6,  4,  6,  7,  // ì•„ë«ë©´
+        8,  9,  10, 8,  10, 11, // ì•ë©´
+        12, 13, 14, 12, 14, 15, // ë’·ë©´
+        16, 17, 18, 16, 18, 19, // ì™¼ìª½
+        20, 21, 22, 20, 22, 23  // ì˜¤ë¥¸ìª½
     };
 
     gameObject->meshes.push_back(meshData);
@@ -206,7 +206,7 @@ Model *GeometryGenerator::MakeCylinder(Model *gameObject,
     std::shared_ptr<Mesh> meshData = std::make_shared<Mesh>();
     std::vector<Vertex> &vertices = meshData->vertices;
 
-    // ¿·¸éÀÇ ¹Ù´Ú ¹öÅØ½ºµé (ÀÎµ¦½º 0 ÀÌ»ó numSlices ¹Ì¸¸)
+    // ì˜†ë©´ì˜ ë°”ë‹¥ ë²„í…ìŠ¤ë“¤ (ì¸ë±ìŠ¤ 0 ì´ìƒ numSlices ë¯¸ë§Œ)
     for (int i = 0; i <= numSlices; i++) {
         Vertex v;
         v.position =
@@ -222,7 +222,7 @@ Model *GeometryGenerator::MakeCylinder(Model *gameObject,
         vertices.push_back(v);
     }
 
-    // ¿·¸éÀÇ ¸Ç À§ ¹öÅØ½ºµé (ÀÎµ¦½º numSlices ÀÌ»ó 2 * numSlices ¹Ì¸¸)
+    // ì˜†ë©´ì˜ ë§¨ ìœ„ ë²„í…ìŠ¤ë“¤ (ì¸ë±ìŠ¤ numSlices ì´ìƒ 2 * numSlices ë¯¸ë§Œ)
     for (int i = 0; i <= numSlices; i++) {
         Vertex v;
         v.position =
@@ -298,9 +298,9 @@ CubeMap *GeometryGenerator::MakeBox(CubeMap* cube_map) {
     std::vector<Vector3> positions;
     std::vector<Vector3> colors;
     std::vector<Vector3> normals;
-    std::vector<Vector2> texcoords; // ÅØ½ºÃç ÁÂÇ¥
+    std::vector<Vector2> texcoords; // í…ìŠ¤ì¶° ì¢Œí‘œ
 
-    // À­¸é
+    // ìœ—ë©´
     positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, 1.0f) * scale);
@@ -318,7 +318,7 @@ CubeMap *GeometryGenerator::MakeBox(CubeMap* cube_map) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // ¾Æ·§¸é
+    // ì•„ë«ë©´
     positions.push_back(Vector3(-1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
@@ -336,7 +336,7 @@ CubeMap *GeometryGenerator::MakeBox(CubeMap* cube_map) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // ¾Õ¸é
+    // ì•ë©´
     positions.push_back(Vector3(-1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, -1.0f) * scale);
@@ -354,7 +354,7 @@ CubeMap *GeometryGenerator::MakeBox(CubeMap* cube_map) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // µŞ¸é
+    // ë’·ë©´
     positions.push_back(Vector3(-1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, 1.0f) * scale);
@@ -372,7 +372,7 @@ CubeMap *GeometryGenerator::MakeBox(CubeMap* cube_map) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // ¿ŞÂÊ
+    // ì™¼ìª½
     positions.push_back(Vector3(-1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, 1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
@@ -390,7 +390,7 @@ CubeMap *GeometryGenerator::MakeBox(CubeMap* cube_map) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // ¿À¸¥ÂÊ
+    // ì˜¤ë¥¸ìª½
     positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, -1.0f) * scale);
@@ -419,12 +419,12 @@ CubeMap *GeometryGenerator::MakeBox(CubeMap* cube_map) {
     }
 
     cube_map->mesh->indices = {
-        0,  1,  2,  0,  2,  3,  // À­¸é
-        4,  5,  6,  4,  6,  7,  // ¾Æ·§¸é
-        8,  9,  10, 8,  10, 11, // ¾Õ¸é
-        12, 13, 14, 12, 14, 15, // µŞ¸é
-        16, 17, 18, 16, 18, 19, // ¿ŞÂÊ
-        20, 21, 22, 20, 22, 23  // ¿À¸¥ÂÊ
+        0,  1,  2,  0,  2,  3,  // ìœ—ë©´
+        4,  5,  6,  4,  6,  7,  // ì•„ë«ë©´
+        8,  9,  10, 8,  10, 11, // ì•ë©´
+        12, 13, 14, 12, 14, 15, // ë’·ë©´
+        16, 17, 18, 16, 18, 19, // ì™¼ìª½
+        20, 21, 22, 20, 22, 23  // ì˜¤ë¥¸ìª½
     };
     cube_map->SetName("CubeMap");
 
@@ -494,9 +494,9 @@ PostProcess *
     std::vector<Vector3> positions;
     std::vector<Vector3> colors;
     std::vector<Vector3> normals;
-    std::vector<Vector2> texcoords; // ÅØ½ºÃç ÁÂÇ¥
+    std::vector<Vector2> texcoords; // í…ìŠ¤ì¶° ì¢Œí‘œ
 
-    // ¾Õ¸é
+    // ì•ë©´
     positions.push_back(Vector3(-1.0f, 1.0f, 0.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, 0.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, 0.0f) * scale);
@@ -529,7 +529,7 @@ PostProcess *
          postProcess->m_mesh->vertices.push_back(v);
     }
     postProcess->m_mesh->indices = {
-        0, 1, 2, 0, 2, 3, // ¾Õ¸é
+        0, 1, 2, 0, 2, 3, // ì•ë©´
     };
 
     return postProcess;

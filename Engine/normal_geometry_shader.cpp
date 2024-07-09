@@ -1,4 +1,4 @@
-#include "normal_geometry_shader.h"
+ï»¿#include "normal_geometry_shader.h"
 #include "geometry_generator.h"
 #include "panel.h"
 
@@ -21,7 +21,7 @@ EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
     auto geometry_shader = std::make_shared<NormalGeometryShader>();
     manager->shaders[EnumShaderType::eNormalGeometry] = geometry_shader;
 
-    // Texture sampler ¸¸µé±â
+    // Texture sampler ë§Œë“¤ê¸°
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
     sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -51,7 +51,7 @@ EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
         L"physically_vertex_shader.hlsl", inputElements,
         geometry_shader->vertex_shader, geometry_shader->layout);
 
-    // Geometry shader ÃÊ±âÈ­ÇÏ±â
+    // Geometry shader ì´ˆê¸°í™”í•˜ê¸°
     Direct3D::GetInstance().CreateGeometryShader(
         L"NormalGS.hlsl", geometry_shader->normalGeometryShader);
 

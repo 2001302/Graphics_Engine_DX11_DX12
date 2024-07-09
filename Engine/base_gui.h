@@ -1,4 +1,4 @@
-#ifndef _BASEGUI
+﻿#ifndef _BASEGUI
 #define _BASEGUI
 
 #include "ImGui/imgui.h"

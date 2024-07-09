@@ -1,4 +1,4 @@
-#include "physically_based_shader.h"
+ï»¿#include "physically_based_shader.h"
 #include "geometry_generator.h"
 #include "panel.h"
 
@@ -40,7 +40,7 @@ EnumBehaviorTreeStatus InitializePhysicallyBasedShader::OnInvoke() {
     auto physical_shader = std::make_shared<PhsicallyBasedShader>();
     manager->shaders[EnumShaderType::ePhysicallyBased] = physical_shader;
 
-    // Texture sampler ¸¸µé±â
+    // Texture sampler ë§Œë“¤ê¸°
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
     sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -278,7 +278,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
         for (const auto &mesh : model->meshes) {
 
-            // VertexShader¿¡¼­µµ Texture »ç¿ë
+            // VertexShaderì—ì„œë„ Texture ì‚¬ìš©
             context->VSSetShader(physically_shader->vertex_shader.Get(), 0, 0);
             context->VSSetShaderResources(0, 1, mesh->heightSRV.GetAddressOf());
             context->VSSetSamplers(

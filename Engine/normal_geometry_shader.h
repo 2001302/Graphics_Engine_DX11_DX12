@@ -1,4 +1,4 @@
-#ifndef _NORMALGEOMETRYSHADER
+﻿#ifndef _NORMALGEOMETRYSHADER
 #define _NORMALGEOMETRYSHADER
 
 #include "shader.h"

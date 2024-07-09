@@ -1,4 +1,4 @@
-#ifndef _IMAGEFLITERSHADER
+﻿#ifndef _IMAGEFLITERSHADER
 #define _IMAGEFLITERSHADER
 
 #include "shader.h"

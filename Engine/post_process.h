@@ -1,4 +1,4 @@
-#ifndef _POSTPROCESS
+﻿#ifndef _POSTPROCESS
 #define _POSTPROCESS
 
 #include "common_struct.h"

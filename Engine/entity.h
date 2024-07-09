@@ -1,4 +1,4 @@
-#ifndef _ENTITY
+﻿#ifndef _ENTITY
 #define _ENTITY
 
 #include "common_struct.h"

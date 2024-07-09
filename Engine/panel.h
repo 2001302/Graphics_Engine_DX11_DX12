@@ -1,4 +1,4 @@
-#ifndef _PANEL
+﻿#ifndef _PANEL
 #define _PANEL
 
 #include "base_gui.h"

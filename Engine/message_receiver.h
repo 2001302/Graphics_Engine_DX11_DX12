@@ -1,4 +1,4 @@
-#ifndef _MESSAGERECEIVER
+﻿#ifndef _MESSAGERECEIVER
 #define _MESSAGERECEIVER
 
 #include "input.h"

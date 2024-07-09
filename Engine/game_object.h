@@ -1,4 +1,4 @@
-#ifndef _GAMEOBJECT
+﻿#ifndef _GAMEOBJECT
 #define _GAMEOBJECT
 
 #include "common_struct.h"

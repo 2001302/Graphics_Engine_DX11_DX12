@@ -1,4 +1,4 @@
-#ifndef _IMAGEFILTER
+﻿#ifndef _IMAGEFILTER
 #define _IMAGEFILTER
 
 #include "common_struct.h"

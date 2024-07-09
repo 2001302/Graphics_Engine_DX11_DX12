@@ -1,4 +1,4 @@
-#ifndef _CUBEMAP
+﻿#ifndef _CUBEMAP
 #define _CUBEMAP
 
 #include "entity.h"

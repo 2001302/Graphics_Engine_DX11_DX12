@@ -1,4 +1,4 @@
-#ifndef _D3DCLASS_H_
+ï»¿#ifndef _D3DCLASS_H_
 #define _D3DCLASS_H_
 
 #include <directxtk/DDSTextureLoader.h> 
@@ -138,8 +138,8 @@ class Direct3D {
     ComPtr<IDXGISwapChain> swap_chain_;
     ComPtr<ID3D11RenderTargetView> back_buffer_RTV_;
 
-    // »ï°¢Çü ·¹½ºÅÍÈ­ -> float(MSAA) -> resolved(No MSAA)
-    // -> ÈÄÃ³¸®(ºí·ë, Åæ¸ÅÇÎ) -> backBuffer(ÃÖÁ¾ SwapChain Present)
+    // ì‚¼ê°í˜• ë ˆìŠ¤í„°í™” -> float(MSAA) -> resolved(No MSAA)
+    // -> í›„ì²˜ë¦¬(ë¸”ë£¸, í†¤ë§¤í•‘) -> backBuffer(ìµœì¢… SwapChain Present)
     ComPtr<ID3D11Texture2D> float_buffer_;
     ComPtr<ID3D11Texture2D> resolved_buffer_;
     ComPtr<ID3D11RenderTargetView> float_RTV;

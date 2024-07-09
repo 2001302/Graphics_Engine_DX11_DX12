@@ -359,19 +359,19 @@
     <FxCompile Include="physically_based_pixel_shader.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="CombinePS.hlsl">
+    <FxCompile Include="combine_ps.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="BloomUpPS.hlsl">
+    <FxCompile Include="bloom_up_ps.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="BloomDownPS.hlsl">
+    <FxCompile Include="bloom_down_ps.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="SamplingVS.hlsl">
+    <FxCompile Include="sampling_vs.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="SamplingPS.hlsl">
+    <FxCompile Include="sampling_ps.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

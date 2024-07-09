@@ -27,15 +27,15 @@ void PostProcess::Initialize(
 
     // 모든 이미지 필터들이 VS 공유
     Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
-        L"SamplingVS.hlsl",
+        L"sampling_vs.hlsl",
                                                  basicInputElements,
                                                  m_vertexShader, m_inputLayout);
 
-    Direct3D::GetInstance().CreatePixelShader(L"CombinePS.hlsl",
+    Direct3D::GetInstance().CreatePixelShader(L"combine_ps.hlsl",
                                            m_combinePixelShader);
-    Direct3D::GetInstance().CreatePixelShader(L"BloomDownPS.hlsl",
+    Direct3D::GetInstance().CreatePixelShader(L"bloom_down_ps.hlsl",
                                            m_bloomDownPixelShader);
-    Direct3D::GetInstance().CreatePixelShader(L"BloomUpPS.hlsl",
+    Direct3D::GetInstance().CreatePixelShader(L"bloom_up_ps.hlsl",
                                   m_bloomUpPixelShader);
 
     // Sampler도 공유

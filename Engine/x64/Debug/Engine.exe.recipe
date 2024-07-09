@@ -7,13 +7,13 @@
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\user\Source\Engine\x64\Debug\BloomDownPS.cso</FullPath>
+      <FullPath>C:\Users\user\Source\Engine\x64\Debug\bloom_down_ps.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\user\Source\Engine\x64\Debug\BloomUpPS.cso</FullPath>
+      <FullPath>C:\Users\user\Source\Engine\x64\Debug\bloom_up_ps.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\user\Source\Engine\x64\Debug\CombinePS.cso</FullPath>
+      <FullPath>C:\Users\user\Source\Engine\x64\Debug\combine_ps.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\user\Source\Engine\x64\Debug\cube_mapping_pixel_shader.cso</FullPath>
@@ -40,10 +40,10 @@
       <FullPath>C:\Users\user\Source\Engine\x64\Debug\physically_based_vertex_shader.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\user\Source\Engine\x64\Debug\SamplingPS.cso</FullPath>
+      <FullPath>C:\Users\user\Source\Engine\x64\Debug\sampling_ps.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\user\Source\Engine\x64\Debug\SamplingVS.cso</FullPath>
+      <FullPath>C:\Users\user\Source\Engine\x64\Debug\sampling_vs.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

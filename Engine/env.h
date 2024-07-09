@@ -5,7 +5,9 @@
 #include "dataBlock.h"
 
 namespace Engine {
-class Env {
+struct Env {
+  private:
+    Env() : screen_width(1920), screen_height(1080), aspect(0.0f){};
   public:
     static Env &Get() {
         static Env instance;
@@ -18,9 +20,6 @@ class Env {
     float screen_width;
     float screen_height;
     float aspect;
-
-  private:
-    Env() : screen_width(1920), screen_height(1080), aspect(0.0f){};
 };
 } // namespace Engine
 #endif

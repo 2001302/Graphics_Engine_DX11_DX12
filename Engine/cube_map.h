@@ -1,4 +1,4 @@
-﻿#ifndef _CUBEMAP
+#ifndef _CUBEMAP
 #define _CUBEMAP
 
 #include "entity.h"
@@ -25,4 +25,4 @@ class CubeMap : public GameObject {
     std::shared_ptr<CubeMapShaderSource> cube_map_shader_source;
 };
 } // namespace Engine
-#endif \
+#endif

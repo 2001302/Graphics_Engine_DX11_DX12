@@ -1,8 +1,8 @@
-﻿#include "post_process.h"
+#include "board_map.h"
 
 using namespace Engine;
 
-void PostProcess::Initialize(
+void BoardMap::Initialize(
     ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
     const std::vector<ComPtr<ID3D11ShaderResourceView>> &resources,
     const std::vector<ComPtr<ID3D11RenderTargetView>> &targets, const int width,
@@ -25,7 +25,6 @@ void PostProcess::Initialize(
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    // 紐⑤뱺 ?대?吏 ?꾪꽣?ㅼ씠 VS 怨듭쑀
     Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
         L"sampling_vs.hlsl",
                                                  basicInputElements,
@@ -38,7 +37,6 @@ void PostProcess::Initialize(
     Direct3D::GetInstance().CreatePixelShader(L"bloom_up_ps.hlsl",
                                   m_bloomUpPixelShader);
 
-    // Sampler??怨듭쑀
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
     sampDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -101,14 +99,13 @@ void PostProcess::Initialize(
     m_combineFilter.SetShaderResources({resources[0], m_bloomSRVs[0]});
     m_combineFilter.SetRenderTargets(targets);
     m_combineFilter.m_constData.strength = 0.0f; // Bloom strength
-    m_combineFilter.m_constData.option1 = 1.0f;  // Exposure濡??ъ슜
-    m_combineFilter.m_constData.option2 = 2.2f;  // Gamma濡??ъ슜
+    m_combineFilter.m_constData.option1 = 1.0f;  // Exposure
+    m_combineFilter.m_constData.option2 = 2.2f;  // Gamma
     m_combineFilter.UpdateConstantBuffers(device, context);
 }
 
-void PostProcess::Render(ComPtr<ID3D11DeviceContext> &context) {
+void BoardMap::Render(ComPtr<ID3D11DeviceContext> &context) {
 
-    // ?щ윭 ?꾪꽣??怨듯넻
     context->RSSetState(m_rasterizerSate.Get());
 
     UINT stride = sizeof(Vertex);
@@ -137,13 +134,13 @@ void PostProcess::Render(ComPtr<ID3D11DeviceContext> &context) {
     RenderImageFilter(context, m_combineFilter);
 }
 
-void PostProcess::RenderImageFilter(ComPtr<ID3D11DeviceContext> &context,
+void BoardMap::RenderImageFilter(ComPtr<ID3D11DeviceContext> &context,
                                     const ImageFilter &imageFilter) {
     imageFilter.Render(context);
     context->DrawIndexed(UINT(m_mesh->indices.size()), 0, 0);
 }
 
-void PostProcess::CreateBuffer(ComPtr<ID3D11Device> &device,
+void BoardMap::CreateBuffer(ComPtr<ID3D11Device> &device,
                                ComPtr<ID3D11DeviceContext> &context, int width,
                                int height,
                                ComPtr<ID3D11ShaderResourceView> &srv,
@@ -156,7 +153,7 @@ void PostProcess::CreateBuffer(ComPtr<ID3D11Device> &device,
     txtDesc.Width = width;
     txtDesc.Height = height;
     txtDesc.MipLevels = txtDesc.ArraySize = 1;
-    txtDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT; //  ?대?吏 泥섎━?⑸룄
+    txtDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
     txtDesc.SampleDesc.Count = 1;
     txtDesc.Usage = D3D11_USAGE_DEFAULT;
     txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;

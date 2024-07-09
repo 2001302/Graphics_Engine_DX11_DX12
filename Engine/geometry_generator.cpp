@@ -484,8 +484,8 @@ CubeMap *GeometryGenerator::MakeSphere(CubeMap *cube_map,
     return cube_map;
 }
 
-PostProcess *
-    GeometryGenerator::MakeSquare(PostProcess* postProcess,
+BoardMap *
+    GeometryGenerator::MakeSquare(BoardMap* postProcess,
         const float scale,
         const Vector2 texScale) {
 

@@ -136,7 +136,7 @@
     <ClInclude Include="normal_geometry_shader.h">
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="post_process.h">
+    <ClInclude Include="board_map.h">
       <Filter>Model</Filter>
     </ClInclude>
     <ClInclude Include="image_filter.h">
@@ -265,7 +265,7 @@
     <ClCompile Include="normal_geometry_shader.cpp">
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="post_process.cpp">
+    <ClCompile Include="board_map.cpp">
       <Filter>Model</Filter>
     </ClCompile>
     <ClCompile Include="image_filter.cpp">

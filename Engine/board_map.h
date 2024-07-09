@@ -1,4 +1,4 @@
-﻿#ifndef _POSTPROCESS
+#ifndef _POSTPROCESS
 #define _POSTPROCESS
 
 #include "common_struct.h"
@@ -11,7 +11,7 @@ namespace Engine {
 using DirectX::SimpleMath::Vector4;
 using Microsoft::WRL::ComPtr;
 
-class PostProcess {
+class BoardMap {
   public:
     void
     Initialize(ComPtr<ID3D11Device> &device,

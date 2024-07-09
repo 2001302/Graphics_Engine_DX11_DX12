@@ -1,4 +1,4 @@
-﻿#ifndef _IMAGEFLITERSHADER
+#ifndef _IMAGEFLITERSHADER
 #define _IMAGEFLITERSHADER
 
 #include "shader.h"
@@ -14,5 +14,14 @@ struct ImageFilterShaderSource : public IShaderSource {
   public:
 
 };
+
+class InitializeBoardMap : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class RenderBoardMap : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
+};
+
 } // namespace Engine
 #endif

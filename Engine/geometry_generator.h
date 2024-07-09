@@ -1,11 +1,11 @@
-﻿#ifndef _GEOMETRYGENERATOR
+#ifndef _GEOMETRYGENERATOR
 #define _GEOMETRYGENERATOR
 
 #include "cube_map.h"
 #include "direct3D.h"
 #include "model.h"
 #include "model_loader.h"
-#include "post_process.h"
+#include "board_map.h"
 
 namespace Engine {
 class GeometryGenerator {
@@ -24,7 +24,7 @@ class GeometryGenerator {
                                     const float bottomRadius,
                                     const float topRadius, float height,
                                     int numSlices);
-    static PostProcess *MakeSquare(PostProcess *postProcess,
+    static BoardMap *MakeSquare(BoardMap *postProcess,
                                    const float scale = 1.0f,
                                    const Vector2 texScale = Vector2(1.0f));
     static Model *ReadFromFile(Model *gameObject,

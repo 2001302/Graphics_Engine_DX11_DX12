@@ -8,7 +8,6 @@ Application::Application() : imgui_(0), manager_(0) {
     manager_ = std::make_shared<PipelineManager>();
     message_receiver_ = std::make_unique<MessageReceiver>();
     imgui_ = std::make_shared<Panel>(manager_);
-    post_process_ = std::make_unique<PostProcess>();
 };
 
 bool Application::OnStart() {
@@ -20,17 +19,8 @@ bool Application::OnStart() {
         {EnumDataBlockType::eGui, imgui_.get()},
     };
 
-    GeometryGenerator::MakeSquare(post_process_.get());
     Direct3D::GetInstance().Initialize(VSYNC_ENABLED, main_window_,
                                        FULL_SCREEN);
-
-    auto device = Direct3D::GetInstance().device();
-    auto context = Direct3D::GetInstance().device_context();
-
-    post_process_->Initialize(
-        device, context, {Direct3D::GetInstance().resolved_SRV()},
-        {Direct3D::GetInstance().back_buffer_RTV()}, Env::Get().screen_width,
-        Env::Get().screen_height, 4);
 
     input_->Initialize(hinstance_, main_window_, Env::Get().screen_width,
                        Env::Get().screen_height);
@@ -40,6 +30,7 @@ bool Application::OnStart() {
     auto tree = new BehaviorTreeBuilder();
     tree->Build(dataBlock)
         ->Sequence()
+            ->Excute(std::make_shared<InitializeBoardMap>())
             ->Excute(std::make_shared<InitializeCamera>())
             ->Excute(std::make_shared<InitializeCubeMapShader>())
             ->Excute(std::make_shared<InitializePhongShader>())
@@ -90,16 +81,9 @@ bool Application::OnFrame() {
             ->Excute(std::make_shared<RenderCubeMap>())
         ->Close()
     ->End()
+    ->Excute(std::make_shared<RenderBoardMap>())
     ->Run();
     // clang-format on
-
-    Direct3D::GetInstance().device_context()->ResolveSubresource(
-        Direct3D::GetInstance().resolved_buffer().Get(), 0,
-        Direct3D::GetInstance().float_buffer().Get(), 0,
-        DXGI_FORMAT_R16G16B16A16_FLOAT);
-
-    auto context = Direct3D::GetInstance().device_context();
-    post_process_->Render(context);
 
     input_->Frame();
     imgui_->Frame();

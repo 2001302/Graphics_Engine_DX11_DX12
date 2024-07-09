@@ -1,19 +1,26 @@
-﻿#ifndef _ENV
+#ifndef _ENV
 #define _ENV
 
 #include "common_struct.h"
 #include "dataBlock.h"
 
 namespace Engine {
-class Env : public IDataBlock {
+class Env {
   public:
-    const float screen_depth_ = 1000.0f;
-    const float screen_near_ = 0.3f;
-    const float field_of_view_ = M_PI / 4.0f;
+    static Env &Get() {
+        static Env instance;
+        return instance;
+    }
 
-    float screen_width_;
-    float screen_height_;
-    float aspect_;
+    const float field_of_view = M_PI / 4.0f;
+    const float screen_depth = 1000.0f;
+    const float screen_near = 0.3f;
+    float screen_width;
+    float screen_height;
+    float aspect;
+
+  private:
+    Env() : screen_width(1920), screen_height(1080), aspect(0.0f){};
 };
 } // namespace Engine
 #endif

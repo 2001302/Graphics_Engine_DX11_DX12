@@ -1,4 +1,4 @@
-﻿#include "direct3D.h"
+#include "direct3D.h"
 
 using namespace Engine;
 
@@ -47,7 +47,7 @@ ComPtr<ID3D11ShaderResourceView> Direct3D::resolved_SRV() {
     return resolved_SRV_;
 }
 
-bool Direct3D::Initialize(Env *env, bool vsync, HWND main_window,
+bool Direct3D::Initialize(bool vsync, HWND main_window,
                           bool fullscreen) {
     const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
 
@@ -66,8 +66,8 @@ bool Direct3D::Initialize(Env *env, bool vsync, HWND main_window,
 
     DXGI_SWAP_CHAIN_DESC sd;
     ZeroMemory(&sd, sizeof(sd));
-    sd.BufferDesc.Width = env->screen_width_;
-    sd.BufferDesc.Height = env->screen_height_;
+    sd.BufferDesc.Width = Env::Get().screen_width;
+    sd.BufferDesc.Height = Env::Get().screen_height;
     sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     sd.BufferCount = 2;
     sd.BufferDesc.RefreshRate.Numerator = 60;
@@ -92,10 +92,10 @@ bool Direct3D::Initialize(Env *env, bool vsync, HWND main_window,
         return false;
     }
 
-    CreateBuffer(env);
+    CreateBuffer();
 
-    SetViewPort(0.0f, 0.0f, (float)env->screen_width_,
-                (float)env->screen_height_);
+    SetViewPort(0.0f, 0.0f, (float)Env::Get().screen_width,
+                (float)Env::Get().screen_height);
 
     D3D11_RASTERIZER_DESC rastDesc;
     ZeroMemory(&rastDesc, sizeof(D3D11_RASTERIZER_DESC));
@@ -115,7 +115,7 @@ bool Direct3D::Initialize(Env *env, bool vsync, HWND main_window,
     return true;
 }
 
-bool Direct3D::CreateBuffer(Env *env) {
+bool Direct3D::CreateBuffer() {
 
     // 레스터화 -> float/depthBuffer(MSAA) -> resolved -> backBuffer
 
@@ -155,7 +155,7 @@ bool Direct3D::CreateBuffer(Env *env) {
     ThrowIfFailed(device_->CreateRenderTargetView(float_buffer_.Get(), NULL,
                                                   float_RTV.GetAddressOf()));
 
-    CreateDepthBuffer(device_, env->screen_width_, env->screen_height_,
+    CreateDepthBuffer(device_, Env::Get().screen_width, Env::Get().screen_height,
                       UINT(useMSAA ? num_quality_levels_ : 0),
                       depth_stencil_view_);
 

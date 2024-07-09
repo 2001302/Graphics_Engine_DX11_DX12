@@ -1,4 +1,4 @@
-﻿#include "phong_shader.h"
+#include "phong_shader.h"
 #include "panel.h"
 
 using namespace Engine;
@@ -73,14 +73,10 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
 
 EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *envBlock = data_block[EnumDataBlockType::eEnv];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
-
-    auto env = dynamic_cast<Engine::Env *>(envBlock);
-    assert(env != nullptr);
 
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
@@ -128,7 +124,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
         }
         // projection
         {
-            const float aspect = env->aspect_;
+            const float aspect = Env::Get().aspect;
             if (detail->use_perspective_projection) {
                 phong_shader_source->vertex_constant_buffer_data.projection =
                     XMMatrixPerspectiveFovLH(
@@ -197,14 +193,10 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
 
 EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *envBlock = data_block[EnumDataBlockType::eEnv];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
-
-    auto env = dynamic_cast<Engine::Env *>(envBlock);
-    assert(env != nullptr);
 
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);

@@ -1,4 +1,4 @@
-﻿#ifndef _PIPELINEMANAGER
+#ifndef _PIPELINEMANAGER
 #define _PIPELINEMANAGER
 
 #include "camera.h"
@@ -20,10 +20,10 @@ namespace Engine {
 /// </summary>
 class PipelineManager : public IDataBlock {
   public:
+    std::unique_ptr<Camera> camera;
+    std::shared_ptr<CubeMap> cube_map;
     std::map<int /*id*/, std::shared_ptr<Model>> models;
     std::map<EnumShaderType, std::shared_ptr<IShader>> shaders;
-    std::shared_ptr<CubeMap> cube_map;
-    std::unique_ptr<Camera> camera;
 };
 } // namespace Engine
 #endif

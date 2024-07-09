@@ -1,4 +1,4 @@
-﻿#include "cube_map_shader.h"
+#include "cube_map_shader.h"
 #include "geometry_generator.h"
 #include "panel.h"
 
@@ -94,14 +94,10 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
 
 EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *envBlock = data_block[EnumDataBlockType::eEnv];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
-
-    auto env = dynamic_cast<Engine::Env *>(envBlock);
-    assert(env != nullptr);
 
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
@@ -118,7 +114,7 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
         cube_shader_source->vertex_constant_buffer_data.view =
             manager->camera->view.Transpose();
 
-        const float aspect = env->aspect_;
+        const float aspect = Env::Get().aspect;
         cube_shader_source->vertex_constant_buffer_data.projection =
             XMMatrixPerspectiveFovLH(70.0f, aspect, 0.01f, 100.0f);
 
@@ -140,14 +136,10 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
 
 EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *envBlock = data_block[EnumDataBlockType::eEnv];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
-
-    auto env = dynamic_cast<Engine::Env *>(envBlock);
-    assert(env != nullptr);
 
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);

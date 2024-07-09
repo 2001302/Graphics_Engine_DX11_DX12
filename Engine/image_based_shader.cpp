@@ -1,4 +1,4 @@
-﻿#include "image_based_shader.h"
+#include "image_based_shader.h"
 #include "geometry_generator.h"
 #include "panel.h"
 
@@ -74,14 +74,10 @@ EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
 
 EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *envBlock = data_block[EnumDataBlockType::eEnv];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
-
-    auto env = dynamic_cast<Engine::Env *>(envBlock);
-    assert(env != nullptr);
 
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);
@@ -131,7 +127,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
         }
         // projection
         {
-            const float aspect = env->aspect_;
+            const float aspect = Env::Get().aspect;
             if (detail->use_perspective_projection) {
                 image_based_shader_source->vertex_constant_buffer_data
                     .projection = XMMatrixPerspectiveFovLH(
@@ -186,14 +182,10 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
 
 EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *envBlock = data_block[EnumDataBlockType::eEnv];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
-
-    auto env = dynamic_cast<Engine::Env *>(envBlock);
-    assert(env != nullptr);
 
     auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
     assert(gui != nullptr);

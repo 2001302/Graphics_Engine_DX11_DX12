@@ -1,12 +1,11 @@
-﻿#include "application.h"
+#include "application.h"
 #include "behavior_tree_builder.h"
 
 using namespace Engine;
 
-Application::Application() : imgui_(0), manager_(0), env_(0) {
+Application::Application() : imgui_(0), manager_(0) {
     input_ = std::make_unique<Input>();
     manager_ = std::make_shared<PipelineManager>();
-    env_ = std::make_shared<Env>();
     message_receiver_ = std::make_unique<MessageReceiver>();
     imgui_ = std::make_shared<Panel>(manager_);
     post_process_ = std::make_unique<PostProcess>();
@@ -16,28 +15,26 @@ bool Application::OnStart() {
 
     Platform::OnStart();
 
-    env_->screen_width_ = screen_width_;
-    env_->screen_height_ = screen_height_;
-
     std::map<EnumDataBlockType, IDataBlock *> dataBlock = {
         {EnumDataBlockType::eManager, manager_.get()},
         {EnumDataBlockType::eGui, imgui_.get()},
     };
 
     GeometryGenerator::MakeSquare(post_process_.get());
-    Direct3D::GetInstance().Initialize(env_.get(), VSYNC_ENABLED, main_window_,
+    Direct3D::GetInstance().Initialize(VSYNC_ENABLED, main_window_,
                                        FULL_SCREEN);
 
     auto device = Direct3D::GetInstance().device();
     auto context = Direct3D::GetInstance().device_context();
 
-    post_process_->Initialize(device, context,
-                              {Direct3D::GetInstance().resolved_SRV()},
-                              {Direct3D::GetInstance().back_buffer_RTV()},
-                              screen_width_, screen_height_, 4);
+    post_process_->Initialize(
+        device, context, {Direct3D::GetInstance().resolved_SRV()},
+        {Direct3D::GetInstance().back_buffer_RTV()}, Env::Get().screen_width,
+        Env::Get().screen_height, 4);
 
-    input_->Initialize(hinstance_, main_window_, screen_width_, screen_height_);
-    imgui_->Initialize(main_window_, env_.get());
+    input_->Initialize(hinstance_, main_window_, Env::Get().screen_width,
+                       Env::Get().screen_height);
+    imgui_->Initialize(main_window_);
 
     // clang-format off
     auto tree = new BehaviorTreeBuilder();
@@ -61,7 +58,6 @@ bool Application::OnFrame() {
 
     std::map<EnumDataBlockType, IDataBlock *> dataBlock = {
         {EnumDataBlockType::eManager, manager_.get()},
-        {EnumDataBlockType::eEnv, env_.get()},
         {EnumDataBlockType::eGui, imgui_.get()},
     };
 
@@ -122,10 +118,6 @@ bool Application::OnStop() {
             model.second.reset();
         }
         manager_->camera.reset();
-    }
-
-    if (env_) {
-        env_.reset();
     }
 
     if (imgui_) {

@@ -1,4 +1,4 @@
-﻿#include "base_gui.h"
+#include "base_gui.h"
 
 using namespace Engine;
 
@@ -15,9 +15,8 @@ ImGuiWindowFlags GetWindowFlags() {
            ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove;
 }
 
-bool BaseGui::Initialize(HWND main_window, Env *env) {
+bool BaseGui::Initialize(HWND main_window) {
     main_window_ = main_window;
-    env_ = env;
     // Setup Dear ImGui context
     context_ = ImGui::CreateContext();
     ImGui::SetCurrentContext(context_);
@@ -57,13 +56,13 @@ bool BaseGui::Frame() {
 
     if (ImGui::GetCurrentWindow()) {
          Direct3D::GetInstance().SetViewPort(ImGui::GetWindowSize().x, 0.0f,
-                                             (float)env_->screen_width_ -
+                                            (float)Env::Get().screen_width -
                                                  ImGui::GetWindowSize().x,
-                                             (float)env_->screen_height_);
+                                            (float)Env::Get().screen_height);
 
-        env_->aspect_ =
-            ((float)env_->screen_width_ - ImGui::GetWindowSize().x) /
-            (float)env_->screen_height_;
+         Env::Get().aspect =
+             ((float)Env::Get().screen_width - ImGui::GetWindowSize().x) /
+             (float)Env::Get().screen_height;
     }
 
     OnFrame(io.DeltaTime);

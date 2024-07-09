@@ -1,4 +1,4 @@
-﻿#ifndef _D3DCLASS_H_
+#ifndef _D3DCLASS_H_
 #define _D3DCLASS_H_
 
 #include <directxtk/DDSTextureLoader.h> 
@@ -16,12 +16,12 @@ class Direct3D {
         static Direct3D instance;
         return instance;
     }
-    bool Initialize(Env *env, bool vsync, HWND main_window, bool fullscreen);
+    bool Initialize(bool vsync, HWND main_window, bool fullscreen);
     void BeginScene(float red, float green, float blue, float alpha);
     void EndScene();
 
     void SetViewPort(float x, float y, float width, float height);
-    bool CreateBuffer(Env *env);
+    bool CreateBuffer();
     void CreateDepthBuffer(ComPtr<ID3D11Device> &device, int screenWidth,
                            int screenHeight, UINT numQualityLevels,
                            ComPtr<ID3D11DepthStencilView> &depthStencilView);

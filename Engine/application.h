@@ -1,4 +1,4 @@
-﻿#ifndef _APPLICATION
+#ifndef _APPLICATION
 #define _APPLICATION
 
 #include "message_receiver.h"
@@ -17,7 +17,6 @@ class Application : public Platform {
                                     LPARAM lparam) override final;
 
   private:
-    std::shared_ptr<Env> env_;
     std::shared_ptr<Input> input_;
     std::shared_ptr<Panel> imgui_;
     std::shared_ptr<PipelineManager> manager_;

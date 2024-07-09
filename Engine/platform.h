@@ -1,4 +1,4 @@
-﻿#ifndef _PLATFORM
+#ifndef _PLATFORM
 #define _PLATFORM
 
 #define WIN32_LEAN_AND_MEAN
@@ -31,8 +31,6 @@ class Platform {
     };
 
   protected:
-    int screen_width_;
-    int screen_height_;
     LPCWSTR application_name_;
     HINSTANCE hinstance_;
     HWND main_window_;

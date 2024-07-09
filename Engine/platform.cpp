@@ -1,4 +1,4 @@
-﻿#include "platform.h"
+#include "platform.h"
 
 using namespace Engine;
 
@@ -7,9 +7,7 @@ using namespace Engine;
 /// </summary>
 static Platform *g_system = nullptr;
 
-Platform::Platform()
-    : screen_width_(1920), screen_height_(1080), main_window_(0),
-      application_name_(0), hinstance_(0) {
+Platform::Platform() : main_window_(0), application_name_(0), hinstance_(0) {
     g_system = this;
 }
 
@@ -33,6 +31,9 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam,
 }
 
 bool Platform::OnStart() {
+
+    SetProcessDpiAwareness(PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE);
+
     hinstance_ = GetModuleHandle(NULL);
 
     WNDCLASSEX wc = {sizeof(WNDCLASSEX),
@@ -61,20 +62,20 @@ bool Platform::OnStart() {
     // 윈도우를 만들 해상도를 다시 계산해서 CreateWindow()에서 사용
 
     // 우리가 원하는 그림이 그려질 부분의 해상도
-    RECT wr = {0, 0, screen_width_, screen_height_};
+    RECT wr = {0, 0, Env::Get().screen_width, Env::Get().screen_height};
 
     // 필요한 윈도우 크기(해상도) 계산
     // wr의 값이 바뀜
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
 
     // 윈도우를 만들때 위에서 계산한 wr 사용
-    main_window_ = CreateWindow(wc.lpszClassName, L"Engine",
-                                WS_OVERLAPPEDWINDOW,
-                                10, // 윈도우 좌측 상단의 x 좌표
-                                10, // 윈도우 좌측 상단의 y 좌표
-                                wr.right - wr.left, // 윈도우 가로 방향 해상도
-                                wr.bottom - wr.top, // 윈도우 세로 방향 해상도
-                                NULL, NULL, wc.hInstance, NULL);
+    main_window_ =
+        CreateWindow(wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW,
+                     10,                 // 윈도우 좌측 상단의 x 좌표
+                     10,                 // 윈도우 좌측 상단의 y 좌표
+                     wr.right - wr.left, // 윈도우 가로 방향 해상도
+                     wr.bottom - wr.top, // 윈도우 세로 방향 해상도
+                     NULL, NULL, wc.hInstance, NULL);
 
     if (!main_window_) {
         std::cout << "CreateWindow() failed." << std::endl;
@@ -132,7 +133,7 @@ bool Platform::OnStop() {
 
     // Remove the application instance.
     UnregisterClass(application_name_, hinstance_);
-    hinstance_= NULL;
+    hinstance_ = NULL;
 
     // Release the pointer to this class.
     g_system = NULL;

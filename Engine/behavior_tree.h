@@ -1,4 +1,4 @@
-﻿#ifndef _BehaviorTree
+#ifndef _BehaviorTree
 #define _BehaviorTree
 
 #include "common_struct.h"
@@ -7,8 +7,7 @@
 namespace Engine {
 enum EnumDataBlockType {
     eManager = 0,
-    eEnv = 1,
-    eGui = 2,
+    eGui = 1,
 };
 
 enum EnumBehaviorTreeStatus {

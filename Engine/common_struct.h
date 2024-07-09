@@ -1,4 +1,4 @@
-﻿#ifndef _CommonStruct
+#ifndef _CommonStruct
 #define _CommonStruct
 
 #define _USE_MATH_DEFINES
@@ -19,6 +19,7 @@
 #include <commdlg.h>	//for file open
 #include <wrl.h>
 #include <memory>
+#include <shellscalingapi.h>
 
 #include <d3d11.h>
 #include <directxmath.h>
@@ -28,7 +29,11 @@
 #include <assimp/importer.hpp>
 #include <assimp/scene.h>           
 #include <assimp/postprocess.h>
+
 // clang-format on
+
+#pragma comment(lib, "shcore.lib")
+
 
 namespace Engine {
 inline void ThrowIfFailed(HRESULT hr) {

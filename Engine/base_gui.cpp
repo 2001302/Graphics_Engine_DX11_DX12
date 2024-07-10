@@ -2,26 +2,17 @@
 
 using namespace Engine;
 
-#ifdef _MSC_VER
-#define portable_strcpy strcpy_s
-#define portable_sprintf sprintf_s
-#else
-#define portable_strcpy strcpy
-#define portable_sprintf sprintf
-#endif
-
 ImGuiWindowFlags GetWindowFlags() {
     return ImGuiWindowFlags_NoTitleBar |
            ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove;
 }
 
-bool BaseGui::Initialize(HWND main_window) {
-    main_window_ = main_window;
+bool BaseGui::Initialize() {
     // Setup Dear ImGui context
     context_ = ImGui::CreateContext();
     ImGui::SetCurrentContext(context_);
 
-    ImGui_ImplWin32_Init(main_window_);
+    ImGui_ImplWin32_Init(Env::Get().main_window);
     ImGui_ImplDX11_Init(Direct3D::GetInstance().device().Get(),
                         Direct3D::GetInstance().device_context().Get());
 

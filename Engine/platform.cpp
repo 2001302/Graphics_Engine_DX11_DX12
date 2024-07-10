@@ -7,7 +7,7 @@ using namespace Engine;
 /// </summary>
 static Platform *g_system = nullptr;
 
-Platform::Platform() : main_window_(0), application_name_(0), hinstance_(0) {
+Platform::Platform() : application_name_(0), hinstance_(0) {
     g_system = this;
 }
 
@@ -69,7 +69,7 @@ bool Platform::OnStart() {
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
 
     // 윈도우를 만들때 위에서 계산한 wr 사용
-    main_window_ =
+    Env::Get().main_window =
         CreateWindow(wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW,
                      10,                 // 윈도우 좌측 상단의 x 좌표
                      10,                 // 윈도우 좌측 상단의 y 좌표
@@ -77,13 +77,13 @@ bool Platform::OnStart() {
                      wr.bottom - wr.top, // 윈도우 세로 방향 해상도
                      NULL, NULL, wc.hInstance, NULL);
 
-    if (!main_window_) {
+    if (!Env::Get().main_window) {
         std::cout << "CreateWindow() failed." << std::endl;
         return false;
     }
 
-    ShowWindow(main_window_, SW_SHOWDEFAULT);
-    UpdateWindow(main_window_);
+    ShowWindow(Env::Get().main_window, SW_SHOWDEFAULT);
+    UpdateWindow(Env::Get().main_window);
 
     return true;
 }
@@ -123,13 +123,13 @@ void Platform::Run() {
 
 bool Platform::OnStop() {
     // Shutdown the window.
-    if (FULL_SCREEN) {
+    if (Env::Get().full_screen) {
         ChangeDisplaySettings(NULL, 0);
     }
 
     // Remove the window.
-    DestroyWindow(main_window_);
-    main_window_ = NULL;
+    DestroyWindow(Env::Get().main_window);
+    Env::Get().main_window = NULL;
 
     // Remove the application instance.
     UnregisterClass(application_name_, hinstance_);

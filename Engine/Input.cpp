@@ -1,4 +1,4 @@
-﻿#include "input.h"
+#include "input.h"
 
 using namespace Engine;
 
@@ -12,7 +12,7 @@ Input::Input(const Input &other) {}
 
 Input::~Input() {}
 
-bool Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth,
+bool Input::Initialize(HINSTANCE hinstance, int screenWidth,
                        int screenHeight) {
     HRESULT result;
 
@@ -48,7 +48,8 @@ bool Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth,
 
     // Set the cooperative level of the keyboard to not share with other
     // programs.
-    result = keyboard_->SetCooperativeLevel(hwnd, DISCL_FOREGROUND |
+    result = keyboard_->SetCooperativeLevel(Env::Get().main_window,
+                                            DISCL_FOREGROUND |
                                                        DISCL_EXCLUSIVE);
     if (FAILED(result)) {
         return false;
@@ -74,7 +75,8 @@ bool Input::Initialize(HINSTANCE hinstance, HWND hwnd, int screenWidth,
     }
 
     // Set the cooperative level of the mouse to share with other programs.
-    result = mouse_->SetCooperativeLevel(hwnd, DISCL_FOREGROUND |
+    result = mouse_->SetCooperativeLevel(Env::Get().main_window,
+                                         DISCL_FOREGROUND |
                                                     DISCL_NONEXCLUSIVE);
     if (FAILED(result)) {
         return false;

@@ -1,4 +1,4 @@
-﻿#include "panel.h"
+#include "panel.h"
 
 using namespace Engine;
 Panel::Panel(std::shared_ptr<PipelineManager> pipeline_manager) {
@@ -33,19 +33,19 @@ void Panel::FrameRate() {
 void Panel::MenuBar() {
     // Add Object
     if (ImGui::Button("Sphere")) {
-        SendMessage(main_window_, WM_SPHERE_LOAD, 0, 0);
+        SendMessage(Env::Get().main_window, WM_SPHERE_LOAD, 0, 0);
     }
     ImGui::SameLine();
     if (ImGui::Button("Box")) {
-        SendMessage(main_window_, WM_BOX_LOAD, 0, 0);
+        SendMessage(Env::Get().main_window, WM_BOX_LOAD, 0, 0);
     }
     ImGui::SameLine();
     if (ImGui::Button("Cylinder")) {
-        SendMessage(main_window_, WM_CYLINDER_LOAD, 0, 0);
+        SendMessage(Env::Get().main_window, WM_CYLINDER_LOAD, 0, 0);
     }
     ImGui::SameLine();
     if (ImGui::Button("Search")) {
-        SendMessage(main_window_, WM_MODEL_LOAD, 0, 0);
+        SendMessage(Env::Get().main_window, WM_MODEL_LOAD, 0, 0);
     }
     ImGui::Separator();
 }

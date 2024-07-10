@@ -19,12 +19,11 @@ bool Application::OnStart() {
         {EnumDataBlockType::eGui, imgui_.get()},
     };
 
-    Direct3D::GetInstance().Initialize(VSYNC_ENABLED, main_window_,
-                                       FULL_SCREEN);
+    Direct3D::GetInstance().Initialize();
 
-    input_->Initialize(hinstance_, main_window_, Env::Get().screen_width,
+    input_->Initialize(hinstance_, Env::Get().screen_width,
                        Env::Get().screen_height);
-    imgui_->Initialize(main_window_);
+    imgui_->Initialize();
 
     // clang-format off
     auto tree = new BehaviorTreeBuilder();

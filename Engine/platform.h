@@ -12,9 +12,6 @@
 #include "resource_helper.h"
 #include "board_map.h"
 
-const bool FULL_SCREEN = false;
-const bool VSYNC_ENABLED = true;
-
 namespace Engine {
 class Platform {
   public:
@@ -33,7 +30,6 @@ class Platform {
   protected:
     LPCWSTR application_name_;
     HINSTANCE hinstance_;
-    HWND main_window_;
 };
 } // namespace Engine
 #endif

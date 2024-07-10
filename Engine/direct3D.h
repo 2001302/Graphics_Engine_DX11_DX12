@@ -1,9 +1,9 @@
 #ifndef _D3DCLASS_H_
 #define _D3DCLASS_H_
 
-#include <directxtk/DDSTextureLoader.h> 
 #include "common_struct.h"
 #include "env.h"
+#include <directxtk/DDSTextureLoader.h>
 
 using namespace DirectX;
 
@@ -16,7 +16,7 @@ class Direct3D {
         static Direct3D instance;
         return instance;
     }
-    bool Initialize(bool vsync, HWND main_window, bool fullscreen);
+    bool Initialize();
     void BeginScene(float red, float green, float blue, float alpha);
     void EndScene();
 
@@ -126,10 +126,9 @@ class Direct3D {
 
   private:
     Direct3D()
-        : vsync_enabled_(true), swap_chain_(0), device_(0), device_context_(0),
+        : swap_chain_(0), device_(0), device_context_(0),
           viewport_(D3D11_VIEWPORT()) {}
 
-    bool vsync_enabled_;
     bool useMSAA = true;
     UINT num_quality_levels_ = 0;
 

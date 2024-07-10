@@ -47,8 +47,7 @@ ComPtr<ID3D11ShaderResourceView> Direct3D::resolved_SRV() {
     return resolved_SRV_;
 }
 
-bool Direct3D::Initialize(bool vsync, HWND main_window,
-                          bool fullscreen) {
+bool Direct3D::Initialize() {
     const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
 
     UINT createDeviceFlags = 0;
@@ -73,7 +72,7 @@ bool Direct3D::Initialize(bool vsync, HWND main_window,
     sd.BufferDesc.RefreshRate.Numerator = 60;
     sd.BufferDesc.RefreshRate.Denominator = 1;
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = main_window;
+    sd.OutputWindow = Env::Get().main_window;
     sd.Windowed = TRUE;
     sd.Flags =
         DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // allow full-screen switching
@@ -155,9 +154,9 @@ bool Direct3D::CreateBuffer() {
     ThrowIfFailed(device_->CreateRenderTargetView(float_buffer_.Get(), NULL,
                                                   float_RTV.GetAddressOf()));
 
-    CreateDepthBuffer(device_, Env::Get().screen_width, Env::Get().screen_height,
-                      UINT(useMSAA ? num_quality_levels_ : 0),
-                      depth_stencil_view_);
+    CreateDepthBuffer(
+        device_, Env::Get().screen_width, Env::Get().screen_height,
+        UINT(useMSAA ? num_quality_levels_ : 0), depth_stencil_view_);
 
     // FLOAT MSAA를 Relsolve해서 저장할 SRV/RTV
     desc.SampleDesc.Count = 1;
@@ -245,7 +244,7 @@ void Direct3D::BeginScene(float red, float green, float blue, float alpha) {
 void Direct3D::EndScene() {
 
     // Present the back buffer to the screen since rendering is complete.
-    if (vsync_enabled_) {
+    if (Env::Get().vsync_enabled) {
         // Lock to screen refresh rate.
         swap_chain_->Present(1, 0);
     } else {

@@ -1,4 +1,4 @@
-﻿#ifndef _INPUT
+#ifndef _INPUT
 #define _INPUT
 
 #define DIRECTINPUT_VERSION 0x0800
@@ -9,6 +9,7 @@
 #include <dinput.h>
 
 #include "common_struct.h"
+#include "env.h"
 
 namespace Engine {
 class Input {
@@ -17,7 +18,7 @@ class Input {
     Input(const Input &);
     ~Input();
 
-    bool Initialize(HINSTANCE, HWND, int, int);
+    bool Initialize(HINSTANCE, int, int);
     void Shutdown();
     bool Frame();
 

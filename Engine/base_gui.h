@@ -14,7 +14,7 @@ namespace ed = ax::NodeEditor;
 namespace Engine {
 class BaseGui : public IDataBlock {
   public:
-    bool Initialize(HWND main_window);
+    bool Initialize();
     bool Frame();
     void Shutdown();
 
@@ -22,7 +22,6 @@ class BaseGui : public IDataBlock {
     virtual void OnFrame(float delta_time){};
 
   protected:
-    HWND main_window_;
     ImGuiContext *context_ = nullptr;
     std::string ini_file_name_;
     ImFont *default_font_ = nullptr;

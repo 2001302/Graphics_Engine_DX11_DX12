@@ -160,6 +160,9 @@
     <ClInclude Include="ground.h">
       <Filter>Model</Filter>
     </ClInclude>
+    <ClInclude Include="ground_shader.h">
+      <Filter>DirectX\Shader</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -292,6 +295,9 @@
     <ClCompile Include="ground.cpp">
       <Filter>Model</Filter>
     </ClCompile>
+    <ClCompile Include="ground_shader.cpp">
+      <Filter>DirectX\Shader</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Model">
@@ -348,6 +354,9 @@
     <None Include="physically_common.hlsli">
       <Filter>DirectX\Shader\HLSL</Filter>
     </None>
+    <None Include="ground.hlslI">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="phong_vertex_shader.hlsl">
@@ -387,6 +396,12 @@
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="sampling_ps.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="ground_vs.hlsl">
+      <Filter>DirectX\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="ground_ps.hlsl">
       <Filter>DirectX\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

@@ -4,7 +4,7 @@
 #include "common_struct.h"
 #include "entity.h"
 #include "game_object.h"
-#include "phong_shader.h"
+#include "ground_shader.h"
 
 namespace Engine {
 using Microsoft::WRL::ComPtr;
@@ -17,9 +17,9 @@ class Ground : public GameObject {
     int GetIndexCount();
 
     DirectX::SimpleMath::Matrix transform;
-    std::vector<std::shared_ptr<Mesh>> meshes;
+    std::shared_ptr<Mesh> mesh;
 
-    std::shared_ptr<PhongShaderSource> phong_shader_source;
+    std::shared_ptr<GroundShaderSource> ground_shader_source;
 };
 } // namespace Engine
 #endif

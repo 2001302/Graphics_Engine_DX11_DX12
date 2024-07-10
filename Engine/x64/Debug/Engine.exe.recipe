@@ -22,6 +22,12 @@
       <FullPath>C:\Users\user\Source\Engine\x64\Debug\cube_mapping_vertex_shader.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\user\Source\Engine\x64\Debug\ground_ps.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\user\Source\Engine\x64\Debug\ground_vs.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\user\Source\Engine\x64\Debug\image_based_pixel_shader.cso</FullPath>
     </ContentFile>
     <ContentFile>

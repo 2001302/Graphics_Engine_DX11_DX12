@@ -32,6 +32,7 @@ bool Application::OnStart() {
         ->Sequence()
             ->Excute(std::make_shared<InitializeBoardMap>())
             ->Excute(std::make_shared<InitializeCamera>())
+            ->Excute(std::make_shared<InitializeGroundShader>())
             ->Excute(std::make_shared<InitializeCubeMapShader>())
             ->Excute(std::make_shared<InitializePhongShader>())
             ->Excute(std::make_shared<InitializeImageBasedShader>())
@@ -82,6 +83,8 @@ bool Application::OnFrame() {
             ->Excute(std::make_shared<RenderCubeMap>())
         ->Close()
     ->End()
+    ->Excute(std::make_shared<UpdateGroundShader>())
+    ->Excute(std::make_shared<RenderGroundShader>())
     ->Excute(std::make_shared<RenderBoardMap>())
     ->Run();
     // clang-format on

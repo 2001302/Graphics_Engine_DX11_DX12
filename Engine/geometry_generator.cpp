@@ -1,11 +1,9 @@
-﻿#include "geometry_generator.h"
+#include "geometry_generator.h"
 
 using namespace Engine;
 
-Model *GeometryGenerator::MakeSphere(Model *gameObject,
-                                          const float radius,
-                                          const int numSlices,
-                                          const int numStacks) {
+Model *GeometryGenerator::MakeSphere(Model *gameObject, const float radius,
+                                     const int numSlices, const int numStacks) {
     const float dTheta = -XM_2PI / float(numSlices);
     const float dPhi = -XM_PI / float(numStacks);
 
@@ -198,9 +196,9 @@ Model *GeometryGenerator::MakeBox(Model *gameObject) {
 }
 
 Model *GeometryGenerator::MakeCylinder(Model *gameObject,
-                                            const float bottomRadius,
-                                            const float topRadius, float height,
-                                            int numSlices) {
+                                       const float bottomRadius,
+                                       const float topRadius, float height,
+                                       int numSlices) {
     const float dTheta = -XM_2PI / float(numSlices);
 
     std::shared_ptr<Mesh> meshData = std::make_shared<Mesh>();
@@ -250,9 +248,8 @@ Model *GeometryGenerator::MakeCylinder(Model *gameObject,
     gameObject->meshes.push_back(meshData);
     return gameObject;
 }
-Model *GeometryGenerator::ReadFromFile(Model *gameObject,
-                                            std::string basePath,
-                                            std::string filename) {
+Model *GeometryGenerator::ReadFromFile(Model *gameObject, std::string basePath,
+                                       std::string filename) {
     using namespace DirectX;
 
     ModelLoader modelLoader;
@@ -292,7 +289,7 @@ Model *GeometryGenerator::ReadFromFile(Model *gameObject,
     return gameObject;
 }
 
-CubeMap *GeometryGenerator::MakeBox(CubeMap* cube_map) {
+CubeMap *GeometryGenerator::MakeBox(CubeMap *cube_map) {
     const float scale = 40.0f;
 
     std::vector<Vector3> positions;
@@ -431,10 +428,9 @@ CubeMap *GeometryGenerator::MakeBox(CubeMap* cube_map) {
     return cube_map;
 }
 
-CubeMap *GeometryGenerator::MakeSphere(CubeMap *cube_map,
-                                          const float radius,
-                                          const int numSlices,
-                                          const int numStacks) {
+CubeMap *GeometryGenerator::MakeSphere(CubeMap *cube_map, const float radius,
+                                       const int numSlices,
+                                       const int numStacks) {
     const float dTheta = -XM_2PI / float(numSlices);
     const float dPhi = -XM_PI / float(numStacks);
 
@@ -484,13 +480,12 @@ CubeMap *GeometryGenerator::MakeSphere(CubeMap *cube_map,
     return cube_map;
 }
 
-BoardMap *
-    GeometryGenerator::MakeSquare(BoardMap* postProcess,
-        const float scale,
-        const Vector2 texScale) {
+BoardMap *GeometryGenerator::MakeSquare(BoardMap *postProcess,
+                                        const float scale,
+                                        const Vector2 texScale) {
 
-    postProcess->m_mesh= std::make_shared<Mesh>();
-    
+    postProcess->m_mesh = std::make_shared<Mesh>();
+
     std::vector<Vector3> positions;
     std::vector<Vector3> colors;
     std::vector<Vector3> normals;
@@ -526,11 +521,52 @@ BoardMap *
 
         // v.color = colors[i];
 
-         postProcess->m_mesh->vertices.push_back(v);
+        postProcess->m_mesh->vertices.push_back(v);
     }
     postProcess->m_mesh->indices = {
         0, 1, 2, 0, 2, 3, // 앞면
     };
 
     return postProcess;
+}
+
+Ground *GeometryGenerator::MakeSquareGrid(Ground *ground, const int numSlices,
+                                          const int numStacks,
+                                          const float scale,
+                                          const Vector2 texScale) {
+
+    ground->mesh = std::make_shared<Mesh>();
+
+    float dx = 2.0f / numSlices;
+    float dy = 2.0f / numStacks;
+
+    float y = 1.0f;
+    for (int j = 0; j < numStacks + 1; j++) {
+        float x = -1.0f;
+        for (int i = 0; i < numSlices + 1; i++) {
+            Vertex v;
+            v.position = Vector3(x, y, 0.0f) * scale;
+            v.normal = Vector3(0.0f, 0.0f, -1.0f);
+            v.texcoord = Vector2(x + 1.0f, y + 1.0f) * 0.5f * texScale;
+            v.tangent = Vector3(1.0f, 0.0f, 0.0f);
+
+            ground->mesh->vertices.push_back(v);
+
+            x += dx;
+        }
+        y -= dy;
+    }
+
+    for (int j = 0; j < numStacks; j++) {
+        for (int i = 0; i < numSlices; i++) {
+            ground->mesh->indices.push_back((numSlices + 1) * j + i);
+            ground->mesh->indices.push_back((numSlices + 1) * j + i + 1);
+            ground->mesh->indices.push_back((numSlices + 1) * (j + 1) + i);
+            ground->mesh->indices.push_back((numSlices + 1) * (j + 1) + i);
+            ground->mesh->indices.push_back((numSlices + 1) * j + i + 1);
+            ground->mesh->indices.push_back((numSlices + 1) * (j + 1) + i + 1);
+        }
+    }
+
+    return ground;
 }

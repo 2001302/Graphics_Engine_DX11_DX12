@@ -54,6 +54,7 @@ enum EnumShaderType {
     eImageBased = 2,
     ePhysicallyBased = 3,
     eNormalGeometry = 4,
+    eGround = 5,
 };
 
 struct Vertex {

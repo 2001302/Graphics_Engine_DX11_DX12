@@ -3,7 +3,8 @@
 using namespace Engine;
 
 EnumBehaviorTreeStatus BehaviorActionNode::Invoke() {
-    this->target_id = parent_node->target_id;
+    if (parent_node)
+        this->target_id = parent_node->target_id;
     return OnInvoke();
 }
 

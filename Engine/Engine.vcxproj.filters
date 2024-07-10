@@ -157,6 +157,9 @@
     <ClInclude Include="target_objects_block.h">
       <Filter>DataBlock</Filter>
     </ClInclude>
+    <ClInclude Include="ground.h">
+      <Filter>Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -285,6 +288,9 @@
     </ClCompile>
     <ClCompile Include="parallel_node.cpp">
       <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="ground.cpp">
+      <Filter>Model</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

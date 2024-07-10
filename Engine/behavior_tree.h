@@ -5,7 +5,6 @@
 #include "dataBlock.h"
 #include "target_objects_block.h"
 
-
 namespace Engine {
 enum EnumDataBlockType {
     eManager = 0,
@@ -30,6 +29,7 @@ class IDisposable {
 
 class BehaviorActionNode : public IDisposable {
   public:
+    BehaviorActionNode() : parent_node(0), target_id(0){};
     EnumBehaviorTreeStatus Invoke();
     BehaviorActionNode *GetParent();
     void Dispose() override;

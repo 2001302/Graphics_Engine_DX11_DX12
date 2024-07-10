@@ -133,5 +133,9 @@ struct Light {
     float spotPower = 1.0f;                        // 4
 };
 
+struct Texture {
+
+};
+
 } // namespace Engine
 #endif

@@ -144,6 +144,7 @@
     <ClInclude Include="cube_map_shader.h" />
     <ClInclude Include="game_object.h" />
     <ClInclude Include="graph.h" />
+    <ClInclude Include="ground.h" />
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="image_fliter_shader.h" />
     <ClInclude Include="normal_geometry_shader.h" />
@@ -198,6 +199,7 @@
     <ClCompile Include="cube_map_shader.cpp" />
     <ClCompile Include="game_object.cpp" />
     <ClCompile Include="graph.cpp" />
+    <ClCompile Include="ground.cpp" />
     <ClCompile Include="image_filter.cpp" />
     <ClCompile Include="image_fliter_shader.cpp" />
     <ClCompile Include="normal_geometry_shader.cpp" />

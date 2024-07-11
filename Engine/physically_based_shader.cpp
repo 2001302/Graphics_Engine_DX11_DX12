@@ -1,6 +1,6 @@
 #include "physically_based_shader.h"
 #include "geometry_generator.h"
-#include "panel.h"
+#include "setting_ui.h"
 
 using namespace Engine;
 
@@ -19,7 +19,7 @@ void PhsicallyBasedShaderSource::InitializeThis() {
 
 EnumBehaviorTreeStatus CheckPhysicallyBasedShader::CheckCondition() {
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     if (gui->GetGlobalTab().render_mode ==
@@ -90,28 +90,23 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::GetInstance().device_context();
 
     auto model = manager->models[target_id];
-    auto graph = manager->models[model->GetEntityId()]->behavior;
-
-    auto detail =
-        dynamic_cast<Engine::ModelDetailNode *>(graph->GetDetailNode().get());
-    assert(detail != nullptr);
 
     auto physically_shader_source = model->physically_based_shader_source;
     auto physically_shader = manager->shaders[EnumShaderType::ePhysicallyBased];
     // model
     {
         physically_shader_source->vertex_constant_buffer_data.modelWorld =
-            Matrix::CreateScale(detail->scaling) *
-            Matrix::CreateRotationX(detail->rotation.x) *
-            Matrix::CreateRotationY(detail->rotation.y) *
-            Matrix::CreateRotationZ(detail->rotation.z) *
-            Matrix::CreateTranslation(detail->translation);
+            Matrix::CreateScale(model->scaling) *
+            Matrix::CreateRotationX(model->rotation.x) *
+            Matrix::CreateRotationY(model->rotation.y) *
+            Matrix::CreateRotationZ(model->rotation.z) *
+            Matrix::CreateTranslation(model->translation);
 
         physically_shader_source->vertex_constant_buffer_data.modelWorld =
             physically_shader_source->vertex_constant_buffer_data.modelWorld
@@ -136,21 +131,15 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     // projection
     {
         const float aspect = Env::Get().aspect;
-        if (detail->use_perspective_projection) {
-            physically_shader_source->vertex_constant_buffer_data.projection =
-                XMMatrixPerspectiveFovLH(
-                    XMConvertToRadians(
-                        gui->GetGlobalTab()
-                            .projection_setting.projection_fov_angle_y),
-                    aspect, gui->GetGlobalTab().projection_setting.near_z,
-                    gui->GetGlobalTab().projection_setting.far_z);
-        } else {
-            physically_shader_source->vertex_constant_buffer_data.projection =
-                XMMatrixOrthographicOffCenterLH(
-                    -aspect, aspect, -1.0f, 1.0f,
-                    gui->GetGlobalTab().projection_setting.near_z,
-                    gui->GetGlobalTab().projection_setting.far_z);
-        }
+
+        physically_shader_source->vertex_constant_buffer_data.projection =
+            XMMatrixPerspectiveFovLH(
+                XMConvertToRadians(
+                    gui->GetGlobalTab()
+                        .projection_setting.projection_fov_angle_y),
+                aspect, gui->GetGlobalTab().projection_setting.near_z,
+                gui->GetGlobalTab().projection_setting.far_z);
+
         physically_shader_source->vertex_constant_buffer_data.projection =
             physically_shader_source->vertex_constant_buffer_data.projection
                 .Transpose();
@@ -217,7 +206,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::GetInstance().device_context();

@@ -1,6 +1,6 @@
-﻿#include "normal_geometry_shader.h"
+#include "normal_geometry_shader.h"
 #include "geometry_generator.h"
-#include "panel.h"
+#include "setting_ui.h"
 
 using namespace Engine;
 

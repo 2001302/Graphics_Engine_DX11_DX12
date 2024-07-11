@@ -1,5 +1,5 @@
 #include "phong_shader.h"
-#include "panel.h"
+#include "setting_ui.h"
 
 using namespace Engine;
 
@@ -17,7 +17,7 @@ void PhongShaderSource::InitializeThis() {
 
 EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     if (gui->GetGlobalTab().render_mode == EnumRenderMode::eLight) {
@@ -78,28 +78,23 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::GetInstance().device_context();
 
     auto model = manager->models[target_id];
-    auto graph = manager->models[model->GetEntityId()]->behavior;
-
-    auto detail =
-        dynamic_cast<Engine::ModelDetailNode *>(graph->GetDetailNode().get());
-    assert(detail != nullptr);
 
     auto phong_shader_source = model->phong_shader_source;
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
     // model
     {
         phong_shader_source->vertex_constant_buffer_data.model =
-            Matrix::CreateScale(detail->scaling) *
-            Matrix::CreateRotationX(detail->rotation.x) *
-            Matrix::CreateRotationY(detail->rotation.y) *
-            Matrix::CreateRotationZ(detail->rotation.z) *
-            Matrix::CreateTranslation(detail->translation);
+            Matrix::CreateScale(model->scaling) *
+            Matrix::CreateRotationX(model->rotation.x) *
+            Matrix::CreateRotationY(model->rotation.y) *
+            Matrix::CreateRotationZ(model->rotation.z) *
+            Matrix::CreateTranslation(model->translation);
 
         phong_shader_source->vertex_constant_buffer_data.model =
             phong_shader_source->vertex_constant_buffer_data.model.Transpose();
@@ -123,21 +118,14 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     // projection
     {
         const float aspect = Env::Get().aspect;
-        if (detail->use_perspective_projection) {
-            phong_shader_source->vertex_constant_buffer_data.projection =
-                XMMatrixPerspectiveFovLH(
-                    XMConvertToRadians(
-                        gui->GetGlobalTab()
-                            .projection_setting.projection_fov_angle_y),
-                    aspect, gui->GetGlobalTab().projection_setting.near_z,
-                    gui->GetGlobalTab().projection_setting.far_z);
-        } else {
-            phong_shader_source->vertex_constant_buffer_data.projection =
-                XMMatrixOrthographicOffCenterLH(
-                    -aspect, aspect, -1.0f, 1.0f,
-                    gui->GetGlobalTab().projection_setting.near_z,
-                    gui->GetGlobalTab().projection_setting.far_z);
-        }
+
+        phong_shader_source->vertex_constant_buffer_data
+            .projection = XMMatrixPerspectiveFovLH(
+            XMConvertToRadians(
+                gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
+            aspect, gui->GetGlobalTab().projection_setting.near_z,
+            gui->GetGlobalTab().projection_setting.far_z);
+
         phong_shader_source->vertex_constant_buffer_data.projection =
             phong_shader_source->vertex_constant_buffer_data.projection
                 .Transpose();
@@ -154,15 +142,15 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
                 Vector3(0.0f),
                 phong_shader_source->vertex_constant_buffer_data.view.Invert());
     }
-    // material
-    {
-        phong_shader_source->pixel_constant_buffer_data.material.diffuse =
-            Vector3(detail->diffuse);
-        phong_shader_source->pixel_constant_buffer_data.material.specular =
-            Vector3(detail->specular);
-        phong_shader_source->pixel_constant_buffer_data.material.shininess =
-            detail->shininess;
-    }
+    //// material
+    //{
+    //    phong_shader_source->pixel_constant_buffer_data.material.diffuse =
+    //        Vector3(detail->diffuse);
+    //    phong_shader_source->pixel_constant_buffer_data.material.specular =
+    //        Vector3(detail->specular);
+    //    phong_shader_source->pixel_constant_buffer_data.material.shininess =
+    //        detail->shininess;
+    //}
     // light
     {
         for (int i = 0; i < MAX_LIGHTS; i++) {
@@ -177,8 +165,8 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
         }
     }
 
-    phong_shader_source->pixel_constant_buffer_data.useTexture =
-        detail->use_texture;
+    //phong_shader_source->pixel_constant_buffer_data.useTexture =
+    //    detail->use_texture;
     phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
         gui->GetGlobalTab().light_setting.use_blinn_phong;
 
@@ -196,7 +184,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::GetInstance().device_context();

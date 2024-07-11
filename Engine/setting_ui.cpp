@@ -1,28 +1,28 @@
-#include "panel.h"
+#include "setting_ui.h"
 
 using namespace Engine;
-Panel::Panel(std::shared_ptr<PipelineManager> pipeline_manager) {
+SettingUi::SettingUi(std::shared_ptr<PipelineManager> pipeline_manager) {
     pipeline_manager_ = pipeline_manager;
 }
-void Panel::OnStart() {
+void SettingUi::OnStart() {
     ed::Config config;
     config.SettingsFile = "widgets.json";
     context_ = ed::CreateEditor(&config);
 }
-void Panel::OnFrame(float deltaTime) {
+void SettingUi::OnFrame(float deltaTime) {
     StyleSetting();
     MenuBar();
     NodeEditor();
     TabBar();
 }
-void Panel::StyleSetting() {
+void SettingUi::StyleSetting() {
     ImGuiStyle &style = ImGui::GetStyle();
     style.Alpha = 1.0f;
     style.WindowRounding = 5.3f;
     style.FrameRounding = 2.3f;
     style.ScrollbarRounding = 0;
 }
-void Panel::FrameRate() {
+void SettingUi::FrameRate() {
     auto &io = ImGui::GetIO();
 
     // FPS Counter Ribbon
@@ -30,7 +30,7 @@ void Panel::FrameRate() {
                 io.Framerate ? 1000.0f / io.Framerate : 0.0f);
     ImGui::Separator();
 }
-void Panel::MenuBar() {
+void SettingUi::MenuBar() {
     // Add Object
     if (ImGui::Button("Sphere")) {
         SendMessage(Env::Get().main_window, WM_SPHERE_LOAD, 0, 0);
@@ -49,21 +49,21 @@ void Panel::MenuBar() {
     }
     ImGui::Separator();
 }
-void Panel::NodeEditor() {
+void SettingUi::NodeEditor() {
     // Node Editor Widget
     ed::SetCurrentEditor(context_);
     ed::Begin("My Editor", ImVec2(0.0, ImGui::GetWindowHeight() / 1.5f));
 
     // Start drawing nodes.
     if (selected_object_id_ != -99999) {
-        auto graph = pipeline_manager_->models[selected_object_id_]->behavior;
-        graph->Show();
+        auto model = pipeline_manager_->models[selected_object_id_];
+        model->Show();
     }
 
     ed::End();
     ed::SetCurrentEditor(nullptr);
 }
-void Panel::TabBar() { // Tab Bar
+void SettingUi::TabBar() { // Tab Bar
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_FittingPolicyScroll)) {
         if (ImGui::BeginTabItem("Hierarchy")) {
             ImGui::BeginTable("MyTable", ImGuiTableFlags_Resizable |
@@ -191,8 +191,6 @@ void Panel::TabBar() { // Tab Bar
                                    &global_setting.pbr_setting.roughness, 0.0f,
                                    1.0f);
             }
-
-
 
             ImGui::EndTabItem();
         }

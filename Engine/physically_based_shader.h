@@ -1,4 +1,4 @@
-﻿#ifndef _PHYSICALLYBASEDSHADER
+#ifndef _PHYSICALLYBASEDSHADER
 #define _PHYSICALLYBASEDSHADER
 
 #include "shader.h"
@@ -9,6 +9,13 @@ using namespace DirectX;
 namespace Engine {
 
 struct PhsicallyBasedShader : public IShader {
+    struct PhysicallyMatrial {
+        Vector3 albedo = Vector3(1.0f); // 12
+        float roughness = 0.0f;
+        float metallic = 0.0f;
+        Vector3 dummy;
+    };
+
     struct PhsicallyBasedVertexConstantBuffer {
         Matrix modelWorld;
         Matrix invTranspose;

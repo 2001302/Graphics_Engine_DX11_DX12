@@ -1,4 +1,4 @@
-﻿#include "message_receiver.h"
+#include "message_receiver.h"
 
 using namespace Engine;
 using namespace DirectX::SimpleMath;
@@ -112,12 +112,6 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
         manager->models[model->GetEntityId()] = model;
         GeometryGenerator::ReadFromFile(model.get(), directoryPath, fileName);
         model->SetName(fileName);
-
-        auto graph = std::make_shared<Graph>();
-        graph->SetDetailNode(std::make_shared<ModelDetailNode>());
-        model->behavior = graph;
-
-        model->transform = Matrix();
 
         for (const auto &meshData : model->meshes) {
             {
@@ -237,10 +231,6 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
     model->SetName("sphere");
     manager->models[model->GetEntityId()] = model;
 
-    auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
-    model->behavior = graph;
-
     GeometryGenerator::MakeSphere(model.get(), 1.5f, 15, 13);
 
     for (auto mesh : model->meshes) {
@@ -293,10 +283,6 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
         }
     }
 
-
-
-    model->transform = Matrix();
-
     return true;
 }
 
@@ -305,10 +291,6 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
     auto model = std::make_shared<Model>();
     model->SetName("box");
     manager->models[model->GetEntityId()] = model;
-
-    auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
-    model->behavior = graph;
 
     GeometryGenerator::MakeBox(model.get());
 
@@ -362,10 +344,6 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
         }
     }
 
-
-
-    model->transform = Matrix();
-
     return true;
 }
 
@@ -374,10 +352,6 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
     auto model = std::make_shared<Model>();
     model->SetName("cylinder");
     manager->models[model->GetEntityId()] = model;
-
-    auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
-    model->behavior = graph;
 
     GeometryGenerator::MakeCylinder(model.get(), 5.0f, 5.0f, 15.0f, 30);
 
@@ -430,10 +404,6 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
                 &bufferDesc, &indexBufferData, &mesh->indexBuffer);
         }
     }
-
-
-
-    model->transform = Matrix();
 
     return true;
 }

@@ -1,6 +1,6 @@
-﻿#include "camera.h"
+#include "camera.h"
 #include "geometry_generator.h"
-#include "panel.h"
+#include "setting_ui.h"
 
 using namespace Engine;
 

@@ -1,6 +1,6 @@
 #include "cube_map_shader.h"
 #include "geometry_generator.h"
-#include "panel.h"
+#include "setting_ui.h"
 
 using namespace Engine;
 
@@ -23,10 +23,6 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
 
     manager->cube_map = std::make_shared<CubeMap>();
     GeometryGenerator::MakeBox(manager->cube_map.get());
-
-    auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
-    manager->cube_map->behavior = graph;
 
     auto cube_map_shader = std::make_shared<CubeMapShader>();
     manager->shaders[EnumShaderType::eCube] = cube_map_shader;
@@ -101,7 +97,7 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto cube_map = manager->cube_map;
@@ -117,8 +113,12 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
             manager->camera->view.Transpose();
 
         const float aspect = Env::Get().aspect;
-        cube_shader_source->vertex_constant_buffer_data.projection =
-            XMMatrixPerspectiveFovLH(70.0f, aspect, 0.01f, 100.0f);
+        cube_shader_source->vertex_constant_buffer_data
+            .projection = XMMatrixPerspectiveFovLH(
+            XMConvertToRadians(
+                gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
+            aspect, gui->GetGlobalTab().projection_setting.near_z,
+            gui->GetGlobalTab().projection_setting.far_z);
 
         cube_shader_source->vertex_constant_buffer_data.projection =
             cube_shader_source->vertex_constant_buffer_data.projection
@@ -143,7 +143,7 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::GetInstance().device_context();

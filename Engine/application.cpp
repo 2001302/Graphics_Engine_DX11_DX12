@@ -7,7 +7,7 @@ Application::Application() : imgui_(0), manager_(0) {
     input_ = std::make_unique<Input>();
     manager_ = std::make_shared<PipelineManager>();
     message_receiver_ = std::make_unique<MessageReceiver>();
-    imgui_ = std::make_shared<Panel>(manager_);
+    imgui_ = std::make_shared<SettingUi>(manager_);
 };
 
 bool Application::OnStart() {
@@ -58,9 +58,9 @@ bool Application::OnFrame() {
 
     // clang-format off
     std::vector<int> model_ids;
-    std::transform(manager_->models.begin(), manager_->models.end(), model_ids.begin(), 
-        [](const std::pair<int, std::shared_ptr<Model>> &x) { return x.first; });
-
+    for(auto model : manager_->models)
+        model_ids.push_back(model.first);
+    
     auto tree = std::make_unique<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
     ->Excute(std::make_shared<UpdateCamera>())

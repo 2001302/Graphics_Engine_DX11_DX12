@@ -1,4 +1,4 @@
-﻿#pragma warning(disable : 6385)
+#pragma warning(disable : 6385)
 #pragma warning(disable : 6386)
 
 #include "model.h"
@@ -24,11 +24,7 @@ int Model::GetIndexCount() {
     return count;
 }
 
-EnumBehaviorTreeStatus ModelDetailNode::OnInvoke() {
-
-    return EnumBehaviorTreeStatus::eSuccess;
-}
-EnumBehaviorTreeStatus ModelDetailNode::OnShow() {
+void Model::OnShow() {
 
     static bool firstframe = true; // Used to position the nodes on startup
     auto &io = ImGui::GetIO();
@@ -59,17 +55,11 @@ EnumBehaviorTreeStatus ModelDetailNode::OnShow() {
         ImGui::Text("Thanks for clicking me!");
     }
 
-    ImGui::Checkbox("Use Texture", &use_texture);
-
     ImGui::Text("Transform");
     ImGui::SliderFloat3("Translation", &translation.x, -2.0f, 2.0f);
     ImGui::SliderFloat("Rotation", &rotation.y, -3.14f, 3.14f);
     ImGui::SliderFloat3("Scaling", &scaling.x, 0.1f, 4.0f);
-
-    ImGui::Text("Material");
-    ImGui::SliderFloat("Shininess", &shininess, 0.01f, 1.0f);
-    ImGui::SliderFloat("Diffuse", &diffuse, 0.0f, 1.0f);
-    ImGui::SliderFloat("Specular", &specular, 0.0f, 1.0f);
+    phong_shader_source->Show();
 
     // Checkbox
     static bool check = true;
@@ -193,6 +183,4 @@ EnumBehaviorTreeStatus ModelDetailNode::OnShow() {
     ed::EndDelete();
 
     firstframe = false;
-
-    return EnumBehaviorTreeStatus::eSuccess;
 }

@@ -12,7 +12,7 @@
 namespace ed = ax::NodeEditor;
 
 namespace Engine {
-class BaseGui : public IDataBlock {
+class IGui : public IDataBlock {
   public:
     bool Initialize();
     bool Frame();

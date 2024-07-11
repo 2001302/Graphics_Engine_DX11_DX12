@@ -2,7 +2,7 @@
 #define _APPLICATION
 
 #include "message_receiver.h"
-#include "panel.h"
+#include "setting_ui.h"
 #include "platform.h"
 
 namespace Engine {
@@ -18,7 +18,7 @@ class Application : public Platform {
 
   private:
     std::shared_ptr<Input> input_;
-    std::shared_ptr<Panel> imgui_;
+    std::shared_ptr<SettingUi> imgui_;
     std::shared_ptr<PipelineManager> manager_;
     std::unique_ptr<MessageReceiver> message_receiver_;
 };

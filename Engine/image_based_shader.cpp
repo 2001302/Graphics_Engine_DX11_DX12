@@ -1,6 +1,6 @@
 #include "image_based_shader.h"
 #include "geometry_generator.h"
-#include "panel.h"
+#include "setting_ui.h"
 
 using namespace Engine;
 
@@ -17,7 +17,7 @@ void ImageBasedShaderSource::InitializeThis() {
 
 EnumBehaviorTreeStatus CheckImageBasedShader::CheckCondition() {
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     if (gui->GetGlobalTab().render_mode ==
@@ -79,28 +79,23 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::GetInstance().device_context();
 
     auto model = manager->models[target_id];
-    auto graph = model->behavior;
-
-    auto detail =
-        dynamic_cast<Engine::ModelDetailNode *>(graph->GetDetailNode().get());
-    assert(detail != nullptr);
 
     auto image_based_shader_source = model->image_based_shader_source;
     auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
     // model
     {
         image_based_shader_source->vertex_constant_buffer_data.model =
-            Matrix::CreateScale(detail->scaling) *
-            Matrix::CreateRotationX(detail->rotation.x) *
-            Matrix::CreateRotationY(detail->rotation.y) *
-            Matrix::CreateRotationZ(detail->rotation.z) *
-            Matrix::CreateTranslation(detail->translation);
+            Matrix::CreateScale(model->scaling) *
+            Matrix::CreateRotationX(model->rotation.x) *
+            Matrix::CreateRotationY(model->rotation.y) *
+            Matrix::CreateRotationZ(model->rotation.z) *
+            Matrix::CreateTranslation(model->translation);
 
         image_based_shader_source->vertex_constant_buffer_data.model =
             image_based_shader_source->vertex_constant_buffer_data.model
@@ -125,21 +120,13 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     // projection
     {
         const float aspect = Env::Get().aspect;
-        if (detail->use_perspective_projection) {
-            image_based_shader_source->vertex_constant_buffer_data.projection =
-                XMMatrixPerspectiveFovLH(
-                    XMConvertToRadians(
-                        gui->GetGlobalTab()
-                            .projection_setting.projection_fov_angle_y),
-                    aspect, gui->GetGlobalTab().projection_setting.near_z,
-                    gui->GetGlobalTab().projection_setting.far_z);
-        } else {
-            image_based_shader_source->vertex_constant_buffer_data.projection =
-                XMMatrixOrthographicOffCenterLH(
-                    -aspect, aspect, -1.0f, 1.0f,
-                    gui->GetGlobalTab().projection_setting.near_z,
-                    gui->GetGlobalTab().projection_setting.far_z);
-        }
+        image_based_shader_source->vertex_constant_buffer_data
+            .projection = XMMatrixPerspectiveFovLH(
+            XMConvertToRadians(
+                gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
+            aspect, gui->GetGlobalTab().projection_setting.near_z,
+            gui->GetGlobalTab().projection_setting.far_z);
+
         image_based_shader_source->vertex_constant_buffer_data.projection =
             image_based_shader_source->vertex_constant_buffer_data.projection
                 .Transpose();
@@ -156,18 +143,18 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
                                image_based_shader_source
                                    ->vertex_constant_buffer_data.view.Invert());
     }
-    // material
-    {
-        image_based_shader_source->pixel_constant_buffer_data.material.diffuse =
-            Vector3(detail->diffuse);
-        image_based_shader_source->pixel_constant_buffer_data.material
-            .specular = Vector3(detail->specular);
-        image_based_shader_source->pixel_constant_buffer_data.material
-            .shininess = detail->shininess;
-    }
+    //// material
+    //{
+    //    image_based_shader_source->pixel_constant_buffer_data.material.diffuse =
+    //        Vector3(detail->diffuse);
+    //    image_based_shader_source->pixel_constant_buffer_data.material
+    //        .specular = Vector3(detail->specular);
+    //    image_based_shader_source->pixel_constant_buffer_data.material
+    //        .shininess = detail->shininess;
+    //}
 
-    image_based_shader_source->pixel_constant_buffer_data.useTexture =
-        detail->use_texture;
+    //image_based_shader_source->pixel_constant_buffer_data.useTexture =
+    //    detail->use_texture;
 
     Direct3D::GetInstance().UpdateBuffer(
         image_based_shader_source->pixel_constant_buffer_data,
@@ -183,7 +170,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::GetInstance().device_context();

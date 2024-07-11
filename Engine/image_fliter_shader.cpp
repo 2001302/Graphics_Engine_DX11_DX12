@@ -1,6 +1,6 @@
 #include "image_fliter_shader.h"
 #include "geometry_generator.h"
-#include "panel.h"
+#include "setting_ui.h"
 
 using namespace Engine;
 

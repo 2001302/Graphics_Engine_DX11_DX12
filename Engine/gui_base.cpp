@@ -1,4 +1,4 @@
-#include "base_gui.h"
+#include "gui_base.h"
 
 using namespace Engine;
 
@@ -7,7 +7,7 @@ ImGuiWindowFlags GetWindowFlags() {
            ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove;
 }
 
-bool BaseGui::Initialize() {
+bool IGui::Initialize() {
     // Setup Dear ImGui context
     context_ = ImGui::CreateContext();
     ImGui::SetCurrentContext(context_);
@@ -26,7 +26,7 @@ bool BaseGui::Initialize() {
     return true;
 }
 
-bool BaseGui::Frame() {
+bool IGui::Frame() {
 
     auto &io = ImGui::GetIO();
 
@@ -68,13 +68,13 @@ bool BaseGui::Frame() {
     return true;
 }
 
-void BaseGui::Shutdown() {
+void IGui::Shutdown() {
     ImGui_ImplDX11_Shutdown();
     ImGui_ImplWin32_Shutdown();
     ImGui::DestroyContext();
 }
 
-void BaseGui::RecreateFontAtlas() {
+void IGui::RecreateFontAtlas() {
     ImGuiIO &io = ImGui::GetIO();
 
     IM_DELETE(io.Fonts);

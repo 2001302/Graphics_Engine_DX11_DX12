@@ -3,7 +3,7 @@
 
 #include "behavior_tree.h"
 #include "common_struct.h"
-#include "base_gui.h"
+#include "gui_base.h"
 
 namespace Engine {
 

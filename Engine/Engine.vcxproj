@@ -148,6 +148,8 @@
     <ClInclude Include="ground_shader.h" />
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="image_fliter_shader.h" />
+    <ClInclude Include="gui_extension.h" />
+    <ClInclude Include="node_ui.h" />
     <ClInclude Include="normal_geometry_shader.h" />
     <ClInclude Include="parallel_node.h" />
     <ClInclude Include="physically_based_shader.h" />
@@ -160,7 +162,7 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="geometry_generator.h" />
-    <ClInclude Include="base_gui.h" />
+    <ClInclude Include="gui_base.h" />
     <ClInclude Include="id_generator.h" />
     <ClInclude Include="ImGui\crude_json.h" />
     <ClInclude Include="ImGui\imconfig.h" />
@@ -179,7 +181,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="message_receiver.h" />
-    <ClInclude Include="panel.h" />
+    <ClInclude Include="setting_ui.h" />
     <ClInclude Include="selector_node.h" />
     <ClInclude Include="sequence_node.h" />
     <ClInclude Include="shader.h" />
@@ -211,7 +213,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="cube_map.cpp" />
     <ClCompile Include="direct3D.cpp" />
-    <ClCompile Include="base_gui.cpp" />
+    <ClCompile Include="gui_base.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="geometry_generator.cpp" />
     <ClCompile Include="id_generator.cpp" />
@@ -232,7 +234,7 @@
     <ClCompile Include="image_based_shader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
-    <ClCompile Include="panel.cpp" />
+    <ClCompile Include="setting_ui.cpp" />
     <ClCompile Include="phong_shader.cpp" />
     <ClCompile Include="platform.cpp" />
     <ClCompile Include="resource_helper.cpp" />

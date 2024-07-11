@@ -1,6 +1,6 @@
 #include "ground_shader.h"
 #include "geometry_generator.h"
-#include "panel.h"
+#include "setting_ui.h"
 #include "resource_helper.h"
 
 using namespace Engine;
@@ -27,10 +27,6 @@ EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
     manager->ground = std::make_shared<Ground>();
     GeometryGenerator::MakeSquareGrid(manager->ground.get(), 256, 256, 20.0f,
                                       {40.0f, 40.0f});
-
-    auto graph = std::make_shared<Graph>();
-    graph->SetDetailNode(std::make_shared<ModelDetailNode>());
-    manager->ground->behavior = graph;
 
     auto ground_shader = std::make_shared<GroundShader>();
     manager->shaders[EnumShaderType::eGround] = ground_shader;
@@ -135,7 +131,7 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto ground = manager->ground;
@@ -163,8 +159,12 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
             manager->camera->view.Transpose();
 
         const float aspect = Env::Get().aspect;
-        ground_shader_source->vertex_constant_buffer_data.projection =
-            XMMatrixPerspectiveFovLH(70.0f, aspect, 0.01f, 100.0f);
+        ground_shader_source->vertex_constant_buffer_data
+            .projection = XMMatrixPerspectiveFovLH(
+            XMConvertToRadians(
+                gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
+            aspect, gui->GetGlobalTab().projection_setting.near_z,
+            gui->GetGlobalTab().projection_setting.far_z);
 
         ground_shader_source->vertex_constant_buffer_data.projection =
             ground_shader_source->vertex_constant_buffer_data.projection
@@ -198,7 +198,7 @@ EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
     auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::Panel *>(guiBlock);
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::GetInstance().device_context();

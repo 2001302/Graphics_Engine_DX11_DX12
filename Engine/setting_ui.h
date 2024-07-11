@@ -1,7 +1,7 @@
-﻿#ifndef _PANEL
+#ifndef _PANEL
 #define _PANEL
 
-#include "base_gui.h"
+#include "gui_base.h"
 #include "pipeline_manager.h"
 
 namespace ed = ax::NodeEditor;
@@ -56,10 +56,10 @@ struct GlobalTab {
     PhysicallyBasedRenderingSetting pbr_setting;
     PostProcessSetting post_process_setting;
 };
-class Panel : public BaseGui {
+class SettingUi : public IGui {
 
   public:
-    Panel(std::shared_ptr<PipelineManager> pipeline_manager);
+    SettingUi(std::shared_ptr<PipelineManager> pipeline_manager);
     void OnStart() override;
     void OnFrame(float deltaTime) override;
     GlobalTab GetGlobalTab() { return global_setting; }

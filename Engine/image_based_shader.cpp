@@ -84,99 +84,95 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    for (auto &model_map : manager->models) {
-        auto &model = model_map.second;
-        auto graph = model->behavior;
+    auto model = manager->models[target_id];
+    auto graph = model->behavior;
 
-        auto detail = dynamic_cast<Engine::ModelDetailNode *>(
-            graph->GetDetailNode().get());
-        assert(detail != nullptr);
+    auto detail =
+        dynamic_cast<Engine::ModelDetailNode *>(graph->GetDetailNode().get());
+    assert(detail != nullptr);
 
-        auto image_based_shader_source = model->image_based_shader_source;
-        auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
-        // model
-        {
-            image_based_shader_source->vertex_constant_buffer_data.model =
-                Matrix::CreateScale(detail->scaling) *
-                Matrix::CreateRotationX(detail->rotation.x) *
-                Matrix::CreateRotationY(detail->rotation.y) *
-                Matrix::CreateRotationZ(detail->rotation.z) *
-                Matrix::CreateTranslation(detail->translation);
+    auto image_based_shader_source = model->image_based_shader_source;
+    auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
+    // model
+    {
+        image_based_shader_source->vertex_constant_buffer_data.model =
+            Matrix::CreateScale(detail->scaling) *
+            Matrix::CreateRotationX(detail->rotation.x) *
+            Matrix::CreateRotationY(detail->rotation.y) *
+            Matrix::CreateRotationZ(detail->rotation.z) *
+            Matrix::CreateTranslation(detail->translation);
 
-            image_based_shader_source->vertex_constant_buffer_data.model =
-                image_based_shader_source->vertex_constant_buffer_data.model
-                    .Transpose();
-        }
-        // view
-        {
-            image_based_shader_source->vertex_constant_buffer_data.view =
-                manager->camera->view.Transpose();
-        }
-        // inverse transpose
-        {
-            image_based_shader_source->vertex_constant_buffer_data
-                .invTranspose =
-                image_based_shader_source->vertex_constant_buffer_data.model;
+        image_based_shader_source->vertex_constant_buffer_data.model =
+            image_based_shader_source->vertex_constant_buffer_data.model
+                .Transpose();
+    }
+    // view
+    {
+        image_based_shader_source->vertex_constant_buffer_data.view =
+            manager->camera->view.Transpose();
+    }
+    // inverse transpose
+    {
+        image_based_shader_source->vertex_constant_buffer_data.invTranspose =
+            image_based_shader_source->vertex_constant_buffer_data.model;
+        image_based_shader_source->vertex_constant_buffer_data.invTranspose
+            .Translation(Vector3(0.0f));
+        image_based_shader_source->vertex_constant_buffer_data.invTranspose =
             image_based_shader_source->vertex_constant_buffer_data.invTranspose
-                .Translation(Vector3(0.0f));
-            image_based_shader_source->vertex_constant_buffer_data
-                .invTranspose =
-                image_based_shader_source->vertex_constant_buffer_data
-                    .invTranspose.Transpose()
-                    .Invert();
-        }
-        // projection
-        {
-            const float aspect = Env::Get().aspect;
-            if (detail->use_perspective_projection) {
-                image_based_shader_source->vertex_constant_buffer_data
-                    .projection = XMMatrixPerspectiveFovLH(
+                .Transpose()
+                .Invert();
+    }
+    // projection
+    {
+        const float aspect = Env::Get().aspect;
+        if (detail->use_perspective_projection) {
+            image_based_shader_source->vertex_constant_buffer_data.projection =
+                XMMatrixPerspectiveFovLH(
                     XMConvertToRadians(
                         gui->GetGlobalTab()
                             .projection_setting.projection_fov_angle_y),
                     aspect, gui->GetGlobalTab().projection_setting.near_z,
                     gui->GetGlobalTab().projection_setting.far_z);
-            } else {
-                image_based_shader_source->vertex_constant_buffer_data
-                    .projection = XMMatrixOrthographicOffCenterLH(
+        } else {
+            image_based_shader_source->vertex_constant_buffer_data.projection =
+                XMMatrixOrthographicOffCenterLH(
                     -aspect, aspect, -1.0f, 1.0f,
                     gui->GetGlobalTab().projection_setting.near_z,
                     gui->GetGlobalTab().projection_setting.far_z);
-            }
-            image_based_shader_source->vertex_constant_buffer_data.projection =
-                image_based_shader_source->vertex_constant_buffer_data
-                    .projection.Transpose();
         }
-
-        Direct3D::GetInstance().UpdateBuffer(
-            image_based_shader_source->vertex_constant_buffer_data,
-            image_based_shader_source->vertex_constant_buffer);
-
-        // eye
-        {
-            image_based_shader_source->pixel_constant_buffer_data.eyeWorld =
-                Vector3::Transform(
-                    Vector3(0.0f),
-                    image_based_shader_source->vertex_constant_buffer_data.view
-                        .Invert());
-        }
-        // material
-        {
-            image_based_shader_source->pixel_constant_buffer_data.material
-                .diffuse = Vector3(detail->diffuse);
-            image_based_shader_source->pixel_constant_buffer_data.material
-                .specular = Vector3(detail->specular);
-            image_based_shader_source->pixel_constant_buffer_data.material
-                .shininess = detail->shininess;
-        }
-
-        image_based_shader_source->pixel_constant_buffer_data.useTexture =
-            detail->use_texture;
-
-        Direct3D::GetInstance().UpdateBuffer(
-            image_based_shader_source->pixel_constant_buffer_data,
-            image_based_shader_source->pixel_constant_buffer);
+        image_based_shader_source->vertex_constant_buffer_data.projection =
+            image_based_shader_source->vertex_constant_buffer_data.projection
+                .Transpose();
     }
+
+    Direct3D::GetInstance().UpdateBuffer(
+        image_based_shader_source->vertex_constant_buffer_data,
+        image_based_shader_source->vertex_constant_buffer);
+
+    // eye
+    {
+        image_based_shader_source->pixel_constant_buffer_data.eyeWorld =
+            Vector3::Transform(Vector3(0.0f),
+                               image_based_shader_source
+                                   ->vertex_constant_buffer_data.view.Invert());
+    }
+    // material
+    {
+        image_based_shader_source->pixel_constant_buffer_data.material.diffuse =
+            Vector3(detail->diffuse);
+        image_based_shader_source->pixel_constant_buffer_data.material
+            .specular = Vector3(detail->specular);
+        image_based_shader_source->pixel_constant_buffer_data.material
+            .shininess = detail->shininess;
+    }
+
+    image_based_shader_source->pixel_constant_buffer_data.useTexture =
+        detail->use_texture;
+
+    Direct3D::GetInstance().UpdateBuffer(
+        image_based_shader_source->pixel_constant_buffer_data,
+        image_based_shader_source->pixel_constant_buffer);
+
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
@@ -192,51 +188,47 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    for (auto &model_map : manager->models) {
-        // RS: Rasterizer stage
-        // OM: Output-Merger stage
-        // VS: Vertex Shader
-        // PS: Pixel Shader
-        // IA: Input-Assembler stage
-        auto model = model_map.second;
-        auto image_based_shader_source = model->image_based_shader_source;
-        auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
+    // RS: Rasterizer stage
+    // OM: Output-Merger stage
+    // VS: Vertex Shader
+    // PS: Pixel Shader
+    // IA: Input-Assembler stage
+    auto model = manager->models[target_id];
+    auto image_based_shader_source = model->image_based_shader_source;
+    auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
 
-        unsigned int stride = sizeof(Vertex);
-        unsigned int offset = 0;
+    unsigned int stride = sizeof(Vertex);
+    unsigned int offset = 0;
 
-        context->VSSetShader(image_based_shader->vertex_shader.Get(), 0, 0);
-        context->PSSetSamplers(0, 1, &image_based_shader->sample_state);
+    context->VSSetShader(image_based_shader->vertex_shader.Get(), 0, 0);
+    context->PSSetSamplers(0, 1, &image_based_shader->sample_state);
 
-        context->VSSetConstantBuffers(
-            0, 1,
-            image_based_shader_source->vertex_constant_buffer.GetAddressOf());
+    context->VSSetConstantBuffers(
+        0, 1, image_based_shader_source->vertex_constant_buffer.GetAddressOf());
 
-        context->PSSetConstantBuffers(
-            0, 1,
-            image_based_shader_source->pixel_constant_buffer.GetAddressOf());
-        context->PSSetShader(image_based_shader->pixel_shader.Get(), NULL, 0);
-        context->IASetInputLayout(image_based_shader->layout.Get());
+    context->PSSetConstantBuffers(
+        0, 1, image_based_shader_source->pixel_constant_buffer.GetAddressOf());
+    context->PSSetShader(image_based_shader->pixel_shader.Get(), NULL, 0);
+    context->IASetInputLayout(image_based_shader->layout.Get());
 
-        for (const auto &mesh : model->meshes) {
+    for (const auto &mesh : model->meshes) {
 
-            std::vector<ID3D11ShaderResourceView *> resViews = {
-                mesh->textureResourceView.Get(),
-                manager->cube_map->texture->specular_SRV.Get(),
-                manager->cube_map->texture->irradiance_SRV.Get(),
-            };
-            context->PSSetShaderResources(0, UINT(resViews.size()),
-                                          resViews.data());
+        std::vector<ID3D11ShaderResourceView *> resViews = {
+            mesh->textureResourceView.Get(),
+            manager->cube_map->texture->specular_SRV.Get(),
+            manager->cube_map->texture->irradiance_SRV.Get(),
+        };
+        context->PSSetShaderResources(0, UINT(resViews.size()),
+                                      resViews.data());
 
-            context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
-                                        &stride, &offset);
-            context->IASetIndexBuffer(mesh->indexBuffer.Get(),
-                                      DXGI_FORMAT_R32_UINT, 0);
-        }
-
-        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        context->DrawIndexed(model->GetIndexCount(), 0, 0);
+        context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
+                                    &stride, &offset);
+        context->IASetIndexBuffer(mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
+                                  0);
     }
+
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    context->DrawIndexed(model->GetIndexCount(), 0, 0);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }

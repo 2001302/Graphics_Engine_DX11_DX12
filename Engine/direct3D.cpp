@@ -215,7 +215,8 @@ void Direct3D::SetViewPort(float x, float y, float width, float height) {
     device_context_->RSSetViewports(1, &viewport_);
 }
 
-void Direct3D::BeginScene(float red, float green, float blue, float alpha) {
+void Direct3D::BeginScene(float red, float green, float blue, float alpha,
+                          bool draw_as_wire) {
     float color[4];
 
     // Setup the color to clear the buffer to.
@@ -237,6 +238,19 @@ void Direct3D::BeginScene(float red, float green, float blue, float alpha) {
     device_context_->ClearDepthStencilView(depth_stencil_view_.Get(),
                                            D3D11_CLEAR_DEPTH, 1.0f, 0);
     device_context_->OMSetDepthStencilState(depth_stencil_state_.Get(), 0);
+
+    Direct3D::GetInstance().device_context()->OMSetRenderTargets(
+        1, Direct3D::GetInstance().render_target_view().GetAddressOf(),
+        Direct3D::GetInstance().depth_stencil_view().Get());
+    Direct3D::GetInstance().device_context()->OMSetDepthStencilState(
+        Direct3D::GetInstance().depth_stencil_state().Get(), 0);
+
+    if (draw_as_wire)
+        Direct3D::GetInstance().device_context()->RSSetState(
+            Direct3D::GetInstance().wire_rasterizer_state().Get());
+    else
+        Direct3D::GetInstance().device_context()->RSSetState(
+            Direct3D::GetInstance().solid_rasterizer_state().Get());
 
     return;
 }

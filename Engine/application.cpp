@@ -53,43 +53,37 @@ bool Application::OnFrame() {
     };
 
     // Clear the buffers to begin the scene.
-    Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
-
-    Direct3D::GetInstance().device_context()->OMSetRenderTargets(
-        1, Direct3D::GetInstance().render_target_view().GetAddressOf(),
-        Direct3D::GetInstance().depth_stencil_view().Get());
-    Direct3D::GetInstance().device_context()->OMSetDepthStencilState(
-        Direct3D::GetInstance().depth_stencil_state().Get(), 0);
-
-    if (imgui_->GetGlobalTab().draw_as_wire_)
-        Direct3D::GetInstance().device_context()->RSSetState(
-            Direct3D::GetInstance().wire_rasterizer_state().Get());
-    else
-        Direct3D::GetInstance().device_context()->RSSetState(
-            Direct3D::GetInstance().solid_rasterizer_state().Get());
+    Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f,
+                                       imgui_->GetGlobalTab().draw_as_wire_);
 
     // clang-format off
+    std::vector<int> model_ids;
+    std::transform(manager_->models.begin(), manager_->models.end(), model_ids.begin(), 
+        [](const std::pair<int, std::shared_ptr<Model>> &x) { return x.first; });
+
     auto tree = std::make_unique<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
     ->Excute(std::make_shared<UpdateCamera>())
-    ->Conditional(std::make_shared<CheckImageBasedShader>())
-        ->Sequence()
-            ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
-            ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
-        ->Close()
-    ->End()
-    ->Conditional(std::make_shared<CheckPhongShader>())
-        ->Sequence()
-            ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
-            ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
-        ->Close()
-    ->End()
-    ->Conditional(std::make_shared<CheckPhysicallyBasedShader>())
-        ->Sequence()
-            ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
-            ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
-        ->Close()
-    ->End()
+    ->Parallel(model_ids)
+        ->Conditional(std::make_shared<CheckImageBasedShader>())
+            ->Sequence()
+                ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
+                ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
+            ->Close()
+        ->End()
+        ->Conditional(std::make_shared<CheckPhongShader>())
+            ->Sequence()
+                ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
+                ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
+            ->Close()
+        ->End()
+        ->Conditional(std::make_shared<CheckPhysicallyBasedShader>())
+            ->Sequence()
+                ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
+                ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
+            ->Close()
+        ->End()
+    ->Close()
     ->Excute(std::make_shared<UpdateGroundShader>())
     ->Excute(std::make_shared<RenderGroundShader>())
     ->Excute(std::make_shared<UpdateCubeMap>())

@@ -95,124 +95,118 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    for (auto &model_amp : manager->models) {
-        auto &model = model_amp.second;
-        auto graph = manager->models[model->GetEntityId()]->behavior;
+    auto model = manager->models[target_id];
+    auto graph = manager->models[model->GetEntityId()]->behavior;
 
-        auto detail = dynamic_cast<Engine::ModelDetailNode *>(
-            graph->GetDetailNode().get());
-        assert(detail != nullptr);
+    auto detail =
+        dynamic_cast<Engine::ModelDetailNode *>(graph->GetDetailNode().get());
+    assert(detail != nullptr);
 
-        auto physically_shader_source = model->physically_based_shader_source;
-        auto physically_shader =
-            manager->shaders[EnumShaderType::ePhysicallyBased];
-        // model
-        {
-            physically_shader_source->vertex_constant_buffer_data.modelWorld =
-                Matrix::CreateScale(detail->scaling) *
-                Matrix::CreateRotationX(detail->rotation.x) *
-                Matrix::CreateRotationY(detail->rotation.y) *
-                Matrix::CreateRotationZ(detail->rotation.z) *
-                Matrix::CreateTranslation(detail->translation);
+    auto physically_shader_source = model->physically_based_shader_source;
+    auto physically_shader = manager->shaders[EnumShaderType::ePhysicallyBased];
+    // model
+    {
+        physically_shader_source->vertex_constant_buffer_data.modelWorld =
+            Matrix::CreateScale(detail->scaling) *
+            Matrix::CreateRotationX(detail->rotation.x) *
+            Matrix::CreateRotationY(detail->rotation.y) *
+            Matrix::CreateRotationZ(detail->rotation.z) *
+            Matrix::CreateTranslation(detail->translation);
 
-            physically_shader_source->vertex_constant_buffer_data.modelWorld =
-                physically_shader_source->vertex_constant_buffer_data.modelWorld
-                    .Transpose();
-        }
-        // view
-        {
-            physically_shader_source->vertex_constant_buffer_data.view =
-                manager->camera->view.Transpose();
-        }
-        // inverse transpose
-        {
-            physically_shader_source->vertex_constant_buffer_data.invTranspose =
-                physically_shader_source->vertex_constant_buffer_data
-                    .modelWorld;
+        physically_shader_source->vertex_constant_buffer_data.modelWorld =
+            physically_shader_source->vertex_constant_buffer_data.modelWorld
+                .Transpose();
+    }
+    // view
+    {
+        physically_shader_source->vertex_constant_buffer_data.view =
+            manager->camera->view.Transpose();
+    }
+    // inverse transpose
+    {
+        physically_shader_source->vertex_constant_buffer_data.invTranspose =
+            physically_shader_source->vertex_constant_buffer_data.modelWorld;
+        physically_shader_source->vertex_constant_buffer_data.invTranspose
+            .Translation(Vector3(0.0f));
+        physically_shader_source->vertex_constant_buffer_data.invTranspose =
             physically_shader_source->vertex_constant_buffer_data.invTranspose
-                .Translation(Vector3(0.0f));
-            physically_shader_source->vertex_constant_buffer_data.invTranspose =
-                physically_shader_source->vertex_constant_buffer_data
-                    .invTranspose.Transpose()
-                    .Invert();
-        }
-        // projection
-        {
-            const float aspect = Env::Get().aspect;
-            if (detail->use_perspective_projection) {
-                physically_shader_source->vertex_constant_buffer_data
-                    .projection = XMMatrixPerspectiveFovLH(
+                .Transpose()
+                .Invert();
+    }
+    // projection
+    {
+        const float aspect = Env::Get().aspect;
+        if (detail->use_perspective_projection) {
+            physically_shader_source->vertex_constant_buffer_data.projection =
+                XMMatrixPerspectiveFovLH(
                     XMConvertToRadians(
                         gui->GetGlobalTab()
                             .projection_setting.projection_fov_angle_y),
                     aspect, gui->GetGlobalTab().projection_setting.near_z,
                     gui->GetGlobalTab().projection_setting.far_z);
-            } else {
-                physically_shader_source->vertex_constant_buffer_data
-                    .projection = XMMatrixOrthographicOffCenterLH(
+        } else {
+            physically_shader_source->vertex_constant_buffer_data.projection =
+                XMMatrixOrthographicOffCenterLH(
                     -aspect, aspect, -1.0f, 1.0f,
                     gui->GetGlobalTab().projection_setting.near_z,
                     gui->GetGlobalTab().projection_setting.far_z);
-            }
-            physically_shader_source->vertex_constant_buffer_data.projection =
-                physically_shader_source->vertex_constant_buffer_data.projection
-                    .Transpose();
         }
-
-        Direct3D::GetInstance().UpdateBuffer(
-            physically_shader_source->vertex_constant_buffer_data,
-            physically_shader_source->vertex_constant_buffer);
-
-        // eye
-        {
-            physically_shader_source->pixel_constant_buffer_data.eyeWorld =
-                Vector3::Transform(
-                    Vector3(0.0f),
-                    physically_shader_source->vertex_constant_buffer_data.view
-                        .Invert());
-        }
-        // material
-        {
-            physically_shader_source->pixel_constant_buffer_data.material
-                .roughness = gui->GetGlobalTab().pbr_setting.roughness;
-            physically_shader_source->pixel_constant_buffer_data.material
-                .metallic = gui->GetGlobalTab().pbr_setting.metallic;
-        }
-        // light
-        {
-            for (int i = 0; i < MAX_LIGHTS; i++) {
-                if (i != gui->GetGlobalTab().light_setting.light_type) {
-                    physically_shader_source->pixel_constant_buffer_data
-                        .lights[i]
-                        .strength *= 0.0f;
-                } else {
-                    // turn off another light
-                    physically_shader_source->pixel_constant_buffer_data
-                        .lights[i] =
-                        gui->GetGlobalTab().light_setting.light_from_gui;
-                }
-            }
-        }
-
-        physically_shader_source->pixel_constant_buffer_data.useAlbedoMap =
-            gui->GetGlobalTab().pbr_setting.useAlbedoMap;
-        physically_shader_source->pixel_constant_buffer_data.useNormalMap =
-            gui->GetGlobalTab().pbr_setting.useNormalMap;
-        physically_shader_source->pixel_constant_buffer_data.useAOMap =
-            gui->GetGlobalTab().pbr_setting.useAOMap;
-        physically_shader_source->pixel_constant_buffer_data.invertNormalMapY =
-            gui->GetGlobalTab().pbr_setting.invertNormalMapY;
-        physically_shader_source->pixel_constant_buffer_data.useMetallicMap =
-            gui->GetGlobalTab().pbr_setting.useMetallicMap;
-        physically_shader_source->pixel_constant_buffer_data.useRoughnessMap =
-            gui->GetGlobalTab().pbr_setting.useRoughnessMap;
-        physically_shader_source->pixel_constant_buffer_data.useEmissiveMap =
-            gui->GetGlobalTab().pbr_setting.useEmissiveMap;
-
-        Direct3D::GetInstance().UpdateBuffer(
-            physically_shader_source->pixel_constant_buffer_data,
-            physically_shader_source->pixel_constant_buffer);
+        physically_shader_source->vertex_constant_buffer_data.projection =
+            physically_shader_source->vertex_constant_buffer_data.projection
+                .Transpose();
     }
+
+    Direct3D::GetInstance().UpdateBuffer(
+        physically_shader_source->vertex_constant_buffer_data,
+        physically_shader_source->vertex_constant_buffer);
+
+    // eye
+    {
+        physically_shader_source->pixel_constant_buffer_data.eyeWorld =
+            Vector3::Transform(Vector3(0.0f),
+                               physically_shader_source
+                                   ->vertex_constant_buffer_data.view.Invert());
+    }
+    // material
+    {
+        physically_shader_source->pixel_constant_buffer_data.material
+            .roughness = gui->GetGlobalTab().pbr_setting.roughness;
+        physically_shader_source->pixel_constant_buffer_data.material.metallic =
+            gui->GetGlobalTab().pbr_setting.metallic;
+    }
+    // light
+    {
+        for (int i = 0; i < MAX_LIGHTS; i++) {
+            if (i != gui->GetGlobalTab().light_setting.light_type) {
+                physically_shader_source->pixel_constant_buffer_data.lights[i]
+                    .strength *= 0.0f;
+            } else {
+                // turn off another light
+                physically_shader_source->pixel_constant_buffer_data.lights[i] =
+                    gui->GetGlobalTab().light_setting.light_from_gui;
+            }
+        }
+    }
+
+    physically_shader_source->pixel_constant_buffer_data.useAlbedoMap =
+        gui->GetGlobalTab().pbr_setting.useAlbedoMap;
+    physically_shader_source->pixel_constant_buffer_data.useNormalMap =
+        gui->GetGlobalTab().pbr_setting.useNormalMap;
+    physically_shader_source->pixel_constant_buffer_data.useAOMap =
+        gui->GetGlobalTab().pbr_setting.useAOMap;
+    physically_shader_source->pixel_constant_buffer_data.invertNormalMapY =
+        gui->GetGlobalTab().pbr_setting.invertNormalMapY;
+    physically_shader_source->pixel_constant_buffer_data.useMetallicMap =
+        gui->GetGlobalTab().pbr_setting.useMetallicMap;
+    physically_shader_source->pixel_constant_buffer_data.useRoughnessMap =
+        gui->GetGlobalTab().pbr_setting.useRoughnessMap;
+    physically_shader_source->pixel_constant_buffer_data.useEmissiveMap =
+        gui->GetGlobalTab().pbr_setting.useEmissiveMap;
+
+    Direct3D::GetInstance().UpdateBuffer(
+        physically_shader_source->pixel_constant_buffer_data,
+        physically_shader_source->pixel_constant_buffer);
+
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
@@ -228,68 +222,64 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    for (auto &model_map : manager->models) {
-        // RS: Rasterizer stage
-        // OM: Output-Merger stage
-        // VS: Vertex Shader
-        // PS: Pixel Shader
-        // IA: Input-Assembler stage
-        auto model = model_map.second;
-        auto physically_shader_source = model->physically_based_shader_source;
-        auto physically_shader = std::static_pointer_cast<PhsicallyBasedShader>(
-            manager->shaders[EnumShaderType::ePhysicallyBased]);
+    // RS: Rasterizer stage
+    // OM: Output-Merger stage
+    // VS: Vertex Shader
+    // PS: Pixel Shader
+    // IA: Input-Assembler stage
+    auto model = manager->models[target_id];
+    auto physically_shader_source = model->physically_based_shader_source;
+    auto physically_shader = std::static_pointer_cast<PhsicallyBasedShader>(
+        manager->shaders[EnumShaderType::ePhysicallyBased]);
 
-        assert(physically_shader != nullptr);
+    assert(physically_shader != nullptr);
 
-        unsigned int stride = sizeof(Vertex);
-        unsigned int offset = 0;
+    unsigned int stride = sizeof(Vertex);
+    unsigned int offset = 0;
 
-        for (const auto &mesh : model->meshes) {
+    for (const auto &mesh : model->meshes) {
 
-            // VertexShader에서도 Texture 사용
-            context->VSSetShader(physically_shader->vertex_shader.Get(), 0, 0);
-            context->VSSetShaderResources(0, 1, mesh->heightSRV.GetAddressOf());
-            context->VSSetSamplers(
-                0, 1, physically_shader->sample_state.GetAddressOf());
-            context->VSSetConstantBuffers(
-                0, 1,
-                physically_shader_source->vertex_constant_buffer
-                    .GetAddressOf());
+        // VertexShader에서도 Texture 사용
+        context->VSSetShader(physically_shader->vertex_shader.Get(), 0, 0);
+        context->VSSetShaderResources(0, 1, mesh->heightSRV.GetAddressOf());
+        context->VSSetSamplers(0, 1,
+                               physically_shader->sample_state.GetAddressOf());
+        context->VSSetConstantBuffers(
+            0, 1,
+            physically_shader_source->vertex_constant_buffer.GetAddressOf());
 
-            std::vector<ID3D11SamplerState *> samplers = {
-                physically_shader->sample_state.Get(),
-                physically_shader->clampSamplerState.Get()};
+        std::vector<ID3D11SamplerState *> samplers = {
+            physically_shader->sample_state.Get(),
+            physically_shader->clampSamplerState.Get()};
 
-            context->PSSetSamplers(0, UINT(samplers.size()), samplers.data());
-            context->PSSetShader(physically_shader->pixel_shader.Get(), 0, 0);
+        context->PSSetSamplers(0, UINT(samplers.size()), samplers.data());
+        context->PSSetShader(physically_shader->pixel_shader.Get(), 0, 0);
 
-            std::vector<ID3D11ShaderResourceView *> resViews = {
-                manager->cube_map->texture->specular_SRV.Get(),
-                manager->cube_map->texture->irradiance_SRV.Get(),
-                manager->cube_map->texture->brdf_SRV.Get(),
-                mesh->albedoSRV.Get(),
-                mesh->normalSRV.Get(),
-                mesh->aoSRV.Get(),
-                mesh->metallicSRV.Get(),
-                mesh->roughnessSRV.Get(),
-                mesh->emissiveSRV.Get()};
-            context->PSSetShaderResources(0, UINT(resViews.size()),
-                                          resViews.data());
+        std::vector<ID3D11ShaderResourceView *> resViews = {
+            manager->cube_map->texture->specular_SRV.Get(),
+            manager->cube_map->texture->irradiance_SRV.Get(),
+            manager->cube_map->texture->brdf_SRV.Get(),
+            mesh->albedoSRV.Get(),
+            mesh->normalSRV.Get(),
+            mesh->aoSRV.Get(),
+            mesh->metallicSRV.Get(),
+            mesh->roughnessSRV.Get(),
+            mesh->emissiveSRV.Get()};
+        context->PSSetShaderResources(0, UINT(resViews.size()),
+                                      resViews.data());
 
-            context->PSSetConstantBuffers(
-                0, 1,
-                physically_shader_source->pixel_constant_buffer.GetAddressOf());
+        context->PSSetConstantBuffers(
+            0, 1,
+            physically_shader_source->pixel_constant_buffer.GetAddressOf());
 
-            context->IASetInputLayout(physically_shader->layout.Get());
-            context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
-                                        &stride, &offset);
-            context->IASetIndexBuffer(mesh->indexBuffer.Get(),
-                                      DXGI_FORMAT_R32_UINT, 0);
-            context->IASetPrimitiveTopology(
-                D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        context->IASetInputLayout(physically_shader->layout.Get());
+        context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
+                                    &stride, &offset);
+        context->IASetIndexBuffer(mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
+                                  0);
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-            context->DrawIndexed(model->GetIndexCount(), 0, 0);
-        }
+        context->DrawIndexed(model->GetIndexCount(), 0, 0);
     }
 
     return EnumBehaviorTreeStatus::eSuccess;

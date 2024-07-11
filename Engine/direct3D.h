@@ -17,7 +17,8 @@ class Direct3D {
         return instance;
     }
     bool Initialize();
-    void BeginScene(float red, float green, float blue, float alpha);
+    void BeginScene(float red, float green, float blue,
+                    float alpha, bool draw_as_wire);
     void EndScene();
 
     void SetViewPort(float x, float y, float width, float height);

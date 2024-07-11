@@ -10,6 +10,7 @@
 // clang-format off
 #include <map>
 #include <vector>
+#include <algorithm>
 #include <windows.h>
 #include <string>
 #include <iostream>

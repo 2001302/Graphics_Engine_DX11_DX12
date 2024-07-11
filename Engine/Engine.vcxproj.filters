@@ -23,10 +23,10 @@
       <Filter>DirectX\Shader</Filter>
     </ClInclude>
     <ClInclude Include="dataBlock.h">
-      <Filter>DataBlock</Filter>
+      <Filter>Model\DataBlock</Filter>
     </ClInclude>
     <ClInclude Include="pipeline_manager.h">
-      <Filter>DataBlock</Filter>
+      <Filter>Model\DataBlock</Filter>
     </ClInclude>
     <ClInclude Include="platform.h">
       <Filter>Framework</Filter>
@@ -153,9 +153,6 @@
     </ClInclude>
     <ClInclude Include="parallel_node.h">
       <Filter>BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="target_objects_block.h">
-      <Filter>DataBlock</Filter>
     </ClInclude>
     <ClInclude Include="ground.h">
       <Filter>Model</Filter>
@@ -318,9 +315,6 @@
     <Filter Include="DirectX\Shader\HLSL">
       <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DataBlock">
-      <UniqueIdentifier>{7a46ec5a-5b65-4605-a844-3164e238f8bb}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Framework">
       <UniqueIdentifier>{954ae3a7-14c0-4d2d-8136-883fe33d142a}</UniqueIdentifier>
     </Filter>
@@ -332,6 +326,9 @@
     </Filter>
     <Filter Include="BehaviorGraph">
       <UniqueIdentifier>{dd885491-628a-4699-bf68-ccd7e4610344}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Model\DataBlock">
+      <UniqueIdentifier>{7a46ec5a-5b65-4605-a844-3164e238f8bb}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

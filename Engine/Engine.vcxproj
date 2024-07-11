@@ -191,7 +191,6 @@
     <ClInclude Include="pipeline_manager.h" />
     <ClInclude Include="platform.h" />
     <ClInclude Include="resource_helper.h" />
-    <ClInclude Include="target_objects_block.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="application.cpp" />

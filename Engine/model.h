@@ -2,7 +2,6 @@
 #define _MODEL
 
 #include "common_struct.h"
-#include "entity.h"
 #include "game_object.h"
 #include "image_based_shader.h"
 #include "phong_shader.h"

@@ -1,5 +1,5 @@
-#ifndef _CommonStruct
-#define _CommonStruct
+#ifndef _COMMONSTRUCT
+#define _COMMONSTRUCT
 
 #define _USE_MATH_DEFINES
 #define WM_MODEL_LOAD (WM_APP + 1)
@@ -26,6 +26,7 @@
 #include <directxmath.h>
 #include <d3dcompiler.h>
 #include <directxtk/SimpleMath.h>
+#include <directxtk/DDSTextureLoader.h>
 
 #include <assimp/importer.hpp>
 #include <assimp/scene.h>           
@@ -37,17 +38,17 @@
 
 
 namespace Engine {
-inline void ThrowIfFailed(HRESULT hr) {
-    if (FAILED(hr)) {
-        throw std::exception();
-    }
-}
-
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;
 using DirectX::SimpleMath::Vector3;
 using DirectX::SimpleMath::Vector4;
 using Microsoft::WRL::ComPtr;
+
+inline void ThrowIfFailed(HRESULT hr) {
+    if (FAILED(hr)) {
+        throw std::exception();
+    }
+}
 
 enum EnumShaderType {
     ePhong = 0,
@@ -126,10 +127,6 @@ struct Light {
     float fallOffEnd = 10.0f;                      // 4
     Vector3 position = Vector3(0.0f, 0.0f, -2.0f); // 12
     float spotPower = 1.0f;                        // 4
-};
-
-struct Texture {
-
 };
 
 } // namespace Engine

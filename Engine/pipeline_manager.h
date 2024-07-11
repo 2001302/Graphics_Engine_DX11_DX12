@@ -3,20 +3,11 @@
 
 #include "direct3D.h"
 #include "dataBlock.h"
-#include "input.h"
-#include "graph.h"
 #include "camera.h"
 #include "model.h"
 #include "cube_map.h"
 #include "board_map.h"
 #include "ground.h"
-#include "phong_shader.h"
-#include "cube_map_shader.h"
-#include "image_based_shader.h"
-#include "physically_based_shader.h"
-#include "normal_geometry_shader.h"
-#include "image_fliter_shader.h"
-#include "ground_shader.h"
 
 namespace Engine {
 /// <summary>

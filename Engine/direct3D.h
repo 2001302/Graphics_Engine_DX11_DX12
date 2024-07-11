@@ -3,7 +3,6 @@
 
 #include "common_struct.h"
 #include "env.h"
-#include <directxtk/DDSTextureLoader.h>
 
 using namespace DirectX;
 

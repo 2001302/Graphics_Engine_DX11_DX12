@@ -1,9 +1,15 @@
 #ifndef _APPLICATION
 #define _APPLICATION
 
-#include "message_receiver.h"
-#include "setting_ui.h"
 #include "platform.h"
+#include "direct3D.h"
+#include "setting_ui.h"
+#include "behavior_tree.h"
+#include "pipeline_manager.h"
+
+#include "message_receiver.h"
+#include "geometry_generator.h"
+#include "resource_helper.h"
 
 namespace Engine {
 class Application : public Platform {

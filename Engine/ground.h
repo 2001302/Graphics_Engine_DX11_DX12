@@ -2,7 +2,6 @@
 #define _GROUND
 
 #include "common_struct.h"
-#include "entity.h"
 #include "game_object.h"
 #include "ground_shader.h"
 

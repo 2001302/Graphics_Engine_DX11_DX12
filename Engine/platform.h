@@ -3,14 +3,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include "behavior_tree.h"
-#include "direct3D.h"
+#include "common_struct.h"
 #include "env.h"
-#include "geometry_generator.h"
-#include "setting_ui.h"
-#include "pipeline_manager.h"
-#include "resource_helper.h"
-#include "board_map.h"
 
 namespace Engine {
 class Platform {

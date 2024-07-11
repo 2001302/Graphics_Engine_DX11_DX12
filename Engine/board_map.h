@@ -3,7 +3,6 @@
 
 #include "common_struct.h"
 #include "image_filter.h"
-#include "entity.h"
 #include "image_fliter_shader.h"
 
 namespace Engine {

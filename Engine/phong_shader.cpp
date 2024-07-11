@@ -15,6 +15,25 @@ void PhongShaderSource::InitializeThis() {
                                                  pixel_constant_buffer);
 }
 
+void PhongShaderSource::OnShow() {
+
+    ImGui::Checkbox("Use Texture", &pixel_constant_buffer_data.useTexture);
+    ImGui::Checkbox("Use BlinnPhong",
+                    &pixel_constant_buffer_data.useBlinnPhong);
+
+    ImGui::Text("Material");
+    ImGui::SliderFloat("Shininess",
+                       &pixel_constant_buffer_data.material.shininess, 0.01f,
+                       1.0f);
+    float diffuse;
+    ImGui::SliderFloat("Diffuse", &diffuse, 0.0f, 1.0f);
+    pixel_constant_buffer_data.material.diffuse = Vector3(diffuse);
+
+    float specular;
+    ImGui::SliderFloat("Specular", &specular, 0.0f, 1.0f);
+    pixel_constant_buffer_data.material.specular = Vector3(specular);
+};
+
 EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
     auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);

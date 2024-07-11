@@ -2,7 +2,6 @@
 #define _ENV
 
 #include "common_struct.h"
-#include "dataBlock.h"
 
 namespace Engine {
 struct Env {

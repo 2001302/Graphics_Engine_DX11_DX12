@@ -228,13 +228,6 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    context->ClearRenderTargetView(
-        Direct3D::GetInstance().render_target_view().Get(), clearColor);
-    context->ClearDepthStencilView(
-        Direct3D::GetInstance().depth_stencil_view().Get(),
-        D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
     for (auto &model_map : manager->models) {
         // RS: Rasterizer stage
         // OM: Output-Merger stage
@@ -250,23 +243,6 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
         unsigned int stride = sizeof(Vertex);
         unsigned int offset = 0;
-
-        std::vector<ID3D11RenderTargetView *> renderTargetViews = {
-            Direct3D::GetInstance().render_target_view().Get()};
-
-        context->OMSetRenderTargets(
-            UINT(renderTargetViews.size()), renderTargetViews.data(),
-            Direct3D::GetInstance().depth_stencil_view().Get());
-
-        context->OMSetDepthStencilState(
-            Direct3D::GetInstance().depth_stencil_state().Get(), 0);
-
-        if (gui->GetGlobalTab().draw_as_wire_)
-            context->RSSetState(
-                Direct3D::GetInstance().wire_rasterizer_state().Get());
-        else
-            context->RSSetState(
-                Direct3D::GetInstance().solid_rasterizer_state().Get());
 
         for (const auto &mesh : model->meshes) {
 

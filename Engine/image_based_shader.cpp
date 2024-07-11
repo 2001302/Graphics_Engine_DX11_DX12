@@ -192,13 +192,6 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    context->ClearRenderTargetView(
-        Direct3D::GetInstance().render_target_view().Get(), clearColor);
-    context->ClearDepthStencilView(
-        Direct3D::GetInstance().depth_stencil_view().Get(),
-        D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
     for (auto &model_map : manager->models) {
         // RS: Rasterizer stage
         // OM: Output-Merger stage
@@ -212,25 +205,18 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
         unsigned int stride = sizeof(Vertex);
         unsigned int offset = 0;
 
-        context->OMSetRenderTargets(
-            1, Direct3D::GetInstance().render_target_view().GetAddressOf(),
-            Direct3D::GetInstance().depth_stencil_view().Get());
-        context->OMSetDepthStencilState(
-            Direct3D::GetInstance().depth_stencil_state().Get(), 0);
-
         context->VSSetShader(image_based_shader->vertex_shader.Get(), 0, 0);
         context->PSSetSamplers(0, 1, &image_based_shader->sample_state);
-
-        if (gui->GetGlobalTab().draw_as_wire_)
-            context->RSSetState(
-                Direct3D::GetInstance().wire_rasterizer_state().Get());
-        else
-            context->RSSetState(
-                Direct3D::GetInstance().solid_rasterizer_state().Get());
 
         context->VSSetConstantBuffers(
             0, 1,
             image_based_shader_source->vertex_constant_buffer.GetAddressOf());
+
+        context->PSSetConstantBuffers(
+            0, 1,
+            image_based_shader_source->pixel_constant_buffer.GetAddressOf());
+        context->PSSetShader(image_based_shader->pixel_shader.Get(), NULL, 0);
+        context->IASetInputLayout(image_based_shader->layout.Get());
 
         for (const auto &mesh : model->meshes) {
 
@@ -242,32 +228,14 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
             context->PSSetShaderResources(0, UINT(resViews.size()),
                                           resViews.data());
 
-            /*std::vector<ID3D11ShaderResourceView *> resViews = {
-                m_specularSRV.Get(),     m_irradianceSRV.Get(),
-                m_brdfSRV.Get(),         mesh->albedoSRV.Get(),
-                mesh->normalSRV.Get(),   mesh->aoSRV.Get(),
-                mesh->metallicSRV.Get(), mesh->roughnessSRV.Get(),
-                mesh->emissiveSRV.Get()};
-            context->PSSetShaderResources(0, UINT(resViews.size()),
-                                          resViews.data());*/
-
-            context->PSSetConstantBuffers(
-                0, 1,
-                image_based_shader_source->pixel_constant_buffer
-                    .GetAddressOf());
-            context->PSSetShader(image_based_shader->pixel_shader.Get(), NULL,
-                                 0);
-
-            context->IASetInputLayout(image_based_shader->layout.Get());
             context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
                                         &stride, &offset);
             context->IASetIndexBuffer(mesh->indexBuffer.Get(),
                                       DXGI_FORMAT_R32_UINT, 0);
-            context->IASetPrimitiveTopology(
-                D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-            context->DrawIndexed(model->GetIndexCount(), 0, 0);
         }
+
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        context->DrawIndexed(model->GetIndexCount(), 0, 0);
     }
 
     return EnumBehaviorTreeStatus::eSuccess;

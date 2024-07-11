@@ -55,17 +55,27 @@ bool Application::OnFrame() {
     // Clear the buffers to begin the scene.
     Direct3D::GetInstance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f);
 
+    Direct3D::GetInstance().device_context()->OMSetRenderTargets(
+        1, Direct3D::GetInstance().render_target_view().GetAddressOf(),
+        Direct3D::GetInstance().depth_stencil_view().Get());
+    Direct3D::GetInstance().device_context()->OMSetDepthStencilState(
+        Direct3D::GetInstance().depth_stencil_state().Get(), 0);
+
+    if (imgui_->GetGlobalTab().draw_as_wire_)
+        Direct3D::GetInstance().device_context()->RSSetState(
+            Direct3D::GetInstance().wire_rasterizer_state().Get());
+    else
+        Direct3D::GetInstance().device_context()->RSSetState(
+            Direct3D::GetInstance().solid_rasterizer_state().Get());
+
     // clang-format off
     auto tree = std::make_unique<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
     ->Excute(std::make_shared<UpdateCamera>())
-        //clear rtv, dsv
     ->Conditional(std::make_shared<CheckImageBasedShader>())
         ->Sequence()
             ->Excute(std::make_shared<UpdateGameObjectsUsingImageBasedShader>())
             ->Excute(std::make_shared<RenderGameObjectsUsingImageBasedShader>())
-            ->Excute(std::make_shared<UpdateCubeMap>())
-            ->Excute(std::make_shared<RenderCubeMap>())
         ->Close()
     ->End()
     ->Conditional(std::make_shared<CheckPhongShader>())
@@ -78,12 +88,12 @@ bool Application::OnFrame() {
         ->Sequence()
             ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
             ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
-            ->Excute(std::make_shared<UpdateCubeMap>())
-            ->Excute(std::make_shared<RenderCubeMap>())
         ->Close()
     ->End()
     ->Excute(std::make_shared<UpdateGroundShader>())
     ->Excute(std::make_shared<RenderGroundShader>())
+    ->Excute(std::make_shared<UpdateCubeMap>())
+    ->Excute(std::make_shared<RenderCubeMap>())
     ->Excute(std::make_shared<RenderBoardMap>())
     ->Run();
     // clang-format on

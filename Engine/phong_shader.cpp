@@ -203,13 +203,6 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    context->ClearRenderTargetView(
-        Direct3D::GetInstance().render_target_view().Get(), clearColor);
-    context->ClearDepthStencilView(
-        Direct3D::GetInstance().depth_stencil_view().Get(),
-        D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
     for (auto &model_map : manager->models) {
         // RS: Rasterizer stage
         // OM: Output-Merger stage
@@ -223,44 +216,28 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
         unsigned int stride = sizeof(Vertex);
         unsigned int offset = 0;
 
-        context->OMSetRenderTargets(
-            1, Direct3D::GetInstance().render_target_view().GetAddressOf(),
-            Direct3D::GetInstance().depth_stencil_view().Get());
-        context->OMSetDepthStencilState(
-            Direct3D::GetInstance().depth_stencil_state().Get(), 0);
-
         context->VSSetShader(phong_shader->vertex_shader.Get(), 0, 0);
-        context->PSSetSamplers(0, 1, &phong_shader->sample_state);
-
-        if (gui->GetGlobalTab().draw_as_wire_)
-            context->RSSetState(
-                Direct3D::GetInstance().wire_rasterizer_state().Get());
-        else
-            context->RSSetState(
-                Direct3D::GetInstance().solid_rasterizer_state().Get());
-
         context->VSSetConstantBuffers(
             0, 1, phong_shader_source->vertex_constant_buffer.GetAddressOf());
+
+        context->PSSetSamplers(0, 1, &phong_shader->sample_state);
+        context->PSSetConstantBuffers(
+            0, 1, phong_shader_source->pixel_constant_buffer.GetAddressOf());
+        context->PSSetShader(phong_shader->pixel_shader.Get(), NULL, 0);
+        context->IASetInputLayout(phong_shader->layout.Get());
 
         for (const auto &mesh : model->meshes) {
             context->PSSetShaderResources(
                 0, 1, mesh->textureResourceView.GetAddressOf());
 
-            context->PSSetConstantBuffers(
-                0, 1,
-                phong_shader_source->pixel_constant_buffer.GetAddressOf());
-            context->PSSetShader(phong_shader->pixel_shader.Get(), NULL, 0);
-
-            context->IASetInputLayout(phong_shader->layout.Get());
             context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
                                         &stride, &offset);
             context->IASetIndexBuffer(mesh->indexBuffer.Get(),
                                       DXGI_FORMAT_R32_UINT, 0);
-            context->IASetPrimitiveTopology(
-                D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-            context->DrawIndexed(model->GetIndexCount(), 0, 0);
         }
+
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        context->DrawIndexed(model->GetIndexCount(), 0, 0);
     }
 
     return EnumBehaviorTreeStatus::eSuccess;

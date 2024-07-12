@@ -4,7 +4,7 @@ using namespace Engine;
 
 EnumBehaviorTreeStatus BehaviorActionNode::Invoke() {
     if (parent_node)
-        this->target_id_ = parent_node->target_id();
+        this->target_id = parent_node->target_id;
     return OnInvoke();
 }
 
@@ -28,5 +28,3 @@ void BehaviorActionNode::Dispose() {
         child.reset();
     }
 };
-
-int BehaviorActionNode::target_id() { return target_id_; };

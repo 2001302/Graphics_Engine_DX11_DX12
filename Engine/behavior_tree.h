@@ -28,21 +28,19 @@ class IDisposable {
 
 class BehaviorActionNode : public IDisposable {
   public:
-    BehaviorActionNode() : parent_node(0), target_id_(0){};
+    BehaviorActionNode() : parent_node(0), target_id(0){};
     EnumBehaviorTreeStatus Invoke();
     BehaviorActionNode *GetParent();
     void Dispose() override;
     void PushNode(std::shared_ptr<BehaviorActionNode> node);
     void PopNode();
 
-    int target_id();
-
   protected:
     virtual EnumBehaviorTreeStatus OnInvoke();
     BehaviorActionNode *parent_node;
     std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
     std::map<EnumDataBlockType, IDataBlock *> data_block;
-    int target_id_;
+    int target_id;
 };
 } // namespace Engine
 #endif

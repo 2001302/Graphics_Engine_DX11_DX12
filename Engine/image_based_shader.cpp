@@ -85,14 +85,14 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    auto model = manager->models[target_id()];
+    auto model = manager->models[target_id];
 
     auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
-    if (image_based_shader->source[parent_node->target_id()] == nullptr) {
+    if (image_based_shader->source[target_id] == nullptr) {
 
         auto source = std::make_shared<ImageBasedShaderSource>();
         source->Initialize();
-        image_based_shader->source[parent_node->target_id()] = source;
+        image_based_shader->source[target_id] = source;
     }
     auto image_based_shader_source = dynamic_cast<ImageBasedShaderSource *>(
         image_based_shader->source[model->GetEntityId()].get());
@@ -190,7 +190,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
     // VS: Vertex Shader
     // PS: Pixel Shader
     // IA: Input-Assembler stage
-    auto model = manager->models[target_id()];
+    auto model = manager->models[target_id];
     auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
     auto image_based_shader_source = dynamic_cast<ImageBasedShaderSource *>(
         image_based_shader->source[model->GetEntityId()].get());

@@ -103,14 +103,14 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    auto model = manager->models[target_id()];
+    auto model = manager->models[target_id];
 
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
-    if (phong_shader->source[target_id()] == nullptr) {
+    if (phong_shader->source[target_id] == nullptr) {
 
         auto source = std::make_shared<PhongShaderSource>();
         source->Initialize();
-        phong_shader->source[target_id()] = source;
+        phong_shader->source[target_id] = source;
     }
     auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
         phong_shader->source[model->GetEntityId()].get());
@@ -223,7 +223,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     // PS: Pixel Shader
     // IA: Input-Assembler stage
 
-    auto model = manager->models[target_id()];
+    auto model = manager->models[target_id];
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
     auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
         phong_shader->source[model->GetEntityId()].get());

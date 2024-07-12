@@ -95,14 +95,14 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    auto model = manager->models[target_id()];
+    auto model = manager->models[target_id];
 
     auto physically_shader = manager->shaders[EnumShaderType::ePhysicallyBased];
-    if (physically_shader->source[target_id()] == nullptr) {
+    if (physically_shader->source[target_id] == nullptr) {
 
         auto source = std::make_shared<PhsicallyBasedShaderSource>();
         source->Initialize();
-        physically_shader->source[target_id()] = source;
+        physically_shader->source[target_id] = source;
     }
     auto physically_shader_source = dynamic_cast<PhsicallyBasedShaderSource *>(
         physically_shader->source[model->GetEntityId()].get());
@@ -224,7 +224,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     // VS: Vertex Shader
     // PS: Pixel Shader
     // IA: Input-Assembler stage
-    auto model = manager->models[target_id()];
+    auto model = manager->models[target_id];
     auto physically_shader = std::static_pointer_cast<PhsicallyBasedShader>(
         manager->shaders[EnumShaderType::ePhysicallyBased]);
     auto physically_shader_source = dynamic_cast<PhsicallyBasedShaderSource *>(

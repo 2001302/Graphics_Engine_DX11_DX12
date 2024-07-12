@@ -1,17 +1,17 @@
 #ifndef _APPLICATION
 #define _APPLICATION
 
-#include "platform.h"
-#include "direct3D.h"
-#include "setting_ui.h"
 #include "behavior_tree.h"
+#include "direct3D.h"
 #include "pipeline_manager.h"
+#include "platform.h"
+#include "setting_ui.h"
 
-#include "message_receiver.h"
 #include "geometry_generator.h"
+#include "message_receiver.h"
 #include "resource_helper.h"
 
-namespace Engine {
+namespace platform {
 class Application : public Platform {
   public:
     Application();
@@ -23,10 +23,10 @@ class Application : public Platform {
                                     LPARAM lparam) override final;
 
   private:
-    std::shared_ptr<Input> input_;
-    std::shared_ptr<SettingUi> imgui_;
-    std::shared_ptr<PipelineManager> manager_;
-    std::unique_ptr<MessageReceiver> message_receiver_;
+    std::shared_ptr<Engine::Input> input_;
+    std::shared_ptr<Engine::SettingUi> imgui_;
+    std::shared_ptr<Engine::PipelineManager> manager_;
+    std::unique_ptr<Engine::MessageReceiver> message_receiver_;
 };
-} // namespace Engine
+} // namespace platform
 #endif

@@ -1,15 +1,13 @@
 #include "platform.h"
 
-using namespace Engine;
+namespace platform {
 
 /// <summary>
 /// NOTE : Global
 /// </summary>
 static Platform *g_system = nullptr;
 
-Platform::Platform() : application_name_(0), hinstance_(0) {
-    g_system = this;
-}
+Platform::Platform() : application_name_(0), hinstance_(0) { g_system = this; }
 
 Platform::~Platform() {}
 
@@ -62,14 +60,15 @@ bool Platform::OnStart() {
     // 윈도우를 만들 해상도를 다시 계산해서 CreateWindow()에서 사용
 
     // 우리가 원하는 그림이 그려질 부분의 해상도
-    RECT wr = {0, 0, Env::Get().screen_width, Env::Get().screen_height};
+    RECT wr = {0, 0, Engine::Env::Get().screen_width,
+               Engine::Env::Get().screen_height};
 
     // 필요한 윈도우 크기(해상도) 계산
     // wr의 값이 바뀜
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
 
     // 윈도우를 만들때 위에서 계산한 wr 사용
-    Env::Get().main_window =
+    Engine::Env::Get().main_window =
         CreateWindow(wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW,
                      10,                 // 윈도우 좌측 상단의 x 좌표
                      10,                 // 윈도우 좌측 상단의 y 좌표
@@ -77,13 +76,13 @@ bool Platform::OnStart() {
                      wr.bottom - wr.top, // 윈도우 세로 방향 해상도
                      NULL, NULL, wc.hInstance, NULL);
 
-    if (!Env::Get().main_window) {
+    if (!Engine::Env::Get().main_window) {
         std::cout << "CreateWindow() failed." << std::endl;
         return false;
     }
 
-    ShowWindow(Env::Get().main_window, SW_SHOWDEFAULT);
-    UpdateWindow(Env::Get().main_window);
+    ShowWindow(Engine::Env::Get().main_window, SW_SHOWDEFAULT);
+    UpdateWindow(Engine::Env::Get().main_window);
 
     return true;
 }
@@ -123,13 +122,13 @@ void Platform::Run() {
 
 bool Platform::OnStop() {
     // Shutdown the window.
-    if (Env::Get().full_screen) {
+    if (Engine::Env::Get().full_screen) {
         ChangeDisplaySettings(NULL, 0);
     }
 
     // Remove the window.
-    DestroyWindow(Env::Get().main_window);
-    Env::Get().main_window = NULL;
+    DestroyWindow(Engine::Env::Get().main_window);
+    Engine::Env::Get().main_window = NULL;
 
     // Remove the application instance.
     UnregisterClass(application_name_, hinstance_);
@@ -139,3 +138,4 @@ bool Platform::OnStop() {
     g_system = NULL;
     return true;
 }
+} // namespace platform

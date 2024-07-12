@@ -6,7 +6,7 @@
 #include "common_struct.h"
 #include "env.h"
 
-namespace Engine {
+namespace platform {
 class Platform {
   public:
     Platform();
@@ -25,5 +25,5 @@ class Platform {
     LPCWSTR application_name_;
     HINSTANCE hinstance_;
 };
-} // namespace Engine
+} // namespace platform
 #endif

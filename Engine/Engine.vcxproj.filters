@@ -2,410 +2,422 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="model.h">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClInclude>
     <ClInclude Include="behavior_tree.h">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClInclude>
     <ClInclude Include="resource_helper.h">
-      <Filter>Util</Filter>
+      <Filter>Renderer\Util</Filter>
     </ClInclude>
     <ClInclude Include="image_based_shader.h">
-      <Filter>DirectX\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="direct3D.h">
-      <Filter>DirectX</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="shader.h">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="dataBlock.h">
-      <Filter>Model\DataBlock</Filter>
+      <Filter>Common\Model\DataBlock</Filter>
     </ClInclude>
     <ClInclude Include="pipeline_manager.h">
-      <Filter>Model\DataBlock</Filter>
+      <Filter>Common\Model\DataBlock</Filter>
     </ClInclude>
     <ClInclude Include="platform.h">
-      <Filter>Framework</Filter>
+      <Filter>Platform\Framework</Filter>
     </ClInclude>
     <ClInclude Include="application.h">
-      <Filter>Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>Framework</Filter>
+      <Filter>Platform\Framework</Filter>
     </ClInclude>
     <ClInclude Include="phong_shader.h">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="geometry_generator.h">
-      <Filter>Util</Filter>
+      <Filter>Renderer\Util</Filter>
     </ClInclude>
     <ClInclude Include="model_loader.h">
-      <Filter>Util</Filter>
+      <Filter>Renderer\Util</Filter>
     </ClInclude>
     <ClInclude Include="common_struct.h">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\crude_json.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_bezier_math.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_canvas.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_extra_keys.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_extra_math.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_impl_dx11.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_impl_win32.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_internal.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_node_editor.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_node_editor_internal.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_rectpack.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_textedit.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_truetype.h">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
-      <Filter>Gui\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="message_receiver.h">
-      <Filter>Framework</Filter>
+      <Filter>ImGui</Filter>
     </ClInclude>
     <ClInclude Include="gui_base.h">
-      <Filter>Gui</Filter>
+      <Filter>Renderer\BluePrint</Filter>
     </ClInclude>
     <ClInclude Include="setting_ui.h">
-      <Filter>Gui</Filter>
+      <Filter>Renderer\BluePrint</Filter>
     </ClInclude>
     <ClInclude Include="id_generator.h">
-      <Filter>Util</Filter>
+      <Filter>Renderer\Util</Filter>
     </ClInclude>
     <ClInclude Include="entity.h">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClInclude>
     <ClInclude Include="cube_map.h">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClInclude>
     <ClInclude Include="graph.h">
-      <Filter>BehaviorGraph</Filter>
+      <Filter>Renderer\BehaviorGraph</Filter>
     </ClInclude>
     <ClInclude Include="cube_map_shader.h">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="behavior_tree_builder.h">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="conditional_node.h">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="sequence_node.h">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="selector_node.h">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="physically_based_shader.h">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="normal_geometry_shader.h">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="board_map.h">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClInclude>
     <ClInclude Include="image_filter.h">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClInclude>
     <ClInclude Include="image_fliter_shader.h">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="game_object.h">
-      <Filter>Model</Filter>
-    </ClInclude>
-    <ClInclude Include="env.h">
-      <Filter>Framework</Filter>
+      <Filter>Common\Model</Filter>
     </ClInclude>
     <ClInclude Include="parallel_node.h">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="ground.h">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClInclude>
     <ClInclude Include="ground_shader.h">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClInclude>
     <ClInclude Include="gui_extension.h">
-      <Filter>Gui</Filter>
+      <Filter>Renderer\BluePrint</Filter>
     </ClInclude>
     <ClInclude Include="node_ui.h">
-      <Filter>Gui</Filter>
+      <Filter>Renderer\BluePrint</Filter>
+    </ClInclude>
+    <ClInclude Include="direct3D.h">
+      <Filter>Renderer\DX11</Filter>
+    </ClInclude>
+    <ClInclude Include="message_receiver.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="env.h">
+      <Filter>Renderer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClCompile>
     <ClCompile Include="behavior_tree.cpp">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClCompile>
     <ClCompile Include="resource_helper.cpp">
-      <Filter>Util</Filter>
+      <Filter>Renderer\Util</Filter>
     </ClCompile>
     <ClCompile Include="image_based_shader.cpp">
-      <Filter>DirectX\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="direct3D.cpp">
-      <Filter>DirectX</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="platform.cpp">
-      <Filter>Framework</Filter>
+      <Filter>Platform\Framework</Filter>
     </ClCompile>
     <ClCompile Include="application.cpp">
-      <Filter>Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>Framework</Filter>
+      <Filter>Platform\Framework</Filter>
     </ClCompile>
     <ClCompile Include="phong_shader.cpp">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="model_loader.cpp">
-      <Filter>Util</Filter>
+      <Filter>Renderer\Util</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\crude_json.cpp">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_canvas.cpp">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_win32.cpp">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_node_editor.cpp">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_node_editor_api.cpp">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_tables.cpp">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_widgets.cpp">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_demo.cpp">
-      <Filter>Gui\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="message_receiver.cpp">
-      <Filter>Framework</Filter>
+      <Filter>ImGui</Filter>
     </ClCompile>
     <ClCompile Include="gui_base.cpp">
-      <Filter>Gui</Filter>
+      <Filter>Renderer\BluePrint</Filter>
     </ClCompile>
     <ClCompile Include="setting_ui.cpp">
-      <Filter>Gui</Filter>
+      <Filter>Renderer\BluePrint</Filter>
     </ClCompile>
     <ClCompile Include="geometry_generator.cpp">
-      <Filter>Util</Filter>
+      <Filter>Renderer\Util</Filter>
     </ClCompile>
     <ClCompile Include="id_generator.cpp">
-      <Filter>Util</Filter>
+      <Filter>Renderer\Util</Filter>
     </ClCompile>
     <ClCompile Include="entity.cpp">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClCompile>
     <ClCompile Include="cube_map.cpp">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClCompile>
     <ClCompile Include="graph.cpp">
-      <Filter>BehaviorGraph</Filter>
+      <Filter>Renderer\BehaviorGraph</Filter>
     </ClCompile>
     <ClCompile Include="cube_map_shader.cpp">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="conditional_node.cpp">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="sequence_node.cpp">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="behavior_tree_builder.cpp">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="selector_node.cpp">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="physically_based_shader.cpp">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="normal_geometry_shader.cpp">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="board_map.cpp">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClCompile>
     <ClCompile Include="image_filter.cpp">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClCompile>
     <ClCompile Include="image_fliter_shader.cpp">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
     </ClCompile>
     <ClCompile Include="game_object.cpp">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClCompile>
     <ClCompile Include="parallel_node.cpp">
-      <Filter>BehaviorTree</Filter>
+      <Filter>Renderer\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="ground.cpp">
-      <Filter>Model</Filter>
+      <Filter>Common\Model</Filter>
     </ClCompile>
     <ClCompile Include="ground_shader.cpp">
-      <Filter>DirectX\Shader</Filter>
+      <Filter>Renderer\Shader</Filter>
+    </ClCompile>
+    <ClCompile Include="direct3D.cpp">
+      <Filter>Renderer\DX11</Filter>
+    </ClCompile>
+    <ClCompile Include="message_receiver.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Model">
-      <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
+    <Filter Include="Renderer">
+      <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BehaviorTree">
-      <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{d0845f2f-5aa8-41c5-a240-d5a81d8a26fe}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Util">
-      <UniqueIdentifier>{0e42b4f6-d6f5-44fe-bceb-6a275b568a85}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX">
-      <UniqueIdentifier>{5f8f3dcc-1835-4e80-8498-b21fddb72fc6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\Shader">
-      <UniqueIdentifier>{75d77732-7f85-4c0a-b799-392f4e62111e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX\Shader\HLSL">
-      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Framework">
+    <Filter Include="Platform\Framework">
       <UniqueIdentifier>{954ae3a7-14c0-4d2d-8136-883fe33d142a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Gui">
-      <UniqueIdentifier>{9eb6ce6c-e8f1-4912-bd9c-acf6ddd4f248}</UniqueIdentifier>
+    <Filter Include="Renderer\Shader">
+      <UniqueIdentifier>{75d77732-7f85-4c0a-b799-392f4e62111e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Gui\ImGui">
+    <Filter Include="Renderer\Shader\HLSL">
+      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ImGui">
       <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="BehaviorGraph">
+    <Filter Include="Renderer\BluePrint">
+      <UniqueIdentifier>{9eb6ce6c-e8f1-4912-bd9c-acf6ddd4f248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\BehaviorGraph">
       <UniqueIdentifier>{dd885491-628a-4699-bf68-ccd7e4610344}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Model\DataBlock">
+    <Filter Include="Renderer\BehaviorTree">
+      <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\Util">
+      <UniqueIdentifier>{0e42b4f6-d6f5-44fe-bceb-6a275b568a85}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{cd4d1aed-5e7a-4f54-8223-c66fbe383b80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Model">
+      <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Model\DataBlock">
       <UniqueIdentifier>{7a46ec5a-5b65-4605-a844-3164e238f8bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Data">
+      <UniqueIdentifier>{ba2eaf2e-7ce0-4495-9423-86319442efbd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Renderer\DX11">
+      <UniqueIdentifier>{0aa38baf-3a90-4bf8-b990-92391fe9b4bf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hlsli">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </None>
     <None Include="ImGui\imgui_bezier_math.inl">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </None>
     <None Include="ImGui\imgui_extra_math.inl">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </None>
     <None Include="ImGui\imgui_node_editor_internal.inl">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </None>
     <None Include="ImGui\config.h.in">
-      <Filter>Gui\ImGui</Filter>
+      <Filter>ImGui</Filter>
     </None>
     <None Include="packages.config" />
     <None Include="physically_common.hlsli">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </None>
     <None Include="ground.hlslI">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="phong_vertex_shader.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="phong_pixel_shader.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="image_based_vertex_shader.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="image_based_pixel_shader.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="cube_mapping_vertex_shader.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="cube_mapping_pixel_shader.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="physically_based_vertex_shader.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="physically_based_pixel_shader.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="combine_ps.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="bloom_up_ps.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="bloom_down_ps.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="sampling_vs.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="sampling_ps.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="ground_vs.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="ground_ps.hlsl">
-      <Filter>DirectX\Shader\HLSL</Filter>
+      <Filter>Renderer\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

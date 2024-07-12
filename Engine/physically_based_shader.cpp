@@ -24,20 +24,6 @@ EnumBehaviorTreeStatus CheckPhysicallyBasedShader::CheckCondition() {
 
     if (gui->GetGlobalTab().render_mode ==
         EnumRenderMode::ePhysicallyBasedRendering) {
-
-        IDataBlock *block = data_block[EnumDataBlockType::eManager];
-        auto manager = dynamic_cast<Engine::PipelineManager *>(block);
-        assert(manager != nullptr);
-
-        auto shader = manager->shaders[EnumShaderType::ePhysicallyBased];
-
-        if (shader->source[target_id()] == nullptr) {
-
-            auto source = std::make_shared<PhsicallyBasedShaderSource>();
-            source->Initialize();
-            shader->source[target_id()] = source;
-        }
-
         return EnumBehaviorTreeStatus::eSuccess;
     }
 
@@ -112,6 +98,12 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto model = manager->models[target_id()];
 
     auto physically_shader = manager->shaders[EnumShaderType::ePhysicallyBased];
+    if (physically_shader->source[target_id()] == nullptr) {
+
+        auto source = std::make_shared<PhsicallyBasedShaderSource>();
+        source->Initialize();
+        physically_shader->source[target_id()] = source;
+    }
     auto physically_shader_source = dynamic_cast<PhsicallyBasedShaderSource *>(
         physically_shader->source[model->GetEntityId()].get());
 

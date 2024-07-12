@@ -85,21 +85,6 @@ EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
     assert(gui != nullptr);
 
     if (gui->GetGlobalTab().render_mode == EnumRenderMode::eLight) {
-
-        ConditionalNode::CheckCondition();
-        IDataBlock *block = data_block[EnumDataBlockType::eManager];
-        auto manager = dynamic_cast<Engine::PipelineManager *>(block);
-        assert(manager != nullptr);
-
-        auto shader = manager->shaders[EnumShaderType::ePhong];
-
-        if (shader->source[target_id()] == nullptr) {
-
-            auto source = std::make_shared<PhongShaderSource>();
-            source->Initialize();
-            shader->source[target_id()] = source;
-        }
-
         return EnumBehaviorTreeStatus::eSuccess;
     }
 
@@ -121,6 +106,12 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     auto model = manager->models[target_id()];
 
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
+    if (phong_shader->source[target_id()] == nullptr) {
+
+        auto source = std::make_shared<PhongShaderSource>();
+        source->Initialize();
+        phong_shader->source[target_id()] = source;
+    }
     auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
         phong_shader->source[model->GetEntityId()].get());
 

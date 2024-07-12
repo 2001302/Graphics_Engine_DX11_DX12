@@ -28,6 +28,7 @@ BehaviorTreeBuilder *
 BehaviorTreeBuilder::Conditional(std::shared_ptr<ConditionalNode> node) {
 
     current->PushNode(node);
+    node->SetId(current->target_id());
     if (node->CheckCondition() == EnumBehaviorTreeStatus::eSuccess) {
         conditional_status = EnumConditionalStatus::ePass;
     }

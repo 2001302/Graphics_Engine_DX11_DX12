@@ -67,19 +67,6 @@ EnumBehaviorTreeStatus CheckImageBasedShader::CheckCondition() {
     if (gui->GetGlobalTab().render_mode ==
         EnumRenderMode::eImageBasedLighting) {
 
-        IDataBlock *block = data_block[EnumDataBlockType::eManager];
-        auto manager = dynamic_cast<Engine::PipelineManager *>(block);
-        assert(manager != nullptr);
-
-        auto shader = manager->shaders[EnumShaderType::eImageBased];
-
-        if (shader->source[target_id()] == nullptr) {
-
-            auto source = std::make_shared<ImageBasedShaderSource>();
-            source->Initialize();
-            shader->source[target_id()] = source;
-        }
-
         return EnumBehaviorTreeStatus::eSuccess;
     }
 
@@ -101,6 +88,12 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     auto model = manager->models[target_id()];
 
     auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
+    if (image_based_shader->source[parent_node->target_id()] == nullptr) {
+
+        auto source = std::make_shared<ImageBasedShaderSource>();
+        source->Initialize();
+        image_based_shader->source[parent_node->target_id()] = source;
+    }
     auto image_based_shader_source = dynamic_cast<ImageBasedShaderSource *>(
         image_based_shader->source[model->GetEntityId()].get());
 

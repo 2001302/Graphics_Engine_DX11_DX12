@@ -45,12 +45,12 @@ struct PhongShaderSource : public IShaderSource, INodeUi {
     void OnShow() override;
 };
 
-class CheckPhongShader : public ConditionalNode {
-    EnumBehaviorTreeStatus CheckCondition() override;
-};
-
 class InitializePhongShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class CheckPhongShader : public ConditionalNode {
+    EnumBehaviorTreeStatus CheckCondition() override;
 };
 
 class UpdateGameObjectsUsingPhongShader : public BehaviorActionNode {

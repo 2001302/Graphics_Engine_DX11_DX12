@@ -17,8 +17,6 @@ class Ground : public GameObject {
 
     DirectX::SimpleMath::Matrix transform;
     std::shared_ptr<Mesh> mesh;
-
-    std::shared_ptr<GroundShaderSource> ground_shader_source;
 };
 } // namespace Engine
 #endif

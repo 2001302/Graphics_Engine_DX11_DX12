@@ -39,6 +39,10 @@ class InitializeCubeMapShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
+class CheckCubeMapShader : public ConditionalNode {
+    EnumBehaviorTreeStatus CheckCondition() override;
+};
+
 class UpdateCubeMap : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };

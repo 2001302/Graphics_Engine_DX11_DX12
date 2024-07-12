@@ -24,7 +24,6 @@ class CubeMap : public GameObject {
     DirectX::SimpleMath::Matrix transform;
     std::shared_ptr<Mesh> mesh;
     std::shared_ptr<CubeTexture> texture;
-    std::shared_ptr<CubeMapShaderSource> cube_map_shader_source;
 
 };
 } // namespace Engine

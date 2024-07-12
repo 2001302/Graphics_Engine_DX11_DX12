@@ -48,21 +48,6 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     Direct3D::GetInstance().CreateDDSTexture(
         brdfFilename, manager->cube_map->texture->brdf_SRV);
 
-    manager->cube_map->cube_map_shader_source =
-        std::make_shared<CubeMapShaderSource>();
-    auto cube_map_shader_source = manager->cube_map->cube_map_shader_source;
-
-    cube_map_shader_source->vertex_constant_buffer_data.model = Matrix();
-    cube_map_shader_source->vertex_constant_buffer_data.view = Matrix();
-    cube_map_shader_source->vertex_constant_buffer_data.projection = Matrix();
-
-    Direct3D::GetInstance().CreateConstantBuffer(
-        cube_map_shader_source->vertex_constant_buffer_data,
-        cube_map_shader_source->vertex_constant_buffer);
-    Direct3D::GetInstance().CreateConstantBuffer(
-        cube_map_shader_source->pixel_constant_buffer_data,
-        cube_map_shader_source->pixel_constant_buffer);
-
     Direct3D::GetInstance().CreateVertexBuffer(
         manager->cube_map->mesh->vertices,
         manager->cube_map->mesh->vertexBuffer);
@@ -90,6 +75,25 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
+EnumBehaviorTreeStatus CheckCubeMapShader::CheckCondition() {
+    IDataBlock *block = data_block[EnumDataBlockType::eManager];
+
+    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+    assert(manager != nullptr);
+
+    auto shader = manager->shaders[EnumShaderType::eCube];
+    shader->source[manager->cube_map->GetEntityId()];
+
+    if (shader->source[manager->cube_map->GetEntityId()] == nullptr) {
+
+        auto source = std::make_shared<CubeMapShaderSource>();
+        source->Initialize();
+        shader->source[manager->cube_map->GetEntityId()] = source;
+    }
+
+    return EnumBehaviorTreeStatus::eSuccess;
+}
+
 EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
@@ -101,9 +105,9 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     assert(gui != nullptr);
 
     auto cube_map = manager->cube_map;
-
-    auto cube_shader_source = cube_map->cube_map_shader_source;
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
+    auto cube_shader_source = dynamic_cast<CubeMapShaderSource *>(
+        cube_map_shader->source[cube_map->GetEntityId()].get());
 
     cube_shader_source->pixel_constant_buffer_data.textureToDraw =
         gui->GetGlobalTab().cube_map_setting.textureToDraw;
@@ -149,6 +153,8 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     auto context = Direct3D::GetInstance().device_context();
     auto cube_map = manager->cube_map;
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
+    auto cube_shader_source = dynamic_cast<CubeMapShaderSource *>(
+        cube_map_shader->source[cube_map->GetEntityId()].get());
 
     unsigned int stride = sizeof(Vertex);
     unsigned int offset = 0;
@@ -166,9 +172,8 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     context->VSSetShader(cube_map_shader->vertex_shader.Get(), 0, 0);
-    context->VSSetConstantBuffers(0, 1,
-                                  cube_map->cube_map_shader_source
-                                      ->vertex_constant_buffer.GetAddressOf());
+    context->VSSetConstantBuffers(
+        0, 1, cube_shader_source->vertex_constant_buffer.GetAddressOf());
 
     std::vector<ID3D11ShaderResourceView *> srvs = {
         cube_map->texture->env_SRV.Get(), cube_map->texture->specular_SRV.Get(),

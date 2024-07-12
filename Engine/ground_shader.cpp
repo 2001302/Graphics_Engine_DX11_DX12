@@ -1,7 +1,7 @@
 #include "ground_shader.h"
 #include "geometry_generator.h"
-#include "setting_ui.h"
 #include "resource_helper.h"
+#include "setting_ui.h"
 
 using namespace Engine;
 
@@ -16,6 +16,25 @@ void GroundShaderSource::InitializeThis() {
                                                  vertex_constant_buffer);
     Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
                                                  pixel_constant_buffer);
+}
+
+EnumBehaviorTreeStatus CheckGroundShader::CheckCondition() {
+    IDataBlock *block = data_block[EnumDataBlockType::eManager];
+
+    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+    assert(manager != nullptr);
+
+    auto shader = manager->shaders[EnumShaderType::eGround];
+    shader->source[manager->ground->GetEntityId()];
+
+    if (shader->source[manager->ground->GetEntityId()] == nullptr) {
+
+        auto source = std::make_shared<GroundShaderSource>();
+        source->Initialize();
+        shader->source[manager->ground->GetEntityId()] = source;
+    }
+
+    return EnumBehaviorTreeStatus::eSuccess;
 }
 
 EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
@@ -45,21 +64,6 @@ EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
     // Create the Sample State
     Direct3D::GetInstance().device()->CreateSamplerState(
         &sampDesc, ground_shader->sample_state.GetAddressOf());
-
-    manager->ground->ground_shader_source =
-        std::make_shared<GroundShaderSource>();
-    auto ground_shader_source = manager->ground->ground_shader_source;
-
-    ground_shader_source->vertex_constant_buffer_data.model = Matrix();
-    ground_shader_source->vertex_constant_buffer_data.view = Matrix();
-    ground_shader_source->vertex_constant_buffer_data.projection = Matrix();
-
-    Direct3D::GetInstance().CreateConstantBuffer(
-        ground_shader_source->vertex_constant_buffer_data,
-        ground_shader_source->vertex_constant_buffer);
-    Direct3D::GetInstance().CreateConstantBuffer(
-        ground_shader_source->pixel_constant_buffer_data,
-        ground_shader_source->pixel_constant_buffer);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
@@ -136,8 +140,9 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
 
     auto ground = manager->ground;
 
-    auto ground_shader_source = ground->ground_shader_source;
     auto ground_shader = manager->shaders[EnumShaderType::eGround];
+    auto ground_shader_source = dynamic_cast<GroundShaderSource *>(
+        ground_shader->source[ground->GetEntityId()].get());
 
     {
         ground_shader_source->vertex_constant_buffer_data.model =
@@ -204,6 +209,8 @@ EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
     auto context = Direct3D::GetInstance().device_context();
     auto ground = manager->ground;
     auto ground_shader = manager->shaders[EnumShaderType::eGround];
+    auto ground_shader_source = dynamic_cast<GroundShaderSource *>(
+        ground_shader->source[ground->GetEntityId()].get());
 
     unsigned int stride = sizeof(Vertex);
     unsigned int offset = 0;
@@ -224,8 +231,7 @@ EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
     context->VSSetShaderResources(0, 1, ground->mesh->heightSRV.GetAddressOf());
     context->VSSetSamplers(0, 1, ground_shader->sample_state.GetAddressOf());
     context->VSSetConstantBuffers(
-        0, 1,
-        ground->ground_shader_source->vertex_constant_buffer.GetAddressOf());
+        0, 1, ground_shader_source->vertex_constant_buffer.GetAddressOf());
 
     if (gui->GetGlobalTab().draw_as_wire_)
         context->RSSetState(
@@ -242,8 +248,7 @@ EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
     context->PSSetShaderResources(0, UINT(resViews.size()), resViews.data());
 
     context->PSSetConstantBuffers(
-        0, 1,
-        ground->ground_shader_source->pixel_constant_buffer.GetAddressOf());
+        0, 1, ground_shader_source->pixel_constant_buffer.GetAddressOf());
 
     context->DrawIndexed(ground->GetIndexCount(), 0, 0);
 

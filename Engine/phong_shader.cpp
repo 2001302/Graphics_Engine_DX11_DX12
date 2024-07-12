@@ -34,18 +34,6 @@ void PhongShaderSource::OnShow() {
     pixel_constant_buffer_data.material.specular = Vector3(specular);
 };
 
-EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
-    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
-    assert(gui != nullptr);
-
-    if (gui->GetGlobalTab().render_mode == EnumRenderMode::eLight) {
-        return EnumBehaviorTreeStatus::eSuccess;
-    }
-
-    return EnumBehaviorTreeStatus::eFail;
-}
-
 EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 
@@ -90,6 +78,34 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
+EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
+
+    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
+    assert(gui != nullptr);
+
+    if (gui->GetGlobalTab().render_mode == EnumRenderMode::eLight) {
+
+        ConditionalNode::CheckCondition();
+        IDataBlock *block = data_block[EnumDataBlockType::eManager];
+        auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+        assert(manager != nullptr);
+
+        auto shader = manager->shaders[EnumShaderType::ePhong];
+
+        if (shader->source[target_id()] == nullptr) {
+
+            auto source = std::make_shared<PhongShaderSource>();
+            source->Initialize();
+            shader->source[target_id()] = source;
+        }
+
+        return EnumBehaviorTreeStatus::eSuccess;
+    }
+
+    return EnumBehaviorTreeStatus::eFail;
+}
+
 EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
@@ -102,10 +118,12 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    auto model = manager->models[target_id];
+    auto model = manager->models[target_id()];
 
-    auto phong_shader_source = model->phong_shader_source;
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
+    auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
+        phong_shader->source[model->GetEntityId()].get());
+
     // model
     {
         phong_shader_source->vertex_constant_buffer_data.model =
@@ -184,8 +202,8 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
         }
     }
 
-    //phong_shader_source->pixel_constant_buffer_data.useTexture =
-    //    detail->use_texture;
+    // phong_shader_source->pixel_constant_buffer_data.useTexture =
+    //     detail->use_texture;
     phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
         gui->GetGlobalTab().light_setting.use_blinn_phong;
 
@@ -208,41 +226,42 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-        // RS: Rasterizer stage
-        // OM: Output-Merger stage
-        // VS: Vertex Shader
-        // PS: Pixel Shader
-        // IA: Input-Assembler stage
-        auto model = manager->models[target_id];
-        auto phong_shader_source = model->phong_shader_source;
-        auto phong_shader = manager->shaders[EnumShaderType::ePhong];
+    // RS: Rasterizer stage
+    // OM: Output-Merger stage
+    // VS: Vertex Shader
+    // PS: Pixel Shader
+    // IA: Input-Assembler stage
 
-        unsigned int stride = sizeof(Vertex);
-        unsigned int offset = 0;
+    auto model = manager->models[target_id()];
+    auto phong_shader = manager->shaders[EnumShaderType::ePhong];
+    auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
+        phong_shader->source[model->GetEntityId()].get());
 
-        context->VSSetShader(phong_shader->vertex_shader.Get(), 0, 0);
-        context->VSSetConstantBuffers(
-            0, 1, phong_shader_source->vertex_constant_buffer.GetAddressOf());
+    unsigned int stride = sizeof(Vertex);
+    unsigned int offset = 0;
 
-        context->PSSetSamplers(0, 1, &phong_shader->sample_state);
-        context->PSSetConstantBuffers(
-            0, 1, phong_shader_source->pixel_constant_buffer.GetAddressOf());
-        context->PSSetShader(phong_shader->pixel_shader.Get(), NULL, 0);
-        context->IASetInputLayout(phong_shader->layout.Get());
+    context->VSSetShader(phong_shader->vertex_shader.Get(), 0, 0);
+    context->VSSetConstantBuffers(
+        0, 1, phong_shader_source->vertex_constant_buffer.GetAddressOf());
 
-        for (const auto &mesh : model->meshes) {
-            context->PSSetShaderResources(
-                0, 1, mesh->textureResourceView.GetAddressOf());
+    context->PSSetSamplers(0, 1, &phong_shader->sample_state);
+    context->PSSetConstantBuffers(
+        0, 1, phong_shader_source->pixel_constant_buffer.GetAddressOf());
+    context->PSSetShader(phong_shader->pixel_shader.Get(), NULL, 0);
+    context->IASetInputLayout(phong_shader->layout.Get());
 
-            context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
-                                        &stride, &offset);
-            context->IASetIndexBuffer(mesh->indexBuffer.Get(),
-                                      DXGI_FORMAT_R32_UINT, 0);
-        }
+    for (const auto &mesh : model->meshes) {
+        context->PSSetShaderResources(0, 1,
+                                      mesh->textureResourceView.GetAddressOf());
 
-        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        context->DrawIndexed(model->GetIndexCount(), 0, 0);
-    
+        context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
+                                    &stride, &offset);
+        context->IASetIndexBuffer(mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
+                                  0);
+    }
+
+    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    context->DrawIndexed(model->GetIndexCount(), 0, 0);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }

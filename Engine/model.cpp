@@ -5,15 +5,7 @@
 
 using namespace Engine;
 
-Model::Model() {
-    phong_shader_source = std::make_shared<PhongShaderSource>();
-    phong_shader_source->Initialize();
-    image_based_shader_source = std::make_shared<ImageBasedShaderSource>();
-    image_based_shader_source->Initialize();
-    physically_based_shader_source =
-        std::make_shared<PhsicallyBasedShaderSource>();
-    physically_based_shader_source->Initialize();
-}
+Model::Model() {}
 
 Model::~Model() {}
 
@@ -59,7 +51,8 @@ void Model::OnShow() {
     ImGui::SliderFloat3("Translation", &translation.x, -2.0f, 2.0f);
     ImGui::SliderFloat("Rotation", &rotation.y, -3.14f, 3.14f);
     ImGui::SliderFloat3("Scaling", &scaling.x, 0.1f, 4.0f);
-    phong_shader_source->Show();
+
+    //phong_shader_source->Show();
 
     // Checkbox
     static bool check = true;

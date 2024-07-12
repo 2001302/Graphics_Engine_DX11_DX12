@@ -25,10 +25,6 @@ class Model : public GameObject, public INodeUi {
     std::vector<std::shared_ptr<Mesh>> meshes;
     // std::shared_ptr<Animation> animation;
 
-    std::shared_ptr<PhongShaderSource> phong_shader_source;
-    std::shared_ptr<ImageBasedShaderSource> image_based_shader_source;
-    std::shared_ptr<PhsicallyBasedShaderSource> physically_based_shader_source;
-
   private:
     void OnShow() override;
 };

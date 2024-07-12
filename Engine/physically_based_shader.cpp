@@ -24,6 +24,20 @@ EnumBehaviorTreeStatus CheckPhysicallyBasedShader::CheckCondition() {
 
     if (gui->GetGlobalTab().render_mode ==
         EnumRenderMode::ePhysicallyBasedRendering) {
+
+        IDataBlock *block = data_block[EnumDataBlockType::eManager];
+        auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+        assert(manager != nullptr);
+
+        auto shader = manager->shaders[EnumShaderType::ePhysicallyBased];
+
+        if (shader->source[target_id()] == nullptr) {
+
+            auto source = std::make_shared<PhsicallyBasedShaderSource>();
+            source->Initialize();
+            shader->source[target_id()] = source;
+        }
+
         return EnumBehaviorTreeStatus::eSuccess;
     }
 
@@ -95,10 +109,12 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    auto model = manager->models[target_id];
+    auto model = manager->models[target_id()];
 
-    auto physically_shader_source = model->physically_based_shader_source;
     auto physically_shader = manager->shaders[EnumShaderType::ePhysicallyBased];
+    auto physically_shader_source = dynamic_cast<PhsicallyBasedShaderSource *>(
+        physically_shader->source[model->GetEntityId()].get());
+
     // model
     {
         physically_shader_source->vertex_constant_buffer_data.modelWorld =
@@ -216,10 +232,11 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     // VS: Vertex Shader
     // PS: Pixel Shader
     // IA: Input-Assembler stage
-    auto model = manager->models[target_id];
-    auto physically_shader_source = model->physically_based_shader_source;
+    auto model = manager->models[target_id()];
     auto physically_shader = std::static_pointer_cast<PhsicallyBasedShader>(
         manager->shaders[EnumShaderType::ePhysicallyBased]);
+    auto physically_shader_source = dynamic_cast<PhsicallyBasedShaderSource *>(
+        physically_shader->source[model->GetEntityId()].get());
 
     assert(physically_shader != nullptr);
 

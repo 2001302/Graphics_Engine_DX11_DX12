@@ -15,19 +15,6 @@ void ImageBasedShaderSource::InitializeThis() {
                                                  pixel_constant_buffer);
 }
 
-EnumBehaviorTreeStatus CheckImageBasedShader::CheckCondition() {
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
-    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
-    assert(gui != nullptr);
-
-    if (gui->GetGlobalTab().render_mode ==
-        EnumRenderMode::eImageBasedLighting) {
-        return EnumBehaviorTreeStatus::eSuccess;
-    }
-
-    return EnumBehaviorTreeStatus::eFail;
-}
-
 EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 
@@ -72,6 +59,33 @@ EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
+EnumBehaviorTreeStatus CheckImageBasedShader::CheckCondition() {
+    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
+    assert(gui != nullptr);
+
+    if (gui->GetGlobalTab().render_mode ==
+        EnumRenderMode::eImageBasedLighting) {
+
+        IDataBlock *block = data_block[EnumDataBlockType::eManager];
+        auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+        assert(manager != nullptr);
+
+        auto shader = manager->shaders[EnumShaderType::eImageBased];
+
+        if (shader->source[target_id()] == nullptr) {
+
+            auto source = std::make_shared<ImageBasedShaderSource>();
+            source->Initialize();
+            shader->source[target_id()] = source;
+        }
+
+        return EnumBehaviorTreeStatus::eSuccess;
+    }
+
+    return EnumBehaviorTreeStatus::eFail;
+}
+
 EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
@@ -84,10 +98,12 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
 
     auto context = Direct3D::GetInstance().device_context();
 
-    auto model = manager->models[target_id];
+    auto model = manager->models[target_id()];
 
-    auto image_based_shader_source = model->image_based_shader_source;
     auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
+    auto image_based_shader_source = dynamic_cast<ImageBasedShaderSource *>(
+        image_based_shader->source[model->GetEntityId()].get());
+
     // model
     {
         image_based_shader_source->vertex_constant_buffer_data.model =
@@ -145,7 +161,8 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     }
     //// material
     //{
-    //    image_based_shader_source->pixel_constant_buffer_data.material.diffuse =
+    //    image_based_shader_source->pixel_constant_buffer_data.material.diffuse
+    //    =
     //        Vector3(detail->diffuse);
     //    image_based_shader_source->pixel_constant_buffer_data.material
     //        .specular = Vector3(detail->specular);
@@ -153,8 +170,8 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     //        .shininess = detail->shininess;
     //}
 
-    //image_based_shader_source->pixel_constant_buffer_data.useTexture =
-    //    detail->use_texture;
+    // image_based_shader_source->pixel_constant_buffer_data.useTexture =
+    //     detail->use_texture;
 
     Direct3D::GetInstance().UpdateBuffer(
         image_based_shader_source->pixel_constant_buffer_data,
@@ -180,9 +197,10 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
     // VS: Vertex Shader
     // PS: Pixel Shader
     // IA: Input-Assembler stage
-    auto model = manager->models[target_id];
-    auto image_based_shader_source = model->image_based_shader_source;
+    auto model = manager->models[target_id()];
     auto image_based_shader = manager->shaders[EnumShaderType::eImageBased];
+    auto image_based_shader_source = dynamic_cast<ImageBasedShaderSource *>(
+        image_based_shader->source[model->GetEntityId()].get());
 
     unsigned int stride = sizeof(Vertex);
     unsigned int offset = 0;

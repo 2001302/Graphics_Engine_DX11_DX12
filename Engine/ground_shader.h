@@ -61,6 +61,10 @@ class InitializeGroundShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
+class CheckGroundShader : public ConditionalNode {
+    EnumBehaviorTreeStatus CheckCondition() override;
+};
+
 class UpdateGroundShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };

@@ -262,7 +262,7 @@
     <ClCompile Include="cube_map_shader.cpp">
       <Filter>DirectX\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="conditional_node.h.cpp">
+    <ClCompile Include="conditional_node.cpp">
       <Filter>BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="sequence_node.cpp">

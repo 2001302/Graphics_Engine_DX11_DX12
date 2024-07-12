@@ -61,12 +61,12 @@ struct PhsicallyBasedShaderSource : public IShaderSource {
     void InitializeThis() override;
 };
 
-class CheckPhysicallyBasedShader : public ConditionalNode {
-    EnumBehaviorTreeStatus CheckCondition() override;
-};
-
 class InitializePhysicallyBasedShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class CheckPhysicallyBasedShader : public ConditionalNode {
+    EnumBehaviorTreeStatus CheckCondition() override;
 };
 
 class UpdateGameObjectsUsingPhysicallyBasedShader : public BehaviorActionNode {

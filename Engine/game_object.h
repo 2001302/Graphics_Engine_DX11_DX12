@@ -16,10 +16,7 @@ class GameObject : public IEntity {
 
   private:
     virtual void OnUpdate(){};
-    virtual void OnUpdateGui(){};
     virtual void OnRender(){};
-    DirectX::SimpleMath::Matrix transform;
-    std::vector<std::shared_ptr<Mesh>> meshes;
 };
 } // namespace Engine
 #endif

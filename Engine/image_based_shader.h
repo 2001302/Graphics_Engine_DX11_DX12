@@ -1,4 +1,4 @@
-﻿#ifndef _IMAGEBASEDSHADER
+#ifndef _IMAGEBASEDSHADER
 #define _IMAGEBASEDSHADER
 
 #include "shader.h"
@@ -34,12 +34,12 @@ struct ImageBasedShaderSource : public IShaderSource {
     void InitializeThis() override;
 };
 
-class CheckImageBasedShader : public ConditionalNode {
-    EnumBehaviorTreeStatus CheckCondition() override;
-};
-
 class InitializeImageBasedShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
+};
+
+class CheckImageBasedShader : public ConditionalNode {
+    EnumBehaviorTreeStatus CheckCondition() override;
 };
 
 class UpdateGameObjectsUsingImageBasedShader : public BehaviorActionNode {

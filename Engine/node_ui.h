@@ -9,7 +9,7 @@
 
 namespace ed = ax::NodeEditor;
 
-namespace dx11 {
+namespace common {
 
 struct INodeUi {
   public:

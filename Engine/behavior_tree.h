@@ -39,7 +39,7 @@ class BehaviorActionNode : public IDisposable {
     virtual EnumBehaviorTreeStatus OnInvoke();
     BehaviorActionNode *parent_node;
     std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
-    std::map<EnumDataBlockType, IDataBlock *> data_block;
+    std::map<EnumDataBlockType, common::IDataBlock *> data_block;
     int target_id;
 };
 } // namespace Engine

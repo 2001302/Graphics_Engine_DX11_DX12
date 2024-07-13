@@ -13,7 +13,7 @@ namespace dx11 {
 class BehaviorTreeBuilder {
   public:
     BehaviorTreeBuilder *
-    Build(std::map<EnumDataBlockType, IDataBlock *> dataBlock) {
+    Build(std::map<EnumDataBlockType, common::IDataBlock *> dataBlock) {
         tree = std::make_shared<SequenceNode>(dataBlock);
         current = tree.get();
         return this;

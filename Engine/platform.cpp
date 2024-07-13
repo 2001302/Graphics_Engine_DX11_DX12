@@ -60,15 +60,15 @@ bool Platform::OnStart() {
     // 윈도우를 만들 해상도를 다시 계산해서 CreateWindow()에서 사용
 
     // 우리가 원하는 그림이 그려질 부분의 해상도
-    RECT wr = {0, 0, dx11::Env::Instance().screen_width,
-               dx11::Env::Instance().screen_height};
+    RECT wr = {0, 0, common::Env::Instance().screen_width,
+               common::Env::Instance().screen_height};
 
     // 필요한 윈도우 크기(해상도) 계산
     // wr의 값이 바뀜
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
 
     // 윈도우를 만들때 위에서 계산한 wr 사용
-    dx11::Env::Instance().main_window =
+    common::Env::Instance().main_window =
         CreateWindow(wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW,
                      10,                 // 윈도우 좌측 상단의 x 좌표
                      10,                 // 윈도우 좌측 상단의 y 좌표
@@ -76,13 +76,13 @@ bool Platform::OnStart() {
                      wr.bottom - wr.top, // 윈도우 세로 방향 해상도
                      NULL, NULL, wc.hInstance, NULL);
 
-    if (!dx11::Env::Instance().main_window) {
+    if (!common::Env::Instance().main_window) {
         std::cout << "CreateWindow() failed." << std::endl;
         return false;
     }
 
-    ShowWindow(dx11::Env::Instance().main_window, SW_SHOWDEFAULT);
-    UpdateWindow(dx11::Env::Instance().main_window);
+    ShowWindow(common::Env::Instance().main_window, SW_SHOWDEFAULT);
+    UpdateWindow(common::Env::Instance().main_window);
 
     return true;
 }
@@ -122,13 +122,13 @@ void Platform::Run() {
 
 bool Platform::OnStop() {
     // Shutdown the window.
-    if (dx11::Env::Instance().full_screen) {
+    if (common::Env::Instance().full_screen) {
         ChangeDisplaySettings(NULL, 0);
     }
 
     // Remove the window.
-    DestroyWindow(dx11::Env::Instance().main_window);
-    dx11::Env::Instance().main_window = NULL;
+    DestroyWindow(common::Env::Instance().main_window);
+    common::Env::Instance().main_window = NULL;
 
     // Remove the application instance.
     UnregisterClass(application_name_, hinstance_);

@@ -7,22 +7,22 @@ Application::Application() : imgui_(0), manager_(0) {
     input_ = std::make_unique<dx11::Input>();
     manager_ = std::make_shared<dx11::PipelineManager>();
     message_receiver_ = std::make_unique<dx11::MessageReceiver>();
-    imgui_ = std::make_shared<dx11::SettingUi>();
+    imgui_ = std::make_shared<common::SettingUi>();
 };
 
 bool Application::OnStart() {
 
     Platform::OnStart();
 
-    std::map<dx11::EnumDataBlockType, dx11::IDataBlock *> dataBlock = {
+    std::map<dx11::EnumDataBlockType, common::IDataBlock *> dataBlock = {
         {dx11::EnumDataBlockType::eManager, manager_.get()},
         {dx11::EnumDataBlockType::eGui, imgui_.get()},
     };
 
     dx11::Direct3D::Instance().Initialize();
 
-    input_->Initialize(hinstance_, dx11::Env::Instance().screen_width,
-                       dx11::Env::Instance().screen_height);
+    input_->Initialize(hinstance_, common::Env::Instance().screen_width,
+                       common::Env::Instance().screen_height);
     imgui_->Initialize();
 
     // clang-format off
@@ -47,7 +47,7 @@ bool Application::OnStart() {
 
 bool Application::OnFrame() {
 
-    std::map<dx11::EnumDataBlockType, dx11::IDataBlock *> dataBlock = {
+    std::map<dx11::EnumDataBlockType, common::IDataBlock *> dataBlock = {
         {dx11::EnumDataBlockType::eManager, manager_.get()},
         {dx11::EnumDataBlockType::eGui, imgui_.get()},
     };

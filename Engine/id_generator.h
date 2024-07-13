@@ -1,7 +1,7 @@
-﻿#ifndef _IDGENERATOR
+#ifndef _IDGENERATOR
 #define _IDGENERATOR
 
-namespace dx11 {
+namespace common {
 class IdGenerator {
   public:
     IdGenerator(){};

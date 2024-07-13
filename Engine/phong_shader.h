@@ -33,7 +33,7 @@ struct PhongShader : public IShader {
 /// <summary>
 /// Phong Shader에서 사용하는 공유되지 않는 Constant Buffer 정보
 /// </summary>
-struct PhongShaderSource : public IShaderSource, INodeUi {
+struct PhongShaderSource : public IShaderSource, common::INodeUi {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;

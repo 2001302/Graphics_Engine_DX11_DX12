@@ -1,9 +1,9 @@
 #ifndef _ENV
 #define _ENV
 
-#include "common_struct.h"
+#include <windows.h>
 
-namespace dx11 {
+namespace common {
 struct Env {
   private:
     Env() : main_window(0), screen_width(1920), screen_height(1080), aspect(0.0f){};

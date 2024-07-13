@@ -17,7 +17,7 @@ void ImageBasedShaderSource::InitializeThis() {
 }
 
 EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
-    IDataBlock *block = data_block[EnumDataBlockType::eManager];
+    auto block = data_block[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
@@ -61,12 +61,12 @@ EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
 }
 
 EnumBehaviorTreeStatus CheckImageBasedShader::CheckCondition() {
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
-    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
+    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     if (gui->GetGlobalTab().render_mode ==
-        EnumRenderMode::eImageBasedLighting) {
+        common::EnumRenderMode::eImageBasedLighting) {
 
         return EnumBehaviorTreeStatus::eSuccess;
     }
@@ -75,13 +75,13 @@ EnumBehaviorTreeStatus CheckImageBasedShader::CheckCondition() {
 }
 
 EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
-    IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto managerBlock = data_block[EnumDataBlockType::eManager];
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::Instance().device_context();
@@ -129,7 +129,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     }
     // projection
     {
-        const float aspect = Env::Instance().aspect;
+        const float aspect = common::Env::Instance().aspect;
         image_based_shader_source->vertex_constant_buffer_data
             .projection = XMMatrixPerspectiveFovLH(
             XMConvertToRadians(
@@ -175,13 +175,13 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
 }
 
 EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
-    IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto managerBlock = data_block[EnumDataBlockType::eManager];
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::Instance().device_context();

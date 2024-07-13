@@ -1,12 +1,10 @@
 #ifndef _ENTITY
 #define _ENTITY
 
-#include "common_struct.h"
 #include "node_ui.h"
+#include <string>
 
-namespace dx11 {
-using Microsoft::WRL::ComPtr;
-
+namespace common {
 class IEntity : public INodeUi {
   public:
     IEntity();
@@ -19,5 +17,5 @@ class IEntity : public INodeUi {
     int entity_id_;
     std::string name_ = "";
 };
-} // namespace Engine
+} // namespace common
 #endif

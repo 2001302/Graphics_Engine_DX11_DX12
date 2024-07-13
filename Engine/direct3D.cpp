@@ -65,14 +65,14 @@ bool Direct3D::Initialize() {
 
     DXGI_SWAP_CHAIN_DESC sd;
     ZeroMemory(&sd, sizeof(sd));
-    sd.BufferDesc.Width = Env::Instance().screen_width;
-    sd.BufferDesc.Height = Env::Instance().screen_height;
+    sd.BufferDesc.Width = common::Env::Instance().screen_width;
+    sd.BufferDesc.Height = common::Env::Instance().screen_height;
     sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     sd.BufferCount = 2;
     sd.BufferDesc.RefreshRate.Numerator = 60;
     sd.BufferDesc.RefreshRate.Denominator = 1;
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = Env::Instance().main_window;
+    sd.OutputWindow = common::Env::Instance().main_window;
     sd.Windowed = TRUE;
     sd.Flags =
         DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH; // allow full-screen switching
@@ -93,8 +93,8 @@ bool Direct3D::Initialize() {
 
     CreateBuffer();
 
-    SetViewPort(0.0f, 0.0f, (float)Env::Instance().screen_width,
-                (float)Env::Instance().screen_height);
+    SetViewPort(0.0f, 0.0f, (float)common::Env::Instance().screen_width,
+                (float)common::Env::Instance().screen_height);
 
     D3D11_RASTERIZER_DESC rastDesc;
     ZeroMemory(&rastDesc, sizeof(D3D11_RASTERIZER_DESC));
@@ -154,9 +154,10 @@ bool Direct3D::CreateBuffer() {
     ThrowIfFailed(device_->CreateRenderTargetView(float_buffer_.Get(), NULL,
                                                   float_RTV.GetAddressOf()));
 
-    CreateDepthBuffer(
-        device_, Env::Instance().screen_width, Env::Instance().screen_height,
-        UINT(useMSAA ? num_quality_levels_ : 0), depth_stencil_view_);
+    CreateDepthBuffer(device_, common::Env::Instance().screen_width,
+                      common::Env::Instance().screen_height,
+                      UINT(useMSAA ? num_quality_levels_ : 0),
+                      depth_stencil_view_);
 
     // FLOAT MSAA를 Relsolve해서 저장할 SRV/RTV
     desc.SampleDesc.Count = 1;
@@ -258,7 +259,7 @@ void Direct3D::BeginScene(float red, float green, float blue, float alpha,
 void Direct3D::EndScene() {
 
     // Present the back buffer to the screen since rendering is complete.
-    if (Env::Instance().vsync_enabled) {
+    if (common::Env::Instance().vsync_enabled) {
         // Lock to screen refresh rate.
         swap_chain_->Present(1, 0);
     } else {

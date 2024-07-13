@@ -7,7 +7,7 @@ using namespace dx11;
 
 
 EnumBehaviorTreeStatus InitializeBoardMap::OnInvoke() {
-    IDataBlock *block = data_block[EnumDataBlockType::eManager];
+    auto block = data_block[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
@@ -21,15 +21,16 @@ EnumBehaviorTreeStatus InitializeBoardMap::OnInvoke() {
         device, context,
                           {Direct3D::Instance().resolved_SRV()},
                           {Direct3D::Instance().back_buffer_RTV()},
-                          Env::Instance().screen_width, Env::Instance().screen_height, 4);
+                                   common::Env::Instance().screen_width,
+                                   common::Env::Instance().screen_height, 4);
 
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
 EnumBehaviorTreeStatus RenderBoardMap::OnInvoke() {
-    IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto managerBlock = data_block[EnumDataBlockType::eManager];
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);

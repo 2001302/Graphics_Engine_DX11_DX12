@@ -5,12 +5,12 @@
 
 namespace ed = ax::NodeEditor;
 
-namespace dx11 {
+namespace common {
 
 struct LightSetting {
     bool use_blinn_phong = false;
     int light_type = 0;
-    Light light_from_gui;
+    dx11::Light light_from_gui;
 };
 struct CubeMapSetting {
     int textureToDraw = 0;

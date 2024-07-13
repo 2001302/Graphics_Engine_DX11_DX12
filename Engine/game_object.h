@@ -7,7 +7,7 @@
 namespace dx11 {
 using Microsoft::WRL::ComPtr;
 
-class GameObject : public IEntity {
+class GameObject : public common::IEntity {
   public:
     GameObject(){};
     ~GameObject(){};

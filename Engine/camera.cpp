@@ -47,7 +47,7 @@ void Camera::Render() {
 }
 
 EnumBehaviorTreeStatus InitializeCamera::OnInvoke() {
-    IDataBlock *block = data_block[EnumDataBlockType::eManager];
+    auto block = data_block[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
@@ -68,7 +68,7 @@ EnumBehaviorTreeStatus InitializeCamera::OnInvoke() {
 }
 
 EnumBehaviorTreeStatus UpdateCamera::OnInvoke() {
-    IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
+    auto managerBlock = data_block[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);

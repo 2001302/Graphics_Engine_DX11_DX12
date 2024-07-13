@@ -21,7 +21,7 @@ void GroundShaderSource::InitializeThis() {
 }
 
 EnumBehaviorTreeStatus CheckGroundShader::CheckCondition() {
-    IDataBlock *block = data_block[EnumDataBlockType::eManager];
+    auto block = data_block[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
@@ -40,7 +40,7 @@ EnumBehaviorTreeStatus CheckGroundShader::CheckCondition() {
 }
 
 EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
-    IDataBlock *block = data_block[EnumDataBlockType::eManager];
+    auto block = data_block[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
@@ -131,13 +131,13 @@ EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
 }
 
 EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
-    IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto managerBlock = data_block[EnumDataBlockType::eManager];
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto ground = manager->ground;
@@ -165,7 +165,7 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
         ground_shader_source->vertex_constant_buffer_data.view =
             manager->camera->view.Transpose();
 
-        const float aspect = Env::Instance().aspect;
+        const float aspect = common::Env::Instance().aspect;
         ground_shader_source->vertex_constant_buffer_data
             .projection = XMMatrixPerspectiveFovLH(
             XMConvertToRadians(
@@ -199,13 +199,13 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
 }
 
 EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
-    IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto managerBlock = data_block[EnumDataBlockType::eManager];
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::Instance().device_context();

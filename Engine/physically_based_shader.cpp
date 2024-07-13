@@ -19,12 +19,12 @@ void PhsicallyBasedShaderSource::InitializeThis() {
 }
 
 EnumBehaviorTreeStatus CheckPhysicallyBasedShader::CheckCondition() {
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
-    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
+    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     if (gui->GetGlobalTab().render_mode ==
-        EnumRenderMode::ePhysicallyBasedRendering) {
+        common::EnumRenderMode::ePhysicallyBasedRendering) {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 
@@ -32,7 +32,7 @@ EnumBehaviorTreeStatus CheckPhysicallyBasedShader::CheckCondition() {
 }
 
 EnumBehaviorTreeStatus InitializePhysicallyBasedShader::OnInvoke() {
-    IDataBlock *block = data_block[EnumDataBlockType::eManager];
+    auto block = data_block[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
@@ -85,13 +85,13 @@ EnumBehaviorTreeStatus InitializePhysicallyBasedShader::OnInvoke() {
 }
 
 EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
-    IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto managerBlock = data_block[EnumDataBlockType::eManager];
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::Instance().device_context();
@@ -139,15 +139,14 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     }
     // projection
     {
-        const float aspect = Env::Instance().aspect;
+        const float aspect = common::Env::Instance().aspect;
 
-        physically_shader_source->vertex_constant_buffer_data.projection =
-            XMMatrixPerspectiveFovLH(
-                XMConvertToRadians(
-                    gui->GetGlobalTab()
-                        .projection_setting.projection_fov_angle_y),
-                aspect, gui->GetGlobalTab().projection_setting.near_z,
-                gui->GetGlobalTab().projection_setting.far_z);
+        physically_shader_source->vertex_constant_buffer_data
+            .projection = XMMatrixPerspectiveFovLH(
+            XMConvertToRadians(
+                gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
+            aspect, gui->GetGlobalTab().projection_setting.near_z,
+            gui->GetGlobalTab().projection_setting.far_z);
 
         physically_shader_source->vertex_constant_buffer_data.projection =
             physically_shader_source->vertex_constant_buffer_data.projection
@@ -209,13 +208,13 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 }
 
 EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
-    IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto managerBlock = data_block[EnumDataBlockType::eManager];
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::Instance().device_context();

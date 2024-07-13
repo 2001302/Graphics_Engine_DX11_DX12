@@ -36,7 +36,7 @@ void PhongShaderSource::OnShow() {
 };
 
 EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
-    IDataBlock *block = data_block[EnumDataBlockType::eManager];
+    auto block = data_block[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
@@ -81,11 +81,11 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
 
 EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
 
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
-    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
+    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    if (gui->GetGlobalTab().render_mode == EnumRenderMode::eLight) {
+    if (gui->GetGlobalTab().render_mode == common::EnumRenderMode::eLight) {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 
@@ -93,13 +93,13 @@ EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
 }
 
 EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
-    IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto managerBlock = data_block[EnumDataBlockType::eManager];
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::Instance().device_context();
@@ -146,7 +146,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     }
     // projection
     {
-        const float aspect = Env::Instance().aspect;
+        const float aspect = common::Env::Instance().aspect;
 
         phong_shader_source->vertex_constant_buffer_data
             .projection = XMMatrixPerspectiveFovLH(
@@ -207,13 +207,13 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
 }
 
 EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
-    IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
-    IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
+    auto managerBlock = data_block[EnumDataBlockType::eManager];
+    auto guiBlock = data_block[EnumDataBlockType::eGui];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::Instance().device_context();

@@ -1,6 +1,6 @@
 #include "gui_base.h"
 
-using namespace dx11;
+using namespace common;
 
 ImGuiWindowFlags GetWindowFlags() {
     return ImGuiWindowFlags_NoTitleBar |
@@ -13,8 +13,8 @@ bool IGui::Initialize() {
     ImGui::SetCurrentContext(context_);
 
     ImGui_ImplWin32_Init(Env::Instance().main_window);
-    ImGui_ImplDX11_Init(Direct3D::Instance().device().Get(),
-                        Direct3D::Instance().device_context().Get());
+    ImGui_ImplDX11_Init(dx11::Direct3D::Instance().device().Get(),
+                        dx11::Direct3D::Instance().device_context().Get());
 
     ImGui::StyleColorsDark();
     RecreateFontAtlas();
@@ -48,7 +48,8 @@ bool IGui::Frame(std::unordered_map<int, std::shared_ptr<INodeUi>> node_map) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
 
     if (ImGui::GetCurrentWindow()) {
-         Direct3D::Instance().SetViewPort(ImGui::GetWindowSize().x, 0.0f,
+        dx11::Direct3D::Instance().SetViewPort(
+            ImGui::GetWindowSize().x, 0.0f,
                                             (float)Env::Instance().screen_width -
                                                  ImGui::GetWindowSize().x,
                                             (float)Env::Instance().screen_height);

@@ -13,7 +13,7 @@ void NormalGeometryShaderSource::InitializeThis() {
 }
 
 EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
-    IDataBlock *block = data_block[EnumDataBlockType::eManager];
+    auto block = data_block[EnumDataBlockType::eManager];
 
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);

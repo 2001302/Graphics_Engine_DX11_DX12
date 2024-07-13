@@ -24,7 +24,7 @@ class Application : public Platform {
 
   private:
     std::shared_ptr<dx11::Input> input_;
-    std::shared_ptr<dx11::SettingUi> imgui_;
+    std::shared_ptr<common::SettingUi> imgui_;
     std::shared_ptr<dx11::PipelineManager> manager_;
     std::unique_ptr<dx11::MessageReceiver> message_receiver_;
 };

@@ -148,9 +148,6 @@
     <ClInclude Include="pipeline_manager.h">
       <Filter>DirectX11</Filter>
     </ClInclude>
-    <ClInclude Include="common_struct.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="direct3D.h">
       <Filter>DirectX11</Filter>
     </ClInclude>
@@ -161,6 +158,9 @@
       <Filter>DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="model_loader.h">
+      <Filter>DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="common_struct.h">
       <Filter>DirectX11</Filter>
     </ClInclude>
   </ItemGroup>

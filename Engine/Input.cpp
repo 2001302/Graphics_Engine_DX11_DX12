@@ -48,9 +48,8 @@ bool Input::Initialize(HINSTANCE hinstance, int screenWidth,
 
     // Set the cooperative level of the keyboard to not share with other
     // programs.
-    result = keyboard_->SetCooperativeLevel(Env::Instance().main_window,
-                                            DISCL_FOREGROUND |
-                                                       DISCL_EXCLUSIVE);
+    result = keyboard_->SetCooperativeLevel(common::Env::Instance().main_window,
+                                            DISCL_FOREGROUND | DISCL_EXCLUSIVE);
     if (FAILED(result)) {
         return false;
     }
@@ -75,7 +74,7 @@ bool Input::Initialize(HINSTANCE hinstance, int screenWidth,
     }
 
     // Set the cooperative level of the mouse to share with other programs.
-    result = mouse_->SetCooperativeLevel(Env::Instance().main_window,
+    result = mouse_->SetCooperativeLevel(common::Env::Instance().main_window,
                                          DISCL_FOREGROUND |
                                                     DISCL_NONEXCLUSIVE);
     if (FAILED(result)) {

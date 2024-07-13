@@ -5,7 +5,7 @@
 #include "common_struct.h"
 #include "gui_base.h"
 
-namespace Engine {
+namespace dx11 {
 
 class GraphNode {
   public:

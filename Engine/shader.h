@@ -6,7 +6,7 @@
 
 #define MAX_LIGHTS 3
 
-namespace Engine {
+namespace dx11 {
 struct IShaderSource {
   public:
     void Initialize() { InitializeThis(); }

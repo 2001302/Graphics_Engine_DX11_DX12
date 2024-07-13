@@ -3,7 +3,7 @@
 #include "setting_ui.h"
 #include "pipeline_manager.h"
 
-using namespace Engine;
+using namespace dx11;
 
 void Camera::Render() {
     DirectX::SimpleMath::Vector3 upVector, positionVector, lookAtVector;
@@ -49,7 +49,7 @@ void Camera::Render() {
 EnumBehaviorTreeStatus InitializeCamera::OnInvoke() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
     // Create and initialize the camera object.
@@ -70,7 +70,7 @@ EnumBehaviorTreeStatus InitializeCamera::OnInvoke() {
 EnumBehaviorTreeStatus UpdateCamera::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
     // Generate the view matrix based on the camera's position.

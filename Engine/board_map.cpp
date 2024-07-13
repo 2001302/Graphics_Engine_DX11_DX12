@@ -1,6 +1,6 @@
 #include "board_map.h"
 
-using namespace Engine;
+using namespace dx11;
 
 void BoardMap::Initialize(
     ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,

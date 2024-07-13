@@ -1,6 +1,6 @@
 #include "input.h"
 
-using namespace Engine;
+using namespace dx11;
 
 Input::Input() {
     direct_input_ = 0;

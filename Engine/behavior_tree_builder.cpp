@@ -1,6 +1,6 @@
 #include "behavior_tree_builder.h"
 
-using namespace Engine;
+using namespace dx11;
 
 BehaviorTreeBuilder *
 BehaviorTreeBuilder::Excute(std::shared_ptr<BehaviorActionNode> node) {

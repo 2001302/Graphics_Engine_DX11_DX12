@@ -1,7 +1,7 @@
 #ifndef _IDATABLOCK
 #define _IDATABLOCK
 
-namespace Engine {
+namespace dx11 {
 /// <summary>
 /// Abstract class
 /// BehaviorTree traversal 수행 시 사용되는 DataBlock 단위.

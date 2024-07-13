@@ -1,6 +1,6 @@
 #include "ground.h"
 
-using namespace Engine;
+using namespace dx11;
 
 Ground::Ground() {
 }

@@ -6,7 +6,7 @@
 #include "pipeline_manager.h"
 #include "resource_helper.h"
 
-namespace Engine {
+namespace dx11 {
 class MessageReceiver {
   public:
     bool OnModelLoadRequest(PipelineManager *manager, HWND main_window);

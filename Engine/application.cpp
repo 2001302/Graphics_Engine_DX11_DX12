@@ -4,38 +4,38 @@
 namespace platform {
 
 Application::Application() : imgui_(0), manager_(0) {
-    input_ = std::make_unique<Engine::Input>();
-    manager_ = std::make_shared<Engine::PipelineManager>();
-    message_receiver_ = std::make_unique<Engine::MessageReceiver>();
-    imgui_ = std::make_shared<Engine::SettingUi>();
+    input_ = std::make_unique<dx11::Input>();
+    manager_ = std::make_shared<dx11::PipelineManager>();
+    message_receiver_ = std::make_unique<dx11::MessageReceiver>();
+    imgui_ = std::make_shared<dx11::SettingUi>();
 };
 
 bool Application::OnStart() {
 
     Platform::OnStart();
 
-    std::map<Engine::EnumDataBlockType, Engine::IDataBlock *> dataBlock = {
-        {Engine::EnumDataBlockType::eManager, manager_.get()},
-        {Engine::EnumDataBlockType::eGui, imgui_.get()},
+    std::map<dx11::EnumDataBlockType, dx11::IDataBlock *> dataBlock = {
+        {dx11::EnumDataBlockType::eManager, manager_.get()},
+        {dx11::EnumDataBlockType::eGui, imgui_.get()},
     };
 
-    Engine::Direct3D::Instance().Initialize();
+    dx11::Direct3D::Instance().Initialize();
 
-    input_->Initialize(hinstance_, Engine::Env::Instance().screen_width,
-                       Engine::Env::Instance().screen_height);
+    input_->Initialize(hinstance_, dx11::Env::Instance().screen_width,
+                       dx11::Env::Instance().screen_height);
     imgui_->Initialize();
 
     // clang-format off
-    auto tree = new Engine::BehaviorTreeBuilder();
+    auto tree = new dx11::BehaviorTreeBuilder();
     tree->Build(dataBlock)
         ->Sequence()
-            ->Excute(std::make_shared<Engine::InitializeBoardMap>())
-            ->Excute(std::make_shared<Engine::InitializeCamera>())
-            ->Excute(std::make_shared<Engine::InitializeGroundShader>())
-            ->Excute(std::make_shared<Engine::InitializeCubeMapShader>())
-            ->Excute(std::make_shared<Engine::InitializePhongShader>())
-            ->Excute(std::make_shared<Engine::InitializeImageBasedShader>())
-            ->Excute(std::make_shared<Engine::InitializePhysicallyBasedShader>())
+            ->Excute(std::make_shared<dx11::InitializeBoardMap>())
+            ->Excute(std::make_shared<dx11::InitializeCamera>())
+            ->Excute(std::make_shared<dx11::InitializeGroundShader>())
+            ->Excute(std::make_shared<dx11::InitializeCubeMapShader>())
+            ->Excute(std::make_shared<dx11::InitializePhongShader>())
+            ->Excute(std::make_shared<dx11::InitializeImageBasedShader>())
+            ->Excute(std::make_shared<dx11::InitializePhysicallyBasedShader>())
         ->Close()
     ->Run();
     // clang-format on
@@ -47,13 +47,13 @@ bool Application::OnStart() {
 
 bool Application::OnFrame() {
 
-    std::map<Engine::EnumDataBlockType, Engine::IDataBlock *> dataBlock = {
-        {Engine::EnumDataBlockType::eManager, manager_.get()},
-        {Engine::EnumDataBlockType::eGui, imgui_.get()},
+    std::map<dx11::EnumDataBlockType, dx11::IDataBlock *> dataBlock = {
+        {dx11::EnumDataBlockType::eManager, manager_.get()},
+        {dx11::EnumDataBlockType::eGui, imgui_.get()},
     };
 
     // Clear the buffers to begin the scene.
-    Engine::Direct3D::Instance().BeginScene(
+    dx11::Direct3D::Instance().BeginScene(
         0.0f, 0.0f, 0.0f, 1.0f, imgui_->GetGlobalTab().draw_as_wire_);
 
     // clang-format off
@@ -61,42 +61,42 @@ bool Application::OnFrame() {
     for(auto model : manager_->models)
         model_ids.push_back(model.first);
     
-    auto tree = std::make_unique<Engine::BehaviorTreeBuilder>();
+    auto tree = std::make_unique<dx11::BehaviorTreeBuilder>();
     tree->Build(dataBlock)
-    ->Excute(std::make_shared<Engine::UpdateCamera>())
+    ->Excute(std::make_shared<dx11::UpdateCamera>())
     ->Parallel(model_ids)
-        ->Conditional(std::make_shared<Engine::CheckImageBasedShader>())
+        ->Conditional(std::make_shared<dx11::CheckImageBasedShader>())
             ->Sequence()
-                ->Excute(std::make_shared<Engine::UpdateGameObjectsUsingImageBasedShader>())
-                ->Excute(std::make_shared<Engine::RenderGameObjectsUsingImageBasedShader>())
+                ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingImageBasedShader>())
+                ->Excute(std::make_shared<dx11::RenderGameObjectsUsingImageBasedShader>())
             ->Close()
         ->End()
-        ->Conditional(std::make_shared<Engine::CheckPhongShader>())
+        ->Conditional(std::make_shared<dx11::CheckPhongShader>())
             ->Sequence()
-                ->Excute(std::make_shared<Engine::UpdateGameObjectsUsingPhongShader>())
-                ->Excute(std::make_shared<Engine::RenderGameObjectsUsingPhongShader>())
+                ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingPhongShader>())
+                ->Excute(std::make_shared<dx11::RenderGameObjectsUsingPhongShader>())
             ->Close()
         ->End()
-        ->Conditional(std::make_shared<Engine::CheckPhysicallyBasedShader>())
+        ->Conditional(std::make_shared<dx11::CheckPhysicallyBasedShader>())
             ->Sequence()
-                ->Excute(std::make_shared<Engine::UpdateGameObjectsUsingPhysicallyBasedShader>())
-                ->Excute(std::make_shared<Engine::RenderGameObjectsUsingPhysicallyBasedShader>())
+                ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingPhysicallyBasedShader>())
+                ->Excute(std::make_shared<dx11::RenderGameObjectsUsingPhysicallyBasedShader>())
             ->Close()
         ->End()
     ->Close()
-    ->Conditional(std::make_shared<Engine::CheckGroundShader>())
+    ->Conditional(std::make_shared<dx11::CheckGroundShader>())
         ->Sequence()
-            ->Excute(std::make_shared<Engine::UpdateGroundShader>())
-            ->Excute(std::make_shared<Engine::RenderGroundShader>())
+            ->Excute(std::make_shared<dx11::UpdateGroundShader>())
+            ->Excute(std::make_shared<dx11::RenderGroundShader>())
         ->Close()
     ->End()
-    ->Conditional(std::make_shared<Engine::CheckCubeMapShader>())
+    ->Conditional(std::make_shared<dx11::CheckCubeMapShader>())
         ->Sequence()
-            ->Excute(std::make_shared<Engine::UpdateCubeMap>())
-            ->Excute(std::make_shared<Engine::RenderCubeMap>())
+            ->Excute(std::make_shared<dx11::UpdateCubeMap>())
+            ->Excute(std::make_shared<dx11::RenderCubeMap>())
         ->Close()
     ->End()
-    ->Excute(std::make_shared<Engine::RenderBoardMap>())
+    ->Excute(std::make_shared<dx11::RenderBoardMap>())
     ->Run();
     // clang-format on
 
@@ -104,7 +104,7 @@ bool Application::OnFrame() {
     imgui_->Frame(manager_->models);
 
     // Present the rendered scene to the screen.
-    Engine::Direct3D::Instance().EndScene();
+    dx11::Direct3D::Instance().EndScene();
 
     return true;
 }
@@ -134,7 +134,7 @@ bool Application::OnStop() {
 
 bool CheckIfMouseInViewport() {
     auto cursor = ImGui::GetMousePos();
-    auto view_port = Engine::Direct3D::Instance().viewport();
+    auto view_port = dx11::Direct3D::Instance().viewport();
     if (view_port.TopLeftX < cursor.x && view_port.TopLeftY < cursor.y &&
         cursor.x < view_port.TopLeftX + view_port.Width &&
         cursor.y < view_port.TopLeftY + view_port.Height) {

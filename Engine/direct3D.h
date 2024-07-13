@@ -6,7 +6,7 @@
 
 using namespace DirectX;
 
-namespace Engine {
+namespace dx11 {
 using Microsoft::WRL::ComPtr;
 
 class Direct3D {
@@ -16,8 +16,8 @@ class Direct3D {
         return instance;
     }
     bool Initialize();
-    void BeginScene(float red, float green, float blue,
-                    float alpha, bool draw_as_wire);
+    void BeginScene(float red, float green, float blue, float alpha,
+                    bool draw_as_wire);
     void EndScene();
 
     void SetViewPort(float x, float y, float width, float height);
@@ -154,5 +154,5 @@ class Direct3D {
 
     D3D11_VIEWPORT viewport_;
 };
-} // namespace Engine
+} // namespace dx11
 #endif

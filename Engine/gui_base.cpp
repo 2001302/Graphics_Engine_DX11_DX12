@@ -1,6 +1,6 @@
 #include "gui_base.h"
 
-using namespace Engine;
+using namespace dx11;
 
 ImGuiWindowFlags GetWindowFlags() {
     return ImGuiWindowFlags_NoTitleBar |

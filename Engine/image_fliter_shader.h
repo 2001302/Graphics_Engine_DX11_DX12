@@ -6,7 +6,7 @@
 
 using namespace DirectX;
 
-namespace Engine {
+namespace dx11 {
 struct ImageFilterShader : public IShader {
   public:
 };

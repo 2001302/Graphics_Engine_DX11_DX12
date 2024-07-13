@@ -23,10 +23,10 @@ class Application : public Platform {
                                     LPARAM lparam) override final;
 
   private:
-    std::shared_ptr<Engine::Input> input_;
-    std::shared_ptr<Engine::SettingUi> imgui_;
-    std::shared_ptr<Engine::PipelineManager> manager_;
-    std::unique_ptr<Engine::MessageReceiver> message_receiver_;
+    std::shared_ptr<dx11::Input> input_;
+    std::shared_ptr<dx11::SettingUi> imgui_;
+    std::shared_ptr<dx11::PipelineManager> manager_;
+    std::unique_ptr<dx11::MessageReceiver> message_receiver_;
 };
 } // namespace platform
 #endif

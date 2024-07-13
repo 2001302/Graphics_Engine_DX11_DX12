@@ -4,7 +4,7 @@
 #include "direct3D.h"
 #include "model.h"
 
-namespace Engine {
+namespace dx11 {
 
 /// <summary>
 /// Resource Load/Save/Convert 등 작업을 수행하는 class.

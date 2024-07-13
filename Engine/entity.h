@@ -4,7 +4,7 @@
 #include "common_struct.h"
 #include "node_ui.h"
 
-namespace Engine {
+namespace dx11 {
 using Microsoft::WRL::ComPtr;
 
 class IEntity : public INodeUi {

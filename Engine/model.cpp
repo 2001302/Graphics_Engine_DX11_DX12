@@ -3,7 +3,7 @@
 
 #include "model.h"
 
-using namespace Engine;
+using namespace dx11;
 
 Model::Model() {}
 

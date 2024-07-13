@@ -3,7 +3,7 @@
 
 #include "common_struct.h"
 
-namespace Engine {
+namespace dx11 {
 struct Env {
   private:
     Env() : main_window(0), screen_width(1920), screen_height(1080), aspect(0.0f){};

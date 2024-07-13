@@ -5,7 +5,7 @@
 #include "cube_map_shader.h"
 #include "game_object.h"
 
-namespace Engine {
+namespace dx11 {
 using Microsoft::WRL::ComPtr;
 
 class CubeMap : public GameObject {

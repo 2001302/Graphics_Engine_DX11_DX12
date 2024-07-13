@@ -11,7 +11,7 @@
 #include "common_struct.h"
 #include "env.h"
 
-namespace Engine {
+namespace dx11 {
 class Input {
   public:
     Input();

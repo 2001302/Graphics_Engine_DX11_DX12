@@ -4,7 +4,7 @@
 #include "common_struct.h"
 #include "dataBlock.h"
 
-namespace Engine {
+namespace dx11 {
 enum EnumDataBlockType {
     eManager = 0,
     eGui = 1,

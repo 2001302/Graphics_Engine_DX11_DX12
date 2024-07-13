@@ -1,6 +1,6 @@
 ﻿#include "image_filter.h"
 
-using namespace Engine;
+using namespace dx11;
 
 
 ImageFilter::ImageFilter(ComPtr<ID3D11Device> &device,

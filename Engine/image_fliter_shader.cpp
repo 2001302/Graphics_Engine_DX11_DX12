@@ -3,13 +3,13 @@
 #include "setting_ui.h"
 #include "pipeline_manager.h"
 
-using namespace Engine;
+using namespace dx11;
 
 
 EnumBehaviorTreeStatus InitializeBoardMap::OnInvoke() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
     auto device = Direct3D::Instance().device();
@@ -31,7 +31,7 @@ EnumBehaviorTreeStatus RenderBoardMap::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
     Direct3D::Instance().device_context()->ResolveSubresource(

@@ -4,7 +4,7 @@
 #include <DirectXMesh.h>
 #include <vector>
 
-using namespace Engine;
+using namespace dx11;
 using namespace DirectX::SimpleMath;
 
 void ModelLoader::Load(std::string basePath, std::string filename) {

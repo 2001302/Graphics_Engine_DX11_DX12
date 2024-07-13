@@ -5,7 +5,7 @@
 #include "pipeline_manager.h"
 #include "direct3d.h"
 
-using namespace Engine;
+using namespace dx11;
 
 void GroundShaderSource::InitializeThis() {
     vertex_constant_buffer_data.model = Matrix();
@@ -23,7 +23,7 @@ void GroundShaderSource::InitializeThis() {
 EnumBehaviorTreeStatus CheckGroundShader::CheckCondition() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
     auto shader = manager->shaders[EnumShaderType::eGround];
@@ -42,7 +42,7 @@ EnumBehaviorTreeStatus CheckGroundShader::CheckCondition() {
 EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
     manager->ground = std::make_shared<Ground>();
@@ -134,10 +134,10 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto ground = manager->ground;
@@ -202,10 +202,10 @@ EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::Instance().device_context();

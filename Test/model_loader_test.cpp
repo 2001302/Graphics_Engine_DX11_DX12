@@ -8,7 +8,7 @@ namespace UnitTest {
 
 TEST(ModelLoader, ModelLoader) {
 
-    Engine::ModelLoader loader;
+    dx11::ModelLoader loader;
     EXPECT_EQ(1, 1);
     EXPECT_TRUE(true);
 }

@@ -9,7 +9,7 @@
 
 #include "common_struct.h"
 
-namespace Engine {
+namespace dx11 {
 
 using namespace DirectX::SimpleMath;
 

@@ -1,6 +1,6 @@
 #include "setting_ui.h"
 
-using namespace Engine;
+using namespace dx11;
 
 void SettingUi::OnStart() {
     ed::Config config;

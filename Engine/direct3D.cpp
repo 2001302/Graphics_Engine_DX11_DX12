@@ -1,6 +1,6 @@
 #include "direct3D.h"
 
-using namespace Engine;
+using namespace dx11;
 
 ComPtr<ID3D11Device> Direct3D::device() { return device_; }
 

@@ -5,7 +5,7 @@
 
 namespace ed = ax::NodeEditor;
 
-namespace Engine {
+namespace dx11 {
 
 struct LightSetting {
     bool use_blinn_phong = false;

@@ -37,7 +37,7 @@
 #pragma comment(lib, "shcore.lib")
 
 
-namespace Engine {
+namespace dx11 {
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;
 using DirectX::SimpleMath::Vector3;

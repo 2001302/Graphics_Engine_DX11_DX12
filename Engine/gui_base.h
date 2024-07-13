@@ -5,7 +5,7 @@
 #include "direct3D.h"
 #include "node_ui.h"
 
-namespace Engine {
+namespace dx11 {
 class IGui : public IDataBlock {
   public:
     bool Initialize();

@@ -4,7 +4,7 @@
 #include "common_struct.h"
 #include "entity.h"
 
-namespace Engine {
+namespace dx11 {
 using Microsoft::WRL::ComPtr;
 
 class GameObject : public IEntity {

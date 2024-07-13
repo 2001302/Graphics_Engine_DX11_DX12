@@ -5,7 +5,7 @@
 #include "image_filter.h"
 #include "image_fliter_shader.h"
 
-namespace Engine {
+namespace dx11 {
 
 using DirectX::SimpleMath::Vector4;
 using Microsoft::WRL::ComPtr;

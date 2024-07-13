@@ -8,7 +8,7 @@
 #include "model.h"
 #include "model_loader.h"
 
-namespace Engine {
+namespace dx11 {
 class GeometryGenerator {
 
   public:

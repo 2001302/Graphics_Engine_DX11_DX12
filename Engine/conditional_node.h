@@ -3,7 +3,7 @@
 
 #include "behavior_tree.h"
 
-namespace Engine {
+namespace dx11 {
 class ConditionalNode : public BehaviorActionNode {
   public:
     virtual EnumBehaviorTreeStatus CheckCondition();

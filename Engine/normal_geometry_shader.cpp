@@ -3,7 +3,7 @@
 #include "setting_ui.h"
 #include "pipeline_manager.h"
 
-using namespace Engine;
+using namespace dx11;
 
 void NormalGeometryShaderSource::InitializeThis() {
     Direct3D::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
@@ -15,7 +15,7 @@ void NormalGeometryShaderSource::InitializeThis() {
 EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
     // Create and initialize the light shader object.

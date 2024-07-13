@@ -3,7 +3,7 @@
 #include "pipeline_manager.h"
 #include "setting_ui.h"
 
-using namespace Engine;
+using namespace dx11;
 
 void CubeMapShaderSource::InitializeThis() {
     vertex_constant_buffer_data.model = Matrix();
@@ -19,7 +19,7 @@ void CubeMapShaderSource::InitializeThis() {
 EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
     manager->cube_map = std::make_shared<CubeMap>();
@@ -79,7 +79,7 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
 EnumBehaviorTreeStatus CheckCubeMapShader::CheckCondition() {
     IDataBlock *block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(block);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
     auto shader = manager->shaders[EnumShaderType::eCube];
@@ -99,10 +99,10 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto cube_map = manager->cube_map;
@@ -145,10 +145,10 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     IDataBlock *managerBlock = data_block[EnumDataBlockType::eManager];
     IDataBlock *guiBlock = data_block[EnumDataBlockType::eGui];
 
-    auto manager = dynamic_cast<Engine::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
+    auto gui = dynamic_cast<dx11::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
     auto context = Direct3D::Instance().device_context();

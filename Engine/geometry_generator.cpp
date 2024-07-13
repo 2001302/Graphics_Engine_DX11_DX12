@@ -1,6 +1,6 @@
 #include "geometry_generator.h"
 
-using namespace Engine;
+using namespace dx11;
 
 Model *GeometryGenerator::MakeSphere(Model *gameObject, const float radius,
                                      const int numSlices, const int numStacks) {

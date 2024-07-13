@@ -1,7 +1,7 @@
 ﻿#ifndef _IDGENERATOR
 #define _IDGENERATOR
 
-namespace Engine {
+namespace dx11 {
 class IdGenerator {
   public:
     IdGenerator(){};

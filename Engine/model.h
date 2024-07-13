@@ -7,7 +7,7 @@
 #include "phong_shader.h"
 #include "physically_based_shader.h"
 
-namespace Engine {
+namespace dx11 {
 using Microsoft::WRL::ComPtr;
 
 class Model : public GameObject{

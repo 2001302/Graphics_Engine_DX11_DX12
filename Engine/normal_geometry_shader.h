@@ -1,4 +1,4 @@
-﻿#ifndef _NORMALGEOMETRYSHADER
+#ifndef _NORMALGEOMETRYSHADER
 #define _NORMALGEOMETRYSHADER
 
 #include "shader.h"
@@ -6,7 +6,7 @@
 
 using namespace DirectX;
 
-namespace Engine {
+namespace dx11 {
 
 struct NormalGeometryShader : public IShader {
   public:

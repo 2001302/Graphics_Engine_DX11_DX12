@@ -8,7 +8,7 @@
 #include "selector_node.h"
 #include "sequence_node.h"
 
-namespace Engine {
+namespace dx11 {
 
 class BehaviorTreeBuilder {
   public:

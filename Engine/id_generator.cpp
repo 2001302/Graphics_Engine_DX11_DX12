@@ -1,6 +1,6 @@
 ﻿#include "id_generator.h"
 
-using namespace Engine;
+using namespace dx11;
 
 
 int IdGenerator::GetId() { return entity_id_++; };

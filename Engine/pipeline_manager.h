@@ -9,7 +9,7 @@
 #include "board_map.h"
 #include "ground.h"
 
-namespace Engine {
+namespace dx11 {
 /// <summary>
 /// Rendering에 필요한 shared object의 집합.
 /// </summary>

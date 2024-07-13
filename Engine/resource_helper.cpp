@@ -10,7 +10,7 @@
 #include <fp16.h>
 #include <iostream>
 
-using namespace Engine;
+using namespace dx11;
 using namespace std;
 using namespace DirectX;
 
@@ -283,7 +283,7 @@ void ResourceHelper::CreateTextureArray(
     Direct3D::Instance().device_context()->GenerateMips(textureResourceView.Get());
 }
 
-Model *ResourceHelper::ImportModel(Engine::Model *gameObject,
+Model *ResourceHelper::ImportModel(dx11::Model *gameObject,
                                         const char *filename) {
     Assimp::Importer importer;
 
@@ -327,10 +327,10 @@ Model *ResourceHelper::ImportModel(Engine::Model *gameObject,
     return gameObject;
 }
 
-void ResourceHelper::ReadModelData(Engine::Model *gameObject,
+void ResourceHelper::ReadModelData(dx11::Model *gameObject,
                                    const aiScene *scene, aiNode *node,
                                    int index, int parent) {
-    std::shared_ptr<Engine::Bone> bone = std::make_shared<Engine::Bone>();
+    std::shared_ptr<dx11::Bone> bone = std::make_shared<dx11::Bone>();
 
     bone->index = index;
     bone->parent = parent;
@@ -364,14 +364,14 @@ void ResourceHelper::ReadModelData(Engine::Model *gameObject,
     }
 }
 
-void ResourceHelper::ReadMeshData(Engine::Model *gameObject,
+void ResourceHelper::ReadMeshData(dx11::Model *gameObject,
                                   const aiScene *scene, aiNode *node,
                                   int bone) {
     // Do not process nodes without a mesh.
     if (node->mNumMeshes < 1)
         return;
 
-    std::shared_ptr<Engine::Mesh> mesh = std::make_shared<Engine::Mesh>();
+    std::shared_ptr<dx11::Mesh> mesh = std::make_shared<dx11::Mesh>();
 
     mesh->name = node->mName.C_Str();
     mesh->boneIndex = bone; // Set the bone indices associated with the mesh.
@@ -413,7 +413,7 @@ void ResourceHelper::ReadMeshData(Engine::Model *gameObject,
     gameObject->meshes.push_back(mesh);
 }
 
-unsigned int ResourceHelper::GetBoneIndex(Engine::Model *gameObject,
+unsigned int ResourceHelper::GetBoneIndex(dx11::Model *gameObject,
                                           const std::string &name) {
     for (std::shared_ptr<Bone> &bone : gameObject->bones) {
         if (bone->name == name)

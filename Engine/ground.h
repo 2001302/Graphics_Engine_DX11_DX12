@@ -5,7 +5,7 @@
 #include "game_object.h"
 #include "ground_shader.h"
 
-namespace Engine {
+namespace dx11 {
 using Microsoft::WRL::ComPtr;
 
 class Ground : public GameObject {

@@ -1,7 +1,7 @@
-﻿#include"entity.h"
+#include"entity.h"
 #include "id_generator.h"
 
-using namespace Engine;
+using namespace dx11;
 
 IEntity::IEntity() { entity_id_ = IdGenerator::GetId(); }
 

@@ -19,7 +19,7 @@ struct INodeUi {
         ed::PinId OutputId;
     };
 
-    void Show() { OnShow(); }
+    void Show();
 
   private:
     virtual void OnShow() {}

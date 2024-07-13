@@ -92,6 +92,7 @@ class SettingUi : public IGui {
     ed::EditorContext *context_ = nullptr;
     TabInfo tab;
     int selected_object_id_ = -99999;
+
 };
 } // namespace common
 #endif

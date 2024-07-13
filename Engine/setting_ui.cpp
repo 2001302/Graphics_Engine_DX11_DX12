@@ -78,11 +78,9 @@ void SettingUi::TabBar() { // Tab Bar
                 ImGui::TableNextRow();
 
                 ImGui::TableSetColumnIndex(0);
-                if (ImGui::Selectable(
-                        std::to_string(model.first)
-                            .c_str(),
-                        model.first == selected_object_id_,
-                        ImGuiSelectableFlags_SpanAllColumns)) {
+                if (ImGui::Selectable(std::to_string(model.first).c_str(),
+                                      model.first == selected_object_id_,
+                                      ImGuiSelectableFlags_SpanAllColumns)) {
                     selected_object_id_ = model.first;
                 }
 
@@ -101,94 +99,122 @@ void SettingUi::TabBar() { // Tab Bar
         }
         if (ImGui::BeginTabItem("Setting")) {
 
-            ImGui::Checkbox("Wire Frame", &global_setting.draw_as_wire_);
-
-            if (ImGui::RadioButton("Use Light", global_setting.render_mode ==
+            ImGui::Checkbox("Wire Frame",
+                            &global_setting.common_setting.draw_as_wire_);
+            
+            if (ImGui::RadioButton("Use Light",
+                                   global_setting.common_setting.render_mode ==
                                                     EnumRenderMode::eLight)) {
-                global_setting.render_mode = EnumRenderMode::eLight;
+                global_setting.common_setting.render_mode =
+                    EnumRenderMode::eLight;
             }
             ImGui::SameLine();
             if (ImGui::RadioButton("Use Image Based Lighting",
-                                   global_setting.render_mode ==
+                                   global_setting.common_setting.render_mode ==
                                        EnumRenderMode::eImageBasedLighting)) {
-                global_setting.render_mode =
+                global_setting.common_setting.render_mode =
                     EnumRenderMode::eImageBasedLighting;
             }
             ImGui::SameLine();
             if (ImGui::RadioButton(
                     "Use Physically Based Lighting",
-                    global_setting.render_mode ==
+                    global_setting.common_setting.render_mode ==
                         EnumRenderMode::ePhysicallyBasedRendering)) {
-                global_setting.render_mode =
+                global_setting.common_setting.render_mode =
                     EnumRenderMode::ePhysicallyBasedRendering;
             }
 
-            if (global_setting.render_mode == EnumRenderMode::eLight) {
-                ImGui::Checkbox("Use BlinnPhong",
-                                &global_setting.light_setting.use_blinn_phong);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Cube Map")) {
 
-                if (ImGui::RadioButton(
-                        "Directional Light",
-                        global_setting.light_setting.light_type == 0)) {
-                    global_setting.light_setting.light_type = 0;
-                }
-                ImGui::SameLine();
-                if (ImGui::RadioButton(
-                        "Point Light",
-                        global_setting.light_setting.light_type == 1)) {
-                    global_setting.light_setting.light_type = 1;
-                }
-                ImGui::SameLine();
-                if (ImGui::RadioButton(
-                        "Spot Light",
-                        global_setting.light_setting.light_type == 2)) {
-                    global_setting.light_setting.light_type = 2;
-                }
+            ImGui::SliderFloat("MipLevel",
+                               &global_setting.cube_map_setting.mipLevel, 0.0f,
+                               1.0f);
+            ImGui::SliderInt("textureToDraw",
+                             &global_setting.cube_map_setting.textureToDraw, 0,
+                             2);
 
-                ImGui::SliderFloat3(
-                    "Position",
-                    &global_setting.light_setting.light_from_gui.position.x,
-                    -5.0f, 5.0f);
-                ImGui::SliderFloat(
-                    "Fall Off Start",
-                    &global_setting.light_setting.light_from_gui.fallOffStart,
-                    0.0f, 5.0f);
-                ImGui::SliderFloat(
-                    "Fall Off End",
-                    &global_setting.light_setting.light_from_gui.fallOffEnd,
-                    0.0f, 10.0f);
-                ImGui::SliderFloat(
-                    "Spot Power",
-                    &global_setting.light_setting.light_from_gui.spotPower,
-                    1.0f, 512.0f);
-            } else if (global_setting.render_mode ==
-                       EnumRenderMode::eImageBasedLighting) {
-                // ImGui::Checkbox(
-                //     "Texture to draw",
-                //     &global_setting.cube_map_setting.textureToDraw);
-            } else if (global_setting.render_mode ==
-                       EnumRenderMode::ePhysicallyBasedRendering) {
-                ImGui::Checkbox("useAlbedoMap",
-                                &global_setting.pbr_setting.useAlbedoMap);
-                ImGui::Checkbox("useNormalMap",
-                                &global_setting.pbr_setting.useNormalMap);
-                ImGui::Checkbox("useAOMap",
-                                &global_setting.pbr_setting.useAOMap);
-                ImGui::Checkbox("invertNormalMapY",
-                                &global_setting.pbr_setting.invertNormalMapY);
-                ImGui::Checkbox("useMetallicMap",
-                                &global_setting.pbr_setting.useMetallicMap);
-                ImGui::Checkbox("useRoughnessMap",
-                                &global_setting.pbr_setting.useRoughnessMap);
-                ImGui::Checkbox("useEmissiveMap",
-                                &global_setting.pbr_setting.useEmissiveMap);
-                ImGui::SliderFloat("Metallic",
-                                   &global_setting.pbr_setting.metallic, 0.0f,
-                                   1.0f);
-                ImGui::SliderFloat("Roughness",
-                                   &global_setting.pbr_setting.roughness, 0.0f,
-                                   1.0f);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Ground")) {
+
+            ImGui::Checkbox("useHeightMap",
+                            &global_setting.ground_setting.useHeightMap);
+
+            ImGui::SliderFloat("heightScale",
+                               &global_setting.ground_setting.heightScale, 0.0f,
+                               1.0f);
+            ImGui::SliderFloat(
+                "ambient", &global_setting.ground_setting.ambient, 0.0f, 1.0f);
+            ImGui::SliderFloat("shininess",
+                               &global_setting.ground_setting.shininess, 0.0f,
+                               1.0f);
+            ImGui::SliderFloat(
+                "diffuse", &global_setting.ground_setting.diffuse, 0.0f, 1.0f);
+            ImGui::SliderFloat("specular",
+                               &global_setting.ground_setting.specular, 0.0f,
+                               1.0f);
+            ImGui::SliderFloat("fresnelR0",
+                               &global_setting.ground_setting.fresnelR0, 0.0f,
+                               1.0f);
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Light")) {
+
+            ImGui::Checkbox("Use BlinnPhong",
+                            &global_setting.light_setting.use_blinn_phong);
+
+            if (ImGui::RadioButton("Directional Light",
+                                   global_setting.light_setting.light_type ==
+                                       0)) {
+                global_setting.light_setting.light_type = 0;
             }
+            ImGui::SameLine();
+            if (ImGui::RadioButton("Point Light",
+                                   global_setting.light_setting.light_type ==
+                                       1)) {
+                global_setting.light_setting.light_type = 1;
+            }
+            ImGui::SameLine();
+            if (ImGui::RadioButton("Spot Light",
+                                   global_setting.light_setting.light_type ==
+                                       2)) {
+                global_setting.light_setting.light_type = 2;
+            }
+
+            ImGui::SliderFloat3(
+                "Position",
+                &global_setting.light_setting.light_from_gui.position.x, -5.0f,
+                5.0f);
+            ImGui::SliderFloat(
+                "Fall Off Start",
+                &global_setting.light_setting.light_from_gui.fallOffStart, 0.0f,
+                5.0f);
+            ImGui::SliderFloat(
+                "Fall Off End",
+                &global_setting.light_setting.light_from_gui.fallOffEnd, 0.0f,
+                10.0f);
+            ImGui::SliderFloat(
+                "Spot Power",
+                &global_setting.light_setting.light_from_gui.spotPower, 1.0f,
+                512.0f);
+
+            ImGui::EndTabItem();
+        }
+        if (ImGui::BeginTabItem("Filter")) {
+
+            ImGui::SliderFloat("bloom_strength",
+                &global_setting.post_process_setting.bloom_strength, 0.0f,
+                               1.0f);
+            ImGui::SliderFloat("bloom_exposure",
+                &global_setting.post_process_setting.bloom_exposure,
+                               0.0f,
+                               1.0f);
+            ImGui::SliderFloat("bloom_gamma",
+                               &global_setting.post_process_setting.bloom_gamma,
+                               0.0f,
+                               1.0f);
 
             ImGui::EndTabItem();
         }

@@ -1,9 +1,9 @@
 #include "ground_shader.h"
+#include "direct3d.h"
 #include "geometry_generator.h"
+#include "pipeline_manager.h"
 #include "resource_helper.h"
 #include "setting_ui.h"
-#include "pipeline_manager.h"
-#include "direct3d.h"
 
 using namespace dx11;
 
@@ -15,9 +15,9 @@ void GroundShaderSource::InitializeThis() {
     vertex_constant_buffer_data.heightScale = 0.0f;
 
     Direct3D::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
-                                                 vertex_constant_buffer);
+                                              vertex_constant_buffer);
     Direct3D::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
-                                                 pixel_constant_buffer);
+                                              pixel_constant_buffer);
 }
 
 EnumBehaviorTreeStatus CheckGroundShader::CheckCondition() {
@@ -83,11 +83,10 @@ EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
         ground_shader->layout);
 
     Direct3D::Instance().CreatePixelShader(L"ground_ps.hlsl",
-                                              ground_shader->pixel_shader);
+                                           ground_shader->pixel_shader);
 
     auto mesh = manager->ground->mesh;
-    Direct3D::Instance().CreateVertexBuffer(mesh->vertices,
-                                               mesh->vertexBuffer);
+    Direct3D::Instance().CreateVertexBuffer(mesh->vertices, mesh->vertexBuffer);
     Direct3D::Instance().CreateIndexBuffer(mesh->indices, mesh->indexBuffer);
 
     mesh->albedoTextureFilename =
@@ -148,7 +147,11 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
 
     {
         ground_shader_source->vertex_constant_buffer_data.model =
-            Matrix::CreateRotationX(DirectX::XM_PIDIV2).Transpose();
+            Matrix::CreateRotationX(DirectX::XM_PIDIV2) *
+            Matrix::CreateTranslation(Vector3(0.0f, -2.0f, 0.0f));
+
+        ground_shader_source->vertex_constant_buffer_data.model =
+            ground_shader_source->vertex_constant_buffer_data.model.Transpose();
 
         ground_shader_source->vertex_constant_buffer_data.invTranspose =
             ground_shader_source->vertex_constant_buffer_data.model;
@@ -235,9 +238,8 @@ EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
     context->VSSetConstantBuffers(
         0, 1, ground_shader_source->vertex_constant_buffer.GetAddressOf());
 
-    if (gui->GetGlobalTab().draw_as_wire_)
-        context->RSSetState(
-            Direct3D::Instance().wire_rasterizer_state().Get());
+    if (gui->GetGlobalTab().common_setting.draw_as_wire_)
+        context->RSSetState(Direct3D::Instance().wire_rasterizer_state().Get());
     else
         context->RSSetState(
             Direct3D::Instance().solid_rasterizer_state().Get());

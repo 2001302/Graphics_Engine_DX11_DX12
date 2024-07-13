@@ -10,19 +10,50 @@ namespace ed = ax::NodeEditor;
 
 namespace common {
 
-struct LightSetting {
-    bool use_blinn_phong = false;
-    int light_type = 0;
-    dx11::Light light_from_gui;
+enum EnumRenderMode {
+    eLight = 0,
+    eImageBasedLighting = 1,
+    ePhysicallyBasedRendering = 2
 };
-struct CubeMapSetting {
-    int textureToDraw = 0;
-};
+
 struct ProjectionSetting {
     float projection_fov_angle_y = 70.0f;
     float near_z = 0.01f;
     float far_z = 100.0f;
 };
+
+struct CommonSetting {
+    bool draw_as_wire_ = false;
+    EnumRenderMode render_mode;
+};
+
+struct LightSetting {
+    bool use_blinn_phong;
+    int light_type;
+    dx11::Light light_from_gui;
+};
+
+struct CubeMapSetting {
+    int textureToDraw;
+    float mipLevel;
+};
+
+struct PostProcessSetting {
+    float bloom_strength;
+    float bloom_exposure;
+    float bloom_gamma;
+};
+
+struct GroundSetting {
+    bool useHeightMap;
+    float heightScale;
+    float ambient;                 
+    float shininess;             
+    float diffuse;                
+    float specular;            
+    float fresnelR0;  
+};
+
 struct PhysicallyBasedRenderingSetting {
     bool useAlbedoMap = 0;
     bool useNormalMap = 0;
@@ -36,26 +67,14 @@ struct PhysicallyBasedRenderingSetting {
     float roughness = 0.0f;
 };
 
-struct PostProcessSetting {
-    float bloom_strength = 0.0f;
-    float bloom_exposure = 0.0f;
-    float bloom_gamma = 0.0f;
-};
-
-enum EnumRenderMode {
-    eLight = 0,
-    eImageBasedLighting = 1,
-    ePhysicallyBasedRendering = 2
-};
-
 struct GlobalTab {
-    bool draw_as_wire_ = false;
-    EnumRenderMode render_mode;
+    CommonSetting common_setting;
     LightSetting light_setting;
     CubeMapSetting cube_map_setting;
+    PostProcessSetting post_process_setting;
+    GroundSetting ground_setting;
     ProjectionSetting projection_setting;
     PhysicallyBasedRenderingSetting pbr_setting;
-    PostProcessSetting post_process_setting;
 };
 class SettingUi : public IGui {
 

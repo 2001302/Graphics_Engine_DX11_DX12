@@ -65,7 +65,7 @@ EnumBehaviorTreeStatus CheckImageBasedShader::CheckCondition() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    if (gui->GetGlobalTab().render_mode ==
+    if (gui->GetGlobalTab().common_setting.render_mode ==
         common::EnumRenderMode::eImageBasedLighting) {
 
         return EnumBehaviorTreeStatus::eSuccess;

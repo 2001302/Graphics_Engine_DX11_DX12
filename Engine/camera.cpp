@@ -61,7 +61,7 @@ EnumBehaviorTreeStatus InitializeCamera::OnInvoke() {
 
     // Update the position and rotation of the camera for this scene.
     manager->camera->position =
-        DirectX::SimpleMath::Vector3(-10.0f, 0.0f, -10.0f);
+        DirectX::SimpleMath::Vector3(-10.0f, 1.0f, -10.0f);
     manager->camera->rotation = DirectX::SimpleMath::Vector3(0.0f, 45.0f, 0.0f);
 
     return EnumBehaviorTreeStatus::eSuccess;

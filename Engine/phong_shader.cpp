@@ -85,7 +85,8 @@ EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    if (gui->GetGlobalTab().render_mode == common::EnumRenderMode::eLight) {
+    if (gui->GetGlobalTab().common_setting.render_mode ==
+        common::EnumRenderMode::eLight) {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 

@@ -2,52 +2,52 @@
 
 using namespace dx11;
 
-ComPtr<ID3D11Device> Direct3D::device() { return device_; }
+ComPtr<ID3D11Device> GraphicsContext::device() { return device_; }
 
-ComPtr<ID3D11DeviceContext> Direct3D::device_context() {
+ComPtr<ID3D11DeviceContext> GraphicsContext::device_context() {
     return device_context_;
 }
 
-ComPtr<IDXGISwapChain> Direct3D::swap_chain() { return swap_chain_; }
+ComPtr<IDXGISwapChain> GraphicsContext::swap_chain() { return swap_chain_; }
 
-ComPtr<ID3D11Texture2D> Direct3D::depth_stencil_buffer() {
+ComPtr<ID3D11Texture2D> GraphicsContext::depth_stencil_buffer() {
     return float_buffer_;
 };
 
-ComPtr<ID3D11DepthStencilState> Direct3D::depth_stencil_state() {
+ComPtr<ID3D11DepthStencilState> GraphicsContext::depth_stencil_state() {
     return depth_stencil_state_;
 }
 
-ComPtr<ID3D11DepthStencilView> Direct3D::depth_stencil_view() {
+ComPtr<ID3D11DepthStencilView> GraphicsContext::depth_stencil_view() {
     return depth_stencil_view_;
 }
 
-ComPtr<ID3D11RasterizerState> Direct3D::solid_rasterizer_state() {
+ComPtr<ID3D11RasterizerState> GraphicsContext::solid_rasterizer_state() {
     return solid_rasterizer_state_;
 }
 
-ComPtr<ID3D11RasterizerState> Direct3D::wire_rasterizer_state() {
+ComPtr<ID3D11RasterizerState> GraphicsContext::wire_rasterizer_state() {
     return wire_rasterizer_state_;
 }
 
-ComPtr<ID3D11RenderTargetView> Direct3D::render_target_view() {
+ComPtr<ID3D11RenderTargetView> GraphicsContext::render_target_view() {
     return float_RTV;
 }
 
-D3D11_VIEWPORT Direct3D::viewport() { return viewport_; }
+D3D11_VIEWPORT GraphicsContext::viewport() { return viewport_; }
 
-ComPtr<ID3D11Texture2D> Direct3D::float_buffer() { return float_buffer_; }
+ComPtr<ID3D11Texture2D> GraphicsContext::float_buffer() { return float_buffer_; }
 
-ComPtr<ID3D11Texture2D> Direct3D::resolved_buffer() { return resolved_buffer_; }
+ComPtr<ID3D11Texture2D> GraphicsContext::resolved_buffer() { return resolved_buffer_; }
 
-ComPtr<ID3D11RenderTargetView> Direct3D::back_buffer_RTV() {
+ComPtr<ID3D11RenderTargetView> GraphicsContext::back_buffer_RTV() {
     return back_buffer_RTV_;
 }
-ComPtr<ID3D11ShaderResourceView> Direct3D::resolved_SRV() {
+ComPtr<ID3D11ShaderResourceView> GraphicsContext::resolved_SRV() {
     return resolved_SRV_;
 }
 
-bool Direct3D::Initialize() {
+bool GraphicsContext::Initialize() {
     const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
 
     UINT createDeviceFlags = 0;
@@ -114,7 +114,7 @@ bool Direct3D::Initialize() {
     return true;
 }
 
-bool Direct3D::CreateBuffer() {
+bool GraphicsContext::CreateBuffer() {
 
     // 레스터화 -> float/depthBuffer(MSAA) -> resolved -> backBuffer
 
@@ -172,7 +172,7 @@ bool Direct3D::CreateBuffer() {
     return true;
 }
 
-void Direct3D::CreateDepthBuffer(
+void GraphicsContext::CreateDepthBuffer(
     ComPtr<ID3D11Device> &device, int screenWidth, int screenHeight,
     UINT numQualityLevels, ComPtr<ID3D11DepthStencilView> &depthStencilView) {
 
@@ -203,7 +203,7 @@ void Direct3D::CreateDepthBuffer(
         depthStencilBuffer.Get(), 0, depthStencilView.GetAddressOf()));
 }
 
-void Direct3D::SetViewPort(float x, float y, float width, float height) {
+void GraphicsContext::SetViewPort(float x, float y, float width, float height) {
     // Setup the viewport for rendering.
     viewport_.Width = (float)width;
     viewport_.Height = (float)height;
@@ -216,7 +216,7 @@ void Direct3D::SetViewPort(float x, float y, float width, float height) {
     device_context_->RSSetViewports(1, &viewport_);
 }
 
-void Direct3D::BeginScene(float red, float green, float blue, float alpha,
+void GraphicsContext::BeginScene(float red, float green, float blue, float alpha,
                           bool draw_as_wire) {
     float color[4];
 
@@ -240,23 +240,23 @@ void Direct3D::BeginScene(float red, float green, float blue, float alpha,
                                            D3D11_CLEAR_DEPTH, 1.0f, 0);
     device_context_->OMSetDepthStencilState(depth_stencil_state_.Get(), 0);
 
-    Direct3D::Instance().device_context()->OMSetRenderTargets(
-        1, Direct3D::Instance().render_target_view().GetAddressOf(),
-        Direct3D::Instance().depth_stencil_view().Get());
-    Direct3D::Instance().device_context()->OMSetDepthStencilState(
-        Direct3D::Instance().depth_stencil_state().Get(), 0);
+    GraphicsContext::Instance().device_context()->OMSetRenderTargets(
+        1, GraphicsContext::Instance().render_target_view().GetAddressOf(),
+        GraphicsContext::Instance().depth_stencil_view().Get());
+    GraphicsContext::Instance().device_context()->OMSetDepthStencilState(
+        GraphicsContext::Instance().depth_stencil_state().Get(), 0);
 
     if (draw_as_wire)
-        Direct3D::Instance().device_context()->RSSetState(
-            Direct3D::Instance().wire_rasterizer_state().Get());
+        GraphicsContext::Instance().device_context()->RSSetState(
+            GraphicsContext::Instance().wire_rasterizer_state().Get());
     else
-        Direct3D::Instance().device_context()->RSSetState(
-            Direct3D::Instance().solid_rasterizer_state().Get());
+        GraphicsContext::Instance().device_context()->RSSetState(
+            GraphicsContext::Instance().solid_rasterizer_state().Get());
 
     return;
 }
 
-void Direct3D::EndScene() {
+void GraphicsContext::EndScene() {
 
     // Present the back buffer to the screen since rendering is complete.
     if (common::Env::Instance().vsync_enabled) {
@@ -270,7 +270,7 @@ void Direct3D::EndScene() {
     return;
 }
 
-void Direct3D::CreateIndexBuffer(const std::vector<uint32_t> &indices,
+void GraphicsContext::CreateIndexBuffer(const std::vector<uint32_t> &indices,
                                  ComPtr<ID3D11Buffer> &indexBuffer) {
     D3D11_BUFFER_DESC bufferDesc = {};
     bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -287,7 +287,7 @@ void Direct3D::CreateIndexBuffer(const std::vector<uint32_t> &indices,
     device_->CreateBuffer(&bufferDesc, &indexBufferData,
                           indexBuffer.GetAddressOf());
 }
-void Direct3D::CreateGeometryShader(
+void GraphicsContext::CreateGeometryShader(
     const std::wstring &filename,
     ComPtr<ID3D11GeometryShader> &geometryShader) {
 
@@ -311,7 +311,7 @@ void Direct3D::CreateGeometryShader(
                                   shaderBlob->GetBufferSize(), NULL,
                                   &geometryShader);
 }
-void Direct3D::CreatePixelShader(const std::wstring &filename,
+void GraphicsContext::CreatePixelShader(const std::wstring &filename,
                                  ComPtr<ID3D11PixelShader> &pixelShader) {
     ComPtr<ID3DBlob> shaderBlob;
     ComPtr<ID3DBlob> errorBlob;
@@ -328,7 +328,7 @@ void Direct3D::CreatePixelShader(const std::wstring &filename,
                                shaderBlob->GetBufferSize(), NULL, &pixelShader);
 }
 
-void Direct3D::CreateVertexShaderAndInputLayout(
+void GraphicsContext::CreateVertexShaderAndInputLayout(
     const std::wstring &filename,
     const std::vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
     ComPtr<ID3D11VertexShader> &vertexShader,
@@ -353,7 +353,7 @@ void Direct3D::CreateVertexShaderAndInputLayout(
                                shaderBlob->GetBufferSize(), &inputLayout);
 }
 
-void Direct3D::CreateDDSTexture(
+void GraphicsContext::CreateDDSTexture(
     const wchar_t *filename,
     ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
 
@@ -365,7 +365,7 @@ void Direct3D::CreateDDSTexture(
     }
 
     auto hr = CreateDDSTextureFromFileEx(
-        Direct3D::Instance().device().Get(), filename, 0,
+        GraphicsContext::Instance().device().Get(), filename, 0,
         D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, miscFlags,
         DDS_LOADER_FLAGS(false), (ID3D11Resource **)texture.GetAddressOf(),
         textureResourceView.GetAddressOf(), NULL);

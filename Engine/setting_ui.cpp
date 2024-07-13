@@ -8,6 +8,7 @@ void SettingUi::OnStart() {
     context_ = ed::CreateEditor(&config);
 }
 void SettingUi::OnFrame() {
+    FrameRate();
     StyleSetting();
     MenuBar();
     NodeEditor();

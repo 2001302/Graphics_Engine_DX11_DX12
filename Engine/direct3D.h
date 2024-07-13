@@ -26,10 +26,10 @@ inline void ThrowIfFailed(HRESULT hr) {
     }
 }
 
-class Direct3D {
+class GraphicsContext {
   public:
-    static Direct3D &Instance() {
-        static Direct3D instance;
+    static GraphicsContext &Instance() {
+        static GraphicsContext instance;
         return instance;
     }
     bool Initialize();
@@ -142,7 +142,7 @@ class Direct3D {
     ComPtr<ID3D11ShaderResourceView> resolved_SRV();
 
   private:
-    Direct3D()
+    GraphicsContext()
         : swap_chain_(0), device_(0), device_context_(0),
           viewport_(D3D11_VIEWPORT()) {}
 

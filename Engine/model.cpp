@@ -52,7 +52,21 @@ void Model::OnShow() {
     ImGui::SliderFloat("Rotation", &rotation.y, -3.14f, 3.14f);
     ImGui::SliderFloat3("Scaling", &scaling.x, 0.1f, 4.0f);
 
-    //phong_shader_source->Show();
+    switch (shader_type) {
+    case EnumShaderType::ePhong: {
+        break;
+    }
+    case EnumShaderType::eImageBased: {
+        break;
+    }
+    case EnumShaderType::ePhysicallyBased: {
+        break;
+    }
+    default:
+        break;
+    }
+
+    // phong_shader_source->Show();
 
     // Checkbox
     static bool check = true;

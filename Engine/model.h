@@ -9,7 +9,7 @@
 namespace dx11 {
 using Microsoft::WRL::ComPtr;
 
-class Model : public GameObject{
+class Model : public GameObject {
   public:
     Model();
     ~Model();
@@ -24,9 +24,11 @@ class Model : public GameObject{
     std::vector<std::shared_ptr<Mesh>> meshes;
     // std::shared_ptr<Animation> animation;
 
+    EnumShaderType shader_type;
+
   private:
     void OnShow() override;
 };
 
-} // namespace Engine
+} // namespace dx11
 #endif

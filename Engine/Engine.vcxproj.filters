@@ -16,12 +16,6 @@
     <ClInclude Include="shader.h">
       <Filter>DirectX11\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="platform.h">
-      <Filter>Platform\Framework</Filter>
-    </ClInclude>
-    <ClInclude Include="application.h">
-      <Filter>Platform\Framework</Filter>
-    </ClInclude>
     <ClInclude Include="phong_shader.h">
       <Filter>DirectX11\Shader</Filter>
     </ClInclude>
@@ -178,6 +172,12 @@
     <ClInclude Include="message.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="platform.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -192,12 +192,6 @@
     </ClCompile>
     <ClCompile Include="image_based_shader.cpp">
       <Filter>DirectX11\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="platform.cpp">
-      <Filter>Platform\Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="application.cpp">
-      <Filter>Platform\Framework</Filter>
     </ClCompile>
     <ClCompile Include="phong_shader.cpp">
       <Filter>DirectX11\Shader</Filter>
@@ -313,13 +307,16 @@
     <ClCompile Include="resource_helper.cpp">
       <Filter>DirectX11</Filter>
     </ClCompile>
+    <ClCompile Include="application.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="platform.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Platform">
       <UniqueIdentifier>{d0845f2f-5aa8-41c5-a240-d5a81d8a26fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Platform\Framework">
-      <UniqueIdentifier>{954ae3a7-14c0-4d2d-8136-883fe33d142a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{cd4d1aed-5e7a-4f54-8223-c66fbe383b80}</UniqueIdentifier>

@@ -10,11 +10,28 @@ void ImageBasedShaderSource::InitializeThis() {
     vertex_constant_buffer_data.view = Matrix();
     vertex_constant_buffer_data.projection = Matrix();
 
-    Direct3D::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
+    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
                                                  vertex_constant_buffer);
-    Direct3D::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
+    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
                                                  pixel_constant_buffer);
 }
+
+void ImageBasedShaderSource::OnShow() {
+
+    ImGui::Checkbox("Use Texture", &pixel_constant_buffer_data.useTexture);
+
+    ImGui::Text("Material");
+    ImGui::SliderFloat("Shininess",
+                       &pixel_constant_buffer_data.material.shininess, 0.01f,
+                       1.0f);
+    float diffuse;
+    ImGui::SliderFloat("Diffuse", &diffuse, 0.0f, 1.0f);
+    pixel_constant_buffer_data.material.diffuse = Vector3(diffuse);
+
+    float specular;
+    ImGui::SliderFloat("Specular", &specular, 0.0f, 1.0f);
+    pixel_constant_buffer_data.material.specular = Vector3(specular);
+};
 
 EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
     auto block = data_block[EnumDataBlockType::eManager];
@@ -38,7 +55,7 @@ EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     // Create the Sample State
-    Direct3D::Instance().device()->CreateSamplerState(
+    GraphicsContext::Instance().device()->CreateSamplerState(
         &sampDesc, image_based_shader->sample_state.GetAddressOf());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
@@ -50,11 +67,11 @@ EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::Instance().CreateVertexShaderAndInputLayout(
+    GraphicsContext::Instance().CreateVertexShaderAndInputLayout(
         L"image_based_vertex_shader.hlsl", inputElements,
         image_based_shader->vertex_shader, image_based_shader->layout);
 
-    Direct3D::Instance().CreatePixelShader(L"image_based_pixel_shader.hlsl",
+    GraphicsContext::Instance().CreatePixelShader(L"image_based_pixel_shader.hlsl",
                                               image_based_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -84,7 +101,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::Instance().device_context();
+    auto context = GraphicsContext::Instance().device_context();
 
     auto model = dynamic_cast<Model *>(manager->models[target_id].get());
 
@@ -142,7 +159,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
                 .Transpose();
     }
 
-    Direct3D::Instance().UpdateBuffer(
+    GraphicsContext::Instance().UpdateBuffer(
         image_based_shader_source->vertex_constant_buffer_data,
         image_based_shader_source->vertex_constant_buffer);
 
@@ -167,7 +184,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     // image_based_shader_source->pixel_constant_buffer_data.useTexture =
     //     detail->use_texture;
 
-    Direct3D::Instance().UpdateBuffer(
+    GraphicsContext::Instance().UpdateBuffer(
         image_based_shader_source->pixel_constant_buffer_data,
         image_based_shader_source->pixel_constant_buffer);
 
@@ -184,7 +201,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::Instance().device_context();
+    auto context = GraphicsContext::Instance().device_context();
 
     // RS: Rasterizer stage
     // OM: Output-Merger stage

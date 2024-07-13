@@ -19,7 +19,7 @@ bool Application::OnStart() {
         {dx11::EnumDataBlockType::eGui, imgui_.get()},
     };
 
-    dx11::Direct3D::Instance().Initialize();
+    dx11::GraphicsContext::Instance().Initialize();
 
     input_->Initialize(hinstance_, common::Env::Instance().screen_width,
                        common::Env::Instance().screen_height);
@@ -53,7 +53,7 @@ bool Application::OnFrame() {
     };
 
     // Clear the buffers to begin the scene.
-    dx11::Direct3D::Instance().BeginScene(
+    dx11::GraphicsContext::Instance().BeginScene(
         0.0f, 0.0f, 0.0f, 1.0f, imgui_->Tab().common.draw_as_wire_);
 
     // clang-format off
@@ -104,7 +104,7 @@ bool Application::OnFrame() {
     imgui_->Frame(manager_->models);
 
     // Present the rendered scene to the screen.
-    dx11::Direct3D::Instance().EndScene();
+    dx11::GraphicsContext::Instance().EndScene();
 
     return true;
 }
@@ -134,7 +134,7 @@ bool Application::OnStop() {
 
 bool CheckIfMouseInViewport() {
     auto cursor = ImGui::GetMousePos();
-    auto view_port = dx11::Direct3D::Instance().viewport();
+    auto view_port = dx11::GraphicsContext::Instance().viewport();
     if (view_port.TopLeftX < cursor.x && view_port.TopLeftY < cursor.y &&
         cursor.x < view_port.TopLeftX + view_port.Width &&
         cursor.y < view_port.TopLeftY + view_port.Height) {

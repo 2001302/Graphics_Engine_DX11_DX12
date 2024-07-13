@@ -10,10 +10,10 @@ void BoardMap::Initialize(
 
     image_filter_shader = std::make_shared<ImageFilterShader>();
 
-    Direct3D::Instance().CreateVertexBuffer(m_mesh->vertices,
+    GraphicsContext::Instance().CreateVertexBuffer(m_mesh->vertices,
                                    m_mesh->vertexBuffer);
     //m_mesh->m_indexCount = UINT(m_mesh->indices.size());
-    Direct3D::Instance().CreateIndexBuffer(m_mesh->indices,
+    GraphicsContext::Instance().CreateIndexBuffer(m_mesh->indices,
                                   m_mesh->indexBuffer);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
@@ -25,16 +25,16 @@ void BoardMap::Initialize(
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::Instance().CreateVertexShaderAndInputLayout(
+    GraphicsContext::Instance().CreateVertexShaderAndInputLayout(
         L"sampling_vs.hlsl",
                                                  basicInputElements,
                                                  m_vertexShader, m_inputLayout);
 
-    Direct3D::Instance().CreatePixelShader(L"combine_ps.hlsl",
+    GraphicsContext::Instance().CreatePixelShader(L"combine_ps.hlsl",
                                            m_combinePixelShader);
-    Direct3D::Instance().CreatePixelShader(L"bloom_down_ps.hlsl",
+    GraphicsContext::Instance().CreatePixelShader(L"bloom_down_ps.hlsl",
                                            m_bloomDownPixelShader);
-    Direct3D::Instance().CreatePixelShader(L"bloom_up_ps.hlsl",
+    GraphicsContext::Instance().CreatePixelShader(L"bloom_up_ps.hlsl",
                                   m_bloomUpPixelShader);
 
     D3D11_SAMPLER_DESC sampDesc;

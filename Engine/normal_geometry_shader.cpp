@@ -6,9 +6,9 @@
 using namespace dx11;
 
 void NormalGeometryShaderSource::InitializeThis() {
-    Direct3D::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
+    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
                                                  vertex_constant_buffer);
-    Direct3D::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
+    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
                                                  pixel_constant_buffer);
 }
 
@@ -34,7 +34,7 @@ EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     // Create the Sample State
-    Direct3D::Instance().device()->CreateSamplerState(
+    GraphicsContext::Instance().device()->CreateSamplerState(
         &sampDesc, geometry_shader->sample_state.GetAddressOf());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
@@ -48,19 +48,19 @@ EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::Instance().CreateVertexShaderAndInputLayout(
+    GraphicsContext::Instance().CreateVertexShaderAndInputLayout(
         L"physically_vertex_shader.hlsl", inputElements,
         geometry_shader->vertex_shader, geometry_shader->layout);
 
     // Geometry shader 초기화하기
-    Direct3D::Instance().CreateGeometryShader(
+    GraphicsContext::Instance().CreateGeometryShader(
         L"NormalGS.hlsl", geometry_shader->normalGeometryShader);
 
-    Direct3D::Instance().CreateVertexShaderAndInputLayout(
+    GraphicsContext::Instance().CreateVertexShaderAndInputLayout(
         L"NormalVS.hlsl", inputElements, geometry_shader->vertex_shader,
         geometry_shader->layout);
 
-    Direct3D::Instance().CreatePixelShader(L"NormalPS.hlsl",
+    GraphicsContext::Instance().CreatePixelShader(L"NormalPS.hlsl",
                                               geometry_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;

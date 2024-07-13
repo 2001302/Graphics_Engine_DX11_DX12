@@ -2,6 +2,7 @@
 #define _PHYSICALLYBASEDSHADER
 
 #include "shader.h"
+#include "node_ui.h"
 #include "behavior_tree_builder.h"
 
 using namespace DirectX;
@@ -48,7 +49,7 @@ struct PhsicallyBasedShader : public IShader {
     ComPtr<ID3D11SamplerState> clampSamplerState;
 };
 
-struct PhsicallyBasedShaderSource : public IShaderSource {
+struct PhsicallyBasedShaderSource : public IShaderSource, common::INodeUi {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
@@ -59,6 +60,7 @@ struct PhsicallyBasedShaderSource : public IShaderSource {
 
   private:
     void InitializeThis() override;
+    void OnShow() override;
 };
 
 class InitializePhysicallyBasedShader : public BehaviorActionNode {

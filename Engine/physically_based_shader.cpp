@@ -1,7 +1,7 @@
 #include "physically_based_shader.h"
 #include "geometry_generator.h"
-#include "setting_ui.h"
 #include "pipeline_manager.h"
+#include "setting_ui.h"
 
 using namespace dx11;
 
@@ -12,11 +12,61 @@ void PhsicallyBasedShaderSource::InitializeThis() {
     vertex_constant_buffer_data.useHeightMap = 0;
     vertex_constant_buffer_data.heightScale = 0.0f;
 
-    Direct3D::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
-                                                 vertex_constant_buffer);
-    Direct3D::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
-                                                 pixel_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
+                                              vertex_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
+                                              pixel_constant_buffer);
 }
+
+void PhsicallyBasedShaderSource::OnShow() {
+
+    //float mipmapLevel = 0.0f; // 4
+    //float expose = 1.0f;      // 16
+    //float gamma = 1.0f;
+
+    bool useAlbedoMap;
+    ImGui::Checkbox("Use Texture", &useAlbedoMap);
+    pixel_constant_buffer_data.useAlbedoMap = useAlbedoMap;
+
+    bool useNormalMap;
+    ImGui::Checkbox("useNormalMap", &useNormalMap);
+    pixel_constant_buffer_data.useNormalMap = useNormalMap;
+
+    bool useAOMap;
+    ImGui::Checkbox("useAOMap", &useAOMap);
+    pixel_constant_buffer_data.useAOMap = useAOMap;
+
+    bool invertNormalMapY;
+    ImGui::Checkbox("invertNormalMapY", &invertNormalMapY);
+    pixel_constant_buffer_data.invertNormalMapY = invertNormalMapY;
+
+    bool useMetallicMap;
+    ImGui::Checkbox("useMetallicMap", &useMetallicMap);
+    pixel_constant_buffer_data.useMetallicMap = useMetallicMap;
+
+    bool useRoughnessMap;
+    ImGui::Checkbox("useRoughnessMap", &useRoughnessMap);
+    pixel_constant_buffer_data.useRoughnessMap = useRoughnessMap;
+
+    bool useEmissiveMap;
+    ImGui::Checkbox("useEmissiveMap", &useEmissiveMap);
+    pixel_constant_buffer_data.useRoughnessMap = useEmissiveMap;
+
+    ImGui::Text("Material");
+
+    float albedo;
+    ImGui::SliderFloat("albedo", &albedo, 0.01f, 1.0f);
+    pixel_constant_buffer_data.material.albedo = Vector3(albedo);
+
+    float roughness;
+    ImGui::SliderFloat("roughness",
+                       &pixel_constant_buffer_data.material.roughness, 0.0f,
+                       1.0f);
+
+    float metallic;
+    ImGui::SliderFloat(
+        "metallic", &pixel_constant_buffer_data.material.metallic, 0.0f, 1.0f);
+};
 
 EnumBehaviorTreeStatus CheckPhysicallyBasedShader::CheckCondition() {
     auto guiBlock = data_block[EnumDataBlockType::eGui];
@@ -53,14 +103,14 @@ EnumBehaviorTreeStatus InitializePhysicallyBasedShader::OnInvoke() {
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     // Create the Sample State
-    Direct3D::Instance().device()->CreateSamplerState(
+    GraphicsContext::Instance().device()->CreateSamplerState(
         &sampDesc, physical_shader->sample_state.GetAddressOf());
 
     sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 
-    Direct3D::Instance().device()->CreateSamplerState(
+    GraphicsContext::Instance().device()->CreateSamplerState(
         &sampDesc, physical_shader->clampSamplerState.GetAddressOf());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
@@ -74,11 +124,11 @@ EnumBehaviorTreeStatus InitializePhysicallyBasedShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::Instance().CreateVertexShaderAndInputLayout(
+    GraphicsContext::Instance().CreateVertexShaderAndInputLayout(
         L"physically_based_vertex_shader.hlsl", inputElements,
         physical_shader->vertex_shader, physical_shader->layout);
 
-    Direct3D::Instance().CreatePixelShader(
+    GraphicsContext::Instance().CreatePixelShader(
         L"physically_based_pixel_shader.hlsl", physical_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -94,7 +144,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::Instance().device_context();
+    auto context = GraphicsContext::Instance().device_context();
 
     auto model = dynamic_cast<Model *>(manager->models[target_id].get());
 
@@ -141,19 +191,19 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     {
         const float aspect = common::Env::Instance().aspect;
 
-        physically_shader_source->vertex_constant_buffer_data
-            .projection = XMMatrixPerspectiveFovLH(
-            XMConvertToRadians(
-                gui->Tab().projection.projection_fov_angle_y),
-            aspect, gui->Tab().projection.near_z,
-            gui->Tab().projection.far_z);
+        physically_shader_source->vertex_constant_buffer_data.projection =
+            XMMatrixPerspectiveFovLH(
+                XMConvertToRadians(
+                    gui->Tab().projection.projection_fov_angle_y),
+                aspect, gui->Tab().projection.near_z,
+                gui->Tab().projection.far_z);
 
         physically_shader_source->vertex_constant_buffer_data.projection =
             physically_shader_source->vertex_constant_buffer_data.projection
                 .Transpose();
     }
 
-    Direct3D::Instance().UpdateBuffer(
+    GraphicsContext::Instance().UpdateBuffer(
         physically_shader_source->vertex_constant_buffer_data,
         physically_shader_source->vertex_constant_buffer);
 
@@ -200,7 +250,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     physically_shader_source->pixel_constant_buffer_data.useEmissiveMap =
         gui->Tab().pbr.useEmissiveMap;
 
-    Direct3D::Instance().UpdateBuffer(
+    GraphicsContext::Instance().UpdateBuffer(
         physically_shader_source->pixel_constant_buffer_data,
         physically_shader_source->pixel_constant_buffer);
 
@@ -217,7 +267,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::Instance().device_context();
+    auto context = GraphicsContext::Instance().device_context();
 
     // RS: Rasterizer stage
     // OM: Output-Merger stage

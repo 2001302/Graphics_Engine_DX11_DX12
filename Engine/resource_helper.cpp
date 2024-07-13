@@ -162,8 +162,8 @@ void ResourceHelper::CreateTexture(
     }
 
     // 스테이징 텍스춰 만들고 CPU에서 이미지를 복사합니다.
-    auto device = Direct3D::Instance().device();
-    auto context = Direct3D::Instance().device_context();
+    auto device = GraphicsContext::Instance().device();
+    auto context = GraphicsContext::Instance().device_context();
 
     ComPtr<ID3D11Texture2D> stagingTexture = CreateStagingTexture(
         device, context, width, height, image, pixelFormat);
@@ -183,7 +183,7 @@ void ResourceHelper::CreateTexture(
     txtDesc.CPUAccessFlags = 0;
 
     // 초기 데이터 없이 텍스춰 생성 (전부 검은색)
-    Direct3D::Instance().device()->CreateTexture2D(&txtDesc, NULL,
+    GraphicsContext::Instance().device()->CreateTexture2D(&txtDesc, NULL,
                                                    texture.GetAddressOf());
 
     // 실제로 생성된 MipLevels를 확인해보고 싶을 경우
@@ -191,15 +191,15 @@ void ResourceHelper::CreateTexture(
     // cout << txtDesc.MipLevels << endl;
 
     // 스테이징 텍스춰로부터 가장 해상도가 높은 이미지 복사
-    Direct3D::Instance().device_context()->CopySubresourceRegion(
+    GraphicsContext::Instance().device_context()->CopySubresourceRegion(
         texture.Get(), 0, 0, 0, 0, stagingTexture.Get(), 0, NULL);
 
     // ResourceView 만들기
-    Direct3D::Instance().device()->CreateShaderResourceView(
+    GraphicsContext::Instance().device()->CreateShaderResourceView(
         texture.Get(), 0, textureResourceView.GetAddressOf());
 
     // 해상도를 낮춰가며 밉맵 생성
-    Direct3D::Instance().device_context()->GenerateMips(
+    GraphicsContext::Instance().device_context()->GenerateMips(
         textureResourceView.Get());
 
     // HLSL 쉐이더 안에서는 SampleLevel() 사용
@@ -247,7 +247,7 @@ void ResourceHelper::CreateTextureArray(
     txtDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS; // 밉맵 사용
 
     // 초기 데이터 없이 텍스춰를 만듭니다.
-    Direct3D::Instance().device()->CreateTexture2D(&txtDesc, NULL,
+    GraphicsContext::Instance().device()->CreateTexture2D(&txtDesc, NULL,
                                                    texture.GetAddressOf());
 
     // 실제로 만들어진 MipLevels를 확인
@@ -259,8 +259,8 @@ void ResourceHelper::CreateTextureArray(
 
         auto &image = imageArray[i];
 
-        auto device = Direct3D::Instance().device();
-        auto context = Direct3D::Instance().device_context();
+        auto device = GraphicsContext::Instance().device();
+        auto context = GraphicsContext::Instance().device_context();
         // StagingTexture는 Texture2DArray가 아니라 Texture2D 입니다.
         ComPtr<ID3D11Texture2D> stagingTexture = CreateStagingTexture(
             device, context, width, height, image, txtDesc.Format, 1, 1);
@@ -273,10 +273,10 @@ void ResourceHelper::CreateTextureArray(
                                        stagingTexture.Get(), 0, NULL);
     }
 
-    Direct3D::Instance().device()->CreateShaderResourceView(
+    GraphicsContext::Instance().device()->CreateShaderResourceView(
         texture.Get(), NULL, textureResourceView.GetAddressOf());
 
-    Direct3D::Instance().device_context()->GenerateMips(
+    GraphicsContext::Instance().device_context()->GenerateMips(
         textureResourceView.Get());
 }
 

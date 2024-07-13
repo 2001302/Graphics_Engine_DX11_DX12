@@ -2,6 +2,7 @@
 #define _IMAGEBASEDSHADER
 
 #include "shader.h"
+#include "node_ui.h"
 #include "behavior_tree_builder.h"
 
 using namespace DirectX;
@@ -23,7 +24,7 @@ struct ImageBasedShader : public IShader {
     };
 };
 
-struct ImageBasedShaderSource : public IShaderSource {
+struct ImageBasedShaderSource : public IShaderSource, common::INodeUi {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
@@ -32,6 +33,7 @@ struct ImageBasedShaderSource : public IShaderSource {
 
   private:
     void InitializeThis() override;
+    void OnShow() override;
 };
 
 class InitializeImageBasedShader : public BehaviorActionNode {

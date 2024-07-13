@@ -3,6 +3,8 @@
 
 #include "common_struct.h"
 #include "entity.h"
+#include "mesh.h"
+#include "bone.h"
 
 namespace dx11 {
 using Microsoft::WRL::ComPtr;

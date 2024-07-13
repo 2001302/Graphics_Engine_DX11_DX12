@@ -1,4 +1,5 @@
-﻿#include "model_loader.h"
+#include "model_loader.h"
+#include "mesh.h"
 
 #include <filesystem>
 #include <DirectXMesh.h>

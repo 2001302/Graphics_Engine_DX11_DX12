@@ -7,6 +7,16 @@
 #define MAX_LIGHTS 3
 
 namespace dx11 {
+
+enum EnumShaderType {
+    ePhong = 0,
+    eCube = 1,
+    eImageBased = 2,
+    ePhysicallyBased = 3,
+    eNormalGeometry = 4,
+    eGround = 5,
+};
+
 struct IShaderSource {
   public:
     void Initialize() { InitializeThis(); }
@@ -20,5 +30,5 @@ struct IShader {
     std::unordered_map<int, std::shared_ptr<IShaderSource>> source;
 };
 
-} // namespace Engine
+} // namespace dx11
 #endif

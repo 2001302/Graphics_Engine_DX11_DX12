@@ -163,6 +163,12 @@
     <ClInclude Include="common_struct.h">
       <Filter>DirectX11</Filter>
     </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>DirectX11\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="bone.h">
+      <Filter>DirectX11\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -335,6 +341,9 @@
     </Filter>
     <Filter Include="DirectX11\Model">
       <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="DirectX11\Data">
+      <UniqueIdentifier>{3fc71904-4c1d-43d0-b771-a258e5fba9b8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

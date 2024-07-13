@@ -140,6 +140,7 @@
   <ItemGroup>
     <ClInclude Include="application.h" />
     <ClInclude Include="behavior_tree_builder.h" />
+    <ClInclude Include="bone.h" />
     <ClInclude Include="conditional_node.h" />
     <ClInclude Include="cube_map_shader.h" />
     <ClInclude Include="game_object.h" />
@@ -148,6 +149,7 @@
     <ClInclude Include="ground_shader.h" />
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="image_fliter_shader.h" />
+    <ClInclude Include="mesh.h" />
     <ClInclude Include="node_ui.h" />
     <ClInclude Include="normal_geometry_shader.h" />
     <ClInclude Include="parallel_node.h" />

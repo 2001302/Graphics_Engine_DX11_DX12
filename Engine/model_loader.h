@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include <assimp\Importer.hpp>
 #include <assimp\postprocess.h>
@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "common_struct.h"
+#include "mesh.h"
 
 namespace dx11 {
 

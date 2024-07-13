@@ -4,6 +4,7 @@
 #include "common_struct.h"
 #include "image_filter.h"
 #include "image_fliter_shader.h"
+#include "mesh.h"
 
 namespace dx11 {
 

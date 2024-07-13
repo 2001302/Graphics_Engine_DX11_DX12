@@ -99,28 +99,24 @@ void SettingUi::TabBar() { // Tab Bar
         }
         if (ImGui::BeginTabItem("Setting")) {
 
-            ImGui::Checkbox("Wire Frame",
-                            &global_setting.common_setting.draw_as_wire_);
-            
-            if (ImGui::RadioButton("Use Light",
-                                   global_setting.common_setting.render_mode ==
+            ImGui::Checkbox("Wire Frame", &tab.common.draw_as_wire_);
+
+            if (ImGui::RadioButton("Use Light", tab.common.render_mode ==
                                                     EnumRenderMode::eLight)) {
-                global_setting.common_setting.render_mode =
-                    EnumRenderMode::eLight;
+                tab.common.render_mode = EnumRenderMode::eLight;
             }
             ImGui::SameLine();
             if (ImGui::RadioButton("Use Image Based Lighting",
-                                   global_setting.common_setting.render_mode ==
+                                   tab.common.render_mode ==
                                        EnumRenderMode::eImageBasedLighting)) {
-                global_setting.common_setting.render_mode =
-                    EnumRenderMode::eImageBasedLighting;
+                tab.common.render_mode = EnumRenderMode::eImageBasedLighting;
             }
             ImGui::SameLine();
             if (ImGui::RadioButton(
                     "Use Physically Based Lighting",
-                    global_setting.common_setting.render_mode ==
+                    tab.common.render_mode ==
                         EnumRenderMode::ePhysicallyBasedRendering)) {
-                global_setting.common_setting.render_mode =
+                tab.common.render_mode =
                     EnumRenderMode::ePhysicallyBasedRendering;
             }
 
@@ -128,92 +124,63 @@ void SettingUi::TabBar() { // Tab Bar
         }
         if (ImGui::BeginTabItem("Cube Map")) {
 
-            ImGui::SliderFloat("MipLevel",
-                               &global_setting.cube_map_setting.mipLevel, 0.0f,
-                               1.0f);
-            ImGui::SliderInt("textureToDraw",
-                             &global_setting.cube_map_setting.textureToDraw, 0,
+            ImGui::SliderFloat("MipLevel", &tab.cube_map.mipLevel, 0.0f, 1.0f);
+            ImGui::SliderInt("textureToDraw", &tab.cube_map.textureToDraw, 0,
                              2);
 
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Ground")) {
 
-            ImGui::Checkbox("useHeightMap",
-                            &global_setting.ground_setting.useHeightMap);
+            ImGui::Checkbox("useHeightMap", &tab.ground.useHeightMap);
 
-            ImGui::SliderFloat("heightScale",
-                               &global_setting.ground_setting.heightScale, 0.0f,
+            ImGui::SliderFloat("heightScale", &tab.ground.heightScale, 0.0f,
                                1.0f);
-            ImGui::SliderFloat(
-                "ambient", &global_setting.ground_setting.ambient, 0.0f, 1.0f);
-            ImGui::SliderFloat("shininess",
-                               &global_setting.ground_setting.shininess, 0.0f,
-                               1.0f);
-            ImGui::SliderFloat(
-                "diffuse", &global_setting.ground_setting.diffuse, 0.0f, 1.0f);
-            ImGui::SliderFloat("specular",
-                               &global_setting.ground_setting.specular, 0.0f,
-                               1.0f);
-            ImGui::SliderFloat("fresnelR0",
-                               &global_setting.ground_setting.fresnelR0, 0.0f,
-                               1.0f);
+            ImGui::SliderFloat("ambient", &tab.ground.ambient, 0.0f, 1.0f);
+            ImGui::SliderFloat("shininess", &tab.ground.shininess, 0.0f, 1.0f);
+            ImGui::SliderFloat("diffuse", &tab.ground.diffuse, 0.0f, 1.0f);
+            ImGui::SliderFloat("specular", &tab.ground.specular, 0.0f, 1.0f);
+            ImGui::SliderFloat("fresnelR0", &tab.ground.fresnelR0, 0.0f, 1.0f);
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Light")) {
 
-            ImGui::Checkbox("Use BlinnPhong",
-                            &global_setting.light_setting.use_blinn_phong);
+            ImGui::Checkbox("Use BlinnPhong", &tab.light.use_blinn_phong);
 
             if (ImGui::RadioButton("Directional Light",
-                                   global_setting.light_setting.light_type ==
-                                       0)) {
-                global_setting.light_setting.light_type = 0;
+                                   tab.light.light_type == 0)) {
+                tab.light.light_type = 0;
             }
             ImGui::SameLine();
-            if (ImGui::RadioButton("Point Light",
-                                   global_setting.light_setting.light_type ==
-                                       1)) {
-                global_setting.light_setting.light_type = 1;
+            if (ImGui::RadioButton("Point Light", tab.light.light_type == 1)) {
+                tab.light.light_type = 1;
             }
             ImGui::SameLine();
-            if (ImGui::RadioButton("Spot Light",
-                                   global_setting.light_setting.light_type ==
-                                       2)) {
-                global_setting.light_setting.light_type = 2;
+            if (ImGui::RadioButton("Spot Light", tab.light.light_type == 2)) {
+                tab.light.light_type = 2;
             }
 
             ImGui::SliderFloat3(
-                "Position",
-                &global_setting.light_setting.light_from_gui.position.x, -5.0f,
-                5.0f);
-            ImGui::SliderFloat(
-                "Fall Off Start",
-                &global_setting.light_setting.light_from_gui.fallOffStart, 0.0f,
-                5.0f);
-            ImGui::SliderFloat(
-                "Fall Off End",
-                &global_setting.light_setting.light_from_gui.fallOffEnd, 0.0f,
-                10.0f);
-            ImGui::SliderFloat(
-                "Spot Power",
-                &global_setting.light_setting.light_from_gui.spotPower, 1.0f,
-                512.0f);
+                "Position", &tab.light.light_from_gui.position.x, -5.0f, 5.0f);
+            ImGui::SliderFloat("Fall Off Start",
+                               &tab.light.light_from_gui.fallOffStart, 0.0f,
+                               5.0f);
+            ImGui::SliderFloat("Fall Off End",
+                               &tab.light.light_from_gui.fallOffEnd, 0.0f,
+                               10.0f);
+            ImGui::SliderFloat("Spot Power",
+                               &tab.light.light_from_gui.spotPower, 1.0f,
+                               512.0f);
 
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Filter")) {
 
-            ImGui::SliderFloat("bloom_strength",
-                &global_setting.post_process_setting.bloom_strength, 0.0f,
-                               1.0f);
-            ImGui::SliderFloat("bloom_exposure",
-                &global_setting.post_process_setting.bloom_exposure,
-                               0.0f,
-                               1.0f);
-            ImGui::SliderFloat("bloom_gamma",
-                               &global_setting.post_process_setting.bloom_gamma,
-                               0.0f,
+            ImGui::SliderFloat("bloom_strength", &tab.filter.bloom_strength,
+                               0.0f, 1.0f);
+            ImGui::SliderFloat("bloom_exposure", &tab.filter.bloom_exposure,
+                               0.0f, 1.0f);
+            ImGui::SliderFloat("bloom_gamma", &tab.filter.bloom_gamma, 0.0f,
                                1.0f);
 
             ImGui::EndTabItem();

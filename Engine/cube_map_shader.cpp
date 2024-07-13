@@ -111,7 +111,7 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
         cube_map_shader->source[cube_map->GetEntityId()].get());
 
     cube_shader_source->pixel_constant_buffer_data.textureToDraw =
-        gui->GetGlobalTab().cube_map_setting.textureToDraw;
+        gui->Tab().cube_map.textureToDraw;
 
     {
         cube_shader_source->vertex_constant_buffer_data.view =
@@ -121,9 +121,9 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
         cube_shader_source->vertex_constant_buffer_data
             .projection = XMMatrixPerspectiveFovLH(
             XMConvertToRadians(
-                gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
-            aspect, gui->GetGlobalTab().projection_setting.near_z,
-            gui->GetGlobalTab().projection_setting.far_z);
+                gui->Tab().projection.projection_fov_angle_y),
+            aspect, gui->Tab().projection.near_z,
+            gui->Tab().projection.far_z);
 
         cube_shader_source->vertex_constant_buffer_data.projection =
             cube_shader_source->vertex_constant_buffer_data.projection

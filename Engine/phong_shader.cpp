@@ -85,7 +85,7 @@ EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    if (gui->GetGlobalTab().common_setting.render_mode ==
+    if (gui->Tab().common.render_mode ==
         common::EnumRenderMode::eLight) {
         return EnumBehaviorTreeStatus::eSuccess;
     }
@@ -152,9 +152,9 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
         phong_shader_source->vertex_constant_buffer_data
             .projection = XMMatrixPerspectiveFovLH(
             XMConvertToRadians(
-                gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
-            aspect, gui->GetGlobalTab().projection_setting.near_z,
-            gui->GetGlobalTab().projection_setting.far_z);
+                gui->Tab().projection.projection_fov_angle_y),
+            aspect, gui->Tab().projection.near_z,
+            gui->Tab().projection.far_z);
 
         phong_shader_source->vertex_constant_buffer_data.projection =
             phong_shader_source->vertex_constant_buffer_data.projection
@@ -184,13 +184,13 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     // light
     {
         for (int i = 0; i < MAX_LIGHTS; i++) {
-            if (i != gui->GetGlobalTab().light_setting.light_type) {
+            if (i != gui->Tab().light.light_type) {
                 phong_shader_source->pixel_constant_buffer_data.lights[i]
                     .strength *= 0.0f;
             } else {
                 // turn off another light
                 phong_shader_source->pixel_constant_buffer_data.lights[i] =
-                    gui->GetGlobalTab().light_setting.light_from_gui;
+                    gui->Tab().light.light_from_gui;
             }
         }
     }
@@ -198,7 +198,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     // phong_shader_source->pixel_constant_buffer_data.useTexture =
     //     detail->use_texture;
     phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
-        gui->GetGlobalTab().light_setting.use_blinn_phong;
+        gui->Tab().light.use_blinn_phong;
 
     Direct3D::Instance().UpdateBuffer(
         phong_shader_source->pixel_constant_buffer_data,

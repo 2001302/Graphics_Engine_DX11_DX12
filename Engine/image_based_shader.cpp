@@ -65,7 +65,7 @@ EnumBehaviorTreeStatus CheckImageBasedShader::CheckCondition() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    if (gui->GetGlobalTab().common_setting.render_mode ==
+    if (gui->Tab().common.render_mode ==
         common::EnumRenderMode::eImageBasedLighting) {
 
         return EnumBehaviorTreeStatus::eSuccess;
@@ -133,9 +133,9 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
         image_based_shader_source->vertex_constant_buffer_data
             .projection = XMMatrixPerspectiveFovLH(
             XMConvertToRadians(
-                gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
-            aspect, gui->GetGlobalTab().projection_setting.near_z,
-            gui->GetGlobalTab().projection_setting.far_z);
+                gui->Tab().projection.projection_fov_angle_y),
+            aspect, gui->Tab().projection.near_z,
+            gui->Tab().projection.far_z);
 
         image_based_shader_source->vertex_constant_buffer_data.projection =
             image_based_shader_source->vertex_constant_buffer_data.projection

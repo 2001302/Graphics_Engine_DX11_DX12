@@ -54,7 +54,7 @@ bool Application::OnFrame() {
 
     // Clear the buffers to begin the scene.
     dx11::Direct3D::Instance().BeginScene(
-        0.0f, 0.0f, 0.0f, 1.0f, imgui_->GetGlobalTab().common_setting.draw_as_wire_);
+        0.0f, 0.0f, 0.0f, 1.0f, imgui_->Tab().common.draw_as_wire_);
 
     // clang-format off
     std::vector<int> model_ids;

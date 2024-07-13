@@ -38,7 +38,7 @@ struct CubeMapSetting {
     float mipLevel;
 };
 
-struct PostProcessSetting {
+struct FilterSetting {
     float bloom_strength;
     float bloom_exposure;
     float bloom_gamma;
@@ -67,21 +67,21 @@ struct PhysicallyBasedRenderingSetting {
     float roughness = 0.0f;
 };
 
-struct GlobalTab {
-    CommonSetting common_setting;
-    LightSetting light_setting;
-    CubeMapSetting cube_map_setting;
-    PostProcessSetting post_process_setting;
-    GroundSetting ground_setting;
-    ProjectionSetting projection_setting;
-    PhysicallyBasedRenderingSetting pbr_setting;
+struct TabInfo {
+    CommonSetting common;
+    LightSetting light;
+    CubeMapSetting cube_map;
+    FilterSetting filter;
+    GroundSetting ground;
+    ProjectionSetting projection;
+    PhysicallyBasedRenderingSetting pbr;
 };
 class SettingUi : public IGui {
 
   public:
     void OnStart() override;
     void OnFrame() override;
-    GlobalTab GetGlobalTab() { return global_setting; }
+    TabInfo Tab() { return tab; }
 
   private:
     void StyleSetting();
@@ -91,7 +91,7 @@ class SettingUi : public IGui {
     void TabBar();
 
     ed::EditorContext *context_ = nullptr;
-    GlobalTab global_setting;
+    TabInfo tab;
     int selected_object_id_ = -99999;
 };
 } // namespace common

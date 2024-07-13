@@ -172,9 +172,9 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
         ground_shader_source->vertex_constant_buffer_data
             .projection = XMMatrixPerspectiveFovLH(
             XMConvertToRadians(
-                gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
-            aspect, gui->GetGlobalTab().projection_setting.near_z,
-            gui->GetGlobalTab().projection_setting.far_z);
+                gui->Tab().projection.projection_fov_angle_y),
+            aspect, gui->Tab().projection.near_z,
+            gui->Tab().projection.far_z);
 
         ground_shader_source->vertex_constant_buffer_data.projection =
             ground_shader_source->vertex_constant_buffer_data.projection
@@ -238,7 +238,7 @@ EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
     context->VSSetConstantBuffers(
         0, 1, ground_shader_source->vertex_constant_buffer.GetAddressOf());
 
-    if (gui->GetGlobalTab().common_setting.draw_as_wire_)
+    if (gui->Tab().common.draw_as_wire_)
         context->RSSetState(Direct3D::Instance().wire_rasterizer_state().Get());
     else
         context->RSSetState(

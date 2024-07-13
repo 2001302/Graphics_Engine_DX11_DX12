@@ -23,7 +23,7 @@ EnumBehaviorTreeStatus CheckPhysicallyBasedShader::CheckCondition() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    if (gui->GetGlobalTab().common_setting.render_mode ==
+    if (gui->Tab().common.render_mode ==
         common::EnumRenderMode::ePhysicallyBasedRendering) {
         return EnumBehaviorTreeStatus::eSuccess;
     }
@@ -144,9 +144,9 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         physically_shader_source->vertex_constant_buffer_data
             .projection = XMMatrixPerspectiveFovLH(
             XMConvertToRadians(
-                gui->GetGlobalTab().projection_setting.projection_fov_angle_y),
-            aspect, gui->GetGlobalTab().projection_setting.near_z,
-            gui->GetGlobalTab().projection_setting.far_z);
+                gui->Tab().projection.projection_fov_angle_y),
+            aspect, gui->Tab().projection.near_z,
+            gui->Tab().projection.far_z);
 
         physically_shader_source->vertex_constant_buffer_data.projection =
             physically_shader_source->vertex_constant_buffer_data.projection
@@ -167,38 +167,38 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     // material
     {
         physically_shader_source->pixel_constant_buffer_data.material
-            .roughness = gui->GetGlobalTab().pbr_setting.roughness;
+            .roughness = gui->Tab().pbr.roughness;
         physically_shader_source->pixel_constant_buffer_data.material.metallic =
-            gui->GetGlobalTab().pbr_setting.metallic;
+            gui->Tab().pbr.metallic;
     }
     // light
     {
         for (int i = 0; i < MAX_LIGHTS; i++) {
-            if (i != gui->GetGlobalTab().light_setting.light_type) {
+            if (i != gui->Tab().light.light_type) {
                 physically_shader_source->pixel_constant_buffer_data.lights[i]
                     .strength *= 0.0f;
             } else {
                 // turn off another light
                 physically_shader_source->pixel_constant_buffer_data.lights[i] =
-                    gui->GetGlobalTab().light_setting.light_from_gui;
+                    gui->Tab().light.light_from_gui;
             }
         }
     }
 
     physically_shader_source->pixel_constant_buffer_data.useAlbedoMap =
-        gui->GetGlobalTab().pbr_setting.useAlbedoMap;
+        gui->Tab().pbr.useAlbedoMap;
     physically_shader_source->pixel_constant_buffer_data.useNormalMap =
-        gui->GetGlobalTab().pbr_setting.useNormalMap;
+        gui->Tab().pbr.useNormalMap;
     physically_shader_source->pixel_constant_buffer_data.useAOMap =
-        gui->GetGlobalTab().pbr_setting.useAOMap;
+        gui->Tab().pbr.useAOMap;
     physically_shader_source->pixel_constant_buffer_data.invertNormalMapY =
-        gui->GetGlobalTab().pbr_setting.invertNormalMapY;
+        gui->Tab().pbr.invertNormalMapY;
     physically_shader_source->pixel_constant_buffer_data.useMetallicMap =
-        gui->GetGlobalTab().pbr_setting.useMetallicMap;
+        gui->Tab().pbr.useMetallicMap;
     physically_shader_source->pixel_constant_buffer_data.useRoughnessMap =
-        gui->GetGlobalTab().pbr_setting.useRoughnessMap;
+        gui->Tab().pbr.useRoughnessMap;
     physically_shader_source->pixel_constant_buffer_data.useEmissiveMap =
-        gui->GetGlobalTab().pbr_setting.useEmissiveMap;
+        gui->Tab().pbr.useEmissiveMap;
 
     Direct3D::Instance().UpdateBuffer(
         physically_shader_source->pixel_constant_buffer_data,

@@ -10,7 +10,7 @@
 namespace Engine {
 using Microsoft::WRL::ComPtr;
 
-class Model : public GameObject, public INodeUi {
+class Model : public GameObject{
   public:
     Model();
     ~Model();

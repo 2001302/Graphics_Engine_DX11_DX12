@@ -11,7 +11,7 @@ using Microsoft::WRL::ComPtr;
 
 class Direct3D {
   public:
-    static Direct3D &GetInstance() {
+    static Direct3D &Instance() {
         static Direct3D instance;
         return instance;
     }

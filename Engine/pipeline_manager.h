@@ -19,8 +19,8 @@ class PipelineManager : public IDataBlock {
     std::unique_ptr<BoardMap> board_map;
     std::shared_ptr<CubeMap> cube_map;
     std::shared_ptr<Ground> ground;
-    std::map<int /*id*/, std::shared_ptr<Model>> models;
-    std::map<EnumShaderType, std::shared_ptr<IShader>> shaders;
+    std::unordered_map<int /*id*/, std::shared_ptr<INodeUi>> models;
+    std::unordered_map<EnumShaderType, std::shared_ptr<IShader>> shaders;
 };
 } // namespace Engine
 #endif

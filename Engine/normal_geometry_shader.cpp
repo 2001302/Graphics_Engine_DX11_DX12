@@ -1,13 +1,14 @@
 #include "normal_geometry_shader.h"
 #include "geometry_generator.h"
 #include "setting_ui.h"
+#include "pipeline_manager.h"
 
 using namespace Engine;
 
 void NormalGeometryShaderSource::InitializeThis() {
-    Direct3D::GetInstance().CreateConstantBuffer(vertex_constant_buffer_data,
+    Direct3D::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
                                                  vertex_constant_buffer);
-    Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
+    Direct3D::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
                                                  pixel_constant_buffer);
 }
 
@@ -33,7 +34,7 @@ EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     // Create the Sample State
-    Direct3D::GetInstance().device()->CreateSamplerState(
+    Direct3D::Instance().device()->CreateSamplerState(
         &sampDesc, geometry_shader->sample_state.GetAddressOf());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
@@ -47,19 +48,19 @@ EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
+    Direct3D::Instance().CreateVertexShaderAndInputLayout(
         L"physically_vertex_shader.hlsl", inputElements,
         geometry_shader->vertex_shader, geometry_shader->layout);
 
     // Geometry shader 초기화하기
-    Direct3D::GetInstance().CreateGeometryShader(
+    Direct3D::Instance().CreateGeometryShader(
         L"NormalGS.hlsl", geometry_shader->normalGeometryShader);
 
-    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
+    Direct3D::Instance().CreateVertexShaderAndInputLayout(
         L"NormalVS.hlsl", inputElements, geometry_shader->vertex_shader,
         geometry_shader->layout);
 
-    Direct3D::GetInstance().CreatePixelShader(L"NormalPS.hlsl",
+    Direct3D::Instance().CreatePixelShader(L"NormalPS.hlsl",
                                               geometry_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;

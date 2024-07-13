@@ -7,7 +7,7 @@ Application::Application() : imgui_(0), manager_(0) {
     input_ = std::make_unique<Engine::Input>();
     manager_ = std::make_shared<Engine::PipelineManager>();
     message_receiver_ = std::make_unique<Engine::MessageReceiver>();
-    imgui_ = std::make_shared<Engine::SettingUi>(manager_);
+    imgui_ = std::make_shared<Engine::SettingUi>();
 };
 
 bool Application::OnStart() {
@@ -19,10 +19,10 @@ bool Application::OnStart() {
         {Engine::EnumDataBlockType::eGui, imgui_.get()},
     };
 
-    Engine::Direct3D::GetInstance().Initialize();
+    Engine::Direct3D::Instance().Initialize();
 
-    input_->Initialize(hinstance_, Engine::Env::Get().screen_width,
-                       Engine::Env::Get().screen_height);
+    input_->Initialize(hinstance_, Engine::Env::Instance().screen_width,
+                       Engine::Env::Instance().screen_height);
     imgui_->Initialize();
 
     // clang-format off
@@ -53,9 +53,8 @@ bool Application::OnFrame() {
     };
 
     // Clear the buffers to begin the scene.
-    Engine::Direct3D::GetInstance().BeginScene(
-        0.0f, 0.0f, 0.0f, 1.0f,
-                                       imgui_->GetGlobalTab().draw_as_wire_);
+    Engine::Direct3D::Instance().BeginScene(
+        0.0f, 0.0f, 0.0f, 1.0f, imgui_->GetGlobalTab().draw_as_wire_);
 
     // clang-format off
     std::vector<int> model_ids;
@@ -102,10 +101,10 @@ bool Application::OnFrame() {
     // clang-format on
 
     input_->Frame();
-    imgui_->Frame();
+    imgui_->Frame(manager_->models);
 
     // Present the rendered scene to the screen.
-    Engine::Direct3D::GetInstance().EndScene();
+    Engine::Direct3D::Instance().EndScene();
 
     return true;
 }
@@ -135,7 +134,7 @@ bool Application::OnStop() {
 
 bool CheckIfMouseInViewport() {
     auto cursor = ImGui::GetMousePos();
-    auto view_port = Engine::Direct3D::GetInstance().viewport();
+    auto view_port = Engine::Direct3D::Instance().viewport();
     if (view_port.TopLeftX < cursor.x && view_port.TopLeftY < cursor.y &&
         cursor.x < view_port.TopLeftX + view_port.Width &&
         cursor.y < view_port.TopLeftY + view_port.Height) {

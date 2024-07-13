@@ -1,5 +1,6 @@
 #include "phong_shader.h"
 #include "setting_ui.h"
+#include "pipeline_manager.h"
 
 using namespace Engine;
 
@@ -9,9 +10,9 @@ void PhongShaderSource::InitializeThis() {
     vertex_constant_buffer_data.view = Matrix();
     vertex_constant_buffer_data.projection = Matrix();
 
-    Direct3D::GetInstance().CreateConstantBuffer(vertex_constant_buffer_data,
+    Direct3D::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
                                                  vertex_constant_buffer);
-    Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
+    Direct3D::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
                                                  pixel_constant_buffer);
 }
 
@@ -56,7 +57,7 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     // Create the Sample State
-    Direct3D::GetInstance().device()->CreateSamplerState(
+    Direct3D::Instance().device()->CreateSamplerState(
         &sampDesc, phong_shader->sample_state.GetAddressOf());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
@@ -68,11 +69,11 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
+    Direct3D::Instance().CreateVertexShaderAndInputLayout(
         L"phong_vertex_shader.hlsl", inputElements, phong_shader->vertex_shader,
         phong_shader->layout);
 
-    Direct3D::GetInstance().CreatePixelShader(L"phong_pixel_shader.hlsl",
+    Direct3D::Instance().CreatePixelShader(L"phong_pixel_shader.hlsl",
                                               phong_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -101,9 +102,9 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::GetInstance().device_context();
+    auto context = Direct3D::Instance().device_context();
 
-    auto model = manager->models[target_id];
+    auto model = dynamic_cast<Model *>(manager->models[target_id].get());
 
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
     if (phong_shader->source[target_id] == nullptr) {
@@ -145,7 +146,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     }
     // projection
     {
-        const float aspect = Env::Get().aspect;
+        const float aspect = Env::Instance().aspect;
 
         phong_shader_source->vertex_constant_buffer_data
             .projection = XMMatrixPerspectiveFovLH(
@@ -159,7 +160,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
                 .Transpose();
     }
 
-    Direct3D::GetInstance().UpdateBuffer(
+    Direct3D::Instance().UpdateBuffer(
         phong_shader_source->vertex_constant_buffer_data,
         phong_shader_source->vertex_constant_buffer);
 
@@ -198,7 +199,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
         gui->GetGlobalTab().light_setting.use_blinn_phong;
 
-    Direct3D::GetInstance().UpdateBuffer(
+    Direct3D::Instance().UpdateBuffer(
         phong_shader_source->pixel_constant_buffer_data,
         phong_shader_source->pixel_constant_buffer);
 
@@ -215,7 +216,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::GetInstance().device_context();
+    auto context = Direct3D::Instance().device_context();
 
     // RS: Rasterizer stage
     // OM: Output-Merger stage
@@ -223,7 +224,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     // PS: Pixel Shader
     // IA: Input-Assembler stage
 
-    auto model = manager->models[target_id];
+    auto model = dynamic_cast<Model *>(manager->models[target_id].get());
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
     auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
         phong_shader->source[model->GetEntityId()].get());

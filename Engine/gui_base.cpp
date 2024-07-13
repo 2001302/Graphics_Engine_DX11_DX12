@@ -12,21 +12,23 @@ bool IGui::Initialize() {
     context_ = ImGui::CreateContext();
     ImGui::SetCurrentContext(context_);
 
-    ImGui_ImplWin32_Init(Env::Get().main_window);
-    ImGui_ImplDX11_Init(Direct3D::GetInstance().device().Get(),
-                        Direct3D::GetInstance().device_context().Get());
+    ImGui_ImplWin32_Init(Env::Instance().main_window);
+    ImGui_ImplDX11_Init(Direct3D::Instance().device().Get(),
+                        Direct3D::Instance().device_context().Get());
 
     ImGui::StyleColorsDark();
     RecreateFontAtlas();
 
     OnStart();
 
-    Frame();
+    Frame(node_map);
 
     return true;
 }
 
-bool IGui::Frame() {
+bool IGui::Frame(std::unordered_map<int, std::shared_ptr<INodeUi>> node_map) {
+
+    this->node_map = node_map;
 
     auto &io = ImGui::GetIO();
 
@@ -46,17 +48,17 @@ bool IGui::Frame() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
 
     if (ImGui::GetCurrentWindow()) {
-         Direct3D::GetInstance().SetViewPort(ImGui::GetWindowSize().x, 0.0f,
-                                            (float)Env::Get().screen_width -
+         Direct3D::Instance().SetViewPort(ImGui::GetWindowSize().x, 0.0f,
+                                            (float)Env::Instance().screen_width -
                                                  ImGui::GetWindowSize().x,
-                                            (float)Env::Get().screen_height);
+                                            (float)Env::Instance().screen_height);
 
-         Env::Get().aspect =
-             ((float)Env::Get().screen_width - ImGui::GetWindowSize().x) /
-             (float)Env::Get().screen_height;
+         Env::Instance().aspect =
+             ((float)Env::Instance().screen_width - ImGui::GetWindowSize().x) /
+             (float)Env::Instance().screen_height;
     }
 
-    OnFrame(io.DeltaTime);
+    OnFrame();
 
     ImGui::PopStyleVar(2);
     ImGui::End();

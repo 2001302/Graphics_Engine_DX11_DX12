@@ -2,7 +2,6 @@
 #define _PANEL
 
 #include "gui_base.h"
-#include "pipeline_manager.h"
 
 namespace ed = ax::NodeEditor;
 
@@ -59,9 +58,8 @@ struct GlobalTab {
 class SettingUi : public IGui {
 
   public:
-    SettingUi(std::shared_ptr<PipelineManager> pipeline_manager);
     void OnStart() override;
-    void OnFrame(float deltaTime) override;
+    void OnFrame() override;
     GlobalTab GetGlobalTab() { return global_setting; }
 
   private:
@@ -72,7 +70,6 @@ class SettingUi : public IGui {
     void TabBar();
 
     ed::EditorContext *context_ = nullptr;
-    std::shared_ptr<PipelineManager> pipeline_manager_;
     GlobalTab global_setting;
     int selected_object_id_ = -99999;
 };

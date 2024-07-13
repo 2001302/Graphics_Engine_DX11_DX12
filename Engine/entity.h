@@ -2,11 +2,12 @@
 #define _ENTITY
 
 #include "common_struct.h"
+#include "node_ui.h"
 
 namespace Engine {
 using Microsoft::WRL::ComPtr;
 
-class IEntity {
+class IEntity : public INodeUi {
   public:
     IEntity();
     ~IEntity();

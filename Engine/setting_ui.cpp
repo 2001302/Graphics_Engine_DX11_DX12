@@ -1,15 +1,13 @@
 #include "setting_ui.h"
 
 using namespace Engine;
-SettingUi::SettingUi(std::shared_ptr<PipelineManager> pipeline_manager) {
-    pipeline_manager_ = pipeline_manager;
-}
+
 void SettingUi::OnStart() {
     ed::Config config;
     config.SettingsFile = "widgets.json";
     context_ = ed::CreateEditor(&config);
 }
-void SettingUi::OnFrame(float deltaTime) {
+void SettingUi::OnFrame() {
     StyleSetting();
     MenuBar();
     NodeEditor();
@@ -33,19 +31,19 @@ void SettingUi::FrameRate() {
 void SettingUi::MenuBar() {
     // Add Object
     if (ImGui::Button("Sphere")) {
-        SendMessage(Env::Get().main_window, WM_SPHERE_LOAD, 0, 0);
+        SendMessage(Env::Instance().main_window, WM_SPHERE_LOAD, 0, 0);
     }
     ImGui::SameLine();
     if (ImGui::Button("Box")) {
-        SendMessage(Env::Get().main_window, WM_BOX_LOAD, 0, 0);
+        SendMessage(Env::Instance().main_window, WM_BOX_LOAD, 0, 0);
     }
     ImGui::SameLine();
     if (ImGui::Button("Cylinder")) {
-        SendMessage(Env::Get().main_window, WM_CYLINDER_LOAD, 0, 0);
+        SendMessage(Env::Instance().main_window, WM_CYLINDER_LOAD, 0, 0);
     }
     ImGui::SameLine();
     if (ImGui::Button("Search")) {
-        SendMessage(Env::Get().main_window, WM_MODEL_LOAD, 0, 0);
+        SendMessage(Env::Instance().main_window, WM_MODEL_LOAD, 0, 0);
     }
     ImGui::Separator();
 }
@@ -56,8 +54,8 @@ void SettingUi::NodeEditor() {
 
     // Start drawing nodes.
     if (selected_object_id_ != -99999) {
-        auto model = pipeline_manager_->models[selected_object_id_];
-        model->Show();
+        auto node = node_map[selected_object_id_];
+        node->Show();
     }
 
     ed::End();
@@ -75,23 +73,23 @@ void SettingUi::TabBar() { // Tab Bar
             ImGui::TableSetColumnIndex(1);
             ImGui::Text("Name");
 
-            for (auto &model : pipeline_manager_->models) {
+            for (auto &model : node_map) {
 
                 ImGui::TableNextRow();
 
                 ImGui::TableSetColumnIndex(0);
                 if (ImGui::Selectable(
-                        std::to_string(model.second.get()->GetEntityId())
+                        std::to_string(model.first)
                             .c_str(),
-                        model.second->GetEntityId() == selected_object_id_,
+                        model.first == selected_object_id_,
                         ImGuiSelectableFlags_SpanAllColumns)) {
-                    selected_object_id_ = model.second.get()->GetEntityId();
+                    selected_object_id_ = model.first;
                 }
 
                 ImGui::TableSetColumnIndex(1);
-                ImGui::Text(model.second.get()->GetName().c_str());
+                ImGui::Text("Node");
 
-                if (selected_object_id_ == model.second->GetEntityId()) {
+                if (selected_object_id_ == model.first) {
                     ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,
                                            ImGui::GetColorU32(ImGuiCol_Header));
                 }

@@ -2,6 +2,8 @@
 #include "geometry_generator.h"
 #include "resource_helper.h"
 #include "setting_ui.h"
+#include "pipeline_manager.h"
+#include "direct3d.h"
 
 using namespace Engine;
 
@@ -12,9 +14,9 @@ void GroundShaderSource::InitializeThis() {
     vertex_constant_buffer_data.useHeightMap = 0;
     vertex_constant_buffer_data.heightScale = 0.0f;
 
-    Direct3D::GetInstance().CreateConstantBuffer(vertex_constant_buffer_data,
+    Direct3D::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
                                                  vertex_constant_buffer);
-    Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
+    Direct3D::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
                                                  pixel_constant_buffer);
 }
 
@@ -62,7 +64,7 @@ EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     // Create the Sample State
-    Direct3D::GetInstance().device()->CreateSamplerState(
+    Direct3D::Instance().device()->CreateSamplerState(
         &sampDesc, ground_shader->sample_state.GetAddressOf());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
@@ -76,17 +78,17 @@ EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
+    Direct3D::Instance().CreateVertexShaderAndInputLayout(
         L"ground_vs.hlsl", basicInputElements, ground_shader->vertex_shader,
         ground_shader->layout);
 
-    Direct3D::GetInstance().CreatePixelShader(L"ground_ps.hlsl",
+    Direct3D::Instance().CreatePixelShader(L"ground_ps.hlsl",
                                               ground_shader->pixel_shader);
 
     auto mesh = manager->ground->mesh;
-    Direct3D::GetInstance().CreateVertexBuffer(mesh->vertices,
+    Direct3D::Instance().CreateVertexBuffer(mesh->vertices,
                                                mesh->vertexBuffer);
-    Direct3D::GetInstance().CreateIndexBuffer(mesh->indices, mesh->indexBuffer);
+    Direct3D::Instance().CreateIndexBuffer(mesh->indices, mesh->indexBuffer);
 
     mesh->albedoTextureFilename =
         "Assets/Textures/PBR/Bricks075A_1K-PNG/Bricks075A_1K_Color.png";
@@ -163,7 +165,7 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
         ground_shader_source->vertex_constant_buffer_data.view =
             manager->camera->view.Transpose();
 
-        const float aspect = Env::Get().aspect;
+        const float aspect = Env::Instance().aspect;
         ground_shader_source->vertex_constant_buffer_data
             .projection = XMMatrixPerspectiveFovLH(
             XMConvertToRadians(
@@ -185,11 +187,11 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
         Vector3(0.0f);
     ground_shader_source->pixel_constant_buffer_data.material.shininess = 0.1f;
 
-    Direct3D::GetInstance().UpdateBuffer(
+    Direct3D::Instance().UpdateBuffer(
         ground_shader_source->vertex_constant_buffer_data,
         ground_shader_source->vertex_constant_buffer);
 
-    Direct3D::GetInstance().UpdateBuffer(
+    Direct3D::Instance().UpdateBuffer(
         ground_shader_source->pixel_constant_buffer_data,
         ground_shader_source->pixel_constant_buffer);
 
@@ -206,7 +208,7 @@ EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
     auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::GetInstance().device_context();
+    auto context = Direct3D::Instance().device_context();
     auto ground = manager->ground;
     auto ground_shader = manager->shaders[EnumShaderType::eGround];
     auto ground_shader_source = dynamic_cast<GroundShaderSource *>(
@@ -235,10 +237,10 @@ EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
 
     if (gui->GetGlobalTab().draw_as_wire_)
         context->RSSetState(
-            Direct3D::GetInstance().wire_rasterizer_state().Get());
+            Direct3D::Instance().wire_rasterizer_state().Get());
     else
         context->RSSetState(
-            Direct3D::GetInstance().solid_rasterizer_state().Get());
+            Direct3D::Instance().solid_rasterizer_state().Get());
 
     context->PSSetSamplers(0, 1, ground_shader->sample_state.GetAddressOf());
     context->PSSetShader(ground_shader->pixel_shader.Get(), 0, 0);

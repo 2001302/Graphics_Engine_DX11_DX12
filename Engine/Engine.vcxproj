@@ -148,7 +148,6 @@
     <ClInclude Include="ground_shader.h" />
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="image_fliter_shader.h" />
-    <ClInclude Include="gui_extension.h" />
     <ClInclude Include="node_ui.h" />
     <ClInclude Include="normal_geometry_shader.h" />
     <ClInclude Include="parallel_node.h" />

@@ -7,12 +7,6 @@
 
 namespace Engine {
 
-struct LinkInfo {
-    ed::LinkId Id;
-    ed::PinId InputId;
-    ed::PinId OutputId;
-};
-
 class GraphNode {
   public:
     virtual EnumBehaviorTreeStatus OnInvoke() {

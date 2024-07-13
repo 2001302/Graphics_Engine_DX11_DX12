@@ -1,5 +1,6 @@
 #include "cube_map_shader.h"
 #include "geometry_generator.h"
+#include "pipeline_manager.h"
 #include "setting_ui.h"
 
 using namespace Engine;
@@ -9,9 +10,9 @@ void CubeMapShaderSource::InitializeThis() {
     vertex_constant_buffer_data.view = Matrix();
     vertex_constant_buffer_data.projection = Matrix();
 
-    Direct3D::GetInstance().CreateConstantBuffer(vertex_constant_buffer_data,
+    Direct3D::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
                                                  vertex_constant_buffer);
-    Direct3D::GetInstance().CreateConstantBuffer(pixel_constant_buffer_data,
+    Direct3D::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
                                                  pixel_constant_buffer);
 }
 
@@ -39,19 +40,19 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
         L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
     auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-    Direct3D::GetInstance().CreateDDSTexture(
+    Direct3D::Instance().CreateDDSTexture(
         envFilename, manager->cube_map->texture->env_SRV);
-    Direct3D::GetInstance().CreateDDSTexture(
+    Direct3D::Instance().CreateDDSTexture(
         specularFilename, manager->cube_map->texture->specular_SRV);
-    Direct3D::GetInstance().CreateDDSTexture(
+    Direct3D::Instance().CreateDDSTexture(
         irradianceFilename, manager->cube_map->texture->irradiance_SRV);
-    Direct3D::GetInstance().CreateDDSTexture(
+    Direct3D::Instance().CreateDDSTexture(
         brdfFilename, manager->cube_map->texture->brdf_SRV);
 
-    Direct3D::GetInstance().CreateVertexBuffer(
+    Direct3D::Instance().CreateVertexBuffer(
         manager->cube_map->mesh->vertices,
         manager->cube_map->mesh->vertexBuffer);
-    Direct3D::GetInstance().CreateIndexBuffer(
+    Direct3D::Instance().CreateIndexBuffer(
         manager->cube_map->mesh->indices, manager->cube_map->mesh->indexBuffer);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
@@ -65,11 +66,11 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    Direct3D::GetInstance().CreateVertexShaderAndInputLayout(
+    Direct3D::Instance().CreateVertexShaderAndInputLayout(
         L"cube_mapping_vertex_shader.hlsl", basicInputElements,
         cube_map_shader->vertex_shader, cube_map_shader->layout);
 
-    Direct3D::GetInstance().CreatePixelShader(L"cube_mapping_pixel_shader.hlsl",
+    Direct3D::Instance().CreatePixelShader(L"cube_mapping_pixel_shader.hlsl",
                                               cube_map_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -116,7 +117,7 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
         cube_shader_source->vertex_constant_buffer_data.view =
             manager->camera->view.Transpose();
 
-        const float aspect = Env::Get().aspect;
+        const float aspect = Env::Instance().aspect;
         cube_shader_source->vertex_constant_buffer_data
             .projection = XMMatrixPerspectiveFovLH(
             XMConvertToRadians(
@@ -129,11 +130,11 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
                 .Transpose();
     }
 
-    Direct3D::GetInstance().UpdateBuffer(
+    Direct3D::Instance().UpdateBuffer(
         cube_shader_source->vertex_constant_buffer_data,
         cube_shader_source->vertex_constant_buffer);
 
-    Direct3D::GetInstance().UpdateBuffer(
+    Direct3D::Instance().UpdateBuffer(
         cube_shader_source->pixel_constant_buffer_data,
         cube_shader_source->pixel_constant_buffer);
 
@@ -150,7 +151,7 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     auto gui = dynamic_cast<Engine::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = Direct3D::GetInstance().device_context();
+    auto context = Direct3D::Instance().device_context();
     auto cube_map = manager->cube_map;
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
     auto cube_shader_source = dynamic_cast<CubeMapShaderSource *>(

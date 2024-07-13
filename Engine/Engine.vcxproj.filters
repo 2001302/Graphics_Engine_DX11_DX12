@@ -169,6 +169,15 @@
     <ClInclude Include="bone.h">
       <Filter>DirectX11\Data</Filter>
     </ClInclude>
+    <ClInclude Include="vertex.h">
+      <Filter>DirectX11\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>DirectX11\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>DirectX11\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

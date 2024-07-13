@@ -7,7 +7,17 @@
 using namespace DirectX;
 
 namespace dx11 {
+using DirectX::SimpleMath::Matrix;
+using DirectX::SimpleMath::Vector2;
+using DirectX::SimpleMath::Vector3;
+using DirectX::SimpleMath::Vector4;
 using Microsoft::WRL::ComPtr;
+
+inline void ThrowIfFailed(HRESULT hr) {
+    if (FAILED(hr)) {
+        throw std::exception();
+    }
+}
 
 class Direct3D {
   public:

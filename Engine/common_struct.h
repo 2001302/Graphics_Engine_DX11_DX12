@@ -36,44 +36,4 @@
 
 #pragma comment(lib, "shcore.lib")
 
-
-namespace dx11 {
-using DirectX::SimpleMath::Matrix;
-using DirectX::SimpleMath::Vector2;
-using DirectX::SimpleMath::Vector3;
-using DirectX::SimpleMath::Vector4;
-using Microsoft::WRL::ComPtr;
-
-inline void ThrowIfFailed(HRESULT hr) {
-    if (FAILED(hr)) {
-        throw std::exception();
-    }
-}
-
-struct Vertex {
-    Vector3 position;
-    Vector3 normal;
-    Vector2 texcoord;
-    Vector3 tangent;
-};
-
-struct Material {
-    Vector3 ambient = Vector3(0.1f);  // 12
-    float shininess = 1.0f;           // 4
-    Vector3 diffuse = Vector3(0.5f);  // 12
-    float dummy1;                     // 4
-    Vector3 specular = Vector3(0.5f); // 12
-    float dummy2;                     // 4
-};
-
-struct Light {
-    Vector3 strength = Vector3(1.0f);              // 12
-    float fallOffStart = 0.0f;                     // 4
-    Vector3 direction = Vector3(0.0f, 0.0f, 1.0f); // 12
-    float fallOffEnd = 10.0f;                      // 4
-    Vector3 position = Vector3(0.0f, 0.0f, -2.0f); // 12
-    float spotPower = 1.0f;                        // 4
-};
-
-} // namespace Engine
 #endif

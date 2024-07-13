@@ -1,4 +1,4 @@
-﻿#ifndef _IMAGEFILTER
+#ifndef _IMAGEFILTER
 #define _IMAGEFILTER
 
 #include "common_struct.h"
@@ -55,8 +55,7 @@ class ImageFilter {
         initData.SysMemPitch = 0;
         initData.SysMemSlicePitch = 0;
 
-        ThrowIfFailed(device->CreateBuffer(&desc, &initData,
-                                           constantBuffer.GetAddressOf()));
+        device->CreateBuffer(&desc, &initData, constantBuffer.GetAddressOf());
     }
     template <typename T_DATA>
     static void UpdateBuffer(ComPtr<ID3D11Device> &device,
@@ -98,5 +97,5 @@ class ImageFilter {
     std::vector<ID3D11ShaderResourceView *> m_shaderResources;
     std::vector<ID3D11RenderTargetView *> m_renderTargets;
 };
-} // namespace Engine
+} // namespace dx11
 #endif

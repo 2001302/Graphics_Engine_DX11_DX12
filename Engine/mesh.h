@@ -2,6 +2,7 @@
 #define _MESH
 
 #include "direct3D.h"
+#include "vertex.h"
 
 namespace dx11 {
 

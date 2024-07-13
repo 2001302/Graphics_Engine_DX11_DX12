@@ -149,6 +149,8 @@
     <ClInclude Include="ground_shader.h" />
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="image_fliter_shader.h" />
+    <ClInclude Include="light.h" />
+    <ClInclude Include="material.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="node_ui.h" />
     <ClInclude Include="normal_geometry_shader.h" />
@@ -194,6 +196,7 @@
     <ClInclude Include="pipeline_manager.h" />
     <ClInclude Include="platform.h" />
     <ClInclude Include="resource_helper.h" />
+    <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="application.cpp" />

@@ -2,6 +2,7 @@
 #define _PANEL
 
 #include "gui_base.h"
+#include "light.h"
 
 namespace ed = ax::NodeEditor;
 

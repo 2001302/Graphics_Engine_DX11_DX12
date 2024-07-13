@@ -3,6 +3,8 @@
 
 #include "common_struct.h"
 #include "direct3D.h"
+#include "light.h"
+#include "material.h"
 
 #define MAX_LIGHTS 3
 

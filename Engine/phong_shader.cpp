@@ -197,8 +197,8 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
 
     // phong_shader_source->pixel_constant_buffer_data.useTexture =
     //     detail->use_texture;
-    phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
-        gui->Tab().light.use_blinn_phong;
+    //phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
+    //    gui->Tab().light.use_blinn_phong;
 
     Direct3D::Instance().UpdateBuffer(
         phong_shader_source->pixel_constant_buffer_data,

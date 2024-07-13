@@ -144,9 +144,6 @@ void SettingUi::TabBar() { // Tab Bar
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Light")) {
-
-            ImGui::Checkbox("Use BlinnPhong", &tab.light.use_blinn_phong);
-
             if (ImGui::RadioButton("Directional Light",
                                    tab.light.light_type == 0)) {
                 tab.light.light_type = 0;

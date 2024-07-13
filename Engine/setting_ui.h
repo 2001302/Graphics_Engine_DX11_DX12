@@ -28,7 +28,6 @@ struct CommonSetting {
 };
 
 struct LightSetting {
-    bool use_blinn_phong;
     int light_type;
     dx11::Light light_from_gui;
 };

@@ -182,13 +182,15 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
     }
 
     ground_shader_source->pixel_constant_buffer_data.useTexture = true;
-    ground_shader_source->vertex_constant_buffer_data.useHeightMap = true;
+    ground_shader_source->vertex_constant_buffer_data.useHeightMap = gui->Tab().ground.useHeightMap;
     ground_shader_source->pixel_constant_buffer_data.useAOMap = true;
     ground_shader_source->pixel_constant_buffer_data.material.diffuse =
-        Vector3(1.0f);
+        Vector3(gui->Tab().ground.diffuse);
     ground_shader_source->pixel_constant_buffer_data.material.specular =
-        Vector3(0.0f);
+        Vector3(gui->Tab().ground.specular);
     ground_shader_source->pixel_constant_buffer_data.material.shininess = 0.1f;
+    ground_shader_source->vertex_constant_buffer_data.heightScale =
+        gui->Tab().ground.heightScale;
 
     Direct3D::Instance().UpdateBuffer(
         ground_shader_source->vertex_constant_buffer_data,

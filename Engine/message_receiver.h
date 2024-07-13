@@ -1,8 +1,8 @@
-﻿#ifndef _MESSAGERECEIVER
+#ifndef _MESSAGERECEIVER
 #define _MESSAGERECEIVER
 
-#include "input.h"
 #include "geometry_generator.h"
+#include "input.h"
 #include "pipeline_manager.h"
 #include "resource_helper.h"
 
@@ -18,6 +18,6 @@ class MessageReceiver {
     bool OnMouseWheelRequest(PipelineManager *manager,
                              std::shared_ptr<Input> input);
 };
-} // namespace Engine
+} // namespace dx11
 
 #endif

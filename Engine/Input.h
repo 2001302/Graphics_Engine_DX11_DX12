@@ -6,10 +6,9 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#include <dinput.h>
-
-#include "common_struct.h"
+#include "direct3D.h"
 #include "env.h"
+#include <dinput.h>
 
 namespace dx11 {
 class Input {
@@ -45,5 +44,5 @@ class Input {
     DIMOUSESTATE mouse_state_;
     int screen_width, screen_height, mouse_x, mouse_y;
 };
-} // namespace Engine
+} // namespace dx11
 #endif

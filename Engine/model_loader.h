@@ -1,14 +1,12 @@
 #pragma once
 
+#include "mesh.h"
 #include <assimp\Importer.hpp>
 #include <assimp\postprocess.h>
 #include <assimp\scene.h>
 #include <iostream>
 #include <string>
 #include <vector>
-
-#include "common_struct.h"
-#include "mesh.h"
 
 namespace dx11 {
 

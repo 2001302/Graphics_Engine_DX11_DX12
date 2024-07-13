@@ -1,7 +1,7 @@
 #ifndef _POSTPROCESS
 #define _POSTPROCESS
 
-#include "common_struct.h"
+#include "direct3D.h"
 #include "image_filter.h"
 #include "image_fliter_shader.h"
 #include "mesh.h"
@@ -50,5 +50,5 @@ class BoardMap {
 
     std::shared_ptr<ImageFilterShader> image_filter_shader;
 };
-} // namespace Engine
+} // namespace dx11
 #endif

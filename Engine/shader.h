@@ -1,10 +1,10 @@
 #ifndef _IShader
 #define _IShader
 
-#include "common_struct.h"
 #include "direct3D.h"
 #include "light.h"
 #include "material.h"
+#include <map>
 
 #define MAX_LIGHTS 3
 

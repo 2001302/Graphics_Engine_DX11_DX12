@@ -1,8 +1,15 @@
-#ifndef _D3DCLASS_H_
-#define _D3DCLASS_H_
+#ifndef _DIRECT3D
+#define _DIRECT3D
 
-#include "common_struct.h"
 #include "env.h"
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <directxmath.h>
+#include <directxtk/DDSTextureLoader.h>
+#include <directxtk/SimpleMath.h>
+#include <iostream>
+#include <windows.h>
+#include <wrl.h>
 
 using namespace DirectX;
 

@@ -159,7 +159,7 @@
     <ClInclude Include="board_map.h" />
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
-    <ClInclude Include="common_struct.h" />
+    <ClInclude Include="message.h" />
     <ClInclude Include="cube_map.h" />
     <ClInclude Include="direct3D.h" />
     <ClInclude Include="entity.h" />

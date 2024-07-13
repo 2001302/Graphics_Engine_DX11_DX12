@@ -3,13 +3,13 @@
 
 #include "behavior_tree.h"
 #include "direct3D.h"
+#include "geometry_generator.h"
+#include "message.h"
+#include "message_receiver.h"
 #include "pipeline_manager.h"
 #include "platform.h"
-#include "setting_ui.h"
-
-#include "geometry_generator.h"
-#include "message_receiver.h"
 #include "resource_helper.h"
+#include "setting_ui.h"
 
 namespace platform {
 class Application : public Platform {

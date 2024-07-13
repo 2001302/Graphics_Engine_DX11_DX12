@@ -2,7 +2,6 @@
 #define GRAPH
 
 #include "behavior_tree.h"
-#include "common_struct.h"
 #include "gui_base.h"
 
 namespace dx11 {

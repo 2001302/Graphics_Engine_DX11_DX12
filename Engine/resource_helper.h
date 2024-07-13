@@ -1,8 +1,11 @@
-﻿#ifndef _RESOURCEHELPER
+#ifndef _RESOURCEHELPER
 #define _RESOURCEHELPER
 
 #include "direct3D.h"
 #include "model.h"
+#include <assimp/importer.hpp>
+#include <assimp/postprocess.h>
+#include <assimp/scene.h>
 
 namespace dx11 {
 
@@ -26,8 +29,7 @@ class ResourceHelper {
                        ComPtr<ID3D11Texture2D> &texture,
                        ComPtr<ID3D11ShaderResourceView> &textureResourceView);
 
-    static Model *ImportModel(Model *gameObject,
-                                   const char *filename);
+    static Model *ImportModel(Model *gameObject, const char *filename);
     static void ReadModelData(Model *gameObject, const aiScene *scene,
                               aiNode *node, int index, int parent);
     static void ReadMeshData(Model *gameObject, const aiScene *scene,
@@ -36,5 +38,5 @@ class ResourceHelper {
                                      const std::string &name);
 };
 
-} // namespace Engine
+} // namespace dx11
 #endif

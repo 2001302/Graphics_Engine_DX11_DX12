@@ -1,7 +1,6 @@
 #ifndef _GAMEOBJECT
 #define _GAMEOBJECT
 
-#include "common_struct.h"
 #include "entity.h"
 #include "mesh.h"
 #include "bone.h"

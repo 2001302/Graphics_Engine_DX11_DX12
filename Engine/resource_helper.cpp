@@ -1,7 +1,6 @@
-﻿#include "resource_helper.h"
+#include "resource_helper.h"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
 #include <DirectXTexEXR.h> // EXR 형식 HDRI 읽기
 #include <algorithm>
 #include <directxtk/DDSTextureLoader.h> // 큐브맵 읽을 때 필요
@@ -9,10 +8,9 @@
 #include <dxgi1_4.h>                    // DXGIFactory4
 #include <fp16.h>
 #include <iostream>
+#include <stb_image.h>
 
 using namespace dx11;
-using namespace std;
-using namespace DirectX;
 
 void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
                   int &width, int &height, DXGI_FORMAT &pixelFormat) {
@@ -29,14 +27,14 @@ void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
     height = static_cast<int>(metadata.height);
     pixelFormat = metadata.format;
 
-    cout << filename << " " << metadata.width << " " << metadata.height
-         << metadata.format << endl;
+    std::cout << filename << " " << metadata.width << " " << metadata.height
+              << metadata.format << std::endl;
 
     image.resize(scratchImage.GetPixelsSize());
     memcpy(image.data(), scratchImage.GetPixels(), image.size());
 
     // 데이터 범위 확인해보기
-    vector<float> f32(image.size() / 2);
+    std::vector<float> f32(image.size() / 2);
     uint16_t *f16 = (uint16_t *)image.data();
     for (int i = 0; i < image.size() / 2; i++) {
         f32[i] = fp16_ieee_to_fp32_value(f16[i]);
@@ -45,7 +43,7 @@ void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
     const float minValue = *std::min_element(f32.begin(), f32.end());
     const float maxValue = *std::max_element(f32.begin(), f32.end());
 
-    cout << minValue << " " << maxValue << endl;
+    std::cout << minValue << " " << maxValue << std::endl;
 
     // f16 = (uint16_t *)image.data();
     // for (int i = 0; i < image.size() / 2; i++) {
@@ -63,8 +61,8 @@ void ReadImage(const std::string filename, std::vector<uint8_t> &image,
 
     // assert(channels == 4);
 
-    cout << filename << " " << width << " " << height << " " << channels
-         << endl;
+    std::cout << filename << " " << width << " " << height << " " << channels
+              << std::endl;
 
     // 4채널로 만들어서 복사
     image.resize(width * height * 4);
@@ -98,7 +96,7 @@ void ReadImage(const std::string filename, std::vector<uint8_t> &image,
             }
         }
     } else {
-        std::cout << "Cannot read " << channels << " channels" << endl;
+        std::cout << "Cannot read " << channels << " channels" << std::endl;
     }
 }
 
@@ -124,7 +122,7 @@ CreateStagingTexture(ComPtr<ID3D11Device> &device,
     ComPtr<ID3D11Texture2D> stagingTexture;
     if (FAILED(device->CreateTexture2D(&txtDesc, NULL,
                                        stagingTexture.GetAddressOf()))) {
-        cout << "Failed()" << endl;
+        std::cout << "Failed()" << std::endl;
     }
 
     // CPU에서 이미지 데이터 복사
@@ -147,8 +145,7 @@ CreateStagingTexture(ComPtr<ID3D11Device> &device,
 
 void ResourceHelper::CreateTexture(
     const std::string filename, ComPtr<ID3D11Texture2D> &texture,
-    ComPtr<ID3D11ShaderResourceView> &textureResourceView,
-    bool usSRGB) {
+    ComPtr<ID3D11ShaderResourceView> &textureResourceView, bool usSRGB) {
 
     int width = 0, height = 0;
     std::vector<uint8_t> image;
@@ -187,7 +184,7 @@ void ResourceHelper::CreateTexture(
 
     // 초기 데이터 없이 텍스춰 생성 (전부 검은색)
     Direct3D::Instance().device()->CreateTexture2D(&txtDesc, NULL,
-                                                      texture.GetAddressOf());
+                                                   texture.GetAddressOf());
 
     // 실제로 생성된 MipLevels를 확인해보고 싶을 경우
     // texture->GetDesc(&txtDesc);
@@ -251,7 +248,7 @@ void ResourceHelper::CreateTextureArray(
 
     // 초기 데이터 없이 텍스춰를 만듭니다.
     Direct3D::Instance().device()->CreateTexture2D(&txtDesc, NULL,
-                                                      texture.GetAddressOf());
+                                                   texture.GetAddressOf());
 
     // 실제로 만들어진 MipLevels를 확인
     texture->GetDesc(&txtDesc);
@@ -277,14 +274,14 @@ void ResourceHelper::CreateTextureArray(
     }
 
     Direct3D::Instance().device()->CreateShaderResourceView(
-        texture.Get(), NULL,
-                                     textureResourceView.GetAddressOf());
+        texture.Get(), NULL, textureResourceView.GetAddressOf());
 
-    Direct3D::Instance().device_context()->GenerateMips(textureResourceView.Get());
+    Direct3D::Instance().device_context()->GenerateMips(
+        textureResourceView.Get());
 }
 
 Model *ResourceHelper::ImportModel(dx11::Model *gameObject,
-                                        const char *filename) {
+                                   const char *filename) {
     Assimp::Importer importer;
 
     auto scene = importer.ReadFile(std::string(filename),
@@ -318,11 +315,11 @@ Model *ResourceHelper::ImportModel(dx11::Model *gameObject,
     ReadModelData(gameObject, scene, scene->mRootNode, -1, -1);
 
     //// Read the skin (bone) data to be applied to the mesh.
-    //ReadSkinData(gameObject, scene);
+    // ReadSkinData(gameObject, scene);
 
-    //if (scene->HasAnimations()) {
-    //    gameObject->animation = ReadAnimationData(scene);
-    //}
+    // if (scene->HasAnimations()) {
+    //     gameObject->animation = ReadAnimationData(scene);
+    // }
 
     return gameObject;
 }
@@ -364,9 +361,8 @@ void ResourceHelper::ReadModelData(dx11::Model *gameObject,
     }
 }
 
-void ResourceHelper::ReadMeshData(dx11::Model *gameObject,
-                                  const aiScene *scene, aiNode *node,
-                                  int bone) {
+void ResourceHelper::ReadMeshData(dx11::Model *gameObject, const aiScene *scene,
+                                  aiNode *node, int bone) {
     // Do not process nodes without a mesh.
     if (node->mNumMeshes < 1)
         return;

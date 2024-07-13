@@ -1,7 +1,6 @@
-﻿#ifndef CAMERA
+#ifndef CAMERA
 #define CAMERA
 
-#include "common_struct.h"
 #include "behavior_tree_builder.h"
 #include "game_object.h"
 

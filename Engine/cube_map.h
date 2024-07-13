@@ -1,7 +1,6 @@
 #ifndef _CUBEMAP
 #define _CUBEMAP
 
-#include "common_struct.h"
 #include "cube_map_shader.h"
 #include "game_object.h"
 

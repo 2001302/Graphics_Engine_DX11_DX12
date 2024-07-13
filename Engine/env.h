@@ -2,6 +2,9 @@
 #define _ENV
 
 #include <windows.h>
+#include <cmath>		//for calculate coordination
+
+const double PI = std::acos(-1);
 
 namespace common {
 struct Env {
@@ -15,7 +18,7 @@ struct Env {
 
     const bool full_screen = false;
     const bool vsync_enabled = true;
-    const float field_of_view = M_PI / 4.0f;
+    const float field_of_view = PI / 4.0f;
     const float screen_depth = 1000.0f;
     const float screen_near = 0.3f;
 

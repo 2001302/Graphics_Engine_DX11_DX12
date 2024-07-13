@@ -25,8 +25,8 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         double theta = atan2(origin.z, origin.x);
 
         // rotation
-        double deltaTheta = (2 * M_PI) * (vector.x / viewPort.Width);
-        double deltaPhi = (2 * M_PI) * (vector.y / viewPort.Width);
+        double deltaTheta = (2 * PI) * (vector.x / viewPort.Width);
+        double deltaPhi = (2 * PI) * (vector.y / viewPort.Width);
 
         theta += deltaTheta;
         phi += deltaPhi;
@@ -38,7 +38,7 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
 
         Vector3 origin_prime(x, y, z);
 
-        if (0.0f < phi && phi < M_PI)
+        if (0.0f < phi && phi < PI)
             manager->camera->position =
                 Vector3(origin_prime.x, origin_prime.y, origin_prime.z);
     }

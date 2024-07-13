@@ -3,8 +3,10 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include "common_struct.h"
 #include "env.h"
+#include <iostream>
+#include <shellscalingapi.h>
+#pragma comment(lib, "shcore.lib")
 
 namespace platform {
 class Platform {

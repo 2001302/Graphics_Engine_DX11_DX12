@@ -1,8 +1,10 @@
 #ifndef _BehaviorTree
 #define _BehaviorTree
 
-#include "common_struct.h"
 #include "dataBlock.h"
+#include <iostream>
+#include <map>
+#include <vector>
 
 namespace dx11 {
 enum EnumDataBlockType {
@@ -42,5 +44,5 @@ class BehaviorActionNode : public IDisposable {
     std::map<EnumDataBlockType, common::IDataBlock *> data_block;
     int target_id;
 };
-} // namespace Engine
+} // namespace dx11
 #endif

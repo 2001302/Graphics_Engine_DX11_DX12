@@ -1,7 +1,6 @@
 #ifndef BEHAVIORTREEBUILDER
 #define BEHAVIORTREEBUILDER
 
-#include "common_struct.h"
 #include "behavior_tree.h"
 #include "conditional_node.h"
 #include "parallel_node.h"

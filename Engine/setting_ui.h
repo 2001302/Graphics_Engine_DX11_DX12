@@ -3,6 +3,8 @@
 
 #include "gui_base.h"
 #include "light.h"
+#include "message.h"
+#include <string>
 
 namespace ed = ax::NodeEditor;
 
@@ -22,16 +24,16 @@ struct ProjectionSetting {
     float far_z = 100.0f;
 };
 struct PhysicallyBasedRenderingSetting {
-     bool useAlbedoMap = 0;
-     bool useNormalMap = 0;
-     bool useAOMap = 0;         // Ambient Occlusion
-     bool invertNormalMapY = 0; // 16
-     bool useMetallicMap = 0;
-     bool useRoughnessMap = 0;
-     bool useEmissiveMap = 0;
+    bool useAlbedoMap = 0;
+    bool useNormalMap = 0;
+    bool useAOMap = 0;         // Ambient Occlusion
+    bool invertNormalMapY = 0; // 16
+    bool useMetallicMap = 0;
+    bool useRoughnessMap = 0;
+    bool useEmissiveMap = 0;
 
-     float metallic = 0.0f;
-     float roughness = 0.0f;
+    float metallic = 0.0f;
+    float roughness = 0.0f;
 };
 
 struct PostProcessSetting {
@@ -40,9 +42,8 @@ struct PostProcessSetting {
     float bloom_gamma = 0.0f;
 };
 
-enum EnumRenderMode 
-{ 
-    eLight = 0, 
+enum EnumRenderMode {
+    eLight = 0,
     eImageBasedLighting = 1,
     ePhysicallyBasedRendering = 2
 };
@@ -74,5 +75,5 @@ class SettingUi : public IGui {
     GlobalTab global_setting;
     int selected_object_id_ = -99999;
 };
-} // namespace Engine
+} // namespace common
 #endif

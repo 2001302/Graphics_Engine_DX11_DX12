@@ -82,17 +82,22 @@ class SettingUi : public IGui {
     void OnFrame() override;
     TabInfo Tab() { return tab; }
 
-  private:
     void StyleSetting();
     void FrameRate();
     void MenuBar();
     void NodeEditor();
-    void TabBar();
+    int TabBar(std::unordered_map<int, std::shared_ptr<INodeUi>> node_map);
+
+    void PushNode(INodeUi *node) { nodes.push_back(node); };
+
+  private:
 
     ed::EditorContext *context_ = nullptr;
     TabInfo tab;
-    int selected_object_id_ = -99999;
 
+    ImVector<INodeUi::LinkInfo> links_;
+    int next_link_Id = 100;
+    std::vector<INodeUi *> nodes;
 };
 } // namespace common
 #endif

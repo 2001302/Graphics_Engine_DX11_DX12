@@ -21,14 +21,13 @@ bool IGui::Initialize() {
 
     OnStart();
 
-    Frame(node_map);
+    FrameBegin();
+    FrameEnd();
 
     return true;
 }
 
-bool IGui::Frame(std::unordered_map<int, std::shared_ptr<INodeUi>> node_map) {
-
-    this->node_map = node_map;
+bool IGui::FrameBegin() {
 
     auto &io = ImGui::GetIO();
 
@@ -47,19 +46,12 @@ bool IGui::Frame(std::unordered_map<int, std::shared_ptr<INodeUi>> node_map) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, windowBorderSize);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
 
-    if (ImGui::GetCurrentWindow()) {
-        dx11::GraphicsContext::Instance().SetViewPort(
-            ImGui::GetWindowSize().x, 0.0f,
-                                            (float)Env::Instance().screen_width -
-                                                 ImGui::GetWindowSize().x,
-                                            (float)Env::Instance().screen_height);
-
-         Env::Instance().aspect =
-             ((float)Env::Instance().screen_width - ImGui::GetWindowSize().x) /
-             (float)Env::Instance().screen_height;
-    }
-
     OnFrame();
+
+    return true;
+}
+
+bool IGui::FrameEnd() {
 
     ImGui::PopStyleVar(2);
     ImGui::End();

@@ -209,6 +209,7 @@
     <ClCompile Include="ground_shader.cpp" />
     <ClCompile Include="image_filter.cpp" />
     <ClCompile Include="image_fliter_shader.cpp" />
+    <ClCompile Include="node_ui.cpp" />
     <ClCompile Include="normal_geometry_shader.cpp" />
     <ClCompile Include="parallel_node.cpp" />
     <ClCompile Include="physically_based_shader.cpp" />

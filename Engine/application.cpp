@@ -101,7 +101,26 @@ bool Application::OnFrame() {
     // clang-format on
 
     input_->Frame();
-    imgui_->Frame(manager_->models);
+
+    //Todo : pipeline 돌면서 imgui.nodes에 추가.(unique id, position)
+    imgui_->FrameBegin();
+    imgui_->FrameRate();
+    imgui_->StyleSetting();
+    imgui_->MenuBar();
+    imgui_->NodeEditor();
+    int selected = imgui_->TabBar(manager_->models);
+    imgui_->FrameEnd();
+
+    if (ImGui::GetCurrentWindow()) {
+        dx11::GraphicsContext::Instance().SetViewPort(
+            ImGui::GetWindowSize().x, 0.0f,
+            (float)common::Env::Instance().screen_width - ImGui::GetWindowSize().x,
+            (float)common::Env::Instance().screen_height);
+
+        common::Env::Instance().aspect =
+            ((float)common::Env::Instance().screen_width - ImGui::GetWindowSize().x) /
+            (float)common::Env::Instance().screen_height;
+    }
 
     // Present the rendered scene to the screen.
     dx11::GraphicsContext::Instance().EndScene();

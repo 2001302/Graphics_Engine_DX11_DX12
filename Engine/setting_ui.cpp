@@ -8,11 +8,11 @@ void SettingUi::OnStart() {
     context_ = ed::CreateEditor(&config);
 }
 void SettingUi::OnFrame() {
-    FrameRate();
-    StyleSetting();
-    MenuBar();
-    NodeEditor();
-    TabBar();
+    //FrameRate();
+    //StyleSetting();
+    //MenuBar();
+    //NodeEditor();
+    //TabBar();
 }
 void SettingUi::StyleSetting() {
     ImGuiStyle &style = ImGui::GetStyle();
@@ -52,17 +52,20 @@ void SettingUi::NodeEditor() {
     // Node Editor Widget
     ed::SetCurrentEditor(context_);
     ed::Begin("My Editor", ImVec2(0.0, ImGui::GetWindowHeight() / 1.5f));
+    auto &io = ImGui::GetIO();
 
-    // Start drawing nodes.
-    if (selected_object_id_ != -99999) {
-        auto node = node_map[selected_object_id_];
+    for (auto node : nodes) {
         node->Show();
     }
 
     ed::End();
     ed::SetCurrentEditor(nullptr);
 }
-void SettingUi::TabBar() { // Tab Bar
+int SettingUi::TabBar(
+    std::unordered_map<int, std::shared_ptr<INodeUi>> node_map) { // Tab Bar
+
+    int selected_object_id_ = -99999;
+
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_FittingPolicyScroll)) {
         if (ImGui::BeginTabItem("Hierarchy")) {
             ImGui::BeginTable("MyTable", ImGuiTableFlags_Resizable |
@@ -186,4 +189,5 @@ void SettingUi::TabBar() { // Tab Bar
 
         ImGui::EndTabBar();
     }
+    return selected_object_id_;
 }

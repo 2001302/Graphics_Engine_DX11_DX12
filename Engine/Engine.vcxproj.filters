@@ -313,6 +313,9 @@
     <ClCompile Include="platform.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
+    <ClCompile Include="node_ui.cpp">
+      <Filter>Common\BluePrint</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Platform">

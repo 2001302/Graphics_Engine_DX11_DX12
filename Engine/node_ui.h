@@ -21,12 +21,17 @@ struct INodeUi {
 
     void Show();
 
+    int uniqueId = 1;
+    ImVec2 position = ImVec2(0, 0);
+
   private:
     virtual void OnShow() {}
 
   protected:
     ImVector<LinkInfo> links_;
     int next_link_Id = 100;
+
+    bool firstframe = true;
 };
 } // namespace Engine
 #endif

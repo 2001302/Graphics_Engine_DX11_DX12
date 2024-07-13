@@ -9,7 +9,8 @@ namespace common {
 class IGui : public IDataBlock {
   public:
     bool Initialize();
-    bool Frame(std::unordered_map<int, std::shared_ptr<INodeUi>> node_map);
+    bool FrameBegin();
+    bool FrameEnd();
     void Shutdown();
 
     virtual void OnStart(){};
@@ -20,7 +21,6 @@ class IGui : public IDataBlock {
     std::string ini_file_name_;
     ImFont *default_font_ = nullptr;
     ImFont *header_font = nullptr;
-    std::unordered_map<int, std::shared_ptr<INodeUi>> node_map;
 
   private:
     void RecreateFontAtlas();

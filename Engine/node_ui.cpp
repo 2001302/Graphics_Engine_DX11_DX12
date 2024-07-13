@@ -4,10 +4,7 @@ using namespace common;
 
 void INodeUi::Show() 
 {
-    static bool firstframe = true; // Used to position the nodes on startup
     auto &io = ImGui::GetIO();
-
-    int uniqueId = 1;
 
     // Pin
     auto basic_id = uniqueId++;

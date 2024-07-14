@@ -246,5 +246,8 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context->DrawIndexed(model->GetIndexCount(), 0, 0);
 
+    if (gui->SelectedId() == target_id)
+        gui->PushNode(image_based_shader_source);
+
     return EnumBehaviorTreeStatus::eSuccess;
 }

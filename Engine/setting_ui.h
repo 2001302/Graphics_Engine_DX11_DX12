@@ -81,14 +81,33 @@ class SettingUi : public IGui {
     void OnStart() override;
     void OnFrame() override;
     TabInfo Tab() { return tab; }
+    int SelectedId() {
+        if (selected_object_id_ == -99999)
+            return 0;
+        else {
+            return selected_object_id_;
+        }
+    }
 
     void StyleSetting();
     void FrameRate();
     void MenuBar();
     void NodeEditor();
-    int TabBar(std::unordered_map<int, std::shared_ptr<INodeUi>> node_map);
+    void TabBar(std::unordered_map<int, std::shared_ptr<INodeUi>> node_map);
 
-    void PushNode(INodeUi *node) { nodes.push_back(node); };
+    void PushNode(INodeUi *node) {
+        node->uniqueId = unique_id;
+        node->position = ImVec2(unique_pos_x, 0);
+
+        nodes.push_back(node);
+        unique_id = unique_id + 10;
+        unique_pos_x = unique_pos_x + 500;
+    };
+    void ClearNode() {
+        unique_id = 1;
+        unique_pos_x = 0;
+        nodes.clear();
+    };
 
   private:
 
@@ -97,7 +116,11 @@ class SettingUi : public IGui {
 
     ImVector<INodeUi::LinkInfo> links_;
     int next_link_Id = 100;
+
+    int selected_object_id_ = -99999;
     std::vector<INodeUi *> nodes;
+    int unique_id = 1;
+    int unique_pos_x = 0;
 };
 } // namespace common
 #endif

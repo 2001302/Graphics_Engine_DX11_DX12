@@ -1,6 +1,6 @@
 #include "phong_shader.h"
-#include "setting_ui.h"
 #include "pipeline_manager.h"
+#include "setting_ui.h"
 
 using namespace dx11;
 
@@ -10,10 +10,10 @@ void PhongShaderSource::InitializeThis() {
     vertex_constant_buffer_data.view = Matrix();
     vertex_constant_buffer_data.projection = Matrix();
 
-    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
-                                                 vertex_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(
+        vertex_constant_buffer_data, vertex_constant_buffer);
     GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
-                                                 pixel_constant_buffer);
+                                                     pixel_constant_buffer);
 }
 
 void PhongShaderSource::OnShow() {
@@ -26,13 +26,17 @@ void PhongShaderSource::OnShow() {
     ImGui::SliderFloat("Shininess",
                        &pixel_constant_buffer_data.material.shininess, 0.01f,
                        1.0f);
-    float diffuse;
-    ImGui::SliderFloat("Diffuse", &diffuse, 0.0f, 1.0f);
-    pixel_constant_buffer_data.material.diffuse = Vector3(diffuse);
 
-    float specular;
-    ImGui::SliderFloat("Specular", &specular, 0.0f, 1.0f);
-    pixel_constant_buffer_data.material.specular = Vector3(specular);
+    ImGui::SliderFloat(
+        "Diffuse", &pixel_constant_buffer_data.material.diffuse.x, 0.0f, 1.0f);
+    pixel_constant_buffer_data.material.diffuse =
+        Vector3(pixel_constant_buffer_data.material.diffuse.x);
+
+    ImGui::SliderFloat("Specular",
+                       &pixel_constant_buffer_data.material.specular.x, 0.0f,
+                       1.0f);
+    pixel_constant_buffer_data.material.specular =
+        Vector3(pixel_constant_buffer_data.material.specular);
 };
 
 EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
@@ -74,7 +78,7 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
         phong_shader->layout);
 
     GraphicsContext::Instance().CreatePixelShader(L"phong_pixel_shader.hlsl",
-                                              phong_shader->pixel_shader);
+                                                  phong_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -85,8 +89,7 @@ EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    if (gui->Tab().common.render_mode ==
-        common::EnumRenderMode::eLight) {
+    if (gui->Tab().common.render_mode == common::EnumRenderMode::eLight) {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 
@@ -149,12 +152,12 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     {
         const float aspect = common::Env::Instance().aspect;
 
-        phong_shader_source->vertex_constant_buffer_data
-            .projection = XMMatrixPerspectiveFovLH(
-            XMConvertToRadians(
-                gui->Tab().projection.projection_fov_angle_y),
-            aspect, gui->Tab().projection.near_z,
-            gui->Tab().projection.far_z);
+        phong_shader_source->vertex_constant_buffer_data.projection =
+            XMMatrixPerspectiveFovLH(
+                XMConvertToRadians(
+                    gui->Tab().projection.projection_fov_angle_y),
+                aspect, gui->Tab().projection.near_z,
+                gui->Tab().projection.far_z);
 
         phong_shader_source->vertex_constant_buffer_data.projection =
             phong_shader_source->vertex_constant_buffer_data.projection
@@ -197,7 +200,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
 
     // phong_shader_source->pixel_constant_buffer_data.useTexture =
     //     detail->use_texture;
-    //phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
+    // phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
     //    gui->Tab().light.use_blinn_phong;
 
     GraphicsContext::Instance().UpdateBuffer(
@@ -255,6 +258,9 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
 
     context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
     context->DrawIndexed(model->GetIndexCount(), 0, 0);
+
+    if (gui->SelectedId() == target_id)
+        gui->PushNode(phong_shader_source);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }

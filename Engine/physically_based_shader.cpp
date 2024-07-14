@@ -18,52 +18,56 @@ void PhsicallyBasedShaderSource::InitializeThis() {
                                               pixel_constant_buffer);
 }
 
+void IntCheckbox(const char *label, int *v) {
+    bool b = (*v != 0); // int를 bool로 변환
+    if (ImGui::Checkbox(label, &b)) {
+        *v = b ? 1 : 0; // bool을 다시 int로 변환
+    }
+}
+
 void PhsicallyBasedShaderSource::OnShow() {
 
     //float mipmapLevel = 0.0f; // 4
     //float expose = 1.0f;      // 16
     //float gamma = 1.0f;
 
-    bool useAlbedoMap;
-    ImGui::Checkbox("Use Texture", &useAlbedoMap);
-    pixel_constant_buffer_data.useAlbedoMap = useAlbedoMap;
+    IntCheckbox("Use Texture", &pixel_constant_buffer_data.useAlbedoMap);
 
-    bool useNormalMap;
+    bool useNormalMap = (bool)pixel_constant_buffer_data.useNormalMap;
     ImGui::Checkbox("useNormalMap", &useNormalMap);
     pixel_constant_buffer_data.useNormalMap = useNormalMap;
 
-    bool useAOMap;
+    bool useAOMap = (bool)pixel_constant_buffer_data.useAOMap;
     ImGui::Checkbox("useAOMap", &useAOMap);
     pixel_constant_buffer_data.useAOMap = useAOMap;
 
-    bool invertNormalMapY;
+    bool invertNormalMapY = (bool)pixel_constant_buffer_data.invertNormalMapY;
     ImGui::Checkbox("invertNormalMapY", &invertNormalMapY);
     pixel_constant_buffer_data.invertNormalMapY = invertNormalMapY;
 
-    bool useMetallicMap;
+    bool useMetallicMap = (bool)pixel_constant_buffer_data.useMetallicMap;
     ImGui::Checkbox("useMetallicMap", &useMetallicMap);
     pixel_constant_buffer_data.useMetallicMap = useMetallicMap;
 
-    bool useRoughnessMap;
+    bool useRoughnessMap = (bool)pixel_constant_buffer_data.useRoughnessMap;
     ImGui::Checkbox("useRoughnessMap", &useRoughnessMap);
     pixel_constant_buffer_data.useRoughnessMap = useRoughnessMap;
 
-    bool useEmissiveMap;
+    bool useEmissiveMap = (bool)pixel_constant_buffer_data.useEmissiveMap;
     ImGui::Checkbox("useEmissiveMap", &useEmissiveMap);
     pixel_constant_buffer_data.useRoughnessMap = useEmissiveMap;
 
     ImGui::Text("Material");
 
-    float albedo;
-    ImGui::SliderFloat("albedo", &albedo, 0.01f, 1.0f);
-    pixel_constant_buffer_data.material.albedo = Vector3(albedo);
+    ImGui::SliderFloat("albedo", &pixel_constant_buffer_data.material.albedo.x,
+                       0.01f, 1.0f);
+    pixel_constant_buffer_data.material.albedo =
+        Vector3(pixel_constant_buffer_data.material.albedo.x);
 
-    float roughness;
     ImGui::SliderFloat("roughness",
                        &pixel_constant_buffer_data.material.roughness, 0.0f,
                        1.0f);
 
-    float metallic;
     ImGui::SliderFloat(
         "metallic", &pixel_constant_buffer_data.material.metallic, 0.0f, 1.0f);
 };
@@ -235,21 +239,6 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         }
     }
 
-    physically_shader_source->pixel_constant_buffer_data.useAlbedoMap =
-        gui->Tab().pbr.useAlbedoMap;
-    physically_shader_source->pixel_constant_buffer_data.useNormalMap =
-        gui->Tab().pbr.useNormalMap;
-    physically_shader_source->pixel_constant_buffer_data.useAOMap =
-        gui->Tab().pbr.useAOMap;
-    physically_shader_source->pixel_constant_buffer_data.invertNormalMapY =
-        gui->Tab().pbr.invertNormalMapY;
-    physically_shader_source->pixel_constant_buffer_data.useMetallicMap =
-        gui->Tab().pbr.useMetallicMap;
-    physically_shader_source->pixel_constant_buffer_data.useRoughnessMap =
-        gui->Tab().pbr.useRoughnessMap;
-    physically_shader_source->pixel_constant_buffer_data.useEmissiveMap =
-        gui->Tab().pbr.useEmissiveMap;
-
     GraphicsContext::Instance().UpdateBuffer(
         physically_shader_source->pixel_constant_buffer_data,
         physically_shader_source->pixel_constant_buffer);
@@ -329,6 +318,9 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
         context->DrawIndexed(model->GetIndexCount(), 0, 0);
     }
+
+    if (gui->SelectedId() == target_id)
+        gui->PushNode(physically_shader_source);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }

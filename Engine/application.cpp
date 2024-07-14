@@ -61,6 +61,10 @@ bool Application::OnFrame() {
     for(auto model : manager_->models)
         model_ids.push_back(model.first);
     
+    if (imgui_->SelectedId()) {
+        imgui_->PushNode(manager_->models[imgui_->SelectedId()].get()); 
+    }
+
     auto tree = std::make_unique<dx11::BehaviorTreeBuilder>();
     tree->Build(dataBlock)
     ->Excute(std::make_shared<dx11::UpdateCamera>())
@@ -102,25 +106,14 @@ bool Application::OnFrame() {
 
     input_->Frame();
 
-    //Todo : pipeline 돌면서 imgui.nodes에 추가.(unique id, position)
     imgui_->FrameBegin();
     imgui_->FrameRate();
     imgui_->StyleSetting();
     imgui_->MenuBar();
     imgui_->NodeEditor();
-    int selected = imgui_->TabBar(manager_->models);
+    imgui_->TabBar(manager_->models);
     imgui_->FrameEnd();
-
-    if (ImGui::GetCurrentWindow()) {
-        dx11::GraphicsContext::Instance().SetViewPort(
-            ImGui::GetWindowSize().x, 0.0f,
-            (float)common::Env::Instance().screen_width - ImGui::GetWindowSize().x,
-            (float)common::Env::Instance().screen_height);
-
-        common::Env::Instance().aspect =
-            ((float)common::Env::Instance().screen_width - ImGui::GetWindowSize().x) /
-            (float)common::Env::Instance().screen_height;
-    }
+    imgui_->ClearNode();
 
     // Present the rendered scene to the screen.
     dx11::GraphicsContext::Instance().EndScene();

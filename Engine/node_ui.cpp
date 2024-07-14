@@ -9,6 +9,82 @@ void INodeUi::Show()
     // Pin
     auto basic_id = uniqueId++;
     ed::BeginNode(basic_id);
+    ImGui::Text("Something");
+    ed::BeginPin(uniqueId++, ed::PinKind::Input);
+    ImGui::Text("-> In");
+    ed::EndPin();
+    ImGui::SameLine();
+    ImGui::Dummy(
+        ImVec2(250, 0)); // Hacky magic number to space out the output pin.
+    ImGui::SameLine();
+    ed::BeginPin(uniqueId++, ed::PinKind::Output);
+    ImGui::Text("Out ->");
+    ed::EndPin();
+
+    OnShow();
+
+    ed::EndNode();
+    if (firstframe) {
+        ed::SetNodePosition(basic_id, position);
+    }
+
+    // ==================================================================================================
+    // Link Drawing Section
+
+    for (auto &linkInfo : links_)
+        ed::Link(linkInfo.Id, linkInfo.InputId, linkInfo.OutputId);
+
+    // ==================================================================================================
+    // Interaction Handling Section
+    // This was coppied from BasicInteration.cpp. See that file for
+    // commented code.
+
+    // Handle creation action
+    // ---------------------------------------------------------------------------
+    if (ed::BeginCreate()) {
+        ed::PinId inputPinId, outputPinId;
+        if (ed::QueryNewLink(&inputPinId, &outputPinId)) {
+            if (inputPinId && outputPinId) {
+                if (ed::AcceptNewItem()) {
+                    links_.push_back(
+                        {ed::LinkId(next_link_Id++), inputPinId, outputPinId});
+                    ed::Link(links_.back().Id, links_.back().InputId,
+                             links_.back().OutputId);
+                }
+            }
+        }
+    }
+    ed::EndCreate();
+
+    // Handle deletion action
+    // ---------------------------------------------------------------------------
+    if (ed::BeginDelete()) {
+        ed::LinkId deletedLinkId;
+        while (ed::QueryDeletedLink(&deletedLinkId)) {
+            if (ed::AcceptDeletedItem()) {
+                for (auto &link : links_) {
+                    if (link.Id == deletedLinkId) {
+                        links_.erase(&link);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    ed::EndDelete();
+
+    firstframe = false;
+}
+
+/*
+
+void INodeUi::Show()
+{
+    auto &io = ImGui::GetIO();
+
+    // Pin
+    auto basic_id = uniqueId++;
+    ed::BeginNode(basic_id);
     ImGui::Text("Detail");
     ed::BeginPin(uniqueId++, ed::PinKind::Input);
     ImGui::Text("-> In");
@@ -105,26 +181,27 @@ void INodeUi::Show()
 
     ed::EndNode();
     if (firstframe) {
-        ed::SetNodePosition(basic_id, ImVec2(20, 20));
+        ed::SetNodePosition(basic_id, position);
     }
 
-    // ==================================================================================================
+    //
+==================================================================================================
     // Link Drawing Section
 
     for (auto &linkInfo : links_)
         ed::Link(linkInfo.Id, linkInfo.InputId, linkInfo.OutputId);
 
-    // ==================================================================================================
+    //
+==================================================================================================
     // Interaction Handling Section
     // This was coppied from BasicInteration.cpp. See that file for
     // commented code.
 
     // Handle creation action
-    // ---------------------------------------------------------------------------
-    if (ed::BeginCreate()) {
-        ed::PinId inputPinId, outputPinId;
-        if (ed::QueryNewLink(&inputPinId, &outputPinId)) {
-            if (inputPinId && outputPinId) {
+    //
+--------------------------------------------------------------------------- if
+(ed::BeginCreate()) { ed::PinId inputPinId, outputPinId; if
+(ed::QueryNewLink(&inputPinId, &outputPinId)) { if (inputPinId && outputPinId) {
                 if (ed::AcceptNewItem()) {
                     links_.push_back(
                         {ed::LinkId(next_link_Id++), inputPinId, outputPinId});
@@ -137,14 +214,11 @@ void INodeUi::Show()
     ed::EndCreate();
 
     // Handle deletion action
-    // ---------------------------------------------------------------------------
-    if (ed::BeginDelete()) {
-        ed::LinkId deletedLinkId;
-        while (ed::QueryDeletedLink(&deletedLinkId)) {
-            if (ed::AcceptDeletedItem()) {
-                for (auto &link : links_) {
-                    if (link.Id == deletedLinkId) {
-                        links_.erase(&link);
+    //
+--------------------------------------------------------------------------- if
+(ed::BeginDelete()) { ed::LinkId deletedLinkId; while
+(ed::QueryDeletedLink(&deletedLinkId)) { if (ed::AcceptDeletedItem()) { for
+(auto &link : links_) { if (link.Id == deletedLinkId) { links_.erase(&link);
                         break;
                     }
                 }
@@ -156,3 +230,5 @@ void INodeUi::Show()
     firstframe = false;
 
 }
+
+*/

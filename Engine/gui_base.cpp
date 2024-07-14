@@ -46,6 +46,19 @@ bool IGui::FrameBegin() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, windowBorderSize);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
 
+    if (ImGui::GetCurrentWindow()) {
+        dx11::GraphicsContext::Instance().SetViewPort(
+            ImGui::GetWindowSize().x, 0.0f,
+            (float)common::Env::Instance().screen_width -
+                ImGui::GetWindowSize().x,
+            (float)common::Env::Instance().screen_height);
+
+        common::Env::Instance().aspect =
+            ((float)common::Env::Instance().screen_width -
+             ImGui::GetWindowSize().x) /
+            (float)common::Env::Instance().screen_height;
+    }
+
     OnFrame();
 
     return true;

@@ -2,11 +2,8 @@
 
 using namespace dx11;
 
-CubeMap::CubeMap() {
-}
+CubeMap::CubeMap() {}
 
 CubeMap::~CubeMap() {}
 
-int CubeMap::GetIndexCount() {
-    return mesh->indices.size();
-}
+int CubeMap::GetIndexCount() { return mesh->indices.size(); }

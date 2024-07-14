@@ -10,10 +10,10 @@ void CubeMapShaderSource::InitializeThis() {
     vertex_constant_buffer_data.view = Matrix();
     vertex_constant_buffer_data.projection = Matrix();
 
-    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
-                                                 vertex_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(
+        vertex_constant_buffer_data, vertex_constant_buffer);
     GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
-                                                 pixel_constant_buffer);
+                                                     pixel_constant_buffer);
 }
 
 EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
@@ -70,8 +70,8 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
         L"cube_mapping_vertex_shader.hlsl", basicInputElements,
         cube_map_shader->vertex_shader, cube_map_shader->layout);
 
-    GraphicsContext::Instance().CreatePixelShader(L"cube_mapping_pixel_shader.hlsl",
-                                              cube_map_shader->pixel_shader);
+    GraphicsContext::Instance().CreatePixelShader(
+        L"cube_mapping_pixel_shader.hlsl", cube_map_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -118,12 +118,12 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
             manager->camera->view.Transpose();
 
         const float aspect = common::Env::Instance().aspect;
-        cube_shader_source->vertex_constant_buffer_data
-            .projection = XMMatrixPerspectiveFovLH(
-            XMConvertToRadians(
-                gui->Tab().projection.projection_fov_angle_y),
-            aspect, gui->Tab().projection.near_z,
-            gui->Tab().projection.far_z);
+        cube_shader_source->vertex_constant_buffer_data.projection =
+            XMMatrixPerspectiveFovLH(
+                XMConvertToRadians(
+                    gui->Tab().projection.projection_fov_angle_y),
+                aspect, gui->Tab().projection.near_z,
+                gui->Tab().projection.far_z);
 
         cube_shader_source->vertex_constant_buffer_data.projection =
             cube_shader_source->vertex_constant_buffer_data.projection

@@ -46,11 +46,11 @@ struct FilterSetting {
 struct GroundSetting {
     bool useHeightMap;
     float heightScale;
-    float ambient;                 
-    float shininess;             
-    float diffuse;                
-    float specular;            
-    float fresnelR0;  
+    float ambient;
+    float shininess;
+    float diffuse;
+    float specular;
+    float fresnelR0;
 };
 
 struct TabInfo {

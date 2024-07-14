@@ -1,8 +1,8 @@
 #include "model_loader.h"
 #include "mesh.h"
 
-#include <filesystem>
 #include <DirectXMesh.h>
+#include <filesystem>
 #include <vector>
 
 using namespace dx11;
@@ -162,8 +162,7 @@ Mesh ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
     if (mesh->mMaterialIndex >= 0) {
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-        newMesh.textureFilename =
-            ReadFilename(material, aiTextureType_DIFFUSE);
+        newMesh.textureFilename = ReadFilename(material, aiTextureType_DIFFUSE);
         newMesh.albedoTextureFilename =
             ReadFilename(material, aiTextureType_BASE_COLOR);
         newMesh.emissiveTextureFilename =
@@ -183,7 +182,8 @@ Mesh ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
     return newMesh;
 }
 
-std::string ModelLoader::ReadFilename(aiMaterial *material, aiTextureType type) {
+std::string ModelLoader::ReadFilename(aiMaterial *material,
+                                      aiTextureType type) {
 
     if (material->GetTextureCount(type) > 0) {
         aiString filepath;

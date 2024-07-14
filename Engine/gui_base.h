@@ -25,5 +25,5 @@ class IGui : public IDataBlock {
   private:
     void RecreateFontAtlas();
 };
-} // namespace Engine
+} // namespace common
 #endif

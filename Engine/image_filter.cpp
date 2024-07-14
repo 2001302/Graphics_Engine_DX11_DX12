@@ -1,7 +1,6 @@
-﻿#include "image_filter.h"
+#include "image_filter.h"
 
 using namespace dx11;
-
 
 ImageFilter::ImageFilter(ComPtr<ID3D11Device> &device,
                          ComPtr<ID3D11DeviceContext> &context,

@@ -32,5 +32,5 @@ class GeometryGenerator {
                                   const int numStacks, const float scale,
                                   const Vector2 texScale);
 };
-} // namespace Engine
+} // namespace dx11
 #endif

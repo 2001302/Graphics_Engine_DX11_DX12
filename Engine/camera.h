@@ -5,7 +5,7 @@
 #include "game_object.h"
 
 namespace dx11 {
-class Camera : public GameObject{
+class Camera : public GameObject {
   public:
     void Render();
 
@@ -21,5 +21,5 @@ class InitializeCamera : public BehaviorActionNode {
 class UpdateCamera : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
-} // namespace Engine
+} // namespace dx11
 #endif

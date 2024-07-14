@@ -1,9 +1,9 @@
 #ifndef _IMAGEBASEDSHADER
 #define _IMAGEBASEDSHADER
 
-#include "shader.h"
-#include "node_ui.h"
 #include "behavior_tree_builder.h"
+#include "node_ui.h"
+#include "shader.h"
 
 using namespace DirectX;
 
@@ -28,7 +28,8 @@ struct ImageBasedShaderSource : public IShaderSource, common::INodeUi {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
-    ImageBasedShader::ImageBasedVertexConstantBuffer vertex_constant_buffer_data;
+    ImageBasedShader::ImageBasedVertexConstantBuffer
+        vertex_constant_buffer_data;
     ImageBasedShader::ImageBasedPixelConstantBuffer pixel_constant_buffer_data;
 
   private:
@@ -52,5 +53,5 @@ class RenderGameObjectsUsingImageBasedShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-} // namespace Engine
+} // namespace dx11
 #endif

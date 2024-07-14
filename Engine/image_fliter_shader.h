@@ -1,8 +1,8 @@
 #ifndef _IMAGEFLITERSHADER
 #define _IMAGEFLITERSHADER
 
-#include "shader.h"
 #include "behavior_tree_builder.h"
+#include "shader.h"
 
 using namespace DirectX;
 
@@ -12,7 +12,6 @@ struct ImageFilterShader : public IShader {
 };
 struct ImageFilterShaderSource : public IShaderSource {
   public:
-
 };
 
 class InitializeBoardMap : public BehaviorActionNode {
@@ -23,5 +22,5 @@ class RenderBoardMap : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-} // namespace Engine
+} // namespace dx11
 #endif

@@ -12,24 +12,24 @@ void PhsicallyBasedShaderSource::InitializeThis() {
     vertex_constant_buffer_data.useHeightMap = 0;
     vertex_constant_buffer_data.heightScale = 0.0f;
 
-    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
-                                              vertex_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(
+        vertex_constant_buffer_data, vertex_constant_buffer);
     GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
-                                              pixel_constant_buffer);
+                                                     pixel_constant_buffer);
 }
 
 void IntCheckbox(const char *label, int *v) {
-    bool b = (*v != 0); // int를 bool로 변환
+    bool b = (*v != 0);
     if (ImGui::Checkbox(label, &b)) {
-        *v = b ? 1 : 0; // bool을 다시 int로 변환
+        *v = b ? 1 : 0;
     }
 }
 
 void PhsicallyBasedShaderSource::OnShow() {
 
-    //float mipmapLevel = 0.0f; // 4
-    //float expose = 1.0f;      // 16
-    //float gamma = 1.0f;
+    // float mipmapLevel = 0.0f; // 4
+    // float expose = 1.0f;      // 16
+    // float gamma = 1.0f;
 
     IntCheckbox("Use Texture", &pixel_constant_buffer_data.useAlbedoMap);
 
@@ -222,7 +222,8 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     //{
     //    physically_shader_source->pixel_constant_buffer_data.material
     //        .roughness = gui->Tab().pbr.roughness;
-    //    physically_shader_source->pixel_constant_buffer_data.material.metallic =
+    //    physically_shader_source->pixel_constant_buffer_data.material.metallic
+    //    =
     //        gui->Tab().pbr.metallic;
     //}
     // light

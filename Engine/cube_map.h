@@ -9,7 +9,7 @@ using Microsoft::WRL::ComPtr;
 
 class CubeMap : public GameObject {
   public:
-    struct CubeTexture{
+    struct CubeTexture {
         ComPtr<ID3D11ShaderResourceView> env_SRV;
         ComPtr<ID3D11ShaderResourceView> specular_SRV;   // Radiance
         ComPtr<ID3D11ShaderResourceView> irradiance_SRV; // Diffuse
@@ -23,7 +23,6 @@ class CubeMap : public GameObject {
     DirectX::SimpleMath::Matrix transform;
     std::shared_ptr<Mesh> mesh;
     std::shared_ptr<CubeTexture> texture;
-
 };
-} // namespace Engine
+} // namespace dx11
 #endif

@@ -30,10 +30,9 @@ BehaviorTreeBuilder::Conditional(std::shared_ptr<ConditionalNode> node) {
     current->PushNode(node);
     if (node->CheckCondition() == EnumBehaviorTreeStatus::eSuccess) {
         conditional_status = EnumConditionalStatus::ePass;
+    } else {
+        conditional_status = EnumConditionalStatus::eSkip;
     }
-    else {
-		conditional_status = EnumConditionalStatus::eSkip;
-	}
     current->PopNode();
     return this;
 }

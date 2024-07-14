@@ -1,7 +1,7 @@
 #include "camera.h"
 #include "geometry_generator.h"
-#include "setting_ui.h"
 #include "pipeline_manager.h"
+#include "setting_ui.h"
 
 using namespace dx11;
 

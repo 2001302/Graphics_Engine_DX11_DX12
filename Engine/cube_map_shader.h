@@ -1,8 +1,8 @@
 #ifndef _CUBEMAPSHADER
 #define _CUBEMAPSHADER
 
-#include "shader.h"
 #include "behavior_tree_builder.h"
+#include "shader.h"
 
 using namespace DirectX;
 
@@ -51,5 +51,5 @@ class RenderCubeMap : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-} // namespace Engine
+} // namespace dx11
 #endif

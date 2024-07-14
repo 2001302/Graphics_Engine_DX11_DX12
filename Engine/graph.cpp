@@ -1,4 +1,4 @@
-﻿#include "graph.h"
+#include "graph.h"
 
 using namespace dx11;
 

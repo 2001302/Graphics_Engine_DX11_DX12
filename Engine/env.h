@@ -1,15 +1,18 @@
 #ifndef _ENV
 #define _ENV
 
+#include <cmath> //for calculate coordination
 #include <windows.h>
-#include <cmath>		//for calculate coordination
 
 const double PI = std::acos(-1);
 
 namespace common {
 struct Env {
   private:
-    Env() : main_window(0), screen_width(1920), screen_height(1080), aspect(0.0f){};
+    Env()
+        : main_window(0), screen_width(1920), screen_height(1080),
+          aspect(0.0f){};
+
   public:
     static Env &Instance() {
         static Env instance;
@@ -27,5 +30,5 @@ struct Env {
     float screen_height;
     float aspect;
 };
-} // namespace Engine
+} // namespace common
 #endif

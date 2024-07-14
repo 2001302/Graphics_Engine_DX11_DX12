@@ -183,8 +183,8 @@ void ResourceHelper::CreateTexture(
     txtDesc.CPUAccessFlags = 0;
 
     // 초기 데이터 없이 텍스춰 생성 (전부 검은색)
-    GraphicsContext::Instance().device()->CreateTexture2D(&txtDesc, NULL,
-                                                   texture.GetAddressOf());
+    GraphicsContext::Instance().device()->CreateTexture2D(
+        &txtDesc, NULL, texture.GetAddressOf());
 
     // 실제로 생성된 MipLevels를 확인해보고 싶을 경우
     // texture->GetDesc(&txtDesc);
@@ -247,8 +247,8 @@ void ResourceHelper::CreateTextureArray(
     txtDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS; // 밉맵 사용
 
     // 초기 데이터 없이 텍스춰를 만듭니다.
-    GraphicsContext::Instance().device()->CreateTexture2D(&txtDesc, NULL,
-                                                   texture.GetAddressOf());
+    GraphicsContext::Instance().device()->CreateTexture2D(
+        &txtDesc, NULL, texture.GetAddressOf());
 
     // 실제로 만들어진 MipLevels를 확인
     texture->GetDesc(&txtDesc);

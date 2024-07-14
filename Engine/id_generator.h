@@ -14,5 +14,5 @@ class IdGenerator {
     static inline int entity_id_ = 10000;
 };
 
-} // namespace Engine
+} // namespace common
 #endif

@@ -12,8 +12,7 @@ Input::Input(const Input &other) {}
 
 Input::~Input() {}
 
-bool Input::Initialize(HINSTANCE hinstance, int screenWidth,
-                       int screenHeight) {
+bool Input::Initialize(HINSTANCE hinstance, int screenWidth, int screenHeight) {
     HRESULT result;
 
     // Store the screen size which will be used for positioning the mouse
@@ -75,8 +74,7 @@ bool Input::Initialize(HINSTANCE hinstance, int screenWidth,
 
     // Set the cooperative level of the mouse to share with other programs.
     result = mouse_->SetCooperativeLevel(common::Env::Instance().main_window,
-                                         DISCL_FOREGROUND |
-                                                    DISCL_NONEXCLUSIVE);
+                                         DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
     if (FAILED(result)) {
         return false;
     }
@@ -115,7 +113,7 @@ bool Input::ReadKeyboard() {
 
     // Read the keyboard device.
     result = keyboard_->GetDeviceState(sizeof(keyboard_state_),
-                                        (LPVOID)&keyboard_state_);
+                                       (LPVOID)&keyboard_state_);
     if (FAILED(result)) {
         // If the keyboard lost focus or was not acquired then try to get
         // control back.

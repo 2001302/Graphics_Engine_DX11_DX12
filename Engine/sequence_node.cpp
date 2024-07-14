@@ -1,4 +1,4 @@
-﻿#include "sequence_node.H"
+#include "sequence_node.H"
 
 using namespace dx11;
 

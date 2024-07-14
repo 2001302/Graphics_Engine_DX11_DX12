@@ -1,7 +1,7 @@
 #include "image_based_shader.h"
 #include "geometry_generator.h"
-#include "setting_ui.h"
 #include "pipeline_manager.h"
+#include "setting_ui.h"
 
 using namespace dx11;
 
@@ -10,10 +10,10 @@ void ImageBasedShaderSource::InitializeThis() {
     vertex_constant_buffer_data.view = Matrix();
     vertex_constant_buffer_data.projection = Matrix();
 
-    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
-                                                 vertex_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(
+        vertex_constant_buffer_data, vertex_constant_buffer);
     GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
-                                                 pixel_constant_buffer);
+                                                     pixel_constant_buffer);
 }
 
 void ImageBasedShaderSource::OnShow() {
@@ -71,8 +71,8 @@ EnumBehaviorTreeStatus InitializeImageBasedShader::OnInvoke() {
         L"image_based_vertex_shader.hlsl", inputElements,
         image_based_shader->vertex_shader, image_based_shader->layout);
 
-    GraphicsContext::Instance().CreatePixelShader(L"image_based_pixel_shader.hlsl",
-                                              image_based_shader->pixel_shader);
+    GraphicsContext::Instance().CreatePixelShader(
+        L"image_based_pixel_shader.hlsl", image_based_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -147,12 +147,12 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingImageBasedShader::OnInvoke() {
     // projection
     {
         const float aspect = common::Env::Instance().aspect;
-        image_based_shader_source->vertex_constant_buffer_data
-            .projection = XMMatrixPerspectiveFovLH(
-            XMConvertToRadians(
-                gui->Tab().projection.projection_fov_angle_y),
-            aspect, gui->Tab().projection.near_z,
-            gui->Tab().projection.far_z);
+        image_based_shader_source->vertex_constant_buffer_data.projection =
+            XMMatrixPerspectiveFovLH(
+                XMConvertToRadians(
+                    gui->Tab().projection.projection_fov_angle_y),
+                aspect, gui->Tab().projection.near_z,
+                gui->Tab().projection.far_z);
 
         image_based_shader_source->vertex_constant_buffer_data.projection =
             image_based_shader_source->vertex_constant_buffer_data.projection

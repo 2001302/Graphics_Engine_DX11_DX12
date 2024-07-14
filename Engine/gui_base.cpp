@@ -13,8 +13,9 @@ bool IGui::Initialize() {
     ImGui::SetCurrentContext(context_);
 
     ImGui_ImplWin32_Init(Env::Instance().main_window);
-    ImGui_ImplDX11_Init(dx11::GraphicsContext::Instance().device().Get(),
-                        dx11::GraphicsContext::Instance().device_context().Get());
+    ImGui_ImplDX11_Init(
+        dx11::GraphicsContext::Instance().device().Get(),
+        dx11::GraphicsContext::Instance().device_context().Get());
 
     ImGui::StyleColorsDark();
     RecreateFontAtlas();
@@ -96,8 +97,8 @@ void IGui::RecreateFontAtlas() {
 
     default_font_ = io.Fonts->AddFontFromFileTTF(
         "Assets/Fonts/Play-Regular.ttf", 18.0f, &config);
-    header_font = io.Fonts->AddFontFromFileTTF(
-        "Assets/Fonts/Cuprum-Bold.ttf", 20.0f, &config);
+    header_font = io.Fonts->AddFontFromFileTTF("Assets/Fonts/Cuprum-Bold.ttf",
+                                               20.0f, &config);
 
     io.Fonts->Build();
 }

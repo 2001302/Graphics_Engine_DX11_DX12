@@ -2,8 +2,7 @@
 
 using namespace common;
 
-void INodeUi::Show() 
-{
+void INodeUi::Show() {
     auto &io = ImGui::GetIO();
 
     // Pin

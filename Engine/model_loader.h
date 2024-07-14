@@ -23,8 +23,9 @@ class ModelLoader {
 
     void UpdateTangents();
     std::string ReadFilename(aiMaterial *material, aiTextureType type);
+
   public:
     std::string basePath;
     std::vector<Mesh> meshes;
 };
-} // namespace Engine
+} // namespace dx11

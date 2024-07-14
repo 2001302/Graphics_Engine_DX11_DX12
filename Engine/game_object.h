@@ -1,9 +1,9 @@
 #ifndef _GAMEOBJECT
 #define _GAMEOBJECT
 
+#include "bone.h"
 #include "entity.h"
 #include "mesh.h"
-#include "bone.h"
 
 namespace dx11 {
 using Microsoft::WRL::ComPtr;
@@ -19,5 +19,5 @@ class GameObject : public common::IEntity {
     virtual void OnUpdate(){};
     virtual void OnRender(){};
 };
-} // namespace Engine
+} // namespace dx11
 #endif

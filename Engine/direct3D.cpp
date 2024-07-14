@@ -36,9 +36,13 @@ ComPtr<ID3D11RenderTargetView> GraphicsContext::render_target_view() {
 
 D3D11_VIEWPORT GraphicsContext::viewport() { return viewport_; }
 
-ComPtr<ID3D11Texture2D> GraphicsContext::float_buffer() { return float_buffer_; }
+ComPtr<ID3D11Texture2D> GraphicsContext::float_buffer() {
+    return float_buffer_;
+}
 
-ComPtr<ID3D11Texture2D> GraphicsContext::resolved_buffer() { return resolved_buffer_; }
+ComPtr<ID3D11Texture2D> GraphicsContext::resolved_buffer() {
+    return resolved_buffer_;
+}
 
 ComPtr<ID3D11RenderTargetView> GraphicsContext::back_buffer_RTV() {
     return back_buffer_RTV_;
@@ -216,8 +220,8 @@ void GraphicsContext::SetViewPort(float x, float y, float width, float height) {
     device_context_->RSSetViewports(1, &viewport_);
 }
 
-void GraphicsContext::BeginScene(float red, float green, float blue, float alpha,
-                          bool draw_as_wire) {
+void GraphicsContext::BeginScene(float red, float green, float blue,
+                                 float alpha, bool draw_as_wire) {
     float color[4];
 
     // Setup the color to clear the buffer to.
@@ -271,7 +275,7 @@ void GraphicsContext::EndScene() {
 }
 
 void GraphicsContext::CreateIndexBuffer(const std::vector<uint32_t> &indices,
-                                 ComPtr<ID3D11Buffer> &indexBuffer) {
+                                        ComPtr<ID3D11Buffer> &indexBuffer) {
     D3D11_BUFFER_DESC bufferDesc = {};
     bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
     bufferDesc.ByteWidth = UINT(sizeof(int) * indices.size());
@@ -311,8 +315,8 @@ void GraphicsContext::CreateGeometryShader(
                                   shaderBlob->GetBufferSize(), NULL,
                                   &geometryShader);
 }
-void GraphicsContext::CreatePixelShader(const std::wstring &filename,
-                                 ComPtr<ID3D11PixelShader> &pixelShader) {
+void GraphicsContext::CreatePixelShader(
+    const std::wstring &filename, ComPtr<ID3D11PixelShader> &pixelShader) {
     ComPtr<ID3DBlob> shaderBlob;
     ComPtr<ID3DBlob> errorBlob;
 

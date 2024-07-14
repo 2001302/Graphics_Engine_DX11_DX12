@@ -31,27 +31,24 @@ struct GroundShader : public IShader {
     };
 
     struct GroundPixelConstantBuffer {
-    Vector3 eyeWorld;         // 12
-    float mipmapLevel = 0.0f; // 4
-    GroundMaterial material;  // 48
-    Light lights[MAX_LIGHTS]; // 48 * MAX_LIGHTS
-    Vector4 indexColor;       // 피킹(Picking)에 사용
-    int useTexture = 0;       // 4
-    int useNormalMap = 1;     // 4
-    int useAOMap = 1;         // 4, Ambient Occlusion
-    int reverseNormalMapY = 0; // 4
+        Vector3 eyeWorld;          // 12
+        float mipmapLevel = 0.0f;  // 4
+        GroundMaterial material;   // 48
+        Light lights[MAX_LIGHTS];  // 48 * MAX_LIGHTS
+        Vector4 indexColor;        // 피킹(Picking)에 사용
+        int useTexture = 0;        // 4
+        int useNormalMap = 1;      // 4
+        int useAOMap = 1;          // 4, Ambient Occlusion
+        int reverseNormalMapY = 0; // 4
     };
-
 };
 
 struct GroundShaderSource : public IShaderSource {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
-    GroundShader::GroundVertexConstantBuffer
-        vertex_constant_buffer_data;
-    GroundShader::GroundPixelConstantBuffer
-        pixel_constant_buffer_data;
+    GroundShader::GroundVertexConstantBuffer vertex_constant_buffer_data;
+    GroundShader::GroundPixelConstantBuffer pixel_constant_buffer_data;
 
   private:
     void InitializeThis() override;
@@ -72,5 +69,5 @@ class UpdateGroundShader : public BehaviorActionNode {
 class RenderGroundShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
-} // namespace Engine
+} // namespace dx11
 #endif

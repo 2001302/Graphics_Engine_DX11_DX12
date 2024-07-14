@@ -11,10 +11,10 @@ void BoardMap::Initialize(
     image_filter_shader = std::make_shared<ImageFilterShader>();
 
     GraphicsContext::Instance().CreateVertexBuffer(m_mesh->vertices,
-                                   m_mesh->vertexBuffer);
-    //m_mesh->m_indexCount = UINT(m_mesh->indices.size());
+                                                   m_mesh->vertexBuffer);
+    // m_mesh->m_indexCount = UINT(m_mesh->indices.size());
     GraphicsContext::Instance().CreateIndexBuffer(m_mesh->indices,
-                                  m_mesh->indexBuffer);
+                                                  m_mesh->indexBuffer);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
@@ -26,16 +26,14 @@ void BoardMap::Initialize(
     };
 
     GraphicsContext::Instance().CreateVertexShaderAndInputLayout(
-        L"sampling_vs.hlsl",
-                                                 basicInputElements,
-                                                 m_vertexShader, m_inputLayout);
+        L"sampling_vs.hlsl", basicInputElements, m_vertexShader, m_inputLayout);
 
     GraphicsContext::Instance().CreatePixelShader(L"combine_ps.hlsl",
-                                           m_combinePixelShader);
+                                                  m_combinePixelShader);
     GraphicsContext::Instance().CreatePixelShader(L"bloom_down_ps.hlsl",
-                                           m_bloomDownPixelShader);
+                                                  m_bloomDownPixelShader);
     GraphicsContext::Instance().CreatePixelShader(L"bloom_up_ps.hlsl",
-                                  m_bloomUpPixelShader);
+                                                  m_bloomUpPixelShader);
 
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
@@ -135,16 +133,15 @@ void BoardMap::Render(ComPtr<ID3D11DeviceContext> &context) {
 }
 
 void BoardMap::RenderImageFilter(ComPtr<ID3D11DeviceContext> &context,
-                                    const ImageFilter &imageFilter) {
+                                 const ImageFilter &imageFilter) {
     imageFilter.Render(context);
     context->DrawIndexed(UINT(m_mesh->indices.size()), 0, 0);
 }
 
 void BoardMap::CreateBuffer(ComPtr<ID3D11Device> &device,
-                               ComPtr<ID3D11DeviceContext> &context, int width,
-                               int height,
-                               ComPtr<ID3D11ShaderResourceView> &srv,
-                               ComPtr<ID3D11RenderTargetView> &rtv) {
+                            ComPtr<ID3D11DeviceContext> &context, int width,
+                            int height, ComPtr<ID3D11ShaderResourceView> &srv,
+                            ComPtr<ID3D11RenderTargetView> &rtv) {
 
     ComPtr<ID3D11Texture2D> texture;
 

@@ -1,15 +1,15 @@
 #include "normal_geometry_shader.h"
 #include "geometry_generator.h"
-#include "setting_ui.h"
 #include "pipeline_manager.h"
+#include "setting_ui.h"
 
 using namespace dx11;
 
 void NormalGeometryShaderSource::InitializeThis() {
-    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
-                                                 vertex_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(
+        vertex_constant_buffer_data, vertex_constant_buffer);
     GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
-                                                 pixel_constant_buffer);
+                                                     pixel_constant_buffer);
 }
 
 EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
@@ -60,8 +60,8 @@ EnumBehaviorTreeStatus InitializeNormalGeometryShader::OnInvoke() {
         L"NormalVS.hlsl", inputElements, geometry_shader->vertex_shader,
         geometry_shader->layout);
 
-    GraphicsContext::Instance().CreatePixelShader(L"NormalPS.hlsl",
-                                              geometry_shader->pixel_shader);
+    GraphicsContext::Instance().CreatePixelShader(
+        L"NormalPS.hlsl", geometry_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }

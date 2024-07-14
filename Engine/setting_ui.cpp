@@ -8,11 +8,11 @@ void SettingUi::OnStart() {
     context_ = ed::CreateEditor(&config);
 }
 void SettingUi::OnFrame() {
-    //FrameRate();
-    //StyleSetting();
-    //MenuBar();
-    //NodeEditor();
-    //TabBar();
+    // FrameRate();
+    // StyleSetting();
+    // MenuBar();
+    // NodeEditor();
+    // TabBar();
 }
 void SettingUi::StyleSetting() {
     ImGuiStyle &style = ImGui::GetStyle();

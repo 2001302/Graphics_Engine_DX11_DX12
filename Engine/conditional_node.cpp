@@ -2,7 +2,7 @@
 
 using namespace dx11;
 
-//check condition
+// check condition
 EnumBehaviorTreeStatus ConditionalNode::CheckCondition() {
     return EnumBehaviorTreeStatus::eSuccess;
 }

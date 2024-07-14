@@ -167,55 +167,52 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
                 std::cout << meshData->textureFilename << std::endl;
 
-                ResourceHelper::CreateTexture(meshData->textureFilename,
-                                              meshData->texture,
-                                              meshData->textureResourceView,true);
+                ResourceHelper::CreateTexture(
+                    meshData->textureFilename, meshData->texture,
+                    meshData->textureResourceView, true);
             }
             if (!meshData->albedoTextureFilename.empty()) {
 
-                ResourceHelper::CreateTexture(
-                    meshData->albedoTextureFilename,
-                    meshData->albedoTexture, meshData->albedoSRV,true);
+                ResourceHelper::CreateTexture(meshData->albedoTextureFilename,
+                                              meshData->albedoTexture,
+                                              meshData->albedoSRV, true);
             }
 
             if (!meshData->emissiveTextureFilename.empty()) {
-                ResourceHelper::CreateTexture(
-                    meshData->emissiveTextureFilename,
-                    meshData->emissiveTexture, meshData->emissiveSRV, true);
+                ResourceHelper::CreateTexture(meshData->emissiveTextureFilename,
+                                              meshData->emissiveTexture,
+                                              meshData->emissiveSRV, true);
             }
 
             if (!meshData->normalTextureFilename.empty()) {
-                ResourceHelper::CreateTexture(
-                    meshData->normalTextureFilename,
-                    meshData->normalTexture, meshData->normalSRV, false);
+                ResourceHelper::CreateTexture(meshData->normalTextureFilename,
+                                              meshData->normalTexture,
+                                              meshData->normalSRV, false);
             }
 
             if (!meshData->heightTextureFilename.empty()) {
-                ResourceHelper::CreateTexture(
-                    meshData->heightTextureFilename,
-                    meshData->heightTexture, meshData->heightSRV, false);
+                ResourceHelper::CreateTexture(meshData->heightTextureFilename,
+                                              meshData->heightTexture,
+                                              meshData->heightSRV, false);
             }
 
             if (!meshData->aoTextureFilename.empty()) {
                 ResourceHelper::CreateTexture(meshData->aoTextureFilename,
-                                                meshData->aoTexture,
-                                                meshData->aoSRV, false);
+                                              meshData->aoTexture,
+                                              meshData->aoSRV, false);
             }
 
             if (!meshData->metallicTextureFilename.empty()) {
-                ResourceHelper::CreateTexture(
-                    meshData->metallicTextureFilename,
-                    meshData->metallicTexture, meshData->metallicSRV,
-                    false);
+                ResourceHelper::CreateTexture(meshData->metallicTextureFilename,
+                                              meshData->metallicTexture,
+                                              meshData->metallicSRV, false);
             }
 
             if (!meshData->roughnessTextureFilename.empty()) {
                 ResourceHelper::CreateTexture(
                     meshData->roughnessTextureFilename,
-                    meshData->roughnessTexture, meshData->roughnessSRV,
-                    false);
+                    meshData->roughnessTexture, meshData->roughnessSRV, false);
             }
-            
         }
 
     } else {
@@ -223,7 +220,6 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
     }
     return true;
 }
-
 
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
@@ -235,7 +231,8 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(
-            "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\ojwD8.jpg",
+            "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\ojwD8."
+            "jpg",
             mesh->texture, mesh->textureResourceView);
 
         {
@@ -257,8 +254,9 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
 
-            const HRESULT hr = GraphicsContext::Instance().device()->CreateBuffer(
-                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+            const HRESULT hr =
+                GraphicsContext::Instance().device()->CreateBuffer(
+                    &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
                           << std::endl;
@@ -296,7 +294,8 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(
-            "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\crate2_diffuse.png",
+            "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\crate2_"
+            "diffuse.png",
             mesh->texture, mesh->textureResourceView);
 
         {
@@ -318,8 +317,9 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
 
-            const HRESULT hr = GraphicsContext::Instance().device()->CreateBuffer(
-                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+            const HRESULT hr =
+                GraphicsContext::Instance().device()->CreateBuffer(
+                    &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
                           << std::endl;
@@ -357,7 +357,8 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(
-            "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\wall.jpg",
+            "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\wall."
+            "jpg",
             mesh->texture, mesh->textureResourceView);
 
         {
@@ -379,8 +380,9 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
 
-            const HRESULT hr = GraphicsContext::Instance().device()->CreateBuffer(
-                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+            const HRESULT hr =
+                GraphicsContext::Instance().device()->CreateBuffer(
+                    &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
                           << std::endl;

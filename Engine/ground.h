@@ -17,5 +17,5 @@ class Ground : public GameObject {
     DirectX::SimpleMath::Matrix transform;
     std::shared_ptr<Mesh> mesh;
 };
-} // namespace Engine
+} // namespace dx11
 #endif

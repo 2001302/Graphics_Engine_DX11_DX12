@@ -14,10 +14,10 @@ void GroundShaderSource::InitializeThis() {
     vertex_constant_buffer_data.useHeightMap = 0;
     vertex_constant_buffer_data.heightScale = 0.0f;
 
-    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant_buffer_data,
-                                              vertex_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(
+        vertex_constant_buffer_data, vertex_constant_buffer);
     GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
-                                              pixel_constant_buffer);
+                                                     pixel_constant_buffer);
 }
 
 EnumBehaviorTreeStatus CheckGroundShader::CheckCondition() {
@@ -83,11 +83,13 @@ EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
         ground_shader->layout);
 
     GraphicsContext::Instance().CreatePixelShader(L"ground_ps.hlsl",
-                                           ground_shader->pixel_shader);
+                                                  ground_shader->pixel_shader);
 
     auto mesh = manager->ground->mesh;
-    GraphicsContext::Instance().CreateVertexBuffer(mesh->vertices, mesh->vertexBuffer);
-    GraphicsContext::Instance().CreateIndexBuffer(mesh->indices, mesh->indexBuffer);
+    GraphicsContext::Instance().CreateVertexBuffer(mesh->vertices,
+                                                   mesh->vertexBuffer);
+    GraphicsContext::Instance().CreateIndexBuffer(mesh->indices,
+                                                  mesh->indexBuffer);
 
     mesh->albedoTextureFilename =
         "Assets/Textures/PBR/Bricks075A_1K-PNG/Bricks075A_1K_Color.png";
@@ -169,12 +171,12 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
             manager->camera->view.Transpose();
 
         const float aspect = common::Env::Instance().aspect;
-        ground_shader_source->vertex_constant_buffer_data
-            .projection = XMMatrixPerspectiveFovLH(
-            XMConvertToRadians(
-                gui->Tab().projection.projection_fov_angle_y),
-            aspect, gui->Tab().projection.near_z,
-            gui->Tab().projection.far_z);
+        ground_shader_source->vertex_constant_buffer_data.projection =
+            XMMatrixPerspectiveFovLH(
+                XMConvertToRadians(
+                    gui->Tab().projection.projection_fov_angle_y),
+                aspect, gui->Tab().projection.near_z,
+                gui->Tab().projection.far_z);
 
         ground_shader_source->vertex_constant_buffer_data.projection =
             ground_shader_source->vertex_constant_buffer_data.projection
@@ -182,7 +184,8 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
     }
 
     ground_shader_source->pixel_constant_buffer_data.useTexture = true;
-    ground_shader_source->vertex_constant_buffer_data.useHeightMap = gui->Tab().ground.useHeightMap;
+    ground_shader_source->vertex_constant_buffer_data.useHeightMap =
+        gui->Tab().ground.useHeightMap;
     ground_shader_source->pixel_constant_buffer_data.useAOMap = true;
     ground_shader_source->pixel_constant_buffer_data.material.diffuse =
         Vector3(gui->Tab().ground.diffuse);
@@ -241,7 +244,8 @@ EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
         0, 1, ground_shader_source->vertex_constant_buffer.GetAddressOf());
 
     if (gui->Tab().common.draw_as_wire_)
-        context->RSSetState(GraphicsContext::Instance().wire_rasterizer_state().Get());
+        context->RSSetState(
+            GraphicsContext::Instance().wire_rasterizer_state().Get());
     else
         context->RSSetState(
             GraphicsContext::Instance().solid_rasterizer_state().Get());

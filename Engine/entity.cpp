@@ -1,4 +1,4 @@
-#include"entity.h"
+#include "entity.h"
 #include "id_generator.h"
 
 using namespace common;

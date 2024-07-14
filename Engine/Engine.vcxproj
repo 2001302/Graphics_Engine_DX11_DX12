@@ -150,6 +150,10 @@
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="image_fliter_shader.h" />
     <ClInclude Include="ImGui\NodeEditor\crude_json.h" />
+    <ClInclude Include="ImGui\NodeEditor\imgui_bezier_math.h" />
+    <ClInclude Include="ImGui\NodeEditor\imgui_canvas.h" />
+    <ClInclude Include="ImGui\NodeEditor\imgui_extra_keys.h" />
+    <ClInclude Include="ImGui\NodeEditor\imgui_extra_math.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_node_editor.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_node_editor_internal.h" />
     <ClInclude Include="light.h" />
@@ -172,10 +176,6 @@
     <ClInclude Include="id_generator.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
-    <ClInclude Include="ImGui\imgui_bezier_math.h" />
-    <ClInclude Include="ImGui\imgui_canvas.h" />
-    <ClInclude Include="ImGui\imgui_extra_keys.h" />
-    <ClInclude Include="ImGui\imgui_extra_math.h" />
     <ClInclude Include="ImGui\imgui_impl_dx11.h" />
     <ClInclude Include="ImGui\imgui_impl_win32.h" />
     <ClInclude Include="ImGui\imgui_internal.h" />
@@ -210,6 +210,7 @@
     <ClCompile Include="image_filter.cpp" />
     <ClCompile Include="image_fliter_shader.cpp" />
     <ClCompile Include="ImGui\NodeEditor\crude_json.cpp" />
+    <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp" />
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor.cpp" />
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor_api.cpp" />
     <ClCompile Include="node_ui.cpp" />
@@ -226,7 +227,6 @@
     <ClCompile Include="geometry_generator.cpp" />
     <ClCompile Include="id_generator.cpp" />
     <ClCompile Include="ImGui\imgui.cpp" />
-    <ClCompile Include="ImGui\imgui_canvas.cpp" />
     <ClCompile Include="ImGui\imgui_demo.cpp" />
     <ClCompile Include="ImGui\imgui_draw.cpp" />
     <ClCompile Include="ImGui\imgui_impl_dx11.cpp" />
@@ -249,8 +249,8 @@
   <ItemGroup>
     <None Include="common.hlsli" />
     <None Include="ImGui\config.h.in" />
-    <None Include="ImGui\imgui_bezier_math.inl" />
-    <None Include="ImGui\imgui_extra_math.inl" />
+    <None Include="ImGui\NodeEditor\imgui_bezier_math.inl" />
+    <None Include="ImGui\NodeEditor\imgui_extra_math.inl" />
     <None Include="ImGui\NodeEditor\imgui_node_editor_internal.inl" />
     <None Include="packages.config" />
   </ItemGroup>

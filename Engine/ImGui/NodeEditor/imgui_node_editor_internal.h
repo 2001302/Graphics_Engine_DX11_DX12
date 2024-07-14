@@ -24,9 +24,9 @@
 //------------------------------------------------------------------------------
 # include "../imgui.h"
 # include "../imgui_internal.h"
-# include "../imgui_extra_math.h"
-# include "../imgui_bezier_math.h"
-# include "../imgui_canvas.h"
+# include "imgui_extra_math.h"
+# include "imgui_bezier_math.h"
+# include "imgui_canvas.h"
 
 # include "crude_json.h"
 

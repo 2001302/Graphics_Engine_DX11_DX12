@@ -1,4 +1,4 @@
-﻿//------------------------------------------------------------------------------
+//------------------------------------------------------------------------------
 // VERSION 0.9.1
 //
 // LICENSE
@@ -22,11 +22,11 @@
 
 
 //------------------------------------------------------------------------------
-# include "imgui.h"
-# include "imgui_internal.h"
-# include "imgui_extra_math.h"
-# include "imgui_bezier_math.h"
-# include "imgui_canvas.h"
+# include "../imgui.h"
+# include "../imgui_internal.h"
+# include "../imgui_extra_math.h"
+# include "../imgui_bezier_math.h"
+# include "../imgui_canvas.h"
 
 # include "crude_json.h"
 

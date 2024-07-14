@@ -173,7 +173,6 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
                 return message_receiver_->OnWheelDragRequest(manager_.get(),
                                                              input_);
             }
-
         }
         break;
     }

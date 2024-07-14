@@ -47,6 +47,13 @@ bool IGui::FrameBegin() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, windowBorderSize);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
 
+    return true;
+}
+
+bool IGui::FrameEnd() {
+
+    OnFrame();
+
     if (ImGui::GetCurrentWindow()) {
         dx11::GraphicsContext::Instance().SetViewPort(
             ImGui::GetWindowSize().x, 0.0f,
@@ -59,13 +66,6 @@ bool IGui::FrameBegin() {
              ImGui::GetWindowSize().x) /
             (float)common::Env::Instance().screen_height;
     }
-
-    OnFrame();
-
-    return true;
-}
-
-bool IGui::FrameEnd() {
 
     ImGui::PopStyleVar(2);
     ImGui::End();

@@ -80,7 +80,7 @@ bool MessageReceiver::OnWheelDragRequest(PipelineManager *manager,
         auto viewPort = GraphicsContext::Instance().viewport();
 
         // mouse move vector
-        Vector2 vector = Vector2(mouseState.lX * 0.2f, mouseState.lY * 0.2f);
+        Vector2 vector = Vector2(mouseState.lX * 0.1f, mouseState.lY * 0.1f);
 
         Vector3 lookAt(manager->camera->lookAtVector.x,
                        manager->camera->lookAtVector.y,

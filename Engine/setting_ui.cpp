@@ -188,3 +188,23 @@ void SettingUi::TabBar(
         ImGui::EndTabBar();
     }
 }
+int SettingUi::SelectedId() {
+    if (selected_object_id_ == -99999)
+        return 0;
+    else {
+        return selected_object_id_;
+    }
+}
+void SettingUi::PushNode(INodeUi *node) {
+    node->uniqueId = unique_id;
+    node->position = ImVec2(unique_pos_x, 0);
+
+    nodes.push_back(node);
+    unique_id = unique_id + 10;
+    unique_pos_x = unique_pos_x + 500;
+};
+void SettingUi::ClearNode() {
+    unique_id = 1;
+    unique_pos_x = 0;
+    nodes.clear();
+};

@@ -53,19 +53,6 @@ struct GroundSetting {
     float fresnelR0;  
 };
 
-struct PhysicallyBasedRenderingSetting {
-    bool useAlbedoMap = 0;
-    bool useNormalMap = 0;
-    bool useAOMap = 0;         // Ambient Occlusion
-    bool invertNormalMapY = 0; // 16
-    bool useMetallicMap = 0;
-    bool useRoughnessMap = 0;
-    bool useEmissiveMap = 0;
-
-    float metallic = 0.0f;
-    float roughness = 0.0f;
-};
-
 struct TabInfo {
     CommonSetting common;
     LightSetting light;
@@ -73,7 +60,6 @@ struct TabInfo {
     FilterSetting filter;
     GroundSetting ground;
     ProjectionSetting projection;
-    PhysicallyBasedRenderingSetting pbr;
 };
 class SettingUi : public IGui {
 
@@ -81,13 +67,9 @@ class SettingUi : public IGui {
     void OnStart() override;
     void OnFrame() override;
     TabInfo Tab() { return tab; }
-    int SelectedId() {
-        if (selected_object_id_ == -99999)
-            return 0;
-        else {
-            return selected_object_id_;
-        }
-    }
+    int SelectedId();
+    void PushNode(INodeUi *node);
+    void ClearNode();
 
     void StyleSetting();
     void FrameRate();
@@ -95,22 +77,7 @@ class SettingUi : public IGui {
     void NodeEditor();
     void TabBar(std::unordered_map<int, std::shared_ptr<INodeUi>> node_map);
 
-    void PushNode(INodeUi *node) {
-        node->uniqueId = unique_id;
-        node->position = ImVec2(unique_pos_x, 0);
-
-        nodes.push_back(node);
-        unique_id = unique_id + 10;
-        unique_pos_x = unique_pos_x + 500;
-    };
-    void ClearNode() {
-        unique_id = 1;
-        unique_pos_x = 0;
-        nodes.clear();
-    };
-
   private:
-
     ed::EditorContext *context_ = nullptr;
     TabInfo tab;
 

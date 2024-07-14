@@ -218,13 +218,13 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
                                physically_shader_source
                                    ->vertex_constant_buffer_data.view.Invert());
     }
-    // material
-    {
-        physically_shader_source->pixel_constant_buffer_data.material
-            .roughness = gui->Tab().pbr.roughness;
-        physically_shader_source->pixel_constant_buffer_data.material.metallic =
-            gui->Tab().pbr.metallic;
-    }
+    //// material
+    //{
+    //    physically_shader_source->pixel_constant_buffer_data.material
+    //        .roughness = gui->Tab().pbr.roughness;
+    //    physically_shader_source->pixel_constant_buffer_data.material.metallic =
+    //        gui->Tab().pbr.metallic;
+    //}
     // light
     {
         for (int i = 0; i < MAX_LIGHTS; i++) {

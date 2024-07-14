@@ -203,34 +203,33 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
         return message_receiver_->OnCylinderLoadRequest(manager_.get());
         break;
     }
-    /* case WM_SIZE: {
-        if (Direct3D::GetInstance().swap_chain()) {
+    case WM_SIZE: {
+        if (dx11::GraphicsContext::Instance().swap_chain()) {
 
             imgui_->Shutdown();
 
-            screen_width_ = int(LOWORD(lparam));
-            screen_height_ = int(HIWORD(lparam));
-            env_->screen_width_ = screen_width_;
-            env_->screen_height_ = screen_height_;
-            env_->aspect_ =
-                (float)env_->screen_width_ / (float)env_->screen_height_;
+            common::Env::Instance().screen_width = int(LOWORD(lparam));
+            common::Env::Instance().screen_height = int(HIWORD(lparam));
+            common::Env::Instance().aspect =
+                (float)common::Env::Instance().screen_width /
+                (float)common::Env::Instance().screen_height;
 
-            Direct3D::GetInstance().back_buffer_RTV().Reset();
-            Direct3D::GetInstance().swap_chain()->ResizeBuffers(
+            dx11::GraphicsContext::Instance().back_buffer_RTV().Reset();
+            dx11::GraphicsContext::Instance().swap_chain()->ResizeBuffers(
                 0, (UINT)LOWORD(lparam), (UINT)HIWORD(lparam),
                 DXGI_FORMAT_UNKNOWN, 0);
 
-            Direct3D::GetInstance().CreateBuffer(env_.get());
+            dx11::GraphicsContext::Instance().CreateBuffer();
 
-            Direct3D::GetInstance().SetViewPort(0.0f, 0.0f,
-                                                (float)env_->screen_width_,
-                                                (float)env_->screen_height_);
+            dx11::GraphicsContext::Instance().SetViewPort(
+                0.0f, 0.0f, (float)common::Env::Instance().screen_width,
+                (float)common::Env::Instance().screen_height);
 
-            imgui_->Initialize(main_window_, env_.get());
+            imgui_->Initialize();
         }
 
         break;
-    }*/
+    }
     default: {
         return DefWindowProc(main_window, umsg, wparam, lparam);
     }

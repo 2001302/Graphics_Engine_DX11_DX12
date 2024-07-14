@@ -227,12 +227,15 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
     context->PSSetShader(image_based_shader->pixel_shader.Get(), NULL, 0);
     context->IASetInputLayout(image_based_shader->layout.Get());
 
+    auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
+    assert(cube_map != nullptr);
+
     for (const auto &mesh : model->meshes) {
 
         std::vector<ID3D11ShaderResourceView *> resViews = {
             mesh->textureResourceView.Get(),
-            manager->cube_map->texture->specular_SRV.Get(),
-            manager->cube_map->texture->irradiance_SRV.Get(),
+            cube_map->texture->specular_SRV.Get(),
+            cube_map->texture->irradiance_SRV.Get(),
         };
         context->PSSetShaderResources(0, UINT(resViews.size()),
                                       resViews.data());

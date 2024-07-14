@@ -22,16 +22,17 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
-    manager->cube_map = std::make_shared<CubeMap>();
-    GeometryGenerator::MakeBox(manager->cube_map.get());
+    auto cube_map = std::make_shared<CubeMap>();
+    manager->cube_map = cube_map;
+    GeometryGenerator::MakeBox(cube_map.get());
 
     auto cube_map_shader = std::make_shared<CubeMapShader>();
     manager->shaders[EnumShaderType::eCube] = cube_map_shader;
 
-    manager->cube_map->texture = std::make_shared<CubeMap::CubeTexture>();
+    cube_map->texture = std::make_shared<CubeMap::CubeTexture>();
 
-    std::reverse(manager->cube_map->mesh->indices.begin(),
-                 manager->cube_map->mesh->indices.end());
+    std::reverse(cube_map->mesh->indices.begin(),
+                 cube_map->mesh->indices.end());
 
     auto envFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
     auto specularFilename =
@@ -41,19 +42,19 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
     GraphicsContext::Instance().CreateDDSTexture(
-        envFilename, manager->cube_map->texture->env_SRV);
+        envFilename, cube_map->texture->env_SRV);
     GraphicsContext::Instance().CreateDDSTexture(
-        specularFilename, manager->cube_map->texture->specular_SRV);
+        specularFilename, cube_map->texture->specular_SRV);
     GraphicsContext::Instance().CreateDDSTexture(
-        irradianceFilename, manager->cube_map->texture->irradiance_SRV);
+        irradianceFilename, cube_map->texture->irradiance_SRV);
     GraphicsContext::Instance().CreateDDSTexture(
-        brdfFilename, manager->cube_map->texture->brdf_SRV);
+        brdfFilename, cube_map->texture->brdf_SRV);
 
     GraphicsContext::Instance().CreateVertexBuffer(
-        manager->cube_map->mesh->vertices,
-        manager->cube_map->mesh->vertexBuffer);
+        cube_map->mesh->vertices,
+        cube_map->mesh->vertexBuffer);
     GraphicsContext::Instance().CreateIndexBuffer(
-        manager->cube_map->mesh->indices, manager->cube_map->mesh->indexBuffer);
+        cube_map->mesh->indices, cube_map->mesh->indexBuffer);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
@@ -82,14 +83,17 @@ EnumBehaviorTreeStatus CheckCubeMapShader::CheckCondition() {
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
-    auto shader = manager->shaders[EnumShaderType::eCube];
-    shader->source[manager->cube_map->GetEntityId()];
+    auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
+    assert(cube_map != nullptr);
 
-    if (shader->source[manager->cube_map->GetEntityId()] == nullptr) {
+    auto shader = manager->shaders[EnumShaderType::eCube];
+    shader->source[cube_map->GetEntityId()];
+
+    if (shader->source[cube_map->GetEntityId()] == nullptr) {
 
         auto source = std::make_shared<CubeMapShaderSource>();
         source->Initialize();
-        shader->source[manager->cube_map->GetEntityId()] = source;
+        shader->source[cube_map->GetEntityId()] = source;
     }
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -105,7 +109,7 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto cube_map = manager->cube_map;
+    auto cube_map = dynamic_cast<CubeMap*>(manager->cube_map.get());
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
     auto cube_shader_source = dynamic_cast<CubeMapShaderSource *>(
         cube_map_shader->source[cube_map->GetEntityId()].get());
@@ -152,7 +156,7 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     assert(gui != nullptr);
 
     auto context = GraphicsContext::Instance().device_context();
-    auto cube_map = manager->cube_map;
+    auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
     auto cube_shader_source = dynamic_cast<CubeMapShaderSource *>(
         cube_map_shader->source[cube_map->GetEntityId()].get());

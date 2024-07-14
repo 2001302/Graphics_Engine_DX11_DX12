@@ -26,14 +26,17 @@ EnumBehaviorTreeStatus CheckGroundShader::CheckCondition() {
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
+    auto ground = dynamic_cast<Ground *>(manager->ground.get());
+    assert(ground != nullptr);
+    
     auto shader = manager->shaders[EnumShaderType::eGround];
-    shader->source[manager->ground->GetEntityId()];
+    shader->source[ground->GetEntityId()];
 
-    if (shader->source[manager->ground->GetEntityId()] == nullptr) {
+    if (shader->source[ground->GetEntityId()] == nullptr) {
 
         auto source = std::make_shared<GroundShaderSource>();
         source->Initialize();
-        shader->source[manager->ground->GetEntityId()] = source;
+        shader->source[ground->GetEntityId()] = source;
     }
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -45,8 +48,10 @@ EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
-    manager->ground = std::make_shared<Ground>();
-    GeometryGenerator::MakeSquareGrid(manager->ground.get(), 256, 256, 20.0f,
+    auto ground = std::make_shared<Ground>();
+    manager->ground = ground;
+
+    GeometryGenerator::MakeSquareGrid(ground.get(), 256, 256, 20.0f,
                                       {40.0f, 40.0f});
 
     auto ground_shader = std::make_shared<GroundShader>();
@@ -85,7 +90,7 @@ EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
     GraphicsContext::Instance().CreatePixelShader(L"ground_ps.hlsl",
                                                   ground_shader->pixel_shader);
 
-    auto mesh = manager->ground->mesh;
+    auto mesh = ground->mesh;
     GraphicsContext::Instance().CreateVertexBuffer(mesh->vertices,
                                                    mesh->vertexBuffer);
     GraphicsContext::Instance().CreateIndexBuffer(mesh->indices,
@@ -141,7 +146,8 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto ground = manager->ground;
+    auto ground = dynamic_cast<Ground *>(manager->ground.get());
+    assert(ground != nullptr);
 
     auto ground_shader = manager->shaders[EnumShaderType::eGround];
     auto ground_shader_source = dynamic_cast<GroundShaderSource *>(
@@ -216,8 +222,10 @@ EnumBehaviorTreeStatus RenderGroundShader::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
+    auto ground = dynamic_cast<Ground *>(manager->ground.get());
+    assert(ground != nullptr);
+
     auto context = GraphicsContext::Instance().device_context();
-    auto ground = manager->ground;
     auto ground_shader = manager->shaders[EnumShaderType::eGround];
     auto ground_shader_source = dynamic_cast<GroundShaderSource *>(
         ground_shader->source[ground->GetEntityId()].get());

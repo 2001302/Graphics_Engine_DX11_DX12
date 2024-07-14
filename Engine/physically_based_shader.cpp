@@ -267,13 +267,16 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto model = dynamic_cast<Model *>(manager->models[target_id].get());
     auto physically_shader = std::static_pointer_cast<PhsicallyBasedShader>(
         manager->shaders[EnumShaderType::ePhysicallyBased]);
+
     auto physically_shader_source = dynamic_cast<PhsicallyBasedShaderSource *>(
         physically_shader->source[model->GetEntityId()].get());
-
     assert(physically_shader != nullptr);
 
     unsigned int stride = sizeof(Vertex);
     unsigned int offset = 0;
+
+    auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
+    assert(cube_map != nullptr);
 
     for (const auto &mesh : model->meshes) {
 
@@ -294,9 +297,9 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         context->PSSetShader(physically_shader->pixel_shader.Get(), 0, 0);
 
         std::vector<ID3D11ShaderResourceView *> resViews = {
-            manager->cube_map->texture->specular_SRV.Get(),
-            manager->cube_map->texture->irradiance_SRV.Get(),
-            manager->cube_map->texture->brdf_SRV.Get(),
+            cube_map->texture->specular_SRV.Get(),
+            cube_map->texture->irradiance_SRV.Get(),
+            cube_map->texture->brdf_SRV.Get(),
             mesh->albedoSRV.Get(),
             mesh->normalSRV.Get(),
             mesh->aoSRV.Get(),

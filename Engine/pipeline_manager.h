@@ -16,9 +16,10 @@ namespace dx11 {
 class PipelineManager : public common::IDataBlock {
   public:
     std::unique_ptr<Camera> camera;
+    //std::unique_ptr<Light> light;
     std::unique_ptr<BoardMap> board_map;
-    std::shared_ptr<CubeMap> cube_map;
-    std::shared_ptr<Ground> ground;
+    std::shared_ptr<common::INodeUi> cube_map;
+    std::shared_ptr<common::INodeUi> ground;
     std::unordered_map<int /*id*/, std::shared_ptr<common::INodeUi>> models;
     std::unordered_map<EnumShaderType, std::shared_ptr<IShader>> shaders;
 };

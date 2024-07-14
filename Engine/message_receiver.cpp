@@ -69,6 +69,50 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
     return true;
 }
 
+bool MessageReceiver::OnWheelDragRequest(PipelineManager *manager,
+                                         std::shared_ptr<Input> input) {
+    DIMOUSESTATE mouseState;
+    if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
+                                              &mouseState))) {
+        // retry
+        input->Mouse()->Acquire();
+    } else {
+        auto viewPort = GraphicsContext::Instance().viewport();
+
+        // mouse move vector
+        Vector2 vector = Vector2(mouseState.lX * 0.2f, mouseState.lY * 0.2f);
+
+        Vector3 lookAt(manager->camera->lookAtVector.x,
+                       manager->camera->lookAtVector.y,
+                       manager->camera->lookAtVector.z);
+
+        Vector3 position(manager->camera->position.x,
+                         manager->camera->position.y,
+                         manager->camera->position.z);
+
+        // y axis
+        manager->camera->lookAtVector.y += vector.y;
+        manager->camera->position.y += vector.y;
+
+        // x, z axis
+        Vector3 a = Vector3(0.0f, 1.0f, 0.0f);
+        a.Normalize();
+        Vector3 b = manager->camera->position- manager->camera->lookAtVector;
+        b.Normalize();
+
+        Vector3 c = a.Cross(b);
+        c.Normalize();
+
+        manager->camera->lookAtVector.x += c.x * vector.x;
+        manager->camera->position.x += c.x * vector.x;
+
+        manager->camera->lookAtVector.z += c.z * vector.x;
+        manager->camera->position.z += c.z * vector.x;
+    }
+
+    return true;
+}
+
 bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
                                          HWND main_window) {
     auto ToString = [](LPWSTR lpwstr) -> std::string {

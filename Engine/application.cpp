@@ -169,6 +169,11 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
                 return message_receiver_->OnRightDragRequest(manager_.get(),
                                                              input_);
             }
+            if (wparam & MK_MBUTTON) {
+                return message_receiver_->OnWheelDragRequest(manager_.get(),
+                                                             input_);
+            }
+
         }
         break;
     }

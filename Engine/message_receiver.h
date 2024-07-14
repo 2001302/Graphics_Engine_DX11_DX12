@@ -17,6 +17,8 @@ class MessageReceiver {
                             std::shared_ptr<Input> input);
     bool OnMouseWheelRequest(PipelineManager *manager,
                              std::shared_ptr<Input> input);
+    bool OnWheelDragRequest(PipelineManager *manager,
+                             std::shared_ptr<Input> input);
 };
 } // namespace dx11
 

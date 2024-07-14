@@ -12,6 +12,9 @@ class Camera : public GameObject {
     DirectX::SimpleMath::Matrix view;
     DirectX::SimpleMath::Vector3 position;
     DirectX::SimpleMath::Vector3 rotation;
+    
+    DirectX::SimpleMath::Vector3 upVector;
+    DirectX::SimpleMath::Vector3 lookAtVector;
 };
 
 class InitializeCamera : public BehaviorActionNode {

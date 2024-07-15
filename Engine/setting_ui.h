@@ -51,6 +51,10 @@ struct GroundSetting {
     float diffuse;
     float specular;
     float fresnelR0;
+    bool useTexture;
+    bool useNormalMap;
+    bool useAOMap;
+    bool reverseNormalMapY;
 };
 
 struct TabInfo {

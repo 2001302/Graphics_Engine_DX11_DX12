@@ -244,10 +244,9 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingImageBasedShader::OnInvoke() {
                                     &stride, &offset);
         context->IASetIndexBuffer(mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
                                   0);
+        context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        context->DrawIndexed(model->GetIndexCount(), 0, 0);
     }
-
-    context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-    context->DrawIndexed(model->GetIndexCount(), 0, 0);
 
     if (gui->SelectedId() == target_id)
         gui->PushNode(image_based_shader_source);

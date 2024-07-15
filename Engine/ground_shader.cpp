@@ -28,7 +28,7 @@ EnumBehaviorTreeStatus CheckGroundShader::CheckCondition() {
 
     auto ground = dynamic_cast<Ground *>(manager->ground.get());
     assert(ground != nullptr);
-    
+
     auto shader = manager->shaders[EnumShaderType::eGround];
     shader->source[ground->GetEntityId()];
 
@@ -96,17 +96,20 @@ EnumBehaviorTreeStatus InitializeGroundShader::OnInvoke() {
     GraphicsContext::Instance().CreateIndexBuffer(mesh->indices,
                                                   mesh->indexBuffer);
 
-    mesh->albedoTextureFilename =
-        "Assets/Textures/PBR/Bricks075A_1K-PNG/Bricks075A_1K_Color.png";
+     mesh->albedoTextureFilename =
+         "Assets/Textures/blender_uv_grid_2k.png";
+    
+    //mesh->albedoTextureFilename =
+    //    "Assets/Textures/PBR/Bricks075A_1K-PNG/Bricks075A_1K_Color.png";
 
-    mesh->normalTextureFilename = "Assets/Textures/PBR/Bricks075A_1K-PNG/"
-                                  "Bricks075A_1K_NormalDX.png";
+    //mesh->normalTextureFilename = "Assets/Textures/PBR/Bricks075A_1K-PNG/"
+    //                              "Bricks075A_1K_NormalDX.png";
 
-    mesh->heightTextureFilename = "Assets/Textures/PBR/Bricks075A_1K-PNG/"
-                                  "Bricks075A_1K_Displacement.png";
+    //mesh->heightTextureFilename = "Assets/Textures/PBR/Bricks075A_1K-PNG/"
+    //                              "Bricks075A_1K_Displacement.png";
 
-    mesh->aoTextureFilename = "Assets/Textures/PBR/Bricks075A_1K-PNG/"
-                              "Bricks075A_1K_AmbientOcclusion.png";
+    //mesh->aoTextureFilename = "Assets/Textures/PBR/Bricks075A_1K-PNG/"
+    //                          "Bricks075A_1K_AmbientOcclusion.png";
 
     if (!mesh->albedoTextureFilename.empty()) {
 
@@ -189,10 +192,12 @@ EnumBehaviorTreeStatus UpdateGroundShader::OnInvoke() {
                 .Transpose();
     }
 
-    ground_shader_source->pixel_constant_buffer_data.useTexture = true;
+    ground_shader_source->pixel_constant_buffer_data.useTexture =
+        gui->Tab().ground.useTexture;
     ground_shader_source->vertex_constant_buffer_data.useHeightMap =
         gui->Tab().ground.useHeightMap;
-    ground_shader_source->pixel_constant_buffer_data.useAOMap = true;
+    ground_shader_source->pixel_constant_buffer_data.useAOMap =
+        gui->Tab().ground.useAOMap;
     ground_shader_source->pixel_constant_buffer_data.material.diffuse =
         Vector3(gui->Tab().ground.diffuse);
     ground_shader_source->pixel_constant_buffer_data.material.specular =

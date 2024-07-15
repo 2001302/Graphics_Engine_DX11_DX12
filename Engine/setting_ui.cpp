@@ -135,6 +135,10 @@ void SettingUi::TabBar(
         if (ImGui::BeginTabItem("Ground")) {
 
             ImGui::Checkbox("useHeightMap", &tab.ground.useHeightMap);
+            ImGui::Checkbox("useTexture", &tab.ground.useTexture);
+            ImGui::Checkbox("useNormalMap", &tab.ground.useNormalMap);
+            ImGui::Checkbox("useAOMap", &tab.ground.useAOMap);
+            ImGui::Checkbox("reverseNormalMapY", &tab.ground.reverseNormalMapY);
 
             ImGui::SliderFloat("heightScale", &tab.ground.heightScale, 0.0f,
                                1.0f);
@@ -143,6 +147,7 @@ void SettingUi::TabBar(
             ImGui::SliderFloat("diffuse", &tab.ground.diffuse, 0.0f, 1.0f);
             ImGui::SliderFloat("specular", &tab.ground.specular, 0.0f, 1.0f);
             ImGui::SliderFloat("fresnelR0", &tab.ground.fresnelR0, 0.0f, 1.0f);
+
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Light")) {

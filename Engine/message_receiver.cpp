@@ -70,44 +70,37 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
 }
 
 bool MessageReceiver::OnWheelDragRequest(PipelineManager *manager,
-                                         std::shared_ptr<Input> input) {
+                                         std::shared_ptr<Input> input,
+                                         int mouseX, int mouseY) {
     DIMOUSESTATE mouseState;
     if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
                                               &mouseState))) {
         // retry
         input->Mouse()->Acquire();
     } else {
-        auto viewPort = GraphicsContext::Instance().viewport();
 
-        // mouse move vector
-        Vector2 vector = Vector2(mouseState.lX * 0.1f, mouseState.lY * 0.1f);
+        Vector2 current = Vector2(mouseX, mouseY);
+        Vector2 before =
+            Vector2(mouseX - mouseState.lX, mouseY - mouseState.lY);
 
-        Vector3 lookAt(manager->camera->lookAtVector.x,
-                       manager->camera->lookAtVector.y,
-                       manager->camera->lookAtVector.z);
+        Vector3 cursorNdcCurrent = Vector3(current.x, current.y, 0.0f);
+        Vector3 cursorNdcBefore = Vector3(before.x, before.y, 0.0f);
 
-        Vector3 position(manager->camera->position.x,
-                         manager->camera->position.y,
-                         manager->camera->position.z);
+        float aspect = 1980.0f / 1280.0f;
+        auto projRow = XMMatrixPerspectiveFovLH(XMConvertToRadians(70.0f),
+                                                aspect, 0.01f, 100.0f);
 
-        // y axis
-        manager->camera->lookAtVector.y += vector.y;
-        manager->camera->position.y += vector.y;
+        Matrix inverseProjView = (manager->camera->view * projRow).Invert();
 
-        // x, z axis
-        Vector3 a = Vector3(0.0f, 1.0f, 0.0f);
-        a.Normalize();
-        Vector3 b = manager->camera->position- manager->camera->lookAtVector;
-        b.Normalize();
+        Vector3 cursorWorldCurrent =
+            Vector3::Transform(cursorNdcCurrent, inverseProjView);
+        Vector3 cursorWorldBefore =
+            Vector3::Transform(cursorNdcBefore, inverseProjView);
 
-        Vector3 c = a.Cross(b);
-        c.Normalize();
+        auto move = cursorWorldCurrent - cursorWorldBefore;
 
-        manager->camera->lookAtVector.x += c.x * vector.x;
-        manager->camera->position.x += c.x * vector.x;
-
-        manager->camera->lookAtVector.z += c.z * vector.x;
-        manager->camera->position.z += c.z * vector.x;
+        manager->camera->lookAtVector += move;
+        manager->camera->position += move;
     }
 
     return true;

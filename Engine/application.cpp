@@ -170,8 +170,8 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
                                                              input_);
             }
             if (wparam & MK_MBUTTON) {
-                return message_receiver_->OnWheelDragRequest(manager_.get(),
-                                                             input_);
+                return message_receiver_->OnWheelDragRequest(
+                    manager_.get(), input_, LOWORD(lparam), HIWORD(lparam));
             }
         }
         break;

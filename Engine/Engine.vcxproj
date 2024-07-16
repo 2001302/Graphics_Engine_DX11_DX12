@@ -143,7 +143,6 @@
     <ClInclude Include="bone.h" />
     <ClInclude Include="conditional_node.h" />
     <ClInclude Include="cube_map_shader.h" />
-    <ClInclude Include="game_object.h" />
     <ClInclude Include="graph.h" />
     <ClInclude Include="ground.h" />
     <ClInclude Include="ground_shader.h" />
@@ -203,7 +202,6 @@
     <ClCompile Include="behavior_tree_builder.cpp" />
     <ClCompile Include="conditional_node.cpp" />
     <ClCompile Include="cube_map_shader.cpp" />
-    <ClCompile Include="game_object.cpp" />
     <ClCompile Include="graph.cpp" />
     <ClCompile Include="ground.cpp" />
     <ClCompile Include="ground_shader.cpp" />

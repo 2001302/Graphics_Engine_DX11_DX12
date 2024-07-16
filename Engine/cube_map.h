@@ -2,12 +2,13 @@
 #define _CUBEMAP
 
 #include "cube_map_shader.h"
-#include "game_object.h"
+#include "node_ui.h"
+#include "mesh.h"
 
 namespace dx11 {
 using Microsoft::WRL::ComPtr;
 
-class CubeMap : public GameObject {
+class CubeMap : public common::INodeUi {
   public:
     struct CubeTexture {
         ComPtr<ID3D11ShaderResourceView> env_SRV;

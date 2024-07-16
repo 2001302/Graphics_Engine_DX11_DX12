@@ -6,12 +6,13 @@
 #include "ImGui/imgui_impl_win32.h"
 #include "ImGui/imgui_internal.h"
 #include "ImGui/NodeEditor/imgui_node_editor.h"
+#include "entity.h"
 
 namespace ed = ax::NodeEditor;
 
 namespace common {
 
-struct INodeUi {
+struct INodeUi : public IEntity {
   public:
     struct LinkInfo {
         ed::LinkId Id;

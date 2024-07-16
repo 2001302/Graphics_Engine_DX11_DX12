@@ -85,9 +85,6 @@
     <ClInclude Include="image_fliter_shader.h">
       <Filter>DirectX11\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="game_object.h">
-      <Filter>DirectX11\Model</Filter>
-    </ClInclude>
     <ClInclude Include="parallel_node.h">
       <Filter>DirectX11\BehaviorTree</Filter>
     </ClInclude>
@@ -258,9 +255,6 @@
     </ClCompile>
     <ClCompile Include="image_fliter_shader.cpp">
       <Filter>DirectX11\Shader</Filter>
-    </ClCompile>
-    <ClCompile Include="game_object.cpp">
-      <Filter>DirectX11\Model</Filter>
     </ClCompile>
     <ClCompile Include="parallel_node.cpp">
       <Filter>DirectX11\BehaviorTree</Filter>

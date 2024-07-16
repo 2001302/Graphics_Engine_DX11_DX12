@@ -1,11 +1,10 @@
 #ifndef _ENTITY
 #define _ENTITY
 
-#include "node_ui.h"
 #include <string>
 
 namespace common {
-class IEntity : public INodeUi {
+class IEntity {
   public:
     IEntity();
     ~IEntity();

@@ -1,13 +1,14 @@
 #ifndef _GROUND
 #define _GROUND
 
-#include "game_object.h"
+#include "node_ui.h"
+#include "mesh.h"
 #include "ground_shader.h"
 
 namespace dx11 {
 using Microsoft::WRL::ComPtr;
 
-class Ground : public GameObject {
+class Ground : public common::INodeUi {
   public:
     Ground();
     ~Ground();

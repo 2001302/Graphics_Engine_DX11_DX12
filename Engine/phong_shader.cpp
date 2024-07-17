@@ -243,9 +243,19 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     context->PSSetShader(phong_shader->pixel_shader.Get(), NULL, 0);
     context->IASetInputLayout(phong_shader->layout.Get());
 
+    auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
+    assert(cube_map != nullptr);
+
     for (const auto &mesh : model->meshes) {
-        context->PSSetShaderResources(0, 1,
-                                      mesh->textureResourceView.GetAddressOf());
+
+        std::vector<ID3D11ShaderResourceView *> resViews = {
+            mesh->textureResourceView.Get(),
+            cube_map->texture->specular_SRV.Get(),
+            cube_map->texture->irradiance_SRV.Get(),
+        };
+
+        context->PSSetShaderResources(0, UINT(resViews.size()),
+                                      resViews.data());
 
         context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
                                     &stride, &offset);

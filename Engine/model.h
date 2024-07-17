@@ -4,7 +4,6 @@
 #include "node_ui.h"
 #include "mesh.h"
 #include "bone.h"
-#include "image_based_shader.h"
 #include "phong_shader.h"
 #include "physically_based_shader.h"
 

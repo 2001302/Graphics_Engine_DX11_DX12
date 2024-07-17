@@ -13,10 +13,9 @@ namespace dx11 {
 enum EnumShaderType {
     ePhong = 0,
     eCube = 1,
-    eImageBased = 2,
-    ePhysicallyBased = 3,
-    eNormalGeometry = 4,
-    eGround = 5,
+    ePhysicallyBased = 2,
+    eNormalGeometry = 3,
+    eGround = 4,
 };
 
 struct IShaderSource {

@@ -108,12 +108,6 @@ void SettingUi::TabBar(
                 tab.common.render_mode = EnumRenderMode::eLight;
             }
             ImGui::SameLine();
-            if (ImGui::RadioButton("Use Image Based Lighting",
-                                   tab.common.render_mode ==
-                                       EnumRenderMode::eImageBasedLighting)) {
-                tab.common.render_mode = EnumRenderMode::eImageBasedLighting;
-            }
-            ImGui::SameLine();
             if (ImGui::RadioButton(
                     "Use Physically Based Lighting",
                     tab.common.render_mode ==

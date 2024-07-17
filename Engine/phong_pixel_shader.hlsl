@@ -1,6 +1,8 @@
 #include "common.hlsli"
 
 Texture2D g_texture0 : register(t0);
+TextureCube g_specularCube : register(t1);
+TextureCube g_diffuseCube : register(t2);
 SamplerState g_sampler : register(s0);
 
 cbuffer PixelConstantBuffer : register(b0)
@@ -136,6 +138,22 @@ float4 main(PixelShaderInput input) : SV_TARGET
     {
         color += ComputeSpotLight(light[i], material, input.posWorld, input.normalWorld, toEye);
     }
+    
+    float4 diffuse = g_diffuseCube.Sample(g_sampler, input.normalWorld);
+    float4 specular =
+        g_specularCube.Sample(g_sampler, reflect(toEye, input.normalWorld));
+
+    specular *=
+        pow((specular.x + specular.y + specular.z) / 3.0, material.shininess);
+
+    diffuse.xyz *= material.diffuse;
+    specular.xyz *= material.specular;
+
+    if (useTexture) {
+        diffuse *= g_texture0.Sample(g_sampler, input.texcoord);
+    }
+
+    color = color + diffuse + specular;
 
     return useTexture ? float4(color, 1.0) * g_texture0.Sample(g_sampler, input.texcoord) : float4(color, 1.0);
 }

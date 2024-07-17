@@ -10,9 +10,6 @@
     <ClInclude Include="camera.h">
       <Filter>DirectX11\Model</Filter>
     </ClInclude>
-    <ClInclude Include="image_based_shader.h">
-      <Filter>DirectX11\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="shader.h">
       <Filter>DirectX11\Shader</Filter>
     </ClInclude>
@@ -183,9 +180,6 @@
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>DirectX11\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="image_based_shader.cpp">
-      <Filter>DirectX11\Shader</Filter>
     </ClCompile>
     <ClCompile Include="phong_shader.cpp">
       <Filter>DirectX11\Shader</Filter>
@@ -372,12 +366,6 @@
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="phong_pixel_shader.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="image_based_vertex_shader.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
-    </FxCompile>
-    <FxCompile Include="image_based_pixel_shader.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="cube_mapping_vertex_shader.hlsl">

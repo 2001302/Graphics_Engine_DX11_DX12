@@ -12,8 +12,7 @@ namespace common {
 
 enum EnumRenderMode {
     eLight = 0,
-    eImageBasedLighting = 1,
-    ePhysicallyBasedRendering = 2
+    ePhysicallyBasedRendering = 1
 };
 
 struct CommonSetting {

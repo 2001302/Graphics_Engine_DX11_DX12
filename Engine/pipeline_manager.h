@@ -6,7 +6,6 @@
 #include "cube_map.h"
 #include "dataBlock.h"
 #include "direct3D.h"
-#include "ground.h"
 #include "model.h"
 
 namespace dx11 {

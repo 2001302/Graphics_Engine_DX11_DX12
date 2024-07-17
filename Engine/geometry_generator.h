@@ -4,7 +4,6 @@
 #include "board_map.h"
 #include "cube_map.h"
 #include "direct3D.h"
-#include "ground.h"
 #include "model.h"
 #include "model_loader.h"
 
@@ -28,7 +27,7 @@ class GeometryGenerator {
                                 const Vector2 texScale = Vector2(1.0f));
     static Model *ReadFromFile(Model *gameObject, std::string basePath,
                                std::string filename);
-    static Ground *MakeSquareGrid(Ground *ground, const int numSlices,
+    static Model *MakeSquareGrid(Model *ground, const int numSlices,
                                   const int numStacks, const float scale,
                                   const Vector2 texScale);
 };

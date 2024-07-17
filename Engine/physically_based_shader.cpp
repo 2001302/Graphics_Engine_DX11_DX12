@@ -193,14 +193,11 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     }
     // projection
     {
-        const float aspect = common::Env::Instance().aspect;
-
+        auto env = common::Env::Instance();
         physically_shader_source->vertex_constant_buffer_data.projection =
             XMMatrixPerspectiveFovLH(
-                XMConvertToRadians(
-                    gui->Tab().projection.projection_fov_angle_y),
-                aspect, gui->Tab().projection.near_z,
-                gui->Tab().projection.far_z);
+                XMConvertToRadians(env.projection.projection_fov_angle_y),
+                env.aspect, env.projection.near_z, env.projection.far_z);
 
         physically_shader_source->vertex_constant_buffer_data.projection =
             physically_shader_source->vertex_constant_buffer_data.projection

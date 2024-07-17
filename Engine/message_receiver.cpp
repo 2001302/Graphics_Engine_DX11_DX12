@@ -81,14 +81,16 @@ bool MessageReceiver::OnWheelDragRequest(PipelineManager *manager,
 
         Vector2 current = Vector2(mouseX, mouseY);
         Vector2 before =
-            Vector2(mouseX - mouseState.lX, mouseY - mouseState.lY);
+            Vector2(mouseX + mouseState.lX, mouseY - mouseState.lY);
 
         Vector3 cursorNdcCurrent = Vector3(current.x, current.y, 0.0f);
         Vector3 cursorNdcBefore = Vector3(before.x, before.y, 0.0f);
 
-        float aspect = 1980.0f / 1280.0f;
-        auto projRow = XMMatrixPerspectiveFovLH(XMConvertToRadians(70.0f),
-                                                aspect, 0.01f, 100.0f);
+        auto env = common::Env::Instance();
+
+        auto projRow = XMMatrixPerspectiveFovLH(
+            XMConvertToRadians(env.projection.projection_fov_angle_y),
+            env.aspect, env.projection.near_z, env.projection.far_z);
 
         Matrix inverseProjView = (manager->camera->view * projRow).Invert();
 

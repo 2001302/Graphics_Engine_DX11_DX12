@@ -16,12 +16,6 @@ enum EnumRenderMode {
     ePhysicallyBasedRendering = 2
 };
 
-struct ProjectionSetting {
-    float projection_fov_angle_y = 70.0f;
-    float near_z = 0.01f;
-    float far_z = 100.0f;
-};
-
 struct CommonSetting {
     bool draw_as_wire_ = false;
     EnumRenderMode render_mode;
@@ -63,7 +57,6 @@ struct TabInfo {
     CubeMapSetting cube_map;
     FilterSetting filter;
     GroundSetting ground;
-    ProjectionSetting projection;
 };
 class SettingUi : public IGui {
 

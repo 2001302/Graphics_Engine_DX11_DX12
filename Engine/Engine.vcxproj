@@ -144,8 +144,6 @@
     <ClInclude Include="conditional_node.h" />
     <ClInclude Include="cube_map_shader.h" />
     <ClInclude Include="graph.h" />
-    <ClInclude Include="ground.h" />
-    <ClInclude Include="ground_shader.h" />
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="image_fliter_shader.h" />
     <ClInclude Include="ImGui\NodeEditor\crude_json.h" />
@@ -183,6 +181,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="message_receiver.h" />
+    <ClInclude Include="projection.h" />
     <ClInclude Include="setting_ui.h" />
     <ClInclude Include="selector_node.h" />
     <ClInclude Include="sequence_node.h" />
@@ -203,8 +202,6 @@
     <ClCompile Include="conditional_node.cpp" />
     <ClCompile Include="cube_map_shader.cpp" />
     <ClCompile Include="graph.cpp" />
-    <ClCompile Include="ground.cpp" />
-    <ClCompile Include="ground_shader.cpp" />
     <ClCompile Include="image_filter.cpp" />
     <ClCompile Include="image_fliter_shader.cpp" />
     <ClCompile Include="ImGui\NodeEditor\crude_json.cpp" />

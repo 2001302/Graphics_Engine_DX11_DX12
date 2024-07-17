@@ -41,20 +41,19 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
         L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
     auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-    GraphicsContext::Instance().CreateDDSTexture(
-        envFilename, cube_map->texture->env_SRV);
+    GraphicsContext::Instance().CreateDDSTexture(envFilename,
+                                                 cube_map->texture->env_SRV);
     GraphicsContext::Instance().CreateDDSTexture(
         specularFilename, cube_map->texture->specular_SRV);
     GraphicsContext::Instance().CreateDDSTexture(
         irradianceFilename, cube_map->texture->irradiance_SRV);
-    GraphicsContext::Instance().CreateDDSTexture(
-        brdfFilename, cube_map->texture->brdf_SRV);
+    GraphicsContext::Instance().CreateDDSTexture(brdfFilename,
+                                                 cube_map->texture->brdf_SRV);
 
     GraphicsContext::Instance().CreateVertexBuffer(
-        cube_map->mesh->vertices,
-        cube_map->mesh->vertexBuffer);
-    GraphicsContext::Instance().CreateIndexBuffer(
-        cube_map->mesh->indices, cube_map->mesh->indexBuffer);
+        cube_map->mesh->vertices, cube_map->mesh->vertexBuffer);
+    GraphicsContext::Instance().CreateIndexBuffer(cube_map->mesh->indices,
+                                                  cube_map->mesh->indexBuffer);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
@@ -109,7 +108,7 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto cube_map = dynamic_cast<CubeMap*>(manager->cube_map.get());
+    auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
     auto cube_shader_source = dynamic_cast<CubeMapShaderSource *>(
         cube_map_shader->source[cube_map->GetEntityId()].get());
@@ -121,13 +120,11 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
         cube_shader_source->vertex_constant_buffer_data.view =
             manager->camera->view.Transpose();
 
-        const float aspect = common::Env::Instance().aspect;
+        auto env = common::Env::Instance();
         cube_shader_source->vertex_constant_buffer_data.projection =
             XMMatrixPerspectiveFovLH(
-                XMConvertToRadians(
-                    gui->Tab().projection.projection_fov_angle_y),
-                aspect, gui->Tab().projection.near_z,
-                gui->Tab().projection.far_z);
+                XMConvertToRadians(env.projection.projection_fov_angle_y),
+                env.aspect, env.projection.near_z, env.projection.far_z);
 
         cube_shader_source->vertex_constant_buffer_data.projection =
             cube_shader_source->vertex_constant_buffer_data.projection

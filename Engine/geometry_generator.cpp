@@ -530,12 +530,11 @@ BoardMap *GeometryGenerator::MakeSquare(BoardMap *postProcess,
     return postProcess;
 }
 
-Ground *GeometryGenerator::MakeSquareGrid(Ground *ground, const int numSlices,
+Model *GeometryGenerator::MakeSquareGrid(Model *ground, const int numSlices,
                                           const int numStacks,
                                           const float scale,
                                           const Vector2 texScale) {
-
-    ground->mesh = std::make_shared<Mesh>();
+    auto mesh = std::make_shared<Mesh>();
 
     float dx = 2.0f / numSlices;
     float dy = 2.0f / numStacks;
@@ -550,7 +549,7 @@ Ground *GeometryGenerator::MakeSquareGrid(Ground *ground, const int numSlices,
             v.texcoord = Vector2(x + 1.0f, y + 1.0f) * 0.5f * texScale;
             v.tangent = Vector3(1.0f, 0.0f, 0.0f);
 
-            ground->mesh->vertices.push_back(v);
+            mesh->vertices.push_back(v);
 
             x += dx;
         }
@@ -559,14 +558,15 @@ Ground *GeometryGenerator::MakeSquareGrid(Ground *ground, const int numSlices,
 
     for (int j = 0; j < numStacks; j++) {
         for (int i = 0; i < numSlices; i++) {
-            ground->mesh->indices.push_back((numSlices + 1) * j + i);
-            ground->mesh->indices.push_back((numSlices + 1) * j + i + 1);
-            ground->mesh->indices.push_back((numSlices + 1) * (j + 1) + i);
-            ground->mesh->indices.push_back((numSlices + 1) * (j + 1) + i);
-            ground->mesh->indices.push_back((numSlices + 1) * j + i + 1);
-            ground->mesh->indices.push_back((numSlices + 1) * (j + 1) + i + 1);
+            mesh->indices.push_back((numSlices + 1) * j + i);
+            mesh->indices.push_back((numSlices + 1) * j + i + 1);
+            mesh->indices.push_back((numSlices + 1) * (j + 1) + i);
+            mesh->indices.push_back((numSlices + 1) * (j + 1) + i);
+            mesh->indices.push_back((numSlices + 1) * j + i + 1);
+            mesh->indices.push_back((numSlices + 1) * (j + 1) + i + 1);
         }
     }
 
+    ground->meshes.push_back(mesh);
     return ground;
 }

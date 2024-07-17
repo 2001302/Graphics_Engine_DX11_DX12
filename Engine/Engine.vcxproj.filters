@@ -88,12 +88,6 @@
     <ClInclude Include="parallel_node.h">
       <Filter>DirectX11\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="ground.h">
-      <Filter>DirectX11\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="ground_shader.h">
-      <Filter>DirectX11\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="message_receiver.h">
       <Filter>DirectX11</Filter>
     </ClInclude>
@@ -174,6 +168,9 @@
     </ClInclude>
     <ClInclude Include="light.h">
       <Filter>DirectX11\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="projection.h">
+      <Filter>DirectX11\Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -258,12 +255,6 @@
     </ClCompile>
     <ClCompile Include="parallel_node.cpp">
       <Filter>DirectX11\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="ground.cpp">
-      <Filter>DirectX11\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="ground_shader.cpp">
-      <Filter>DirectX11\Shader</Filter>
     </ClCompile>
     <ClCompile Include="message_receiver.cpp">
       <Filter>DirectX11</Filter>

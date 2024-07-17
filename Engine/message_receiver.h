@@ -13,6 +13,7 @@ class MessageReceiver {
     bool OnSphereLoadRequest(PipelineManager *manager);
     bool OnBoxLoadRequest(PipelineManager *manager);
     bool OnCylinderLoadRequest(PipelineManager *manager);
+
     bool OnRightDragRequest(PipelineManager *manager,
                             std::shared_ptr<Input> input);
     bool OnMouseWheelRequest(PipelineManager *manager,

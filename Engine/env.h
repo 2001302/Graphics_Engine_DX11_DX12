@@ -3,6 +3,7 @@
 
 #include <cmath> //for calculate coordination
 #include <windows.h>
+#include "projection.h"
 
 const double PI = std::acos(-1);
 
@@ -18,7 +19,6 @@ struct Env {
         static Env instance;
         return instance;
     }
-
     const bool full_screen = false;
     const bool vsync_enabled = true;
     const float field_of_view = PI / 4.0f;
@@ -29,6 +29,7 @@ struct Env {
     float screen_width;
     float screen_height;
     float aspect;
+    Projection projection;
 };
 } // namespace common
 #endif

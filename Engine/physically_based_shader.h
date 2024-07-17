@@ -67,8 +67,8 @@ class InitializePhysicallyBasedShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class CheckPhysicallyBasedShader : public ConditionalNode {
-    EnumBehaviorTreeStatus CheckCondition() override;
+class CheckPhysicallyBasedShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
 };
 
 class UpdateGameObjectsUsingPhysicallyBasedShader : public BehaviorActionNode {

@@ -11,14 +11,8 @@ namespace ed = ax::NodeEditor;
 
 namespace common {
 
-enum EnumRenderMode {
-    eLight = 0,
-    ePhysicallyBasedRendering = 1
-};
-
 struct CommonSetting {
     bool draw_as_wire_ = false;
-    EnumRenderMode render_mode;
 };
 
 struct LightSetting {

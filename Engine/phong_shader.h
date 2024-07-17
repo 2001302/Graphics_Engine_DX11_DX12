@@ -49,8 +49,8 @@ class InitializePhongShader : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 
-class CheckPhongShader : public ConditionalNode {
-    EnumBehaviorTreeStatus CheckCondition() override;
+class CheckPhongShader : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override;
 };
 
 class UpdateGameObjectsUsingPhongShader : public BehaviorActionNode {

@@ -72,15 +72,12 @@ void PhsicallyBasedShaderSource::OnShow() {
         "metallic", &pixel_constant_buffer_data.material.metallic, 0.0f, 1.0f);
 };
 
-EnumBehaviorTreeStatus CheckPhysicallyBasedShader::CheckCondition() {
-    auto guiBlock = data_block[EnumDataBlockType::eGui];
-    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
-    assert(gui != nullptr);
+EnumBehaviorTreeStatus CheckPhysicallyBasedShader::OnInvoke() {
 
-    if (gui->Tab().common.render_mode ==
-        common::EnumRenderMode::ePhysicallyBasedRendering) {
+    auto model = dynamic_cast<Model *>(target_object);
+
+    if (model->render_mode == EnumRenderMode::ePhysicallyBasedRendering)
         return EnumBehaviorTreeStatus::eSuccess;
-    }
 
     return EnumBehaviorTreeStatus::eFail;
 }
@@ -150,14 +147,14 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     auto context = GraphicsContext::Instance().device_context();
 
-    auto model = dynamic_cast<Model *>(target_id);
+    auto model = dynamic_cast<Model *>(target_object);
 
     auto physically_shader = manager->shaders[EnumShaderType::ePhysicallyBased];
-    if (physically_shader->source[target_id->GetEntityId()] == nullptr) {
+    if (physically_shader->source[target_object->GetEntityId()] == nullptr) {
 
         auto source = std::make_shared<PhsicallyBasedShaderSource>();
         source->Initialize();
-        physically_shader->source[target_id->GetEntityId()] = source;
+        physically_shader->source[target_object->GetEntityId()] = source;
     }
     auto physically_shader_source = dynamic_cast<PhsicallyBasedShaderSource *>(
         physically_shader->source[model->GetEntityId()].get());
@@ -261,7 +258,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     // VS: Vertex Shader
     // PS: Pixel Shader
     // IA: Input-Assembler stage
-    auto model = dynamic_cast<Model *>(target_id);
+    auto model = dynamic_cast<Model *>(target_object);
     auto physically_shader = std::static_pointer_cast<PhsicallyBasedShader>(
         manager->shaders[EnumShaderType::ePhysicallyBased]);
 
@@ -320,7 +317,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         context->DrawIndexed(model->GetIndexCount(), 0, 0);
     }
 
-    if (gui->SelectedId() == target_id->GetEntityId())
+    if (gui->SelectedId() == target_object->GetEntityId())
         gui->PushNode(physically_shader_source);
 
     return EnumBehaviorTreeStatus::eSuccess;

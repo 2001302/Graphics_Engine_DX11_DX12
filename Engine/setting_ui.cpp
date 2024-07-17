@@ -103,19 +103,6 @@ void SettingUi::TabBar(
 
             ImGui::Checkbox("Wire Frame", &tab.common.draw_as_wire_);
 
-            if (ImGui::RadioButton("Use Light", tab.common.render_mode ==
-                                                    EnumRenderMode::eLight)) {
-                tab.common.render_mode = EnumRenderMode::eLight;
-            }
-            ImGui::SameLine();
-            if (ImGui::RadioButton(
-                    "Use Physically Based Lighting",
-                    tab.common.render_mode ==
-                        EnumRenderMode::ePhysicallyBasedRendering)) {
-                tab.common.render_mode =
-                    EnumRenderMode::ePhysicallyBasedRendering;
-            }
-
             ImGui::EndTabItem();
         }
         if (ImGui::BeginTabItem("Cube Map")) {

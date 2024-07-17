@@ -31,7 +31,7 @@ class IDisposable {
 
 class BehaviorActionNode : public IDisposable {
   public:
-    BehaviorActionNode() : parent_node(0), target_id(0){};
+    BehaviorActionNode() : parent_node(0), target_object(0){};
     EnumBehaviorTreeStatus Invoke();
     BehaviorActionNode *GetParent();
     void Dispose() override;
@@ -43,7 +43,7 @@ class BehaviorActionNode : public IDisposable {
     BehaviorActionNode *parent_node;
     std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
     std::map<EnumDataBlockType, common::IDataBlock *> data_block;
-    common::INodeUi* target_id;
+    common::INodeUi* target_object;
 };
 } // namespace dx11
 #endif

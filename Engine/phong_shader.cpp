@@ -83,15 +83,11 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
-EnumBehaviorTreeStatus CheckPhongShader::CheckCondition() {
+EnumBehaviorTreeStatus CheckPhongShader::OnInvoke() {
+    auto model = dynamic_cast<Model *>(target_object);
 
-    auto guiBlock = data_block[EnumDataBlockType::eGui];
-    auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
-    assert(gui != nullptr);
-
-    if (gui->Tab().common.render_mode == common::EnumRenderMode::eLight) {
+    if (model->render_mode == EnumRenderMode::eLight)
         return EnumBehaviorTreeStatus::eSuccess;
-    }
 
     return EnumBehaviorTreeStatus::eFail;
 }
@@ -108,14 +104,14 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
 
     auto context = GraphicsContext::Instance().device_context();
 
-    auto model = dynamic_cast<Model *>(target_id);
+    auto model = dynamic_cast<Model *>(target_object);
 
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
-    if (phong_shader->source[target_id->GetEntityId()] == nullptr) {
+    if (phong_shader->source[target_object->GetEntityId()] == nullptr) {
 
         auto source = std::make_shared<PhongShaderSource>();
         source->Initialize();
-        phong_shader->source[target_id->GetEntityId()] = source;
+        phong_shader->source[target_object->GetEntityId()] = source;
     }
     auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
         phong_shader->source[model->GetEntityId()].get());
@@ -225,7 +221,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     // PS: Pixel Shader
     // IA: Input-Assembler stage
 
-    auto model = dynamic_cast<Model *>(target_id);
+    auto model = dynamic_cast<Model *>(target_object);
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
     auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
         phong_shader->source[model->GetEntityId()].get());
@@ -266,7 +262,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
         context->DrawIndexed(model->GetIndexCount(), 0, 0);
     }
 
-    if (gui->SelectedId() == target_id->GetEntityId())
+    if (gui->SelectedId() == target_object->GetEntityId())
         gui->PushNode(phong_shader_source);
 
     return EnumBehaviorTreeStatus::eSuccess;

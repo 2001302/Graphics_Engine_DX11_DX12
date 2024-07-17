@@ -55,10 +55,6 @@ bool Application::OnFrame() {
         0.0f, 0.0f, 0.0f, 1.0f, imgui_->Tab().common.draw_as_wire_);
 
     // clang-format off
-    /*std::vector<int> model_ids;
-    for(auto model : manager_->models)
-        model_ids.push_back(model.first);
-    */
 
     if (imgui_->SelectedId()) {
         imgui_->PushNode(manager_->models[imgui_->SelectedId()]); 
@@ -68,18 +64,18 @@ bool Application::OnFrame() {
     tree->Build(dataBlock)
     ->Excute(std::make_shared<dx11::UpdateCamera>())
     ->Parallel(manager_->models)
-        ->Conditional(std::make_shared<dx11::CheckPhongShader>())
+        ->Selector()
             ->Sequence()
+                ->Excute(std::make_shared<dx11::CheckPhongShader>())
                 ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingPhongShader>())
                 ->Excute(std::make_shared<dx11::RenderGameObjectsUsingPhongShader>())
             ->Close()
-        ->End()
-        ->Conditional(std::make_shared<dx11::CheckPhysicallyBasedShader>())
             ->Sequence()
+                ->Excute(std::make_shared<dx11::CheckPhysicallyBasedShader>())
                 ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingPhysicallyBasedShader>())
                 ->Excute(std::make_shared<dx11::RenderGameObjectsUsingPhysicallyBasedShader>())
             ->Close()
-        ->End()
+        ->Close()
     ->Close()
     ->Conditional(std::make_shared<dx11::CheckCubeMapShader>())
         ->Sequence()

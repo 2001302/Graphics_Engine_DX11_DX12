@@ -4,7 +4,7 @@ using namespace dx11;
 
 EnumBehaviorTreeStatus BehaviorActionNode::Invoke() {
     if (parent_node)
-        this->target_id = parent_node->target_id;
+        this->target_object = parent_node->target_object;
     return OnInvoke();
 }
 

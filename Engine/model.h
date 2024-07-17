@@ -10,6 +10,8 @@
 namespace dx11 {
 using Microsoft::WRL::ComPtr;
 
+enum EnumRenderMode { eLight = 0, ePhysicallyBasedRendering = 1 };
+
 class Model : public common::INodeUi {
   public:
     Model();
@@ -26,7 +28,7 @@ class Model : public common::INodeUi {
     // std::shared_ptr<Animation> animation;
 
     EnumShaderType shader_type;
-
+    EnumRenderMode render_mode;
   private:
     void OnShow() override;
 };

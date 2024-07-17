@@ -46,21 +46,21 @@ struct PhsicallyBasedShader : public IShader {
         Vector3 dummy; // 16
     };
 
+    struct PhsicallyBasedConstantBufferData : public IConstantBufferData,
+                                              common::INodeUi {
+      public:
+        ComPtr<ID3D11Buffer> vertex_constant_buffer;
+        ComPtr<ID3D11Buffer> pixel_constant_buffer;
+        PhsicallyBasedVertexConstantBuffer
+            vertex_constant;
+        PhsicallyPixelConstantBuffer pixel_constant;
+
+      private:
+        void InitializeThis() override;
+        void OnShow() override;
+    };
+
     ComPtr<ID3D11SamplerState> clampSamplerState;
-};
-
-struct PhsicallyBasedShaderSource : public IShaderSource, common::INodeUi {
-  public:
-    ComPtr<ID3D11Buffer> vertex_constant_buffer;
-    ComPtr<ID3D11Buffer> pixel_constant_buffer;
-    PhsicallyBasedShader::PhsicallyBasedVertexConstantBuffer
-        vertex_constant_buffer_data;
-    PhsicallyBasedShader::PhsicallyPixelConstantBuffer
-        pixel_constant_buffer_data;
-
-  private:
-    void InitializeThis() override;
-    void OnShow() override;
 };
 
 class InitializePhysicallyBasedShader : public BehaviorActionNode {

@@ -6,13 +6,13 @@
 using namespace dx11;
 
 void CubeMapShaderSource::InitializeThis() {
-    vertex_constant_buffer_data.model = Matrix();
-    vertex_constant_buffer_data.view = Matrix();
-    vertex_constant_buffer_data.projection = Matrix();
+    vertex_constant.model = Matrix();
+    vertex_constant.view = Matrix();
+    vertex_constant.projection = Matrix();
 
     GraphicsContext::Instance().CreateConstantBuffer(
-        vertex_constant_buffer_data, vertex_constant_buffer);
-    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
+        vertex_constant, vertex_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant,
                                                      pixel_constant_buffer);
 }
 
@@ -113,30 +113,30 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     auto cube_shader_source = dynamic_cast<CubeMapShaderSource *>(
         cube_map_shader->source[cube_map->GetEntityId()].get());
 
-    cube_shader_source->pixel_constant_buffer_data.textureToDraw =
+    cube_shader_source->pixel_constant.textureToDraw =
         gui->Tab().cube_map.textureToDraw;
 
     {
-        cube_shader_source->vertex_constant_buffer_data.view =
+        cube_shader_source->vertex_constant.view =
             manager->camera->view.Transpose();
 
         auto env = common::Env::Instance();
-        cube_shader_source->vertex_constant_buffer_data.projection =
+        cube_shader_source->vertex_constant.projection =
             XMMatrixPerspectiveFovLH(
                 XMConvertToRadians(env.projection.projection_fov_angle_y),
                 env.aspect, env.projection.near_z, env.projection.far_z);
 
-        cube_shader_source->vertex_constant_buffer_data.projection =
-            cube_shader_source->vertex_constant_buffer_data.projection
+        cube_shader_source->vertex_constant.projection =
+            cube_shader_source->vertex_constant.projection
                 .Transpose();
     }
 
     GraphicsContext::Instance().UpdateBuffer(
-        cube_shader_source->vertex_constant_buffer_data,
+        cube_shader_source->vertex_constant,
         cube_shader_source->vertex_constant_buffer);
 
     GraphicsContext::Instance().UpdateBuffer(
-        cube_shader_source->pixel_constant_buffer_data,
+        cube_shader_source->pixel_constant,
         cube_shader_source->pixel_constant_buffer);
 
     return EnumBehaviorTreeStatus::eSuccess;

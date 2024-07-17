@@ -7,8 +7,8 @@ using namespace dx11;
 
 void NormalGeometryShaderSource::InitializeThis() {
     GraphicsContext::Instance().CreateConstantBuffer(
-        vertex_constant_buffer_data, vertex_constant_buffer);
-    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
+        vertex_constant, vertex_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant,
                                                      pixel_constant_buffer);
 }
 

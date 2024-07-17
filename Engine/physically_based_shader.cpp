@@ -5,16 +5,16 @@
 
 using namespace dx11;
 
-void PhsicallyBasedShaderSource::InitializeThis() {
-    vertex_constant_buffer_data.modelWorld = Matrix();
-    vertex_constant_buffer_data.view = Matrix();
-    vertex_constant_buffer_data.projection = Matrix();
-    vertex_constant_buffer_data.useHeightMap = 0;
-    vertex_constant_buffer_data.heightScale = 0.0f;
+void PhsicallyBasedShader::PhsicallyBasedConstantBufferData::InitializeThis() {
+    vertex_constant.modelWorld = Matrix();
+    vertex_constant.view = Matrix();
+    vertex_constant.projection = Matrix();
+    vertex_constant.useHeightMap = 0;
+    vertex_constant.heightScale = 0.0f;
 
-    GraphicsContext::Instance().CreateConstantBuffer(
-        vertex_constant_buffer_data, vertex_constant_buffer);
-    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
+    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant,
+                                                     vertex_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant,
                                                      pixel_constant_buffer);
 }
 
@@ -25,51 +25,49 @@ void IntCheckbox(const char *label, int *v) {
     }
 }
 
-void PhsicallyBasedShaderSource::OnShow() {
+void PhsicallyBasedShader::PhsicallyBasedConstantBufferData::OnShow() {
 
     // float mipmapLevel = 0.0f; // 4
     // float expose = 1.0f;      // 16
     // float gamma = 1.0f;
 
-    IntCheckbox("Use Texture", &pixel_constant_buffer_data.useAlbedoMap);
+    IntCheckbox("Use Texture", &pixel_constant.useAlbedoMap);
 
-    bool useNormalMap = (bool)pixel_constant_buffer_data.useNormalMap;
+    bool useNormalMap = (bool)pixel_constant.useNormalMap;
     ImGui::Checkbox("useNormalMap", &useNormalMap);
-    pixel_constant_buffer_data.useNormalMap = useNormalMap;
+    pixel_constant.useNormalMap = useNormalMap;
 
-    bool useAOMap = (bool)pixel_constant_buffer_data.useAOMap;
+    bool useAOMap = (bool)pixel_constant.useAOMap;
     ImGui::Checkbox("useAOMap", &useAOMap);
-    pixel_constant_buffer_data.useAOMap = useAOMap;
+    pixel_constant.useAOMap = useAOMap;
 
-    bool invertNormalMapY = (bool)pixel_constant_buffer_data.invertNormalMapY;
+    bool invertNormalMapY = (bool)pixel_constant.invertNormalMapY;
     ImGui::Checkbox("invertNormalMapY", &invertNormalMapY);
-    pixel_constant_buffer_data.invertNormalMapY = invertNormalMapY;
+    pixel_constant.invertNormalMapY = invertNormalMapY;
 
-    bool useMetallicMap = (bool)pixel_constant_buffer_data.useMetallicMap;
+    bool useMetallicMap = (bool)pixel_constant.useMetallicMap;
     ImGui::Checkbox("useMetallicMap", &useMetallicMap);
-    pixel_constant_buffer_data.useMetallicMap = useMetallicMap;
+    pixel_constant.useMetallicMap = useMetallicMap;
 
-    bool useRoughnessMap = (bool)pixel_constant_buffer_data.useRoughnessMap;
+    bool useRoughnessMap = (bool)pixel_constant.useRoughnessMap;
     ImGui::Checkbox("useRoughnessMap", &useRoughnessMap);
-    pixel_constant_buffer_data.useRoughnessMap = useRoughnessMap;
+    pixel_constant.useRoughnessMap = useRoughnessMap;
 
-    bool useEmissiveMap = (bool)pixel_constant_buffer_data.useEmissiveMap;
+    bool useEmissiveMap = (bool)pixel_constant.useEmissiveMap;
     ImGui::Checkbox("useEmissiveMap", &useEmissiveMap);
-    pixel_constant_buffer_data.useRoughnessMap = useEmissiveMap;
+    pixel_constant.useRoughnessMap = useEmissiveMap;
 
     ImGui::Text("Material");
 
-    ImGui::SliderFloat("albedo", &pixel_constant_buffer_data.material.albedo.x,
-                       0.01f, 1.0f);
-    pixel_constant_buffer_data.material.albedo =
-        Vector3(pixel_constant_buffer_data.material.albedo.x);
+    ImGui::SliderFloat("albedo", &pixel_constant.material.albedo.x, 0.01f,
+                       1.0f);
+    pixel_constant.material.albedo = Vector3(pixel_constant.material.albedo.x);
 
-    ImGui::SliderFloat("roughness",
-                       &pixel_constant_buffer_data.material.roughness, 0.0f,
+    ImGui::SliderFloat("roughness", &pixel_constant.material.roughness, 0.0f,
                        1.0f);
 
-    ImGui::SliderFloat(
-        "metallic", &pixel_constant_buffer_data.material.metallic, 0.0f, 1.0f);
+    ImGui::SliderFloat("metallic", &pixel_constant.material.metallic, 0.0f,
+                       1.0f);
 };
 
 EnumBehaviorTreeStatus CheckPhysicallyBasedShader::OnInvoke() {
@@ -152,65 +150,63 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto physically_shader = manager->shaders[EnumShaderType::ePhysicallyBased];
     if (physically_shader->source[target_object->GetEntityId()] == nullptr) {
 
-        auto source = std::make_shared<PhsicallyBasedShaderSource>();
+        auto source = std::make_shared<
+            PhsicallyBasedShader::PhsicallyBasedConstantBufferData>();
         source->Initialize();
         physically_shader->source[target_object->GetEntityId()] = source;
     }
-    auto physically_shader_source = dynamic_cast<PhsicallyBasedShaderSource *>(
-        physically_shader->source[model->GetEntityId()].get());
+    auto physically_shader_source =
+        dynamic_cast<PhsicallyBasedShader::PhsicallyBasedConstantBufferData *>(
+            physically_shader->source[model->GetEntityId()].get());
 
     // model
     {
-        physically_shader_source->vertex_constant_buffer_data.modelWorld =
+        physically_shader_source->vertex_constant.modelWorld =
             Matrix::CreateScale(model->scaling) *
             Matrix::CreateRotationX(model->rotation.x) *
             Matrix::CreateRotationY(model->rotation.y) *
             Matrix::CreateRotationZ(model->rotation.z) *
             Matrix::CreateTranslation(model->translation);
 
-        physically_shader_source->vertex_constant_buffer_data.modelWorld =
-            physically_shader_source->vertex_constant_buffer_data.modelWorld
-                .Transpose();
+        physically_shader_source->vertex_constant.modelWorld =
+            physically_shader_source->vertex_constant.modelWorld.Transpose();
     }
     // view
     {
-        physically_shader_source->vertex_constant_buffer_data.view =
+        physically_shader_source->vertex_constant.view =
             manager->camera->view.Transpose();
     }
     // inverse transpose
     {
-        physically_shader_source->vertex_constant_buffer_data.invTranspose =
-            physically_shader_source->vertex_constant_buffer_data.modelWorld;
-        physically_shader_source->vertex_constant_buffer_data.invTranspose
-            .Translation(Vector3(0.0f));
-        physically_shader_source->vertex_constant_buffer_data.invTranspose =
-            physically_shader_source->vertex_constant_buffer_data.invTranspose
-                .Transpose()
+        physically_shader_source->vertex_constant.invTranspose =
+            physically_shader_source->vertex_constant.modelWorld;
+        physically_shader_source->vertex_constant.invTranspose.Translation(
+            Vector3(0.0f));
+        physically_shader_source->vertex_constant.invTranspose =
+            physically_shader_source->vertex_constant.invTranspose.Transpose()
                 .Invert();
     }
     // projection
     {
         auto env = common::Env::Instance();
-        physically_shader_source->vertex_constant_buffer_data.projection =
+        physically_shader_source->vertex_constant.projection =
             XMMatrixPerspectiveFovLH(
                 XMConvertToRadians(env.projection.projection_fov_angle_y),
                 env.aspect, env.projection.near_z, env.projection.far_z);
 
-        physically_shader_source->vertex_constant_buffer_data.projection =
-            physically_shader_source->vertex_constant_buffer_data.projection
-                .Transpose();
+        physically_shader_source->vertex_constant.projection =
+            physically_shader_source->vertex_constant.projection.Transpose();
     }
 
     GraphicsContext::Instance().UpdateBuffer(
-        physically_shader_source->vertex_constant_buffer_data,
+        physically_shader_source->vertex_constant,
         physically_shader_source->vertex_constant_buffer);
 
     // eye
     {
-        physically_shader_source->pixel_constant_buffer_data.eyeWorld =
-            Vector3::Transform(Vector3(0.0f),
-                               physically_shader_source
-                                   ->vertex_constant_buffer_data.view.Invert());
+        physically_shader_source->pixel_constant.eyeWorld = Vector3::Transform(
+            Vector3(0.0f),
+            physically_shader_source->vertex_constant.view.Invert());
     }
     //// material
     //{
@@ -224,18 +220,18 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     {
         for (int i = 0; i < MAX_LIGHTS; i++) {
             if (i != gui->Tab().light.light_type) {
-                physically_shader_source->pixel_constant_buffer_data.lights[i]
-                    .strength *= 0.0f;
+                physically_shader_source->pixel_constant.lights[i].strength *=
+                    0.0f;
             } else {
                 // turn off another light
-                physically_shader_source->pixel_constant_buffer_data.lights[i] =
+                physically_shader_source->pixel_constant.lights[i] =
                     gui->Tab().light.light_from_gui;
             }
         }
     }
 
     GraphicsContext::Instance().UpdateBuffer(
-        physically_shader_source->pixel_constant_buffer_data,
+        physically_shader_source->pixel_constant,
         physically_shader_source->pixel_constant_buffer);
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -262,8 +258,9 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto physically_shader = std::static_pointer_cast<PhsicallyBasedShader>(
         manager->shaders[EnumShaderType::ePhysicallyBased]);
 
-    auto physically_shader_source = dynamic_cast<PhsicallyBasedShaderSource *>(
-        physically_shader->source[model->GetEntityId()].get());
+    auto physically_shader_source =
+        dynamic_cast<PhsicallyBasedShader::PhsicallyBasedConstantBufferData *>(
+            physically_shader->source[model->GetEntityId()].get());
     assert(physically_shader != nullptr);
 
     unsigned int stride = sizeof(Vertex);

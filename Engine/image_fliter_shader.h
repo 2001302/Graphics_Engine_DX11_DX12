@@ -10,7 +10,7 @@ namespace dx11 {
 struct ImageFilterShader : public IShader {
   public:
 };
-struct ImageFilterShaderSource : public IShaderSource {
+struct ImageFilterShaderSource : public IConstantBufferData {
   public:
 };
 

@@ -24,12 +24,12 @@ struct CubeMapShader : public IShader {
         float dummy2;
     };
 };
-struct CubeMapShaderSource : public IShaderSource {
+struct CubeMapShaderSource : public IConstantBufferData {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
-    CubeMapShader::CubeMapVertexConstantBuffer vertex_constant_buffer_data;
-    CubeMapShader::CubeMapPixelConstantBuffer pixel_constant_buffer_data;
+    CubeMapShader::CubeMapVertexConstantBuffer vertex_constant;
+    CubeMapShader::CubeMapPixelConstantBuffer pixel_constant;
 
   private:
     void InitializeThis() override;

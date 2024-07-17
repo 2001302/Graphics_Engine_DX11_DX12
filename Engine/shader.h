@@ -18,17 +18,18 @@ enum EnumShaderType {
     eGround = 4,
 };
 
-struct IShaderSource {
+struct IConstantBufferData {
   public:
     void Initialize() { InitializeThis(); }
     virtual void InitializeThis() {}
 };
+
 struct IShader {
     ComPtr<ID3D11VertexShader> vertex_shader;
     ComPtr<ID3D11PixelShader> pixel_shader;
     ComPtr<ID3D11InputLayout> layout;
     ComPtr<ID3D11SamplerState> sample_state;
-    std::unordered_map<int, std::shared_ptr<IShaderSource>> source;
+    std::unordered_map<int, std::shared_ptr<IConstantBufferData>> source;
 };
 
 } // namespace dx11

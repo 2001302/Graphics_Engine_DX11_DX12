@@ -4,39 +4,36 @@
 
 using namespace dx11;
 
-void PhongShaderSource::InitializeThis() {
+void PhongShader::PhongConstantBufferData::InitializeThis() {
     // create constant buffer(Phong Shader)
-    vertex_constant_buffer_data.model = Matrix();
-    vertex_constant_buffer_data.view = Matrix();
-    vertex_constant_buffer_data.projection = Matrix();
+    vertex_constant.model = Matrix();
+    vertex_constant.view = Matrix();
+    vertex_constant.projection = Matrix();
 
-    GraphicsContext::Instance().CreateConstantBuffer(
-        vertex_constant_buffer_data, vertex_constant_buffer);
-    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant_buffer_data,
+    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant,
+                                                     vertex_constant_buffer);
+    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant,
                                                      pixel_constant_buffer);
 }
 
-void PhongShaderSource::OnShow() {
+void PhongShader::PhongConstantBufferData::OnShow() {
 
-    ImGui::Checkbox("Use Texture", &pixel_constant_buffer_data.useTexture);
-    ImGui::Checkbox("Use BlinnPhong",
-                    &pixel_constant_buffer_data.useBlinnPhong);
+    ImGui::Checkbox("Use Texture", &pixel_constant.useTexture);
+    ImGui::Checkbox("Use BlinnPhong", &pixel_constant.useBlinnPhong);
 
     ImGui::Text("Material");
-    ImGui::SliderFloat("Shininess",
-                       &pixel_constant_buffer_data.material.shininess, 0.01f,
+    ImGui::SliderFloat("Shininess", &pixel_constant.material.shininess, 0.01f,
                        1.0f);
 
-    ImGui::SliderFloat(
-        "Diffuse", &pixel_constant_buffer_data.material.diffuse.x, 0.0f, 1.0f);
-    pixel_constant_buffer_data.material.diffuse =
-        Vector3(pixel_constant_buffer_data.material.diffuse.x);
-
-    ImGui::SliderFloat("Specular",
-                       &pixel_constant_buffer_data.material.specular.x, 0.0f,
+    ImGui::SliderFloat("Diffuse", &pixel_constant.material.diffuse.x, 0.0f,
                        1.0f);
-    pixel_constant_buffer_data.material.specular =
-        Vector3(pixel_constant_buffer_data.material.specular);
+    pixel_constant.material.diffuse =
+        Vector3(pixel_constant.material.diffuse.x);
+
+    ImGui::SliderFloat("Specular", &pixel_constant.material.specular.x, 0.0f,
+                       1.0f);
+    pixel_constant.material.specular =
+        Vector3(pixel_constant.material.specular);
 };
 
 EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
@@ -109,64 +106,61 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
     if (phong_shader->source[target_object->GetEntityId()] == nullptr) {
 
-        auto source = std::make_shared<PhongShaderSource>();
+        auto source = std::make_shared<PhongShader::PhongConstantBufferData>();
         source->Initialize();
         phong_shader->source[target_object->GetEntityId()] = source;
     }
-    auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
-        phong_shader->source[model->GetEntityId()].get());
+    auto phong_shader_source =
+        dynamic_cast<PhongShader::PhongConstantBufferData *>(
+            phong_shader->source[model->GetEntityId()].get());
 
     // model
     {
-        phong_shader_source->vertex_constant_buffer_data.model =
+        phong_shader_source->vertex_constant.model =
             Matrix::CreateScale(model->scaling) *
             Matrix::CreateRotationX(model->rotation.x) *
             Matrix::CreateRotationY(model->rotation.y) *
             Matrix::CreateRotationZ(model->rotation.z) *
             Matrix::CreateTranslation(model->translation);
 
-        phong_shader_source->vertex_constant_buffer_data.model =
-            phong_shader_source->vertex_constant_buffer_data.model.Transpose();
+        phong_shader_source->vertex_constant.model =
+            phong_shader_source->vertex_constant.model.Transpose();
     }
     // view
     {
-        phong_shader_source->vertex_constant_buffer_data.view =
+        phong_shader_source->vertex_constant.view =
             manager->camera->view.Transpose();
     }
     // inverse transpose
     {
-        phong_shader_source->vertex_constant_buffer_data.invTranspose =
-            phong_shader_source->vertex_constant_buffer_data.model;
-        phong_shader_source->vertex_constant_buffer_data.invTranspose
-            .Translation(Vector3(0.0f));
-        phong_shader_source->vertex_constant_buffer_data.invTranspose =
-            phong_shader_source->vertex_constant_buffer_data.invTranspose
-                .Transpose()
+        phong_shader_source->vertex_constant.invTranspose =
+            phong_shader_source->vertex_constant.model;
+        phong_shader_source->vertex_constant.invTranspose.Translation(
+            Vector3(0.0f));
+        phong_shader_source->vertex_constant.invTranspose =
+            phong_shader_source->vertex_constant.invTranspose.Transpose()
                 .Invert();
     }
     // projection
     {
         auto env = common::Env::Instance();
-        phong_shader_source->vertex_constant_buffer_data.projection =
+        phong_shader_source->vertex_constant.projection =
             XMMatrixPerspectiveFovLH(
                 XMConvertToRadians(env.projection.projection_fov_angle_y),
                 env.aspect, env.projection.near_z, env.projection.far_z);
 
-        phong_shader_source->vertex_constant_buffer_data.projection =
-            phong_shader_source->vertex_constant_buffer_data.projection
-                .Transpose();
+        phong_shader_source->vertex_constant.projection =
+            phong_shader_source->vertex_constant.projection.Transpose();
     }
 
     GraphicsContext::Instance().UpdateBuffer(
-        phong_shader_source->vertex_constant_buffer_data,
+        phong_shader_source->vertex_constant,
         phong_shader_source->vertex_constant_buffer);
 
     // eye
     {
-        phong_shader_source->pixel_constant_buffer_data.eyeWorld =
-            Vector3::Transform(
-                Vector3(0.0f),
-                phong_shader_source->vertex_constant_buffer_data.view.Invert());
+        phong_shader_source->pixel_constant.eyeWorld = Vector3::Transform(
+            Vector3(0.0f), phong_shader_source->vertex_constant.view.Invert());
     }
     //// material
     //{
@@ -181,11 +175,10 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     {
         for (int i = 0; i < MAX_LIGHTS; i++) {
             if (i != gui->Tab().light.light_type) {
-                phong_shader_source->pixel_constant_buffer_data.lights[i]
-                    .strength *= 0.0f;
+                phong_shader_source->pixel_constant.lights[i].strength *= 0.0f;
             } else {
                 // turn off another light
-                phong_shader_source->pixel_constant_buffer_data.lights[i] =
+                phong_shader_source->pixel_constant.lights[i] =
                     gui->Tab().light.light_from_gui;
             }
         }
@@ -197,7 +190,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     //    gui->Tab().light.use_blinn_phong;
 
     GraphicsContext::Instance().UpdateBuffer(
-        phong_shader_source->pixel_constant_buffer_data,
+        phong_shader_source->pixel_constant,
         phong_shader_source->pixel_constant_buffer);
 
     return EnumBehaviorTreeStatus::eSuccess;
@@ -223,8 +216,9 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
 
     auto model = dynamic_cast<Model *>(target_object);
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
-    auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
-        phong_shader->source[model->GetEntityId()].get());
+    auto phong_shader_source =
+        dynamic_cast<PhongShader::PhongConstantBufferData *>(
+            phong_shader->source[model->GetEntityId()].get());
 
     unsigned int stride = sizeof(Vertex);
     unsigned int offset = 0;

@@ -28,21 +28,22 @@ struct PhongShader : public IShader {
         bool useBlinnPhong = true;
         Vector3 dummy;
     };
-};
 
-/// <summary>
-/// Phong Shader에서 사용하는 공유되지 않는 Constant Buffer 정보
-/// </summary>
-struct PhongShaderSource : public IShaderSource, common::INodeUi {
-  public:
-    ComPtr<ID3D11Buffer> vertex_constant_buffer;
-    ComPtr<ID3D11Buffer> pixel_constant_buffer;
-    PhongShader::PhongVertexConstantBuffer vertex_constant_buffer_data;
-    PhongShader::PhongPixelConstantBuffer pixel_constant_buffer_data;
+    /// <summary>
+    /// Phong Shader에서 사용하는 공유되지 않는 Constant Buffer 정보
+    /// </summary>
+    struct PhongConstantBufferData : public IConstantBufferData,
+                                     common::INodeUi {
+      public:
+        ComPtr<ID3D11Buffer> vertex_constant_buffer;
+        ComPtr<ID3D11Buffer> pixel_constant_buffer;
+        PhongShader::PhongVertexConstantBuffer vertex_constant;
+        PhongShader::PhongPixelConstantBuffer pixel_constant;
 
-  private:
-    void InitializeThis() override;
-    void OnShow() override;
+      private:
+        void InitializeThis() override;
+        void OnShow() override;
+    };
 };
 
 class InitializePhongShader : public BehaviorActionNode {

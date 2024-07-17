@@ -17,14 +17,14 @@ struct NormalGeometryShader : public IShader {
     ComPtr<ID3D11GeometryShader> normalGeometryShader;
 };
 
-struct NormalGeometryShaderSource : public IShaderSource {
+struct NormalGeometryShaderSource : public IConstantBufferData {
   public:
     ComPtr<ID3D11Buffer> vertex_constant_buffer;
     ComPtr<ID3D11Buffer> pixel_constant_buffer;
     NormalGeometryShader::NormalGeometryVertexConstantBuffer
-        vertex_constant_buffer_data;
+        vertex_constant;
     NormalGeometryShader::NormalGeometryPixelConstantBuffer
-        pixel_constant_buffer_data;
+        pixel_constant;
 
   private:
     void InitializeThis() override;

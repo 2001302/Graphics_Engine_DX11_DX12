@@ -2,6 +2,7 @@
 #define _BehaviorTree
 
 #include "dataBlock.h"
+#include "node_ui.h"
 #include <iostream>
 #include <map>
 #include <vector>
@@ -42,7 +43,7 @@ class BehaviorActionNode : public IDisposable {
     BehaviorActionNode *parent_node;
     std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
     std::map<EnumDataBlockType, common::IDataBlock *> data_block;
-    int target_id;
+    common::INodeUi* target_id;
 };
 } // namespace dx11
 #endif

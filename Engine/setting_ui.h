@@ -5,6 +5,7 @@
 #include "light.h"
 #include "message.h"
 #include <string>
+#include <map>
 
 namespace ed = ax::NodeEditor;
 
@@ -71,7 +72,7 @@ class SettingUi : public IGui {
     void FrameRate();
     void MenuBar();
     void NodeEditor();
-    void TabBar(std::unordered_map<int, std::shared_ptr<INodeUi>> node_map);
+    void TabBar(std::map<int, INodeUi *> node_map);
 
   private:
     ed::EditorContext *context_ = nullptr;

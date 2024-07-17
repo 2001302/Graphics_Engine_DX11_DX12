@@ -62,7 +62,7 @@ void SettingUi::NodeEditor() {
     ed::SetCurrentEditor(nullptr);
 }
 void SettingUi::TabBar(
-    std::unordered_map<int, std::shared_ptr<INodeUi>> node_map) { // Tab Bar
+    std::map<int, INodeUi*> node_map) { // Tab Bar
 
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_FittingPolicyScroll)) {
         if (ImGui::BeginTabItem("Hierarchy")) {

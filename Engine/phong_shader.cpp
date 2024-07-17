@@ -108,14 +108,14 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
 
     auto context = GraphicsContext::Instance().device_context();
 
-    auto model = dynamic_cast<Model *>(manager->models[target_id].get());
+    auto model = dynamic_cast<Model *>(target_id);
 
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
-    if (phong_shader->source[target_id] == nullptr) {
+    if (phong_shader->source[target_id->GetEntityId()] == nullptr) {
 
         auto source = std::make_shared<PhongShaderSource>();
         source->Initialize();
-        phong_shader->source[target_id] = source;
+        phong_shader->source[target_id->GetEntityId()] = source;
     }
     auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
         phong_shader->source[model->GetEntityId()].get());
@@ -225,7 +225,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     // PS: Pixel Shader
     // IA: Input-Assembler stage
 
-    auto model = dynamic_cast<Model *>(manager->models[target_id].get());
+    auto model = dynamic_cast<Model *>(target_id);
     auto phong_shader = manager->shaders[EnumShaderType::ePhong];
     auto phong_shader_source = dynamic_cast<PhongShaderSource *>(
         phong_shader->source[model->GetEntityId()].get());
@@ -266,7 +266,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
         context->DrawIndexed(model->GetIndexCount(), 0, 0);
     }
 
-    if (gui->SelectedId() == target_id)
+    if (gui->SelectedId() == target_id->GetEntityId())
         gui->PushNode(phong_shader_source);
 
     return EnumBehaviorTreeStatus::eSuccess;

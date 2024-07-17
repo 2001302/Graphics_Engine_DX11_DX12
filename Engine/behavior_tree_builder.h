@@ -28,7 +28,7 @@ class BehaviorTreeBuilder {
     BehaviorTreeBuilder *Close();
     BehaviorTreeBuilder *Conditional(std::shared_ptr<ConditionalNode> node);
     BehaviorTreeBuilder *End();
-    BehaviorTreeBuilder *Parallel(std::vector<int> target_ids);
+    BehaviorTreeBuilder *Parallel(std::map<int, common::INodeUi *> target_ids);
 
   private:
     std::shared_ptr<BehaviorActionNode> tree;

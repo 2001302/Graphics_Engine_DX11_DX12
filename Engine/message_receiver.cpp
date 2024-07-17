@@ -147,9 +147,9 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
         std::string fileName = fullPath.substr(lastSlash + 1);
         std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
-        auto model = std::make_shared<Model>();
+        auto model = new Model();
         manager->models[model->GetEntityId()] = model;
-        GeometryGenerator::ReadFromFile(model.get(), directoryPath, fileName);
+        GeometryGenerator::ReadFromFile(model, directoryPath, fileName);
         model->SetName(fileName);
 
         for (const auto &meshData : model->meshes) {
@@ -262,11 +262,11 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
-    auto model = std::make_shared<Model>();
+    auto model = new Model();
     model->SetName("sphere");
     manager->models[model->GetEntityId()] = model;
 
-    GeometryGenerator::MakeSphere(model.get(), 1.5f, 15, 13);
+    GeometryGenerator::MakeSphere(model, 1.5f, 15, 13);
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(
@@ -325,11 +325,11 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
 bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
-    auto model = std::make_shared<Model>();
+    auto model = new Model();
     model->SetName("box");
     manager->models[model->GetEntityId()] = model;
 
-    GeometryGenerator::MakeBox(model.get());
+    GeometryGenerator::MakeBox(model);
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(
@@ -388,11 +388,11 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
 bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
-    auto model = std::make_shared<Model>();
+    auto model = new Model();
     model->SetName("cylinder");
     manager->models[model->GetEntityId()] = model;
 
-    GeometryGenerator::MakeCylinder(model.get(), 5.0f, 5.0f, 15.0f, 30);
+    GeometryGenerator::MakeCylinder(model, 5.0f, 5.0f, 15.0f, 30);
 
     for (auto mesh : model->meshes) {
         ResourceHelper::CreateTexture(

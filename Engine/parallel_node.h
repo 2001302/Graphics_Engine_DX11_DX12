@@ -7,13 +7,13 @@ namespace dx11 {
 
 class ParallelNode : public BehaviorActionNode {
   public:
-    ParallelNode(std::vector<int> target_ids) {
-        this->target_ids = target_ids;
+    ParallelNode(std::map<int, common::INodeUi *> target_objects) {
+        this->target_objects = target_objects;
     };
 
   protected:
     EnumBehaviorTreeStatus OnInvoke() override;
-    std::vector<int> target_ids;
+    std::map<int, common::INodeUi*> target_objects;
 };
 
 } // namespace dx11

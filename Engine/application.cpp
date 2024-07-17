@@ -55,18 +55,19 @@ bool Application::OnFrame() {
         0.0f, 0.0f, 0.0f, 1.0f, imgui_->Tab().common.draw_as_wire_);
 
     // clang-format off
-    std::vector<int> model_ids;
+    /*std::vector<int> model_ids;
     for(auto model : manager_->models)
         model_ids.push_back(model.first);
-    
+    */
+
     if (imgui_->SelectedId()) {
-        imgui_->PushNode(manager_->models[imgui_->SelectedId()].get()); 
+        imgui_->PushNode(manager_->models[imgui_->SelectedId()]); 
     }
 
     auto tree = std::make_unique<dx11::BehaviorTreeBuilder>();
     tree->Build(dataBlock)
     ->Excute(std::make_shared<dx11::UpdateCamera>())
-    ->Parallel(model_ids)
+    ->Parallel(manager_->models)
         ->Conditional(std::make_shared<dx11::CheckPhongShader>())
             ->Sequence()
                 ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingPhongShader>())
@@ -112,7 +113,8 @@ bool Application::OnStop() {
 
     if (manager_) {
         for (auto &model : manager_->models) {
-            model.second.reset();
+            delete model.second;
+            model.second = 0;
         }
         manager_->camera.reset();
     }

@@ -150,14 +150,14 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     auto context = GraphicsContext::Instance().device_context();
 
-    auto model = dynamic_cast<Model *>(manager->models[target_id].get());
+    auto model = dynamic_cast<Model *>(target_id);
 
     auto physically_shader = manager->shaders[EnumShaderType::ePhysicallyBased];
-    if (physically_shader->source[target_id] == nullptr) {
+    if (physically_shader->source[target_id->GetEntityId()] == nullptr) {
 
         auto source = std::make_shared<PhsicallyBasedShaderSource>();
         source->Initialize();
-        physically_shader->source[target_id] = source;
+        physically_shader->source[target_id->GetEntityId()] = source;
     }
     auto physically_shader_source = dynamic_cast<PhsicallyBasedShaderSource *>(
         physically_shader->source[model->GetEntityId()].get());
@@ -261,7 +261,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     // VS: Vertex Shader
     // PS: Pixel Shader
     // IA: Input-Assembler stage
-    auto model = dynamic_cast<Model *>(manager->models[target_id].get());
+    auto model = dynamic_cast<Model *>(target_id);
     auto physically_shader = std::static_pointer_cast<PhsicallyBasedShader>(
         manager->shaders[EnumShaderType::ePhysicallyBased]);
 
@@ -320,7 +320,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         context->DrawIndexed(model->GetIndexCount(), 0, 0);
     }
 
-    if (gui->SelectedId() == target_id)
+    if (gui->SelectedId() == target_id->GetEntityId())
         gui->PushNode(physically_shader_source);
 
     return EnumBehaviorTreeStatus::eSuccess;

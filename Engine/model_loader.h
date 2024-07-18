@@ -9,23 +9,25 @@
 #include <vector>
 
 namespace dx11 {
-
 using namespace DirectX::SimpleMath;
 
 class ModelLoader {
   public:
-    void Load(std::string basePath, std::string filename);
+    void Load(std::string basePath, std::string filename, bool revertNormals);
 
     void ProcessNode(aiNode *node, const aiScene *scene,
                      DirectX::SimpleMath::Matrix tr);
 
-    Mesh ProcessMesh(aiMesh *mesh, const aiScene *scene);
+    MeshData ProcessMesh(aiMesh *mesh, const aiScene *scene);
+
+    std::string ReadFilename(aiMaterial *material, aiTextureType type);
 
     void UpdateTangents();
-    std::string ReadFilename(aiMaterial *material, aiTextureType type);
 
   public:
     std::string basePath;
-    std::vector<Mesh> meshes;
+    std::vector<MeshData> meshes;
+    bool m_isGLTF = false; // gltf or fbx
+    bool m_revertNormals = false;
 };
 } // namespace dx11

@@ -26,16 +26,16 @@ bool Application::OnStart() {
     imgui_->Initialize();
 
     // clang-format off
-    auto tree = new dx11::BehaviorTreeBuilder();
-    tree->Build(dataBlock)
-        ->Sequence()
-            ->Excute(std::make_shared<dx11::InitializeBoardMap>())
-            ->Excute(std::make_shared<dx11::InitializeCamera>())
-            ->Excute(std::make_shared<dx11::InitializeCubeMapShader>())
-            ->Excute(std::make_shared<dx11::InitializePhongShader>())
-            ->Excute(std::make_shared<dx11::InitializePhysicallyBasedShader>())
-        ->Close()
-    ->Run();
+    //auto tree = new dx11::BehaviorTreeBuilder();
+    //tree->Build(dataBlock)
+    //    ->Sequence()
+    //        ->Excute(std::make_shared<dx11::InitializeBoardMap>())
+    //        ->Excute(std::make_shared<dx11::InitializeCamera>())
+    //        ->Excute(std::make_shared<dx11::InitializeCubeMapShader>())
+    //        ->Excute(std::make_shared<dx11::InitializePhongShader>())
+    //        ->Excute(std::make_shared<dx11::InitializePhysicallyBasedShader>())
+    //    ->Close()
+    //->Run();
     // clang-format on
 
     OnFrame();
@@ -60,31 +60,31 @@ bool Application::OnFrame() {
         imgui_->PushNode(manager_->models[imgui_->SelectedId()]); 
     }
 
-    auto tree = std::make_unique<dx11::BehaviorTreeBuilder>();
-    tree->Build(dataBlock)
-    ->Excute(std::make_shared<dx11::UpdateCamera>())
-    ->Parallel(manager_->models)
-        ->Selector()
-            ->Sequence()
-                ->Excute(std::make_shared<dx11::CheckPhongShader>())
-                ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingPhongShader>())
-                ->Excute(std::make_shared<dx11::RenderGameObjectsUsingPhongShader>())
-            ->Close()
-            ->Sequence()
-                ->Excute(std::make_shared<dx11::CheckPhysicallyBasedShader>())
-                ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingPhysicallyBasedShader>())
-                ->Excute(std::make_shared<dx11::RenderGameObjectsUsingPhysicallyBasedShader>())
-            ->Close()
-        ->Close()
-    ->Close()
-    ->Conditional(std::make_shared<dx11::CheckCubeMapShader>())
-        ->Sequence()
-            ->Excute(std::make_shared<dx11::UpdateCubeMap>())
-            ->Excute(std::make_shared<dx11::RenderCubeMap>())
-        ->Close()
-    ->End()
-    ->Excute(std::make_shared<dx11::RenderBoardMap>())
-    ->Run();
+    //auto tree = std::make_unique<dx11::BehaviorTreeBuilder>();
+    //tree->Build(dataBlock)
+    //->Excute(std::make_shared<dx11::UpdateCamera>())
+    //->Parallel(manager_->models)
+    //    ->Selector()
+    //        ->Sequence()
+    //            ->Excute(std::make_shared<dx11::CheckPhongShader>())
+    //            ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingPhongShader>())
+    //            ->Excute(std::make_shared<dx11::RenderGameObjectsUsingPhongShader>())
+    //        ->Close()
+    //        ->Sequence()
+    //            ->Excute(std::make_shared<dx11::CheckPhysicallyBasedShader>())
+    //            ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingPhysicallyBasedShader>())
+    //            ->Excute(std::make_shared<dx11::RenderGameObjectsUsingPhysicallyBasedShader>())
+    //        ->Close()
+    //    ->Close()
+    //->Close()
+    //->Conditional(std::make_shared<dx11::CheckCubeMapShader>())
+    //    ->Sequence()
+    //        ->Excute(std::make_shared<dx11::UpdateCubeMap>())
+    //        ->Excute(std::make_shared<dx11::RenderCubeMap>())
+    //    ->Close()
+    //->End()
+    //->Excute(std::make_shared<dx11::RenderBoardMap>())
+    //->Run();
     // clang-format on
 
     input_->Frame();

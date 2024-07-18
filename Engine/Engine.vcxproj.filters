@@ -46,9 +46,6 @@
     <ClInclude Include="setting_ui.h">
       <Filter>Common\BluePrint</Filter>
     </ClInclude>
-    <ClInclude Include="cube_map.h">
-      <Filter>DirectX11\Model</Filter>
-    </ClInclude>
     <ClInclude Include="graph.h">
       <Filter>DirectX11\BehaviorGraph</Filter>
     </ClInclude>
@@ -112,9 +109,6 @@
     <ClInclude Include="direct3D.h">
       <Filter>DirectX11</Filter>
     </ClInclude>
-    <ClInclude Include="resource_helper.h">
-      <Filter>DirectX11</Filter>
-    </ClInclude>
     <ClInclude Include="geometry_generator.h">
       <Filter>DirectX11</Filter>
     </ClInclude>
@@ -163,11 +157,14 @@
     <ClInclude Include="ImGui\NodeEditor\imgui_extra_math.h">
       <Filter>Common\ImGui\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="light.h">
-      <Filter>DirectX11\Model</Filter>
-    </ClInclude>
     <ClInclude Include="projection.h">
       <Filter>DirectX11\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="constant_buffers.h">
+      <Filter>DirectX11\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_util.h">
+      <Filter>DirectX11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -210,9 +207,6 @@
     </ClCompile>
     <ClCompile Include="setting_ui.cpp">
       <Filter>Common\BluePrint</Filter>
-    </ClCompile>
-    <ClCompile Include="cube_map.cpp">
-      <Filter>DirectX11\Model</Filter>
     </ClCompile>
     <ClCompile Include="graph.cpp">
       <Filter>DirectX11\BehaviorGraph</Filter>
@@ -271,9 +265,6 @@
     <ClCompile Include="model_loader.cpp">
       <Filter>DirectX11</Filter>
     </ClCompile>
-    <ClCompile Include="resource_helper.cpp">
-      <Filter>DirectX11</Filter>
-    </ClCompile>
     <ClCompile Include="application.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
@@ -294,6 +285,9 @@
     </ClCompile>
     <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp">
       <Filter>Common\ImGui\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics_util.cpp">
+      <Filter>DirectX11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -131,34 +131,34 @@ void SettingUi::TabBar(
 
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Light")) {
-            if (ImGui::RadioButton("Directional Light",
-                                   tab.light.light_type == 0)) {
-                tab.light.light_type = 0;
-            }
-            ImGui::SameLine();
-            if (ImGui::RadioButton("Point Light", tab.light.light_type == 1)) {
-                tab.light.light_type = 1;
-            }
-            ImGui::SameLine();
-            if (ImGui::RadioButton("Spot Light", tab.light.light_type == 2)) {
-                tab.light.light_type = 2;
-            }
+        //if (ImGui::BeginTabItem("Light")) {
+        //    if (ImGui::RadioButton("Directional Light",
+        //                           tab.light.light_type == 0)) {
+        //        tab.light.light_type = 0;
+        //    }
+        //    ImGui::SameLine();
+        //    if (ImGui::RadioButton("Point Light", tab.light.light_type == 1)) {
+        //        tab.light.light_type = 1;
+        //    }
+        //    ImGui::SameLine();
+        //    if (ImGui::RadioButton("Spot Light", tab.light.light_type == 2)) {
+        //        tab.light.light_type = 2;
+        //    }
 
-            ImGui::SliderFloat3(
-                "Position", &tab.light.light_from_gui.position.x, -5.0f, 5.0f);
-            ImGui::SliderFloat("Fall Off Start",
-                               &tab.light.light_from_gui.fallOffStart, 0.0f,
-                               5.0f);
-            ImGui::SliderFloat("Fall Off End",
-                               &tab.light.light_from_gui.fallOffEnd, 0.0f,
-                               10.0f);
-            ImGui::SliderFloat("Spot Power",
-                               &tab.light.light_from_gui.spotPower, 1.0f,
-                               512.0f);
+        //    ImGui::SliderFloat3(
+        //        "Position", &tab.light.light_from_gui.position.x, -5.0f, 5.0f);
+        //    ImGui::SliderFloat("Fall Off Start",
+        //                       &tab.light.light_from_gui.fallOffStart, 0.0f,
+        //                       5.0f);
+        //    ImGui::SliderFloat("Fall Off End",
+        //                       &tab.light.light_from_gui.fallOffEnd, 0.0f,
+        //                       10.0f);
+        //    ImGui::SliderFloat("Spot Power",
+        //                       &tab.light.light_from_gui.spotPower, 1.0f,
+        //                       512.0f);
 
-            ImGui::EndTabItem();
-        }
+        //    ImGui::EndTabItem();
+        //}
         if (ImGui::BeginTabItem("Filter")) {
 
             ImGui::SliderFloat("bloom_strength", &tab.filter.bloom_strength,

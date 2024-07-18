@@ -4,7 +4,6 @@
 #include "geometry_generator.h"
 #include "input.h"
 #include "pipeline_manager.h"
-#include "resource_helper.h"
 
 namespace dx11 {
 class MessageReceiver {

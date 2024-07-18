@@ -8,7 +8,6 @@
 #include "message_receiver.h"
 #include "pipeline_manager.h"
 #include "platform.h"
-#include "resource_helper.h"
 #include "setting_ui.h"
 
 namespace platform {

@@ -34,7 +34,7 @@ void CheckResult(HRESULT hr, ID3DBlob *errorBlob) {
     }
 }
 
-void D3D11Utils::CreateVertexShaderAndInputLayout(
+void GraphicsUtil::CreateVertexShaderAndInputLayout(
     ComPtr<ID3D11Device> &device, const wstring &filename,
     const vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
     ComPtr<ID3D11VertexShader> &m_vertexShader,
@@ -65,7 +65,7 @@ void D3D11Utils::CreateVertexShaderAndInputLayout(
                               shaderBlob->GetBufferSize(), &m_inputLayout);
 }
 
-void D3D11Utils::CreateHullShader(ComPtr<ID3D11Device> &device,
+void GraphicsUtil::CreateHullShader(ComPtr<ID3D11Device> &device,
                                   const wstring &filename,
                                   ComPtr<ID3D11HullShader> &m_hullShader) {
     ComPtr<ID3DBlob> shaderBlob;
@@ -88,7 +88,7 @@ void D3D11Utils::CreateHullShader(ComPtr<ID3D11Device> &device,
                              shaderBlob->GetBufferSize(), NULL, &m_hullShader);
 }
 
-void D3D11Utils::CreateDomainShader(
+void GraphicsUtil::CreateDomainShader(
     ComPtr<ID3D11Device> &device, const wstring &filename,
     ComPtr<ID3D11DomainShader> &m_domainShader) {
 
@@ -113,7 +113,7 @@ void D3D11Utils::CreateDomainShader(
                                &m_domainShader);
 }
 
-void D3D11Utils::CreatePixelShader(ComPtr<ID3D11Device> &device,
+void GraphicsUtil::CreatePixelShader(ComPtr<ID3D11Device> &device,
                                    const wstring &filename,
                                    ComPtr<ID3D11PixelShader> &m_pixelShader) {
     ComPtr<ID3DBlob> shaderBlob;
@@ -137,7 +137,7 @@ void D3D11Utils::CreatePixelShader(ComPtr<ID3D11Device> &device,
                               &m_pixelShader);
 }
 
-void D3D11Utils::CreateIndexBuffer(ComPtr<ID3D11Device> &device,
+void GraphicsUtil::CreateIndexBuffer(ComPtr<ID3D11Device> &device,
                                    const std::vector<uint32_t> &indices,
                                    ComPtr<ID3D11Buffer> &indexBuffer) {
     D3D11_BUFFER_DESC bufferDesc = {};
@@ -156,7 +156,7 @@ void D3D11Utils::CreateIndexBuffer(ComPtr<ID3D11Device> &device,
                          indexBuffer.GetAddressOf());
 }
 
-void D3D11Utils::CreateGeometryShader(
+void GraphicsUtil::CreateGeometryShader(
     ComPtr<ID3D11Device> &device, const wstring &filename,
     ComPtr<ID3D11GeometryShader> &geometryShader) {
 
@@ -359,7 +359,7 @@ void CreateTextureHelper(ComPtr<ID3D11Device> &device,
     // HLSL 쉐이더 안에서는 SampleLevel() 사용
 }
 
-void D3D11Utils::CreateMetallicRoughnessTexture(
+void GraphicsUtil::CreateMetallicRoughnessTexture(
     ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
     const std::string metallicFilename, const std::string roughnessFilename,
     ComPtr<ID3D11Texture2D> &texture, ComPtr<ID3D11ShaderResourceView> &srv) {
@@ -408,7 +408,7 @@ void D3D11Utils::CreateMetallicRoughnessTexture(
     }
 }
 
-void D3D11Utils::CreateTexture(ComPtr<ID3D11Device> &device,
+void GraphicsUtil::CreateTexture(ComPtr<ID3D11Device> &device,
                                ComPtr<ID3D11DeviceContext> &context,
                                const std::string filename, const bool usSRGB,
                                ComPtr<ID3D11Texture2D> &tex,
@@ -432,7 +432,7 @@ void D3D11Utils::CreateTexture(ComPtr<ID3D11Device> &device,
                         srv);
 }
 
-void D3D11Utils::CreateTextureArray(
+void GraphicsUtil::CreateTextureArray(
     ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
     const std::vector<std::string> filenames, ComPtr<ID3D11Texture2D> &texture,
     ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
@@ -504,7 +504,7 @@ void D3D11Utils::CreateTextureArray(
     context->GenerateMips(textureResourceView.Get());
 }
 
-void D3D11Utils::CreateDDSTexture(
+void GraphicsUtil::CreateDDSTexture(
     ComPtr<ID3D11Device> &device, const wchar_t *filename, bool isCubeMap,
     ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
 
@@ -523,7 +523,7 @@ void D3D11Utils::CreateDDSTexture(
         textureResourceView.GetAddressOf(), NULL));
 }
 
-void D3D11Utils::WriteToFile(ComPtr<ID3D11Device> &device,
+void GraphicsUtil::WriteToFile(ComPtr<ID3D11Device> &device,
                              ComPtr<ID3D11DeviceContext> &context,
                              ComPtr<ID3D11Texture2D> &textureToWrite,
                              const std::string filename) {

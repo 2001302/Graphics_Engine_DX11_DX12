@@ -11,7 +11,7 @@ using namespace DirectX::SimpleMath;
 
 void SetPipelineState(const GraphicsPSO &pso) {
 
-    auto context = dx11::GraphicsContext::Instance().device_context();
+    auto context = dx11::GraphicsManager::Instance().device_context();
     context->VSSetShader(pso.m_vertexShader.Get(), 0, 0);
     context->PSSetShader(pso.m_pixelShader.Get(), 0, 0);
     context->HSSetShader(pso.m_hullShader.Get(), 0, 0);
@@ -42,7 +42,7 @@ bool Application::OnStart() {
         {dx11::EnumDataBlockType::eGui, imgui_.get()},
     };
 
-    dx11::GraphicsContext::Instance().Initialize();
+    dx11::GraphicsManager::Instance().Initialize();
 
     input_->Initialize(hinstance_, common::Env::Instance().screen_width,
                        common::Env::Instance().screen_height);
@@ -61,13 +61,13 @@ bool Application::OnStart() {
                  L"SampleSpecularHDR.dds", L"SampleDiffuseHDR.dds",
                  L"SampleBrdf.dds");
 
-    auto device = dx11::GraphicsContext::Instance().device();
-    auto context = dx11::GraphicsContext::Instance().device_context();
+    auto device = dx11::GraphicsManager::Instance().device();
+    auto context = dx11::GraphicsManager::Instance().device_context();
 
     // 공통으로 쓰이는 ConstBuffers
-    D3D11Utils::CreateConstBuffer(device, m_globalConstsCPU,
+    GraphicsUtil::CreateConstBuffer(device, m_globalConstsCPU,
                                   m_globalConstsGPU);
-    D3D11Utils::CreateConstBuffer(device, m_reflectGlobalConstsCPU,
+    GraphicsUtil::CreateConstBuffer(device, m_reflectGlobalConstsCPU,
                                   m_reflectGlobalConstsGPU);
     // 후처리용 화면 사각형
     {
@@ -167,8 +167,8 @@ bool Application::OnStart() {
     }
 
     m_postProcess.Initialize(device, context,
-                             {GraphicsContext::Instance().post_effects_SRV()},
-                             {GraphicsContext::Instance().back_buffer_RTV()},
+                             {GraphicsManager::Instance().post_effects_SRV()},
+                             {GraphicsManager::Instance().back_buffer_RTV()},
                              common::Env::Instance().screen_width,
                              common::Env::Instance().screen_height, 4);
     OnFrame();
@@ -178,8 +178,8 @@ bool Application::OnStart() {
 
 bool Application::OnFrame() {
 
-    auto device = dx11::GraphicsContext::Instance().device();
-    auto context = dx11::GraphicsContext::Instance().device_context();
+    auto device = dx11::GraphicsManager::Instance().device();
+    auto context = dx11::GraphicsManager::Instance().device_context();
 
     std::map<dx11::EnumDataBlockType, common::IDataBlock *> dataBlock = {
         {dx11::EnumDataBlockType::eManager, manager_.get()},
@@ -187,7 +187,7 @@ bool Application::OnFrame() {
     };
 
     // Clear the buffers to begin the scene.
-    dx11::GraphicsContext::Instance().BeginScene(
+    dx11::GraphicsManager::Instance().BeginScene(
         0.0f, 0.0f, 0.0f, 1.0f, imgui_->Tab().common.draw_as_wire_);
 
     // clang-format off
@@ -250,7 +250,7 @@ bool Application::OnFrame() {
     imgui_->ClearNode();
 
     // Present the rendered scene to the screen.
-    dx11::GraphicsContext::Instance().EndScene();
+    dx11::GraphicsManager::Instance().EndScene();
 
     return true;
 }
@@ -281,7 +281,7 @@ bool Application::OnStop() {
 
 bool CheckIfMouseInViewport() {
     auto cursor = ImGui::GetMousePos();
-    auto view_port = dx11::GraphicsContext::Instance().viewport();
+    auto view_port = dx11::GraphicsManager::Instance().viewport();
     if (view_port.TopLeftX < cursor.x && view_port.TopLeftY < cursor.y &&
         cursor.x < view_port.TopLeftX + view_port.Width &&
         cursor.y < view_port.TopLeftY + view_port.Height) {
@@ -343,7 +343,7 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
         break;
     }
     case WM_SIZE: {
-        if (dx11::GraphicsContext::Instance().swap_chain()) {
+        if (dx11::GraphicsManager::Instance().swap_chain()) {
 
             imgui_->Shutdown();
 
@@ -353,14 +353,14 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
                 (float)common::Env::Instance().screen_width /
                 (float)common::Env::Instance().screen_height;
 
-            dx11::GraphicsContext::Instance().back_buffer_RTV().Reset();
-            dx11::GraphicsContext::Instance().swap_chain()->ResizeBuffers(
+            dx11::GraphicsManager::Instance().back_buffer_RTV().Reset();
+            dx11::GraphicsManager::Instance().swap_chain()->ResizeBuffers(
                 0, (UINT)LOWORD(lparam), (UINT)HIWORD(lparam),
                 DXGI_FORMAT_UNKNOWN, 0);
 
-            dx11::GraphicsContext::Instance().CreateBuffer();
+            dx11::GraphicsManager::Instance().CreateBuffer();
 
-            dx11::GraphicsContext::Instance().SetViewPort(
+            dx11::GraphicsManager::Instance().SetViewPort(
                 0.0f, 0.0f, (float)common::Env::Instance().screen_width,
                 (float)common::Env::Instance().screen_height);
 
@@ -379,15 +379,15 @@ void Application::InitCubemaps(std::wstring basePath, std::wstring envFilename,
                                std::wstring specularFilename,
                                std::wstring irradianceFilename,
                                std::wstring brdfFilename) {
-    auto device = dx11::GraphicsContext::Instance().device();
+    auto device = dx11::GraphicsManager::Instance().device();
     // BRDF LookUp Table은 CubeMap이 아니라 2D 텍스춰 입니다.
-    dx11::D3D11Utils::CreateDDSTexture(device, (basePath + envFilename).c_str(),
+    dx11::GraphicsUtil::CreateDDSTexture(device, (basePath + envFilename).c_str(),
                                        true, m_envSRV);
-    dx11::D3D11Utils::CreateDDSTexture(
+    dx11::GraphicsUtil::CreateDDSTexture(
         device, (basePath + specularFilename).c_str(), true, m_specularSRV);
-    dx11::D3D11Utils::CreateDDSTexture(
+    dx11::GraphicsUtil::CreateDDSTexture(
         device, (basePath + irradianceFilename).c_str(), true, m_irradianceSRV);
-    dx11::D3D11Utils::CreateDDSTexture(
+    dx11::GraphicsUtil::CreateDDSTexture(
         device, (basePath + brdfFilename).c_str(), false, m_brdfSRV);
 }
 
@@ -396,8 +396,8 @@ void Application::UpdateGlobalConstants(const Vector3 &eyeWorld,
                                         const Matrix &projRow,
                                         const Matrix &refl = Matrix()) {
 
-    auto device = dx11::GraphicsContext::Instance().device();
-    auto context = dx11::GraphicsContext::Instance().device_context();
+    auto device = dx11::GraphicsManager::Instance().device();
+    auto context = dx11::GraphicsManager::Instance().device_context();
 
     m_globalConstsCPU.eyeWorld = eyeWorld;
     m_globalConstsCPU.view = viewRow.Transpose();
@@ -416,9 +416,9 @@ void Application::UpdateGlobalConstants(const Vector3 &eyeWorld,
     m_reflectGlobalConstsCPU.invViewProj =
         m_reflectGlobalConstsCPU.viewProj.Invert();
 
-    D3D11Utils::UpdateBuffer(device, context, m_globalConstsCPU,
+    GraphicsUtil::UpdateBuffer(device, context, m_globalConstsCPU,
                              m_globalConstsGPU);
-    D3D11Utils::UpdateBuffer(device, context, m_reflectGlobalConstsCPU,
+    GraphicsUtil::UpdateBuffer(device, context, m_reflectGlobalConstsCPU,
                              m_reflectGlobalConstsGPU);
 }
 

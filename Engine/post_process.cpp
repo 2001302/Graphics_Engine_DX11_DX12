@@ -12,10 +12,10 @@ void PostProcess::Initialize(
     MeshData meshData = GeometryGenerator::MakeSquare();
 
     m_mesh = std::make_shared<Mesh>();
-    D3D11Utils::CreateVertexBuffer(device, meshData.vertices,
+    GraphicsUtil::CreateVertexBuffer(device, meshData.vertices,
                                    m_mesh->vertexBuffer);
     m_mesh->indexCount = UINT(meshData.indices.size());
-    D3D11Utils::CreateIndexBuffer(device, meshData.indices,
+    GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
                                   m_mesh->indexBuffer);
 
     // Bloom Down/Up

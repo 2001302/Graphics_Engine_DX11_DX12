@@ -145,7 +145,7 @@
     <ClInclude Include="constant_buffers.h">
       <Filter>DirectX11\Data</Filter>
     </ClInclude>
-    <ClInclude Include="graphics_context.h">
+    <ClInclude Include="graphics_manager.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics_util.h">
@@ -277,7 +277,7 @@
     <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp">
       <Filter>Common\ImGui\NodeEditor</Filter>
     </ClCompile>
-    <ClCompile Include="graphics_context.cpp">
+    <ClCompile Include="graphics_manager.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="graphics_util.cpp">

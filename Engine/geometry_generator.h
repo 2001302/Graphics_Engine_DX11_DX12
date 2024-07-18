@@ -1,7 +1,7 @@
 #ifndef _GEOMETRYGENERATOR
 #define _GEOMETRYGENERATOR
 
-#include "graphics_context.h"
+#include "graphics_manager.h"
 #include "model_loader.h"
 
 namespace dx11 {

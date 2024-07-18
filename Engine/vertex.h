@@ -1,7 +1,7 @@
 #ifndef _VERTEX
 #define _VERTEX
 
-#include "graphics_context.h"
+#include "graphics_manager.h"
 
 namespace dx11 {
 

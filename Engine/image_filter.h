@@ -2,7 +2,7 @@
 #define _IMAGEFILTER
 
 #include "entity.h"
-#include "graphics_context.h"
+#include "graphics_manager.h"
 #include "graphics_util.h"
 
 namespace dx11 {

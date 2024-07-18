@@ -167,7 +167,7 @@
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="message.h" />
-    <ClInclude Include="graphics_context.h" />
+    <ClInclude Include="graphics_manager.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="geometry_generator.h" />
@@ -218,7 +218,7 @@
     <ClCompile Include="post_process.cpp" />
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="graphics_context.cpp" />
+    <ClCompile Include="graphics_manager.cpp" />
     <ClCompile Include="gui_base.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="geometry_generator.cpp" />

@@ -3,7 +3,7 @@
 
 #include "camera.h"
 #include "dataBlock.h"
-#include "graphics_context.h"
+#include "graphics_manager.h"
 #include "model.h"
 #include "projection.h"
 

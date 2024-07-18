@@ -1,7 +1,7 @@
 #ifndef _BONE
 #define _BONE
 
-#include "graphics_context.h"
+#include "graphics_manager.h"
 
 namespace dx11 {
 

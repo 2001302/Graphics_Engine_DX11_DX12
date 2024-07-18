@@ -1,7 +1,7 @@
 #ifndef _PROJECTION
 #define _PROJECTION
 
-#include "graphics_context.h"
+#include "graphics_manager.h"
 
 namespace dx11 {
 

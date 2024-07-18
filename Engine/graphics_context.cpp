@@ -10,10 +10,6 @@ ComPtr<ID3D11DeviceContext> GraphicsContext::device_context() {
 
 ComPtr<IDXGISwapChain> GraphicsContext::swap_chain() { return swap_chain_; }
 
-ComPtr<ID3D11Texture2D> GraphicsContext::depth_stencil_buffer() {
-    return float_buffer_;
-};
-
 ComPtr<ID3D11DepthStencilState> GraphicsContext::depth_stencil_state() {
     return depth_stencil_state_;
 }
@@ -30,14 +26,22 @@ ComPtr<ID3D11RasterizerState> GraphicsContext::wire_rasterizer_state() {
     return wire_rasterizer_state_;
 }
 
-ComPtr<ID3D11RenderTargetView> GraphicsContext::render_target_view() {
-    return float_RTV;
-}
-
 D3D11_VIEWPORT GraphicsContext::viewport() { return viewport_; }
 
 ComPtr<ID3D11Texture2D> GraphicsContext::float_buffer() {
     return float_buffer_;
+}
+
+ComPtr<ID3D11RenderTargetView> GraphicsContext::float_RTV() {
+    return float_RTV_;
+}
+
+ComPtr<ID3D11RenderTargetView> GraphicsContext::resolved_RTV() {
+    return resolved_RTV_;
+}
+
+ComPtr<ID3D11ShaderResourceView> GraphicsContext::float_SRV() {
+    return float_SRV_;
 }
 
 ComPtr<ID3D11Texture2D> GraphicsContext::resolved_buffer() {
@@ -49,6 +53,16 @@ ComPtr<ID3D11RenderTargetView> GraphicsContext::back_buffer_RTV() {
 }
 ComPtr<ID3D11ShaderResourceView> GraphicsContext::resolved_SRV() {
     return resolved_SRV_;
+}
+
+ComPtr<ID3D11Texture2D> GraphicsContext::post_effects_buffer() {
+    return post_effects_buffer_;
+}
+ComPtr<ID3D11RenderTargetView> GraphicsContext::post_effects_RTV() {
+    return post_effects_RTV_;
+}
+ComPtr<ID3D11ShaderResourceView> GraphicsContext::post_effects_SRV() {
+    return post_effects_SRV_;
 }
 
 bool GraphicsContext::Initialize() {
@@ -107,13 +121,13 @@ bool GraphicsContext::Initialize() {
     rastDesc.FrontCounterClockwise = false;
     rastDesc.DepthClipEnable = true;
 
-    device_->CreateRasterizerState(
-        &rastDesc, solid_rasterizer_state_.GetAddressOf());
+    device_->CreateRasterizerState(&rastDesc,
+                                   solid_rasterizer_state_.GetAddressOf());
 
     rastDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
 
-    device_->CreateRasterizerState(
-        &rastDesc, wire_rasterizer_state_.GetAddressOf());
+    device_->CreateRasterizerState(&rastDesc,
+                                   wire_rasterizer_state_.GetAddressOf());
 
     return true;
 }
@@ -125,14 +139,13 @@ bool GraphicsContext::CreateBuffer() {
     // BackBuffer는 화면으로 최종 출력되기 때문에  RTV만 필요하고 SRV는 불필요
     ComPtr<ID3D11Texture2D> backBuffer;
 
-    
-        swap_chain_->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf()));
-    device_->CreateRenderTargetView(
-        backBuffer.Get(), NULL, back_buffer_RTV_.GetAddressOf());
+    swap_chain_->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf()));
+    device_->CreateRenderTargetView(backBuffer.Get(), NULL,
+                                    back_buffer_RTV_.GetAddressOf());
 
     // FLOAT MSAA RenderTargetView/ShaderResourceView
-    device_->CheckMultisampleQualityLevels(
-        DXGI_FORMAT_R16G16B16A16_FLOAT, 4, &num_quality_levels_);
+    device_->CheckMultisampleQualityLevels(DXGI_FORMAT_R16G16B16A16_FLOAT, 4,
+                                           &num_quality_levels_);
 
     D3D11_TEXTURE2D_DESC desc;
     backBuffer->GetDesc(&desc);
@@ -150,14 +163,13 @@ bool GraphicsContext::CreateBuffer() {
         desc.SampleDesc.Quality = 0;
     }
 
-    
-        device_->CreateTexture2D(&desc, NULL, float_buffer_.GetAddressOf());
+    device_->CreateTexture2D(&desc, NULL, float_buffer_.GetAddressOf());
 
     device_->CreateShaderResourceView(float_buffer_.Get(), NULL,
-                                                    float_SRV.GetAddressOf());
+                                      float_SRV_.GetAddressOf());
 
     device_->CreateRenderTargetView(float_buffer_.Get(), NULL,
-                                                  float_RTV.GetAddressOf());
+                                    float_RTV_.GetAddressOf());
 
     CreateDepthBuffer(device_, common::Env::Instance().screen_width,
                       common::Env::Instance().screen_height,
@@ -167,20 +179,19 @@ bool GraphicsContext::CreateBuffer() {
     // FLOAT MSAA를 Relsolve해서 저장할 SRV/RTV
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;
-    
-        device_->CreateTexture2D(&desc, NULL, resolved_buffer_.GetAddressOf());
-    device_->CreateTexture2D(
-        &desc, NULL, post_effects_buffer_.GetAddressOf());
 
-    device_->CreateShaderResourceView(
-        resolved_buffer_.Get(), NULL, resolved_SRV_.GetAddressOf());
-    device_->CreateShaderResourceView(
-        post_effects_buffer_.Get(), NULL, post_effects_SRV.GetAddressOf());
+    device_->CreateTexture2D(&desc, NULL, resolved_buffer_.GetAddressOf());
+    device_->CreateTexture2D(&desc, NULL, post_effects_buffer_.GetAddressOf());
+
+    device_->CreateShaderResourceView(resolved_buffer_.Get(), NULL,
+                                      resolved_SRV_.GetAddressOf());
+    device_->CreateShaderResourceView(post_effects_buffer_.Get(), NULL,
+                                      post_effects_SRV_.GetAddressOf());
 
     device_->CreateRenderTargetView(resolved_buffer_.Get(), NULL,
-                                                  resolved_RTV.GetAddressOf());
-    device_->CreateRenderTargetView(
-        post_effects_buffer_.Get(), NULL, post_effects_RTV.GetAddressOf());
+                                    resolved_RTV_.GetAddressOf());
+    device_->CreateRenderTargetView(post_effects_buffer_.Get(), NULL,
+                                    post_effects_RTV_.GetAddressOf());
 
     return true;
 }
@@ -210,10 +221,10 @@ void GraphicsContext::CreateDepthBuffer(
     ComPtr<ID3D11Texture2D> depthStencilBuffer;
 
     device->CreateTexture2D(&depthStencilBufferDesc, 0,
-                                          depthStencilBuffer.GetAddressOf());
+                            depthStencilBuffer.GetAddressOf());
 
-    device->CreateDepthStencilView(
-        depthStencilBuffer.Get(), 0, depthStencilView.GetAddressOf());
+    device->CreateDepthStencilView(depthStencilBuffer.Get(), 0,
+                                   depthStencilView.GetAddressOf());
 }
 
 void GraphicsContext::SetViewPort(float x, float y, float width, float height) {
@@ -239,7 +250,8 @@ void GraphicsContext::BeginScene(float red, float green, float blue,
     color[2] = blue;
     color[3] = alpha;
 
-    std::vector<ID3D11RenderTargetView *> renderTargetViews = {float_RTV.Get()};
+    std::vector<ID3D11RenderTargetView *> renderTargetViews = {
+        float_RTV_.Get()};
     // Clear the back buffer.
     for (size_t i = 0; i < renderTargetViews.size(); i++) {
         device_context_->ClearRenderTargetView(renderTargetViews[i], color);
@@ -253,17 +265,17 @@ void GraphicsContext::BeginScene(float red, float green, float blue,
                                            D3D11_CLEAR_DEPTH, 1.0f, 0);
     device_context_->OMSetDepthStencilState(depth_stencil_state_.Get(), 0);
 
-    GraphicsContext::Instance().device_context()->OMSetRenderTargets(
-        1, GraphicsContext::Instance().render_target_view().GetAddressOf(),
+    device_context_->OMSetRenderTargets(
+        1, GraphicsContext::Instance().float_RTV().GetAddressOf(),
         GraphicsContext::Instance().depth_stencil_view().Get());
-    GraphicsContext::Instance().device_context()->OMSetDepthStencilState(
+    device_context_->OMSetDepthStencilState(
         GraphicsContext::Instance().depth_stencil_state().Get(), 0);
 
     if (draw_as_wire)
-        GraphicsContext::Instance().device_context()->RSSetState(
+        device_context_->RSSetState(
             GraphicsContext::Instance().wire_rasterizer_state().Get());
     else
-        GraphicsContext::Instance().device_context()->RSSetState(
+        device_context_->RSSetState(
             GraphicsContext::Instance().solid_rasterizer_state().Get());
 
     return;

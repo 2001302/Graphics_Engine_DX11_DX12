@@ -46,55 +46,62 @@ class GraphicsContext {
                            int screenHeight, UINT numQualityLevels,
                            ComPtr<ID3D11DepthStencilView> &depthStencilView);
 
-
     ComPtr<ID3D11Device> device();
     ComPtr<ID3D11DeviceContext> device_context();
     ComPtr<IDXGISwapChain> swap_chain();
-    ComPtr<ID3D11Texture2D> depth_stencil_buffer();
     ComPtr<ID3D11DepthStencilState> depth_stencil_state();
     ComPtr<ID3D11DepthStencilView> depth_stencil_view();
     ComPtr<ID3D11RasterizerState> solid_rasterizer_state();
     ComPtr<ID3D11RasterizerState> wire_rasterizer_state();
-    ComPtr<ID3D11RenderTargetView> render_target_view();
     D3D11_VIEWPORT viewport();
+
+    ComPtr<ID3D11RenderTargetView> back_buffer_RTV();
+
     ComPtr<ID3D11Texture2D> float_buffer();
     ComPtr<ID3D11Texture2D> resolved_buffer();
-    ComPtr<ID3D11RenderTargetView> back_buffer_RTV();
+
+    ComPtr<ID3D11RenderTargetView> float_RTV();
+    ComPtr<ID3D11RenderTargetView> resolved_RTV();
+
+    ComPtr<ID3D11ShaderResourceView> float_SRV();
     ComPtr<ID3D11ShaderResourceView> resolved_SRV();
 
-    ComPtr<ID3D11Texture2D> post_effects_buffer_;
-    ComPtr<ID3D11RenderTargetView> post_effects_RTV;
-    ComPtr<ID3D11ShaderResourceView> post_effects_SRV;
-
+    ComPtr<ID3D11Texture2D> post_effects_buffer();
+    ComPtr<ID3D11RenderTargetView> post_effects_RTV();
+    ComPtr<ID3D11ShaderResourceView> post_effects_SRV();
   private:
     GraphicsContext()
         : swap_chain_(0), device_(0), device_context_(0),
           viewport_(D3D11_VIEWPORT()) {}
 
-    bool useMSAA = true;
-    UINT num_quality_levels_ = 0;
-
     ComPtr<ID3D11Device> device_;
     ComPtr<ID3D11DeviceContext> device_context_;
     ComPtr<IDXGISwapChain> swap_chain_;
+
     ComPtr<ID3D11RenderTargetView> back_buffer_RTV_;
 
     ComPtr<ID3D11Texture2D> float_buffer_;
     ComPtr<ID3D11Texture2D> resolved_buffer_;
 
-    ComPtr<ID3D11RenderTargetView> float_RTV;
-    ComPtr<ID3D11RenderTargetView> resolved_RTV;
+    ComPtr<ID3D11RenderTargetView> float_RTV_;
+    ComPtr<ID3D11RenderTargetView> resolved_RTV_;
 
-    ComPtr<ID3D11ShaderResourceView> float_SRV;
+    ComPtr<ID3D11ShaderResourceView> float_SRV_;
     ComPtr<ID3D11ShaderResourceView> resolved_SRV_;
+
+    ComPtr<ID3D11Texture2D> post_effects_buffer_;
+    ComPtr<ID3D11RenderTargetView> post_effects_RTV_;
+    ComPtr<ID3D11ShaderResourceView> post_effects_SRV_;
 
     ComPtr<ID3D11RasterizerState> solid_rasterizer_state_;
     ComPtr<ID3D11RasterizerState> wire_rasterizer_state_;
 
     ComPtr<ID3D11DepthStencilState> depth_stencil_state_;
     ComPtr<ID3D11DepthStencilView> depth_stencil_view_;
-    ComPtr<ID3D11DepthStencilView> depth_only_DSV;
-    ComPtr<ID3D11ShaderResourceView> depth_only_SRV;
+    ComPtr<ID3D11DepthStencilView> depth_only_DSV_;
+    ComPtr<ID3D11ShaderResourceView> depth_only_SRV_;
+
+    D3D11_VIEWPORT viewport_;
 
     // Shadow maps
     int shadow_width = 1280;
@@ -103,7 +110,8 @@ class GraphicsContext {
     ComPtr<ID3D11DepthStencilView> shadow_DSVs[MAX_LIGHTS];
     ComPtr<ID3D11ShaderResourceView> shadow_SRVs[MAX_LIGHTS];
 
-    D3D11_VIEWPORT viewport_;
+    bool useMSAA = true;
+    UINT num_quality_levels_ = 0;
 };
 } // namespace dx11
 #endif

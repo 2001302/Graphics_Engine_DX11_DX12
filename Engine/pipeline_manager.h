@@ -4,7 +4,7 @@
 #include "board_map.h"
 #include "camera.h"
 #include "dataBlock.h"
-#include "direct3D.h"
+#include "graphics_context.h"
 #include "model.h"
 
 namespace dx11 {

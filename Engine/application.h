@@ -2,7 +2,7 @@
 #define _APPLICATION
 
 #include "behavior_tree.h"
-#include "direct3D.h"
+#include "graphics_context.h"
 #include "geometry_generator.h"
 #include "message.h"
 #include "message_receiver.h"

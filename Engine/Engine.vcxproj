@@ -145,6 +145,8 @@
     <ClInclude Include="constant_buffers.h" />
     <ClInclude Include="cube_map_shader.h" />
     <ClInclude Include="graph.h" />
+    <ClInclude Include="graphics_common.h" />
+    <ClInclude Include="graphics_pso.h" />
     <ClInclude Include="graphics_util.h" />
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="image_fliter_shader.h" />
@@ -165,7 +167,7 @@
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="message.h" />
-    <ClInclude Include="direct3D.h" />
+    <ClInclude Include="graphics_context.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="geometry_generator.h" />
@@ -200,6 +202,8 @@
     <ClCompile Include="conditional_node.cpp" />
     <ClCompile Include="cube_map_shader.cpp" />
     <ClCompile Include="graph.cpp" />
+    <ClCompile Include="graphics_common.cpp" />
+    <ClCompile Include="graphics_pso.cpp" />
     <ClCompile Include="graphics_util.cpp" />
     <ClCompile Include="image_filter.cpp" />
     <ClCompile Include="image_fliter_shader.cpp" />
@@ -214,7 +218,7 @@
     <ClCompile Include="board_map.cpp" />
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="direct3D.cpp" />
+    <ClCompile Include="graphics_context.cpp" />
     <ClCompile Include="gui_base.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="geometry_generator.cpp" />

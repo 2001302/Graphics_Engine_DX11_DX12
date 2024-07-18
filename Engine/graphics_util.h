@@ -1,7 +1,7 @@
 #ifndef _GRAPHICSUTIL
 #define _GRAPHICSUTIL
 
-#include "direct3D.h"
+#include "graphics_context.h"
 #include <wrl/client.h> // ComPtr
 
 namespace dx11 {

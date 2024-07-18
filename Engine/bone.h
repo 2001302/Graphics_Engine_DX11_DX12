@@ -1,7 +1,7 @@
 #ifndef _BONE
 #define _BONE
 
-#include "direct3D.h"
+#include "graphics_context.h"
 
 namespace dx11 {
 

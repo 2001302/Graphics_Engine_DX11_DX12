@@ -1,7 +1,7 @@
 #ifndef _IMAGEFILTER
 #define _IMAGEFILTER
 
-#include "direct3D.h"
+#include "graphics_context.h"
 #include "entity.h"
 
 namespace dx11 {

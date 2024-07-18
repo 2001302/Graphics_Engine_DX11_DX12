@@ -3,7 +3,7 @@
 
 #include "behavior_tree_builder.h"
 #include "node_ui.h"
-#include "direct3d.h"
+#include "graphics_context.h"
 
 namespace dx11 {
 class Camera : public common::INodeUi {

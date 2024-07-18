@@ -1,7 +1,7 @@
 #ifndef _PROJECTION
 #define _PROJECTION
 
-#include "direct3D.h"
+#include "graphics_context.h"
 
 namespace common {
 

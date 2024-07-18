@@ -1,7 +1,7 @@
 #ifndef _CONSTANTBUFFERS
 #define _CONSTANTBUFFERS
 
-#include "direct3D.h"
+#include "graphics_context.h"
 
 #define MAX_LIGHTS 3
 #define LIGHT_OFF 0x00

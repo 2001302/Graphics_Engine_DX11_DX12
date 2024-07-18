@@ -1,7 +1,7 @@
 #ifndef _MESH
 #define _MESH
 
-#include "direct3D.h"
+#include "graphics_context.h"
 #include "vertex.h"
 
 namespace dx11 {

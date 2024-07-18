@@ -1,6 +1,13 @@
 #ifndef _DIRECT3D
 #define _DIRECT3D
 
+#define MAX_LIGHTS 3
+#define LIGHT_OFF 0x00
+#define LIGHT_DIRECTIONAL 0x01
+#define LIGHT_POINT 0x02
+#define LIGHT_SPOT 0x04
+#define LIGHT_SHADOW 0x10
+
 #include "env.h"
 #include <d3d11.h>
 #include <d3dcompiler.h>
@@ -21,12 +28,6 @@ using DirectX::SimpleMath::Vector2;
 using DirectX::SimpleMath::Vector3;
 using DirectX::SimpleMath::Vector4;
 using Microsoft::WRL::ComPtr;
-
-inline void ThrowIfFailed(HRESULT hr) {
-    if (FAILED(hr)) {
-        throw std::exception();
-    }
-}
 
 class GraphicsContext {
   public:
@@ -61,6 +62,10 @@ class GraphicsContext {
     ComPtr<ID3D11RenderTargetView> back_buffer_RTV();
     ComPtr<ID3D11ShaderResourceView> resolved_SRV();
 
+    ComPtr<ID3D11Texture2D> post_effects_buffer_;
+    ComPtr<ID3D11RenderTargetView> post_effects_RTV;
+    ComPtr<ID3D11ShaderResourceView> post_effects_SRV;
+
   private:
     GraphicsContext()
         : swap_chain_(0), device_(0), device_context_(0),
@@ -74,12 +79,12 @@ class GraphicsContext {
     ComPtr<IDXGISwapChain> swap_chain_;
     ComPtr<ID3D11RenderTargetView> back_buffer_RTV_;
 
-    // 삼각형 레스터화 -> float(MSAA) -> resolved(No MSAA)
-    // -> 후처리(블룸, 톤매핑) -> backBuffer(최종 SwapChain Present)
     ComPtr<ID3D11Texture2D> float_buffer_;
     ComPtr<ID3D11Texture2D> resolved_buffer_;
+
     ComPtr<ID3D11RenderTargetView> float_RTV;
     ComPtr<ID3D11RenderTargetView> resolved_RTV;
+
     ComPtr<ID3D11ShaderResourceView> float_SRV;
     ComPtr<ID3D11ShaderResourceView> resolved_SRV_;
 
@@ -88,6 +93,15 @@ class GraphicsContext {
 
     ComPtr<ID3D11DepthStencilState> depth_stencil_state_;
     ComPtr<ID3D11DepthStencilView> depth_stencil_view_;
+    ComPtr<ID3D11DepthStencilView> depth_only_DSV;
+    ComPtr<ID3D11ShaderResourceView> depth_only_SRV;
+
+    // Shadow maps
+    int shadow_width = 1280;
+    int shadow_height = 1280;
+    ComPtr<ID3D11Texture2D> shadow_buffers[MAX_LIGHTS]; // No MSAA
+    ComPtr<ID3D11DepthStencilView> shadow_DSVs[MAX_LIGHTS];
+    ComPtr<ID3D11ShaderResourceView> shadow_SRVs[MAX_LIGHTS];
 
     D3D11_VIEWPORT viewport_;
 };

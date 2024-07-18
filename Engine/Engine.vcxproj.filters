@@ -70,7 +70,7 @@
     <ClInclude Include="normal_geometry_shader.h">
       <Filter>DirectX11\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="board_map.h">
+    <ClInclude Include="post_process.h">
       <Filter>DirectX11\Model</Filter>
     </ClInclude>
     <ClInclude Include="image_filter.h">
@@ -238,7 +238,7 @@
     <ClCompile Include="normal_geometry_shader.cpp">
       <Filter>DirectX11\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="board_map.cpp">
+    <ClCompile Include="post_process.cpp">
       <Filter>DirectX11\Model</Filter>
     </ClCompile>
     <ClCompile Include="image_filter.cpp">
@@ -360,12 +360,6 @@
       <Filter>Common\ImGui</Filter>
     </None>
     <None Include="packages.config" />
-    <None Include="physically_common.hlsli">
-      <Filter>DirectX11\Shader\HLSL</Filter>
-    </None>
-    <None Include="ground.hlslI">
-      <Filter>DirectX11\Shader\HLSL</Filter>
-    </None>
     <None Include="ImGui\NodeEditor\imgui_node_editor_internal.inl">
       <Filter>Common\ImGui\NodeEditor</Filter>
     </None>
@@ -377,43 +371,49 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="phong_vertex_shader.hlsl">
+    <FxCompile Include="SkyboxPS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="phong_pixel_shader.hlsl">
+    <FxCompile Include="SkyboxVS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="cube_mapping_vertex_shader.hlsl">
+    <FxCompile Include="SamplingPS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="cube_mapping_pixel_shader.hlsl">
+    <FxCompile Include="SamplingVS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="physically_based_vertex_shader.hlsl">
+    <FxCompile Include="NormalPS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="physically_based_pixel_shader.hlsl">
+    <FxCompile Include="NormalVS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="combine_ps.hlsl">
+    <FxCompile Include="PostEffectsPS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="bloom_up_ps.hlsl">
+    <FxCompile Include="NormalGS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="bloom_down_ps.hlsl">
+    <FxCompile Include="DepthOnlyPS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="sampling_vs.hlsl">
+    <FxCompile Include="DepthOnlyVS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="sampling_ps.hlsl">
+    <FxCompile Include="CombinePS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="ground_vs.hlsl">
+    <FxCompile Include="BasicVS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
-    <FxCompile Include="ground_ps.hlsl">
+    <FxCompile Include="BloomDownPS.hlsl">
+      <Filter>DirectX11\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="BloomUpPS.hlsl">
+      <Filter>DirectX11\Shader\HLSL</Filter>
+    </FxCompile>
+    <FxCompile Include="BasicPS.hlsl">
       <Filter>DirectX11\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>

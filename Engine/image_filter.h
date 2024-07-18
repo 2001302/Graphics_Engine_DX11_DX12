@@ -1,8 +1,9 @@
 #ifndef _IMAGEFILTER
 #define _IMAGEFILTER
 
-#include "graphics_context.h"
 #include "entity.h"
+#include "graphics_context.h"
+#include "graphics_util.h"
 
 namespace dx11 {
 
@@ -32,47 +33,6 @@ class ImageFilter {
 
     void SetRenderTargets(
         const std::vector<ComPtr<ID3D11RenderTargetView>> &targets);
-    template <typename T_CONSTANT>
-    static void CreateConstBuffer(ComPtr<ID3D11Device> &device,
-                                  const T_CONSTANT &constantBufferData,
-                                  ComPtr<ID3D11Buffer> &constantBuffer) {
-
-        static_assert((sizeof(T_CONSTANT) % 16) == 0,
-                      "Constant Buffer size must be 16-byte aligned");
-
-        D3D11_BUFFER_DESC desc;
-        ZeroMemory(&desc, sizeof(desc));
-        desc.ByteWidth = sizeof(constantBufferData);
-        desc.Usage = D3D11_USAGE_DYNAMIC;
-        desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        desc.MiscFlags = 0;
-        desc.StructureByteStride = 0;
-
-        D3D11_SUBRESOURCE_DATA initData;
-        ZeroMemory(&initData, sizeof(initData));
-        initData.pSysMem = &constantBufferData;
-        initData.SysMemPitch = 0;
-        initData.SysMemSlicePitch = 0;
-
-        device->CreateBuffer(&desc, &initData, constantBuffer.GetAddressOf());
-    }
-    template <typename T_DATA>
-    static void UpdateBuffer(ComPtr<ID3D11Device> &device,
-                             ComPtr<ID3D11DeviceContext> &context,
-                             const T_DATA &bufferData,
-                             ComPtr<ID3D11Buffer> &buffer) {
-
-        if (!buffer) {
-            std::cout << "UpdateBuffer() buffer was not initialized."
-                      << std::endl;
-        }
-
-        D3D11_MAPPED_SUBRESOURCE ms;
-        context->Map(buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
-        memcpy(ms.pData, &bufferData, sizeof(bufferData));
-        context->Unmap(buffer.Get(), NULL);
-    }
 
   public:
     struct ImageFilterConstData {
@@ -80,8 +40,8 @@ class ImageFilter {
         float dy;
         float threshold;
         float strength;
-        float option1;
-        float option2;
+        float option1; // exposure in CombinePS.hlsl
+        float option2; // gamma in CombinePS.hlsl
         float option3;
         float option4;
     };

@@ -1,10 +1,22 @@
 #ifndef _GRAPHICSUTIL
 #define _GRAPHICSUTIL
 
-#include "graphics_context.h"
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+#include <windows.h>
 #include <wrl/client.h> // ComPtr
 
 namespace dx11 {
+
+inline void ThrowIfFailed(HRESULT hr) {
+    if (FAILED(hr)) {
+        throw std::exception();
+    }
+}
 
 using Microsoft::WRL::ComPtr;
 using std::shared_ptr;

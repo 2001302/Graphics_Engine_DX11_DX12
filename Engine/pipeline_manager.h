@@ -1,11 +1,11 @@
 #ifndef _PIPELINEMANAGER
 #define _PIPELINEMANAGER
 
-#include "board_map.h"
 #include "camera.h"
 #include "dataBlock.h"
 #include "graphics_context.h"
 #include "model.h"
+#include "projection.h"
 
 namespace dx11 {
 /// <summary>
@@ -14,6 +14,7 @@ namespace dx11 {
 class PipelineManager : public common::IDataBlock {
   public:
     std::unique_ptr<Camera> camera;
+    std::unique_ptr<Projection> projection;
     //std::unique_ptr<Light> light;
     //std::unique_ptr<Projection> projection;
     //std::unique_ptr<BoardMap> board_map;

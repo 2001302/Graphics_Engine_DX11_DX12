@@ -1,7 +1,7 @@
 #ifndef _IShader
 #define _IShader
 
-#include "graphics_context.h"
+#include "direct3D.h"
 #include "light.h"
 #include "material.h"
 #include <map>

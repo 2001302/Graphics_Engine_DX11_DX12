@@ -6,7 +6,7 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#include "graphics_context.h"
+#include "direct3D.h"
 #include "env.h"
 #include <dinput.h>
 

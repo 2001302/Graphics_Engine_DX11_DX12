@@ -1,7 +1,7 @@
 #ifndef _MATERIAL
 #define _MATERIAL
 
-#include "graphics_context.h"
+#include "direct3D.h"
 
 namespace dx11 {
 

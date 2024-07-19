@@ -82,6 +82,12 @@
     <ClInclude Include="parallel_node.h">
       <Filter>DirectX11\BehaviorTree</Filter>
     </ClInclude>
+    <ClInclude Include="message_receiver.h">
+      <Filter>DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>DirectX11</Filter>
+    </ClInclude>
     <ClInclude Include="node_ui.h">
       <Filter>Common\BluePrint</Filter>
     </ClInclude>
@@ -96,6 +102,18 @@
     </ClInclude>
     <ClInclude Include="dataBlock.h">
       <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline_manager.h">
+      <Filter>DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="direct3D.h">
+      <Filter>DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry_generator.h">
+      <Filter>DirectX11</Filter>
+    </ClInclude>
+    <ClInclude Include="model_loader.h">
+      <Filter>DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>DirectX11\Data</Filter>
@@ -145,32 +163,8 @@
     <ClInclude Include="constant_buffers.h">
       <Filter>DirectX11\Data</Filter>
     </ClInclude>
-    <ClInclude Include="graphics_context.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics_util.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="geometry_generator.h">
-      <Filter>DirectX11\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="message_receiver.h">
-      <Filter>DirectX11\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="model_loader.h">
-      <Filter>DirectX11\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="pipeline_manager.h">
-      <Filter>DirectX11\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>DirectX11\Input</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics_common.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics_pso.h">
-      <Filter>Graphics</Filter>
+      <Filter>DirectX11</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -250,11 +244,26 @@
     <ClCompile Include="parallel_node.cpp">
       <Filter>DirectX11\BehaviorTree</Filter>
     </ClCompile>
+    <ClCompile Include="message_receiver.cpp">
+      <Filter>DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>DirectX11</Filter>
+    </ClCompile>
     <ClCompile Include="id_generator.cpp">
       <Filter>Common</Filter>
     </ClCompile>
     <ClCompile Include="entity.cpp">
       <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="direct3D.cpp">
+      <Filter>DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry_generator.cpp">
+      <Filter>DirectX11</Filter>
+    </ClCompile>
+    <ClCompile Include="model_loader.cpp">
+      <Filter>DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="application.cpp">
       <Filter>Platform</Filter>
@@ -277,29 +286,8 @@
     <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp">
       <Filter>Common\ImGui\NodeEditor</Filter>
     </ClCompile>
-    <ClCompile Include="graphics_context.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics_util.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="geometry_generator.cpp">
-      <Filter>DirectX11\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="message_receiver.cpp">
-      <Filter>DirectX11\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="model_loader.cpp">
-      <Filter>DirectX11\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>DirectX11\Input</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics_common.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics_pso.cpp">
-      <Filter>Graphics</Filter>
+      <Filter>DirectX11</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -341,15 +329,6 @@
     </Filter>
     <Filter Include="Common\ImGui\NodeEditor">
       <UniqueIdentifier>{30855cc5-8d09-42a4-bb3c-c5aea4725478}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics">
-      <UniqueIdentifier>{ae634c2d-0d3c-4008-89e5-ebd161594223}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX11\Util">
-      <UniqueIdentifier>{49af807d-0eb1-43f3-92b3-17bac976f706}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX11\Input">
-      <UniqueIdentifier>{4f7896cc-b9d6-4bfc-8a0d-852d3aabe86f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

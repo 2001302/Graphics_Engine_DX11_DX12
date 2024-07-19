@@ -2,7 +2,7 @@
 #define _GEOMETRYGENERATOR
 
 #include "board_map.h"
-#include "graphics_context.h"
+#include "direct3D.h"
 #include "model.h"
 #include "model_loader.h"
 

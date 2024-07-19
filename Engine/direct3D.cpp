@@ -85,10 +85,10 @@ bool GraphicsContext::Initialize() {
     sd.SampleDesc.Count = 1; // _FLIP_은 MSAA 미지원
     sd.SampleDesc.Quality = 0;
 
-    D3D11CreateDeviceAndSwapChain(
+    ThrowIfFailed(D3D11CreateDeviceAndSwapChain(
         0, driverType, 0, createDeviceFlags, featureLevels, 1,
         D3D11_SDK_VERSION, &sd, swap_chain_.GetAddressOf(),
-        device_.GetAddressOf(), &featureLevel, device_context_.GetAddressOf());
+        device_.GetAddressOf(), &featureLevel, device_context_.GetAddressOf()));
 
     if (featureLevel != D3D_FEATURE_LEVEL_11_0) {
         std::cout << "D3D Feature Level 11 unsupported." << std::endl;
@@ -124,7 +124,6 @@ bool GraphicsContext::CreateBuffer() {
 
     // BackBuffer는 화면으로 최종 출력되기 때문에  RTV만 필요하고 SRV는 불필요
     ComPtr<ID3D11Texture2D> backBuffer;
-
     ThrowIfFailed(
         swap_chain_->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf())));
     ThrowIfFailed(device_->CreateRenderTargetView(
@@ -273,4 +272,109 @@ void GraphicsContext::EndScene() {
     }
 
     return;
+}
+
+void GraphicsContext::CreateIndexBuffer(const std::vector<uint32_t> &indices,
+                                        ComPtr<ID3D11Buffer> &indexBuffer) {
+    D3D11_BUFFER_DESC bufferDesc = {};
+    bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+    bufferDesc.ByteWidth = UINT(sizeof(int) * indices.size());
+    bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+    bufferDesc.StructureByteStride = sizeof(int);
+
+    D3D11_SUBRESOURCE_DATA indexBufferData = {0};
+    indexBufferData.pSysMem = indices.data();
+    indexBufferData.SysMemPitch = 0;
+    indexBufferData.SysMemSlicePitch = 0;
+
+    device_->CreateBuffer(&bufferDesc, &indexBufferData,
+                          indexBuffer.GetAddressOf());
+}
+void GraphicsContext::CreateGeometryShader(
+    const std::wstring &filename,
+    ComPtr<ID3D11GeometryShader> &geometryShader) {
+
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    // 쉐이더의 시작점의 이름이 "main"인 함수로 지정
+    // D3D_COMPILE_STANDARD_FILE_INCLUDE 추가: 쉐이더에서 include 사용
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "gs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
+
+    // CheckResult(hr, errorBlob.Get());
+
+    device_->CreateGeometryShader(shaderBlob->GetBufferPointer(),
+                                  shaderBlob->GetBufferSize(), NULL,
+                                  &geometryShader);
+}
+void GraphicsContext::CreatePixelShader(
+    const std::wstring &filename, ComPtr<ID3D11PixelShader> &pixelShader) {
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "ps_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
+
+    device_->CreatePixelShader(shaderBlob->GetBufferPointer(),
+                               shaderBlob->GetBufferSize(), NULL, &pixelShader);
+}
+
+void GraphicsContext::CreateVertexShaderAndInputLayout(
+    const std::wstring &filename,
+    const std::vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
+    ComPtr<ID3D11VertexShader> &vertexShader,
+    ComPtr<ID3D11InputLayout> &inputLayout) {
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "vs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
+
+    device_->CreateVertexShader(shaderBlob->GetBufferPointer(),
+                                shaderBlob->GetBufferSize(), NULL,
+                                &vertexShader);
+
+    device_->CreateInputLayout(inputElements.data(), UINT(inputElements.size()),
+                               shaderBlob->GetBufferPointer(),
+                               shaderBlob->GetBufferSize(), &inputLayout);
+}
+
+void GraphicsContext::CreateDDSTexture(
+    const wchar_t *filename,
+    ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
+
+    ComPtr<ID3D11Texture2D> texture;
+
+    UINT miscFlags = 0;
+    if (true) {
+        miscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
+    }
+
+    auto hr = CreateDDSTextureFromFileEx(
+        GraphicsContext::Instance().device().Get(), filename, 0,
+        D3D11_USAGE_DEFAULT, D3D11_BIND_SHADER_RESOURCE, 0, miscFlags,
+        DDS_LOADER_FLAGS(false), (ID3D11Resource **)texture.GetAddressOf(),
+        textureResourceView.GetAddressOf(), NULL);
+
+    if (FAILED(hr)) {
+        std::cout << "CreateDDSTextureFromFileEx() failed" << std::endl;
+    }
 }

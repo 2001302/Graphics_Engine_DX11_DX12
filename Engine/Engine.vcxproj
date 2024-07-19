@@ -142,10 +142,8 @@
     <ClInclude Include="behavior_tree_builder.h" />
     <ClInclude Include="bone.h" />
     <ClInclude Include="conditional_node.h" />
-    <ClInclude Include="constant_buffers.h" />
     <ClInclude Include="cube_map_shader.h" />
     <ClInclude Include="graph.h" />
-    <ClInclude Include="graphics_util.h" />
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="image_fliter_shader.h" />
     <ClInclude Include="ImGui\NodeEditor\crude_json.h" />
@@ -155,6 +153,7 @@
     <ClInclude Include="ImGui\NodeEditor\imgui_extra_math.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_node_editor.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_node_editor_internal.h" />
+    <ClInclude Include="light.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="node_ui.h" />
@@ -165,6 +164,7 @@
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="message.h" />
+    <ClInclude Include="cube_map.h" />
     <ClInclude Include="direct3D.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
@@ -192,6 +192,7 @@
     <ClInclude Include="phong_shader.h" />
     <ClInclude Include="pipeline_manager.h" />
     <ClInclude Include="platform.h" />
+    <ClInclude Include="resource_helper.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
@@ -200,7 +201,6 @@
     <ClCompile Include="conditional_node.cpp" />
     <ClCompile Include="cube_map_shader.cpp" />
     <ClCompile Include="graph.cpp" />
-    <ClCompile Include="graphics_util.cpp" />
     <ClCompile Include="image_filter.cpp" />
     <ClCompile Include="image_fliter_shader.cpp" />
     <ClCompile Include="ImGui\NodeEditor\crude_json.cpp" />
@@ -214,6 +214,7 @@
     <ClCompile Include="board_map.cpp" />
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="cube_map.cpp" />
     <ClCompile Include="direct3D.cpp" />
     <ClCompile Include="gui_base.cpp" />
     <ClCompile Include="entity.cpp" />
@@ -234,6 +235,7 @@
     <ClCompile Include="setting_ui.cpp" />
     <ClCompile Include="phong_shader.cpp" />
     <ClCompile Include="platform.cpp" />
+    <ClCompile Include="resource_helper.cpp" />
     <ClCompile Include="selector_node.cpp" />
     <ClCompile Include="sequence_node.cpp" />
   </ItemGroup>

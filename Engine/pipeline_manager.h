@@ -3,6 +3,7 @@
 
 #include "board_map.h"
 #include "camera.h"
+#include "cube_map.h"
 #include "dataBlock.h"
 #include "direct3D.h"
 #include "model.h"
@@ -15,12 +16,11 @@ class PipelineManager : public common::IDataBlock {
   public:
     std::unique_ptr<Camera> camera;
     //std::unique_ptr<Light> light;
-    //std::unique_ptr<Projection> projection;
-    //std::unique_ptr<BoardMap> board_map;
+    std::unique_ptr<BoardMap> board_map;
     std::shared_ptr<common::INodeUi> cube_map;
     std::shared_ptr<common::INodeUi> ground;
     std::map<int /*id*/, common::INodeUi*> models;
-    //std::unordered_map<EnumShaderType, std::shared_ptr<IShader>> shaders;
+    std::unordered_map<EnumShaderType, std::shared_ptr<IShader>> shaders;
 };
 } // namespace dx11
 #endif

@@ -2,6 +2,7 @@
 #define _GEOMETRYGENERATOR
 
 #include "board_map.h"
+#include "cube_map.h"
 #include "direct3D.h"
 #include "model.h"
 #include "model_loader.h"
@@ -10,25 +11,25 @@ namespace dx11 {
 class GeometryGenerator {
 
   public:
-    static std::vector<MeshData> ReadFromFile(std::string basePath,
-                                         std::string filename,
-                                         bool revertNormals = false);
+    GeometryGenerator(){};
+    ~GeometryGenerator(){};
 
-    static MeshData MakeSquare(const float scale = 1.0f,
-                               const Vector2 texScale = Vector2(1.0f));
-    static MeshData MakeSquareGrid(const int numSlices, const int numStacks,
-                                   const float scale = 1.0f,
-                                   const Vector2 texScale = Vector2(1.0f));
-    static MeshData MakeBox(const float scale = 1.0f);
-    static MeshData MakeCylinder(const float bottomRadius,
-                                 const float topRadius, float height,
-                                 int numSlices);
-    static MeshData MakeSphere(const float radius, const int numSlices,
-                               const int numStacks,
-                               const Vector2 texScale = Vector2(1.0f));
-    static MeshData MakeTetrahedron();
-    static MeshData MakeIcosahedron();
-    static MeshData SubdivideToSphere(const float radius, MeshData meshData);
+    static CubeMap *MakeBox(CubeMap *gameObject);
+    static CubeMap *MakeSphere(CubeMap *gameObject, const float radius,
+                               const int numSlices, const int numStacks);
+    static Model *MakeSphere(Model *gameObject, const float radius,
+                             const int numSlices, const int numStacks);
+    static Model *MakeBox(Model *gameObject);
+    static Model *MakeCylinder(Model *gameObject, const float bottomRadius,
+                               const float topRadius, float height,
+                               int numSlices);
+    static BoardMap *MakeSquare(BoardMap *board, const float scale = 1.0f,
+                                const Vector2 texScale = Vector2(1.0f));
+    static Model *ReadFromFile(Model *gameObject, std::string basePath,
+                               std::string filename);
+    static Model *MakeSquareGrid(Model *ground, const int numSlices,
+                                  const int numStacks, const float scale,
+                                  const Vector2 texScale);
 };
 } // namespace dx11
 #endif

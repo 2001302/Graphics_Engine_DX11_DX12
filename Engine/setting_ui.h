@@ -2,6 +2,7 @@
 #define _PANEL
 
 #include "gui_base.h"
+#include "light.h"
 #include "message.h"
 #include <string>
 #include <map>
@@ -12,6 +13,11 @@ namespace common {
 
 struct CommonSetting {
     bool draw_as_wire_ = false;
+};
+
+struct LightSetting {
+    int light_type;
+    dx11::Light light_from_gui;
 };
 
 struct CubeMapSetting {
@@ -41,6 +47,7 @@ struct GroundSetting {
 
 struct TabInfo {
     CommonSetting common;
+    LightSetting light;
     CubeMapSetting cube_map;
     FilterSetting filter;
     GroundSetting ground;

@@ -10,10 +10,10 @@ void CubeMapShaderSource::InitializeThis() {
     vertex_constant.view = Matrix();
     vertex_constant.projection = Matrix();
 
-    GraphicsContext::Instance().CreateConstantBuffer(
-        vertex_constant, vertex_constant_buffer);
-    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant,
-                                                     pixel_constant_buffer);
+    GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
+                                    vertex_constant, vertex_constant_buffer);
+    GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
+                                    pixel_constant, pixel_constant_buffer);
 }
 
 EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
@@ -41,19 +41,25 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
         L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
     auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-    GraphicsContext::Instance().CreateDDSTexture(envFilename,
-                                                 cube_map->texture->env_SRV);
-    GraphicsContext::Instance().CreateDDSTexture(
-        specularFilename, cube_map->texture->specular_SRV);
-    GraphicsContext::Instance().CreateDDSTexture(
-        irradianceFilename, cube_map->texture->irradiance_SRV);
-    GraphicsContext::Instance().CreateDDSTexture(brdfFilename,
-                                                 cube_map->texture->brdf_SRV);
+    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                   envFilename, true,
+                                   cube_map->texture->env_SRV);
+    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                   specularFilename, true,
+                                   cube_map->texture->specular_SRV);
+    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                   irradianceFilename, true,
+                                   cube_map->texture->irradiance_SRV);
+    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                   brdfFilename, true,
+                                   cube_map->texture->brdf_SRV);
 
-    GraphicsContext::Instance().CreateVertexBuffer(
-        cube_map->mesh->vertices, cube_map->mesh->vertexBuffer);
-    GraphicsContext::Instance().CreateIndexBuffer(cube_map->mesh->indices,
-                                                  cube_map->mesh->indexBuffer);
+    GraphicsUtil::CreateVertexBuffer(GraphicsManager::Instance().device,
+                                     cube_map->mesh->vertices,
+                                     cube_map->mesh->vertexBuffer);
+    GraphicsUtil::CreateIndexBuffer(GraphicsManager::Instance().device,
+                                    cube_map->mesh->indices,
+                                    cube_map->mesh->indexBuffer);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
@@ -66,12 +72,14 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    GraphicsContext::Instance().CreateVertexShaderAndInputLayout(
-        L"cube_mapping_vertex_shader.hlsl", basicInputElements,
-        cube_map_shader->vertex_shader, cube_map_shader->layout);
+    GraphicsUtil::CreateVertexShaderAndInputLayout(
+        GraphicsManager::Instance().device, L"cube_mapping_vertex_shader.hlsl",
+        basicInputElements, cube_map_shader->vertex_shader,
+        cube_map_shader->layout);
 
-    GraphicsContext::Instance().CreatePixelShader(
-        L"cube_mapping_pixel_shader.hlsl", cube_map_shader->pixel_shader);
+    GraphicsUtil::CreatePixelShader(GraphicsManager::Instance().device,
+                                    L"cube_mapping_pixel_shader.hlsl",
+                                    cube_map_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -127,17 +135,18 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
                 env.aspect, env.projection.near_z, env.projection.far_z);
 
         cube_shader_source->vertex_constant.projection =
-            cube_shader_source->vertex_constant.projection
-                .Transpose();
+            cube_shader_source->vertex_constant.projection.Transpose();
     }
 
-    GraphicsContext::Instance().UpdateBuffer(
-        cube_shader_source->vertex_constant,
-        cube_shader_source->vertex_constant_buffer);
+    GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device,
+                               GraphicsManager::Instance().device_context,
+                               cube_shader_source->vertex_constant,
+                               cube_shader_source->vertex_constant_buffer);
 
-    GraphicsContext::Instance().UpdateBuffer(
-        cube_shader_source->pixel_constant,
-        cube_shader_source->pixel_constant_buffer);
+    GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device,
+                               GraphicsManager::Instance().device_context,
+                               cube_shader_source->pixel_constant,
+                               cube_shader_source->pixel_constant_buffer);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -152,7 +161,7 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = GraphicsContext::Instance().device_context();
+    auto context = GraphicsManager::Instance().device_context;
     auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
     auto cube_shader_source = dynamic_cast<CubeMapShaderSource *>(

@@ -11,7 +11,7 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         // retry
         input->Mouse()->Acquire();
     } else {
-        auto viewPort = GraphicsContext::Instance().viewport();
+        auto viewPort = GraphicsManager::Instance().viewport;
 
         // mouse move vector
         Vector2 vector = Vector2(-mouseState.lX, -mouseState.lY);
@@ -174,7 +174,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
                 vertexBufferData.SysMemSlicePitch = 0;
 
                 const HRESULT hr =
-                    GraphicsContext::Instance().device()->CreateBuffer(
+                    GraphicsManager::Instance().device->CreateBuffer(
                         &bufferDesc, &vertexBufferData,
                         &meshData->vertexBuffer);
                 if (FAILED(hr)) {
@@ -198,7 +198,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
                 indexBufferData.SysMemPitch = 0;
                 indexBufferData.SysMemSlicePitch = 0;
 
-                GraphicsContext::Instance().device()->CreateBuffer(
+                GraphicsManager::Instance().device->CreateBuffer(
                     &bufferDesc, &indexBufferData, &meshData->indexBuffer);
             }
 
@@ -206,51 +206,69 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
                 std::cout << meshData->textureFilename << std::endl;
 
-                ResourceHelper::CreateTexture(
-                    meshData->textureFilename, meshData->texture,
-                    meshData->textureResourceView, true);
+                GraphicsUtil::CreateTexture(
+                    GraphicsManager::Instance().device,
+                    GraphicsManager::Instance().device_context,
+                    meshData->textureFilename, true, meshData->texture,
+                    meshData->textureResourceView);
             }
+
             if (!meshData->albedoTextureFilename.empty()) {
 
-                ResourceHelper::CreateTexture(meshData->albedoTextureFilename,
-                                              meshData->albedoTexture,
-                                              meshData->albedoSRV, true);
+                GraphicsUtil::CreateTexture(
+                    GraphicsManager::Instance().device,
+                    GraphicsManager::Instance().device_context,
+                    meshData->textureFilename, true, meshData->texture,
+                    meshData->textureResourceView);
             }
 
             if (!meshData->emissiveTextureFilename.empty()) {
-                ResourceHelper::CreateTexture(meshData->emissiveTextureFilename,
-                                              meshData->emissiveTexture,
-                                              meshData->emissiveSRV, true);
+
+                GraphicsUtil::CreateTexture(
+                    GraphicsManager::Instance().device,
+                    GraphicsManager::Instance().device_context,
+                    meshData->emissiveTextureFilename, true,
+                    meshData->emissiveTexture, meshData->emissiveSRV);
             }
 
             if (!meshData->normalTextureFilename.empty()) {
-                ResourceHelper::CreateTexture(meshData->normalTextureFilename,
-                                              meshData->normalTexture,
-                                              meshData->normalSRV, false);
+                GraphicsUtil::CreateTexture(
+                    GraphicsManager::Instance().device,
+                    GraphicsManager::Instance().device_context,
+                    meshData->normalTextureFilename, true,
+                    meshData->normalTexture, meshData->normalSRV);
             }
 
             if (!meshData->heightTextureFilename.empty()) {
-                ResourceHelper::CreateTexture(meshData->heightTextureFilename,
-                                              meshData->heightTexture,
-                                              meshData->heightSRV, false);
+                GraphicsUtil::CreateTexture(
+                    GraphicsManager::Instance().device,
+                    GraphicsManager::Instance().device_context,
+                    meshData->heightTextureFilename, true,
+                    meshData->heightTexture, meshData->heightSRV);
             }
 
             if (!meshData->aoTextureFilename.empty()) {
-                ResourceHelper::CreateTexture(meshData->aoTextureFilename,
-                                              meshData->aoTexture,
-                                              meshData->aoSRV, false);
+                GraphicsUtil::CreateTexture(
+                    GraphicsManager::Instance().device,
+                    GraphicsManager::Instance().device_context,
+                    meshData->aoTextureFilename, true, meshData->aoTexture,
+                    meshData->aoSRV);
             }
 
             if (!meshData->metallicTextureFilename.empty()) {
-                ResourceHelper::CreateTexture(meshData->metallicTextureFilename,
-                                              meshData->metallicTexture,
-                                              meshData->metallicSRV, false);
+                GraphicsUtil::CreateTexture(
+                    GraphicsManager::Instance().device,
+                    GraphicsManager::Instance().device_context,
+                    meshData->metallicTextureFilename, true,
+                    meshData->metallicTexture, meshData->metallicSRV);
             }
 
             if (!meshData->roughnessTextureFilename.empty()) {
-                ResourceHelper::CreateTexture(
-                    meshData->roughnessTextureFilename,
-                    meshData->roughnessTexture, meshData->roughnessSRV, false);
+                GraphicsUtil::CreateTexture(
+                    GraphicsManager::Instance().device,
+                    GraphicsManager::Instance().device_context,
+                    meshData->roughnessTextureFilename, true,
+                    meshData->roughnessTexture, meshData->roughnessSRV);
             }
         }
 
@@ -269,10 +287,12 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
     GeometryGenerator::MakeSphere(model, 1.5f, 15, 13);
 
     for (auto mesh : model->meshes) {
-        ResourceHelper::CreateTexture(
+        GraphicsUtil::CreateTexture(
+            GraphicsManager::Instance().device,
+            GraphicsManager::Instance().device_context,
             "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\ojwD8."
             "jpg",
-            mesh->texture, mesh->textureResourceView);
+            false, mesh->texture, mesh->textureResourceView);
 
         {
             D3D11_BUFFER_DESC bufferDesc;
@@ -293,9 +313,8 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
 
-            const HRESULT hr =
-                GraphicsContext::Instance().device()->CreateBuffer(
-                    &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+            const HRESULT hr = GraphicsManager::Instance().device->CreateBuffer(
+                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
                           << std::endl;
@@ -315,7 +334,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
             indexBufferData.SysMemPitch = 0;
             indexBufferData.SysMemSlicePitch = 0;
 
-            GraphicsContext::Instance().device()->CreateBuffer(
+            GraphicsManager::Instance().device->CreateBuffer(
                 &bufferDesc, &indexBufferData, &mesh->indexBuffer);
         }
     }
@@ -332,10 +351,12 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
     GeometryGenerator::MakeBox(model);
 
     for (auto mesh : model->meshes) {
-        ResourceHelper::CreateTexture(
+        GraphicsUtil::CreateTexture(
+            GraphicsManager::Instance().device,
+            GraphicsManager::Instance().device_context,
             "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\crate2_"
             "diffuse.png",
-            mesh->texture, mesh->textureResourceView);
+            false, mesh->texture, mesh->textureResourceView);
 
         {
             D3D11_BUFFER_DESC bufferDesc;
@@ -356,9 +377,8 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
 
-            const HRESULT hr =
-                GraphicsContext::Instance().device()->CreateBuffer(
-                    &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+            const HRESULT hr = GraphicsManager::Instance().device->CreateBuffer(
+                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
                           << std::endl;
@@ -378,7 +398,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
             indexBufferData.SysMemPitch = 0;
             indexBufferData.SysMemSlicePitch = 0;
 
-            GraphicsContext::Instance().device()->CreateBuffer(
+            GraphicsManager::Instance().device->CreateBuffer(
                 &bufferDesc, &indexBufferData, &mesh->indexBuffer);
         }
     }
@@ -395,10 +415,12 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
     GeometryGenerator::MakeCylinder(model, 5.0f, 5.0f, 15.0f, 30);
 
     for (auto mesh : model->meshes) {
-        ResourceHelper::CreateTexture(
+        GraphicsUtil::CreateTexture(
+            GraphicsManager::Instance().device,
+            GraphicsManager::Instance().device_context,
             "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\wall."
             "jpg",
-            mesh->texture, mesh->textureResourceView);
+            false, mesh->texture, mesh->textureResourceView);
 
         {
             D3D11_BUFFER_DESC bufferDesc;
@@ -419,9 +441,8 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
             vertexBufferData.SysMemPitch = 0;
             vertexBufferData.SysMemSlicePitch = 0;
 
-            const HRESULT hr =
-                GraphicsContext::Instance().device()->CreateBuffer(
-                    &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
+            const HRESULT hr = GraphicsManager::Instance().device->CreateBuffer(
+                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
             if (FAILED(hr)) {
                 std::cout << "CreateBuffer() failed. " << std::hex << hr
                           << std::endl;
@@ -441,7 +462,7 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
             indexBufferData.SysMemPitch = 0;
             indexBufferData.SysMemSlicePitch = 0;
 
-            GraphicsContext::Instance().device()->CreateBuffer(
+            GraphicsManager::Instance().device->CreateBuffer(
                 &bufferDesc, &indexBufferData, &mesh->indexBuffer);
         }
     }

@@ -19,7 +19,7 @@ bool Application::OnStart() {
         {EnumDataBlockType::eGui, imgui_.get()},
     };
 
-    GraphicsContext::Instance().Initialize();
+    GraphicsManager::Instance().Initialize();
 
     input_->Initialize(hinstance_, common::Env::Instance().screen_width,
                        common::Env::Instance().screen_height);
@@ -51,8 +51,7 @@ bool Application::OnFrame() {
     };
 
     // Clear the buffers to begin the scene.
-    GraphicsContext::Instance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f,
-                                           imgui_->Tab().common.draw_as_wire_);
+    GraphicsManager::Instance().BeginScene(imgui_->Tab().common.draw_as_wire_);
 
     // clang-format off
 
@@ -99,7 +98,7 @@ bool Application::OnFrame() {
     imgui_->ClearNode();
 
     // Present the rendered scene to the screen.
-    GraphicsContext::Instance().EndScene();
+    GraphicsManager::Instance().EndScene();
 
     return true;
 }
@@ -130,7 +129,7 @@ bool Application::OnStop() {
 
 bool CheckIfMouseInViewport() {
     auto cursor = ImGui::GetMousePos();
-    auto view_port = GraphicsContext::Instance().viewport();
+    auto view_port = GraphicsManager::Instance().viewport;
     if (view_port.TopLeftX < cursor.x && view_port.TopLeftY < cursor.y &&
         cursor.x < view_port.TopLeftX + view_port.Width &&
         cursor.y < view_port.TopLeftY + view_port.Height) {
@@ -192,7 +191,7 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
         break;
     }
     case WM_SIZE: {
-        if (GraphicsContext::Instance().swap_chain()) {
+        if (GraphicsManager::Instance().swap_chain) {
 
             imgui_->Shutdown();
 
@@ -202,14 +201,14 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
                 (float)common::Env::Instance().screen_width /
                 (float)common::Env::Instance().screen_height;
 
-            GraphicsContext::Instance().back_buffer_RTV().Reset();
-            GraphicsContext::Instance().swap_chain()->ResizeBuffers(
+            GraphicsManager::Instance().back_buffer_RTV.Reset();
+            GraphicsManager::Instance().swap_chain->ResizeBuffers(
                 0, (UINT)LOWORD(lparam), (UINT)HIWORD(lparam),
                 DXGI_FORMAT_UNKNOWN, 0);
 
-            GraphicsContext::Instance().CreateBuffer();
+            GraphicsManager::Instance().CreateBuffer();
 
-            GraphicsContext::Instance().SetViewPort(
+            GraphicsManager::Instance().SetViewPort(
                 0.0f, 0.0f, (float)common::Env::Instance().screen_width,
                 (float)common::Env::Instance().screen_height);
 

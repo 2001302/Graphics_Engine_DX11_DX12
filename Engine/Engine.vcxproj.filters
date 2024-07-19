@@ -70,9 +70,6 @@
     <ClInclude Include="physically_based_shader.h">
       <Filter>DirectX11\Shader</Filter>
     </ClInclude>
-    <ClInclude Include="normal_geometry_shader.h">
-      <Filter>DirectX11\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="board_map.h">
       <Filter>DirectX11\Model</Filter>
     </ClInclude>
@@ -110,9 +107,6 @@
       <Filter>DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="direct3D.h">
-      <Filter>DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="resource_helper.h">
       <Filter>DirectX11</Filter>
     </ClInclude>
     <ClInclude Include="geometry_generator.h">
@@ -235,9 +229,6 @@
     <ClCompile Include="physically_based_shader.cpp">
       <Filter>DirectX11\Shader</Filter>
     </ClCompile>
-    <ClCompile Include="normal_geometry_shader.cpp">
-      <Filter>DirectX11\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="board_map.cpp">
       <Filter>DirectX11\Model</Filter>
     </ClCompile>
@@ -269,9 +260,6 @@
       <Filter>DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="model_loader.cpp">
-      <Filter>DirectX11</Filter>
-    </ClCompile>
-    <ClCompile Include="resource_helper.cpp">
       <Filter>DirectX11</Filter>
     </ClCompile>
     <ClCompile Include="application.cpp">

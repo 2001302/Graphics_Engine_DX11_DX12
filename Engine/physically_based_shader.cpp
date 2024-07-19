@@ -12,10 +12,10 @@ void PhsicallyBasedShader::PhsicallyBasedConstantBufferData::InitializeThis() {
     vertex_constant.useHeightMap = 0;
     vertex_constant.heightScale = 0.0f;
 
-    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant,
-                                                     vertex_constant_buffer);
-    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant,
-                                                     pixel_constant_buffer);
+    GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
+                                    vertex_constant, vertex_constant_buffer);
+    GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
+                                    pixel_constant, pixel_constant_buffer);
 }
 
 void IntCheckbox(const char *label, int *v) {
@@ -102,14 +102,14 @@ EnumBehaviorTreeStatus InitializePhysicallyBasedShader::OnInvoke() {
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     // Create the Sample State
-    GraphicsContext::Instance().device()->CreateSamplerState(
+    GraphicsManager::Instance().device->CreateSamplerState(
         &sampDesc, physical_shader->sample_state.GetAddressOf());
 
     sampDesc.AddressU = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampDesc.AddressV = D3D11_TEXTURE_ADDRESS_CLAMP;
     sampDesc.AddressW = D3D11_TEXTURE_ADDRESS_CLAMP;
 
-    GraphicsContext::Instance().device()->CreateSamplerState(
+    GraphicsManager::Instance().device->CreateSamplerState(
         &sampDesc, physical_shader->clampSamplerState.GetAddressOf());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
@@ -123,12 +123,14 @@ EnumBehaviorTreeStatus InitializePhysicallyBasedShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    GraphicsContext::Instance().CreateVertexShaderAndInputLayout(
+    GraphicsUtil::CreateVertexShaderAndInputLayout(
+        GraphicsManager::Instance().device,
         L"physically_based_vertex_shader.hlsl", inputElements,
         physical_shader->vertex_shader, physical_shader->layout);
 
-    GraphicsContext::Instance().CreatePixelShader(
-        L"physically_based_pixel_shader.hlsl", physical_shader->pixel_shader);
+    GraphicsUtil::CreatePixelShader(GraphicsManager::Instance().device,
+                                    L"physically_based_pixel_shader.hlsl",
+                                    physical_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -143,7 +145,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = GraphicsContext::Instance().device_context();
+    auto context = GraphicsManager::Instance().device_context;
 
     auto model = dynamic_cast<Model *>(target_object);
 
@@ -198,7 +200,9 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
             physically_shader_source->vertex_constant.projection.Transpose();
     }
 
-    GraphicsContext::Instance().UpdateBuffer(
+    GraphicsUtil::UpdateBuffer(
+        GraphicsManager::Instance().device,
+        GraphicsManager::Instance().device_context,
         physically_shader_source->vertex_constant,
         physically_shader_source->vertex_constant_buffer);
 
@@ -230,9 +234,10 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         }
     }
 
-    GraphicsContext::Instance().UpdateBuffer(
-        physically_shader_source->pixel_constant,
-        physically_shader_source->pixel_constant_buffer);
+    GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device,
+                               GraphicsManager::Instance().device_context,
+                               physically_shader_source->pixel_constant,
+                               physically_shader_source->pixel_constant_buffer);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -247,7 +252,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = GraphicsContext::Instance().device_context();
+    auto context = GraphicsManager::Instance().device_context;
 
     // RS: Rasterizer stage
     // OM: Output-Merger stage

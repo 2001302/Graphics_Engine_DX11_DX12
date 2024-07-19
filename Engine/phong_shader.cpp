@@ -10,10 +10,10 @@ void PhongShader::PhongConstantBufferData::InitializeThis() {
     vertex_constant.view = Matrix();
     vertex_constant.projection = Matrix();
 
-    GraphicsContext::Instance().CreateConstantBuffer(vertex_constant,
-                                                     vertex_constant_buffer);
-    GraphicsContext::Instance().CreateConstantBuffer(pixel_constant,
-                                                     pixel_constant_buffer);
+    GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
+                                    vertex_constant, vertex_constant_buffer);
+    GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
+                                    pixel_constant, pixel_constant_buffer);
 }
 
 void PhongShader::PhongConstantBufferData::OnShow() {
@@ -58,7 +58,7 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
     sampDesc.MaxLOD = D3D11_FLOAT32_MAX;
 
     // Create the Sample State
-    GraphicsContext::Instance().device()->CreateSamplerState(
+    GraphicsManager::Instance().device->CreateSamplerState(
         &sampDesc, phong_shader->sample_state.GetAddressOf());
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> inputElements = {
@@ -70,12 +70,13 @@ EnumBehaviorTreeStatus InitializePhongShader::OnInvoke() {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    GraphicsContext::Instance().CreateVertexShaderAndInputLayout(
-        L"phong_vertex_shader.hlsl", inputElements, phong_shader->vertex_shader,
-        phong_shader->layout);
+    GraphicsUtil::CreateVertexShaderAndInputLayout(
+        GraphicsManager::Instance().device, L"phong_vertex_shader.hlsl",
+        inputElements, phong_shader->vertex_shader, phong_shader->layout);
 
-    GraphicsContext::Instance().CreatePixelShader(L"phong_pixel_shader.hlsl",
-                                                  phong_shader->pixel_shader);
+    GraphicsUtil::CreatePixelShader(GraphicsManager::Instance().device,
+                                    L"phong_pixel_shader.hlsl",
+                                    phong_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -99,7 +100,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = GraphicsContext::Instance().device_context();
+    auto context = GraphicsManager::Instance().device_context;
 
     auto model = dynamic_cast<Model *>(target_object);
 
@@ -153,9 +154,10 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
             phong_shader_source->vertex_constant.projection.Transpose();
     }
 
-    GraphicsContext::Instance().UpdateBuffer(
-        phong_shader_source->vertex_constant,
-        phong_shader_source->vertex_constant_buffer);
+    GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device,
+                               GraphicsManager::Instance().device_context,
+                               phong_shader_source->vertex_constant,
+                               phong_shader_source->vertex_constant_buffer);
 
     // eye
     {
@@ -189,9 +191,10 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     // phong_shader_source->pixel_constant_buffer_data.useBlinnPhong =
     //    gui->Tab().light.use_blinn_phong;
 
-    GraphicsContext::Instance().UpdateBuffer(
-        phong_shader_source->pixel_constant,
-        phong_shader_source->pixel_constant_buffer);
+    GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device,
+                               GraphicsManager::Instance().device_context,
+                               phong_shader_source->pixel_constant,
+                               phong_shader_source->pixel_constant_buffer);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -206,7 +209,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto context = GraphicsContext::Instance().device_context();
+    auto context = GraphicsManager::Instance().device_context;
 
     // RS: Rasterizer stage
     // OM: Output-Merger stage

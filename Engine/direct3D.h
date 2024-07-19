@@ -2,14 +2,16 @@
 #define _DIRECT3D
 
 #include "env.h"
+
 #include <d3d11.h>
 #include <d3dcompiler.h>
-#include <directxmath.h>
-#include <directxtk/DDSTextureLoader.h>
 #include <directxtk/SimpleMath.h>
 #include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
 #include <windows.h>
-#include <wrl.h>
+#include <wrl/client.h> // ComPtr
 
 using namespace DirectX;
 
@@ -26,67 +28,135 @@ inline void ThrowIfFailed(HRESULT hr) {
     }
 }
 
-class GraphicsContext {
+class GraphicsManager {
   public:
-    static GraphicsContext &Instance() {
-        static GraphicsContext instance;
+    static GraphicsManager &Instance() {
+        static GraphicsManager instance;
         return instance;
     }
     bool Initialize();
-    void BeginScene(float red, float green, float blue, float alpha,
-                    bool draw_as_wire);
+    void BeginScene(bool draw_as_wire);
     void EndScene();
-
     void SetViewPort(float x, float y, float width, float height);
     bool CreateBuffer();
-    void CreateDepthBuffer(ComPtr<ID3D11Device> &device, int screenWidth,
-                           int screenHeight, UINT numQualityLevels,
-                           ComPtr<ID3D11DepthStencilView> &depthStencilView);
-    void CreateIndexBuffer(const std::vector<uint32_t> &indices,
-                           ComPtr<ID3D11Buffer> &indexBuffer);
-    void CreateGeometryShader(const std::wstring &filename,
-                              ComPtr<ID3D11GeometryShader> &geometryShader);
-    void CreatePixelShader(const std::wstring &filename,
-                           ComPtr<ID3D11PixelShader> &pixelShader);
-    void CreateDDSTexture(const wchar_t *filename,
-                          ComPtr<ID3D11ShaderResourceView> &texResView);
 
-    void CreateVertexShaderAndInputLayout(
-        const std::wstring &filename,
+    bool useMSAA = true;
+    UINT num_quality_levels = 0;
+
+    ComPtr<ID3D11Device> device;
+    ComPtr<ID3D11DeviceContext> device_context;
+    ComPtr<IDXGISwapChain> swap_chain;
+    ComPtr<ID3D11RenderTargetView> back_buffer_RTV;
+
+    ComPtr<ID3D11Texture2D> float_buffer;
+    ComPtr<ID3D11Texture2D> resolved_buffer;
+    ComPtr<ID3D11RenderTargetView> float_RTV;
+    ComPtr<ID3D11RenderTargetView> resolved_RTV;
+    ComPtr<ID3D11ShaderResourceView> float_SRV;
+    ComPtr<ID3D11ShaderResourceView> resolved_SRV;
+
+    ComPtr<ID3D11RasterizerState> solid_rasterizer_state;
+    ComPtr<ID3D11RasterizerState> wire_rasterizer_state;
+
+    ComPtr<ID3D11DepthStencilState> depth_stencil_state;
+    ComPtr<ID3D11DepthStencilView> depth_stencil_view;
+
+    D3D11_VIEWPORT viewport;
+
+  private:
+    GraphicsManager()
+        : swap_chain(0), device(0), device_context(0),
+          viewport(D3D11_VIEWPORT()) {}
+    void CreateDepthBuffer();
+};
+
+class GraphicsUtil {
+  public:
+    static void CreateVertexShaderAndInputLayout(
+        ComPtr<ID3D11Device> &device, const std::wstring &filename,
         const std::vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
-        ComPtr<ID3D11VertexShader> &vertexShader,
-        ComPtr<ID3D11InputLayout> &inputLayout);
+        ComPtr<ID3D11VertexShader> &m_vertexShader,
+        ComPtr<ID3D11InputLayout> &m_inputLayout);
+
+    static void CreateHullShader(ComPtr<ID3D11Device> &device,
+                                 const std::wstring &filename,
+                                 ComPtr<ID3D11HullShader> &m_hullShader);
+
+    static void CreateDomainShader(ComPtr<ID3D11Device> &device,
+                                   const std::wstring &filename,
+                                   ComPtr<ID3D11DomainShader> &m_domainShader);
+
+    static void
+    CreateGeometryShader(ComPtr<ID3D11Device> &device,
+                         const std::wstring &filename,
+                         ComPtr<ID3D11GeometryShader> &m_geometryShader);
+
+    static void CreatePixelShader(ComPtr<ID3D11Device> &device,
+                                  const std::wstring &filename,
+                                  ComPtr<ID3D11PixelShader> &m_pixelShader);
+
+    static void CreateIndexBuffer(ComPtr<ID3D11Device> &device,
+                                  const std::vector<uint32_t> &indices,
+                                  ComPtr<ID3D11Buffer> &indexBuffer);
+
+    template <typename T_VERTEX>
+    static void CreateVertexBuffer(ComPtr<ID3D11Device> &device,
+                                   const std::vector<T_VERTEX> &vertices,
+                                   ComPtr<ID3D11Buffer> &vertexBuffer) {
+
+        // D3D11_USAGE enumeration (d3d11.h)
+        // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_usage
+
+        D3D11_BUFFER_DESC bufferDesc;
+        ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+        bufferDesc.ByteWidth = UINT(sizeof(T_VERTEX) * vertices.size());
+        bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+        bufferDesc.StructureByteStride = sizeof(T_VERTEX);
+
+        D3D11_SUBRESOURCE_DATA vertexBufferData = {
+            0}; // MS 예제에서 초기화하는 방식
+        vertexBufferData.pSysMem = vertices.data();
+        vertexBufferData.SysMemPitch = 0;
+        vertexBufferData.SysMemSlicePitch = 0;
+
+        ThrowIfFailed(device->CreateBuffer(&bufferDesc, &vertexBufferData,
+                                           vertexBuffer.GetAddressOf()));
+    }
+
     template <typename T_CONSTANT>
-    void CreateConstantBuffer(const T_CONSTANT &constantBufferData,
-                              ComPtr<ID3D11Buffer> &constantBuffer) {
-        // For a constant buffer (BindFlags of D3D11_BUFFER_DESC set to
-        // D3D11_BIND_CONSTANT_BUFFER), you must set the ByteWidth value of
-        // D3D11_BUFFER_DESC in multiples of 16, and less than or equal to
-        // D3D11_REQ_CONSTANT_BUFFER_ELEMENT_COUNT.
+    static void CreateConstBuffer(ComPtr<ID3D11Device> &device,
+                                  const T_CONSTANT &constantBufferData,
+                                  ComPtr<ID3D11Buffer> &constantBuffer) {
 
-        D3D11_BUFFER_DESC cbDesc;
-        cbDesc.ByteWidth = sizeof(constantBufferData);
-        cbDesc.Usage = D3D11_USAGE_DYNAMIC;
-        cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-        cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        cbDesc.MiscFlags = 0;
-        cbDesc.StructureByteStride = 0;
+        static_assert((sizeof(T_CONSTANT) % 16) == 0,
+                      "Constant Buffer size must be 16-byte aligned");
 
-        // Fill in the subresource data.
+        D3D11_BUFFER_DESC desc;
+        ZeroMemory(&desc, sizeof(desc));
+        desc.ByteWidth = sizeof(constantBufferData);
+        desc.Usage = D3D11_USAGE_DYNAMIC;
+        desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+        desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+        desc.MiscFlags = 0;
+        desc.StructureByteStride = 0;
+
         D3D11_SUBRESOURCE_DATA initData;
+        ZeroMemory(&initData, sizeof(initData));
         initData.pSysMem = &constantBufferData;
         initData.SysMemPitch = 0;
         initData.SysMemSlicePitch = 0;
 
-        auto hr = device_->CreateBuffer(&cbDesc, &initData,
-                                        constantBuffer.GetAddressOf());
-        if (FAILED(hr)) {
-            std::cout << "CreateConstantBuffer() CreateBuffer failed()."
-                      << std::endl;
-        }
+        ThrowIfFailed(device->CreateBuffer(&desc, &initData,
+                                           constantBuffer.GetAddressOf()));
     }
+
     template <typename T_DATA>
-    void UpdateBuffer(const T_DATA &bufferData, ComPtr<ID3D11Buffer> &buffer) {
+    static void UpdateBuffer(ComPtr<ID3D11Device> &device,
+                             ComPtr<ID3D11DeviceContext> &context,
+                             const T_DATA &bufferData,
+                             ComPtr<ID3D11Buffer> &buffer) {
 
         if (!buffer) {
             std::cout << "UpdateBuffer() buffer was not initialized."
@@ -94,82 +164,40 @@ class GraphicsContext {
         }
 
         D3D11_MAPPED_SUBRESOURCE ms;
-        device_context_->Map(buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL,
-                             &ms);
+        context->Map(buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
         memcpy(ms.pData, &bufferData, sizeof(bufferData));
-        device_context_->Unmap(buffer.Get(), NULL);
+        context->Unmap(buffer.Get(), NULL);
     }
-    template <typename T_VERTEX>
-    void CreateVertexBuffer(const std::vector<T_VERTEX> &vertices,
-                            ComPtr<ID3D11Buffer> &vertexBuffer) {
 
-        // D3D11_USAGE enumeration (d3d11.h)
-        // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ne-d3d11-d3d11_usage
+    static void
+    CreateTexture(ComPtr<ID3D11Device> &device,
+                  ComPtr<ID3D11DeviceContext> &context,
+                  const std::string filename, const bool usSRGB,
+                  ComPtr<ID3D11Texture2D> &texture,
+                  ComPtr<ID3D11ShaderResourceView> &textureResourceView);
 
-        D3D11_BUFFER_DESC bufferDesc;
-        ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-        bufferDesc.ByteWidth = UINT(sizeof(T_VERTEX) * vertices.size());
-        bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-        bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-        bufferDesc.StructureByteStride = sizeof(T_VERTEX);
+    static void CreateMetallicRoughnessTexture(
+        ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
+        const std::string metallicFiilename,
+        const std::string roughnessFilename, ComPtr<ID3D11Texture2D> &texture,
+        ComPtr<ID3D11ShaderResourceView> &srv);
 
-        D3D11_SUBRESOURCE_DATA vertexBufferData = {0};
-        vertexBufferData.pSysMem = vertices.data();
-        vertexBufferData.SysMemPitch = 0;
-        vertexBufferData.SysMemSlicePitch = 0;
+    static void
+    CreateTextureArray(ComPtr<ID3D11Device> &device,
+                       ComPtr<ID3D11DeviceContext> &context,
+                       const std::vector<std::string> filenames,
+                       ComPtr<ID3D11Texture2D> &texture,
+                       ComPtr<ID3D11ShaderResourceView> &textureResourceView);
 
-        const HRESULT hr = device_->CreateBuffer(&bufferDesc, &vertexBufferData,
-                                                 vertexBuffer.GetAddressOf());
-        if (FAILED(hr)) {
-            std::cout << "CreateBuffer() failed. " << std::hex << hr
-                      << std::endl;
-        };
-    }
-    ComPtr<ID3D11Device> device();
-    ComPtr<ID3D11DeviceContext> device_context();
-    ComPtr<IDXGISwapChain> swap_chain();
-    ComPtr<ID3D11Texture2D> depth_stencil_buffer();
-    ComPtr<ID3D11DepthStencilState> depth_stencil_state();
-    ComPtr<ID3D11DepthStencilView> depth_stencil_view();
-    ComPtr<ID3D11RasterizerState> solid_rasterizer_state();
-    ComPtr<ID3D11RasterizerState> wire_rasterizer_state();
-    ComPtr<ID3D11RenderTargetView> render_target_view();
-    D3D11_VIEWPORT viewport();
-    ComPtr<ID3D11Texture2D> float_buffer();
-    ComPtr<ID3D11Texture2D> resolved_buffer();
-    ComPtr<ID3D11RenderTargetView> back_buffer_RTV();
-    ComPtr<ID3D11ShaderResourceView> resolved_SRV();
+    static void CreateDDSTexture(ComPtr<ID3D11Device> &device,
+                                 const wchar_t *filename, const bool isCubeMap,
+                                 ComPtr<ID3D11ShaderResourceView> &texResView);
 
-  private:
-    GraphicsContext()
-        : swap_chain_(0), device_(0), device_context_(0),
-          viewport_(D3D11_VIEWPORT()) {}
-
-    bool useMSAA = true;
-    UINT num_quality_levels_ = 0;
-
-    ComPtr<ID3D11Device> device_;
-    ComPtr<ID3D11DeviceContext> device_context_;
-    ComPtr<IDXGISwapChain> swap_chain_;
-    ComPtr<ID3D11RenderTargetView> back_buffer_RTV_;
-
-    // 삼각형 레스터화 -> float(MSAA) -> resolved(No MSAA)
-    // -> 후처리(블룸, 톤매핑) -> backBuffer(최종 SwapChain Present)
-    ComPtr<ID3D11Texture2D> float_buffer_;
-    ComPtr<ID3D11Texture2D> resolved_buffer_;
-    ComPtr<ID3D11RenderTargetView> float_RTV;
-    ComPtr<ID3D11RenderTargetView> resolved_RTV;
-    ComPtr<ID3D11ShaderResourceView> float_SRV;
-    ComPtr<ID3D11ShaderResourceView> resolved_SRV_;
-
-    ComPtr<ID3D11RasterizerState> solid_rasterizer_state_;
-    ComPtr<ID3D11RasterizerState> wire_rasterizer_state_;
-
-    ComPtr<ID3D11DepthStencilState> depth_stencil_state_;
-    ComPtr<ID3D11DepthStencilView> depth_stencil_view_;
-
-    D3D11_VIEWPORT viewport_;
+    static void WriteToFile(ComPtr<ID3D11Device> &device,
+                            ComPtr<ID3D11DeviceContext> &context,
+                            ComPtr<ID3D11Texture2D> &textureToWrite,
+                            const std::string filename);
 };
+
 } // namespace dx11
 #endif

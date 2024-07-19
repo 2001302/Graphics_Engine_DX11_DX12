@@ -157,7 +157,6 @@
     <ClInclude Include="material.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="node_ui.h" />
-    <ClInclude Include="normal_geometry_shader.h" />
     <ClInclude Include="parallel_node.h" />
     <ClInclude Include="physically_based_shader.h" />
     <ClInclude Include="board_map.h" />
@@ -192,7 +191,6 @@
     <ClInclude Include="phong_shader.h" />
     <ClInclude Include="pipeline_manager.h" />
     <ClInclude Include="platform.h" />
-    <ClInclude Include="resource_helper.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>
@@ -208,7 +206,6 @@
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor.cpp" />
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor_api.cpp" />
     <ClCompile Include="node_ui.cpp" />
-    <ClCompile Include="normal_geometry_shader.cpp" />
     <ClCompile Include="parallel_node.cpp" />
     <ClCompile Include="physically_based_shader.cpp" />
     <ClCompile Include="board_map.cpp" />
@@ -235,7 +232,6 @@
     <ClCompile Include="setting_ui.cpp" />
     <ClCompile Include="phong_shader.cpp" />
     <ClCompile Include="platform.cpp" />
-    <ClCompile Include="resource_helper.cpp" />
     <ClCompile Include="selector_node.cpp" />
     <ClCompile Include="sequence_node.cpp" />
   </ItemGroup>

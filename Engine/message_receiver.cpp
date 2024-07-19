@@ -16,7 +16,8 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         // mouse move vector
         Vector2 vector = Vector2(-mouseState.lX, -mouseState.lY);
 
-        Vector3 origin = manager->camera->GetPosition();
+        Vector3 origin(manager->camera->position.x, manager->camera->position.y,
+                       manager->camera->position.z);
 
         // convert to spherical coordinates
         double r = origin.Length();
@@ -37,10 +38,9 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
 
         Vector3 origin_prime(x, y, z);
 
-        if (0.0f < phi && phi < PI) {
-            manager->camera->SetPosition(
-                Vector3(origin_prime.x, origin_prime.y, origin_prime.z));
-        }
+        if (0.0f < phi && phi < PI)
+            manager->camera->position =
+                Vector3(origin_prime.x, origin_prime.y, origin_prime.z);
     }
 
     return true;
@@ -55,14 +55,15 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
         input->Mouse()->Acquire();
     } else {
         float wheel = -mouseState.lZ / (600.0);
-        Vector3 origin = manager->camera->GetPosition();
+        Vector3 origin(manager->camera->position.x, manager->camera->position.y,
+                       manager->camera->position.z);
 
         Matrix R1(1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f,
                   0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
         auto origin_prime = Vector3::Transform(origin, R1);
-        manager->camera->SetPosition(
-            Vector3(origin_prime.x, origin_prime.y, origin_prime.z));
+        manager->camera->position =
+            Vector3(origin_prime.x, origin_prime.y, origin_prime.z);
     }
 
     return true;
@@ -71,46 +72,47 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
 bool MessageReceiver::OnWheelDragRequest(PipelineManager *manager,
                                          std::shared_ptr<Input> input,
                                          int mouseX, int mouseY) {
-    DIMOUSESTATE mouseState;
-    if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
-                                              &mouseState))) {
-        // retry
-        input->Mouse()->Acquire();
-    } else {
+    //DIMOUSESTATE mouseState;
+    //if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
+    //                                          &mouseState))) {
+    //    // retry
+    //    input->Mouse()->Acquire();
+    //} else {
 
-        Vector2 current = Vector2(mouseX, mouseY);
-        Vector2 before =
-            Vector2(mouseX + mouseState.lX, mouseY - mouseState.lY);
+    //    Vector2 current = Vector2(mouseX, mouseY);
+    //    Vector2 before =
+    //        Vector2(mouseX + mouseState.lX, mouseY - mouseState.lY);
 
-        Vector3 cursorNdcCurrent = Vector3(current.x, current.y, 0.0f);
-        Vector3 cursorNdcBefore = Vector3(before.x, before.y, 0.0f);
+    //    Vector3 cursorNdcCurrent = Vector3(current.x, current.y, 0.0f);
+    //    Vector3 cursorNdcBefore = Vector3(before.x, before.y, 0.0f);
 
-        auto proj_row = manager->camera->GetProjection();
-        auto view_row = manager->camera->GetView();
+    //    auto env = common::Env::Instance();
 
-        Matrix inverseProjView = (view_row * proj_row).Invert();
+    //    auto projRow = XMMatrixPerspectiveFovLH(
+    //        XMConvertToRadians(env.projection.projection_fov_angle_y),
+    //        env.aspect, env.projection.near_z, env.projection.far_z);
 
-        Vector3 cursorWorldCurrent =
-            Vector3::Transform(cursorNdcCurrent, inverseProjView);
-        Vector3 cursorWorldBefore =
-            Vector3::Transform(cursorNdcBefore, inverseProjView);
+    //    Matrix inverseProjView = (manager->camera->view * projRow).Invert();
 
-        auto move = cursorWorldCurrent - cursorWorldBefore;
+    //    Vector3 cursorWorldCurrent =
+    //        Vector3::Transform(cursorNdcCurrent, inverseProjView);
+    //    Vector3 cursorWorldBefore =
+    //        Vector3::Transform(cursorNdcBefore, inverseProjView);
 
-        manager->camera->SetLookAtVector(manager->camera->GetLookAtVector() +
-                                         move);
+    //    auto move = cursorWorldCurrent - cursorWorldBefore;
 
-        manager->camera->SetPosition(manager->camera->GetPosition() + move);
-    }
+    //    manager->camera->lookAtVector += move;
+    //    manager->camera->position += move;
+    //}
 
     return true;
 }
 
 bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
                                          HWND main_window) {
-    // auto ToString = [](LPWSTR lpwstr) -> std::string {
-    //     if (!lpwstr)
-    //         return std::string();
+    //auto ToString = [](LPWSTR lpwstr) -> std::string {
+    //    if (!lpwstr)
+    //        return std::string();
 
     //    int len =
     //        WideCharToMultiByte(CP_UTF8, 0, lpwstr, -1, NULL, 0, NULL, NULL);
@@ -120,25 +122,25 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
     //    return result;
     //};
 
-    // OPENFILENAMEW ofn;
-    // wchar_t szFile[260] = {0};
+    //OPENFILENAMEW ofn;
+    //wchar_t szFile[260] = {0};
 
     //// OPENFILENAME struct initialize
-    // ZeroMemory(&ofn, sizeof(ofn));
-    // ofn.lStructSize = sizeof(ofn);
-    // ofn.hwndOwner = main_window;
-    // ofn.lpstrFile = szFile;
-    // ofn.lpstrFile[0] = '\0';
-    // ofn.nMaxFile = sizeof(szFile);
-    // ofn.lpstrFilter = L"All files\0*.*\0Text Files\0*.TXT\0";
-    // ofn.nFilterIndex = 1;
-    // ofn.lpstrFileTitle = NULL;
-    // ofn.nMaxFileTitle = 0;
-    // ofn.lpstrInitialDir = NULL;
-    // ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
+    //ZeroMemory(&ofn, sizeof(ofn));
+    //ofn.lStructSize = sizeof(ofn);
+    //ofn.hwndOwner = main_window;
+    //ofn.lpstrFile = szFile;
+    //ofn.lpstrFile[0] = '\0';
+    //ofn.nMaxFile = sizeof(szFile);
+    //ofn.lpstrFilter = L"All files\0*.*\0Text Files\0*.TXT\0";
+    //ofn.nFilterIndex = 1;
+    //ofn.lpstrFileTitle = NULL;
+    //ofn.nMaxFileTitle = 0;
+    //ofn.lpstrInitialDir = NULL;
+    //ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
     //// show file explorer
-    // if (GetOpenFileName(&ofn)) {
+    //if (GetOpenFileName(&ofn)) {
 
     //    std::string fullPath = ToString(ofn.lpstrFile);
     //    size_t lastSlash = fullPath.find_last_of('\\');
@@ -248,8 +250,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
     //        if (!meshData->roughnessTextureFilename.empty()) {
     //            ResourceHelper::CreateTexture(
     //                meshData->roughnessTextureFilename,
-    //                meshData->roughnessTexture, meshData->roughnessSRV,
-    //                false);
+    //                meshData->roughnessTexture, meshData->roughnessSRV, false);
     //        }
     //    }
 
@@ -261,17 +262,17 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
-    // auto model = new Model();
-    // model->SetName("sphere");
-    // manager->models[model->GetEntityId()] = model;
+    //auto model = new Model();
+    //model->SetName("sphere");
+    //manager->models[model->GetEntityId()] = model;
 
-    // GeometryGenerator::MakeSphere(model, 1.5f, 15, 13);
+    //GeometryGenerator::MakeSphere(model, 1.5f, 15, 13);
 
-    // for (auto mesh : model->meshes) {
-    //     ResourceHelper::CreateTexture(
-    //         "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\ojwD8."
-    //         "jpg",
-    //         mesh->texture, mesh->textureResourceView);
+    //for (auto mesh : model->meshes) {
+    //    ResourceHelper::CreateTexture(
+    //        "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\ojwD8."
+    //        "jpg",
+    //        mesh->texture, mesh->textureResourceView);
 
     //    {
     //        D3D11_BUFFER_DESC bufferDesc;
@@ -303,11 +304,11 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
     //    {
     //        D3D11_BUFFER_DESC bufferDesc;
     //        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-    //        bufferDesc.ByteWidth = sizeof(unsigned long) *
-    //        mesh->indices.size(); bufferDesc.BindFlags =
-    //        D3D11_BIND_INDEX_BUFFER; bufferDesc.CPUAccessFlags = 0; // 0 if no
-    //        CPU access is necessary. bufferDesc.StructureByteStride =
-    //        sizeof(int); bufferDesc.MiscFlags = 0;
+    //        bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
+    //        bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    //        bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+    //        bufferDesc.StructureByteStride = sizeof(int);
+    //        bufferDesc.MiscFlags = 0;
 
     //        D3D11_SUBRESOURCE_DATA indexBufferData = {0};
     //        indexBufferData.pSysMem = mesh->indices.data();
@@ -324,17 +325,17 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
 bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
-    // auto model = new Model();
-    // model->SetName("box");
-    // manager->models[model->GetEntityId()] = model;
+    //auto model = new Model();
+    //model->SetName("box");
+    //manager->models[model->GetEntityId()] = model;
 
-    // GeometryGenerator::MakeBox(model);
+    //GeometryGenerator::MakeBox(model);
 
-    // for (auto mesh : model->meshes) {
-    //     ResourceHelper::CreateTexture(
-    //         "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\crate2_"
-    //         "diffuse.png",
-    //         mesh->texture, mesh->textureResourceView);
+    //for (auto mesh : model->meshes) {
+    //    ResourceHelper::CreateTexture(
+    //        "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\crate2_"
+    //        "diffuse.png",
+    //        mesh->texture, mesh->textureResourceView);
 
     //    {
     //        D3D11_BUFFER_DESC bufferDesc;
@@ -366,11 +367,11 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
     //    {
     //        D3D11_BUFFER_DESC bufferDesc;
     //        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-    //        bufferDesc.ByteWidth = sizeof(unsigned long) *
-    //        mesh->indices.size(); bufferDesc.BindFlags =
-    //        D3D11_BIND_INDEX_BUFFER; bufferDesc.CPUAccessFlags = 0; // 0 if no
-    //        CPU access is necessary. bufferDesc.StructureByteStride =
-    //        sizeof(int); bufferDesc.MiscFlags = 0;
+    //        bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
+    //        bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    //        bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+    //        bufferDesc.StructureByteStride = sizeof(int);
+    //        bufferDesc.MiscFlags = 0;
 
     //        D3D11_SUBRESOURCE_DATA indexBufferData = {0};
     //        indexBufferData.pSysMem = mesh->indices.data();
@@ -387,17 +388,17 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
 bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
-    // auto model = new Model();
-    // model->SetName("cylinder");
-    // manager->models[model->GetEntityId()] = model;
+    //auto model = new Model();
+    //model->SetName("cylinder");
+    //manager->models[model->GetEntityId()] = model;
 
-    // GeometryGenerator::MakeCylinder(model, 5.0f, 5.0f, 15.0f, 30);
+    //GeometryGenerator::MakeCylinder(model, 5.0f, 5.0f, 15.0f, 30);
 
-    // for (auto mesh : model->meshes) {
-    //     ResourceHelper::CreateTexture(
-    //         "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\wall."
-    //         "jpg",
-    //         mesh->texture, mesh->textureResourceView);
+    //for (auto mesh : model->meshes) {
+    //    ResourceHelper::CreateTexture(
+    //        "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\wall."
+    //        "jpg",
+    //        mesh->texture, mesh->textureResourceView);
 
     //    {
     //        D3D11_BUFFER_DESC bufferDesc;
@@ -429,11 +430,11 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
     //    {
     //        D3D11_BUFFER_DESC bufferDesc;
     //        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-    //        bufferDesc.ByteWidth = sizeof(unsigned long) *
-    //        mesh->indices.size(); bufferDesc.BindFlags =
-    //        D3D11_BIND_INDEX_BUFFER; bufferDesc.CPUAccessFlags = 0; // 0 if no
-    //        CPU access is necessary. bufferDesc.StructureByteStride =
-    //        sizeof(int); bufferDesc.MiscFlags = 0;
+    //        bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
+    //        bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+    //        bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
+    //        bufferDesc.StructureByteStride = sizeof(int);
+    //        bufferDesc.MiscFlags = 0;
 
     //        D3D11_SUBRESOURCE_DATA indexBufferData = {0};
     //        indexBufferData.pSysMem = mesh->indices.data();

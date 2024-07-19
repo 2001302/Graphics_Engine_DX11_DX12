@@ -49,12 +49,16 @@ bool Application::OnStart() {
     imgui_->Initialize();
 
     // clang-format off
-    auto tree = new dx11::BehaviorTreeBuilder();
-    tree->Build(dataBlock)
-        ->Sequence()
-            ->Excute(std::make_shared<dx11::InitializeCamera>())
-        ->Close()
-    ->Run();
+    //auto tree = new dx11::BehaviorTreeBuilder();
+    //tree->Build(dataBlock)
+    //    ->Sequence()
+    //        ->Excute(std::make_shared<dx11::InitializeBoardMap>())
+    //        ->Excute(std::make_shared<dx11::InitializeCamera>())
+    //        ->Excute(std::make_shared<dx11::InitializeCubeMapShader>())
+    //        ->Excute(std::make_shared<dx11::InitializePhongShader>())
+    //        ->Excute(std::make_shared<dx11::InitializePhysicallyBasedShader>())
+    //    ->Close()
+    //->Run();
     // clang-format on
 
     InitCubemaps(L"../Engine/Assets/Textures/Cubemaps/HDRI/", L"SampleEnvHDR.dds",
@@ -167,7 +171,7 @@ bool Application::OnStart() {
     }
 
     m_postProcess.Initialize(device, context,
-                             {GraphicsContext::Instance().post_effects_SRV()},
+                             {GraphicsContext::Instance().post_effects_SRV},
                              {GraphicsContext::Instance().back_buffer_RTV()},
                              common::Env::Instance().screen_width,
                              common::Env::Instance().screen_height, 4);
@@ -196,9 +200,9 @@ bool Application::OnFrame() {
         imgui_->PushNode(manager_->models[imgui_->SelectedId()]); 
     }
 
-    auto tree = std::make_unique<dx11::BehaviorTreeBuilder>();
-    tree->Build(dataBlock)
-    ->Excute(std::make_shared<dx11::UpdateCamera>())
+    //auto tree = std::make_unique<dx11::BehaviorTreeBuilder>();
+    //tree->Build(dataBlock)
+    //->Excute(std::make_shared<dx11::UpdateCamera>())
     //->Parallel(manager_->models)
     //    ->Selector()
     //        ->Sequence()
@@ -220,7 +224,7 @@ bool Application::OnFrame() {
     //    ->Close()
     //->End()
     //->Excute(std::make_shared<dx11::RenderBoardMap>())
-    ->Run();
+    //->Run();
     // clang-format on
 
     Vector3 eyeWorld = Vector3();
@@ -228,6 +232,10 @@ bool Application::OnFrame() {
     Matrix projRow = Matrix();
     Matrix reflectRow = Matrix();
     UpdateGlobalConstants(eyeWorld, viewRow, projRow, reflectRow);
+
+    GraphicsContext::Instance().SetViewPort(
+        0, 0, common::Env::Instance().screen_width,
+        common::Env::Instance().screen_height);
 
     context->VSSetSamplers(0, UINT(Graphics::sampleStates.size()),
                            Graphics::sampleStates.data());

@@ -1,71 +1,71 @@
-#include "graphics_manager.h"
+#include "graphics_context.h"
 
 using namespace dx11;
 
-ComPtr<ID3D11Device> GraphicsManager::device() { return device_; }
+ComPtr<ID3D11Device> GraphicsContext::device() { return device_; }
 
-ComPtr<ID3D11DeviceContext> GraphicsManager::device_context() {
+ComPtr<ID3D11DeviceContext> GraphicsContext::device_context() {
     return device_context_;
 }
 
-ComPtr<IDXGISwapChain> GraphicsManager::swap_chain() { return swap_chain_; }
+ComPtr<IDXGISwapChain> GraphicsContext::swap_chain() { return swap_chain_; }
 
-ComPtr<ID3D11DepthStencilState> GraphicsManager::depth_stencil_state() {
+ComPtr<ID3D11DepthStencilState> GraphicsContext::depth_stencil_state() {
     return depth_stencil_state_;
 }
 
-ComPtr<ID3D11DepthStencilView> GraphicsManager::depth_stencil_view() {
+ComPtr<ID3D11DepthStencilView> GraphicsContext::depth_stencil_view() {
     return depth_stencil_view_;
 }
 
-ComPtr<ID3D11RasterizerState> GraphicsManager::solid_rasterizer_state() {
+ComPtr<ID3D11RasterizerState> GraphicsContext::solid_rasterizer_state() {
     return solid_rasterizer_state_;
 }
 
-ComPtr<ID3D11RasterizerState> GraphicsManager::wire_rasterizer_state() {
+ComPtr<ID3D11RasterizerState> GraphicsContext::wire_rasterizer_state() {
     return wire_rasterizer_state_;
 }
 
-D3D11_VIEWPORT GraphicsManager::viewport() { return viewport_; }
+D3D11_VIEWPORT GraphicsContext::viewport() { return viewport_; }
 
-ComPtr<ID3D11Texture2D> GraphicsManager::float_buffer() {
+ComPtr<ID3D11Texture2D> GraphicsContext::float_buffer() {
     return float_buffer_;
 }
 
-ComPtr<ID3D11RenderTargetView> GraphicsManager::float_RTV() {
+ComPtr<ID3D11RenderTargetView> GraphicsContext::float_RTV() {
     return float_RTV_;
 }
 
-ComPtr<ID3D11RenderTargetView> GraphicsManager::resolved_RTV() {
+ComPtr<ID3D11RenderTargetView> GraphicsContext::resolved_RTV() {
     return resolved_RTV_;
 }
 
-ComPtr<ID3D11ShaderResourceView> GraphicsManager::float_SRV() {
+ComPtr<ID3D11ShaderResourceView> GraphicsContext::float_SRV() {
     return float_SRV_;
 }
 
-ComPtr<ID3D11Texture2D> GraphicsManager::resolved_buffer() {
+ComPtr<ID3D11Texture2D> GraphicsContext::resolved_buffer() {
     return resolved_buffer_;
 }
 
-ComPtr<ID3D11RenderTargetView> GraphicsManager::back_buffer_RTV() {
+ComPtr<ID3D11RenderTargetView> GraphicsContext::back_buffer_RTV() {
     return back_buffer_RTV_;
 }
-ComPtr<ID3D11ShaderResourceView> GraphicsManager::resolved_SRV() {
+ComPtr<ID3D11ShaderResourceView> GraphicsContext::resolved_SRV() {
     return resolved_SRV_;
 }
 
-ComPtr<ID3D11Texture2D> GraphicsManager::post_effects_buffer() {
+ComPtr<ID3D11Texture2D> GraphicsContext::post_effects_buffer() {
     return post_effects_buffer_;
 }
-ComPtr<ID3D11RenderTargetView> GraphicsManager::post_effects_RTV() {
+ComPtr<ID3D11RenderTargetView> GraphicsContext::post_effects_RTV() {
     return post_effects_RTV_;
 }
-ComPtr<ID3D11ShaderResourceView> GraphicsManager::post_effects_SRV() {
+ComPtr<ID3D11ShaderResourceView> GraphicsContext::post_effects_SRV() {
     return post_effects_SRV_;
 }
 
-bool GraphicsManager::Initialize() {
+bool GraphicsContext::Initialize() {
     const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
 
     UINT createDeviceFlags = 0;
@@ -132,7 +132,7 @@ bool GraphicsManager::Initialize() {
     return true;
 }
 
-bool GraphicsManager::CreateBuffer() {
+bool GraphicsContext::CreateBuffer() {
 
     // 레스터화 -> float/depthBuffer(MSAA) -> resolved -> backBuffer
 
@@ -196,7 +196,7 @@ bool GraphicsManager::CreateBuffer() {
     return true;
 }
 
-void GraphicsManager::CreateDepthBuffer(
+void GraphicsContext::CreateDepthBuffer(
     ComPtr<ID3D11Device> &device, int screenWidth, int screenHeight,
     UINT numQualityLevels, ComPtr<ID3D11DepthStencilView> &depthStencilView) {
 
@@ -227,7 +227,7 @@ void GraphicsManager::CreateDepthBuffer(
                                    depthStencilView.GetAddressOf());
 }
 
-void GraphicsManager::SetViewPort(float x, float y, float width, float height) {
+void GraphicsContext::SetViewPort(float x, float y, float width, float height) {
     // Setup the viewport for rendering.
     viewport_.Width = (float)width;
     viewport_.Height = (float)height;
@@ -240,7 +240,7 @@ void GraphicsManager::SetViewPort(float x, float y, float width, float height) {
     device_context_->RSSetViewports(1, &viewport_);
 }
 
-void GraphicsManager::BeginScene(float red, float green, float blue,
+void GraphicsContext::BeginScene(float red, float green, float blue,
                                  float alpha, bool draw_as_wire) {
     float color[4];
 
@@ -266,22 +266,22 @@ void GraphicsManager::BeginScene(float red, float green, float blue,
     device_context_->OMSetDepthStencilState(depth_stencil_state_.Get(), 0);
 
     device_context_->OMSetRenderTargets(
-        1, GraphicsManager::Instance().float_RTV().GetAddressOf(),
-        GraphicsManager::Instance().depth_stencil_view().Get());
+        1, GraphicsContext::Instance().float_RTV().GetAddressOf(),
+        GraphicsContext::Instance().depth_stencil_view().Get());
     device_context_->OMSetDepthStencilState(
-        GraphicsManager::Instance().depth_stencil_state().Get(), 0);
+        GraphicsContext::Instance().depth_stencil_state().Get(), 0);
 
     if (draw_as_wire)
         device_context_->RSSetState(
-            GraphicsManager::Instance().wire_rasterizer_state().Get());
+            GraphicsContext::Instance().wire_rasterizer_state().Get());
     else
         device_context_->RSSetState(
-            GraphicsManager::Instance().solid_rasterizer_state().Get());
+            GraphicsContext::Instance().solid_rasterizer_state().Get());
 
     return;
 }
 
-void GraphicsManager::EndScene() {
+void GraphicsContext::EndScene() {
 
     // Present the back buffer to the screen since rendering is complete.
     if (common::Env::Instance().vsync_enabled) {

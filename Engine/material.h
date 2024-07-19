@@ -1,7 +1,7 @@
 #ifndef _MATERIAL
 #define _MATERIAL
 
-#include "graphics_manager.h"
+#include "graphics_context.h"
 
 namespace dx11 {
 

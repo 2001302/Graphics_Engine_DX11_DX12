@@ -23,7 +23,7 @@ using std::shared_ptr;
 using std::vector;
 using std::wstring;
 
-class GraphicsUtil {
+class D3D11Utils {
   public:
     static void CreateVertexShaderAndInputLayout(
         ComPtr<ID3D11Device> &device, const wstring &filename,

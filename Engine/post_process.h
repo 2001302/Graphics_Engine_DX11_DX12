@@ -1,7 +1,7 @@
 #ifndef _POSTPROCESS
 #define _POSTPROCESS
 
-#include "graphics_manager.h"
+#include "graphics_context.h"
 #include "image_filter.h"
 #include "geometry_generator.h"
 #include "mesh.h"

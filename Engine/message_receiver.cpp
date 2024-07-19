@@ -11,7 +11,7 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         // retry
         input->Mouse()->Acquire();
     } else {
-        auto viewPort = GraphicsManager::Instance().viewport();
+        auto viewPort = GraphicsContext::Instance().viewport();
 
         // mouse move vector
         Vector2 vector = Vector2(-mouseState.lX, -mouseState.lY);

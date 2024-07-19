@@ -30,50 +30,50 @@ void Model::Initialize(ComPtr<ID3D11Device> &device,
     // ConstantBuffer 만들기
     m_meshConstsCPU.world = Matrix();
 
-    GraphicsUtil::CreateConstBuffer(device, m_meshConstsCPU, m_meshConstsGPU);
-    GraphicsUtil::CreateConstBuffer(device, m_materialConstsCPU,
+    D3D11Utils::CreateConstBuffer(device, m_meshConstsCPU, m_meshConstsGPU);
+    D3D11Utils::CreateConstBuffer(device, m_materialConstsCPU,
                                   m_materialConstsGPU);
 
     for (const auto &meshData : meshes) {
         auto newMesh = std::make_shared<Mesh>();
-        GraphicsUtil::CreateVertexBuffer(device, meshData.vertices,
+        D3D11Utils::CreateVertexBuffer(device, meshData.vertices,
                                        newMesh->vertexBuffer);
         newMesh->indexCount = UINT(meshData.indices.size());
         newMesh->vertexCount = UINT(meshData.vertices.size());
         newMesh->stride = UINT(sizeof(Vertex));
-        GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
+        D3D11Utils::CreateIndexBuffer(device, meshData.indices,
                                       newMesh->indexBuffer);
 
         if (!meshData.albedoTextureFilename.empty()) {
-            GraphicsUtil::CreateTexture(
+            D3D11Utils::CreateTexture(
                 device, context, meshData.albedoTextureFilename, true,
                 newMesh->albedoTexture, newMesh->albedoSRV);
             m_materialConstsCPU.useAlbedoMap = true;
         }
 
         if (!meshData.emissiveTextureFilename.empty()) {
-            GraphicsUtil::CreateTexture(
+            D3D11Utils::CreateTexture(
                 device, context, meshData.emissiveTextureFilename, true,
                 newMesh->emissiveTexture, newMesh->emissiveSRV);
             m_materialConstsCPU.useEmissiveMap = true;
         }
 
         if (!meshData.normalTextureFilename.empty()) {
-            GraphicsUtil::CreateTexture(
+            D3D11Utils::CreateTexture(
                 device, context, meshData.normalTextureFilename, false,
                 newMesh->normalTexture, newMesh->normalSRV);
             m_materialConstsCPU.useNormalMap = true;
         }
 
         if (!meshData.heightTextureFilename.empty()) {
-            GraphicsUtil::CreateTexture(
+            D3D11Utils::CreateTexture(
                 device, context, meshData.heightTextureFilename, false,
                 newMesh->heightTexture, newMesh->heightSRV);
             m_meshConstsCPU.useHeightMap = true;
         }
 
         if (!meshData.aoTextureFilename.empty()) {
-            GraphicsUtil::CreateTexture(device, context,
+            D3D11Utils::CreateTexture(device, context,
                                       meshData.aoTextureFilename, false,
                                       newMesh->aoTexture, newMesh->aoSRV);
             m_materialConstsCPU.useAOMap = true;
@@ -83,7 +83,7 @@ void Model::Initialize(ComPtr<ID3D11Device> &device,
         // Green : Roughness, Blue : Metallic(Metalness)
         if (!meshData.metallicTextureFilename.empty() ||
             !meshData.roughnessTextureFilename.empty()) {
-            GraphicsUtil::CreateMetallicRoughnessTexture(
+            D3D11Utils::CreateMetallicRoughnessTexture(
                 device, context, meshData.metallicTextureFilename,
                 meshData.roughnessTextureFilename,
                 newMesh->metallicRoughnessTexture,
@@ -108,10 +108,10 @@ void Model::Initialize(ComPtr<ID3D11Device> &device,
 void Model::UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
                                   ComPtr<ID3D11DeviceContext> &context) {
     if (m_isVisible) {
-        GraphicsUtil::UpdateBuffer(
+        D3D11Utils::UpdateBuffer(
             device, context, m_meshConstsCPU, m_meshConstsGPU);
 
-        GraphicsUtil::UpdateBuffer(
+        D3D11Utils::UpdateBuffer(
             device, context, m_materialConstsCPU,
                                  m_materialConstsGPU);
     }

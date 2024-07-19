@@ -29,10 +29,10 @@ using DirectX::SimpleMath::Vector3;
 using DirectX::SimpleMath::Vector4;
 using Microsoft::WRL::ComPtr;
 
-class GraphicsManager {
+class GraphicsContext {
   public:
-    static GraphicsManager &Instance() {
-        static GraphicsManager instance;
+    static GraphicsContext &Instance() {
+        static GraphicsContext instance;
         return instance;
     }
     bool Initialize();
@@ -70,7 +70,7 @@ class GraphicsManager {
     ComPtr<ID3D11RenderTargetView> post_effects_RTV();
     ComPtr<ID3D11ShaderResourceView> post_effects_SRV();
   private:
-    GraphicsManager()
+    GraphicsContext()
         : swap_chain_(0), device_(0), device_context_(0),
           viewport_(D3D11_VIEWPORT()) {}
 

@@ -27,13 +27,13 @@ void ImageFilter::Initialize(ComPtr<ID3D11Device> &device,
     m_constData.dx = 1.0f / width;
     m_constData.dy = 1.0f / height;
 
-    GraphicsUtil::CreateConstBuffer(device, m_constData, m_constBuffer);
+    D3D11Utils::CreateConstBuffer(device, m_constData, m_constBuffer);
 }
 
 void ImageFilter::UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
                                         ComPtr<ID3D11DeviceContext> &context) {
 
-    GraphicsUtil::UpdateBuffer(device, context, m_constData, m_constBuffer);
+    D3D11Utils::UpdateBuffer(device, context, m_constData, m_constBuffer);
 }
 
 void ImageFilter::Render(ComPtr<ID3D11DeviceContext> &context) const {

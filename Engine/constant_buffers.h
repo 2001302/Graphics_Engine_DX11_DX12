@@ -1,7 +1,7 @@
 #ifndef _CONSTANTBUFFERS
 #define _CONSTANTBUFFERS
 
-#include "graphics_manager.h"
+#include "graphics_context.h"
 
 namespace dx11 {
 using DirectX::SimpleMath::Matrix;

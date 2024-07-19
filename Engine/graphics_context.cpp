@@ -107,13 +107,13 @@ bool GraphicsContext::Initialize() {
     rastDesc.FrontCounterClockwise = false;
     rastDesc.DepthClipEnable = true;
 
-    device_->CreateRasterizerState(
-        &rastDesc, solid_rasterizer_state_.GetAddressOf());
+    ThrowIfFailed(device_->CreateRasterizerState(
+        &rastDesc, solid_rasterizer_state_.GetAddressOf()));
 
     rastDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
 
-    device_->CreateRasterizerState(
-        &rastDesc, wire_rasterizer_state_.GetAddressOf());
+    ThrowIfFailed(device_->CreateRasterizerState(
+        &rastDesc, wire_rasterizer_state_.GetAddressOf()));
 
     return true;
 }
@@ -125,14 +125,14 @@ bool GraphicsContext::CreateBuffer() {
     // BackBuffer는 화면으로 최종 출력되기 때문에  RTV만 필요하고 SRV는 불필요
     ComPtr<ID3D11Texture2D> backBuffer;
 
-    
-        swap_chain_->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf()));
-    device_->CreateRenderTargetView(
-        backBuffer.Get(), NULL, back_buffer_RTV_.GetAddressOf());
+    ThrowIfFailed(
+        swap_chain_->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf())));
+    ThrowIfFailed(device_->CreateRenderTargetView(
+        backBuffer.Get(), NULL, back_buffer_RTV_.GetAddressOf()));
 
     // FLOAT MSAA RenderTargetView/ShaderResourceView
-    device_->CheckMultisampleQualityLevels(
-        DXGI_FORMAT_R16G16B16A16_FLOAT, 4, &num_quality_levels_);
+    ThrowIfFailed(device_->CheckMultisampleQualityLevels(
+        DXGI_FORMAT_R16G16B16A16_FLOAT, 4, &num_quality_levels_));
 
     D3D11_TEXTURE2D_DESC desc;
     backBuffer->GetDesc(&desc);
@@ -150,14 +150,14 @@ bool GraphicsContext::CreateBuffer() {
         desc.SampleDesc.Quality = 0;
     }
 
-    
-        device_->CreateTexture2D(&desc, NULL, float_buffer_.GetAddressOf());
+    ThrowIfFailed(
+        device_->CreateTexture2D(&desc, NULL, float_buffer_.GetAddressOf()));
 
-    device_->CreateShaderResourceView(float_buffer_.Get(), NULL,
-                                                    float_SRV.GetAddressOf());
+    ThrowIfFailed(device_->CreateShaderResourceView(float_buffer_.Get(), NULL,
+                                                    float_SRV.GetAddressOf()));
 
-    device_->CreateRenderTargetView(float_buffer_.Get(), NULL,
-                                                  float_RTV.GetAddressOf());
+    ThrowIfFailed(device_->CreateRenderTargetView(float_buffer_.Get(), NULL,
+                                                  float_RTV.GetAddressOf()));
 
     CreateDepthBuffer(device_, common::Env::Instance().screen_width,
                       common::Env::Instance().screen_height,
@@ -167,20 +167,12 @@ bool GraphicsContext::CreateBuffer() {
     // FLOAT MSAA를 Relsolve해서 저장할 SRV/RTV
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;
-    
-        device_->CreateTexture2D(&desc, NULL, resolved_buffer_.GetAddressOf());
-    device_->CreateTexture2D(
-        &desc, NULL, post_effects_buffer_.GetAddressOf());
-
-    device_->CreateShaderResourceView(
-        resolved_buffer_.Get(), NULL, resolved_SRV_.GetAddressOf());
-    device_->CreateShaderResourceView(
-        post_effects_buffer_.Get(), NULL, post_effects_SRV.GetAddressOf());
-
-    device_->CreateRenderTargetView(resolved_buffer_.Get(), NULL,
-                                                  resolved_RTV.GetAddressOf());
-    device_->CreateRenderTargetView(
-        post_effects_buffer_.Get(), NULL, post_effects_RTV.GetAddressOf());
+    ThrowIfFailed(
+        device_->CreateTexture2D(&desc, NULL, resolved_buffer_.GetAddressOf()));
+    ThrowIfFailed(device_->CreateShaderResourceView(
+        resolved_buffer_.Get(), NULL, resolved_SRV_.GetAddressOf()));
+    ThrowIfFailed(device_->CreateRenderTargetView(resolved_buffer_.Get(), NULL,
+                                                  resolved_RTV.GetAddressOf()));
 
     return true;
 }
@@ -209,11 +201,11 @@ void GraphicsContext::CreateDepthBuffer(
 
     ComPtr<ID3D11Texture2D> depthStencilBuffer;
 
-    device->CreateTexture2D(&depthStencilBufferDesc, 0,
-                                          depthStencilBuffer.GetAddressOf());
+    ThrowIfFailed(device->CreateTexture2D(&depthStencilBufferDesc, 0,
+                                          depthStencilBuffer.GetAddressOf()));
 
-    device->CreateDepthStencilView(
-        depthStencilBuffer.Get(), 0, depthStencilView.GetAddressOf());
+    ThrowIfFailed(device->CreateDepthStencilView(
+        depthStencilBuffer.Get(), 0, depthStencilView.GetAddressOf()));
 }
 
 void GraphicsContext::SetViewPort(float x, float y, float width, float height) {

@@ -3,7 +3,7 @@
 
 #include "graphics_context.h"
 
-namespace dx11 {
+namespace common {
 
 struct Projection {
     float projection_fov_angle_y = 70.0f;

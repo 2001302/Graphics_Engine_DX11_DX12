@@ -1,6 +1,6 @@
 #include "image_filter.h"
 
-namespace dx11 {
+using namespace dx11;
 
 ImageFilter::ImageFilter(ComPtr<ID3D11Device> &device,
                          ComPtr<ID3D11DeviceContext> &context,
@@ -14,7 +14,7 @@ void ImageFilter::Initialize(ComPtr<ID3D11Device> &device,
                              ComPtr<ID3D11PixelShader> &pixelShader, int width,
                              int height) {
 
-    ThrowIfFailed(pixelShader.CopyTo(m_pixelShader.GetAddressOf()));
+    pixelShader.CopyTo(m_pixelShader.GetAddressOf());
 
     ZeroMemory(&m_viewport, sizeof(D3D11_VIEWPORT));
     m_viewport.TopLeftX = 0;
@@ -27,13 +27,13 @@ void ImageFilter::Initialize(ComPtr<ID3D11Device> &device,
     m_constData.dx = 1.0f / width;
     m_constData.dy = 1.0f / height;
 
-    D3D11Utils::CreateConstBuffer(device, m_constData, m_constBuffer);
+    CreateConstBuffer(device, m_constData, m_constBuffer);
 }
 
 void ImageFilter::UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
                                         ComPtr<ID3D11DeviceContext> &context) {
 
-    D3D11Utils::UpdateBuffer(device, context, m_constData, m_constBuffer);
+    UpdateBuffer(device, context, m_constData, m_constBuffer);
 }
 
 void ImageFilter::Render(ComPtr<ID3D11DeviceContext> &context) const {
@@ -67,4 +67,3 @@ void ImageFilter::SetRenderTargets(
         m_renderTargets.push_back(tar.Get());
     }
 }
-} // namespace hlab

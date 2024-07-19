@@ -3,6 +3,7 @@
 
 #include <cmath> //for calculate coordination
 #include <windows.h>
+#include "projection.h"
 
 const double PI = std::acos(-1);
 
@@ -28,6 +29,7 @@ struct Env {
     float screen_width;
     float screen_height;
     float aspect;
+    Projection projection;
 };
 } // namespace common
 #endif

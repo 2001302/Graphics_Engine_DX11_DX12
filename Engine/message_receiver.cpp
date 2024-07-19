@@ -72,38 +72,38 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
 bool MessageReceiver::OnWheelDragRequest(PipelineManager *manager,
                                          std::shared_ptr<Input> input,
                                          int mouseX, int mouseY) {
-    //DIMOUSESTATE mouseState;
-    //if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
-    //                                          &mouseState))) {
-    //    // retry
-    //    input->Mouse()->Acquire();
-    //} else {
+    DIMOUSESTATE mouseState;
+    if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
+                                              &mouseState))) {
+        // retry
+        input->Mouse()->Acquire();
+    } else {
 
-    //    Vector2 current = Vector2(mouseX, mouseY);
-    //    Vector2 before =
-    //        Vector2(mouseX + mouseState.lX, mouseY - mouseState.lY);
+        Vector2 current = Vector2(mouseX, mouseY);
+        Vector2 before =
+            Vector2(mouseX + mouseState.lX, mouseY - mouseState.lY);
 
-    //    Vector3 cursorNdcCurrent = Vector3(current.x, current.y, 0.0f);
-    //    Vector3 cursorNdcBefore = Vector3(before.x, before.y, 0.0f);
+        Vector3 cursorNdcCurrent = Vector3(current.x, current.y, 0.0f);
+        Vector3 cursorNdcBefore = Vector3(before.x, before.y, 0.0f);
 
-    //    auto env = common::Env::Instance();
+        auto env = common::Env::Instance();
 
-    //    auto projRow = XMMatrixPerspectiveFovLH(
-    //        XMConvertToRadians(env.projection.projection_fov_angle_y),
-    //        env.aspect, env.projection.near_z, env.projection.far_z);
+        auto projRow = XMMatrixPerspectiveFovLH(
+            XMConvertToRadians(env.projection.projection_fov_angle_y),
+            env.aspect, env.projection.near_z, env.projection.far_z);
 
-    //    Matrix inverseProjView = (manager->camera->view * projRow).Invert();
+        Matrix inverseProjView = (manager->camera->view * projRow).Invert();
 
-    //    Vector3 cursorWorldCurrent =
-    //        Vector3::Transform(cursorNdcCurrent, inverseProjView);
-    //    Vector3 cursorWorldBefore =
-    //        Vector3::Transform(cursorNdcBefore, inverseProjView);
+        Vector3 cursorWorldCurrent =
+            Vector3::Transform(cursorNdcCurrent, inverseProjView);
+        Vector3 cursorWorldBefore =
+            Vector3::Transform(cursorNdcBefore, inverseProjView);
 
-    //    auto move = cursorWorldCurrent - cursorWorldBefore;
+        auto move = cursorWorldCurrent - cursorWorldBefore;
 
-    //    manager->camera->lookAtVector += move;
-    //    manager->camera->position += move;
-    //}
+        manager->camera->lookAtVector += move;
+        manager->camera->position += move;
+    }
 
     return true;
 }

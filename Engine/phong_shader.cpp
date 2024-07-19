@@ -130,7 +130,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     // view
     {
         phong_shader_source->vertex_constant.view =
-            manager->camera->view.Transpose();
+            manager->camera->GetView().Transpose();
     }
     // inverse transpose
     {
@@ -146,12 +146,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     {
         auto env = common::Env::Instance();
         phong_shader_source->vertex_constant.projection =
-            XMMatrixPerspectiveFovLH(
-                XMConvertToRadians(env.projection.projection_fov_angle_y),
-                env.aspect, env.projection.near_z, env.projection.far_z);
-
-        phong_shader_source->vertex_constant.projection =
-            phong_shader_source->vertex_constant.projection.Transpose();
+            manager->camera->GetProjection().Transpose();
     }
 
     GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device,

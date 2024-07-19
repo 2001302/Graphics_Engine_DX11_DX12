@@ -5,27 +5,42 @@
 
 using namespace dx11;
 
+Camera::Camera() {
+    view = DirectX::SimpleMath::Matrix();
+    position = DirectX::SimpleMath::Vector3(-10.0f, 1.0f, -10.0f);
+    rotation = DirectX::SimpleMath::Vector3(0.0f, 45.0f, 0.0f);
+    upVector = DirectX::SimpleMath::Vector3(0.0f, 0.1f, 0.0f);
+    lookAtVector = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
+
+    projection_fov_angle_y = 70.0f;
+    near_z = 0.01f;
+    far_z = 100.0f;
+}
+DirectX::SimpleMath::Matrix Camera::GetView() { return view; }
+DirectX::SimpleMath::Vector3 Camera::GetPosition() { return position; }
+DirectX::SimpleMath::Vector3 Camera::GetLookAt() { return lookAtVector; }
+DirectX::SimpleMath::Matrix Camera::GetProjection() {
+    return XMMatrixPerspectiveFovLH(XMConvertToRadians(projection_fov_angle_y),
+                                    common::Env::Instance().aspect, near_z,
+                                    far_z);
+}
+
+void Camera::SetPosition(DirectX::SimpleMath::Vector3 pos) { position = pos; }
+void Camera::SetLookAt(DirectX::SimpleMath::Vector3 look) {
+    lookAtVector = look;
+}
+
 void Camera::Render() {
     float yaw, pitch, roll;
     DirectX::SimpleMath::Matrix rotationMatrix;
 
-    // Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in
     auto rot = rotation * 0.0174532925f;
     pitch = rot.x;
     yaw = rot.y;
     roll = rot.z;
 
-    // Create the rotation matrix from the yaw, pitch, and roll values.
     rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
-
-    // Transform the lookAt and up vector by the rotation matrix so the view is
-    // correctly rotated at the origin.
-    // lookAtVector = XMVector3TransformCoord(lookAtVector, rotationMatrix);
     upVector = XMVector3TransformCoord(upVector, rotationMatrix);
-
-    // Translate the rotated camera position to the location of the viewer.
-
-    // Finally create the view matrix from the three updated vectors.
     view = XMMatrixLookAtLH(position, lookAtVector, upVector);
 
     return;
@@ -37,20 +52,8 @@ EnumBehaviorTreeStatus InitializeCamera::OnInvoke() {
     auto manager = dynamic_cast<dx11::PipelineManager *>(block);
     assert(manager != nullptr);
 
-    // Create and initialize the camera object.
     manager->camera = std::make_unique<Camera>();
-
-    manager->camera->lookAtVector =
-        DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
-    manager->camera->upVector = DirectX::SimpleMath::Vector3(0.0f, 0.1f, 0.0f);
-    manager->camera->position =
-        DirectX::SimpleMath::Vector3(0.0f, 0.0f, -10.0f);
     manager->camera->Render();
-
-    // Update the position and rotation of the camera for this scene.
-    manager->camera->position =
-        DirectX::SimpleMath::Vector3(-10.0f, 1.0f, -10.0f);
-    manager->camera->rotation = DirectX::SimpleMath::Vector3(0.0f, 45.0f, 0.0f);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -61,7 +64,6 @@ EnumBehaviorTreeStatus UpdateCamera::OnInvoke() {
     auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    // Generate the view matrix based on the camera's position.
     manager->camera->Render();
 
     return EnumBehaviorTreeStatus::eSuccess;

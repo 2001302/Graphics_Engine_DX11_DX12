@@ -126,13 +126,11 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
 
     {
         cube_shader_source->vertex_constant.view =
-            manager->camera->view.Transpose();
+            manager->camera->GetView().Transpose();
 
         auto env = common::Env::Instance();
         cube_shader_source->vertex_constant.projection =
-            XMMatrixPerspectiveFovLH(
-                XMConvertToRadians(env.projection.projection_fov_angle_y),
-                env.aspect, env.projection.near_z, env.projection.far_z);
+            manager->camera->GetProjection();
 
         cube_shader_source->vertex_constant.projection =
             cube_shader_source->vertex_constant.projection.Transpose();

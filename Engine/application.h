@@ -4,6 +4,7 @@
 #include "behavior_tree.h"
 #include "direct3D.h"
 #include "geometry_generator.h"
+#include "input.h"
 #include "message.h"
 #include "message_receiver.h"
 #include "pipeline_manager.h"
@@ -22,10 +23,10 @@ class Application : public Platform {
                                     LPARAM lparam) override final;
 
   private:
-    std::shared_ptr<Input> input_;
-    std::shared_ptr<common::SettingUi> imgui_;
     std::shared_ptr<PipelineManager> manager_;
     std::unique_ptr<MessageReceiver> message_receiver_;
+    std::shared_ptr<Input> input_;
+    std::shared_ptr<common::SettingUi> imgui_;
 };
-} // namespace platform
+} // namespace dx11
 #endif

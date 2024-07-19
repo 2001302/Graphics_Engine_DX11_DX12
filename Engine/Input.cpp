@@ -12,13 +12,13 @@ Input::Input(const Input &other) {}
 
 Input::~Input() {}
 
-bool Input::Initialize(HINSTANCE hinstance, int screenWidth, int screenHeight) {
+bool Input::Initialize(HINSTANCE hinstance) {
     HRESULT result;
 
     // Store the screen size which will be used for positioning the mouse
     // cursor.
-    screen_width = screenWidth;
-    screen_height = screenHeight;
+    screen_width = common::Env::Instance().screen_width;
+    screen_height = common::Env::Instance().screen_height;
 
     // Initialize the location of the mouse on the screen.
     mouse_x = 0;

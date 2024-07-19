@@ -176,7 +176,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     // view
     {
         physically_shader_source->vertex_constant.view =
-            manager->camera->view.Transpose();
+            manager->camera->GetView().Transpose();
     }
     // inverse transpose
     {
@@ -192,12 +192,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     {
         auto env = common::Env::Instance();
         physically_shader_source->vertex_constant.projection =
-            XMMatrixPerspectiveFovLH(
-                XMConvertToRadians(env.projection.projection_fov_angle_y),
-                env.aspect, env.projection.near_z, env.projection.far_z);
-
-        physically_shader_source->vertex_constant.projection =
-            physically_shader_source->vertex_constant.projection.Transpose();
+            manager->camera->GetProjection().Transpose();
     }
 
     GraphicsUtil::UpdateBuffer(

@@ -3,27 +3,23 @@
 
 namespace dx11 {
 
-Application::Application() : imgui_(0), manager_(0) {
-    input_ = std::make_unique<Input>();
+Application::Application() {
     manager_ = std::make_shared<PipelineManager>();
     message_receiver_ = std::make_unique<MessageReceiver>();
+    input_ = std::make_unique<Input>();
     imgui_ = std::make_shared<common::SettingUi>();
 };
 
 bool Application::OnStart() {
 
     Platform::OnStart();
+    input_->Initialize(hinstance_);
+    imgui_->Initialize();
 
     std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
         {EnumDataBlockType::eManager, manager_.get()},
         {EnumDataBlockType::eGui, imgui_.get()},
     };
-
-    GraphicsManager::Instance().Initialize();
-
-    input_->Initialize(hinstance_, common::Env::Instance().screen_width,
-                       common::Env::Instance().screen_height);
-    imgui_->Initialize();
 
     // clang-format off
     auto tree = new BehaviorTreeBuilder();

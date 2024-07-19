@@ -17,7 +17,7 @@ class Input {
     Input(const Input &);
     ~Input();
 
-    bool Initialize(HINSTANCE, int, int);
+    bool Initialize(HINSTANCE);
     void Shutdown();
     bool Frame();
 

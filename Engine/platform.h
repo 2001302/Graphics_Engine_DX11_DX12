@@ -4,6 +4,7 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "env.h"
+#include "direct3d.h"
 #include <iostream>
 #include <shellscalingapi.h>
 #pragma comment(lib, "shcore.lib")
@@ -31,5 +32,5 @@ class Platform {
     LPCWSTR application_name_;
     HINSTANCE hinstance_;
 };
-} // namespace platform
+} // namespace dx11
 #endif

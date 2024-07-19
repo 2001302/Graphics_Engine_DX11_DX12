@@ -2,19 +2,19 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClInclude Include="model.h">
-      <Filter>DirectX11\Model</Filter>
+      <Filter>Engine\Model</Filter>
     </ClInclude>
     <ClInclude Include="behavior_tree.h">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
-      <Filter>DirectX11\Model</Filter>
+      <Filter>Engine\Model</Filter>
     </ClInclude>
     <ClInclude Include="shader.h">
-      <Filter>DirectX11\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </ClInclude>
     <ClInclude Include="phong_shader.h">
-      <Filter>DirectX11\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui.h">
       <Filter>Common\ImGui</Filter>
@@ -47,46 +47,46 @@
       <Filter>Common\BluePrint</Filter>
     </ClInclude>
     <ClInclude Include="cube_map.h">
-      <Filter>DirectX11\Model</Filter>
+      <Filter>Engine\Model</Filter>
     </ClInclude>
     <ClInclude Include="graph.h">
-      <Filter>DirectX11\BehaviorGraph</Filter>
+      <Filter>Engine\BehaviorGraph</Filter>
     </ClInclude>
     <ClInclude Include="cube_map_shader.h">
-      <Filter>DirectX11\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </ClInclude>
     <ClInclude Include="behavior_tree_builder.h">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="conditional_node.h">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="sequence_node.h">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="selector_node.h">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="physically_based_shader.h">
-      <Filter>DirectX11\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </ClInclude>
     <ClInclude Include="board_map.h">
-      <Filter>DirectX11\Model</Filter>
+      <Filter>Engine\Model</Filter>
     </ClInclude>
     <ClInclude Include="image_filter.h">
-      <Filter>DirectX11\Model</Filter>
+      <Filter>Engine\Model</Filter>
     </ClInclude>
     <ClInclude Include="image_fliter_shader.h">
-      <Filter>DirectX11\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </ClInclude>
     <ClInclude Include="parallel_node.h">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="message_receiver.h">
-      <Filter>DirectX11</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
-      <Filter>DirectX11</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="node_ui.h">
       <Filter>Common\BluePrint</Filter>
@@ -104,28 +104,25 @@
       <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="pipeline_manager.h">
-      <Filter>DirectX11</Filter>
-    </ClInclude>
-    <ClInclude Include="direct3D.h">
-      <Filter>DirectX11</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="geometry_generator.h">
-      <Filter>DirectX11</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="model_loader.h">
-      <Filter>DirectX11</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
-      <Filter>DirectX11\Data</Filter>
+      <Filter>Engine\Data</Filter>
     </ClInclude>
     <ClInclude Include="bone.h">
-      <Filter>DirectX11\Data</Filter>
+      <Filter>Engine\Data</Filter>
     </ClInclude>
     <ClInclude Include="vertex.h">
-      <Filter>DirectX11\Data</Filter>
+      <Filter>Engine\Data</Filter>
     </ClInclude>
     <ClInclude Include="material.h">
-      <Filter>DirectX11\Data</Filter>
+      <Filter>Engine\Data</Filter>
     </ClInclude>
     <ClInclude Include="message.h">
       <Filter>Common</Filter>
@@ -158,25 +155,25 @@
       <Filter>Common\ImGui\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="light.h">
-      <Filter>DirectX11\Model</Filter>
+      <Filter>Engine\Model</Filter>
     </ClInclude>
-    <ClInclude Include="projection.h">
-      <Filter>DirectX11\Data</Filter>
+    <ClInclude Include="direct3D.h">
+      <Filter>Engine\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp">
-      <Filter>DirectX11\Model</Filter>
+      <Filter>Engine\Model</Filter>
     </ClCompile>
     <ClCompile Include="behavior_tree.cpp">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
-      <Filter>DirectX11\Model</Filter>
+      <Filter>Engine\Model</Filter>
     </ClCompile>
     <ClCompile Include="phong_shader.cpp">
-      <Filter>DirectX11\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>Common\ImGui</Filter>
@@ -206,46 +203,46 @@
       <Filter>Common\BluePrint</Filter>
     </ClCompile>
     <ClCompile Include="cube_map.cpp">
-      <Filter>DirectX11\Model</Filter>
+      <Filter>Engine\Model</Filter>
     </ClCompile>
     <ClCompile Include="graph.cpp">
-      <Filter>DirectX11\BehaviorGraph</Filter>
+      <Filter>Engine\BehaviorGraph</Filter>
     </ClCompile>
     <ClCompile Include="cube_map_shader.cpp">
-      <Filter>DirectX11\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </ClCompile>
     <ClCompile Include="conditional_node.cpp">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="sequence_node.cpp">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="behavior_tree_builder.cpp">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="selector_node.cpp">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="physically_based_shader.cpp">
-      <Filter>DirectX11\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </ClCompile>
     <ClCompile Include="board_map.cpp">
-      <Filter>DirectX11\Model</Filter>
+      <Filter>Engine\Model</Filter>
     </ClCompile>
     <ClCompile Include="image_filter.cpp">
-      <Filter>DirectX11\Model</Filter>
+      <Filter>Engine\Model</Filter>
     </ClCompile>
     <ClCompile Include="image_fliter_shader.cpp">
-      <Filter>DirectX11\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </ClCompile>
     <ClCompile Include="parallel_node.cpp">
-      <Filter>DirectX11\BehaviorTree</Filter>
+      <Filter>Engine\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="message_receiver.cpp">
-      <Filter>DirectX11</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="input.cpp">
-      <Filter>DirectX11</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="id_generator.cpp">
       <Filter>Common</Filter>
@@ -253,14 +250,11 @@
     <ClCompile Include="entity.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="direct3D.cpp">
-      <Filter>DirectX11</Filter>
-    </ClCompile>
     <ClCompile Include="geometry_generator.cpp">
-      <Filter>DirectX11</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="model_loader.cpp">
-      <Filter>DirectX11</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="application.cpp">
       <Filter>Platform</Filter>
@@ -283,6 +277,9 @@
     <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp">
       <Filter>Common\ImGui\NodeEditor</Filter>
     </ClCompile>
+    <ClCompile Include="direct3D.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Platform">
@@ -300,44 +297,47 @@
     <Filter Include="Common\ImGui">
       <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="DirectX11">
-      <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX11\Shader">
-      <UniqueIdentifier>{75d77732-7f85-4c0a-b799-392f4e62111e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX11\Shader\HLSL">
-      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX11\BehaviorGraph">
-      <UniqueIdentifier>{dd885491-628a-4699-bf68-ccd7e4610344}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX11\BehaviorTree">
-      <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX11\Model">
-      <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="DirectX11\Data">
-      <UniqueIdentifier>{3fc71904-4c1d-43d0-b771-a258e5fba9b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\ImGui\NodeEditor">
       <UniqueIdentifier>{30855cc5-8d09-42a4-bb3c-c5aea4725478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shader">
+      <UniqueIdentifier>{75d77732-7f85-4c0a-b799-392f4e62111e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Shader\HLSL">
+      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\BehaviorGraph">
+      <UniqueIdentifier>{dd885491-628a-4699-bf68-ccd7e4610344}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\BehaviorTree">
+      <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Model">
+      <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Data">
+      <UniqueIdentifier>{3fc71904-4c1d-43d0-b771-a258e5fba9b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics">
+      <UniqueIdentifier>{1a58e045-98f9-419c-972d-1f2ad2b6a109}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="common.hlsli">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </None>
     <None Include="ImGui\config.h.in">
       <Filter>Common\ImGui</Filter>
     </None>
     <None Include="packages.config" />
     <None Include="physically_common.hlsli">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </None>
     <None Include="ground.hlslI">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </None>
     <None Include="ImGui\NodeEditor\imgui_node_editor_internal.inl">
       <Filter>Common\ImGui\NodeEditor</Filter>
@@ -351,43 +351,43 @@
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="phong_vertex_shader.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="phong_pixel_shader.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="cube_mapping_vertex_shader.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="cube_mapping_pixel_shader.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="physically_based_vertex_shader.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="physically_based_pixel_shader.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="combine_ps.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="bloom_up_ps.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="bloom_down_ps.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="sampling_vs.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="sampling_ps.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="ground_vs.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="ground_ps.hlsl">
-      <Filter>DirectX11\Shader\HLSL</Filter>
+      <Filter>Engine\Shader\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -7,7 +7,9 @@ namespace dx11 {
 /// </summary>
 static Platform *g_system = nullptr;
 
-Platform::Platform() : application_name_(0), hinstance_(0) { g_system = this; }
+Platform::Platform() : application_name_(0), hinstance_(0) {
+    g_system = this;
+}
 
 Platform::~Platform() {}
 
@@ -134,5 +136,8 @@ bool Platform::InitializeWindow() {
     UpdateWindow(common::Env::Instance().main_window);
 }
 
-bool Platform::InitializeDirectX() { return true; }
-} // namespace platform
+bool Platform::InitializeDirectX() {
+    GraphicsManager::Instance().Initialize();
+    return true;
+}
+} // namespace dx11

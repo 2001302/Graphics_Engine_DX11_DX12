@@ -180,7 +180,6 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="message_receiver.h" />
-    <ClInclude Include="projection.h" />
     <ClInclude Include="setting_ui.h" />
     <ClInclude Include="selector_node.h" />
     <ClInclude Include="sequence_node.h" />

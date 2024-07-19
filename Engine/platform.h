@@ -8,7 +8,7 @@
 #include <shellscalingapi.h>
 #pragma comment(lib, "shcore.lib")
 
-namespace platform {
+namespace dx11 {
 class Platform {
   public:
     Platform();
@@ -22,6 +22,10 @@ class Platform {
                                             WPARAM wparam, LPARAM lparam) {
         return 0;
     };
+
+  private:
+    bool InitializeWindow();
+    bool InitializeDirectX();
 
   protected:
     LPCWSTR application_name_;

@@ -1,12 +1,12 @@
 #include "application.h"
 #include "behavior_tree_builder.h"
 
-namespace platform {
+namespace dx11 {
 
 Application::Application() : imgui_(0), manager_(0) {
-    input_ = std::make_unique<dx11::Input>();
-    manager_ = std::make_shared<dx11::PipelineManager>();
-    message_receiver_ = std::make_unique<dx11::MessageReceiver>();
+    input_ = std::make_unique<Input>();
+    manager_ = std::make_shared<PipelineManager>();
+    message_receiver_ = std::make_unique<MessageReceiver>();
     imgui_ = std::make_shared<common::SettingUi>();
 };
 
@@ -14,26 +14,26 @@ bool Application::OnStart() {
 
     Platform::OnStart();
 
-    std::map<dx11::EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {dx11::EnumDataBlockType::eManager, manager_.get()},
-        {dx11::EnumDataBlockType::eGui, imgui_.get()},
+    std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
+        {EnumDataBlockType::eManager, manager_.get()},
+        {EnumDataBlockType::eGui, imgui_.get()},
     };
 
-    dx11::GraphicsContext::Instance().Initialize();
+    GraphicsContext::Instance().Initialize();
 
     input_->Initialize(hinstance_, common::Env::Instance().screen_width,
                        common::Env::Instance().screen_height);
     imgui_->Initialize();
 
     // clang-format off
-    auto tree = new dx11::BehaviorTreeBuilder();
+    auto tree = new BehaviorTreeBuilder();
     tree->Build(dataBlock)
         ->Sequence()
-            ->Excute(std::make_shared<dx11::InitializeBoardMap>())
-            ->Excute(std::make_shared<dx11::InitializeCamera>())
-            ->Excute(std::make_shared<dx11::InitializeCubeMapShader>())
-            ->Excute(std::make_shared<dx11::InitializePhongShader>())
-            ->Excute(std::make_shared<dx11::InitializePhysicallyBasedShader>())
+            ->Excute(std::make_shared<InitializeBoardMap>())
+            ->Excute(std::make_shared<InitializeCamera>())
+            ->Excute(std::make_shared<InitializeCubeMapShader>())
+            ->Excute(std::make_shared<InitializePhongShader>())
+            ->Excute(std::make_shared<InitializePhysicallyBasedShader>())
         ->Close()
     ->Run();
     // clang-format on
@@ -45,14 +45,14 @@ bool Application::OnStart() {
 
 bool Application::OnFrame() {
 
-    std::map<dx11::EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {dx11::EnumDataBlockType::eManager, manager_.get()},
-        {dx11::EnumDataBlockType::eGui, imgui_.get()},
+    std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
+        {EnumDataBlockType::eManager, manager_.get()},
+        {EnumDataBlockType::eGui, imgui_.get()},
     };
 
     // Clear the buffers to begin the scene.
-    dx11::GraphicsContext::Instance().BeginScene(
-        0.0f, 0.0f, 0.0f, 1.0f, imgui_->Tab().common.draw_as_wire_);
+    GraphicsContext::Instance().BeginScene(0.0f, 0.0f, 0.0f, 1.0f,
+                                           imgui_->Tab().common.draw_as_wire_);
 
     // clang-format off
 
@@ -60,30 +60,30 @@ bool Application::OnFrame() {
         imgui_->PushNode(manager_->models[imgui_->SelectedId()]); 
     }
 
-    auto tree = std::make_unique<dx11::BehaviorTreeBuilder>();
+    auto tree = std::make_unique<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
-    ->Excute(std::make_shared<dx11::UpdateCamera>())
+    ->Excute(std::make_shared<UpdateCamera>())
     ->Parallel(manager_->models)
         ->Selector()
             ->Sequence()
-                ->Excute(std::make_shared<dx11::CheckPhongShader>())
-                ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingPhongShader>())
-                ->Excute(std::make_shared<dx11::RenderGameObjectsUsingPhongShader>())
+                ->Excute(std::make_shared<CheckPhongShader>())
+                ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
+                ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
             ->Close()
             ->Sequence()
-                ->Excute(std::make_shared<dx11::CheckPhysicallyBasedShader>())
-                ->Excute(std::make_shared<dx11::UpdateGameObjectsUsingPhysicallyBasedShader>())
-                ->Excute(std::make_shared<dx11::RenderGameObjectsUsingPhysicallyBasedShader>())
+                ->Excute(std::make_shared<CheckPhysicallyBasedShader>())
+                ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
+                ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
             ->Close()
         ->Close()
     ->Close()
-    ->Conditional(std::make_shared<dx11::CheckCubeMapShader>())
+    ->Conditional(std::make_shared<CheckCubeMapShader>())
         ->Sequence()
-            ->Excute(std::make_shared<dx11::UpdateCubeMap>())
-            ->Excute(std::make_shared<dx11::RenderCubeMap>())
+            ->Excute(std::make_shared<UpdateCubeMap>())
+            ->Excute(std::make_shared<RenderCubeMap>())
         ->Close()
     ->End()
-    ->Excute(std::make_shared<dx11::RenderBoardMap>())
+    ->Excute(std::make_shared<RenderBoardMap>())
     ->Run();
     // clang-format on
 
@@ -99,7 +99,7 @@ bool Application::OnFrame() {
     imgui_->ClearNode();
 
     // Present the rendered scene to the screen.
-    dx11::GraphicsContext::Instance().EndScene();
+    GraphicsContext::Instance().EndScene();
 
     return true;
 }
@@ -130,7 +130,7 @@ bool Application::OnStop() {
 
 bool CheckIfMouseInViewport() {
     auto cursor = ImGui::GetMousePos();
-    auto view_port = dx11::GraphicsContext::Instance().viewport();
+    auto view_port = GraphicsContext::Instance().viewport();
     if (view_port.TopLeftX < cursor.x && view_port.TopLeftY < cursor.y &&
         cursor.x < view_port.TopLeftX + view_port.Width &&
         cursor.y < view_port.TopLeftY + view_port.Height) {
@@ -192,7 +192,7 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
         break;
     }
     case WM_SIZE: {
-        if (dx11::GraphicsContext::Instance().swap_chain()) {
+        if (GraphicsContext::Instance().swap_chain()) {
 
             imgui_->Shutdown();
 
@@ -202,14 +202,14 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
                 (float)common::Env::Instance().screen_width /
                 (float)common::Env::Instance().screen_height;
 
-            dx11::GraphicsContext::Instance().back_buffer_RTV().Reset();
-            dx11::GraphicsContext::Instance().swap_chain()->ResizeBuffers(
+            GraphicsContext::Instance().back_buffer_RTV().Reset();
+            GraphicsContext::Instance().swap_chain()->ResizeBuffers(
                 0, (UINT)LOWORD(lparam), (UINT)HIWORD(lparam),
                 DXGI_FORMAT_UNKNOWN, 0);
 
-            dx11::GraphicsContext::Instance().CreateBuffer();
+            GraphicsContext::Instance().CreateBuffer();
 
-            dx11::GraphicsContext::Instance().SetViewPort(
+            GraphicsContext::Instance().SetViewPort(
                 0.0f, 0.0f, (float)common::Env::Instance().screen_width,
                 (float)common::Env::Instance().screen_height);
 
@@ -223,4 +223,4 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
     }
     }
 }
-} // namespace platform
+} // namespace dx11

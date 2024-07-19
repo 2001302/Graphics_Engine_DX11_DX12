@@ -1,6 +1,6 @@
 #include "platform.h"
 
-namespace platform {
+namespace dx11 {
 
 /// <summary>
 /// NOTE : Global
@@ -29,61 +29,8 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam,
 }
 
 bool Platform::OnStart() {
-
-    SetProcessDpiAwareness(PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE);
-
-    hinstance_ = GetModuleHandle(NULL);
-
-    WNDCLASSEX wc = {sizeof(WNDCLASSEX),
-                     CS_CLASSDC,
-                     WndProc,
-                     0L,
-                     0L,
-                     hinstance_,
-                     NULL,
-                     NULL,
-                     NULL,
-                     NULL,
-                     L"Engine", // lpszClassName, L-string
-                     NULL};
-
-    // The RegisterClass function has been superseded by the RegisterClassEx
-    // function.
-    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassa?redirectedfrom=MSDN
-    if (!RegisterClassEx(&wc)) {
-        std::cout << "RegisterClassEx() failed." << std::endl;
-        return false;
-    }
-
-    // 툴바까지 포함한 윈도우 전체 해상도가 아니라
-    // 우리가 실제로 그리는 해상도가 width x height가 되도록
-    // 윈도우를 만들 해상도를 다시 계산해서 CreateWindow()에서 사용
-
-    // 우리가 원하는 그림이 그려질 부분의 해상도
-    RECT wr = {0, 0, common::Env::Instance().screen_width,
-               common::Env::Instance().screen_height};
-
-    // 필요한 윈도우 크기(해상도) 계산
-    // wr의 값이 바뀜
-    AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
-
-    // 윈도우를 만들때 위에서 계산한 wr 사용
-    common::Env::Instance().main_window =
-        CreateWindow(wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW,
-                     10,                 // 윈도우 좌측 상단의 x 좌표
-                     10,                 // 윈도우 좌측 상단의 y 좌표
-                     wr.right - wr.left, // 윈도우 가로 방향 해상도
-                     wr.bottom - wr.top, // 윈도우 세로 방향 해상도
-                     NULL, NULL, wc.hInstance, NULL);
-
-    if (!common::Env::Instance().main_window) {
-        std::cout << "CreateWindow() failed." << std::endl;
-        return false;
-    }
-
-    ShowWindow(common::Env::Instance().main_window, SW_SHOWDEFAULT);
-    UpdateWindow(common::Env::Instance().main_window);
-
+    InitializeWindow();
+    InitializeDirectX();
     return true;
 }
 
@@ -138,4 +85,54 @@ bool Platform::OnStop() {
     g_system = NULL;
     return true;
 }
+
+bool Platform::InitializeWindow() {
+    SetProcessDpiAwareness(PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE);
+
+    hinstance_ = GetModuleHandle(NULL);
+
+    WNDCLASSEX wc = {sizeof(WNDCLASSEX),
+                     CS_CLASSDC,
+                     WndProc,
+                     0L,
+                     0L,
+                     hinstance_,
+                     NULL,
+                     NULL,
+                     NULL,
+                     NULL,
+                     L"Engine", // lpszClassName, L-string
+                     NULL};
+
+    // The RegisterClass function has been superseded by the RegisterClassEx
+    // function.
+    // https://learn.microsoft.com/en-us/windows/win32/api/winuser/nf-winuser-registerclassa?redirectedfrom=MSDN
+    if (!RegisterClassEx(&wc)) {
+        std::cout << "RegisterClassEx() failed." << std::endl;
+        return false;
+    }
+
+    RECT wr = {0, 0, common::Env::Instance().screen_width,
+               common::Env::Instance().screen_height};
+
+    AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
+
+    common::Env::Instance().main_window =
+        CreateWindow(wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW,
+                     10,                 // 윈도우 좌측 상단의 x 좌표
+                     10,                 // 윈도우 좌측 상단의 y 좌표
+                     wr.right - wr.left, // 윈도우 가로 방향 해상도
+                     wr.bottom - wr.top, // 윈도우 세로 방향 해상도
+                     NULL, NULL, wc.hInstance, NULL);
+
+    if (!common::Env::Instance().main_window) {
+        std::cout << "CreateWindow() failed." << std::endl;
+        return false;
+    }
+
+    ShowWindow(common::Env::Instance().main_window, SW_SHOWDEFAULT);
+    UpdateWindow(common::Env::Instance().main_window);
+}
+
+bool Platform::InitializeDirectX() { return true; }
 } // namespace platform

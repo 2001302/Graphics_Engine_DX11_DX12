@@ -11,7 +11,7 @@
 #include "resource_helper.h"
 #include "setting_ui.h"
 
-namespace platform {
+namespace dx11 {
 class Application : public Platform {
   public:
     Application();
@@ -23,10 +23,10 @@ class Application : public Platform {
                                     LPARAM lparam) override final;
 
   private:
-    std::shared_ptr<dx11::Input> input_;
+    std::shared_ptr<Input> input_;
     std::shared_ptr<common::SettingUi> imgui_;
-    std::shared_ptr<dx11::PipelineManager> manager_;
-    std::unique_ptr<dx11::MessageReceiver> message_receiver_;
+    std::shared_ptr<PipelineManager> manager_;
+    std::unique_ptr<MessageReceiver> message_receiver_;
 };
 } // namespace platform
 #endif

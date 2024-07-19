@@ -1,6 +1,6 @@
 #include "graph.h"
 
-using namespace dx11;
+namespace engine {
 
 void Graph::Invoke() {}
 
@@ -11,3 +11,4 @@ void Graph::SetDetailNode(std::shared_ptr<GraphNode> node) {
 }
 
 std::shared_ptr<GraphNode> Graph::GetDetailNode() const { return detail_node_; }
+} // namespace engine

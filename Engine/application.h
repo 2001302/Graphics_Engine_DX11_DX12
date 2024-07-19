@@ -2,8 +2,8 @@
 #define _APPLICATION
 
 #include "behavior_tree.h"
-#include "direct3D.h"
 #include "geometry_generator.h"
+#include "graphics_manager.h"
 #include "input.h"
 #include "message.h"
 #include "message_receiver.h"
@@ -11,7 +11,7 @@
 #include "platform.h"
 #include "setting_ui.h"
 
-namespace dx11 {
+namespace engine {
 class Application : public Platform {
   public:
     Application();
@@ -28,5 +28,5 @@ class Application : public Platform {
     std::shared_ptr<Input> input_;
     std::shared_ptr<common::SettingUi> imgui_;
 };
-} // namespace dx11
+} // namespace engine
 #endif

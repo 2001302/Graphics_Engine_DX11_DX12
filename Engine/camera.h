@@ -2,11 +2,11 @@
 #define CAMERA
 
 #include "behavior_tree_builder.h"
-#include "direct3d.h"
+#include "graphics_manager.h"
 #include "env.h"
 #include "node_ui.h"
 
-namespace dx11 {
+namespace engine {
 class Camera : public common::INodeUi {
   public:
     Camera();

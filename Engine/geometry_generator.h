@@ -3,11 +3,11 @@
 
 #include "board_map.h"
 #include "cube_map.h"
-#include "direct3D.h"
+#include "graphics_manager.h"
 #include "model.h"
 #include "model_loader.h"
 
-namespace dx11 {
+namespace engine {
 class GeometryGenerator {
 
   public:

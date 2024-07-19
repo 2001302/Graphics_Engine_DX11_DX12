@@ -1,6 +1,6 @@
 #include "selector_node.H"
 
-using namespace dx11;
+namespace engine {
 
 EnumBehaviorTreeStatus SelectorNode::OnInvoke() {
     for (auto &child : child_nodes) {
@@ -9,3 +9,4 @@ EnumBehaviorTreeStatus SelectorNode::OnInvoke() {
     }
     return EnumBehaviorTreeStatus::eFail;
 }
+} // namespace engine

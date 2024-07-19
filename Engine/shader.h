@@ -1,14 +1,14 @@
 #ifndef _IShader
 #define _IShader
 
-#include "direct3D.h"
+#include "graphics_manager.h"
 #include "light.h"
 #include "material.h"
 #include <map>
 
 #define MAX_LIGHTS 3
 
-namespace dx11 {
+namespace engine {
 
 enum EnumShaderType {
     ePhong = 0,

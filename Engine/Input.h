@@ -6,11 +6,11 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#include "direct3D.h"
+#include "graphics_manager.h"
 #include "env.h"
 #include <dinput.h>
 
-namespace dx11 {
+namespace engine {
 class Input {
   public:
     Input();

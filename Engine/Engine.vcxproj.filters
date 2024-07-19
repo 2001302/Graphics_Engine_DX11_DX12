@@ -157,7 +157,10 @@
     <ClInclude Include="light.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
-    <ClInclude Include="direct3D.h">
+    <ClInclude Include="graphics_manager.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_util.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
   </ItemGroup>
@@ -277,7 +280,10 @@
     <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp">
       <Filter>Common\ImGui\NodeEditor</Filter>
     </ClCompile>
-    <ClCompile Include="direct3D.cpp">
+    <ClCompile Include="graphics_manager.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics_util.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
   </ItemGroup>

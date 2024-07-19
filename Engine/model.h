@@ -7,7 +7,7 @@
 #include "phong_shader.h"
 #include "physically_based_shader.h"
 
-namespace dx11 {
+namespace engine {
 using Microsoft::WRL::ComPtr;
 
 enum EnumRenderMode { eLight = 0, ePhysicallyBasedRendering = 1 };

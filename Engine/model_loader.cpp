@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <vector>
 
-using namespace dx11;
+namespace engine {
 using namespace DirectX::SimpleMath;
 
 void ModelLoader::Load(std::string basePath, std::string filename) {
@@ -199,3 +199,4 @@ std::string ModelLoader::ReadFilename(aiMaterial *material,
         return "";
     }
 }
+} // namespace engine

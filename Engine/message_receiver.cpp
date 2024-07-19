@@ -1,6 +1,6 @@
 #include "message_receiver.h"
 
-using namespace dx11;
+namespace engine {
 using namespace DirectX::SimpleMath;
 
 bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
@@ -40,7 +40,6 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         if (0.0f < phi && phi < PI)
             manager->camera->SetPosition(
                 Vector3(origin_prime.x, origin_prime.y, origin_prime.z));
-                
     }
 
     return true;
@@ -156,13 +155,13 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
                 ZeroMemory(&bufferDesc, sizeof(bufferDesc));
                 bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
                 bufferDesc.ByteWidth =
-                    sizeof(dx11::Vertex) *
+                    sizeof(engine::Vertex) *
                     meshData->vertices
                         .size(); // UINT(sizeof(T_VERTEX) * vertices.size());
                 bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
                 bufferDesc.CPUAccessFlags =
                     0; // 0 if no CPU access is necessary.
-                bufferDesc.StructureByteStride = sizeof(dx11::Vertex);
+                bufferDesc.StructureByteStride = sizeof(engine::Vertex);
                 bufferDesc.MiscFlags = 0;
 
                 D3D11_SUBRESOURCE_DATA vertexBufferData = {
@@ -297,12 +296,12 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
             ZeroMemory(&bufferDesc, sizeof(bufferDesc));
             bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
             bufferDesc.ByteWidth =
-                sizeof(dx11::Vertex) *
+                sizeof(engine::Vertex) *
                 mesh->vertices
                     .size(); // UINT(sizeof(T_VERTEX) * vertices.size());
             bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
             bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-            bufferDesc.StructureByteStride = sizeof(dx11::Vertex);
+            bufferDesc.StructureByteStride = sizeof(engine::Vertex);
             bufferDesc.MiscFlags = 0;
 
             D3D11_SUBRESOURCE_DATA vertexBufferData = {
@@ -361,12 +360,12 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
             ZeroMemory(&bufferDesc, sizeof(bufferDesc));
             bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
             bufferDesc.ByteWidth =
-                sizeof(dx11::Vertex) *
+                sizeof(engine::Vertex) *
                 mesh->vertices
                     .size(); // UINT(sizeof(T_VERTEX) * vertices.size());
             bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
             bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-            bufferDesc.StructureByteStride = sizeof(dx11::Vertex);
+            bufferDesc.StructureByteStride = sizeof(engine::Vertex);
             bufferDesc.MiscFlags = 0;
 
             D3D11_SUBRESOURCE_DATA vertexBufferData = {
@@ -425,12 +424,12 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
             ZeroMemory(&bufferDesc, sizeof(bufferDesc));
             bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
             bufferDesc.ByteWidth =
-                sizeof(dx11::Vertex) *
+                sizeof(engine::Vertex) *
                 mesh->vertices
                     .size(); // UINT(sizeof(T_VERTEX) * vertices.size());
             bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
             bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-            bufferDesc.StructureByteStride = sizeof(dx11::Vertex);
+            bufferDesc.StructureByteStride = sizeof(engine::Vertex);
             bufferDesc.MiscFlags = 0;
 
             D3D11_SUBRESOURCE_DATA vertexBufferData = {
@@ -467,3 +466,4 @@ bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
     return true;
 }
+} // namespace engine

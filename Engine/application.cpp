@@ -1,7 +1,7 @@
 #include "application.h"
 #include "behavior_tree_builder.h"
 
-namespace dx11 {
+namespace engine {
 
 Application::Application() {
     manager_ = std::make_shared<PipelineManager>();
@@ -218,4 +218,4 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
     }
     }
 }
-} // namespace dx11
+} // namespace engine

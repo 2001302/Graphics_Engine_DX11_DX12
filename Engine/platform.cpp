@@ -1,6 +1,6 @@
 #include "platform.h"
 
-namespace dx11 {
+namespace engine {
 
 /// <summary>
 /// NOTE : Global

@@ -1,6 +1,6 @@
 #include "input.h"
 
-using namespace dx11;
+namespace engine {
 
 Input::Input() {
     direct_input_ = 0;
@@ -236,3 +236,4 @@ void Input::Shutdown() {
 
     return;
 }
+} // namespace engine

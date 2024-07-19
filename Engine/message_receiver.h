@@ -5,7 +5,7 @@
 #include "input.h"
 #include "pipeline_manager.h"
 
-namespace dx11 {
+namespace engine {
 class MessageReceiver {
   public:
     bool OnModelLoadRequest(PipelineManager *manager, HWND main_window);

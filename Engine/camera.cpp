@@ -3,7 +3,7 @@
 #include "pipeline_manager.h"
 #include "setting_ui.h"
 
-using namespace dx11;
+namespace engine {
 
 Camera::Camera() {
     view = DirectX::SimpleMath::Matrix();
@@ -49,7 +49,7 @@ void Camera::Render() {
 EnumBehaviorTreeStatus InitializeCamera::OnInvoke() {
     auto block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
+    auto manager = dynamic_cast<engine::PipelineManager *>(block);
     assert(manager != nullptr);
 
     manager->camera = std::make_unique<Camera>();
@@ -61,10 +61,11 @@ EnumBehaviorTreeStatus InitializeCamera::OnInvoke() {
 EnumBehaviorTreeStatus UpdateCamera::OnInvoke() {
     auto managerBlock = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
     manager->camera->Render();
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
+} // namespace engine

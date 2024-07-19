@@ -3,12 +3,12 @@
 #include "pipeline_manager.h"
 #include "setting_ui.h"
 
-using namespace dx11;
+namespace engine {
 
 EnumBehaviorTreeStatus InitializeBoardMap::OnInvoke() {
     auto block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
+    auto manager = dynamic_cast<engine::PipelineManager *>(block);
     assert(manager != nullptr);
 
     auto device = GraphicsManager::Instance().device;
@@ -29,7 +29,7 @@ EnumBehaviorTreeStatus RenderBoardMap::OnInvoke() {
     auto managerBlock = data_block[EnumDataBlockType::eManager];
     auto guiBlock = data_block[EnumDataBlockType::eGui];
 
-    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
     GraphicsManager::Instance().device_context->ResolveSubresource(
@@ -42,3 +42,4 @@ EnumBehaviorTreeStatus RenderBoardMap::OnInvoke() {
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
+} // namespace engine

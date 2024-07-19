@@ -1,10 +1,10 @@
 #ifndef _MESH
 #define _MESH
 
-#include "direct3D.h"
+#include "graphics_manager.h"
 #include "vertex.h"
 
-namespace dx11 {
+namespace engine {
 
 struct Mesh {
     std::string name;

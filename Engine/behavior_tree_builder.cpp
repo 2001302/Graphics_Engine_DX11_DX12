@@ -1,6 +1,6 @@
 #include "behavior_tree_builder.h"
 
-using namespace dx11;
+namespace engine {
 
 BehaviorTreeBuilder *
 BehaviorTreeBuilder::Excute(std::shared_ptr<BehaviorActionNode> node) {
@@ -57,3 +57,4 @@ BehaviorTreeBuilder::Parallel(std::map<int, common::INodeUi *> target_objects) {
 
     return this;
 }
+} // namespace engine

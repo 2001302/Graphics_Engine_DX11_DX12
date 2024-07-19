@@ -1,9 +1,9 @@
 #ifndef _BONE
 #define _BONE
 
-#include "direct3D.h"
+#include "graphics_manager.h"
 
-namespace dx11 {
+namespace engine {
 
 struct Bone {
     int index;

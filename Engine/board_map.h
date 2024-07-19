@@ -1,12 +1,12 @@
 #ifndef _POSTPROCESS
 #define _POSTPROCESS
 
-#include "direct3D.h"
+#include "graphics_manager.h"
 #include "image_filter.h"
 #include "image_fliter_shader.h"
 #include "mesh.h"
 
-namespace dx11 {
+namespace engine {
 
 using DirectX::SimpleMath::Vector4;
 using Microsoft::WRL::ComPtr;

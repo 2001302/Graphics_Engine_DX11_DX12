@@ -5,7 +5,7 @@
 #include "node_ui.h"
 #include "mesh.h"
 
-namespace dx11 {
+namespace engine {
 using Microsoft::WRL::ComPtr;
 
 class CubeMap : public common::INodeUi {

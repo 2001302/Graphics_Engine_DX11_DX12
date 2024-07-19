@@ -5,10 +5,10 @@
 #include "camera.h"
 #include "cube_map.h"
 #include "dataBlock.h"
-#include "direct3D.h"
+#include "graphics_manager.h"
 #include "model.h"
 
-namespace dx11 {
+namespace engine {
 /// <summary>
 /// Rendering에 필요한 shared object의 집합.
 /// </summary>

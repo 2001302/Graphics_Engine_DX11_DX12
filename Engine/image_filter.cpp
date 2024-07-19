@@ -1,6 +1,6 @@
 #include "image_filter.h"
 
-using namespace dx11;
+namespace engine {
 
 ImageFilter::ImageFilter(ComPtr<ID3D11Device> &device,
                          ComPtr<ID3D11DeviceContext> &context,
@@ -67,3 +67,4 @@ void ImageFilter::SetRenderTargets(
         m_renderTargets.push_back(tar.Get());
     }
 }
+} // namespace engine

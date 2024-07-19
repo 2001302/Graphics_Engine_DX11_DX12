@@ -1,6 +1,6 @@
 #include "behavior_tree.h"
 
-using namespace dx11;
+namespace engine {
 
 EnumBehaviorTreeStatus BehaviorActionNode::Invoke() {
     if (parent_node)
@@ -28,3 +28,4 @@ void BehaviorActionNode::Dispose() {
         child.reset();
     }
 };
+} // namespace engine

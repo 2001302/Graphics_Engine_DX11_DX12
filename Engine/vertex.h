@@ -1,9 +1,9 @@
 #ifndef _VERTEX
 #define _VERTEX
 
-#include "direct3D.h"
+#include "graphics_manager.h"
 
-namespace dx11 {
+namespace engine {
 
 struct Vertex {
     Vector3 position;

@@ -7,7 +7,7 @@
 #include <map>
 #include <vector>
 
-namespace dx11 {
+namespace engine {
 enum EnumDataBlockType {
     eManager = 0,
     eGui = 1,
@@ -43,7 +43,7 @@ class BehaviorActionNode : public IDisposable {
     BehaviorActionNode *parent_node;
     std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
     std::map<EnumDataBlockType, common::IDataBlock *> data_block;
-    common::INodeUi* target_object;
+    common::INodeUi *target_object;
 };
-} // namespace dx11
+} // namespace engine
 #endif

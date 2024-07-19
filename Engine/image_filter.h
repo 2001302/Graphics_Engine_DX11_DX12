@@ -1,10 +1,10 @@
 #ifndef _IMAGEFILTER
 #define _IMAGEFILTER
 
-#include "direct3D.h"
+#include "graphics_manager.h"
 #include "entity.h"
 
-namespace dx11 {
+namespace engine {
 
 using DirectX::SimpleMath::Vector4;
 using Microsoft::WRL::ComPtr;

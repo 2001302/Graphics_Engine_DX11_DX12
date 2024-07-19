@@ -1,9 +1,9 @@
 #ifndef _LIGHT
 #define _LIGHT
 
-#include "direct3D.h"
+#include "graphics_manager.h"
 
-namespace dx11 {
+namespace engine {
 
 struct Light {
     Vector3 strength = Vector3(1.0f);              // 12

@@ -3,7 +3,7 @@
 #include "pipeline_manager.h"
 #include "setting_ui.h"
 
-using namespace dx11;
+namespace engine {
 
 void PhsicallyBasedShader::PhsicallyBasedConstantBufferData::InitializeThis() {
     vertex_constant.modelWorld = Matrix();
@@ -83,7 +83,7 @@ EnumBehaviorTreeStatus CheckPhysicallyBasedShader::OnInvoke() {
 EnumBehaviorTreeStatus InitializePhysicallyBasedShader::OnInvoke() {
     auto block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
+    auto manager = dynamic_cast<engine::PipelineManager *>(block);
     assert(manager != nullptr);
 
     // Create and initialize the light shader object.
@@ -139,7 +139,7 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto managerBlock = data_block[EnumDataBlockType::eManager];
     auto guiBlock = data_block[EnumDataBlockType::eGui];
 
-    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
@@ -241,7 +241,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     auto managerBlock = data_block[EnumDataBlockType::eManager];
     auto guiBlock = data_block[EnumDataBlockType::eGui];
 
-    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
@@ -319,3 +319,4 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
+} // namespace engine

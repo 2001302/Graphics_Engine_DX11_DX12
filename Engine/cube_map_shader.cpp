@@ -3,7 +3,7 @@
 #include "pipeline_manager.h"
 #include "setting_ui.h"
 
-using namespace dx11;
+namespace engine {
 
 void CubeMapShaderSource::InitializeThis() {
     vertex_constant.model = Matrix();
@@ -19,7 +19,7 @@ void CubeMapShaderSource::InitializeThis() {
 EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     auto block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
+    auto manager = dynamic_cast<engine::PipelineManager *>(block);
     assert(manager != nullptr);
 
     auto cube_map = std::make_shared<CubeMap>();
@@ -87,7 +87,7 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
 EnumBehaviorTreeStatus CheckCubeMapShader::CheckCondition() {
     auto block = data_block[EnumDataBlockType::eManager];
 
-    auto manager = dynamic_cast<dx11::PipelineManager *>(block);
+    auto manager = dynamic_cast<engine::PipelineManager *>(block);
     assert(manager != nullptr);
 
     auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
@@ -110,7 +110,7 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     auto managerBlock = data_block[EnumDataBlockType::eManager];
     auto guiBlock = data_block[EnumDataBlockType::eGui];
 
-    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
@@ -153,7 +153,7 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     auto managerBlock = data_block[EnumDataBlockType::eManager];
     auto guiBlock = data_block[EnumDataBlockType::eGui];
 
-    auto manager = dynamic_cast<dx11::PipelineManager *>(managerBlock);
+    auto manager = dynamic_cast<engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
@@ -196,3 +196,4 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
+} // namespace engine

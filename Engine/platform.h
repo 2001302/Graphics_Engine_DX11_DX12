@@ -4,12 +4,12 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "env.h"
-#include "direct3d.h"
+#include "graphics_manager.h"
 #include <iostream>
 #include <shellscalingapi.h>
 #pragma comment(lib, "shcore.lib")
 
-namespace dx11 {
+namespace engine {
 class Platform {
   public:
     Platform();

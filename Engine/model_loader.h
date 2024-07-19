@@ -8,7 +8,7 @@
 #include <string>
 #include <vector>
 
-namespace dx11 {
+namespace engine {
 
 using namespace DirectX::SimpleMath;
 

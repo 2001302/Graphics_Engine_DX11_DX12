@@ -17,7 +17,7 @@ struct CommonSetting {
 
 struct LightSetting {
     int light_type;
-    dx11::Light light_from_gui;
+    engine::Light light_from_gui;
 };
 
 struct CubeMapSetting {

@@ -1,9 +1,9 @@
 #ifndef _MATERIAL
 #define _MATERIAL
 
-#include "direct3D.h"
+#include "graphics_manager.h"
 
-namespace dx11 {
+namespace engine {
 
 struct Material {
     Vector3 ambient = Vector3(0.1f);  // 12

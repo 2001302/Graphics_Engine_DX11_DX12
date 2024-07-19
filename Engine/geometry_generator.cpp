@@ -1,6 +1,6 @@
 #include "geometry_generator.h"
 
-using namespace dx11;
+namespace engine {
 
 Model *GeometryGenerator::MakeSphere(Model *gameObject, const float radius,
                                      const int numSlices, const int numStacks) {
@@ -531,9 +531,8 @@ BoardMap *GeometryGenerator::MakeSquare(BoardMap *postProcess,
 }
 
 Model *GeometryGenerator::MakeSquareGrid(Model *ground, const int numSlices,
-                                          const int numStacks,
-                                          const float scale,
-                                          const Vector2 texScale) {
+                                         const int numStacks, const float scale,
+                                         const Vector2 texScale) {
     auto mesh = std::make_shared<Mesh>();
 
     float dx = 2.0f / numSlices;
@@ -570,3 +569,4 @@ Model *GeometryGenerator::MakeSquareGrid(Model *ground, const int numSlices,
     ground->meshes.push_back(mesh);
     return ground;
 }
+} // namespace engine

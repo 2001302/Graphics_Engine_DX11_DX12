@@ -7,7 +7,7 @@
 
 using namespace DirectX;
 
-namespace dx11 {
+namespace engine {
 
 /// <summary>
 /// 공유되어 사용되는 Phong Shader

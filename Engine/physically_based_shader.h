@@ -7,7 +7,7 @@
 
 using namespace DirectX;
 
-namespace dx11 {
+namespace engine {
 
 struct PhsicallyBasedShader : public IShader {
     struct PhysicallyMatrial {

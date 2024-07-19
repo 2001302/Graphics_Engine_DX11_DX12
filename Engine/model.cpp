@@ -3,7 +3,7 @@
 
 #include "model.h"
 
-using namespace dx11;
+namespace engine {
 
 Model::Model() {}
 
@@ -33,3 +33,4 @@ void Model::OnShow() {
         render_mode = EnumRenderMode::ePhysicallyBasedRendering;
     }
 }
+} // namespace engine

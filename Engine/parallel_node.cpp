@@ -1,6 +1,6 @@
 #include "parallel_node.h"
 
-using namespace dx11;
+namespace engine {
 
 EnumBehaviorTreeStatus ParallelNode::OnInvoke() {
     for (auto id : target_objects) {
@@ -12,3 +12,4 @@ EnumBehaviorTreeStatus ParallelNode::OnInvoke() {
     }
     return EnumBehaviorTreeStatus::eSuccess;
 }
+} // namespace engine

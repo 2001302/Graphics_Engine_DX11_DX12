@@ -1,8 +1,9 @@
 #include "conditional_node.h"
 
-using namespace dx11;
+namespace engine {
 
 // check condition
 EnumBehaviorTreeStatus ConditionalNode::CheckCondition() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
+} // namespace engine

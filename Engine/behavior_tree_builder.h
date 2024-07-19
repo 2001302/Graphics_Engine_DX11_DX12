@@ -7,7 +7,7 @@
 #include "selector_node.h"
 #include "sequence_node.h"
 
-namespace dx11 {
+namespace engine {
 
 class BehaviorTreeBuilder {
   public:
@@ -35,5 +35,5 @@ class BehaviorTreeBuilder {
     BehaviorActionNode *current;
     EnumConditionalStatus conditional_status;
 };
-} // namespace dx11
+} // namespace engine
 #endif

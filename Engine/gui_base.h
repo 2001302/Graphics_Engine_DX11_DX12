@@ -2,7 +2,7 @@
 #define _BASEGUI
 
 #include "dataBlock.h"
-#include "direct3D.h"
+#include "graphics_manager.h"
 #include "node_ui.h"
 
 namespace common {

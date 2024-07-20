@@ -145,6 +145,8 @@
     <ClInclude Include="constant_buffer.h" />
     <ClInclude Include="cube_map_shader.h" />
     <ClInclude Include="graph.h" />
+    <ClInclude Include="graphics_common.h" />
+    <ClInclude Include="graphics_pso.h" />
     <ClInclude Include="graphics_util.h" />
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="image_fliter_shader.h" />
@@ -198,6 +200,8 @@
     <ClCompile Include="conditional_node.cpp" />
     <ClCompile Include="cube_map_shader.cpp" />
     <ClCompile Include="graph.cpp" />
+    <ClCompile Include="graphics_common.cpp" />
+    <ClCompile Include="graphics_pso.cpp" />
     <ClCompile Include="graphics_util.cpp" />
     <ClCompile Include="image_filter.cpp" />
     <ClCompile Include="image_fliter_shader.cpp" />

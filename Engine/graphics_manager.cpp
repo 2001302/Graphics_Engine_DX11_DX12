@@ -60,6 +60,8 @@ bool GraphicsManager::Initialize() {
     ThrowIfFailed(device->CreateRasterizerState(
         &rastDesc, wire_rasterizer_state.GetAddressOf()));
 
+    //Graphics::InitCommonStates(device);
+
     return true;
 }
 

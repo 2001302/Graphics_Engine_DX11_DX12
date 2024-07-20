@@ -160,6 +160,12 @@
     <ClInclude Include="constant_buffer.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
+    <ClInclude Include="graphics_pso.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_common.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -279,6 +285,12 @@
     </ClCompile>
     <ClCompile Include="entity.cpp">
       <Filter>Common\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics_pso.cpp">
+      <Filter>Engine\Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics_common.cpp">
+      <Filter>Engine\Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -9,6 +9,7 @@
 #define LIGHT_SHADOW 0x10
 
 #include "graphics_util.h"
+#include "graphics_common.h"
 
 namespace engine {
 class GraphicsManager {

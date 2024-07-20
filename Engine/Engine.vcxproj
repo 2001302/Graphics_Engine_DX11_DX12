@@ -164,7 +164,6 @@
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="message.h" />
-    <ClInclude Include="cube_map.h" />
     <ClInclude Include="graphics_manager.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
@@ -212,7 +211,6 @@
     <ClCompile Include="board_map.cpp" />
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />
-    <ClCompile Include="cube_map.cpp" />
     <ClCompile Include="graphics_manager.cpp" />
     <ClCompile Include="gui_base.cpp" />
     <ClCompile Include="entity.cpp" />

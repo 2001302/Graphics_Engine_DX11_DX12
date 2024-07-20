@@ -10,6 +10,7 @@
 #include "pipeline_manager.h"
 #include "platform.h"
 #include "setting_ui.h"
+#include "cube_map_shader.h"
 
 namespace engine {
 class Application : public Platform {

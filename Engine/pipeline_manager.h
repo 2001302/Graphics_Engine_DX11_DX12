@@ -3,7 +3,6 @@
 
 #include "board_map.h"
 #include "camera.h"
-#include "cube_map.h"
 #include "dataBlock.h"
 #include "graphics_manager.h"
 #include "model.h"

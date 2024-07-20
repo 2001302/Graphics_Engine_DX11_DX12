@@ -266,9 +266,6 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     unsigned int stride = sizeof(Vertex);
     unsigned int offset = 0;
 
-    auto cube_map = dynamic_cast<CubeMap *>(manager->skybox.get());
-    assert(cube_map != nullptr);
-
     for (const auto &mesh : model->meshes) {
 
         // VertexShader에서도 Texture 사용
@@ -288,9 +285,9 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         context->PSSetShader(physically_shader->pixel_shader.Get(), 0, 0);
 
         std::vector<ID3D11ShaderResourceView *> resViews = {
-            cube_map->texture->specular_SRV.Get(),
-            cube_map->texture->irradiance_SRV.Get(),
-            cube_map->texture->brdf_SRV.Get(),
+            manager->m_specularSRV.Get(),
+            manager->m_irradianceSRV.Get(),
+            manager->m_brdfSRV.Get(),
             mesh->albedoSRV.Get(),
             mesh->normalSRV.Get(),
             mesh->aoSRV.Get(),

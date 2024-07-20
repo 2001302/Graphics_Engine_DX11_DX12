@@ -46,9 +46,6 @@
     <ClInclude Include="setting_ui.h">
       <Filter>Common\BluePrint</Filter>
     </ClInclude>
-    <ClInclude Include="cube_map.h">
-      <Filter>Engine\Model</Filter>
-    </ClInclude>
     <ClInclude Include="graph.h">
       <Filter>Engine\BehaviorGraph</Filter>
     </ClInclude>
@@ -204,9 +201,6 @@
     </ClCompile>
     <ClCompile Include="setting_ui.cpp">
       <Filter>Common\BluePrint</Filter>
-    </ClCompile>
-    <ClCompile Include="cube_map.cpp">
-      <Filter>Engine\Model</Filter>
     </ClCompile>
     <ClCompile Include="graph.cpp">
       <Filter>Engine\BehaviorGraph</Filter>

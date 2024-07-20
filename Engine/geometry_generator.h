@@ -2,7 +2,6 @@
 #define _GEOMETRYGENERATOR
 
 #include "board_map.h"
-#include "cube_map.h"
 #include "graphics_manager.h"
 #include "model.h"
 #include "model_loader.h"

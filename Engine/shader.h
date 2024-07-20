@@ -2,11 +2,9 @@
 #define _IShader
 
 #include "graphics_manager.h"
-#include "light.h"
 #include "material.h"
+#include "constant_buffer.h"
 #include <map>
-
-#define MAX_LIGHTS 3
 
 namespace engine {
 

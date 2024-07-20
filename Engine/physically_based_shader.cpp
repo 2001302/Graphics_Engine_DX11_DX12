@@ -216,18 +216,18 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     //        gui->Tab().pbr.metallic;
     //}
     // light
-    {
-        for (int i = 0; i < MAX_LIGHTS; i++) {
-            if (i != gui->Tab().light.light_type) {
-                physically_shader_source->pixel_constant.lights[i].strength *=
-                    0.0f;
-            } else {
-                // turn off another light
-                physically_shader_source->pixel_constant.lights[i] =
-                    gui->Tab().light.light_from_gui;
-            }
-        }
-    }
+    //{
+    //    for (int i = 0; i < MAX_LIGHTS; i++) {
+    //        if (i != gui->Tab().light.light_type) {
+    //            physically_shader_source->pixel_constant.lights[i].strength *=
+    //                0.0f;
+    //        } else {
+    //            // turn off another light
+    //            physically_shader_source->pixel_constant.lights[i] =
+    //                gui->Tab().light.light_from_gui;
+    //        }
+    //    }
+    //}
 
     GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device,
                                GraphicsManager::Instance().device_context,
@@ -266,7 +266,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
     unsigned int stride = sizeof(Vertex);
     unsigned int offset = 0;
 
-    auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
+    auto cube_map = dynamic_cast<CubeMap *>(manager->skybox.get());
     assert(cube_map != nullptr);
 
     for (const auto &mesh : model->meshes) {

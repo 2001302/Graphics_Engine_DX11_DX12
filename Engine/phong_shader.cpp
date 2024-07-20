@@ -169,17 +169,17 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
     //        detail->shininess;
     //}
     // light
-    {
-        for (int i = 0; i < MAX_LIGHTS; i++) {
-            if (i != gui->Tab().light.light_type) {
-                phong_shader_source->pixel_constant.lights[i].strength *= 0.0f;
-            } else {
-                // turn off another light
-                phong_shader_source->pixel_constant.lights[i] =
-                    gui->Tab().light.light_from_gui;
-            }
-        }
-    }
+    //{
+    //    for (int i = 0; i < MAX_LIGHTS; i++) {
+    //        if (i != gui->Tab().light.light_type) {
+    //            phong_shader_source->pixel_constant.lights[i].strength *= 0.0f;
+    //        } else {
+    //            // turn off another light
+    //            phong_shader_source->pixel_constant.lights[i] =
+    //                gui->Tab().light.light_from_gui;
+    //        }
+    //    }
+    //}
 
     // phong_shader_source->pixel_constant_buffer_data.useTexture =
     //     detail->use_texture;
@@ -231,7 +231,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     context->PSSetShader(phong_shader->pixel_shader.Get(), NULL, 0);
     context->IASetInputLayout(phong_shader->layout.Get());
 
-    auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
+    auto cube_map = dynamic_cast<CubeMap *>(manager->skybox.get());
     assert(cube_map != nullptr);
 
     for (const auto &mesh : model->meshes) {

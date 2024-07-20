@@ -24,7 +24,7 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
 
     auto cube_map = std::make_shared<CubeMap>();
     cube_map->texture = std::make_shared<CubeMap::CubeTexture>();
-    manager->cube_map = cube_map;
+    manager->skybox = cube_map;
 
     //auto mesh_data = GeometryGenerator::MakeBox();
     //auto cube_map = std::make_shared<CubeMap>(GraphicsManager::Instance().device,
@@ -95,7 +95,7 @@ EnumBehaviorTreeStatus CheckCubeMapShader::CheckCondition() {
     auto manager = dynamic_cast<engine::PipelineManager *>(block);
     assert(manager != nullptr);
 
-    auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
+    auto cube_map = dynamic_cast<CubeMap *>(manager->skybox.get());
     assert(cube_map != nullptr);
 
     auto shader = manager->shaders[EnumShaderType::eCube];
@@ -121,7 +121,7 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     auto gui = dynamic_cast<common::SettingUi *>(guiBlock);
     assert(gui != nullptr);
 
-    auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
+    auto cube_map = dynamic_cast<CubeMap *>(manager->skybox.get());
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
     auto cube_shader_source = dynamic_cast<CubeMapShaderSource *>(
         cube_map_shader->source[cube_map->GetEntityId()].get());
@@ -165,7 +165,7 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     assert(gui != nullptr);
 
     auto context = GraphicsManager::Instance().device_context;
-    auto cube_map = dynamic_cast<CubeMap *>(manager->cube_map.get());
+    auto cube_map = dynamic_cast<CubeMap *>(manager->skybox.get());
     auto cube_map_shader = manager->shaders[EnumShaderType::eCube];
     auto cube_shader_source = dynamic_cast<CubeMapShaderSource *>(
         cube_map_shader->source[cube_map->GetEntityId()].get());

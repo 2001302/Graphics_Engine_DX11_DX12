@@ -139,9 +139,6 @@
     <ClInclude Include="ImGui\NodeEditor\imgui_extra_math.h">
       <Filter>Common\ImGui\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="light.h">
-      <Filter>Engine\Model</Filter>
-    </ClInclude>
     <ClInclude Include="graphics_manager.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
@@ -162,6 +159,9 @@
     </ClInclude>
     <ClInclude Include="dataBlock.h">
       <Filter>Common\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="constant_buffer.h">
+      <Filter>Engine\Data</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

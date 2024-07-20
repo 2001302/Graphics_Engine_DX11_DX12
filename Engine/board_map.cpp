@@ -10,11 +10,13 @@ void BoardMap::Initialize(
 
     image_filter_shader = std::make_shared<ImageFilterShader>();
 
-    GraphicsUtil::CreateVertexBuffer(GraphicsManager::Instance().device,
-                                     m_mesh->vertices, m_mesh->vertexBuffer);
-    // m_mesh->m_indexCount = UINT(m_mesh->indices.size());
-    GraphicsUtil::CreateIndexBuffer(GraphicsManager::Instance().device,
-                                    m_mesh->indices, m_mesh->indexBuffer);
+    MeshData meshData = GeometryGenerator::MakeSquare();
+    m_mesh = std::make_shared<Mesh>();
+    GraphicsUtil::CreateVertexBuffer(device, meshData.vertices,
+                                     m_mesh->vertexBuffer);
+    m_mesh->indexCount = UINT(meshData.indices.size());
+    GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
+                                    m_mesh->indexBuffer);
 
     std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
@@ -137,7 +139,7 @@ void BoardMap::Render(ComPtr<ID3D11DeviceContext> &context) {
 void BoardMap::RenderImageFilter(ComPtr<ID3D11DeviceContext> &context,
                                  const ImageFilter &imageFilter) {
     imageFilter.Render(context);
-    context->DrawIndexed(UINT(m_mesh->indices.size()), 0, 0);
+    context->DrawIndexed(UINT(m_mesh->indexCount), 0, 0);
 }
 
 void BoardMap::CreateBuffer(ComPtr<ID3D11Device> &device,

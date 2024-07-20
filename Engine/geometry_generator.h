@@ -14,22 +14,25 @@ class GeometryGenerator {
     GeometryGenerator(){};
     ~GeometryGenerator(){};
 
-    static CubeMap *MakeBox(CubeMap *gameObject);
-    static CubeMap *MakeSphere(CubeMap *gameObject, const float radius,
-                               const int numSlices, const int numStacks);
-    static Model *MakeSphere(Model *gameObject, const float radius,
-                             const int numSlices, const int numStacks);
-    static Model *MakeBox(Model *gameObject);
-    static Model *MakeCylinder(Model *gameObject, const float bottomRadius,
-                               const float topRadius, float height,
-                               int numSlices);
-    static BoardMap *MakeSquare(BoardMap *board, const float scale = 1.0f,
-                                const Vector2 texScale = Vector2(1.0f));
-    static Model *ReadFromFile(Model *gameObject, std::string basePath,
-                               std::string filename);
-    static Model *MakeSquareGrid(Model *ground, const int numSlices,
-                                  const int numStacks, const float scale,
-                                  const Vector2 texScale);
+    static std::vector<MeshData> ReadFromFile(std::string basePath,
+                                         std::string filename,
+                                         bool revertNormals = false);
+
+    static MeshData MakeSquare(const float scale = 1.0f,
+                               const Vector2 texScale = Vector2(1.0f));
+    static MeshData MakeSquareGrid(const int numSlices, const int numStacks,
+                                   const float scale = 1.0f,
+                                   const Vector2 texScale = Vector2(1.0f));
+    static MeshData MakeBox(const float scale = 1.0f);
+    static MeshData MakeCylinder(const float bottomRadius,
+                                 const float topRadius, float height,
+                                 int numSlices);
+    static MeshData MakeSphere(const float radius, const int numSlices,
+                               const int numStacks,
+                               const Vector2 texScale = Vector2(1.0f));
+    static MeshData MakeTetrahedron();
+    static MeshData MakeIcosahedron();
+    static MeshData SubdivideToSphere(const float radius, MeshData meshData);
 };
 } // namespace dx11
 #endif

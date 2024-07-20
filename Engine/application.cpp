@@ -72,12 +72,12 @@ bool Application::OnFrame() {
             ->Close()
         ->Close()
     ->Close()
-    ->Conditional(std::make_shared<CheckCubeMapShader>())
-        ->Sequence()
-            ->Excute(std::make_shared<UpdateCubeMap>())
-            ->Excute(std::make_shared<RenderCubeMap>())
-        ->Close()
-    ->End()
+    //->Conditional(std::make_shared<CheckCubeMapShader>())
+    //    ->Sequence()
+    //        ->Excute(std::make_shared<UpdateCubeMap>())
+    //        ->Excute(std::make_shared<RenderCubeMap>())
+    //    ->Close()
+    //->End()
     ->Excute(std::make_shared<RenderBoardMap>())
     ->Run();
     // clang-format on

@@ -23,63 +23,68 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
     assert(manager != nullptr);
 
     auto cube_map = std::make_shared<CubeMap>();
-    manager->cube_map = cube_map;
-    GeometryGenerator::MakeBox(cube_map.get());
-
-    auto cube_map_shader = std::make_shared<CubeMapShader>();
-    manager->shaders[EnumShaderType::eCube] = cube_map_shader;
-
     cube_map->texture = std::make_shared<CubeMap::CubeTexture>();
+    manager->cube_map = cube_map;
 
-    std::reverse(cube_map->mesh->indices.begin(),
-                 cube_map->mesh->indices.end());
+    //auto mesh_data = GeometryGenerator::MakeBox();
+    //auto cube_map = std::make_shared<CubeMap>(GraphicsManager::Instance().device,
+    //    GraphicsManager::Instance().device_context, std::vector{mesh_data});
+    //manager->cube_map = cube_map;
 
-    auto envFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
-    auto specularFilename =
-        L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
-    auto irradianceFilename =
-        L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
-    auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
+    //auto cube_map_shader = std::make_shared<CubeMapShader>();
+    //manager->shaders[EnumShaderType::eCube] = cube_map_shader;
 
-    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                   envFilename, true,
-                                   cube_map->texture->env_SRV);
-    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                   specularFilename, true,
-                                   cube_map->texture->specular_SRV);
-    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                   irradianceFilename, true,
-                                   cube_map->texture->irradiance_SRV);
-    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                   brdfFilename, true,
-                                   cube_map->texture->brdf_SRV);
+    //cube_map->texture = std::make_shared<CubeMap::CubeTexture>();
 
-    GraphicsUtil::CreateVertexBuffer(GraphicsManager::Instance().device,
-                                     cube_map->mesh->vertices,
-                                     cube_map->mesh->vertexBuffer);
-    GraphicsUtil::CreateIndexBuffer(GraphicsManager::Instance().device,
-                                    cube_map->mesh->indices,
-                                    cube_map->mesh->indexBuffer);
+    //std::reverse(cube_map->mesh->indices.begin(),
+    //             cube_map->mesh->indices.end());
 
-    std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
-        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
-         D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,
-         D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24,
-         D3D11_INPUT_PER_VERTEX_DATA, 0},
-        {"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32,
-         D3D11_INPUT_PER_VERTEX_DATA, 0},
-    };
+    //auto envFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
+    //auto specularFilename =
+    //    L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
+    //auto irradianceFilename =
+    //    L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
+    //auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-    GraphicsUtil::CreateVertexShaderAndInputLayout(
-        GraphicsManager::Instance().device, L"cube_mapping_vertex_shader.hlsl",
-        basicInputElements, cube_map_shader->vertex_shader,
-        cube_map_shader->layout);
+    //GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+    //                               envFilename, true,
+    //                               cube_map->texture->env_SRV);
+    //GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+    //                               specularFilename, true,
+    //                               cube_map->texture->specular_SRV);
+    //GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+    //                               irradianceFilename, true,
+    //                               cube_map->texture->irradiance_SRV);
+    //GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+    //                               brdfFilename, true,
+    //                               cube_map->texture->brdf_SRV);
 
-    GraphicsUtil::CreatePixelShader(GraphicsManager::Instance().device,
-                                    L"cube_mapping_pixel_shader.hlsl",
-                                    cube_map_shader->pixel_shader);
+    ////GraphicsUtil::CreateVertexBuffer(GraphicsManager::Instance().device,
+    ////                                 cube_map->mesh->vertices,
+    ////                                 cube_map->mesh->vertexBuffer);
+    ////GraphicsUtil::CreateIndexBuffer(GraphicsManager::Instance().device,
+    ////                                cube_map->mesh->indices,
+    ////                                cube_map->mesh->indexBuffer);
+
+    //std::vector<D3D11_INPUT_ELEMENT_DESC> basicInputElements = {
+    //    {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+    //     D3D11_INPUT_PER_VERTEX_DATA, 0},
+    //    {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,
+    //     D3D11_INPUT_PER_VERTEX_DATA, 0},
+    //    {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24,
+    //     D3D11_INPUT_PER_VERTEX_DATA, 0},
+    //    {"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32,
+    //     D3D11_INPUT_PER_VERTEX_DATA, 0},
+    //};
+
+    //GraphicsUtil::CreateVertexShaderAndInputLayout(
+    //    GraphicsManager::Instance().device, L"cube_mapping_vertex_shader.hlsl",
+    //    basicInputElements, cube_map_shader->vertex_shader,
+    //    cube_map_shader->layout);
+
+    //GraphicsUtil::CreatePixelShader(GraphicsManager::Instance().device,
+    //                                L"cube_mapping_pixel_shader.hlsl",
+    //                                cube_map_shader->pixel_shader);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -192,7 +197,7 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     context->PSSetShader(cube_map_shader->pixel_shader.Get(), 0, 0);
     context->PSSetSamplers(0, 1, cube_map_shader->sample_state.GetAddressOf());
 
-    context->DrawIndexed(cube_map->GetIndexCount(), 0, 0);
+    context->DrawIndexed(cube_map->mesh->indexCount, 0, 0);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }

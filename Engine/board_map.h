@@ -5,6 +5,7 @@
 #include "image_filter.h"
 #include "image_fliter_shader.h"
 #include "mesh.h"
+#include "geometry_generator.h"
 
 namespace engine {
 

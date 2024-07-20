@@ -144,130 +144,130 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
         std::string fileName = fullPath.substr(lastSlash + 1);
         std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
-        auto model = new Model();
-        manager->models[model->GetEntityId()] = model;
-        GeometryGenerator::ReadFromFile(model, directoryPath, fileName);
-        model->SetName(fileName);
+        // auto model = new Model();
+        // manager->models[model->GetEntityId()] = model;
+        // GeometryGenerator::ReadFromFile(model, directoryPath, fileName);
+        // model->SetName(fileName);
 
-        for (const auto &meshData : model->meshes) {
-            {
-                D3D11_BUFFER_DESC bufferDesc;
-                ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-                bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-                bufferDesc.ByteWidth =
-                    sizeof(engine::Vertex) *
-                    meshData->vertices
-                        .size(); // UINT(sizeof(T_VERTEX) * vertices.size());
-                bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-                bufferDesc.CPUAccessFlags =
-                    0; // 0 if no CPU access is necessary.
-                bufferDesc.StructureByteStride = sizeof(engine::Vertex);
-                bufferDesc.MiscFlags = 0;
+        // for (const auto &meshData : model->meshes) {
+        //     {
+        //         D3D11_BUFFER_DESC bufferDesc;
+        //         ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+        //         bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+        //         bufferDesc.ByteWidth =
+        //             sizeof(engine::Vertex) *
+        //             meshData->vertices
+        //                 .size(); // UINT(sizeof(T_VERTEX) * vertices.size());
+        //         bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+        //         bufferDesc.CPUAccessFlags =
+        //             0; // 0 if no CPU access is necessary.
+        //         bufferDesc.StructureByteStride = sizeof(engine::Vertex);
+        //         bufferDesc.MiscFlags = 0;
 
-                D3D11_SUBRESOURCE_DATA vertexBufferData = {
-                    0}; // MS 예제에서 초기화하는 방식
-                vertexBufferData.pSysMem = meshData->vertices.data();
-                vertexBufferData.SysMemPitch = 0;
-                vertexBufferData.SysMemSlicePitch = 0;
+        //        D3D11_SUBRESOURCE_DATA vertexBufferData = {
+        //            0}; // MS 예제에서 초기화하는 방식
+        //        vertexBufferData.pSysMem = meshData->vertices.data();
+        //        vertexBufferData.SysMemPitch = 0;
+        //        vertexBufferData.SysMemSlicePitch = 0;
 
-                const HRESULT hr =
-                    GraphicsManager::Instance().device->CreateBuffer(
-                        &bufferDesc, &vertexBufferData,
-                        &meshData->vertexBuffer);
-                if (FAILED(hr)) {
-                    std::cout << "CreateBuffer() failed. " << std::hex << hr
-                              << std::endl;
-                };
-            }
-            {
-                D3D11_BUFFER_DESC bufferDesc;
-                bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-                bufferDesc.ByteWidth =
-                    sizeof(unsigned long) * meshData->indices.size();
-                bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-                bufferDesc.CPUAccessFlags =
-                    0; // 0 if no CPU access is necessary.
-                bufferDesc.StructureByteStride = sizeof(int);
-                bufferDesc.MiscFlags = 0;
+        //        const HRESULT hr =
+        //            GraphicsManager::Instance().device->CreateBuffer(
+        //                &bufferDesc, &vertexBufferData,
+        //                &meshData->vertexBuffer);
+        //        if (FAILED(hr)) {
+        //            std::cout << "CreateBuffer() failed. " << std::hex << hr
+        //                      << std::endl;
+        //        };
+        //    }
+        //    {
+        //        D3D11_BUFFER_DESC bufferDesc;
+        //        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+        //        bufferDesc.ByteWidth =
+        //            sizeof(unsigned long) * meshData->indices.size();
+        //        bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+        //        bufferDesc.CPUAccessFlags =
+        //            0; // 0 if no CPU access is necessary.
+        //        bufferDesc.StructureByteStride = sizeof(int);
+        //        bufferDesc.MiscFlags = 0;
 
-                D3D11_SUBRESOURCE_DATA indexBufferData = {0};
-                indexBufferData.pSysMem = meshData->indices.data();
-                indexBufferData.SysMemPitch = 0;
-                indexBufferData.SysMemSlicePitch = 0;
+        //        D3D11_SUBRESOURCE_DATA indexBufferData = {0};
+        //        indexBufferData.pSysMem = meshData->indices.data();
+        //        indexBufferData.SysMemPitch = 0;
+        //        indexBufferData.SysMemSlicePitch = 0;
 
-                GraphicsManager::Instance().device->CreateBuffer(
-                    &bufferDesc, &indexBufferData, &meshData->indexBuffer);
-            }
+        //        GraphicsManager::Instance().device->CreateBuffer(
+        //            &bufferDesc, &indexBufferData, &meshData->indexBuffer);
+        //    }
 
-            if (!meshData->textureFilename.empty()) {
+        //    if (!meshData->textureFilename.empty()) {
 
-                std::cout << meshData->textureFilename << std::endl;
+        //        std::cout << meshData->textureFilename << std::endl;
 
-                GraphicsUtil::CreateTexture(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context,
-                    meshData->textureFilename, true, meshData->texture,
-                    meshData->textureResourceView);
-            }
+        //        GraphicsUtil::CreateTexture(
+        //            GraphicsManager::Instance().device,
+        //            GraphicsManager::Instance().device_context,
+        //            meshData->textureFilename, true, meshData->texture,
+        //            meshData->textureResourceView);
+        //    }
 
-            if (!meshData->albedoTextureFilename.empty()) {
+        //    if (!meshData->albedoTextureFilename.empty()) {
 
-                GraphicsUtil::CreateTexture(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context,
-                    meshData->textureFilename, true, meshData->texture,
-                    meshData->textureResourceView);
-            }
+        //        GraphicsUtil::CreateTexture(
+        //            GraphicsManager::Instance().device,
+        //            GraphicsManager::Instance().device_context,
+        //            meshData->textureFilename, true, meshData->texture,
+        //            meshData->textureResourceView);
+        //    }
 
-            if (!meshData->emissiveTextureFilename.empty()) {
+        //    if (!meshData->emissiveTextureFilename.empty()) {
 
-                GraphicsUtil::CreateTexture(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context,
-                    meshData->emissiveTextureFilename, true,
-                    meshData->emissiveTexture, meshData->emissiveSRV);
-            }
+        //        GraphicsUtil::CreateTexture(
+        //            GraphicsManager::Instance().device,
+        //            GraphicsManager::Instance().device_context,
+        //            meshData->emissiveTextureFilename, true,
+        //            meshData->emissiveTexture, meshData->emissiveSRV);
+        //    }
 
-            if (!meshData->normalTextureFilename.empty()) {
-                GraphicsUtil::CreateTexture(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context,
-                    meshData->normalTextureFilename, true,
-                    meshData->normalTexture, meshData->normalSRV);
-            }
+        //    if (!meshData->normalTextureFilename.empty()) {
+        //        GraphicsUtil::CreateTexture(
+        //            GraphicsManager::Instance().device,
+        //            GraphicsManager::Instance().device_context,
+        //            meshData->normalTextureFilename, true,
+        //            meshData->normalTexture, meshData->normalSRV);
+        //    }
 
-            if (!meshData->heightTextureFilename.empty()) {
-                GraphicsUtil::CreateTexture(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context,
-                    meshData->heightTextureFilename, true,
-                    meshData->heightTexture, meshData->heightSRV);
-            }
+        //    if (!meshData->heightTextureFilename.empty()) {
+        //        GraphicsUtil::CreateTexture(
+        //            GraphicsManager::Instance().device,
+        //            GraphicsManager::Instance().device_context,
+        //            meshData->heightTextureFilename, true,
+        //            meshData->heightTexture, meshData->heightSRV);
+        //    }
 
-            if (!meshData->aoTextureFilename.empty()) {
-                GraphicsUtil::CreateTexture(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context,
-                    meshData->aoTextureFilename, true, meshData->aoTexture,
-                    meshData->aoSRV);
-            }
+        //    if (!meshData->aoTextureFilename.empty()) {
+        //        GraphicsUtil::CreateTexture(
+        //            GraphicsManager::Instance().device,
+        //            GraphicsManager::Instance().device_context,
+        //            meshData->aoTextureFilename, true, meshData->aoTexture,
+        //            meshData->aoSRV);
+        //    }
 
-            if (!meshData->metallicTextureFilename.empty()) {
-                GraphicsUtil::CreateTexture(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context,
-                    meshData->metallicTextureFilename, true,
-                    meshData->metallicTexture, meshData->metallicSRV);
-            }
+        //    if (!meshData->metallicTextureFilename.empty()) {
+        //        GraphicsUtil::CreateTexture(
+        //            GraphicsManager::Instance().device,
+        //            GraphicsManager::Instance().device_context,
+        //            meshData->metallicTextureFilename, true,
+        //            meshData->metallicTexture, meshData->metallicSRV);
+        //    }
 
-            if (!meshData->roughnessTextureFilename.empty()) {
-                GraphicsUtil::CreateTexture(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context,
-                    meshData->roughnessTextureFilename, true,
-                    meshData->roughnessTexture, meshData->roughnessSRV);
-            }
-        }
+        //    if (!meshData->roughnessTextureFilename.empty()) {
+        //        GraphicsUtil::CreateTexture(
+        //            GraphicsManager::Instance().device,
+        //            GraphicsManager::Instance().device_context,
+        //            meshData->roughnessTextureFilename, true,
+        //            meshData->roughnessTexture, meshData->roughnessSRV);
+        //    }
+        //}
 
     } else {
         // need logger
@@ -277,192 +277,39 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
-    auto model = new Model();
+    auto mesh_data = GeometryGenerator::MakeSphere(1.5f, 15, 13);
+
+    auto model = new Model(GraphicsManager::Instance().device,
+                           GraphicsManager::Instance().device_context,
+                           std::vector{mesh_data});
     model->SetName("sphere");
     manager->models[model->GetEntityId()] = model;
-
-    GeometryGenerator::MakeSphere(model, 1.5f, 15, 13);
-
-    for (auto mesh : model->meshes) {
-        GraphicsUtil::CreateTexture(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context,
-            "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\ojwD8."
-            "jpg",
-            false, mesh->texture, mesh->textureResourceView);
-
-        {
-            D3D11_BUFFER_DESC bufferDesc;
-            ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-            bufferDesc.ByteWidth =
-                sizeof(engine::Vertex) *
-                mesh->vertices
-                    .size(); // UINT(sizeof(T_VERTEX) * vertices.size());
-            bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-            bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-            bufferDesc.StructureByteStride = sizeof(engine::Vertex);
-            bufferDesc.MiscFlags = 0;
-
-            D3D11_SUBRESOURCE_DATA vertexBufferData = {
-                0}; // MS 예제에서 초기화하는 방식
-            vertexBufferData.pSysMem = mesh->vertices.data();
-            vertexBufferData.SysMemPitch = 0;
-            vertexBufferData.SysMemSlicePitch = 0;
-
-            const HRESULT hr = GraphicsManager::Instance().device->CreateBuffer(
-                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
-            if (FAILED(hr)) {
-                std::cout << "CreateBuffer() failed. " << std::hex << hr
-                          << std::endl;
-            };
-        }
-        {
-            D3D11_BUFFER_DESC bufferDesc;
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-            bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
-            bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-            bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-            bufferDesc.StructureByteStride = sizeof(int);
-            bufferDesc.MiscFlags = 0;
-
-            D3D11_SUBRESOURCE_DATA indexBufferData = {0};
-            indexBufferData.pSysMem = mesh->indices.data();
-            indexBufferData.SysMemPitch = 0;
-            indexBufferData.SysMemSlicePitch = 0;
-
-            GraphicsManager::Instance().device->CreateBuffer(
-                &bufferDesc, &indexBufferData, &mesh->indexBuffer);
-        }
-    }
 
     return true;
 }
 
 bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
-    auto model = new Model();
+    auto mesh_data = GeometryGenerator::MakeBox(1.0f);
+
+    auto model = new Model(GraphicsManager::Instance().device,
+                           GraphicsManager::Instance().device_context,
+                           std::vector{mesh_data});
     model->SetName("box");
     manager->models[model->GetEntityId()] = model;
-
-    GeometryGenerator::MakeBox(model);
-
-    for (auto mesh : model->meshes) {
-        GraphicsUtil::CreateTexture(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context,
-            "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\crate2_"
-            "diffuse.png",
-            false, mesh->texture, mesh->textureResourceView);
-
-        {
-            D3D11_BUFFER_DESC bufferDesc;
-            ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-            bufferDesc.ByteWidth =
-                sizeof(engine::Vertex) *
-                mesh->vertices
-                    .size(); // UINT(sizeof(T_VERTEX) * vertices.size());
-            bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-            bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-            bufferDesc.StructureByteStride = sizeof(engine::Vertex);
-            bufferDesc.MiscFlags = 0;
-
-            D3D11_SUBRESOURCE_DATA vertexBufferData = {
-                0}; // MS 예제에서 초기화하는 방식
-            vertexBufferData.pSysMem = mesh->vertices.data();
-            vertexBufferData.SysMemPitch = 0;
-            vertexBufferData.SysMemSlicePitch = 0;
-
-            const HRESULT hr = GraphicsManager::Instance().device->CreateBuffer(
-                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
-            if (FAILED(hr)) {
-                std::cout << "CreateBuffer() failed. " << std::hex << hr
-                          << std::endl;
-            };
-        }
-        {
-            D3D11_BUFFER_DESC bufferDesc;
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-            bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
-            bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-            bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-            bufferDesc.StructureByteStride = sizeof(int);
-            bufferDesc.MiscFlags = 0;
-
-            D3D11_SUBRESOURCE_DATA indexBufferData = {0};
-            indexBufferData.pSysMem = mesh->indices.data();
-            indexBufferData.SysMemPitch = 0;
-            indexBufferData.SysMemSlicePitch = 0;
-
-            GraphicsManager::Instance().device->CreateBuffer(
-                &bufferDesc, &indexBufferData, &mesh->indexBuffer);
-        }
-    }
 
     return true;
 }
 
 bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
-    auto model = new Model();
+    auto mesh_data = GeometryGenerator::MakeCylinder(5.0f, 5.0f, 15.0f, 30);
+
+    auto model = new Model(GraphicsManager::Instance().device,
+                           GraphicsManager::Instance().device_context,
+                           std::vector{mesh_data});
     model->SetName("cylinder");
     manager->models[model->GetEntityId()] = model;
-
-    GeometryGenerator::MakeCylinder(model, 5.0f, 5.0f, 15.0f, 30);
-
-    for (auto mesh : model->meshes) {
-        GraphicsUtil::CreateTexture(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context,
-            "C:\\Users\\user\\Source\\Engine\\Engine\\Assets\\Textures\\wall."
-            "jpg",
-            false, mesh->texture, mesh->textureResourceView);
-
-        {
-            D3D11_BUFFER_DESC bufferDesc;
-            ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-            bufferDesc.ByteWidth =
-                sizeof(engine::Vertex) *
-                mesh->vertices
-                    .size(); // UINT(sizeof(T_VERTEX) * vertices.size());
-            bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-            bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-            bufferDesc.StructureByteStride = sizeof(engine::Vertex);
-            bufferDesc.MiscFlags = 0;
-
-            D3D11_SUBRESOURCE_DATA vertexBufferData = {
-                0}; // MS 예제에서 초기화하는 방식
-            vertexBufferData.pSysMem = mesh->vertices.data();
-            vertexBufferData.SysMemPitch = 0;
-            vertexBufferData.SysMemSlicePitch = 0;
-
-            const HRESULT hr = GraphicsManager::Instance().device->CreateBuffer(
-                &bufferDesc, &vertexBufferData, &mesh->vertexBuffer);
-            if (FAILED(hr)) {
-                std::cout << "CreateBuffer() failed. " << std::hex << hr
-                          << std::endl;
-            };
-        }
-        {
-            D3D11_BUFFER_DESC bufferDesc;
-            bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
-            bufferDesc.ByteWidth = sizeof(unsigned long) * mesh->indices.size();
-            bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-            bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-            bufferDesc.StructureByteStride = sizeof(int);
-            bufferDesc.MiscFlags = 0;
-
-            D3D11_SUBRESOURCE_DATA indexBufferData = {0};
-            indexBufferData.pSysMem = mesh->indices.data();
-            indexBufferData.SysMemPitch = 0;
-            indexBufferData.SysMemSlicePitch = 0;
-
-            GraphicsManager::Instance().device->CreateBuffer(
-                &bufferDesc, &indexBufferData, &mesh->indexBuffer);
-        }
-    }
 
     return true;
 }

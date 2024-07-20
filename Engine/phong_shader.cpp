@@ -237,7 +237,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
     for (const auto &mesh : model->meshes) {
 
         std::vector<ID3D11ShaderResourceView *> resViews = {
-            mesh->textureResourceView.Get(),
+            mesh->albedoSRV.Get(),
             cube_map->texture->specular_SRV.Get(),
             cube_map->texture->irradiance_SRV.Get(),
         };
@@ -251,7 +251,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhongShader::OnInvoke() {
                                   0);
 
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        context->DrawIndexed(model->GetIndexCount(), 0, 0);
+        context->DrawIndexed(mesh->indexCount, 0, 0);
     }
 
     if (gui->SelectedId() == target_object->GetEntityId())

@@ -4,6 +4,7 @@
 #include "node_ui.h"
 #include "mesh.h"
 #include "bone.h"
+#include "geometry_generator.h"
 #include "phong_shader.h"
 #include "physically_based_shader.h"
 
@@ -14,10 +15,19 @@ enum EnumRenderMode { eLight = 0, ePhysicallyBasedRendering = 1 };
 
 class Model : public common::INodeUi {
   public:
-    Model();
-    ~Model();
+    Model() {}
+    Model(ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
+          const std::string &basePath, const std::string &filename);
+    Model(ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
+          const std::vector<MeshData> &meshes);
 
-    int GetIndexCount();
+    void Initialize(ComPtr<ID3D11Device> &device,
+                    ComPtr<ID3D11DeviceContext> &context,
+                    const std::string &basePath, const std::string &filename);
+
+    void Initialize(ComPtr<ID3D11Device> &device,
+                    ComPtr<ID3D11DeviceContext> &context,
+                    const std::vector<MeshData> &meshes);
 
     Vector3 translation = Vector3(0.0f);
     Vector3 rotation = Vector3(0.0f);

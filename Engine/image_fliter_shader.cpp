@@ -15,7 +15,6 @@ EnumBehaviorTreeStatus InitializeBoardMap::OnInvoke() {
     auto context = GraphicsManager::Instance().device_context;
 
     manager->board_map = std::make_unique<BoardMap>();
-    GeometryGenerator::MakeSquare(manager->board_map.get());
     manager->board_map->Initialize(
         device, context, {GraphicsManager::Instance().resolved_SRV},
         {GraphicsManager::Instance().back_buffer_RTV},

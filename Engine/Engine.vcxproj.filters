@@ -91,18 +91,6 @@
     <ClInclude Include="node_ui.h">
       <Filter>Common\BluePrint</Filter>
     </ClInclude>
-    <ClInclude Include="id_generator.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="env.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="entity.h">
-      <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="dataBlock.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="pipeline_manager.h">
       <Filter>Engine</Filter>
     </ClInclude>
@@ -123,9 +111,6 @@
     </ClInclude>
     <ClInclude Include="material.h">
       <Filter>Engine\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="message.h">
-      <Filter>Common</Filter>
     </ClInclude>
     <ClInclude Include="application.h">
       <Filter>Platform</Filter>
@@ -162,6 +147,21 @@
     </ClInclude>
     <ClInclude Include="graphics_util.h">
       <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="message.h">
+      <Filter>Common\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="id_generator.h">
+      <Filter>Common\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="env.h">
+      <Filter>Common\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>Common\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="dataBlock.h">
+      <Filter>Common\Structure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -247,12 +247,6 @@
     <ClCompile Include="input.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="id_generator.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
-    <ClCompile Include="entity.cpp">
-      <Filter>Common</Filter>
-    </ClCompile>
     <ClCompile Include="geometry_generator.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
@@ -286,6 +280,12 @@
     <ClCompile Include="graphics_util.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="id_generator.cpp">
+      <Filter>Common\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="entity.cpp">
+      <Filter>Common\Structure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Platform">
@@ -293,9 +293,6 @@
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{cd4d1aed-5e7a-4f54-8223-c66fbe383b80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\Data">
-      <UniqueIdentifier>{ba2eaf2e-7ce0-4495-9423-86319442efbd}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\BluePrint">
       <UniqueIdentifier>{9eb6ce6c-e8f1-4912-bd9c-acf6ddd4f248}</UniqueIdentifier>
@@ -329,6 +326,9 @@
     </Filter>
     <Filter Include="Engine\Graphics">
       <UniqueIdentifier>{1a58e045-98f9-419c-972d-1f2ad2b6a109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Structure">
+      <UniqueIdentifier>{ba2eaf2e-7ce0-4495-9423-86319442efbd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

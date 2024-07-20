@@ -294,8 +294,8 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
             mesh->albedoSRV.Get(),
             mesh->normalSRV.Get(),
             mesh->aoSRV.Get(),
-            mesh->metallicSRV.Get(),
-            mesh->roughnessSRV.Get(),
+            mesh->metallicRoughnessSRV.Get(),
+            nullptr,
             mesh->emissiveSRV.Get()};
         context->PSSetShaderResources(0, UINT(resViews.size()),
                                       resViews.data());
@@ -311,7 +311,7 @@ EnumBehaviorTreeStatus RenderGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
                                   0);
         context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-        context->DrawIndexed(model->GetIndexCount(), 0, 0);
+        context->DrawIndexed(mesh->indexCount, 0, 0);
     }
 
     if (gui->SelectedId() == target_object->GetEntityId())

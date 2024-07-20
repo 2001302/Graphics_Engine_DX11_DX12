@@ -6,23 +6,19 @@
 #include <vector>
 
 namespace engine {
+
+using namespace std;
 using namespace DirectX::SimpleMath;
 
-void ModelLoader::Load(std::string basePath, std::string filename) {
-    this->basePath = basePath;
-
-    Assimp::Importer importer;
-
-    const aiScene *pScene = importer.ReadFile(
-        this->basePath + filename,
-        aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
-
-    Matrix tr; // Initial transformation
-    ProcessNode(pScene->mRootNode, pScene, tr);
+void UpdateNormals(vector<MeshData> &meshes) {
 
     // 노멀 벡터가 없는 경우를 대비하여 다시 계산
     // 한 위치에는 한 버텍스만 있어야 연결 관계를 찾을 수 있음
-    /* for (auto &m : this->meshes) {
+
+    // DirectXMesh의 ComputeNormals()과 비슷합니다.
+    // https://github.com/microsoft/DirectXMesh/wiki/ComputeNormals
+
+    for (auto &m : meshes) {
 
         vector<Vector3> normalsTemp(m.vertices.size(), Vector3(0.0f));
         vector<float> weightsTemp(m.vertices.size(), 0.0f);
@@ -54,7 +50,40 @@ void ModelLoader::Load(std::string basePath, std::string filename) {
                 m.vertices[i].normal.Normalize();
             }
         }
-    }*/
+    }
+}
+
+string GetExtension(const string filename) {
+    string ext(filesystem::path(filename).extension().string());
+    transform(ext.begin(), ext.end(), ext.begin(), ::tolower);
+    return ext;
+}
+
+void ModelLoader::Load(std::string basePath, std::string filename,
+                       bool revertNormals) {
+
+    if (GetExtension(filename) == ".gltf") {
+        m_isGLTF = true;
+        m_revertNormals = revertNormals;
+    }
+
+    this->basePath = basePath;
+
+    Assimp::Importer importer;
+
+    const aiScene *pScene = importer.ReadFile(
+        this->basePath + filename,
+        aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
+
+    if (!pScene) {
+        std::cout << "Failed to read file: " << this->basePath + filename
+                  << std::endl;
+    } else {
+        Matrix tr; // Initial transformation
+        ProcessNode(pScene->mRootNode, pScene, tr);
+    }
+
+    // UpdateNormals(this->meshes); // Vertex Normal을 직접 계산 (참고용)
 
     UpdateTangents();
 }
@@ -122,7 +151,25 @@ void ModelLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
     }
 }
 
-Mesh ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
+string ModelLoader::ReadFilename(aiMaterial *material, aiTextureType type) {
+
+    if (material->GetTextureCount(type) > 0) {
+        aiString filepath;
+        material->GetTexture(type, 0, &filepath);
+
+        std::string fullPath =
+            this->basePath +
+            std::string(
+                std::filesystem::path(filepath.C_Str()).filename().string());
+
+        return fullPath;
+    } else {
+        return "";
+    }
+}
+
+MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
+
     // Data to fill
     std::vector<Vertex> vertices;
     std::vector<uint32_t> indices;
@@ -136,8 +183,18 @@ Mesh ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
         vertex.position.z = mesh->mVertices[i].z;
 
         vertex.normal.x = mesh->mNormals[i].x;
-        vertex.normal.y = mesh->mNormals[i].y;
-        vertex.normal.z = mesh->mNormals[i].z;
+        if (m_isGLTF) {
+            vertex.normal.y = mesh->mNormals[i].z;
+            vertex.normal.z = -mesh->mNormals[i].y;
+        } else {
+            vertex.normal.y = mesh->mNormals[i].y;
+            vertex.normal.z = mesh->mNormals[i].z;
+        }
+
+        if (m_revertNormals) {
+            vertex.normal *= -1.0f;
+        }
+
         vertex.normal.Normalize();
 
         if (mesh->mTextureCoords[0]) {
@@ -154,17 +211,22 @@ Mesh ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
             indices.push_back(face.mIndices[j]);
     }
 
-    Mesh newMesh;
+    MeshData newMesh;
     newMesh.vertices = vertices;
     newMesh.indices = indices;
 
     // http://assimp.sourceforge.net/lib_html/materials.html
     if (mesh->mMaterialIndex >= 0) {
+
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-        newMesh.textureFilename = ReadFilename(material, aiTextureType_DIFFUSE);
         newMesh.albedoTextureFilename =
             ReadFilename(material, aiTextureType_BASE_COLOR);
+        if (newMesh.aoTextureFilename.empty()) {
+            newMesh.aoTextureFilename =
+                ReadFilename(material, aiTextureType_DIFFUSE);
+        }
+
         newMesh.emissiveTextureFilename =
             ReadFilename(material, aiTextureType_EMISSIVE);
         newMesh.heightTextureFilename =
@@ -175,28 +237,22 @@ Mesh ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
             ReadFilename(material, aiTextureType_METALNESS);
         newMesh.roughnessTextureFilename =
             ReadFilename(material, aiTextureType_DIFFUSE_ROUGHNESS);
+
         newMesh.aoTextureFilename =
             ReadFilename(material, aiTextureType_AMBIENT_OCCLUSION);
+        if (newMesh.aoTextureFilename.empty()) {
+            newMesh.aoTextureFilename =
+                ReadFilename(material, aiTextureType_LIGHTMAP);
+        }
+
+        // 디버깅용
+        // for (size_t i = 0; i < 22; i++) {
+        //    cout << i << " " << ReadFilename(material, aiTextureType(i))
+        //         << endl;
+        //}
     }
 
     return newMesh;
 }
 
-std::string ModelLoader::ReadFilename(aiMaterial *material,
-                                      aiTextureType type) {
-
-    if (material->GetTextureCount(type) > 0) {
-        aiString filepath;
-        material->GetTexture(type, 0, &filepath);
-
-        std::string fullPath =
-            this->basePath +
-            std::string(
-                std::filesystem::path(filepath.C_Str()).filename().string());
-
-        return fullPath;
-    } else {
-        return "";
-    }
-}
 } // namespace engine

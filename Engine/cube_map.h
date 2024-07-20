@@ -19,8 +19,6 @@ class CubeMap : public common::INodeUi {
     CubeMap();
     ~CubeMap();
 
-    int GetIndexCount();
-
     DirectX::SimpleMath::Matrix transform;
     std::shared_ptr<Mesh> mesh;
     std::shared_ptr<CubeTexture> texture;

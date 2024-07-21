@@ -188,7 +188,27 @@ void GraphicsManager::BeginScene(bool draw_as_wire) {
 
     return;
 }
+void GraphicsManager::SetPipelineState(const GraphicsPSO &pso) {
 
+    device_context->VSSetShader(pso.m_vertexShader.Get(), 0, 0);
+    device_context->PSSetShader(pso.m_pixelShader.Get(), 0, 0);
+    device_context->HSSetShader(pso.m_hullShader.Get(), 0, 0);
+    device_context->DSSetShader(pso.m_domainShader.Get(), 0, 0);
+    device_context->GSSetShader(pso.m_geometryShader.Get(), 0, 0);
+    device_context->IASetInputLayout(pso.m_inputLayout.Get());
+    device_context->RSSetState(pso.m_rasterizerState.Get());
+    device_context->OMSetBlendState(pso.m_blendState.Get(), pso.m_blendFactor,
+                                    0xffffffff);
+    device_context->OMSetDepthStencilState(pso.m_depthStencilState.Get(),
+                                           pso.m_stencilRef);
+    device_context->IASetPrimitiveTopology(pso.m_primitiveTopology);
+}
+void GraphicsManager::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
+    // 쉐이더와 일관성 유지 register(b1)
+    device_context->VSSetConstantBuffers(1, 1, globalConstsGPU.GetAddressOf());
+    device_context->PSSetConstantBuffers(1, 1, globalConstsGPU.GetAddressOf());
+    device_context->GSSetConstantBuffers(1, 1, globalConstsGPU.GetAddressOf());
+}
 void GraphicsManager::EndScene() {
 
     if (common::Env::Instance().vsync_enabled) {

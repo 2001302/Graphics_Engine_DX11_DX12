@@ -1,18 +1,10 @@
-#ifndef _POSTPROCESS
-#define _POSTPROCESS
+#pragma once
 
-#include "graphics_manager.h"
 #include "image_filter.h"
-#include "image_fliter_shader.h"
 #include "mesh.h"
-#include "geometry_generator.h"
 
 namespace engine {
-
-using DirectX::SimpleMath::Vector4;
-using Microsoft::WRL::ComPtr;
-
-class BoardMap {
+class PostProcess {
   public:
     void
     Initialize(ComPtr<ID3D11Device> &device,
@@ -35,21 +27,11 @@ class BoardMap {
     ImageFilter m_combineFilter;
     std::vector<ImageFilter> m_bloomDownFilters;
     std::vector<ImageFilter> m_bloomUpFilters;
+
     std::shared_ptr<Mesh> m_mesh;
 
   private:
-    ComPtr<ID3D11InputLayout> m_inputLayout;
-    ComPtr<ID3D11SamplerState> m_samplerState;
-    ComPtr<ID3D11RasterizerState> m_rasterizerSate;
-    ComPtr<ID3D11VertexShader> m_vertexShader;
-    ComPtr<ID3D11PixelShader> m_combinePixelShader;
-    ComPtr<ID3D11PixelShader> m_bloomDownPixelShader;
-    ComPtr<ID3D11PixelShader> m_bloomUpPixelShader;
-
     std::vector<ComPtr<ID3D11ShaderResourceView>> m_bloomSRVs;
     std::vector<ComPtr<ID3D11RenderTargetView>> m_bloomRTVs;
-
-    std::shared_ptr<ImageFilterShader> image_filter_shader;
 };
-} // namespace dx11
-#endif
+} // namespace hlab

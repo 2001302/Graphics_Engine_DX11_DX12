@@ -1,12 +1,12 @@
 #ifndef _PIPELINEMANAGER
 #define _PIPELINEMANAGER
 
-#include "board_map.h"
 #include "camera.h"
 #include "dataBlock.h"
 #include "graphics_manager.h"
 #include "model.h"
 #include "constant_buffer.h"
+#include "post_process.h"
 
 namespace engine {
 /// <summary>
@@ -16,7 +16,6 @@ class PipelineManager : public common::IDataBlock {
   public:
     std::unique_ptr<Camera> camera;
     //std::unique_ptr<Light> light;
-    std::unique_ptr<BoardMap> board_map;
     std::shared_ptr<common::INodeUi> skybox;
     std::shared_ptr<common::INodeUi> ground;
     std::map<int /*id*/, common::INodeUi*> models;
@@ -36,6 +35,11 @@ class PipelineManager : public common::IDataBlock {
     ComPtr<ID3D11ShaderResourceView> m_irradianceSRV;
     ComPtr<ID3D11ShaderResourceView> m_specularSRV;
     ComPtr<ID3D11ShaderResourceView> m_brdfSRV;
+
+    
+    PostEffectsConstants m_postEffectsConstsCPU;
+    ComPtr<ID3D11Buffer> m_postEffectsConstsGPU;
+    PostProcess m_postProcess;
 
 };
 } // namespace dx11

@@ -21,11 +21,24 @@ bool Application::OnStart() {
         {EnumDataBlockType::eGui, imgui_.get()},
     };
 
+    auto device = GraphicsManager::Instance().device;
+    auto context = GraphicsManager::Instance().device_context;
+
+    manager_->m_postProcess.Initialize(
+        device, context, {GraphicsManager::Instance().postEffectsSRV},
+        {GraphicsManager::Instance().back_buffer_RTV},
+        common::Env::Instance().screen_width,
+        common::Env::Instance().screen_height, 4);
+
+    GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
+                                    manager_->m_globalConstsCPU,
+                                    manager_->m_globalConstsGPU);
+
     // clang-format off
     auto tree = new BehaviorTreeBuilder();
     tree->Build(dataBlock)
         ->Sequence()
-            ->Excute(std::make_shared<InitializeBoardMap>())
+            //->Excute(std::make_shared<InitializeBoardMap>())
             ->Excute(std::make_shared<InitializeCamera>())
             ->Excute(std::make_shared<InitializeCubeMapShader>())
             //->Excute(std::make_shared<InitializePhongShader>())
@@ -46,8 +59,39 @@ bool Application::OnFrame() {
         {EnumDataBlockType::eGui, imgui_.get()},
     };
 
+    auto device = GraphicsManager::Instance().device;
+    auto context = GraphicsManager::Instance().device_context;
+
+    context->VSSetSamplers(0, UINT(Graphics::sampleStates.size()),
+                           Graphics::sampleStates.data());
+    context->PSSetSamplers(0, UINT(Graphics::sampleStates.size()),
+                           Graphics::sampleStates.data());
+
+    // 공용 텍스춰들: "Common.hlsli"에서 register(t10)부터 시작
+    std::vector<ID3D11ShaderResourceView *> commonSRVs = {
+        manager_->m_envSRV.Get(), manager_->m_specularSRV.Get(),
+        manager_->m_irradianceSRV.Get(), manager_->m_brdfSRV.Get()};
+    context->PSSetShaderResources(10, UINT(commonSRVs.size()),
+                                  commonSRVs.data());
+
+    const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+    std::vector<ID3D11RenderTargetView *> rtvs = {
+        GraphicsManager::Instance().float_RTV.Get()};
+
+    for (size_t i = 0; i < rtvs.size(); i++) {
+        context->ClearRenderTargetView(rtvs[i], clearColor);
+    }
+    context->OMSetRenderTargets(
+        UINT(rtvs.size()), rtvs.data(),
+        GraphicsManager::Instance().depth_stencil_view.Get());
+
+    context->ClearDepthStencilView(
+        GraphicsManager::Instance().depth_stencil_view.Get(),
+        D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+    GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
+
     // Clear the buffers to begin the scene.
-    GraphicsManager::Instance().BeginScene(imgui_->Tab().common.draw_as_wire_);
+    // GraphicsManager::Instance().BeginScene(imgui_->Tab().common.draw_as_wire_);
 
     // clang-format off
 
@@ -78,9 +122,17 @@ bool Application::OnFrame() {
     //        ->Excute(std::make_shared<RenderCubeMap>())
     //    ->Close()
     //->End()
-    ->Excute(std::make_shared<RenderBoardMap>())
+    //->Excute(std::make_shared<RenderBoardMap>())
     ->Run();
     // clang-format on
+
+    context->ResolveSubresource(
+        GraphicsManager::Instance().resolved_buffer.Get(), 0,
+        GraphicsManager::Instance().float_buffer.Get(), 0,
+        DXGI_FORMAT_R16G16B16A16_FLOAT);
+
+    GraphicsManager::Instance().SetPipelineState(Graphics::postProcessingPSO);
+    manager_->m_postProcess.Render(context);
 
     input_->Frame();
 

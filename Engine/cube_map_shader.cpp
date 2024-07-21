@@ -70,10 +70,6 @@ EnumBehaviorTreeStatus InitializeCubeMapShader::OnInvoke() {
                                     L"SkyboxPS.hlsl",
                                     cube_map_shader->pixel_shader);
 
-    GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                    manager->m_globalConstsCPU,
-                                    manager->m_globalConstsGPU);
-
     // Texture sampler 만들기
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
@@ -142,22 +138,6 @@ EnumBehaviorTreeStatus UpdateCubeMap::OnInvoke() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
-void SetPipelineState(ComPtr<ID3D11DeviceContext> &context,
-                      const GraphicsPSO &pso) {
-
-    context->VSSetShader(pso.m_vertexShader.Get(), 0, 0);
-    context->PSSetShader(pso.m_pixelShader.Get(), 0, 0);
-    context->HSSetShader(pso.m_hullShader.Get(), 0, 0);
-    context->DSSetShader(pso.m_domainShader.Get(), 0, 0);
-    context->GSSetShader(pso.m_geometryShader.Get(), 0, 0);
-    context->IASetInputLayout(pso.m_inputLayout.Get());
-    context->RSSetState(pso.m_rasterizerState.Get());
-    context->OMSetBlendState(pso.m_blendState.Get(), pso.m_blendFactor,
-                             0xffffffff);
-    context->OMSetDepthStencilState(pso.m_depthStencilState.Get(),
-                                    pso.m_stencilRef);
-    context->IASetPrimitiveTopology(pso.m_primitiveTopology);
-}
 EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     auto managerBlock = data_block[EnumDataBlockType::eManager];
     auto guiBlock = data_block[EnumDataBlockType::eGui];
@@ -187,7 +167,7 @@ EnumBehaviorTreeStatus RenderCubeMap::OnInvoke() {
     //// VS: Vertex Shader
     //// PS: Pixel Shader
     //// IA: Input-Assembler stage
-    SetPipelineState(context, gui->Tab().common.draw_as_wire_
+    GraphicsManager::Instance().SetPipelineState(gui->Tab().common.draw_as_wire_
                                   ? Graphics::skyboxWirePSO
                                   : Graphics::skyboxSolidPSO);
     cube_map->Render(context);

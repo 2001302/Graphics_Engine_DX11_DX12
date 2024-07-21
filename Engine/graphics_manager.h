@@ -8,8 +8,8 @@
 #define LIGHT_SPOT 0x04
 #define LIGHT_SHADOW 0x10
 
-#include "graphics_util.h"
 #include "graphics_common.h"
+#include "graphics_util.h"
 
 namespace engine {
 class GraphicsManager {
@@ -23,6 +23,8 @@ class GraphicsManager {
     void EndScene();
     void SetViewPort(float x, float y, float width, float height);
     bool CreateBuffer();
+    void SetPipelineState(const GraphicsPSO &pso);
+    void SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU);
 
     bool useMSAA = true;
     UINT num_quality_levels = 0;
@@ -59,5 +61,5 @@ class GraphicsManager {
     void CreateDepthBuffer();
 };
 
-} // namespace dx11
+} // namespace engine
 #endif

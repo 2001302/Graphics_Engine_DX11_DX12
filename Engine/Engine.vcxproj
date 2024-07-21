@@ -149,7 +149,6 @@
     <ClInclude Include="graphics_pso.h" />
     <ClInclude Include="graphics_util.h" />
     <ClInclude Include="image_filter.h" />
-    <ClInclude Include="image_fliter_shader.h" />
     <ClInclude Include="ImGui\NodeEditor\crude_json.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_bezier_math.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_canvas.h" />
@@ -162,7 +161,6 @@
     <ClInclude Include="node_ui.h" />
     <ClInclude Include="parallel_node.h" />
     <ClInclude Include="physically_based_shader.h" />
-    <ClInclude Include="board_map.h" />
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="message.h" />
@@ -182,6 +180,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="message_receiver.h" />
+    <ClInclude Include="post_process.h" />
     <ClInclude Include="setting_ui.h" />
     <ClInclude Include="selector_node.h" />
     <ClInclude Include="sequence_node.h" />
@@ -204,7 +203,6 @@
     <ClCompile Include="graphics_pso.cpp" />
     <ClCompile Include="graphics_util.cpp" />
     <ClCompile Include="image_filter.cpp" />
-    <ClCompile Include="image_fliter_shader.cpp" />
     <ClCompile Include="ImGui\NodeEditor\crude_json.cpp" />
     <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp" />
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor.cpp" />
@@ -212,7 +210,6 @@
     <ClCompile Include="node_ui.cpp" />
     <ClCompile Include="parallel_node.cpp" />
     <ClCompile Include="physically_based_shader.cpp" />
-    <ClCompile Include="board_map.cpp" />
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="graphics_manager.cpp" />
@@ -232,6 +229,7 @@
     <ClCompile Include="model_loader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
+    <ClCompile Include="post_process.cpp" />
     <ClCompile Include="setting_ui.cpp" />
     <ClCompile Include="phong_shader.cpp" />
     <ClCompile Include="platform.cpp" />
@@ -247,27 +245,59 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="bloom_down_ps.hlsl">
+    <FxCompile Include="BasicPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="bloom_up_ps.hlsl">
+    <FxCompile Include="BasicVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="BloomDownPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="combine_ps.hlsl">
+    <FxCompile Include="BloomUpPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="CombinePS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="sampling_ps.hlsl">
+    <FxCompile Include="DepthOnlyPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="DepthOnlyVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="NormalGS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Geometry</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="NormalPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="NormalVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="PostEffectsPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="SamplingPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="sampling_vs.hlsl">
+    <FxCompile Include="SamplingVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>

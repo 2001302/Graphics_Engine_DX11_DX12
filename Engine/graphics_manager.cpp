@@ -60,7 +60,7 @@ bool GraphicsManager::Initialize() {
     ThrowIfFailed(device->CreateRasterizerState(
         &rastDesc, wire_rasterizer_state.GetAddressOf()));
 
-    //Graphics::InitCommonStates(device);
+    Graphics::InitCommonStates(device);
 
     return true;
 }
@@ -99,23 +99,28 @@ bool GraphicsManager::CreateBuffer() {
     ThrowIfFailed(
         device->CreateTexture2D(&desc, NULL, float_buffer.GetAddressOf()));
 
-    ThrowIfFailed(device->CreateShaderResourceView(float_buffer.Get(), NULL,
-                                                   float_SRV.GetAddressOf()));
-
     ThrowIfFailed(device->CreateRenderTargetView(float_buffer.Get(), NULL,
                                                  float_RTV.GetAddressOf()));
-
-    CreateDepthBuffer();
 
     // FLOAT MSAA를 Relsolve해서 저장할 SRV/RTV
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;
     ThrowIfFailed(
         device->CreateTexture2D(&desc, NULL, resolved_buffer.GetAddressOf()));
+    ThrowIfFailed(
+        device->CreateTexture2D(&desc, NULL, postEffectsBuffer.GetAddressOf()));
+
     ThrowIfFailed(device->CreateShaderResourceView(
         resolved_buffer.Get(), NULL, resolved_SRV.GetAddressOf()));
+    ThrowIfFailed(device->CreateShaderResourceView(
+        postEffectsBuffer.Get(), NULL, postEffectsSRV.GetAddressOf()));
+
     ThrowIfFailed(device->CreateRenderTargetView(resolved_buffer.Get(), NULL,
                                                  resolved_RTV.GetAddressOf()));
+    ThrowIfFailed(device->CreateRenderTargetView(
+        postEffectsBuffer.Get(), NULL, postEffectsRTV.GetAddressOf()));
+
+    CreateDepthBuffer();
 
     return true;
 }
@@ -171,27 +176,15 @@ void GraphicsManager::BeginScene(bool draw_as_wire) {
     color[2] = 0.0f;
     color[3] = 1.0f;
 
-    std::vector<ID3D11RenderTargetView *> rtv = {float_RTV.Get()};
-    // Clear the back buffer.
-    for (size_t i = 0; i < rtv.size(); i++) {
-        device_context->ClearRenderTargetView(rtv[i], color);
-    }
-    device_context->OMSetRenderTargets(UINT(rtv.size()), rtv.data(),
-                                       depth_stencil_view.Get());
-
     // Clear the depth buffer.
-    device_context->ClearDepthStencilView(depth_stencil_view.Get(),
-                                          D3D11_CLEAR_DEPTH, 1.0f, 0);
+    device_context->ClearRenderTargetView(float_RTV.Get(), color);
+    device_context->ClearDepthStencilView(
+        depth_stencil_view.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f,
+        0);
     device_context->OMSetDepthStencilState(depth_stencil_state.Get(), 0);
 
     device_context->OMSetRenderTargets(1, float_RTV.GetAddressOf(),
                                        depth_stencil_view.Get());
-    device_context->OMSetDepthStencilState(depth_stencil_state.Get(), 0);
-
-    if (draw_as_wire)
-        device_context->RSSetState(wire_rasterizer_state.Get());
-    else
-        device_context->RSSetState(solid_rasterizer_state.Get());
 
     return;
 }
@@ -206,4 +199,4 @@ void GraphicsManager::EndScene() {
 
     return;
 }
-} // namespace dx11
+} // namespace engine

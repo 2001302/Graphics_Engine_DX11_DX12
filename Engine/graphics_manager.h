@@ -29,15 +29,20 @@ class GraphicsManager {
 
     ComPtr<ID3D11Device> device;
     ComPtr<ID3D11DeviceContext> device_context;
+
     ComPtr<IDXGISwapChain> swap_chain;
     ComPtr<ID3D11RenderTargetView> back_buffer_RTV;
 
     ComPtr<ID3D11Texture2D> float_buffer;
     ComPtr<ID3D11Texture2D> resolved_buffer;
+    ComPtr<ID3D11Texture2D> postEffectsBuffer;
+
     ComPtr<ID3D11RenderTargetView> float_RTV;
     ComPtr<ID3D11RenderTargetView> resolved_RTV;
-    ComPtr<ID3D11ShaderResourceView> float_SRV;
+    ComPtr<ID3D11RenderTargetView> postEffectsRTV;
+
     ComPtr<ID3D11ShaderResourceView> resolved_SRV;
+    ComPtr<ID3D11ShaderResourceView> postEffectsSRV;
 
     ComPtr<ID3D11RasterizerState> solid_rasterizer_state;
     ComPtr<ID3D11RasterizerState> wire_rasterizer_state;

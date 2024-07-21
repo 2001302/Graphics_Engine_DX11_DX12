@@ -29,9 +29,24 @@ class Model : public common::INodeUi {
                     ComPtr<ID3D11DeviceContext> &context,
                     const std::vector<MeshData> &meshes);
 
-    Vector3 translation = Vector3(0.0f);
-    Vector3 rotation = Vector3(0.0f);
-    Vector3 scaling = Vector3(1.0f);
+    void UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
+                               ComPtr<ID3D11DeviceContext> &context);
+
+    void Render(ComPtr<ID3D11DeviceContext> &context);
+
+    void RenderNormals(ComPtr<ID3D11DeviceContext> &context);
+
+    void UpdateWorldRow(const Matrix &worldRow);
+
+    Matrix m_worldRow = Matrix();   // Model(Object) To World 행렬
+    Matrix m_worldITRow = Matrix(); // InverseTranspose
+
+    MeshConstants m_meshConstsCPU;
+    MaterialConstants m_materialConstsCPU;
+
+    bool m_drawNormals = false;
+    bool m_isVisible = true;
+    bool m_castShadow = true;
 
     std::vector<std::shared_ptr<Mesh>> meshes;
     std::vector<std::shared_ptr<Bone>> bones;
@@ -39,8 +54,11 @@ class Model : public common::INodeUi {
 
     EnumShaderType shader_type;
     EnumRenderMode render_mode;
+
   private:
     void OnShow() override;
+    ComPtr<ID3D11Buffer> m_meshConstsGPU;
+    ComPtr<ID3D11Buffer> m_materialConstsGPU;
 };
 
 } // namespace dx11

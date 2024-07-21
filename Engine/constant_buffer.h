@@ -91,7 +91,7 @@ __declspec(align(256)) struct GlobalConstants {
     Matrix invViewProj; // Proj -> World
 
     Vector3 eyeWorld;
-    float strengthIBL = 0.0f;
+    float strengthIBL = 1.0f;
 
     int textureToDraw = 0; // 0: Env, 1: Specular, 2: Irradiance, 그외: 검은색
     float envLodBias = 0.0f; // 환경맵 LodBias

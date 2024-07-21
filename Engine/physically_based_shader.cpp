@@ -163,15 +163,15 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
 
     // model
     {
-        physically_shader_source->vertex_constant.modelWorld =
-            Matrix::CreateScale(model->scaling) *
-            Matrix::CreateRotationX(model->rotation.x) *
-            Matrix::CreateRotationY(model->rotation.y) *
-            Matrix::CreateRotationZ(model->rotation.z) *
-            Matrix::CreateTranslation(model->translation);
+        //physically_shader_source->vertex_constant.modelWorld =
+        //    Matrix::CreateScale(model->scaling) *
+        //    Matrix::CreateRotationX(model->rotation.x) *
+        //    Matrix::CreateRotationY(model->rotation.y) *
+        //    Matrix::CreateRotationZ(model->rotation.z) *
+        //    Matrix::CreateTranslation(model->translation);
 
-        physically_shader_source->vertex_constant.modelWorld =
-            physically_shader_source->vertex_constant.modelWorld.Transpose();
+        //physically_shader_source->vertex_constant.modelWorld =
+        //    physically_shader_source->vertex_constant.modelWorld.Transpose();
     }
     // view
     {

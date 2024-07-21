@@ -117,15 +117,15 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhongShader::OnInvoke() {
 
     // model
     {
-        phong_shader_source->vertex_constant.model =
-            Matrix::CreateScale(model->scaling) *
-            Matrix::CreateRotationX(model->rotation.x) *
-            Matrix::CreateRotationY(model->rotation.y) *
-            Matrix::CreateRotationZ(model->rotation.z) *
-            Matrix::CreateTranslation(model->translation);
+        //phong_shader_source->vertex_constant.model =
+        //    Matrix::CreateScale(model->scaling) *
+        //    Matrix::CreateRotationX(model->rotation.x) *
+        //    Matrix::CreateRotationY(model->rotation.y) *
+        //    Matrix::CreateRotationZ(model->rotation.z) *
+        //    Matrix::CreateTranslation(model->translation);
 
-        phong_shader_source->vertex_constant.model =
-            phong_shader_source->vertex_constant.model.Transpose();
+        //phong_shader_source->vertex_constant.model =
+        //    phong_shader_source->vertex_constant.model.Transpose();
     }
     // view
     {

@@ -13,8 +13,7 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
     } else {
         auto move = Vector2(-mouseState.lX, mouseState.lY)/1000.0f;
 
-        manager->camera->MoveRight(move.x);
-        manager->camera->MoveUp(move.y);
+        manager->camera->Rotate(move.x, move.y);
     }
 
     return true;

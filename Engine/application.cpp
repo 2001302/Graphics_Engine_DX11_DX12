@@ -185,6 +185,7 @@ bool Application::OnFrame() {
 
     GraphicsUtil::UpdateBuffer(device, context, manager_->m_globalConstsCPU,
                                manager_->m_globalConstsGPU);
+
     GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
 
     GraphicsManager::Instance().SetPipelineState(
@@ -195,6 +196,7 @@ bool Application::OnFrame() {
         i->Render(context);
     }
 
+    GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
     GraphicsManager::Instance().SetPipelineState(
         imgui_->Tab().common.draw_as_wire_ ? Graphics::skyboxWirePSO
                                            : Graphics::skyboxSolidPSO);

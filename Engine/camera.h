@@ -16,6 +16,7 @@ class Camera : public common::INodeUi {
     void UpdateViewDir();
     void UpdateKeyboard(const float dt, bool const keyPressed[256]);
     void UpdateMouse(float mouseNdcX, float mouseNdcY);
+    void Rotate(float dx, float dy);
     void MoveForward(float dt);
     void MoveRight(float dt);
     void MoveUp(float dt);

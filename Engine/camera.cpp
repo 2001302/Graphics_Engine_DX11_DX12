@@ -47,6 +47,13 @@ void Camera::UpdateMouse(float mouseNdcX, float mouseNdcY) {
     }
 }
 
+void Camera::Rotate(float dx, float dy) {
+    m_yaw = m_yaw + dx * DirectX::XM_2PI;        // 좌우 360도
+    m_pitch = m_pitch + dy * DirectX::XM_PIDIV2; // 위 아래 90도
+
+    UpdateViewDir();
+}
+
 void Camera::MoveForward(float dt) {
     // 이동후의_위치 = 현재_위치 + 이동방향 * 속도 * 시간차이;
     m_position += m_viewDir * m_speed * dt;

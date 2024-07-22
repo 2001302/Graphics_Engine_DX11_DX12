@@ -59,18 +59,16 @@ void Camera::MoveUp(float dt) {
 
 void Camera::MoveRight(float dt) { m_position += m_rightDir * m_speed * dt; }
 
-void Camera::SetEyeWorld(Vector3 pos) {
-    m_position = pos;
-}
+void Camera::SetEyeWorld(Vector3 pos) { m_position = pos; }
 
 Matrix Camera::GetProjRow() {
     return m_usePerspectiveProjection
                ? XMMatrixPerspectiveFovLH(XMConvertToRadians(m_projFovAngleY),
-                                          common::Env::Instance().aspect,
+                                          common::Env::Instance().GetAspect(),
                                           m_nearZ, m_farZ)
                : XMMatrixOrthographicOffCenterLH(
-                     -common::Env::Instance().aspect,
-                     common::Env::Instance().aspect, -1.0f, 1.0f, m_nearZ,
+                     -common::Env::Instance().GetAspect(),
+                     common::Env::Instance().GetAspect(), -1.0f, 1.0f, m_nearZ,
                      m_farZ);
 }
 
@@ -93,8 +91,7 @@ EnumBehaviorTreeStatus UpdateCamera::OnInvoke() {
 
     manager->m_globalConstsCPU.eyeWorld = manager->camera->GetEyePos();
     manager->m_globalConstsCPU.view = manager->camera->GetViewRow().Transpose();
-    manager->m_globalConstsCPU.proj =
-        manager->camera->GetProjRow().Transpose();
+    manager->m_globalConstsCPU.proj = manager->camera->GetProjRow().Transpose();
     manager->m_globalConstsCPU.invProj =
         manager->m_globalConstsCPU.proj.Invert().Transpose();
     manager->m_globalConstsCPU.viewProj =

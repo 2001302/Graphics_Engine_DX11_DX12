@@ -275,14 +275,25 @@ bool Application::OnStop() {
 }
 
 bool CheckIfMouseInViewport() {
-    auto cursor = ImGui::GetMousePos();
-    auto view_port = GraphicsManager::Instance().viewport;
-    if (view_port.TopLeftX < cursor.x && view_port.TopLeftY < cursor.y &&
-        cursor.x < view_port.TopLeftX + view_port.Width &&
-        cursor.y < view_port.TopLeftY + view_port.Height) {
-        return true;
+
+    if (GraphicsManager::Instance().swap_chain) {
+
+        if (ImGui::GetCurrentWindow()) {
+
+            auto cursor = ImGui::GetMousePos();
+
+            auto left = GraphicsManager::Instance().viewport.TopLeftX +
+                        ImGui::GetWindowSize().x;
+            auto top = GraphicsManager::Instance().viewport.TopLeftY;
+            auto right = GraphicsManager::Instance().viewport.Width + left;
+            auto bottom = GraphicsManager::Instance().viewport.Height + top;
+
+            if (left < cursor.x && cursor.x < right && top < cursor.y &&
+                cursor.y < bottom)
+                return true;
+        }
+        return false;
     }
-    return false;
 }
 
 LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
@@ -294,12 +305,16 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
 
     switch (umsg) {
     case WM_MOUSEMOVE: {
-        if (CheckIfMouseInViewport()) {
-            if (wparam & MK_RBUTTON) {
+        if (wparam & MK_RBUTTON) {
+            //if (CheckIfMouseInViewport()) 
+            {
                 return message_receiver_->OnRightDragRequest(manager_.get(),
                                                              input_);
             }
-            if (wparam & MK_MBUTTON) {
+        }
+        if (wparam & MK_MBUTTON) {
+            //if (CheckIfMouseInViewport()) 
+            {
                 return message_receiver_->OnWheelDragRequest(
                     manager_.get(), input_, LOWORD(lparam), HIWORD(lparam));
             }
@@ -307,7 +322,8 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
         break;
     }
     case WM_MOUSEWHEEL: {
-        if (CheckIfMouseInViewport()) {
+        //if (CheckIfMouseInViewport()) 
+        {
             return message_receiver_->OnMouseWheelRequest(manager_.get(),
                                                           input_);
         }
@@ -344,9 +360,6 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
 
             common::Env::Instance().screen_width = int(LOWORD(lparam));
             common::Env::Instance().screen_height = int(HIWORD(lparam));
-            common::Env::Instance().aspect =
-                (float)common::Env::Instance().screen_width /
-                (float)common::Env::Instance().screen_height;
 
             GraphicsManager::Instance().back_buffer_RTV.Reset();
             GraphicsManager::Instance().swap_chain->ResizeBuffers(

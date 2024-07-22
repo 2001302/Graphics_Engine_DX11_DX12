@@ -17,12 +17,13 @@ void ImageFilter::Initialize(ComPtr<ID3D11Device> &device,
     pixelShader.CopyTo(m_pixelShader.GetAddressOf());
 
     ZeroMemory(&m_viewport, sizeof(D3D11_VIEWPORT));
-    m_viewport.TopLeftX = 0;
+    m_viewport = GraphicsManager::Instance().viewport;
+    /*m_viewport.TopLeftX = 0;
     m_viewport.TopLeftY = 0;
     m_viewport.Width = float(width);
     m_viewport.Height = float(height);
     m_viewport.MinDepth = 0.0f;
-    m_viewport.MaxDepth = 1.0f;
+    m_viewport.MaxDepth = 1.0f;*/
 
     m_constData.dx = 1.0f / width;
     m_constData.dy = 1.0f / height;

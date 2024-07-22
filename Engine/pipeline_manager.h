@@ -132,12 +132,12 @@ class PipelineManager : public common::IDataBlock, public common::INodeUi {
             else
                 Graphics::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
 
-            //ImGui::SliderFloat("Metallic",
-            //                   &m_mirror->m_materialConstsCPU.metallicFactor,
-            //                   0.0f, 1.0f);
-            //ImGui::SliderFloat("Roughness",
-            //                   &m_mirror->m_materialConstsCPU.roughnessFactor,
-            //                   0.0f, 1.0f);
+            ImGui::SliderFloat("Metallic",
+                               &m_mirror->m_materialConstsCPU.metallicFactor,
+                               0.0f, 1.0f);
+            ImGui::SliderFloat("Roughness",
+                               &m_mirror->m_materialConstsCPU.roughnessFactor,
+                               0.0f, 1.0f);
 
             ImGui::TreePop();
         }

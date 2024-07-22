@@ -637,20 +637,19 @@ bool CheckIfMouseInViewport() {
 
     if (GraphicsManager::Instance().swap_chain) {
 
-        if (ImGui::GetCurrentWindow()) {
+        auto cursor = ImGui::GetMousePos();
 
-            auto cursor = ImGui::GetMousePos();
+        auto left = GraphicsManager::Instance().viewport.TopLeftX +
+                    ImGui::GetWindowSize().x;
+        auto top = GraphicsManager::Instance().viewport.TopLeftY;
+        auto right = GraphicsManager::Instance().viewport.Width + left;
+        auto bottom = GraphicsManager::Instance().viewport.Height + top;
 
-            auto left = GraphicsManager::Instance().viewport.TopLeftX +
-                        ImGui::GetWindowSize().x;
-            auto top = GraphicsManager::Instance().viewport.TopLeftY;
-            auto right = GraphicsManager::Instance().viewport.Width + left;
-            auto bottom = GraphicsManager::Instance().viewport.Height + top;
-
-            if (left < cursor.x && cursor.x < right && top < cursor.y &&
-                cursor.y < bottom)
-                return true;
+        if (left < cursor.x && cursor.x < right && top < cursor.y &&
+            cursor.y < bottom) {
+            return true;
         }
+
         return false;
     }
 }

@@ -4,9 +4,6 @@
     <ClInclude Include="model.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
-    <ClInclude Include="behavior_tree.h">
-      <Filter>Engine\BehaviorTree</Filter>
-    </ClInclude>
     <ClInclude Include="camera.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
@@ -40,26 +37,8 @@
     <ClInclude Include="setting_ui.h">
       <Filter>Common\BluePrint</Filter>
     </ClInclude>
-    <ClInclude Include="graph.h">
-      <Filter>Engine\BehaviorGraph</Filter>
-    </ClInclude>
-    <ClInclude Include="behavior_tree_builder.h">
-      <Filter>Engine\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="conditional_node.h">
-      <Filter>Engine\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="sequence_node.h">
-      <Filter>Engine\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="selector_node.h">
-      <Filter>Engine\BehaviorTree</Filter>
-    </ClInclude>
     <ClInclude Include="image_filter.h">
       <Filter>Engine\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="parallel_node.h">
-      <Filter>Engine\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="node_ui.h">
       <Filter>Common\BluePrint</Filter>
@@ -151,14 +130,32 @@
     <ClInclude Include="message_receiver.h">
       <Filter>Engine\Util</Filter>
     </ClInclude>
+    <ClInclude Include="sequence_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="behavior_tree.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="behavior_tree_builder.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="conditional_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="parallel_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="selector_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="graph.h">
+      <Filter>Engine\BehaviorGraph\GraghNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp">
       <Filter>Engine\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="behavior_tree.cpp">
-      <Filter>Engine\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>Engine\Model</Filter>
@@ -190,26 +187,8 @@
     <ClCompile Include="setting_ui.cpp">
       <Filter>Common\BluePrint</Filter>
     </ClCompile>
-    <ClCompile Include="graph.cpp">
-      <Filter>Engine\BehaviorGraph</Filter>
-    </ClCompile>
-    <ClCompile Include="conditional_node.cpp">
-      <Filter>Engine\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="sequence_node.cpp">
-      <Filter>Engine\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="behavior_tree_builder.cpp">
-      <Filter>Engine\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="selector_node.cpp">
-      <Filter>Engine\BehaviorTree</Filter>
-    </ClCompile>
     <ClCompile Include="image_filter.cpp">
       <Filter>Engine\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="parallel_node.cpp">
-      <Filter>Engine\BehaviorTree</Filter>
     </ClCompile>
     <ClCompile Include="application.cpp">
       <Filter>Platform</Filter>
@@ -265,6 +244,27 @@
     <ClCompile Include="model_loader.cpp">
       <Filter>Engine\Util</Filter>
     </ClCompile>
+    <ClCompile Include="behavior_tree_builder.cpp">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="conditional_node.cpp">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="parallel_node.cpp">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="selector_node.cpp">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="sequence_node.cpp">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="behavior_tree.cpp">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClCompile>
+    <ClCompile Include="graph.cpp">
+      <Filter>Engine\BehaviorGraph\GraghNode</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Platform">
@@ -275,12 +275,6 @@
     </Filter>
     <Filter Include="Common\BluePrint">
       <UniqueIdentifier>{9eb6ce6c-e8f1-4912-bd9c-acf6ddd4f248}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\ImGui">
-      <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\ImGui\NodeEditor">
-      <UniqueIdentifier>{30855cc5-8d09-42a4-bb3c-c5aea4725478}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
@@ -308,6 +302,18 @@
     </Filter>
     <Filter Include="Engine\Util">
       <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\BehaviorTree\TreeNode">
+      <UniqueIdentifier>{f29ff5f6-1cbe-4545-a200-39f24aba85a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\BehaviorGraph\GraghNode">
+      <UniqueIdentifier>{895e1700-a968-44b5-af87-598595de7b7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\ImGui">
+      <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\ImGui\NodeEditor">
+      <UniqueIdentifier>{30855cc5-8d09-42a4-bb3c-c5aea4725478}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

@@ -150,6 +150,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
         // GeometryGenerator::ReadFromFile(model, directoryPath, fileName);
         // model->SetName(fileName);
 
+
         // for (const auto &meshData : model->meshes) {
         //     {
         //         D3D11_BUFFER_DESC bufferDesc;

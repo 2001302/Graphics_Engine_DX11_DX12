@@ -24,6 +24,7 @@ bool Application::OnStart() {
     auto device = GraphicsManager::Instance().device;
     auto context = GraphicsManager::Instance().device_context;
 
+    // 환경 박스 초기화
     auto mesh_data = GeometryGenerator::MakeBox(40.0f);
     std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
     auto cube_map = std::make_shared<Model>(
@@ -57,6 +58,30 @@ bool Application::OnStart() {
             std::make_shared<Model>(device, context, std::vector{meshData});
     }
 
+    // 바닥(거울)
+    {
+        auto mesh = GeometryGenerator::MakeSquare(5.0);
+        // mesh.albedoTextureFilename =
+        //     "../Assets/Textures/blender_uv_grid_2k.png";
+        manager_->m_ground =
+            std::make_shared<Model>(device, context, std::vector{mesh});
+        manager_->m_ground->m_materialConstsCPU.albedoFactor = Vector3(0.1f);
+        manager_->m_ground->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
+        manager_->m_ground->m_materialConstsCPU.metallicFactor = 0.5f;
+        manager_->m_ground->m_materialConstsCPU.roughnessFactor = 0.3f;
+
+        Vector3 position = Vector3(0.0f, -0.5f, 2.0f);
+        manager_->m_ground->UpdateWorldRow(
+            Matrix::CreateRotationX(3.141592f * 0.5f) *
+            Matrix::CreateTranslation(position));
+
+        manager_->m_mirrorPlane =
+            DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
+        manager_->m_mirror = manager_->m_ground; // 바닥에 거울처럼 반사 구현
+
+        // m_basicList.push_back(m_ground); // 거울은 리스트에 등록 X
+    }
+
     // 추가 물체1
     {
         MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
@@ -71,6 +96,71 @@ bool Application::OnStart() {
         m_obj->UpdateConstantBuffers(device, context);
 
         manager_->m_basicList.push_back(m_obj);
+    }
+
+    // 추가 물체2
+    {
+        MeshData mesh = GeometryGenerator::MakeBox(0.2f);
+        Vector3 center(0.0f, 0.5f, 2.5f);
+        auto m_obj =
+            std::make_shared<Model>(device, context, std::vector{mesh});
+        m_obj->UpdateWorldRow(Matrix::CreateTranslation(center));
+        m_obj->m_materialConstsCPU.albedoFactor = Vector3(1.0f, 0.2f, 0.2f);
+        m_obj->m_materialConstsCPU.roughnessFactor = 0.5f;
+        m_obj->m_materialConstsCPU.metallicFactor = 0.9f;
+        m_obj->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
+        m_obj->UpdateConstantBuffers(device, context);
+
+        manager_->m_basicList.push_back(m_obj);
+    }
+
+    // 조명 설정
+    {
+        // 조명 0은 고정
+        manager_->m_globalConstsCPU.lights[0].radiance = Vector3(5.0f);
+        manager_->m_globalConstsCPU.lights[0].position =
+            Vector3(0.0f, 1.5f, 1.1f);
+        manager_->m_globalConstsCPU.lights[0].direction =
+            Vector3(0.0f, -1.0f, 0.0f);
+        manager_->m_globalConstsCPU.lights[0].spotPower = 3.0f;
+        manager_->m_globalConstsCPU.lights[0].radius = 0.02f;
+        manager_->m_globalConstsCPU.lights[0].type =
+            LIGHT_SPOT | LIGHT_SHADOW; // Point with shadow
+
+        // 조명 1의 위치와 방향은 Update()에서 설정
+        manager_->m_globalConstsCPU.lights[1].radiance = Vector3(5.0f);
+        manager_->m_globalConstsCPU.lights[1].spotPower = 3.0f;
+        manager_->m_globalConstsCPU.lights[1].fallOffEnd = 20.0f;
+        manager_->m_globalConstsCPU.lights[1].radius = 0.02f;
+        manager_->m_globalConstsCPU.lights[1].type =
+            LIGHT_SPOT | LIGHT_SHADOW; // Point with shadow
+
+        // 조명 2는 꺼놓음
+        manager_->m_globalConstsCPU.lights[2].type = LIGHT_OFF;
+    }
+
+    // 조명 위치 표시
+    {
+        for (int i = 0; i < MAX_LIGHTS; i++) {
+            MeshData sphere = GeometryGenerator::MakeSphere(1.0f, 20, 20);
+            manager_->m_lightSphere[i] =
+                std::make_shared<Model>(device, context, std::vector{sphere});
+            manager_->m_lightSphere[i]->UpdateWorldRow(
+                Matrix::CreateTranslation(
+                    manager_->m_globalConstsCPU.lights[i].position));
+            manager_->m_lightSphere[i]->m_materialConstsCPU.albedoFactor =
+                Vector3(0.0f);
+            manager_->m_lightSphere[i]->m_materialConstsCPU.emissionFactor =
+                Vector3(1.0f, 1.0f, 0.0f);
+            manager_->m_lightSphere[i]->m_castShadow =
+                false; // 조명 표시 물체들은 그림자 X
+
+            if (manager_->m_globalConstsCPU.lights[i].type == 0)
+                manager_->m_lightSphere[i]->m_isVisible = false;
+
+            manager_->m_basicList.push_back(
+                manager_->m_lightSphere[i]); // 리스트에 등록
+        }
     }
 
     GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
@@ -119,10 +209,181 @@ bool Application::OnStart() {
 
 bool Application::OnFrame() {
 
-    std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {EnumDataBlockType::eManager, manager_.get()},
-        {EnumDataBlockType::eGui, imgui_.get()},
-    };
+    //std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
+    //    {EnumDataBlockType::eManager, manager_.get()},
+    //    {EnumDataBlockType::eGui, imgui_.get()},
+    //};
+
+    OnUpdate(ImGui::GetIO().DeltaTime);
+    OnRender();
+
+    return true;
+}
+
+void Application::UpdateGlobalConstants(const Vector3 &eyeWorld,
+                                        const Matrix &viewRow,
+                                        const Matrix &projRow,
+                                        const Matrix &refl = Matrix()) {
+
+    auto device = GraphicsManager::Instance().device;
+    auto context = GraphicsManager::Instance().device_context;
+
+    manager_->m_globalConstsCPU.eyeWorld = eyeWorld;
+    manager_->m_globalConstsCPU.view = viewRow.Transpose();
+    manager_->m_globalConstsCPU.proj = projRow.Transpose();
+    manager_->m_globalConstsCPU.invProj = projRow.Invert().Transpose();
+    manager_->m_globalConstsCPU.viewProj = (viewRow * projRow).Transpose();
+    // 그림자 렌더링에 사용
+    manager_->m_globalConstsCPU.invViewProj =
+        manager_->m_globalConstsCPU.viewProj.Invert();
+
+    manager_->m_reflectGlobalConstsCPU = manager_->m_globalConstsCPU;
+    memcpy(&manager_->m_reflectGlobalConstsCPU, &manager_->m_globalConstsCPU,
+           sizeof(manager_->m_globalConstsCPU));
+    manager_->m_reflectGlobalConstsCPU.view = (refl * viewRow).Transpose();
+    manager_->m_reflectGlobalConstsCPU.viewProj =
+        (refl * viewRow * projRow).Transpose();
+    // 그림자 렌더링에 사용 (TODO: 광원의 위치도 반사시킨 후에 계산해야 함)
+    manager_->m_reflectGlobalConstsCPU.invViewProj =
+        manager_->m_reflectGlobalConstsCPU.viewProj.Invert();
+
+    GraphicsUtil::UpdateBuffer(device, context, manager_->m_globalConstsCPU,
+                               manager_->m_globalConstsGPU);
+    GraphicsUtil::UpdateBuffer(device, context,
+                               manager_->m_reflectGlobalConstsCPU,
+                               manager_->m_reflectGlobalConstsGPU);
+}
+
+bool Application::OnUpdate(float dt) {
+    auto device = GraphicsManager::Instance().device;
+    auto context = GraphicsManager::Instance().device_context;
+
+    // 반사 행렬 추가
+    const Vector3 eyeWorld = manager_->camera->GetEyePos();
+    const Matrix reflectRow = Matrix::CreateReflection(manager_->m_mirrorPlane);
+    const Matrix viewRow = manager_->camera->GetViewRow();
+    const Matrix projRow = manager_->camera->GetProjRow();
+
+    UpdateLights(dt);
+
+    // 공용 ConstantBuffer 업데이트
+    UpdateGlobalConstants(eyeWorld, viewRow, projRow, reflectRow);
+
+    // 거울은 따로 처리
+    manager_->m_mirror->UpdateConstantBuffers(device, context);
+
+    // 조명의 위치 반영
+    for (int i = 0; i < MAX_LIGHTS; i++)
+        manager_->m_lightSphere[i]->UpdateWorldRow(
+            Matrix::CreateScale((std::max)(
+                0.01f, manager_->m_globalConstsCPU.lights[i].radius)) *
+            Matrix::CreateTranslation(
+                manager_->m_globalConstsCPU.lights[i].position));
+
+    //// 마우스 이동/회전 반영
+    // if (m_leftButton || m_rightButton) {
+    //     Quaternion q;
+    //     Vector3 dragTranslation;
+    //     Vector3 pickPoint;
+    //     if (UpdateMouseControl(m_mainBoundingSphere, q, dragTranslation,
+    //                            pickPoint)) {
+    //         Vector3 translation = m_mainObj->m_worldRow.Translation();
+    //         m_mainObj->m_worldRow.Translation(Vector3(0.0f));
+    //         m_mainObj->UpdateWorldRow(
+    //             m_mainObj->m_worldRow * Matrix::CreateFromQuaternion(q) *
+    //             Matrix::CreateTranslation(dragTranslation + translation));
+    //         m_mainBoundingSphere.Center =
+    //         m_mainObj->m_worldRow.Translation();
+
+    //        // 충돌 지점에 작은 구 그리기
+    //        m_cursorSphere->m_isVisible = true;
+    //        m_cursorSphere->UpdateWorldRow(
+    //            Matrix::CreateTranslation(pickPoint));
+    //    } else {
+    //        m_cursorSphere->m_isVisible = false;
+    //    }
+    //} else {
+    //    m_cursorSphere->m_isVisible = false;
+    //}
+
+    for (auto &i : manager_->m_basicList) {
+        i->UpdateConstantBuffers(device, context);
+    }
+
+    return true;
+}
+void Application::UpdateLights(float dt) {
+
+    auto device = GraphicsManager::Instance().device;
+    auto context = GraphicsManager::Instance().device_context;
+
+    // 회전하는 lights[1] 업데이트
+    static Vector3 lightDev = Vector3(1.0f, 0.0f, 0.0f);
+    if (manager_->m_lightRotate) {
+        lightDev = Vector3::Transform(
+            lightDev, Matrix::CreateRotationY(dt * 3.141592f * 0.5f));
+    }
+    manager_->m_globalConstsCPU.lights[1].position =
+        Vector3(0.0f, 1.1f, 2.0f) + lightDev;
+    Vector3 focusPosition = Vector3(0.0f, -0.5f, 1.7f);
+    manager_->m_globalConstsCPU.lights[1].direction =
+        focusPosition - manager_->m_globalConstsCPU.lights[1].position;
+    manager_->m_globalConstsCPU.lights[1].direction.Normalize();
+
+    // 그림자맵을 만들기 위한 시점
+    for (int i = 0; i < MAX_LIGHTS; i++) {
+        const auto &light = manager_->m_globalConstsCPU.lights[i];
+        if (light.type & LIGHT_SHADOW) {
+
+            Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+            if (abs(up.Dot(light.direction) + 1.0f) < 1e-5)
+                up = Vector3(1.0f, 0.0f, 0.0f);
+
+            // 그림자맵을 만들 때 필요
+            Matrix lightViewRow = DirectX::XMMatrixLookAtLH(
+                light.position, light.position + light.direction, up);
+
+            Matrix lightProjRow = DirectX::XMMatrixPerspectiveFovLH(
+                DirectX::XMConvertToRadians(120.0f), 1.0f, 0.1f, 10.0f);
+
+            manager_->m_shadowGlobalConstsCPU[i].eyeWorld = light.position;
+            manager_->m_shadowGlobalConstsCPU[i].view =
+                lightViewRow.Transpose();
+            manager_->m_shadowGlobalConstsCPU[i].proj =
+                lightProjRow.Transpose();
+            manager_->m_shadowGlobalConstsCPU[i].invProj =
+                lightProjRow.Invert().Transpose();
+            manager_->m_shadowGlobalConstsCPU[i].viewProj =
+                (lightViewRow * lightProjRow).Transpose();
+
+            // LIGHT_FRUSTUM_WIDTH 확인
+            // Vector4 eye(0.0f, 0.0f, 0.0f, 1.0f);
+            // Vector4 xLeft(-1.0f, -1.0f, 0.0f, 1.0f);
+            // Vector4 xRight(1.0f, 1.0f, 0.0f, 1.0f);
+            // eye = Vector4::Transform(eye, lightProjRow);
+            // xLeft = Vector4::Transform(xLeft, lightProjRow.Invert());
+            // xRight = Vector4::Transform(xRight, lightProjRow.Invert());
+            // xLeft /= xLeft.w;
+            // xRight /= xRight.w;
+            // cout << "LIGHT_FRUSTUM_WIDTH = " << xRight.x - xLeft.x << endl;
+
+            GraphicsUtil::UpdateBuffer(device, context,
+                                       manager_->m_shadowGlobalConstsCPU[i],
+                                       manager_->m_shadowGlobalConstsGPU[i]);
+
+            // 그림자를 실제로 렌더링할 때 필요
+            manager_->m_globalConstsCPU.lights[i].viewProj =
+                manager_->m_shadowGlobalConstsCPU[i].viewProj;
+            manager_->m_globalConstsCPU.lights[i].invProj =
+                manager_->m_shadowGlobalConstsCPU[i].invProj;
+
+            // 반사된 장면에서도 그림자를 그리고 싶다면 조명도 반사시켜서
+            // 넣어주면 됩니다.
+        }
+    }
+}
+
+bool Application::OnRender() {
 
     auto device = GraphicsManager::Instance().device;
     auto context = GraphicsManager::Instance().device_context;
@@ -154,65 +415,6 @@ bool Application::OnFrame() {
         GraphicsManager::Instance().m_depthStencilView.Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-    // Clear the buffers to begin the scene.
-    // GraphicsManager::Instance().BeginScene(imgui_->Tab().common.draw_as_wire_);
-
-    // clang-format off
-
-    if (imgui_->SelectedId()) {
-        imgui_->PushNode(manager_->models[imgui_->SelectedId()]); 
-    }
-
-    //auto tree = std::make_unique<BehaviorTreeBuilder>();
-    //tree->Build(dataBlock)
-    //->Excute(std::make_shared<UpdateCamera>())
-    //->Parallel(manager_->models)
-    //    ->Selector()
-    //        ->Sequence()
-    //            ->Excute(std::make_shared<CheckPhongShader>())
-    //            ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
-    //            ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
-    //        ->Close()
-    //        ->Sequence()
-    //            ->Excute(std::make_shared<CheckPhysicallyBasedShader>())
-    //            ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
-    //            ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
-    //        ->Close()
-    //    ->Close()
-    //->Close()
-    //->Conditional(std::make_shared<CheckCubeMapShader>())
-    //    ->Sequence()
-    //        ->Excute(std::make_shared<UpdateCubeMap>())
-    //        ->Excute(std::make_shared<RenderCubeMap>())
-    //    ->Close()
-    //->End()
-    //->Excute(std::make_shared<RenderBoardMap>())
-    //->Run();
-    // clang-format on
-
-    // 그림자 렌더링에 사용
-    // manager_->m_globalConstsCPU.invViewProj =
-    // manager_->m_globalConstsCPU.viewProj.Invert();
-
-
-    auto eyeWorld = manager_->camera->GetEyePos();
-    auto view = manager_->camera->GetViewRow();
-    auto proj = manager_->camera->GetProjRow();
-
-    manager_->m_globalConstsCPU.eyeWorld = eyeWorld;
-    manager_->m_globalConstsCPU.view = view.Transpose();
-    manager_->m_globalConstsCPU.proj = proj.Transpose();
-    manager_->m_globalConstsCPU.invProj = proj.Invert().Transpose();
-    manager_->m_globalConstsCPU.viewProj = (view * proj).Transpose();
-    manager_->m_globalConstsCPU.invViewProj = view.Invert();
-
-    manager_->m_globalConstsCPU.textureToDraw = 0;
-    manager_->m_globalConstsCPU.envLodBias = 0.1f;
-    manager_->m_globalConstsCPU.lodBias = 2.1f;
-
-    GraphicsUtil::UpdateBuffer(device, context, manager_->m_globalConstsCPU,
-                               manager_->m_globalConstsGPU);
-
     GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
 
     GraphicsManager::Instance().SetPipelineState(Graphics::defaultSolidPSO);
@@ -221,7 +423,6 @@ bool Application::OnFrame() {
         i->Render(context);
     }
 
-    GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
     GraphicsManager::Instance().SetPipelineState(Graphics::skyboxSolidPSO);
 
     auto cube = dynamic_cast<Model *>(manager_->skybox.get());
@@ -257,6 +458,36 @@ bool Application::OnFrame() {
 
     GraphicsManager::Instance().SetPipelineState(Graphics::postProcessingPSO);
     manager_->m_postProcess.Render(context);
+    // clang-format off
+    
+    imgui_->PushNode(dynamic_cast<common::INodeUi*>(manager_.get())); 
+
+    //auto tree = std::make_unique<BehaviorTreeBuilder>();
+    //tree->Build(dataBlock)
+    //->Excute(std::make_shared<UpdateCamera>())
+    //->Parallel(manager_->models)
+    //    ->Selector()
+    //        ->Sequence()
+    //            ->Excute(std::make_shared<CheckPhongShader>())
+    //            ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
+    //            ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
+    //        ->Close()
+    //        ->Sequence()
+    //            ->Excute(std::make_shared<CheckPhysicallyBasedShader>())
+    //            ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
+    //            ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
+    //        ->Close()
+    //    ->Close()
+    //->Close()
+    //->Conditional(std::make_shared<CheckCubeMapShader>())
+    //    ->Sequence()
+    //        ->Excute(std::make_shared<UpdateCubeMap>())
+    //        ->Excute(std::make_shared<RenderCubeMap>())
+    //    ->Close()
+    //->End()
+    //->Excute(std::make_shared<RenderBoardMap>())
+    //->Run();
+    // clang-format on
 
     input_->Frame();
 
@@ -269,14 +500,12 @@ bool Application::OnFrame() {
     imgui_->FrameEnd();
     imgui_->ClearNode();
 
-    // Present the rendered scene to the screen.    
+    // Present the rendered scene to the screen.
     if (common::Env::Instance().vsync_enabled) {
-        GraphicsManager::Instance() .swap_chain->Present(1, 0);
-    }
-    else {
+        GraphicsManager::Instance().swap_chain->Present(1, 0);
+    } else {
         GraphicsManager::Instance().swap_chain->Present(0, 0);
     }
-
     return true;
 }
 
@@ -336,14 +565,14 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
     switch (umsg) {
     case WM_MOUSEMOVE: {
         if (wparam & MK_RBUTTON) {
-            //if (CheckIfMouseInViewport()) 
+            // if (CheckIfMouseInViewport())
             {
-                return message_receiver_->OnMouseRightDragRequest(manager_.get(),
-                                                             input_);
+                return message_receiver_->OnMouseRightDragRequest(
+                    manager_.get(), input_);
             }
         }
         if (wparam & MK_MBUTTON) {
-            //if (CheckIfMouseInViewport()) 
+            // if (CheckIfMouseInViewport())
             {
                 return message_receiver_->OnMouseWheelDragRequest(
                     manager_.get(), input_, LOWORD(lparam), HIWORD(lparam));
@@ -352,7 +581,7 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
         break;
     }
     case WM_MOUSEWHEEL: {
-        //if (CheckIfMouseInViewport()) 
+        // if (CheckIfMouseInViewport())
         {
             return message_receiver_->OnMouseWheelRequest(manager_.get(),
                                                           input_);

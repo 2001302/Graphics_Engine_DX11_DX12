@@ -373,6 +373,14 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
                 (float)common::Env::Instance().screen_height);
 
             imgui_->Initialize();
+
+            manager_->m_postProcess.Initialize(
+                GraphicsManager::Instance().device,
+                GraphicsManager::Instance().device_context,
+                {GraphicsManager::Instance().postEffectsSRV},
+                {GraphicsManager::Instance().back_buffer_RTV},
+                common::Env::Instance().screen_width,
+                common::Env::Instance().screen_height, 4);
         }
 
         break;

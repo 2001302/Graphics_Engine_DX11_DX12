@@ -310,14 +310,14 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
         if (wparam & MK_RBUTTON) {
             //if (CheckIfMouseInViewport()) 
             {
-                return message_receiver_->OnRightDragRequest(manager_.get(),
+                return message_receiver_->OnMouseRightDragRequest(manager_.get(),
                                                              input_);
             }
         }
         if (wparam & MK_MBUTTON) {
             //if (CheckIfMouseInViewport()) 
             {
-                return message_receiver_->OnWheelDragRequest(
+                return message_receiver_->OnMouseWheelDragRequest(
                     manager_.get(), input_, LOWORD(lparam), HIWORD(lparam));
             }
         }

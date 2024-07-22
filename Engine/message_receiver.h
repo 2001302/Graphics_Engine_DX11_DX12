@@ -13,11 +13,11 @@ class MessageReceiver {
     bool OnBoxLoadRequest(PipelineManager *manager);
     bool OnCylinderLoadRequest(PipelineManager *manager);
 
-    bool OnRightDragRequest(PipelineManager *manager,
+    bool OnMouseRightDragRequest(PipelineManager *manager,
                             std::shared_ptr<Input> input);
     bool OnMouseWheelRequest(PipelineManager *manager,
                              std::shared_ptr<Input> input);
-    bool OnWheelDragRequest(PipelineManager *manager,
+    bool OnMouseWheelDragRequest(PipelineManager *manager,
                             std::shared_ptr<Input> input, int mouseX,
                             int mouseY);
 };

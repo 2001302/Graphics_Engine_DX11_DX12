@@ -3,7 +3,7 @@
 namespace engine {
 using namespace DirectX::SimpleMath;
 
-bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
+bool MessageReceiver::OnMouseRightDragRequest(PipelineManager *manager,
                                          std::shared_ptr<Input> input) {
     DIMOUSESTATE mouseState;
     if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
@@ -34,7 +34,7 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
     return true;
 }
 
-bool MessageReceiver::OnWheelDragRequest(PipelineManager *manager,
+bool MessageReceiver::OnMouseWheelDragRequest(PipelineManager *manager,
                                          std::shared_ptr<Input> input,
                                          int mouseX, int mouseY) {
     DIMOUSESTATE mouseState;

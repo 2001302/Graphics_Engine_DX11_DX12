@@ -11,35 +11,10 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         // retry
         input->Mouse()->Acquire();
     } else {
-        auto viewPort = GraphicsManager::Instance().viewport;
+        auto move = Vector2(-mouseState.lX, mouseState.lY)/1000.0f;
 
-        // mouse move vector
-        Vector2 vector = Vector2(-mouseState.lX, -mouseState.lY);
-
-        Vector3 origin = manager->camera->GetEyePos();
-
-        // convert to spherical coordinates
-        double r = origin.Length();
-        double phi = acos(origin.y / r);
-        double theta = atan2(origin.z, origin.x);
-
-        // rotation
-        double deltaTheta = (2 * PI) * (vector.x / viewPort.Width);
-        double deltaPhi = (2 * PI) * (vector.y / viewPort.Width);
-
-        theta += deltaTheta;
-        phi += deltaPhi;
-
-        // convert to Cartesian coordinates after rotation
-        double x = r * sin(phi) * cos(theta);
-        double y = r * cos(phi);
-        double z = r * sin(phi) * sin(theta);
-
-        Vector3 origin_prime(x, y, z);
-
-        if (0.0f < phi && phi < PI)
-            manager->camera->SetEyeWorld(
-                Vector3(origin_prime.x, origin_prime.y, origin_prime.z));
+        manager->camera->MoveRight(move.x);
+        manager->camera->MoveUp(move.y);
     }
 
     return true;
@@ -53,16 +28,8 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
         // retry
         input->Mouse()->Acquire();
     } else {
-        float wheel = -mouseState.lZ / (600.0);
-        Vector3 origin = manager->camera->GetEyePos();
-
-        Matrix R1(1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f,
-                  0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
-
-        auto origin_prime = Vector3::Transform(origin, R1);
-
-        manager->camera->SetEyeWorld(
-            Vector3(origin_prime.x, origin_prime.y, origin_prime.z));
+        float wheel = mouseState.lZ / (100000.0f);
+        manager->camera->MoveForward(wheel);
     }
 
     return true;

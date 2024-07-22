@@ -6,14 +6,6 @@
 namespace engine {
 
 Matrix Camera::GetViewRow() {
-
-    // cout << m_position.x << ", " << m_position.y << ", " << m_position.z << "
-    // " << m_yaw << " " << m_pitch << endl;
-
-    // 렌더링에 사용할 View 행렬을 만들어주는 부분
-    // 이번 예제에서는 upDir이 Y로 고정되었다고 가정합니다.
-    // 시점 변환은 가상 세계가 통째로 반대로 움직이는 것과 동일
-    // m_pitch가 고개를 숙이는 회전이라서 -가 두번 붙어서 생략
     return Matrix::CreateTranslation(-this->m_position) *
            Matrix::CreateRotationY(-this->m_yaw) *
            Matrix::CreateRotationX(this->m_pitch);

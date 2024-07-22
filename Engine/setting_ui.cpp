@@ -99,49 +99,6 @@ void SettingUi::TabBar(
 
             ImGui::EndTabItem();
         }
-        if (ImGui::BeginTabItem("Setting")) {
-
-            ImGui::Checkbox("Wire Frame", &tab.common.draw_as_wire_);
-
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Cube Map")) {
-
-            ImGui::SliderFloat("MipLevel", &tab.cube_map.mipLevel, 0.0f, 1.0f);
-            ImGui::SliderInt("textureToDraw", &tab.cube_map.textureToDraw, 0,
-                             2);
-
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Ground")) {
-
-            ImGui::Checkbox("useHeightMap", &tab.ground.useHeightMap);
-            ImGui::Checkbox("useTexture", &tab.ground.useTexture);
-            ImGui::Checkbox("useNormalMap", &tab.ground.useNormalMap);
-            ImGui::Checkbox("useAOMap", &tab.ground.useAOMap);
-            ImGui::Checkbox("reverseNormalMapY", &tab.ground.reverseNormalMapY);
-
-            ImGui::SliderFloat("heightScale", &tab.ground.heightScale, 0.0f,
-                               1.0f);
-            ImGui::SliderFloat("ambient", &tab.ground.ambient, 0.0f, 1.0f);
-            ImGui::SliderFloat("shininess", &tab.ground.shininess, 0.0f, 1.0f);
-            ImGui::SliderFloat("diffuse", &tab.ground.diffuse, 0.0f, 1.0f);
-            ImGui::SliderFloat("specular", &tab.ground.specular, 0.0f, 1.0f);
-            ImGui::SliderFloat("fresnelR0", &tab.ground.fresnelR0, 0.0f, 1.0f);
-
-            ImGui::EndTabItem();
-        }
-        if (ImGui::BeginTabItem("Filter")) {
-
-            ImGui::SliderFloat("bloom_strength", &tab.filter.bloom_strength,
-                               0.0f, 1.0f);
-            ImGui::SliderFloat("bloom_exposure", &tab.filter.bloom_exposure,
-                               0.0f, 1.0f);
-            ImGui::SliderFloat("bloom_gamma", &tab.filter.bloom_gamma, 0.0f,
-                               1.0f);
-
-            ImGui::EndTabItem();
-        }
 
         ImGui::EndTabBar();
     }

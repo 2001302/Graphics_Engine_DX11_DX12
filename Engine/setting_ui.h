@@ -10,47 +10,11 @@ namespace ed = ax::NodeEditor;
 
 namespace common {
 
-struct CommonSetting {
-    bool draw_as_wire_ = false;
-};
-
-struct CubeMapSetting {
-    int textureToDraw;
-    float mipLevel;
-};
-
-struct FilterSetting {
-    float bloom_strength;
-    float bloom_exposure;
-    float bloom_gamma;
-};
-
-struct GroundSetting {
-    bool useHeightMap;
-    float heightScale;
-    float ambient;
-    float shininess;
-    float diffuse;
-    float specular;
-    float fresnelR0;
-    bool useTexture;
-    bool useNormalMap;
-    bool useAOMap;
-    bool reverseNormalMapY;
-};
-
-struct TabInfo {
-    CommonSetting common;
-    CubeMapSetting cube_map;
-    FilterSetting filter;
-    GroundSetting ground;
-};
 class SettingUi : public IGui {
 
   public:
     void OnStart() override;
     void OnFrame() override;
-    TabInfo Tab() { return tab; }
     int SelectedId();
     void PushNode(INodeUi *node);
     void ClearNode();
@@ -63,7 +27,6 @@ class SettingUi : public IGui {
 
   private:
     ed::EditorContext *context_ = nullptr;
-    TabInfo tab;
 
     ImVector<INodeUi::LinkInfo> links_;
     int next_link_Id = 100;

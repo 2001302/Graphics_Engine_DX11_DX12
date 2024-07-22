@@ -206,22 +206,6 @@ void GraphicsManager::SetViewPort(float x, float y, float width, float height) {
     device_context->RSSetViewports(1, &viewport);
 }
 
-void GraphicsManager::BeginScene(bool draw_as_wire) {
-    float color[4];
-
-    // Setup the color to clear the buffer to.
-    color[0] = 0.0f;
-    color[1] = 0.0f;
-    color[2] = 0.0f;
-    color[3] = 1.0f;
-
-    // Clear the depth buffer.
-    device_context->ClearRenderTargetView(float_RTV.Get(), color);
-    device_context->OMSetRenderTargets(1, float_RTV.GetAddressOf(),
-                                       m_depthStencilView.Get());
-
-    return;
-}
 void GraphicsManager::SetPipelineState(const GraphicsPSO &pso) {
 
     device_context->VSSetShader(pso.m_vertexShader.Get(), 0, 0);
@@ -245,14 +229,4 @@ void GraphicsManager::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
     device_context->GSSetConstantBuffers(1, 1, globalConstsGPU.GetAddressOf());
 }
 
-void GraphicsManager::EndScene() {
-
-    if (common::Env::Instance().vsync_enabled) {
-        swap_chain->Present(1, 0);
-    } else {
-        swap_chain->Present(0, 0);
-    }
-
-    return;
-}
 } // namespace engine

@@ -61,23 +61,8 @@
     <ClInclude Include="parallel_node.h">
       <Filter>Engine\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="message_receiver.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
     <ClInclude Include="node_ui.h">
       <Filter>Common\BluePrint</Filter>
-    </ClInclude>
-    <ClInclude Include="pipeline_manager.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="geometry_generator.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="model_loader.h">
-      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>Engine\Data</Filter>
@@ -151,6 +136,21 @@
     <ClInclude Include="post_process.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="pipeline_manager.h">
+      <Filter>Engine\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="model_loader.h">
+      <Filter>Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="geometry_generator.h">
+      <Filter>Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="message_receiver.h">
+      <Filter>Engine\Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -211,18 +211,6 @@
     <ClCompile Include="parallel_node.cpp">
       <Filter>Engine\BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="message_receiver.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="geometry_generator.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="model_loader.cpp">
-      <Filter>Engine</Filter>
-    </ClCompile>
     <ClCompile Include="application.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
@@ -265,6 +253,18 @@
     <ClCompile Include="post_process.cpp">
       <Filter>Engine\Model</Filter>
     </ClCompile>
+    <ClCompile Include="input.cpp">
+      <Filter>Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="geometry_generator.cpp">
+      <Filter>Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="message_receiver.cpp">
+      <Filter>Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="model_loader.cpp">
+      <Filter>Engine\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Platform">
@@ -305,6 +305,9 @@
     </Filter>
     <Filter Include="Engine\Graphics\HLSL">
       <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Util">
+      <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

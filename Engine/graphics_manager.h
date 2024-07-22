@@ -19,8 +19,6 @@ class GraphicsManager {
         return instance;
     }
     bool Initialize();
-    void BeginScene(bool draw_as_wire);
-    void EndScene();
     void SetViewPort(float x, float y, float width, float height);
     bool CreateBuffer();
     void SetPipelineState(const GraphicsPSO &pso);
@@ -36,17 +34,16 @@ class GraphicsManager {
     ComPtr<ID3D11RenderTargetView> back_buffer_RTV;
 
     ComPtr<ID3D11Texture2D> float_buffer;
-    ComPtr<ID3D11Texture2D> resolved_buffer;
-    ComPtr<ID3D11Texture2D> postEffectsBuffer;
-
     ComPtr<ID3D11RenderTargetView> float_RTV;
-    ComPtr<ID3D11RenderTargetView> resolved_RTV;
-    ComPtr<ID3D11RenderTargetView> postEffectsRTV;
 
+    ComPtr<ID3D11Texture2D> resolved_buffer;
+    ComPtr<ID3D11RenderTargetView> resolved_RTV;
     ComPtr<ID3D11ShaderResourceView> resolved_SRV;
+
+    ComPtr<ID3D11Texture2D> postEffectsBuffer;
+    ComPtr<ID3D11RenderTargetView> postEffectsRTV;
     ComPtr<ID3D11ShaderResourceView> postEffectsSRV;
 
-    // Depth buffer 관련
     ComPtr<ID3D11Texture2D> m_depthOnlyBuffer; // No MSAA
     ComPtr<ID3D11DepthStencilView> m_depthOnlyDSV;
     ComPtr<ID3D11DepthStencilView> m_depthStencilView;

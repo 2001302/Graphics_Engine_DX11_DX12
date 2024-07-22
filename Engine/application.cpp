@@ -194,6 +194,7 @@ bool Application::OnFrame() {
     // manager_->m_globalConstsCPU.invViewProj =
     // manager_->m_globalConstsCPU.viewProj.Invert();
 
+
     auto eyeWorld = manager_->camera->GetEyePos();
     auto view = manager_->camera->GetViewRow();
     auto proj = manager_->camera->GetProjRow();
@@ -214,18 +215,14 @@ bool Application::OnFrame() {
 
     GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
 
-    GraphicsManager::Instance().SetPipelineState(
-        imgui_->Tab().common.draw_as_wire_ ? Graphics::defaultWirePSO
-                                           : Graphics::defaultSolidPSO);
+    GraphicsManager::Instance().SetPipelineState(Graphics::defaultSolidPSO);
 
     for (auto &i : manager_->m_basicList) {
         i->Render(context);
     }
 
     GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
-    GraphicsManager::Instance().SetPipelineState(
-        imgui_->Tab().common.draw_as_wire_ ? Graphics::skyboxWirePSO
-                                           : Graphics::skyboxSolidPSO);
+    GraphicsManager::Instance().SetPipelineState(Graphics::skyboxSolidPSO);
 
     auto cube = dynamic_cast<Model *>(manager_->skybox.get());
     cube->Render(context);
@@ -272,8 +269,13 @@ bool Application::OnFrame() {
     imgui_->FrameEnd();
     imgui_->ClearNode();
 
-    // Present the rendered scene to the screen.
-    GraphicsManager::Instance().EndScene();
+    // Present the rendered scene to the screen.    
+    if (common::Env::Instance().vsync_enabled) {
+        GraphicsManager::Instance() .swap_chain->Present(1, 0);
+    }
+    else {
+        GraphicsManager::Instance().swap_chain->Present(0, 0);
+    }
 
     return true;
 }

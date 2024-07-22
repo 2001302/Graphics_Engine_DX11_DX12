@@ -1,7 +1,7 @@
 #ifndef _ENV
 #define _ENV
 
-#include <cmath> //for calculate coordination
+#include <cmath>
 #include <windows.h>
 
 const double PI = std::acos(-1);

@@ -19,7 +19,8 @@ class GraphicsManager {
         return instance;
     }
     bool Initialize();
-    void SetViewPort(float x, float y, float width, float height);
+    void SetMainViewport();
+    void SetShadowViewport();
     bool CreateBuffer();
     void SetPipelineState(const GraphicsPSO &pso);
     void SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU);

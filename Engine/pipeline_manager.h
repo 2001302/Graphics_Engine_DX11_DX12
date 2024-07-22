@@ -14,7 +14,7 @@ class PipelineManager : public common::IDataBlock, public common::INodeUi {
   public:
     std::unique_ptr<Camera> camera;
     //std::unique_ptr<Light> light;
-    std::shared_ptr<common::INodeUi> skybox;
+    std::shared_ptr<Model> skybox;
     std::map<int /*id*/, common::INodeUi*> models;
     std::shared_ptr<Model> m_screenSquare;
     std::shared_ptr<Model> m_lightSphere[MAX_LIGHTS];

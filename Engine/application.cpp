@@ -209,10 +209,10 @@ bool Application::OnStart() {
 
 bool Application::OnFrame() {
 
-    //std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
-    //    {EnumDataBlockType::eManager, manager_.get()},
-    //    {EnumDataBlockType::eGui, imgui_.get()},
-    //};
+    // std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
+    //     {EnumDataBlockType::eManager, manager_.get()},
+    //     {EnumDataBlockType::eGui, imgui_.get()},
+    // };
 
     OnUpdate(ImGui::GetIO().DeltaTime);
     OnRender();
@@ -385,6 +385,8 @@ void Application::UpdateLights(float dt) {
 
 bool Application::OnRender() {
 
+    GraphicsManager::Instance().SetMainViewport();
+
     auto device = GraphicsManager::Instance().device;
     auto context = GraphicsManager::Instance().device_context;
 
@@ -404,6 +406,46 @@ bool Application::OnRender() {
     std::vector<ID3D11RenderTargetView *> rtvs = {
         GraphicsManager::Instance().float_RTV.Get()};
 
+    // Depth Only Pass (RTS 생략 가능)
+    context->OMSetRenderTargets(
+        0, NULL, GraphicsManager::Instance().m_depthOnlyDSV.Get());
+    context->ClearDepthStencilView(
+        GraphicsManager::Instance().m_depthOnlyDSV.Get(), D3D11_CLEAR_DEPTH,
+        1.0f, 0);
+
+    GraphicsManager::Instance().SetPipelineState(Graphics::depthOnlyPSO);
+    GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
+
+    for (auto &i : manager_->m_basicList)
+        i->Render(context);
+    manager_->skybox->Render(context);
+    manager_->m_mirror->Render(context);
+
+    // 그림자맵 만들기
+    GraphicsManager::Instance().SetShadowViewport(); // 그림자맵 해상도
+    GraphicsManager::Instance().SetPipelineState(Graphics::depthOnlyPSO);
+    for (int i = 0; i < MAX_LIGHTS; i++) {
+        if (manager_->m_globalConstsCPU.lights[i].type & LIGHT_SHADOW) {
+            // RTS 생략 가능
+            context->OMSetRenderTargets(
+                0, NULL, GraphicsManager::Instance().m_shadowDSVs[i].Get());
+            context->ClearDepthStencilView(
+                GraphicsManager::Instance().m_shadowDSVs[i].Get(),
+                D3D11_CLEAR_DEPTH, 1.0f, 0);
+            GraphicsManager::Instance().SetGlobalConsts(
+                manager_->m_shadowGlobalConstsGPU[i]);
+            for (auto &i : manager_->m_basicList)
+                if (i->m_castShadow && i->m_isVisible)
+                    i->Render(context);
+            manager_->skybox->Render(context);
+            manager_->m_mirror->Render(context);
+        }
+    }
+
+    // 다시 렌더링 해상도로 되돌리기
+    GraphicsManager::Instance().SetMainViewport();
+
+    // 거울 1. 거울은 빼고 원래 대로 그리기
     for (size_t i = 0; i < rtvs.size(); i++) {
         context->ClearRenderTargetView(rtvs[i], clearColor);
     }
@@ -411,22 +453,76 @@ bool Application::OnRender() {
         UINT(rtvs.size()), rtvs.data(),
         GraphicsManager::Instance().m_depthStencilView.Get());
 
+    // 그림자맵들도 공용 텍스춰들 이후에 추가
+    // 주의: 마지막 shadowDSV를 RenderTarget에서 해제한 후 설정
+    std::vector<ID3D11ShaderResourceView *> shadowSRVs;
+    for (int i = 0; i < MAX_LIGHTS; i++) {
+        shadowSRVs.push_back(GraphicsManager::Instance().m_shadowSRVs[i].Get());
+    }
+    context->PSSetShaderResources(15, UINT(shadowSRVs.size()),
+                                  shadowSRVs.data());
+
     context->ClearDepthStencilView(
         GraphicsManager::Instance().m_depthStencilView.Get(),
         D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-    GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
-
     GraphicsManager::Instance().SetPipelineState(Graphics::defaultSolidPSO);
+    GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
 
     for (auto &i : manager_->m_basicList) {
         i->Render(context);
     }
 
-    GraphicsManager::Instance().SetPipelineState(Graphics::skyboxSolidPSO);
+    // 거울 반사를 그릴 필요가 없으면 불투명 거울만 그리기
+    if (manager_->m_mirrorAlpha == 1.0f)
+        manager_->m_mirror->Render(context);
 
-    auto cube = dynamic_cast<Model *>(manager_->skybox.get());
-    cube->Render(context);
+    GraphicsManager::Instance().SetPipelineState(Graphics::normalsPSO);
+    for (auto &i : manager_->m_basicList) {
+        if (i->m_drawNormals)
+            i->RenderNormals(context);
+    }
+
+    GraphicsManager::Instance().SetPipelineState(Graphics::skyboxSolidPSO);
+    manager_->skybox->Render(context);
+
+    if (manager_->m_mirrorAlpha < 1.0f) { // 거울을 그려야 하는 상황
+
+        // 거울 2. 거울 위치만 StencilBuffer에 1로 표기
+        GraphicsManager::Instance().SetPipelineState(Graphics::stencilMaskPSO);
+
+        manager_->m_mirror->Render(context);
+
+        // 거울 3. 거울 위치에 반사된 물체들을 렌더링
+        GraphicsManager::Instance().SetPipelineState(
+            manager_->m_drawAsWire ? Graphics::reflectWirePSO
+                                   : Graphics::reflectSolidPSO);
+        GraphicsManager::Instance().SetGlobalConsts(
+            manager_->m_reflectGlobalConstsGPU);
+
+        context->ClearDepthStencilView(
+            GraphicsManager::Instance().m_depthStencilView.Get(),
+            D3D11_CLEAR_DEPTH, 1.0f, 0);
+
+        for (auto &i : manager_->m_basicList) {
+            i->Render(context);
+        }
+
+        GraphicsManager::Instance().SetPipelineState(
+            manager_->m_drawAsWire ? Graphics::reflectSkyboxWirePSO
+                                   : Graphics::reflectSkyboxSolidPSO);
+        manager_->skybox->Render(context);
+
+        // 거울 4. 거울 자체의 재질을 "Blend"로 그림
+        GraphicsManager::Instance().SetPipelineState(
+            manager_->m_drawAsWire ? Graphics::mirrorBlendWirePSO
+                                   : Graphics::mirrorBlendSolidPSO);
+        GraphicsManager::Instance().SetGlobalConsts(
+            manager_->m_globalConstsGPU);
+
+        manager_->m_mirror->Render(context);
+
+    } // end of if (m_mirrorAlpha < 1.0f)
 
     context->ResolveSubresource(
         GraphicsManager::Instance().resolved_buffer.Get(), 0,
@@ -626,10 +722,7 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
                 DXGI_FORMAT_UNKNOWN, 0);
 
             GraphicsManager::Instance().CreateBuffer();
-
-            GraphicsManager::Instance().SetViewPort(
-                0.0f, 0.0f, (float)common::Env::Instance().screen_width,
-                (float)common::Env::Instance().screen_height);
+            GraphicsManager::Instance().SetMainViewport();
 
             imgui_->Initialize();
 

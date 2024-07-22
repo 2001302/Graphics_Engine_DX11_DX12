@@ -41,9 +41,7 @@ bool GraphicsManager::Initialize() {
     }
 
     CreateBuffer();
-
-    SetViewPort(0.0f, 0.0f, (float)common::Env::Instance().screen_width,
-                (float)common::Env::Instance().screen_height);
+    SetMainViewport();
 
     D3D11_RASTERIZER_DESC rastDesc;
     ZeroMemory(&rastDesc, sizeof(D3D11_RASTERIZER_DESC));
@@ -192,18 +190,33 @@ void GraphicsManager::CreateDepthBuffer() {
     }
 }
 
-void GraphicsManager::SetViewPort(float x, float y, float width, float height) {
-    // Setup the viewport for rendering.
+void GraphicsManager::SetMainViewport() {
+
+    // Set the viewport
     ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
-    viewport.Width = (float)width;
-    viewport.Height = (float)height;
+    viewport.TopLeftX = 0;
+    viewport.TopLeftY = 0;
+    viewport.Width = float(common::Env::Instance().screen_width);
+    viewport.Height = float(common::Env::Instance().screen_height);
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
-    viewport.TopLeftX = x;
-    viewport.TopLeftY = y;
 
-    // Create the viewport.
     device_context->RSSetViewports(1, &viewport);
+}
+
+void GraphicsManager::SetShadowViewport() {
+
+    // Set the viewport
+    D3D11_VIEWPORT shadowViewport;
+    ZeroMemory(&shadowViewport, sizeof(D3D11_VIEWPORT));
+    shadowViewport.TopLeftX = 0;
+    shadowViewport.TopLeftY = 0;
+    shadowViewport.Width = float(m_shadowWidth);
+    shadowViewport.Height = float(m_shadowHeight);
+    shadowViewport.MinDepth = 0.0f;
+    shadowViewport.MaxDepth = 1.0f;
+
+    device_context->RSSetViewports(1, &shadowViewport);
 }
 
 void GraphicsManager::SetPipelineState(const GraphicsPSO &pso) {

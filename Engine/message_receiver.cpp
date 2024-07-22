@@ -11,9 +11,35 @@ bool MessageReceiver::OnMouseRightDragRequest(PipelineManager *manager,
         // retry
         input->Mouse()->Acquire();
     } else {
-        auto move = Vector2(-mouseState.lX, mouseState.lY)/1000.0f;
+        auto viewPort = GraphicsManager::Instance().viewport;
 
-        manager->camera->Rotate(move.x, move.y);
+        // mouse move vector
+        Vector2 vector = Vector2(-mouseState.lX, -mouseState.lY);
+
+        Vector3 origin = manager->camera->GetPosition();
+
+        // convert to spherical coordinates
+        double r = origin.Length();
+        double phi = acos(origin.y / r);
+        double theta = atan2(origin.z, origin.x);
+
+        // rotation
+        double deltaTheta = (2 * PI) * (vector.x / viewPort.Width);
+        double deltaPhi = (2 * PI) * (vector.y / viewPort.Width);
+
+        theta += deltaTheta;
+        phi += deltaPhi;
+
+        // convert to Cartesian coordinates after rotation
+        double x = r * sin(phi) * cos(theta);
+        double y = r * cos(phi);
+        double z = r * sin(phi) * sin(theta);
+
+        Vector3 origin_prime(x, y, z);
+
+        if (0.0f < phi && phi < PI)
+            manager->camera->SetPosition(
+                Vector3(origin_prime.x, origin_prime.y, origin_prime.z));
     }
 
     return true;
@@ -27,8 +53,16 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
         // retry
         input->Mouse()->Acquire();
     } else {
-        float wheel = mouseState.lZ / (100000.0f);
-        manager->camera->MoveForward(wheel);
+        float wheel = -mouseState.lZ / (600.0);
+        Vector3 origin = manager->camera->GetPosition();
+
+        Matrix R1(1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f,
+                  0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+
+        auto origin_prime = Vector3::Transform(origin, R1);
+
+        manager->camera->SetPosition(
+            Vector3(origin_prime.x, origin_prime.y, origin_prime.z));
     }
 
     return true;
@@ -53,8 +87,8 @@ bool MessageReceiver::OnMouseWheelDragRequest(PipelineManager *manager,
 
         auto env = common::Env::Instance();
 
-        auto projRow = manager->camera->GetProjRow();
-        auto viewRow = manager->camera->GetViewRow();
+        auto projRow = manager->camera->GetProjection();
+        auto viewRow = manager->camera->GetView();
 
         Matrix inverseProjView = (viewRow * projRow).Invert();
 
@@ -65,7 +99,8 @@ bool MessageReceiver::OnMouseWheelDragRequest(PipelineManager *manager,
 
         auto move = cursorWorldCurrent - cursorWorldBefore;
 
-        manager->camera->SetEyeWorld(manager->camera->GetEyePos() + move);
+        manager->camera->SetPosition(manager->camera->GetPosition() + move);
+        manager->camera->SetLookAt(manager->camera->GetLookAt() + move);
     }
 
     return true;

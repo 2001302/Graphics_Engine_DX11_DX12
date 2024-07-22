@@ -57,7 +57,7 @@ class PipelineManager : public common::IDataBlock, public common::INodeUi {
 
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("General")) {
-            ImGui::Checkbox("Use FPV", &camera->m_useFirstPersonView);
+            //ImGui::Checkbox("Use FPV", &camera->m_useFirstPersonView);
             ImGui::Checkbox("Wireframe", &m_drawAsWire);
             if (ImGui::Checkbox("MSAA ON", &m_useMSAA)) {
                 GraphicsManager::Instance().CreateBuffer();

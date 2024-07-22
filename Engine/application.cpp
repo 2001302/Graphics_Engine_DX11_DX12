@@ -189,12 +189,15 @@ bool Application::OnStart() {
         common::Env::Instance().screen_width,
         common::Env::Instance().screen_height, 4);
 
+    manager_->camera = std::make_unique<Camera>();
+    manager_->camera->Update();
+
     // clang-format off
     auto tree = new BehaviorTreeBuilder();
     tree->Build(dataBlock)
         ->Sequence()
             //->Excute(std::make_shared<InitializeBoardMap>())
-            ->Excute(std::make_shared<InitializeCamera>())
+            //->Excute(std::make_shared<InitializeCamera>())
             //->Excute(std::make_shared<InitializeCubeMapShader>())
             //->Excute(std::make_shared<InitializePhongShader>())
             //->Excute(std::make_shared<InitializePhysicallyBasedShader>())
@@ -258,11 +261,12 @@ bool Application::OnUpdate(float dt) {
     auto device = GraphicsManager::Instance().device;
     auto context = GraphicsManager::Instance().device_context;
 
+    manager_->camera->Update();
     // 반사 행렬 추가
-    const Vector3 eyeWorld = manager_->camera->GetEyePos();
+    const Vector3 eyeWorld = manager_->camera->GetPosition();
     const Matrix reflectRow = Matrix::CreateReflection(manager_->m_mirrorPlane);
-    const Matrix viewRow = manager_->camera->GetViewRow();
-    const Matrix projRow = manager_->camera->GetProjRow();
+    const Matrix viewRow = manager_->camera->GetView();
+    const Matrix projRow = manager_->camera->GetProjection();
 
     UpdateLights(dt);
 

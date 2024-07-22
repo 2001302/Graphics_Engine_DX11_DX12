@@ -131,25 +131,25 @@
       <Filter>Engine\Util</Filter>
     </ClInclude>
     <ClInclude Include="sequence_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClInclude>
     <ClInclude Include="behavior_tree.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClInclude>
     <ClInclude Include="behavior_tree_builder.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClInclude>
     <ClInclude Include="conditional_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClInclude>
     <ClInclude Include="parallel_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClInclude>
     <ClInclude Include="selector_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClInclude>
     <ClInclude Include="graph.h">
-      <Filter>Engine\BehaviorGraph\GraghNode</Filter>
+      <Filter>Engine\BehaviorGraph\Gragh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -245,25 +245,25 @@
       <Filter>Engine\Util</Filter>
     </ClCompile>
     <ClCompile Include="behavior_tree_builder.cpp">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClCompile>
     <ClCompile Include="conditional_node.cpp">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClCompile>
     <ClCompile Include="parallel_node.cpp">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClCompile>
     <ClCompile Include="selector_node.cpp">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClCompile>
     <ClCompile Include="sequence_node.cpp">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClCompile>
     <ClCompile Include="behavior_tree.cpp">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+      <Filter>Engine\BehaviorTree\Root</Filter>
     </ClCompile>
     <ClCompile Include="graph.cpp">
-      <Filter>Engine\BehaviorGraph\GraghNode</Filter>
+      <Filter>Engine\BehaviorGraph\Gragh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -303,17 +303,20 @@
     <Filter Include="Engine\Util">
       <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\BehaviorTree\TreeNode">
-      <UniqueIdentifier>{f29ff5f6-1cbe-4545-a200-39f24aba85a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\BehaviorGraph\GraghNode">
-      <UniqueIdentifier>{895e1700-a968-44b5-af87-598595de7b7f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\ImGui">
       <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\ImGui\NodeEditor">
       <UniqueIdentifier>{30855cc5-8d09-42a4-bb3c-c5aea4725478}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\BehaviorTree\Root">
+      <UniqueIdentifier>{f29ff5f6-1cbe-4545-a200-39f24aba85a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\BehaviorGraph\Gragh">
+      <UniqueIdentifier>{895e1700-a968-44b5-af87-598595de7b7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\BehaviorTree\TreeNode">
+      <UniqueIdentifier>{4e61791e-f820-4d29-9be5-fc0a6792dc4c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

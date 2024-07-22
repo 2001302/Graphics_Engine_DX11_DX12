@@ -143,7 +143,6 @@
     <ClInclude Include="bone.h" />
     <ClInclude Include="conditional_node.h" />
     <ClInclude Include="constant_buffer.h" />
-    <ClInclude Include="cube_map_shader.h" />
     <ClInclude Include="graph.h" />
     <ClInclude Include="graphics_common.h" />
     <ClInclude Include="graphics_pso.h" />
@@ -160,7 +159,6 @@
     <ClInclude Include="mesh.h" />
     <ClInclude Include="node_ui.h" />
     <ClInclude Include="parallel_node.h" />
-    <ClInclude Include="physically_based_shader.h" />
     <ClInclude Include="behavior_tree.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="message.h" />
@@ -184,11 +182,9 @@
     <ClInclude Include="setting_ui.h" />
     <ClInclude Include="selector_node.h" />
     <ClInclude Include="sequence_node.h" />
-    <ClInclude Include="shader.h" />
     <ClInclude Include="model_loader.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="dataBlock.h" />
-    <ClInclude Include="phong_shader.h" />
     <ClInclude Include="pipeline_manager.h" />
     <ClInclude Include="platform.h" />
     <ClInclude Include="vertex.h" />
@@ -197,7 +193,6 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="behavior_tree_builder.cpp" />
     <ClCompile Include="conditional_node.cpp" />
-    <ClCompile Include="cube_map_shader.cpp" />
     <ClCompile Include="graph.cpp" />
     <ClCompile Include="graphics_common.cpp" />
     <ClCompile Include="graphics_pso.cpp" />
@@ -209,7 +204,6 @@
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor_api.cpp" />
     <ClCompile Include="node_ui.cpp" />
     <ClCompile Include="parallel_node.cpp" />
-    <ClCompile Include="physically_based_shader.cpp" />
     <ClCompile Include="behavior_tree.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="graphics_manager.cpp" />
@@ -231,7 +225,6 @@
     <ClCompile Include="model.cpp" />
     <ClCompile Include="post_process.cpp" />
     <ClCompile Include="setting_ui.cpp" />
-    <ClCompile Include="phong_shader.cpp" />
     <ClCompile Include="platform.cpp" />
     <ClCompile Include="selector_node.cpp" />
     <ClCompile Include="sequence_node.cpp" />

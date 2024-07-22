@@ -19,7 +19,6 @@ class PipelineManager : public common::IDataBlock {
     std::shared_ptr<common::INodeUi> skybox;
     std::shared_ptr<common::INodeUi> ground;
     std::map<int /*id*/, common::INodeUi*> models;
-    std::unordered_map<EnumShaderType, std::shared_ptr<IShader>> shaders;
     std::shared_ptr<Model> m_screenSquare;
 
     //shared resource

@@ -5,6 +5,7 @@
 #include "graphics_manager.h"
 #include "env.h"
 #include "node_ui.h"
+#include "graphics_manager.h"
 
 namespace engine {
 class Camera : public common::INodeUi {

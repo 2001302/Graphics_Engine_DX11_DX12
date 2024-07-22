@@ -1,12 +1,11 @@
 #ifndef _MODEL
 #define _MODEL
 
-#include "node_ui.h"
-#include "mesh.h"
 #include "bone.h"
+#include "constant_buffer.h"
 #include "geometry_generator.h"
-#include "phong_shader.h"
-#include "physically_based_shader.h"
+#include "mesh.h"
+#include "node_ui.h"
 
 namespace engine {
 using Microsoft::WRL::ComPtr;
@@ -52,7 +51,6 @@ class Model : public common::INodeUi {
     std::vector<std::shared_ptr<Bone>> bones;
     // std::shared_ptr<Animation> animation;
 
-    EnumShaderType shader_type;
     EnumRenderMode render_mode;
 
   private:
@@ -61,5 +59,5 @@ class Model : public common::INodeUi {
     ComPtr<ID3D11Buffer> m_materialConstsGPU;
 };
 
-} // namespace dx11
+} // namespace engine
 #endif

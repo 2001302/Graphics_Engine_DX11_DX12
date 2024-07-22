@@ -10,12 +10,6 @@
     <ClInclude Include="camera.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
-    <ClInclude Include="shader.h">
-      <Filter>Engine\Graphics\Shader</Filter>
-    </ClInclude>
-    <ClInclude Include="phong_shader.h">
-      <Filter>Engine\Graphics\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\imgui.h">
       <Filter>Common\ImGui</Filter>
     </ClInclude>
@@ -49,9 +43,6 @@
     <ClInclude Include="graph.h">
       <Filter>Engine\BehaviorGraph</Filter>
     </ClInclude>
-    <ClInclude Include="cube_map_shader.h">
-      <Filter>Engine\Graphics\Shader</Filter>
-    </ClInclude>
     <ClInclude Include="behavior_tree_builder.h">
       <Filter>Engine\BehaviorTree</Filter>
     </ClInclude>
@@ -63,9 +54,6 @@
     </ClInclude>
     <ClInclude Include="selector_node.h">
       <Filter>Engine\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="physically_based_shader.h">
-      <Filter>Engine\Graphics\Shader</Filter>
     </ClInclude>
     <ClInclude Include="image_filter.h">
       <Filter>Engine\Model</Filter>
@@ -175,9 +163,6 @@
     <ClCompile Include="camera.cpp">
       <Filter>Engine\Model</Filter>
     </ClCompile>
-    <ClCompile Include="phong_shader.cpp">
-      <Filter>Engine\Graphics\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>Common\ImGui</Filter>
     </ClCompile>
@@ -208,9 +193,6 @@
     <ClCompile Include="graph.cpp">
       <Filter>Engine\BehaviorGraph</Filter>
     </ClCompile>
-    <ClCompile Include="cube_map_shader.cpp">
-      <Filter>Engine\Graphics\Shader</Filter>
-    </ClCompile>
     <ClCompile Include="conditional_node.cpp">
       <Filter>Engine\BehaviorTree</Filter>
     </ClCompile>
@@ -222,9 +204,6 @@
     </ClCompile>
     <ClCompile Include="selector_node.cpp">
       <Filter>Engine\BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="physically_based_shader.cpp">
-      <Filter>Engine\Graphics\Shader</Filter>
     </ClCompile>
     <ClCompile Include="image_filter.cpp">
       <Filter>Engine\Model</Filter>
@@ -324,10 +303,7 @@
     <Filter Include="Common\Structure">
       <UniqueIdentifier>{ba2eaf2e-7ce0-4495-9423-86319442efbd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Graphics\Shader">
-      <UniqueIdentifier>{75d77732-7f85-4c0a-b799-392f4e62111e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Graphics\Shader\HLSL">
+    <Filter Include="Engine\Graphics\HLSL">
       <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -346,54 +322,54 @@
       <Filter>Common\ImGui\NodeEditor</Filter>
     </None>
     <None Include="Common.hlsli">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CombinePS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="SamplingVS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="SamplingPS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxPS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxVS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="BloomDownPS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="BloomUpPS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="DepthOnlyVS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="DepthOnlyPS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="NormalPS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="NormalVS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="PostEffectsPS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="NormalGS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="BasicVS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
     <FxCompile Include="BasicPS.hlsl">
-      <Filter>Engine\Graphics\Shader\HLSL</Filter>
+      <Filter>Engine\Graphics\HLSL</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

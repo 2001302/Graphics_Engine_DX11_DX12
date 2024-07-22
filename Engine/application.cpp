@@ -24,6 +24,32 @@ bool Application::OnStart() {
     auto device = GraphicsManager::Instance().device;
     auto context = GraphicsManager::Instance().device_context;
 
+    auto mesh_data = GeometryGenerator::MakeBox(40.0f);
+    std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
+    auto cube_map = std::make_shared<Model>(
+        GraphicsManager::Instance().device,
+        GraphicsManager::Instance().device_context, std::vector{mesh_data});
+
+    manager_->skybox = cube_map;
+
+    auto envFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
+    auto specularFilename =
+        L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
+    auto irradianceFilename =
+        L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
+    auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
+
+    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                   envFilename, true, manager_->m_envSRV);
+    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                   specularFilename, true,
+                                   manager_->m_specularSRV);
+    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                   irradianceFilename, true,
+                                   manager_->m_irradianceSRV);
+    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                   brdfFilename, true, manager_->m_brdfSRV);
+
     // 후처리용 화면 사각형
     {
         MeshData meshData = GeometryGenerator::MakeSquare();
@@ -79,7 +105,7 @@ bool Application::OnStart() {
         ->Sequence()
             //->Excute(std::make_shared<InitializeBoardMap>())
             ->Excute(std::make_shared<InitializeCamera>())
-            ->Excute(std::make_shared<InitializeCubeMapShader>())
+            //->Excute(std::make_shared<InitializeCubeMapShader>())
             //->Excute(std::make_shared<InitializePhongShader>())
             //->Excute(std::make_shared<InitializePhysicallyBasedShader>())
         ->Close()

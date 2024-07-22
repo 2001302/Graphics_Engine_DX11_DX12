@@ -237,12 +237,14 @@ void GraphicsManager::SetPipelineState(const GraphicsPSO &pso) {
                                            pso.m_stencilRef);
     device_context->IASetPrimitiveTopology(pso.m_primitiveTopology);
 }
+
 void GraphicsManager::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
     // 쉐이더와 일관성 유지 register(b1)
     device_context->VSSetConstantBuffers(1, 1, globalConstsGPU.GetAddressOf());
     device_context->PSSetConstantBuffers(1, 1, globalConstsGPU.GetAddressOf());
     device_context->GSSetConstantBuffers(1, 1, globalConstsGPU.GetAddressOf());
 }
+
 void GraphicsManager::EndScene() {
 
     if (common::Env::Instance().vsync_enabled) {

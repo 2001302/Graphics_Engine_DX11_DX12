@@ -70,10 +70,10 @@ void Camera::SetEyeWorld(Vector3 pos) { m_position = pos; }
 
 Matrix Camera::GetProjRow() {
     return m_usePerspectiveProjection
-               ? XMMatrixPerspectiveFovLH(XMConvertToRadians(m_projFovAngleY),
-                                          common::Env::Instance().GetAspect(),
-                                          m_nearZ, m_farZ)
-               : XMMatrixOrthographicOffCenterLH(
+               ? DirectX::XMMatrixPerspectiveFovLH(
+                     DirectX::XMConvertToRadians(m_projFovAngleY),
+                     common::Env::Instance().GetAspect(), m_nearZ, m_farZ)
+               : DirectX::XMMatrixOrthographicOffCenterLH(
                      -common::Env::Instance().GetAspect(),
                      common::Env::Instance().GetAspect(), -1.0f, 1.0f, m_nearZ,
                      m_farZ);

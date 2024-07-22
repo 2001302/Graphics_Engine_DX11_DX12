@@ -174,10 +174,10 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
         //    physically_shader_source->vertex_constant.modelWorld.Transpose();
     }
     // view
-    {
-        physically_shader_source->vertex_constant.view =
-            manager->camera->GetView().Transpose();
-    }
+    //{
+    //    physically_shader_source->vertex_constant.view =
+    //        manager->camera->GetView().Transpose();
+    //}
     // inverse transpose
     {
         physically_shader_source->vertex_constant.invTranspose =
@@ -189,11 +189,11 @@ EnumBehaviorTreeStatus UpdateGameObjectsUsingPhysicallyBasedShader::OnInvoke() {
                 .Invert();
     }
     // projection
-    {
-        auto env = common::Env::Instance();
-        physically_shader_source->vertex_constant.projection =
-            manager->camera->GetProjection().Transpose();
-    }
+    //{
+    //    auto env = common::Env::Instance();
+    //    physically_shader_source->vertex_constant.projection =
+    //        manager->camera->GetProjection().Transpose();
+    //}
 
     GraphicsUtil::UpdateBuffer(
         GraphicsManager::Instance().device,

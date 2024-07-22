@@ -20,6 +20,7 @@ class PipelineManager : public common::IDataBlock {
     std::shared_ptr<common::INodeUi> ground;
     std::map<int /*id*/, common::INodeUi*> models;
     std::unordered_map<EnumShaderType, std::shared_ptr<IShader>> shaders;
+    std::shared_ptr<Model> m_screenSquare;
 
     //shared resource
     // 다양한 Pass들을 더 간단히 구현하기 위해 ConstBuffer들 분리
@@ -41,6 +42,7 @@ class PipelineManager : public common::IDataBlock {
     ComPtr<ID3D11Buffer> m_postEffectsConstsGPU;
     PostProcess m_postProcess;
 
+    std::vector<std::shared_ptr<Model>> m_basicList;
 };
 } // namespace dx11
 #endif

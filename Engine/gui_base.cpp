@@ -55,11 +55,11 @@ bool IGui::FrameEnd() {
     OnFrame();
 
     if (ImGui::GetCurrentWindow()) {
-        engine::GraphicsManager::Instance().SetViewPort(
-            ImGui::GetWindowSize().x, 0.0f,
-            (float)common::Env::Instance().screen_width -
-                ImGui::GetWindowSize().x,
-            (float)common::Env::Instance().screen_height);
+        //engine::GraphicsManager::Instance().SetViewPort(
+        //    ImGui::GetWindowSize().x, 0.0f,
+        //    (float)common::Env::Instance().screen_width -
+        //        ImGui::GetWindowSize().x,
+        //    (float)common::Env::Instance().screen_height);
 
         common::Env::Instance().aspect =
             ((float)common::Env::Instance().screen_width -

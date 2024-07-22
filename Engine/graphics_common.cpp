@@ -364,9 +364,6 @@ void Graphics::InitPipelineStates(ComPtr<ID3D11Device> &device) {
     skyboxSolidPSO.m_vertexShader = skyboxVS;
     skyboxSolidPSO.m_pixelShader = skyboxPS;
     skyboxSolidPSO.m_inputLayout = skyboxIL;
-    skyboxSolidPSO.m_rasterizerState = solidRS;
-    skyboxSolidPSO.m_primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-    skyboxSolidPSO.m_depthStencilState = drawDSS;
 
     // skyboxWirePSO
     skyboxWirePSO = skyboxSolidPSO;

@@ -5,45 +5,81 @@
 
 namespace engine {
 
-Camera::Camera() {
-    view = DirectX::SimpleMath::Matrix();
-    position = DirectX::SimpleMath::Vector3(-10.0f, 1.0f, -10.0f);
-    rotation = DirectX::SimpleMath::Vector3(0.0f, 45.0f, 0.0f);
-    upVector = DirectX::SimpleMath::Vector3(0.0f, 0.1f, 0.0f);
-    lookAtVector = DirectX::SimpleMath::Vector3(0.0f, 0.0f, 0.0f);
+Matrix Camera::GetViewRow() {
 
-    projection_fov_angle_y = 70.0f;
-    near_z = 0.01f;
-    far_z = 100.0f;
-}
-DirectX::SimpleMath::Matrix Camera::GetView() { return view; }
-DirectX::SimpleMath::Vector3 Camera::GetPosition() { return position; }
-DirectX::SimpleMath::Vector3 Camera::GetLookAt() { return lookAtVector; }
-DirectX::SimpleMath::Matrix Camera::GetProjection() {
-    return XMMatrixPerspectiveFovLH(XMConvertToRadians(projection_fov_angle_y),
-                                    common::Env::Instance().aspect, near_z,
-                                    far_z);
+    // cout << m_position.x << ", " << m_position.y << ", " << m_position.z << "
+    // " << m_yaw << " " << m_pitch << endl;
+
+    // 렌더링에 사용할 View 행렬을 만들어주는 부분
+    // 이번 예제에서는 upDir이 Y로 고정되었다고 가정합니다.
+    // 시점 변환은 가상 세계가 통째로 반대로 움직이는 것과 동일
+    // m_pitch가 고개를 숙이는 회전이라서 -가 두번 붙어서 생략
+    return Matrix::CreateTranslation(-this->m_position) *
+           Matrix::CreateRotationY(-this->m_yaw) *
+           Matrix::CreateRotationX(this->m_pitch);
 }
 
-void Camera::SetPosition(DirectX::SimpleMath::Vector3 pos) { position = pos; }
-void Camera::SetLookAt(DirectX::SimpleMath::Vector3 look) {
-    lookAtVector = look;
+Vector3 Camera::GetEyePos() { return m_position; }
+
+void Camera::UpdateViewDir() {
+    // 이동할 때 기준이 되는 정면/오른쪽 방향 계산
+    m_viewDir = Vector3::Transform(Vector3(0.0f, 0.0f, 1.0f),
+                                   Matrix::CreateRotationY(this->m_yaw));
+    m_rightDir = m_upDir.Cross(m_viewDir);
 }
 
-void Camera::Render() {
-    float yaw, pitch, roll;
-    DirectX::SimpleMath::Matrix rotationMatrix;
+void Camera::UpdateKeyboard(const float dt, bool const keyPressed[256]) {
+    if (m_useFirstPersonView) {
+        if (keyPressed['W'])
+            MoveForward(dt);
+        if (keyPressed['S'])
+            MoveForward(-dt);
+        if (keyPressed['D'])
+            MoveRight(dt);
+        if (keyPressed['A'])
+            MoveRight(-dt);
+        if (keyPressed['E'])
+            MoveUp(dt);
+        if (keyPressed['Q'])
+            MoveUp(-dt);
+    }
+}
 
-    auto rot = rotation * 0.0174532925f;
-    pitch = rot.x;
-    yaw = rot.y;
-    roll = rot.z;
+void Camera::UpdateMouse(float mouseNdcX, float mouseNdcY) {
+    if (m_useFirstPersonView) {
+        // 얼마나 회전할지 계산
+        m_yaw = mouseNdcX * DirectX::XM_2PI;      // 좌우 360도
+        m_pitch = mouseNdcY * DirectX::XM_PIDIV2; // 위 아래 90도
 
-    rotationMatrix = DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll);
-    upVector = XMVector3TransformCoord(upVector, rotationMatrix);
-    view = XMMatrixLookAtLH(position, lookAtVector, upVector);
+        UpdateViewDir();
+    }
+}
 
-    return;
+void Camera::MoveForward(float dt) {
+    // 이동후의_위치 = 현재_위치 + 이동방향 * 속도 * 시간차이;
+    m_position += m_viewDir * m_speed * dt;
+}
+
+void Camera::MoveUp(float dt) {
+    // 이동후의_위치 = 현재_위치 + 이동방향 * 속도 * 시간차이;
+    m_position += m_upDir * m_speed * dt;
+}
+
+void Camera::MoveRight(float dt) { m_position += m_rightDir * m_speed * dt; }
+
+void Camera::SetEyeWorld(Vector3 pos) {
+    m_position = pos;
+}
+
+Matrix Camera::GetProjRow() {
+    return m_usePerspectiveProjection
+               ? XMMatrixPerspectiveFovLH(XMConvertToRadians(m_projFovAngleY),
+                                          common::Env::Instance().aspect,
+                                          m_nearZ, m_farZ)
+               : XMMatrixOrthographicOffCenterLH(
+                     -common::Env::Instance().aspect,
+                     common::Env::Instance().aspect, -1.0f, 1.0f, m_nearZ,
+                     m_farZ);
 }
 
 EnumBehaviorTreeStatus InitializeCamera::OnInvoke() {
@@ -53,7 +89,6 @@ EnumBehaviorTreeStatus InitializeCamera::OnInvoke() {
     assert(manager != nullptr);
 
     manager->camera = std::make_unique<Camera>();
-    manager->camera->Render();
 
     return EnumBehaviorTreeStatus::eSuccess;
 }
@@ -64,7 +99,27 @@ EnumBehaviorTreeStatus UpdateCamera::OnInvoke() {
     auto manager = dynamic_cast<engine::PipelineManager *>(managerBlock);
     assert(manager != nullptr);
 
-    manager->camera->Render();
+    manager->m_globalConstsCPU.eyeWorld = manager->camera->GetEyePos();
+    manager->m_globalConstsCPU.view = manager->camera->GetViewRow().Transpose();
+    manager->m_globalConstsCPU.proj =
+        manager->camera->GetProjRow().Transpose();
+    manager->m_globalConstsCPU.invProj =
+        manager->m_globalConstsCPU.proj.Invert().Transpose();
+    manager->m_globalConstsCPU.viewProj =
+        (manager->m_globalConstsCPU.view * manager->m_globalConstsCPU.proj)
+            .Transpose();
+
+    manager->m_globalConstsCPU.textureToDraw = 0;
+    manager->m_globalConstsCPU.envLodBias = 0.1f;
+    manager->m_globalConstsCPU.lodBias = 2.1f;
+
+    auto device = GraphicsManager::Instance().device;
+    auto context = GraphicsManager::Instance().device_context;
+
+    GraphicsUtil::UpdateBuffer(device, context, manager->m_globalConstsCPU,
+                               manager->m_globalConstsGPU);
+
+    // GraphicsManager::Instance().SetGlobalConsts(manager->m_globalConstsGPU);
 
     return EnumBehaviorTreeStatus::eSuccess;
 }

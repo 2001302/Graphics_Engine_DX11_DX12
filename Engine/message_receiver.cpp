@@ -16,7 +16,7 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         // mouse move vector
         Vector2 vector = Vector2(-mouseState.lX, -mouseState.lY);
 
-        Vector3 origin = manager->camera->GetPosition();
+        Vector3 origin = manager->camera->GetEyePos();
 
         // convert to spherical coordinates
         double r = origin.Length();
@@ -38,7 +38,7 @@ bool MessageReceiver::OnRightDragRequest(PipelineManager *manager,
         Vector3 origin_prime(x, y, z);
 
         if (0.0f < phi && phi < PI)
-            manager->camera->SetPosition(
+            manager->camera->SetEyeWorld(
                 Vector3(origin_prime.x, origin_prime.y, origin_prime.z));
     }
 
@@ -54,13 +54,14 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
         input->Mouse()->Acquire();
     } else {
         float wheel = -mouseState.lZ / (600.0);
-        Vector3 origin = manager->camera->GetPosition();
+        Vector3 origin = manager->camera->GetEyePos();
 
         Matrix R1(1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f,
                   0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
 
         auto origin_prime = Vector3::Transform(origin, R1);
-        manager->camera->SetPosition(
+
+        manager->camera->SetEyeWorld(
             Vector3(origin_prime.x, origin_prime.y, origin_prime.z));
     }
 
@@ -86,8 +87,8 @@ bool MessageReceiver::OnWheelDragRequest(PipelineManager *manager,
 
         auto env = common::Env::Instance();
 
-        auto projRow = manager->camera->GetProjection();
-        auto viewRow = manager->camera->GetView();
+        auto projRow = manager->camera->GetProjRow();
+        auto viewRow = manager->camera->GetViewRow();
 
         Matrix inverseProjView = (viewRow * projRow).Invert();
 
@@ -98,8 +99,7 @@ bool MessageReceiver::OnWheelDragRequest(PipelineManager *manager,
 
         auto move = cursorWorldCurrent - cursorWorldBefore;
 
-        manager->camera->SetLookAt(manager->camera->GetLookAt() + move);
-        manager->camera->SetPosition(manager->camera->GetPosition() + move);
+        manager->camera->SetEyeWorld(manager->camera->GetEyePos() + move);
     }
 
     return true;

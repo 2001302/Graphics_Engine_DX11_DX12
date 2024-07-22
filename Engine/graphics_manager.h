@@ -46,11 +46,18 @@ class GraphicsManager {
     ComPtr<ID3D11ShaderResourceView> resolved_SRV;
     ComPtr<ID3D11ShaderResourceView> postEffectsSRV;
 
-    ComPtr<ID3D11RasterizerState> solid_rasterizer_state;
-    ComPtr<ID3D11RasterizerState> wire_rasterizer_state;
+    // Depth buffer 관련
+    ComPtr<ID3D11Texture2D> m_depthOnlyBuffer; // No MSAA
+    ComPtr<ID3D11DepthStencilView> m_depthOnlyDSV;
+    ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+    ComPtr<ID3D11ShaderResourceView> m_depthOnlySRV;
 
-    ComPtr<ID3D11DepthStencilState> depth_stencil_state;
-    ComPtr<ID3D11DepthStencilView> depth_stencil_view;
+    // Shadow maps
+    int m_shadowWidth = 1280;
+    int m_shadowHeight = 1280;
+    ComPtr<ID3D11Texture2D> m_shadowBuffers[MAX_LIGHTS]; // No MSAA
+    ComPtr<ID3D11DepthStencilView> m_shadowDSVs[MAX_LIGHTS];
+    ComPtr<ID3D11ShaderResourceView> m_shadowSRVs[MAX_LIGHTS];
 
     D3D11_VIEWPORT viewport;
 

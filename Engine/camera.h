@@ -9,30 +9,36 @@
 namespace engine {
 class Camera : public common::INodeUi {
   public:
-    Camera();
-    void Render();
+    Matrix GetViewRow();
+    Matrix GetProjRow();
+    Vector3 GetEyePos();
 
-    DirectX::SimpleMath::Matrix GetView();
-    DirectX::SimpleMath::Vector3 GetPosition();
-    DirectX::SimpleMath::Vector3 GetLookAt();
-    DirectX::SimpleMath::Matrix GetProjection();
-   
-    void SetPosition(DirectX::SimpleMath::Vector3 pos);
-    void SetLookAt(DirectX::SimpleMath::Vector3 look);
-    
+    void UpdateViewDir();
+    void UpdateKeyboard(const float dt, bool const keyPressed[256]);
+    void UpdateMouse(float mouseNdcX, float mouseNdcY);
+    void MoveForward(float dt);
+    void MoveRight(float dt);
+    void MoveUp(float dt);
+    void SetEyeWorld(Vector3 pos);
+
+    bool m_useFirstPersonView = false;
+
   private:
-    DirectX::SimpleMath::Matrix view;
-    DirectX::SimpleMath::Vector3 position = DirectX::SimpleMath::Vector3(-10.0f, 1.0f,
-                                                              -10.0f);
-    DirectX::SimpleMath::Vector3
-        rotation =DirectX::SimpleMath::Vector3(0.0f, 45.0f, 0.0f);
+    Vector3 m_position = Vector3(0.275514f, 0.461257f, 0.0855238f);
+    Vector3 m_viewDir = Vector3(0.0f, 0.0f, 50.0f);
+    Vector3 m_upDir = Vector3(0.0f, 1.0f, 0.0f); // 이번 예제에서는 고정
+    Vector3 m_rightDir = Vector3(1.0f, 0.0f, 0.0f);
 
-    DirectX::SimpleMath::Vector3 upVector;
-    DirectX::SimpleMath::Vector3 lookAtVector;
+    // roll, pitch, yaw
+    // https://en.wikipedia.org/wiki/Aircraft_principal_axes
+    float m_yaw = -0.019635f, m_pitch = -0.120477f;
 
-    float projection_fov_angle_y = 70.0f;
-    float near_z = 0.01f;
-    float far_z = 100.0f;
+    float m_speed = 3.0f; // 움직이는 속도
+
+    float m_projFovAngleY = 90.0f;
+    float m_nearZ = 0.01f;
+    float m_farZ = 100.0f;
+    bool m_usePerspectiveProjection = true;
 };
 
 class InitializeCamera : public BehaviorActionNode {

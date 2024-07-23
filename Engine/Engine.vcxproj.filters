@@ -148,9 +148,6 @@
     <ClInclude Include="selector_node.h">
       <Filter>Engine\BehaviorTree\Root</Filter>
     </ClInclude>
-    <ClInclude Include="graph.h">
-      <Filter>Engine\BehaviorGraph\Gragh</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -262,9 +259,6 @@
     <ClCompile Include="behavior_tree.cpp">
       <Filter>Engine\BehaviorTree\Root</Filter>
     </ClCompile>
-    <ClCompile Include="graph.cpp">
-      <Filter>Engine\BehaviorGraph\Gragh</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Platform">
@@ -278,9 +272,6 @@
     </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\BehaviorGraph">
-      <UniqueIdentifier>{dd885491-628a-4699-bf68-ccd7e4610344}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\BehaviorTree">
       <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
@@ -297,9 +288,6 @@
     <Filter Include="Common\Structure">
       <UniqueIdentifier>{ba2eaf2e-7ce0-4495-9423-86319442efbd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Graphics\HLSL">
-      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Util">
       <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
     </Filter>
@@ -312,11 +300,11 @@
     <Filter Include="Engine\BehaviorTree\Root">
       <UniqueIdentifier>{f29ff5f6-1cbe-4545-a200-39f24aba85a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\BehaviorGraph\Gragh">
-      <UniqueIdentifier>{895e1700-a968-44b5-af87-598595de7b7f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\BehaviorTree\TreeNode">
       <UniqueIdentifier>{4e61791e-f820-4d29-9be5-fc0a6792dc4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Graphics\Shader">
+      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -334,54 +322,54 @@
       <Filter>Common\ImGui\NodeEditor</Filter>
     </None>
     <None Include="Common.hlsli">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CombinePS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SamplingVS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SamplingPS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxPS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxVS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BloomDownPS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BloomUpPS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="DepthOnlyVS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="DepthOnlyPS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalPS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalVS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="PostEffectsPS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalGS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BasicVS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BasicPS.hlsl">
-      <Filter>Engine\Graphics\HLSL</Filter>
+      <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

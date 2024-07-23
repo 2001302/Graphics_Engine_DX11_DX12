@@ -143,7 +143,6 @@
     <ClInclude Include="bone.h" />
     <ClInclude Include="conditional_node.h" />
     <ClInclude Include="constant_buffer.h" />
-    <ClInclude Include="graph.h" />
     <ClInclude Include="graphics_common.h" />
     <ClInclude Include="graphics_pso.h" />
     <ClInclude Include="graphics_util.h" />
@@ -193,7 +192,6 @@
     <ClCompile Include="application.cpp" />
     <ClCompile Include="behavior_tree_builder.cpp" />
     <ClCompile Include="conditional_node.cpp" />
-    <ClCompile Include="graph.cpp" />
     <ClCompile Include="graphics_common.cpp" />
     <ClCompile Include="graphics_pso.cpp" />
     <ClCompile Include="graphics_util.cpp" />

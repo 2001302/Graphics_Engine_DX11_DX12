@@ -141,6 +141,7 @@
     <ClInclude Include="application.h" />
     <ClInclude Include="behavior_tree_builder.h" />
     <ClInclude Include="bone.h" />
+    <ClInclude Include="component.h" />
     <ClInclude Include="conditional_node.h" />
     <ClInclude Include="constant_buffer.h" />
     <ClInclude Include="graphics_common.h" />
@@ -178,6 +179,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="message_receiver.h" />
     <ClInclude Include="post_process.h" />
+    <ClInclude Include="renderer.h" />
     <ClInclude Include="setting_ui.h" />
     <ClInclude Include="selector_node.h" />
     <ClInclude Include="sequence_node.h" />
@@ -222,6 +224,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="post_process.cpp" />
+    <ClCompile Include="renderer.cpp" />
     <ClCompile Include="setting_ui.cpp" />
     <ClCompile Include="platform.cpp" />
     <ClCompile Include="selector_node.cpp" />

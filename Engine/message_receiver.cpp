@@ -279,39 +279,39 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
 
 bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
 
-    auto mesh_data = GeometryGenerator::MakeSphere(1.5f, 15, 13);
+    //auto mesh_data = GeometryGenerator::MakeSphere(1.5f, 15, 13);
 
-    auto model = new Model(GraphicsManager::Instance().device,
-                           GraphicsManager::Instance().device_context,
-                           std::vector{mesh_data});
-    model->SetName("sphere");
-    manager->models[model->GetEntityId()] = model;
+    //auto model = new Model(GraphicsManager::Instance().device,
+    //                       GraphicsManager::Instance().device_context,
+    //                       std::vector{mesh_data});
+    //model->SetName("sphere");
+    //manager->models[model->GetEntityId()] = model;
 
     return true;
 }
 
 bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
 
-    auto mesh_data = GeometryGenerator::MakeBox(1.0f);
+    //auto mesh_data = GeometryGenerator::MakeBox(1.0f);
 
-    auto model = new Model(GraphicsManager::Instance().device,
-                           GraphicsManager::Instance().device_context,
-                           std::vector{mesh_data});
-    model->SetName("box");
-    manager->models[model->GetEntityId()] = model;
+    //auto model = new Model(GraphicsManager::Instance().device,
+    //                       GraphicsManager::Instance().device_context,
+    //                       std::vector{mesh_data});
+    //model->SetName("box");
+    //manager->models[model->GetEntityId()] = model;
 
     return true;
 }
 
 bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
 
-    auto mesh_data = GeometryGenerator::MakeCylinder(5.0f, 5.0f, 15.0f, 30);
+    //auto mesh_data = GeometryGenerator::MakeCylinder(5.0f, 5.0f, 15.0f, 30);
 
-    auto model = new Model(GraphicsManager::Instance().device,
-                           GraphicsManager::Instance().device_context,
-                           std::vector{mesh_data});
-    model->SetName("cylinder");
-    manager->models[model->GetEntityId()] = model;
+    //auto model = new Model(GraphicsManager::Instance().device,
+    //                       GraphicsManager::Instance().device_context,
+    //                       std::vector{mesh_data});
+    //model->SetName("cylinder");
+    //manager->models[model->GetEntityId()] = model;
 
     return true;
 }

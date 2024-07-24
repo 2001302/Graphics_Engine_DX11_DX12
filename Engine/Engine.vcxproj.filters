@@ -8,40 +8,40 @@
       <Filter>Engine\Model</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui.h">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_impl_dx11.h">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_impl_win32.h">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imgui_internal.h">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_rectpack.h">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_textedit.h">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imstb_truetype.h">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="gui_base.h">
-      <Filter>Common\BluePrint</Filter>
+      <Filter>Common\Gui</Filter>
     </ClInclude>
     <ClInclude Include="setting_ui.h">
-      <Filter>Common\BluePrint</Filter>
+      <Filter>Common\Gui</Filter>
     </ClInclude>
     <ClInclude Include="image_filter.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
     <ClInclude Include="node_ui.h">
-      <Filter>Common\BluePrint</Filter>
+      <Filter>Common\Gui</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>Engine\Data</Filter>
@@ -62,25 +62,25 @@
       <Filter>Platform</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\NodeEditor\imgui_node_editor.h">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\NodeEditor\imgui_node_editor_internal.h">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\NodeEditor\crude_json.h">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\NodeEditor\imgui_bezier_math.h">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\NodeEditor\imgui_canvas.h">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\NodeEditor\imgui_extra_keys.h">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\NodeEditor\imgui_extra_math.h">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="graphics_manager.h">
       <Filter>Engine\Graphics</Filter>
@@ -148,6 +148,12 @@
     <ClInclude Include="selector_node.h">
       <Filter>Engine\BehaviorTree\Root</Filter>
     </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="component.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -158,31 +164,31 @@
       <Filter>Engine\Model</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_impl_win32.cpp">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_tables.cpp">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_widgets.cpp">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui_demo.cpp">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="gui_base.cpp">
-      <Filter>Common\BluePrint</Filter>
+      <Filter>Common\Gui</Filter>
     </ClCompile>
     <ClCompile Include="setting_ui.cpp">
-      <Filter>Common\BluePrint</Filter>
+      <Filter>Common\Gui</Filter>
     </ClCompile>
     <ClCompile Include="image_filter.cpp">
       <Filter>Engine\Model</Filter>
@@ -194,19 +200,19 @@
       <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="node_ui.cpp">
-      <Filter>Common\BluePrint</Filter>
+      <Filter>Common\Gui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor.cpp">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor_api.cpp">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\NodeEditor\crude_json.cpp">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClCompile>
     <ClCompile Include="graphics_manager.cpp">
       <Filter>Engine\Graphics</Filter>
@@ -259,6 +265,9 @@
     <ClCompile Include="behavior_tree.cpp">
       <Filter>Engine\BehaviorTree\Root</Filter>
     </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Platform">
@@ -266,9 +275,6 @@
     </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{cd4d1aed-5e7a-4f54-8223-c66fbe383b80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\BluePrint">
-      <UniqueIdentifier>{9eb6ce6c-e8f1-4912-bd9c-acf6ddd4f248}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
@@ -291,12 +297,6 @@
     <Filter Include="Engine\Util">
       <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Common\ImGui">
-      <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Common\ImGui\NodeEditor">
-      <UniqueIdentifier>{30855cc5-8d09-42a4-bb3c-c5aea4725478}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\BehaviorTree\Root">
       <UniqueIdentifier>{f29ff5f6-1cbe-4545-a200-39f24aba85a3}</UniqueIdentifier>
     </Filter>
@@ -306,20 +306,32 @@
     <Filter Include="Engine\Graphics\Shader">
       <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Component">
+      <UniqueIdentifier>{d7d5b87f-7652-45a9-ac58-3878dc145fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Gui">
+      <UniqueIdentifier>{9eb6ce6c-e8f1-4912-bd9c-acf6ddd4f248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Gui\ImGui">
+      <UniqueIdentifier>{1c1a97c5-4144-4fcc-9be4-234896d8df4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Gui\ImGui\NodeEditor">
+      <UniqueIdentifier>{30855cc5-8d09-42a4-bb3c-c5aea4725478}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ImGui\config.h.in">
-      <Filter>Common\ImGui</Filter>
+      <Filter>Common\Gui\ImGui</Filter>
     </None>
     <None Include="packages.config" />
     <None Include="ImGui\NodeEditor\imgui_node_editor_internal.inl">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </None>
     <None Include="ImGui\NodeEditor\imgui_bezier_math.inl">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </None>
     <None Include="ImGui\NodeEditor\imgui_extra_math.inl">
-      <Filter>Common\ImGui\NodeEditor</Filter>
+      <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </None>
     <None Include="Common.hlsli">
       <Filter>Engine\Graphics\Shader</Filter>

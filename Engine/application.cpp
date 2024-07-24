@@ -1,5 +1,6 @@
 #include "application.h"
 #include "behavior_tree_builder.h"
+#include "renderer.h"
 
 namespace engine {
 
@@ -24,56 +25,69 @@ bool Application::OnStart() {
     auto device = GraphicsManager::Instance().device;
     auto context = GraphicsManager::Instance().device_context;
 
-    // 환경 박스 초기화
-    auto mesh_data = GeometryGenerator::MakeBox(40.0f);
-    std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
-    auto cube_map = std::make_shared<Model>(
-        GraphicsManager::Instance().device,
-        GraphicsManager::Instance().device_context, std::vector{mesh_data});
+    {
+        // 환경 박스 초기화
 
-    manager_->skybox = cube_map;
+        auto mesh_data = GeometryGenerator::MakeBox(40.0f);
+        std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
+        Renderer *renderer = new Renderer(
+            GraphicsManager::Instance().device,
+            GraphicsManager::Instance().device_context, std::vector{mesh_data});
 
-    auto envFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
-    auto specularFilename =
-        L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
-    auto irradianceFilename =
-        L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
-    auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
+        manager_->skybox = std::make_shared<Model>();
+        manager_->skybox->AddComponent(EnumComponentType::eRenderer, renderer);
 
-    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                   envFilename, true, manager_->m_envSRV);
-    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                   specularFilename, true,
-                                   manager_->m_specularSRV);
-    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                   irradianceFilename, true,
-                                   manager_->m_irradianceSRV);
-    GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                   brdfFilename, true, manager_->m_brdfSRV);
+        auto envFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
+        auto specularFilename =
+            L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
+        auto irradianceFilename =
+            L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
+        auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
+        GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                       envFilename, true, manager_->m_envSRV);
+        GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                       specularFilename, true,
+                                       manager_->m_specularSRV);
+        GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                       irradianceFilename, true,
+                                       manager_->m_irradianceSRV);
+        GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                       brdfFilename, true, manager_->m_brdfSRV);
+    }
     // 후처리용 화면 사각형
     {
         MeshData meshData = GeometryGenerator::MakeSquare();
-        manager_->m_screenSquare =
-            std::make_shared<Model>(device, context, std::vector{meshData});
+        Renderer *renderer = new Renderer(
+            GraphicsManager::Instance().device,
+            GraphicsManager::Instance().device_context, std::vector{meshData});
+
+        manager_->m_screenSquare = std::make_shared<Model>();
+        manager_->m_screenSquare->AddComponent(EnumComponentType::eRenderer,
+                                               renderer);
     }
 
     // 바닥(거울)
     {
         auto mesh = GeometryGenerator::MakeSquare(5.0);
+        Renderer *renderer = new Renderer(
+            GraphicsManager::Instance().device,
+            GraphicsManager::Instance().device_context, std::vector{mesh});
+
         // mesh.albedoTextureFilename =
         //     "../Assets/Textures/blender_uv_grid_2k.png";
-        manager_->m_ground =
-            std::make_shared<Model>(device, context, std::vector{mesh});
-        manager_->m_ground->m_materialConstsCPU.albedoFactor = Vector3(0.1f);
-        manager_->m_ground->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
-        manager_->m_ground->m_materialConstsCPU.metallicFactor = 0.5f;
-        manager_->m_ground->m_materialConstsCPU.roughnessFactor = 0.3f;
+        renderer->m_materialConstsCPU.albedoFactor = Vector3(0.1f);
+        renderer->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
+        renderer->m_materialConstsCPU.metallicFactor = 0.5f;
+        renderer->m_materialConstsCPU.roughnessFactor = 0.3f;
 
         Vector3 position = Vector3(0.0f, -0.5f, 2.0f);
-        manager_->m_ground->UpdateWorldRow(
-            Matrix::CreateRotationX(3.141592f * 0.5f) *
-            Matrix::CreateTranslation(position));
+        renderer->UpdateWorldRow(Matrix::CreateRotationX(3.141592f * 0.5f) *
+                                 Matrix::CreateTranslation(position));
+
+        manager_->m_ground = std::make_shared<Model>();
+        manager_->m_ground->AddComponent(EnumComponentType::eRenderer,
+                                         renderer);
 
         manager_->m_mirrorPlane =
             DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
@@ -86,32 +100,40 @@ bool Application::OnStart() {
     {
         MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
         Vector3 center(0.5f, 0.5f, 2.0f);
-        auto m_obj =
-            std::make_shared<Model>(device, context, std::vector{mesh});
-        m_obj->UpdateWorldRow(Matrix::CreateTranslation(center));
-        m_obj->m_materialConstsCPU.albedoFactor = Vector3(0.1f, 0.1f, 1.0f);
-        m_obj->m_materialConstsCPU.roughnessFactor = 0.2f;
-        m_obj->m_materialConstsCPU.metallicFactor = 0.6f;
-        m_obj->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
-        m_obj->UpdateConstantBuffers(device, context);
+        Renderer *renderer= new Renderer(
+            GraphicsManager::Instance().device,
+            GraphicsManager::Instance().device_context, std::vector{mesh});
+        renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
+        renderer->m_materialConstsCPU.albedoFactor = Vector3(0.1f, 0.1f, 1.0f);
+        renderer->m_materialConstsCPU.roughnessFactor = 0.2f;
+        renderer->m_materialConstsCPU.metallicFactor = 0.6f;
+        renderer->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
+        renderer->UpdateConstantBuffers(device, context);
 
-        manager_->m_basicList.push_back(m_obj);
+        auto obj = std::make_shared<Model>();
+        obj->AddComponent(EnumComponentType::eRenderer, renderer);
+
+        manager_->m_basicList.push_back(obj);
     }
 
     // 추가 물체2
     {
         MeshData mesh = GeometryGenerator::MakeBox(0.2f);
         Vector3 center(0.0f, 0.5f, 2.5f);
-        auto m_obj =
-            std::make_shared<Model>(device, context, std::vector{mesh});
-        m_obj->UpdateWorldRow(Matrix::CreateTranslation(center));
-        m_obj->m_materialConstsCPU.albedoFactor = Vector3(1.0f, 0.2f, 0.2f);
-        m_obj->m_materialConstsCPU.roughnessFactor = 0.5f;
-        m_obj->m_materialConstsCPU.metallicFactor = 0.9f;
-        m_obj->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
-        m_obj->UpdateConstantBuffers(device, context);
+        Renderer *renderer = new Renderer(
+            GraphicsManager::Instance().device,
+            GraphicsManager::Instance().device_context, std::vector{mesh});
+        renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
+        renderer->m_materialConstsCPU.albedoFactor = Vector3(1.0f, 0.2f, 0.2f);
+        renderer->m_materialConstsCPU.roughnessFactor = 0.5f;
+        renderer->m_materialConstsCPU.metallicFactor = 0.9f;
+        renderer->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
+        renderer->UpdateConstantBuffers(device, context);
 
-        manager_->m_basicList.push_back(m_obj);
+        auto obj = std::make_shared<Model>();
+        obj->AddComponent(EnumComponentType::eRenderer, renderer);
+
+        manager_->m_basicList.push_back(obj);
     }
 
     // 조명 설정
@@ -143,20 +165,23 @@ bool Application::OnStart() {
     {
         for (int i = 0; i < MAX_LIGHTS; i++) {
             MeshData sphere = GeometryGenerator::MakeSphere(1.0f, 20, 20);
-            manager_->m_lightSphere[i] =
-                std::make_shared<Model>(device, context, std::vector{sphere});
-            manager_->m_lightSphere[i]->UpdateWorldRow(
-                Matrix::CreateTranslation(
-                    manager_->m_globalConstsCPU.lights[i].position));
-            manager_->m_lightSphere[i]->m_materialConstsCPU.albedoFactor =
-                Vector3(0.0f);
-            manager_->m_lightSphere[i]->m_materialConstsCPU.emissionFactor =
+
+            Renderer *renderer =
+                new Renderer(device, context, std::vector{sphere});
+
+            renderer->UpdateWorldRow(Matrix::CreateTranslation(
+                manager_->m_globalConstsCPU.lights[i].position));
+            renderer->m_materialConstsCPU.albedoFactor = Vector3(0.0f);
+            renderer->m_materialConstsCPU.emissionFactor =
                 Vector3(1.0f, 1.0f, 0.0f);
-            manager_->m_lightSphere[i]->m_castShadow =
-                false; // 조명 표시 물체들은 그림자 X
+            renderer->m_castShadow = false; // 조명 표시 물체들은 그림자 X
 
             if (manager_->m_globalConstsCPU.lights[i].type == 0)
-                manager_->m_lightSphere[i]->m_isVisible = false;
+                renderer->m_isVisible = false;
+
+            manager_->m_lightSphere[i] = std::make_shared<Model>();
+            manager_->m_lightSphere[i]->AddComponent(
+                EnumComponentType::eRenderer, renderer);
 
             manager_->m_basicList.push_back(
                 manager_->m_lightSphere[i]); // 리스트에 등록
@@ -274,15 +299,26 @@ bool Application::OnUpdate(float dt) {
     UpdateGlobalConstants(eyeWorld, viewRow, projRow, reflectRow);
 
     // 거울은 따로 처리
-    manager_->m_mirror->UpdateConstantBuffers(device, context);
+    if (true)
+    {
+        Renderer *renderer = nullptr;
+        manager_->m_mirror->GetComponent(EnumComponentType::eRenderer,
+            (Component **)(&renderer));
+        renderer->UpdateConstantBuffers(device, context);
+    }
 
     // 조명의 위치 반영
-    for (int i = 0; i < MAX_LIGHTS; i++)
-        manager_->m_lightSphere[i]->UpdateWorldRow(
+    for (int i = 0; i < MAX_LIGHTS; i++) {
+        Renderer *renderer = nullptr;
+        manager_->m_lightSphere[i]->GetComponent(EnumComponentType::eRenderer,
+                                                 (Component **)(&renderer));
+
+        renderer->UpdateWorldRow(
             Matrix::CreateScale((std::max)(
                 0.01f, manager_->m_globalConstsCPU.lights[i].radius)) *
             Matrix::CreateTranslation(
                 manager_->m_globalConstsCPU.lights[i].position));
+    }
 
     //// 마우스 이동/회전 반영
     // if (m_leftButton || m_rightButton) {
@@ -311,7 +347,11 @@ bool Application::OnUpdate(float dt) {
     //}
 
     for (auto &i : manager_->m_basicList) {
-        i->UpdateConstantBuffers(device, context);
+
+        Renderer *renderer = nullptr;
+        i->GetComponent(EnumComponentType::eRenderer,
+                        (Component **)(&renderer));
+        renderer->UpdateConstantBuffers(device, context);
     }
 
     return true;
@@ -420,10 +460,26 @@ bool Application::OnRender() {
     GraphicsManager::Instance().SetPipelineState(Graphics::depthOnlyPSO);
     GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
 
-    for (auto &i : manager_->m_basicList)
-        i->Render(context);
-    manager_->skybox->Render(context);
-    manager_->m_mirror->Render(context);
+    for (auto &i : manager_->m_basicList) {
+        Renderer *renderer = nullptr;
+        i->GetComponent(EnumComponentType::eRenderer,
+                        (Component **)(&renderer));
+        renderer->Render(context);
+    }
+
+    if (true) {
+        Renderer *renderer = nullptr;
+        manager_->skybox->GetComponent(EnumComponentType::eRenderer,
+                                       (Component **)(&renderer));
+        renderer->Render(context);
+    }
+
+    if (true) {
+        Renderer *renderer = nullptr;
+        manager_->m_mirror->GetComponent(EnumComponentType::eRenderer,
+                                         (Component **)(&renderer));
+        renderer->Render(context);
+    }
 
     // 그림자맵 만들기
     GraphicsManager::Instance().SetShadowViewport(); // 그림자맵 해상도
@@ -438,11 +494,31 @@ bool Application::OnRender() {
                 D3D11_CLEAR_DEPTH, 1.0f, 0);
             GraphicsManager::Instance().SetGlobalConsts(
                 manager_->m_shadowGlobalConstsGPU[i]);
-            for (auto &i : manager_->m_basicList)
-                if (i->m_castShadow && i->m_isVisible)
-                    i->Render(context);
-            manager_->skybox->Render(context);
-            manager_->m_mirror->Render(context);
+
+            for (auto &i : manager_->m_basicList) {
+                Renderer *renderer = nullptr;
+                i->GetComponent(EnumComponentType::eRenderer,
+                                (Component **)(&renderer));
+
+                if (renderer->m_castShadow && renderer->m_isVisible)
+                    renderer->Render(context);
+            }
+
+            if (true) {
+                Renderer *renderer = nullptr;
+                manager_->skybox->GetComponent(
+                    EnumComponentType::eRenderer,
+                    (Component **)(&renderer));
+                renderer->Render(context);
+            }
+
+            if (true) {
+                Renderer *renderer = nullptr;
+                manager_->m_mirror->GetComponent(
+                    EnumComponentType::eRenderer,
+                    (Component **)(&renderer));
+                renderer->Render(context);
+            }
         }
     }
 
@@ -474,28 +550,50 @@ bool Application::OnRender() {
     GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
 
     for (auto &i : manager_->m_basicList) {
-        i->Render(context);
+        Renderer *renderer = nullptr;
+        i->GetComponent(EnumComponentType::eRenderer,
+                        (Component **)(&renderer));
+        renderer->Render(context);
     }
 
     // 거울 반사를 그릴 필요가 없으면 불투명 거울만 그리기
-    if (manager_->m_mirrorAlpha == 1.0f)
-        manager_->m_mirror->Render(context);
+    if (manager_->m_mirrorAlpha == 1.0f) {
+
+        Renderer *renderer = nullptr;
+        manager_->m_mirror->GetComponent(EnumComponentType::eRenderer,
+                                         (Component **)(&renderer));
+        renderer->Render(context);
+    }
 
     GraphicsManager::Instance().SetPipelineState(Graphics::normalsPSO);
     for (auto &i : manager_->m_basicList) {
-        if (i->m_drawNormals)
-            i->RenderNormals(context);
+
+        Renderer *renderer = nullptr;
+        i->GetComponent(EnumComponentType::eRenderer,
+                        (Component **)(&renderer));
+        if (renderer->m_drawNormals)
+            renderer->RenderNormals(context);
     }
 
-    GraphicsManager::Instance().SetPipelineState(Graphics::skyboxSolidPSO);
-    manager_->skybox->Render(context);
+    if (true) {
+        GraphicsManager::Instance().SetPipelineState(Graphics::skyboxSolidPSO);
+        Renderer *renderer = nullptr;
+        manager_->skybox->GetComponent(EnumComponentType::eRenderer,
+                                       (Component **)(&renderer));
+        renderer->Render(context);
+    }
 
     if (manager_->m_mirrorAlpha < 1.0f) { // 거울을 그려야 하는 상황
 
         // 거울 2. 거울 위치만 StencilBuffer에 1로 표기
         GraphicsManager::Instance().SetPipelineState(Graphics::stencilMaskPSO);
 
-        manager_->m_mirror->Render(context);
+        if (true) {
+            Renderer *renderer = nullptr;
+            manager_->m_mirror->GetComponent(EnumComponentType::eRenderer,
+                                             (Component **)(&renderer));
+            renderer->Render(context);
+        }
 
         // 거울 3. 거울 위치에 반사된 물체들을 렌더링
         GraphicsManager::Instance().SetPipelineState(
@@ -509,22 +607,34 @@ bool Application::OnRender() {
             D3D11_CLEAR_DEPTH, 1.0f, 0);
 
         for (auto &i : manager_->m_basicList) {
-            i->Render(context);
+            Renderer *renderer = nullptr;
+            i->GetComponent(EnumComponentType::eRenderer,
+                            (Component **)(&renderer));
+            renderer->Render(context);
         }
 
-        GraphicsManager::Instance().SetPipelineState(
-            manager_->m_drawAsWire ? Graphics::reflectSkyboxWirePSO
-                                   : Graphics::reflectSkyboxSolidPSO);
-        manager_->skybox->Render(context);
+        if (true) {
+            GraphicsManager::Instance().SetPipelineState(
+                manager_->m_drawAsWire ? Graphics::reflectSkyboxWirePSO
+                                       : Graphics::reflectSkyboxSolidPSO);
+            Renderer *renderer = nullptr;
+            manager_->skybox->GetComponent(EnumComponentType::eRenderer,
+                                           (Component **)(&renderer));
+            renderer->Render(context);
+        }
 
-        // 거울 4. 거울 자체의 재질을 "Blend"로 그림
-        GraphicsManager::Instance().SetPipelineState(
-            manager_->m_drawAsWire ? Graphics::mirrorBlendWirePSO
-                                   : Graphics::mirrorBlendSolidPSO);
-        GraphicsManager::Instance().SetGlobalConsts(
-            manager_->m_globalConstsGPU);
-
-        manager_->m_mirror->Render(context);
+        if (true) {
+            // 거울 4. 거울 자체의 재질을 "Blend"로 그림
+            GraphicsManager::Instance().SetPipelineState(
+                manager_->m_drawAsWire ? Graphics::mirrorBlendWirePSO
+                                       : Graphics::mirrorBlendSolidPSO);
+            GraphicsManager::Instance().SetGlobalConsts(
+                manager_->m_globalConstsGPU);
+            Renderer *renderer = nullptr;
+            manager_->m_mirror->GetComponent(EnumComponentType::eRenderer,
+                                             (Component **)(&renderer));
+            renderer->Render(context);
+        }
 
     } // end of if (m_mirrorAlpha < 1.0f)
 
@@ -554,7 +664,13 @@ bool Application::OnRender() {
 
     context->PSSetConstantBuffers(
         3, 1, manager_->m_postEffectsConstsGPU.GetAddressOf());
-    manager_->m_screenSquare->Render(context);
+
+    if (true) {
+        Renderer *renderer = nullptr;
+        manager_->m_screenSquare->GetComponent(
+            EnumComponentType::eRenderer, (Component **)(&renderer));
+        renderer->Render(context);
+    }
 
     GraphicsManager::Instance().SetPipelineState(Graphics::postProcessingPSO);
     manager_->m_postProcess.Render(context);

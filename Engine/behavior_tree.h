@@ -43,7 +43,7 @@ class BehaviorActionNode : public IDisposable {
     BehaviorActionNode *parent_node;
     std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
     std::map<EnumDataBlockType, common::IDataBlock *> data_block;
-    common::INodeUi *target_object;
+    common::INode *target_object;
 };
 } // namespace engine
 #endif

@@ -12,7 +12,7 @@ namespace ed = ax::NodeEditor;
 
 namespace common {
 
-struct INodeUi : public IEntity {
+struct INode : public IEntity {
   public:
     struct LinkInfo {
         ed::LinkId Id;

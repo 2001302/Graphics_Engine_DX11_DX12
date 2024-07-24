@@ -50,7 +50,7 @@ BehaviorTreeBuilder *BehaviorTreeBuilder::Close() {
 }
 
 BehaviorTreeBuilder *
-BehaviorTreeBuilder::Parallel(std::map<int, common::INodeUi *> target_objects) {
+BehaviorTreeBuilder::Parallel(std::map<int, common::INode *> target_objects) {
     auto node = std::make_shared<ParallelNode>(target_objects);
     current->PushNode(node);
     current = node.get();

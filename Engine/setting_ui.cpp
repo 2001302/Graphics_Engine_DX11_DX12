@@ -62,7 +62,7 @@ void SettingUi::NodeEditor() {
     ed::SetCurrentEditor(nullptr);
 }
 void SettingUi::TabBar(
-    std::map<int, INodeUi*> node_map) { // Tab Bar
+    std::map<int, INode*> node_map) { // Tab Bar
 
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_FittingPolicyScroll)) {
         if (ImGui::BeginTabItem("Hierarchy")) {
@@ -110,7 +110,7 @@ int SettingUi::SelectedId() {
         return selected_object_id_;
     }
 }
-void SettingUi::PushNode(INodeUi *node) {
+void SettingUi::PushNode(INode *node) {
     node->uniqueId = unique_id;
     node->position = ImVec2(unique_pos_x, 0);
 

@@ -7,7 +7,7 @@
 #include "node_ui.h"
 
 namespace engine {
-class Camera : public common::INodeUi {
+class Camera : public common::INode {
   public:
     Camera();
     Matrix GetView();

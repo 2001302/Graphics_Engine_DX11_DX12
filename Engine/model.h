@@ -9,7 +9,7 @@
 namespace engine {
 using Microsoft::WRL::ComPtr;
 
-class Model : public common::INodeUi {
+class Model : public common::INode {
   public:
     Model(){};
     bool AddComponent(EnumComponentType type, Component *component) {

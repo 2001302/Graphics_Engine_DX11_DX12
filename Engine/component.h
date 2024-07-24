@@ -8,7 +8,7 @@ enum EnumComponentType {
     eRenderer = 0,
 };
 
-class Component : public common::INodeUi {
+class Component : public common::INode {
   public:
     Component(){};
 };

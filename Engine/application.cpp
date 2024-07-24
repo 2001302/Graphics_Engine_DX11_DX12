@@ -676,7 +676,7 @@ bool Application::OnRender() {
     manager_->m_postProcess.Render(context);
     // clang-format off
     
-    imgui_->PushNode(dynamic_cast<common::INodeUi*>(manager_.get())); 
+    imgui_->PushNode(dynamic_cast<common::INode*>(manager_.get())); 
 
     //auto tree = std::make_unique<BehaviorTreeBuilder>();
     //tree->Build(dataBlock)

@@ -10,12 +10,12 @@
 
 namespace engine {
 
-class PipelineManager : public common::IDataBlock, public common::INodeUi {
+class PipelineManager : public common::IDataBlock, public common::INode {
   public:
     std::unique_ptr<Camera> camera;
     //std::unique_ptr<Light> light;
     std::shared_ptr<Model> skybox;
-    std::map<int /*id*/, common::INodeUi*> models;
+    std::map<int /*id*/, common::INode*> models;
     std::shared_ptr<Model> m_screenSquare;
     std::shared_ptr<Model> m_lightSphere[MAX_LIGHTS];
     std::shared_ptr<Model> m_ground;

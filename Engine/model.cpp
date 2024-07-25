@@ -1,6 +1,12 @@
 #include "model.h"
 
 namespace engine {
+Model::~Model() {
+    for (auto component : components) {
+        delete component.second;
+        component.second = 0;
+    }
+}
 bool Model::AddComponent(EnumComponentType type, Component *component) {
     if (components.find(type) == components.end()) {
         components.insert({type, component});

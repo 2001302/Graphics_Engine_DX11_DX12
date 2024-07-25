@@ -12,6 +12,7 @@ using Microsoft::WRL::ComPtr;
 class Model : public common::INode {
   public:
     Model(){};
+    ~Model();
     bool AddComponent(EnumComponentType type, Component *component);
     bool GetComponent(EnumComponentType type, OUT Component **component);
 

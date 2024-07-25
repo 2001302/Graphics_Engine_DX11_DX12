@@ -8,14 +8,14 @@
 
 #include "graphics_manager.h"
 #include "env.h"
+#include "dataBlock.h"
 #include <dinput.h>
 
 namespace engine {
-class Input {
+class Input : public common::IDataBlock {
   public:
     Input();
     Input(const Input &);
-    ~Input();
 
     bool Initialize(HINSTANCE);
     void Shutdown();

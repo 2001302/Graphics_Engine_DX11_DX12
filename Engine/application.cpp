@@ -1,6 +1,8 @@
 #include "application.h"
 #include "behavior_tree_builder.h"
-#include "renderer.h"
+#include "renderer_initialize_node.h"
+#include "gui_node.h"
+#include "input_node.h"
 
 namespace engine {
 
@@ -14,218 +16,27 @@ Application::Application() {
 bool Application::OnStart() {
 
     Platform::OnStart();
-    input_->Initialize(hinstance_);
-    imgui_->Initialize();
 
     std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
         {EnumDataBlockType::eManager, manager_.get()},
         {EnumDataBlockType::eGui, imgui_.get()},
+        {EnumDataBlockType::eInput, input_.get()},
     };
-
-    auto device = GraphicsManager::Instance().device;
-    auto context = GraphicsManager::Instance().device_context;
-
-    {
-        // 환경 박스 초기화
-
-        auto mesh_data = GeometryGenerator::MakeBox(40.0f);
-        std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
-        Renderer *renderer = new Renderer(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context, std::vector{mesh_data});
-
-        manager_->skybox = std::make_shared<Model>();
-        manager_->skybox->AddComponent(EnumComponentType::eRenderer, renderer);
-
-        auto envFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
-        auto specularFilename =
-            L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
-        auto irradianceFilename =
-            L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
-        auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
-
-        GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                       envFilename, true, manager_->m_envSRV);
-        GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                       specularFilename, true,
-                                       manager_->m_specularSRV);
-        GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                       irradianceFilename, true,
-                                       manager_->m_irradianceSRV);
-        GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                       brdfFilename, true, manager_->m_brdfSRV);
-    }
-    // 후처리용 화면 사각형
-    {
-        MeshData meshData = GeometryGenerator::MakeSquare();
-        Renderer *renderer = new Renderer(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context, std::vector{meshData});
-
-        manager_->m_screenSquare = std::make_shared<Model>();
-        manager_->m_screenSquare->AddComponent(EnumComponentType::eRenderer,
-                                               renderer);
-    }
-
-    // 바닥(거울)
-    {
-        auto mesh = GeometryGenerator::MakeSquare(5.0);
-        Renderer *renderer = new Renderer(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context, std::vector{mesh});
-
-        // mesh.albedoTextureFilename =
-        //     "../Assets/Textures/blender_uv_grid_2k.png";
-        renderer->m_materialConstsCPU.albedoFactor = Vector3(0.1f);
-        renderer->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
-        renderer->m_materialConstsCPU.metallicFactor = 0.5f;
-        renderer->m_materialConstsCPU.roughnessFactor = 0.3f;
-
-        Vector3 position = Vector3(0.0f, -0.5f, 2.0f);
-        renderer->UpdateWorldRow(Matrix::CreateRotationX(3.141592f * 0.5f) *
-                                 Matrix::CreateTranslation(position));
-
-        manager_->m_ground = std::make_shared<Model>();
-        manager_->m_ground->AddComponent(EnumComponentType::eRenderer,
-                                         renderer);
-
-        manager_->m_mirrorPlane =
-            DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
-        manager_->m_mirror = manager_->m_ground; // 바닥에 거울처럼 반사 구현
-
-        // m_basicList.push_back(m_ground); // 거울은 리스트에 등록 X
-    }
-
-    // 추가 물체1
-    {
-        MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
-        Vector3 center(0.5f, 0.5f, 2.0f);
-        Renderer *renderer= new Renderer(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context, std::vector{mesh});
-        renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
-        renderer->m_materialConstsCPU.albedoFactor = Vector3(0.1f, 0.1f, 1.0f);
-        renderer->m_materialConstsCPU.roughnessFactor = 0.2f;
-        renderer->m_materialConstsCPU.metallicFactor = 0.6f;
-        renderer->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
-        renderer->UpdateConstantBuffers(device, context);
-
-        auto obj = std::make_shared<Model>();
-        obj->AddComponent(EnumComponentType::eRenderer, renderer);
-
-        manager_->m_basicList.push_back(obj);
-    }
-
-    // 추가 물체2
-    {
-        MeshData mesh = GeometryGenerator::MakeBox(0.2f);
-        Vector3 center(0.0f, 0.5f, 2.5f);
-        Renderer *renderer = new Renderer(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context, std::vector{mesh});
-        renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
-        renderer->m_materialConstsCPU.albedoFactor = Vector3(1.0f, 0.2f, 0.2f);
-        renderer->m_materialConstsCPU.roughnessFactor = 0.5f;
-        renderer->m_materialConstsCPU.metallicFactor = 0.9f;
-        renderer->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
-        renderer->UpdateConstantBuffers(device, context);
-
-        auto obj = std::make_shared<Model>();
-        obj->AddComponent(EnumComponentType::eRenderer, renderer);
-
-        manager_->m_basicList.push_back(obj);
-    }
-
-    // 조명 설정
-    {
-        // 조명 0은 고정
-        manager_->m_globalConstsCPU.lights[0].radiance = Vector3(5.0f);
-        manager_->m_globalConstsCPU.lights[0].position =
-            Vector3(0.0f, 1.5f, 1.1f);
-        manager_->m_globalConstsCPU.lights[0].direction =
-            Vector3(0.0f, -1.0f, 0.0f);
-        manager_->m_globalConstsCPU.lights[0].spotPower = 3.0f;
-        manager_->m_globalConstsCPU.lights[0].radius = 0.02f;
-        manager_->m_globalConstsCPU.lights[0].type =
-            LIGHT_SPOT | LIGHT_SHADOW; // Point with shadow
-
-        // 조명 1의 위치와 방향은 Update()에서 설정
-        manager_->m_globalConstsCPU.lights[1].radiance = Vector3(5.0f);
-        manager_->m_globalConstsCPU.lights[1].spotPower = 3.0f;
-        manager_->m_globalConstsCPU.lights[1].fallOffEnd = 20.0f;
-        manager_->m_globalConstsCPU.lights[1].radius = 0.02f;
-        manager_->m_globalConstsCPU.lights[1].type =
-            LIGHT_SPOT | LIGHT_SHADOW; // Point with shadow
-
-        // 조명 2는 꺼놓음
-        manager_->m_globalConstsCPU.lights[2].type = LIGHT_OFF;
-    }
-
-    // 조명 위치 표시
-    {
-        for (int i = 0; i < MAX_LIGHTS; i++) {
-            MeshData sphere = GeometryGenerator::MakeSphere(1.0f, 20, 20);
-
-            Renderer *renderer =
-                new Renderer(device, context, std::vector{sphere});
-
-            renderer->UpdateWorldRow(Matrix::CreateTranslation(
-                manager_->m_globalConstsCPU.lights[i].position));
-            renderer->m_materialConstsCPU.albedoFactor = Vector3(0.0f);
-            renderer->m_materialConstsCPU.emissionFactor =
-                Vector3(1.0f, 1.0f, 0.0f);
-            renderer->m_castShadow = false; // 조명 표시 물체들은 그림자 X
-
-            if (manager_->m_globalConstsCPU.lights[i].type == 0)
-                renderer->m_isVisible = false;
-
-            manager_->m_lightSphere[i] = std::make_shared<Model>();
-            manager_->m_lightSphere[i]->AddComponent(
-                EnumComponentType::eRenderer, renderer);
-
-            manager_->m_basicList.push_back(
-                manager_->m_lightSphere[i]); // 리스트에 등록
-        }
-    }
-
-    GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                    manager_->m_globalConstsCPU,
-                                    manager_->m_globalConstsGPU);
-
-    GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                    manager_->m_reflectGlobalConstsCPU,
-                                    manager_->m_reflectGlobalConstsGPU);
-
-    // 그림자맵 렌더링할 때 사용할 GlobalConsts들 별도 생성
-    for (int i = 0; i < MAX_LIGHTS; i++) {
-        GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                        manager_->m_shadowGlobalConstsCPU[i],
-                                        manager_->m_shadowGlobalConstsGPU[i]);
-    }
-
-    // 후처리 효과용 ConstBuffer
-    GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                    manager_->m_postEffectsConstsCPU,
-                                    manager_->m_postEffectsConstsGPU);
-
-    manager_->m_postProcess.Initialize(
-        device, context, {GraphicsManager::Instance().postEffectsSRV},
-        {GraphicsManager::Instance().back_buffer_RTV},
-        common::Env::Instance().screen_width,
-        common::Env::Instance().screen_height, 4);
-
-    manager_->camera = std::make_unique<Camera>();
-    manager_->camera->Update();
 
     // clang-format off
     auto tree = new BehaviorTreeBuilder();
     tree->Build(dataBlock)
         ->Sequence()
-            //->Excute(std::make_shared<InitializeBoardMap>())
-            //->Excute(std::make_shared<InitializeCamera>())
-            //->Excute(std::make_shared<InitializeCubeMapShader>())
-            //->Excute(std::make_shared<InitializePhongShader>())
-            //->Excute(std::make_shared<InitializePhysicallyBasedShader>())
+            ->Excute(std::make_shared<InitializeInput>(hinstance_))
+            ->Excute(std::make_shared<InitializeImgui>())
+            ->Excute(std::make_shared<InitializeLight>())
+            ->Excute(std::make_shared<InitializeCamera>())
+            ->Excute(std::make_shared<InitializeSkybox>())
+            ->Excute(std::make_shared<InitializeMirrorGround>())
+            ->Excute(std::make_shared<CreateGlobalConstantBuffer>())
+            ->Excute(std::make_shared<InitializePostEffect>())
+            ->Excute(std::make_shared<InitializePostProcessing>())
+            ->Excute(std::make_shared<InitializeBasicModels>())
         ->Close()
     ->Run();
     // clang-format on
@@ -236,11 +47,6 @@ bool Application::OnStart() {
 }
 
 bool Application::OnFrame() {
-
-    // std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
-    //     {EnumDataBlockType::eManager, manager_.get()},
-    //     {EnumDataBlockType::eGui, imgui_.get()},
-    // };
 
     OnUpdate(ImGui::GetIO().DeltaTime);
     OnRender();

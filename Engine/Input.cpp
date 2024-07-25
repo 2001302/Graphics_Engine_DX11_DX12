@@ -10,7 +10,6 @@ Input::Input() {
 
 Input::Input(const Input &other) {}
 
-Input::~Input() {}
 
 bool Input::Initialize(HINSTANCE hinstance) {
     HRESULT result;

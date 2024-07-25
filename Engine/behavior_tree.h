@@ -11,6 +11,7 @@ namespace engine {
 enum EnumDataBlockType {
     eManager = 0,
     eGui = 1,
+    eInput = 2,
 };
 
 enum EnumBehaviorTreeStatus {

@@ -154,6 +154,21 @@
     <ClInclude Include="component.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
+    <ClInclude Include="renderer_initialize_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_update_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_draw_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="input_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

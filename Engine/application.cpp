@@ -1,6 +1,7 @@
 #include "application.h"
 #include "behavior_tree_builder.h"
 #include "renderer_initialize_node.h"
+#include "renderer_update_node.h"
 #include "gui_node.h"
 #include "input_node.h"
 
@@ -54,183 +55,29 @@ bool Application::OnFrame() {
     return true;
 }
 
-void Application::UpdateGlobalConstants(const Vector3 &eyeWorld,
-                                        const Matrix &viewRow,
-                                        const Matrix &projRow,
-                                        const Matrix &refl = Matrix()) {
-
-    auto device = GraphicsManager::Instance().device;
-    auto context = GraphicsManager::Instance().device_context;
-
-    manager_->m_globalConstsCPU.eyeWorld = eyeWorld;
-    manager_->m_globalConstsCPU.view = viewRow.Transpose();
-    manager_->m_globalConstsCPU.proj = projRow.Transpose();
-    manager_->m_globalConstsCPU.invProj = projRow.Invert().Transpose();
-    manager_->m_globalConstsCPU.viewProj = (viewRow * projRow).Transpose();
-    // 그림자 렌더링에 사용
-    manager_->m_globalConstsCPU.invViewProj =
-        manager_->m_globalConstsCPU.viewProj.Invert();
-
-    manager_->m_reflectGlobalConstsCPU = manager_->m_globalConstsCPU;
-    memcpy(&manager_->m_reflectGlobalConstsCPU, &manager_->m_globalConstsCPU,
-           sizeof(manager_->m_globalConstsCPU));
-    manager_->m_reflectGlobalConstsCPU.view = (refl * viewRow).Transpose();
-    manager_->m_reflectGlobalConstsCPU.viewProj =
-        (refl * viewRow * projRow).Transpose();
-    // 그림자 렌더링에 사용 (TODO: 광원의 위치도 반사시킨 후에 계산해야 함)
-    manager_->m_reflectGlobalConstsCPU.invViewProj =
-        manager_->m_reflectGlobalConstsCPU.viewProj.Invert();
-
-    GraphicsUtil::UpdateBuffer(device, context, manager_->m_globalConstsCPU,
-                               manager_->m_globalConstsGPU);
-    GraphicsUtil::UpdateBuffer(device, context,
-                               manager_->m_reflectGlobalConstsCPU,
-                               manager_->m_reflectGlobalConstsGPU);
-}
-
 bool Application::OnUpdate(float dt) {
-    auto device = GraphicsManager::Instance().device;
-    auto context = GraphicsManager::Instance().device_context;
 
-    manager_->camera->Update();
-    // 반사 행렬 추가
-    const Vector3 eyeWorld = manager_->camera->GetPosition();
-    const Matrix reflectRow = Matrix::CreateReflection(manager_->m_mirrorPlane);
-    const Matrix viewRow = manager_->camera->GetView();
-    const Matrix projRow = manager_->camera->GetProjection();
+    std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
+        {EnumDataBlockType::eManager, manager_.get()},
+        {EnumDataBlockType::eGui, imgui_.get()},
+        {EnumDataBlockType::eInput, input_.get()},
+    };
 
-    UpdateLights(dt);
-
-    // 공용 ConstantBuffer 업데이트
-    UpdateGlobalConstants(eyeWorld, viewRow, projRow, reflectRow);
-
-    // 거울은 따로 처리
-    if (true)
-    {
-        Renderer *renderer = nullptr;
-        manager_->m_mirror->GetComponent(EnumComponentType::eRenderer,
-            (Component **)(&renderer));
-        renderer->UpdateConstantBuffers(device, context);
-    }
-
-    // 조명의 위치 반영
-    for (int i = 0; i < MAX_LIGHTS; i++) {
-        Renderer *renderer = nullptr;
-        manager_->m_lightSphere[i]->GetComponent(EnumComponentType::eRenderer,
-                                                 (Component **)(&renderer));
-
-        renderer->UpdateWorldRow(
-            Matrix::CreateScale((std::max)(
-                0.01f, manager_->m_globalConstsCPU.lights[i].radius)) *
-            Matrix::CreateTranslation(
-                manager_->m_globalConstsCPU.lights[i].position));
-    }
-
-    //// 마우스 이동/회전 반영
-    // if (m_leftButton || m_rightButton) {
-    //     Quaternion q;
-    //     Vector3 dragTranslation;
-    //     Vector3 pickPoint;
-    //     if (UpdateMouseControl(m_mainBoundingSphere, q, dragTranslation,
-    //                            pickPoint)) {
-    //         Vector3 translation = m_mainObj->m_worldRow.Translation();
-    //         m_mainObj->m_worldRow.Translation(Vector3(0.0f));
-    //         m_mainObj->UpdateWorldRow(
-    //             m_mainObj->m_worldRow * Matrix::CreateFromQuaternion(q) *
-    //             Matrix::CreateTranslation(dragTranslation + translation));
-    //         m_mainBoundingSphere.Center =
-    //         m_mainObj->m_worldRow.Translation();
-
-    //        // 충돌 지점에 작은 구 그리기
-    //        m_cursorSphere->m_isVisible = true;
-    //        m_cursorSphere->UpdateWorldRow(
-    //            Matrix::CreateTranslation(pickPoint));
-    //    } else {
-    //        m_cursorSphere->m_isVisible = false;
-    //    }
-    //} else {
-    //    m_cursorSphere->m_isVisible = false;
-    //}
-
-    for (auto &i : manager_->m_basicList) {
-
-        Renderer *renderer = nullptr;
-        i->GetComponent(EnumComponentType::eRenderer,
-                        (Component **)(&renderer));
-        renderer->UpdateConstantBuffers(device, context);
-    }
-
+    // clang-format off
+    auto tree = new BehaviorTreeBuilder();
+    tree->Build(dataBlock)
+        ->Sequence()
+            ->Excute(std::make_shared<UpdateCamera>())
+            ->Excute(std::make_shared<UpdateLights>(dt))
+            ->Excute(std::make_shared<UpdateGlobalConstantBuffers>())
+            ->Excute(std::make_shared<UpdateMirror>())
+            //->Excute(std::make_shared<ApplyMouseMovement>())
+            ->Excute(std::make_shared<UpdateBasicObjects>())
+        ->Close()
+    ->Run();
+    // clang-format on
+    
     return true;
-}
-void Application::UpdateLights(float dt) {
-
-    auto device = GraphicsManager::Instance().device;
-    auto context = GraphicsManager::Instance().device_context;
-
-    // 회전하는 lights[1] 업데이트
-    static Vector3 lightDev = Vector3(1.0f, 0.0f, 0.0f);
-    if (manager_->m_lightRotate) {
-        lightDev = Vector3::Transform(
-            lightDev, Matrix::CreateRotationY(dt * 3.141592f * 0.5f));
-    }
-    manager_->m_globalConstsCPU.lights[1].position =
-        Vector3(0.0f, 1.1f, 2.0f) + lightDev;
-    Vector3 focusPosition = Vector3(0.0f, -0.5f, 1.7f);
-    manager_->m_globalConstsCPU.lights[1].direction =
-        focusPosition - manager_->m_globalConstsCPU.lights[1].position;
-    manager_->m_globalConstsCPU.lights[1].direction.Normalize();
-
-    // 그림자맵을 만들기 위한 시점
-    for (int i = 0; i < MAX_LIGHTS; i++) {
-        const auto &light = manager_->m_globalConstsCPU.lights[i];
-        if (light.type & LIGHT_SHADOW) {
-
-            Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
-            if (abs(up.Dot(light.direction) + 1.0f) < 1e-5)
-                up = Vector3(1.0f, 0.0f, 0.0f);
-
-            // 그림자맵을 만들 때 필요
-            Matrix lightViewRow = DirectX::XMMatrixLookAtLH(
-                light.position, light.position + light.direction, up);
-
-            Matrix lightProjRow = DirectX::XMMatrixPerspectiveFovLH(
-                DirectX::XMConvertToRadians(120.0f), 1.0f, 0.1f, 10.0f);
-
-            manager_->m_shadowGlobalConstsCPU[i].eyeWorld = light.position;
-            manager_->m_shadowGlobalConstsCPU[i].view =
-                lightViewRow.Transpose();
-            manager_->m_shadowGlobalConstsCPU[i].proj =
-                lightProjRow.Transpose();
-            manager_->m_shadowGlobalConstsCPU[i].invProj =
-                lightProjRow.Invert().Transpose();
-            manager_->m_shadowGlobalConstsCPU[i].viewProj =
-                (lightViewRow * lightProjRow).Transpose();
-
-            // LIGHT_FRUSTUM_WIDTH 확인
-            // Vector4 eye(0.0f, 0.0f, 0.0f, 1.0f);
-            // Vector4 xLeft(-1.0f, -1.0f, 0.0f, 1.0f);
-            // Vector4 xRight(1.0f, 1.0f, 0.0f, 1.0f);
-            // eye = Vector4::Transform(eye, lightProjRow);
-            // xLeft = Vector4::Transform(xLeft, lightProjRow.Invert());
-            // xRight = Vector4::Transform(xRight, lightProjRow.Invert());
-            // xLeft /= xLeft.w;
-            // xRight /= xRight.w;
-            // cout << "LIGHT_FRUSTUM_WIDTH = " << xRight.x - xLeft.x << endl;
-
-            GraphicsUtil::UpdateBuffer(device, context,
-                                       manager_->m_shadowGlobalConstsCPU[i],
-                                       manager_->m_shadowGlobalConstsGPU[i]);
-
-            // 그림자를 실제로 렌더링할 때 필요
-            manager_->m_globalConstsCPU.lights[i].viewProj =
-                manager_->m_shadowGlobalConstsCPU[i].viewProj;
-            manager_->m_globalConstsCPU.lights[i].invProj =
-                manager_->m_shadowGlobalConstsCPU[i].invProj;
-
-            // 반사된 장면에서도 그림자를 그리고 싶다면 조명도 반사시켜서
-            // 넣어주면 됩니다.
-        }
-    }
 }
 
 bool Application::OnRender() {

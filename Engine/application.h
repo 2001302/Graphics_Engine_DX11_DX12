@@ -25,10 +25,7 @@ class Application : public Platform {
   private:
     bool OnUpdate(float dt);
     bool OnRender();
-    void UpdateLights(float dt);
-    void UpdateGlobalConstants(const Vector3 &eyeWorld, const Matrix &viewRow,
-                               const Matrix &projRow,
-                               const Matrix &refl);
+
     std::shared_ptr<PipelineManager> manager_;
     std::unique_ptr<MessageReceiver> message_receiver_;
     std::shared_ptr<Input> input_;

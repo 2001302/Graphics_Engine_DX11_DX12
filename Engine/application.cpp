@@ -2,6 +2,7 @@
 #include "behavior_tree_builder.h"
 #include "renderer_initialize_node.h"
 #include "renderer_update_node.h"
+#include "renderer_draw_node.h"
 #include "gui_node.h"
 #include "input_node.h"
 
@@ -67,6 +68,7 @@ bool Application::OnUpdate(float dt) {
     auto tree = new BehaviorTreeBuilder();
     tree->Build(dataBlock)
         ->Sequence()
+            ->Excute(std::make_shared<ReadInput>())
             ->Excute(std::make_shared<UpdateCamera>())
             ->Excute(std::make_shared<UpdateLights>(dt))
             ->Excute(std::make_shared<UpdateGlobalConstantBuffers>())
@@ -82,299 +84,32 @@ bool Application::OnUpdate(float dt) {
 
 bool Application::OnRender() {
 
-    GraphicsManager::Instance().SetMainViewport();
-
-    auto device = GraphicsManager::Instance().device;
-    auto context = GraphicsManager::Instance().device_context;
-
-    context->VSSetSamplers(0, UINT(Graphics::sampleStates.size()),
-                           Graphics::sampleStates.data());
-    context->PSSetSamplers(0, UINT(Graphics::sampleStates.size()),
-                           Graphics::sampleStates.data());
-
-    // 공용 텍스춰들: "Common.hlsli"에서 register(t10)부터 시작
-    std::vector<ID3D11ShaderResourceView *> commonSRVs = {
-        manager_->m_envSRV.Get(), manager_->m_specularSRV.Get(),
-        manager_->m_irradianceSRV.Get(), manager_->m_brdfSRV.Get()};
-    context->PSSetShaderResources(10, UINT(commonSRVs.size()),
-                                  commonSRVs.data());
-
-    const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    std::vector<ID3D11RenderTargetView *> rtvs = {
-        GraphicsManager::Instance().float_RTV.Get()};
-
-    // Depth Only Pass (RTS 생략 가능)
-    context->OMSetRenderTargets(
-        0, NULL, GraphicsManager::Instance().m_depthOnlyDSV.Get());
-    context->ClearDepthStencilView(
-        GraphicsManager::Instance().m_depthOnlyDSV.Get(), D3D11_CLEAR_DEPTH,
-        1.0f, 0);
-
-    GraphicsManager::Instance().SetPipelineState(Graphics::depthOnlyPSO);
-    GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
-
-    for (auto &i : manager_->m_basicList) {
-        Renderer *renderer = nullptr;
-        i->GetComponent(EnumComponentType::eRenderer,
-                        (Component **)(&renderer));
-        renderer->Render(context);
-    }
-
-    if (true) {
-        Renderer *renderer = nullptr;
-        manager_->skybox->GetComponent(EnumComponentType::eRenderer,
-                                       (Component **)(&renderer));
-        renderer->Render(context);
-    }
-
-    if (true) {
-        Renderer *renderer = nullptr;
-        manager_->m_mirror->GetComponent(EnumComponentType::eRenderer,
-                                         (Component **)(&renderer));
-        renderer->Render(context);
-    }
-
-    // 그림자맵 만들기
-    GraphicsManager::Instance().SetShadowViewport(); // 그림자맵 해상도
-    GraphicsManager::Instance().SetPipelineState(Graphics::depthOnlyPSO);
-    for (int i = 0; i < MAX_LIGHTS; i++) {
-        if (manager_->m_globalConstsCPU.lights[i].type & LIGHT_SHADOW) {
-            // RTS 생략 가능
-            context->OMSetRenderTargets(
-                0, NULL, GraphicsManager::Instance().m_shadowDSVs[i].Get());
-            context->ClearDepthStencilView(
-                GraphicsManager::Instance().m_shadowDSVs[i].Get(),
-                D3D11_CLEAR_DEPTH, 1.0f, 0);
-            GraphicsManager::Instance().SetGlobalConsts(
-                manager_->m_shadowGlobalConstsGPU[i]);
-
-            for (auto &i : manager_->m_basicList) {
-                Renderer *renderer = nullptr;
-                i->GetComponent(EnumComponentType::eRenderer,
-                                (Component **)(&renderer));
-
-                if (renderer->m_castShadow && renderer->m_isVisible)
-                    renderer->Render(context);
-            }
-
-            if (true) {
-                Renderer *renderer = nullptr;
-                manager_->skybox->GetComponent(
-                    EnumComponentType::eRenderer,
-                    (Component **)(&renderer));
-                renderer->Render(context);
-            }
-
-            if (true) {
-                Renderer *renderer = nullptr;
-                manager_->m_mirror->GetComponent(
-                    EnumComponentType::eRenderer,
-                    (Component **)(&renderer));
-                renderer->Render(context);
-            }
-        }
-    }
-
-    // 다시 렌더링 해상도로 되돌리기
-    GraphicsManager::Instance().SetMainViewport();
-
-    // 거울 1. 거울은 빼고 원래 대로 그리기
-    for (size_t i = 0; i < rtvs.size(); i++) {
-        context->ClearRenderTargetView(rtvs[i], clearColor);
-    }
-    context->OMSetRenderTargets(
-        UINT(rtvs.size()), rtvs.data(),
-        GraphicsManager::Instance().m_depthStencilView.Get());
-
-    // 그림자맵들도 공용 텍스춰들 이후에 추가
-    // 주의: 마지막 shadowDSV를 RenderTarget에서 해제한 후 설정
-    std::vector<ID3D11ShaderResourceView *> shadowSRVs;
-    for (int i = 0; i < MAX_LIGHTS; i++) {
-        shadowSRVs.push_back(GraphicsManager::Instance().m_shadowSRVs[i].Get());
-    }
-    context->PSSetShaderResources(15, UINT(shadowSRVs.size()),
-                                  shadowSRVs.data());
-
-    context->ClearDepthStencilView(
-        GraphicsManager::Instance().m_depthStencilView.Get(),
-        D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-    GraphicsManager::Instance().SetPipelineState(Graphics::defaultSolidPSO);
-    GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
-
-    for (auto &i : manager_->m_basicList) {
-        Renderer *renderer = nullptr;
-        i->GetComponent(EnumComponentType::eRenderer,
-                        (Component **)(&renderer));
-        renderer->Render(context);
-    }
-
-    // 거울 반사를 그릴 필요가 없으면 불투명 거울만 그리기
-    if (manager_->m_mirrorAlpha == 1.0f) {
-
-        Renderer *renderer = nullptr;
-        manager_->m_mirror->GetComponent(EnumComponentType::eRenderer,
-                                         (Component **)(&renderer));
-        renderer->Render(context);
-    }
-
-    GraphicsManager::Instance().SetPipelineState(Graphics::normalsPSO);
-    for (auto &i : manager_->m_basicList) {
-
-        Renderer *renderer = nullptr;
-        i->GetComponent(EnumComponentType::eRenderer,
-                        (Component **)(&renderer));
-        if (renderer->m_drawNormals)
-            renderer->RenderNormals(context);
-    }
-
-    if (true) {
-        GraphicsManager::Instance().SetPipelineState(Graphics::skyboxSolidPSO);
-        Renderer *renderer = nullptr;
-        manager_->skybox->GetComponent(EnumComponentType::eRenderer,
-                                       (Component **)(&renderer));
-        renderer->Render(context);
-    }
-
-    if (manager_->m_mirrorAlpha < 1.0f) { // 거울을 그려야 하는 상황
-
-        // 거울 2. 거울 위치만 StencilBuffer에 1로 표기
-        GraphicsManager::Instance().SetPipelineState(Graphics::stencilMaskPSO);
-
-        if (true) {
-            Renderer *renderer = nullptr;
-            manager_->m_mirror->GetComponent(EnumComponentType::eRenderer,
-                                             (Component **)(&renderer));
-            renderer->Render(context);
-        }
-
-        // 거울 3. 거울 위치에 반사된 물체들을 렌더링
-        GraphicsManager::Instance().SetPipelineState(
-            manager_->m_drawAsWire ? Graphics::reflectWirePSO
-                                   : Graphics::reflectSolidPSO);
-        GraphicsManager::Instance().SetGlobalConsts(
-            manager_->m_reflectGlobalConstsGPU);
-
-        context->ClearDepthStencilView(
-            GraphicsManager::Instance().m_depthStencilView.Get(),
-            D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-        for (auto &i : manager_->m_basicList) {
-            Renderer *renderer = nullptr;
-            i->GetComponent(EnumComponentType::eRenderer,
-                            (Component **)(&renderer));
-            renderer->Render(context);
-        }
-
-        if (true) {
-            GraphicsManager::Instance().SetPipelineState(
-                manager_->m_drawAsWire ? Graphics::reflectSkyboxWirePSO
-                                       : Graphics::reflectSkyboxSolidPSO);
-            Renderer *renderer = nullptr;
-            manager_->skybox->GetComponent(EnumComponentType::eRenderer,
-                                           (Component **)(&renderer));
-            renderer->Render(context);
-        }
-
-        if (true) {
-            // 거울 4. 거울 자체의 재질을 "Blend"로 그림
-            GraphicsManager::Instance().SetPipelineState(
-                manager_->m_drawAsWire ? Graphics::mirrorBlendWirePSO
-                                       : Graphics::mirrorBlendSolidPSO);
-            GraphicsManager::Instance().SetGlobalConsts(
-                manager_->m_globalConstsGPU);
-            Renderer *renderer = nullptr;
-            manager_->m_mirror->GetComponent(EnumComponentType::eRenderer,
-                                             (Component **)(&renderer));
-            renderer->Render(context);
-        }
-
-    } // end of if (m_mirrorAlpha < 1.0f)
-
-    context->ResolveSubresource(
-        GraphicsManager::Instance().resolved_buffer.Get(), 0,
-        GraphicsManager::Instance().float_buffer.Get(), 0,
-        DXGI_FORMAT_R16G16B16A16_FLOAT);
-
-    // PostEffects
-    GraphicsManager::Instance().SetPipelineState(Graphics::postEffectsPSO);
-
-    std::vector<ID3D11ShaderResourceView *> postEffectsSRVs = {
-        GraphicsManager::Instance().resolved_SRV.Get(), nullptr};
-
-    // 그림자맵 확인용 임시
-    // AppBase::SetGlobalConsts(m_shadowGlobalConstsGPU[0]);
-    GraphicsManager::Instance().SetGlobalConsts(manager_->m_globalConstsGPU);
-    // vector<ID3D11ShaderResourceView *> postEffectsSRVs = {
-    //  m_resolvedSRV.Get(), m_shadowSRVs[1].Get()};
-
-    // 20번에 넣어줌
-    context->PSSetShaderResources(20, UINT(postEffectsSRVs.size()),
-                                  postEffectsSRVs.data());
-    context->OMSetRenderTargets(
-        1, GraphicsManager::Instance().postEffectsRTV.GetAddressOf(), NULL);
-    // m_context->OMSetRenderTargets(1, m_backBufferRTV.GetAddressOf(), NULL);
-
-    context->PSSetConstantBuffers(
-        3, 1, manager_->m_postEffectsConstsGPU.GetAddressOf());
-
-    if (true) {
-        Renderer *renderer = nullptr;
-        manager_->m_screenSquare->GetComponent(
-            EnumComponentType::eRenderer, (Component **)(&renderer));
-        renderer->Render(context);
-    }
-
-    GraphicsManager::Instance().SetPipelineState(Graphics::postProcessingPSO);
-    manager_->m_postProcess.Render(context);
-    // clang-format off
-    
-    imgui_->PushNode(dynamic_cast<common::INode*>(manager_.get())); 
-
-    //auto tree = std::make_unique<BehaviorTreeBuilder>();
-    //tree->Build(dataBlock)
-    //->Excute(std::make_shared<UpdateCamera>())
-    //->Parallel(manager_->models)
-    //    ->Selector()
-    //        ->Sequence()
-    //            ->Excute(std::make_shared<CheckPhongShader>())
-    //            ->Excute(std::make_shared<UpdateGameObjectsUsingPhongShader>())
-    //            ->Excute(std::make_shared<RenderGameObjectsUsingPhongShader>())
-    //        ->Close()
-    //        ->Sequence()
-    //            ->Excute(std::make_shared<CheckPhysicallyBasedShader>())
-    //            ->Excute(std::make_shared<UpdateGameObjectsUsingPhysicallyBasedShader>())
-    //            ->Excute(std::make_shared<RenderGameObjectsUsingPhysicallyBasedShader>())
-    //        ->Close()
-    //    ->Close()
-    //->Close()
-    //->Conditional(std::make_shared<CheckCubeMapShader>())
-    //    ->Sequence()
-    //        ->Excute(std::make_shared<UpdateCubeMap>())
-    //        ->Excute(std::make_shared<RenderCubeMap>())
-    //    ->Close()
-    //->End()
-    //->Excute(std::make_shared<RenderBoardMap>())
-    //->Run();
-    // clang-format on
-
     input_->Frame();
 
-    imgui_->FrameBegin();
-    imgui_->FrameRate();
-    imgui_->StyleSetting();
-    imgui_->MenuBar();
-    imgui_->NodeEditor();
-    imgui_->TabBar(manager_->models);
-    imgui_->FrameEnd();
-    imgui_->ClearNode();
+    std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
+        {EnumDataBlockType::eManager, manager_.get()},
+        {EnumDataBlockType::eGui, imgui_.get()},
+        {EnumDataBlockType::eInput, input_.get()},
+    };
 
-    // Present the rendered scene to the screen.
-    if (common::Env::Instance().vsync_enabled) {
-        GraphicsManager::Instance().swap_chain->Present(1, 0);
-    } else {
-        GraphicsManager::Instance().swap_chain->Present(0, 0);
-    }
+    // clang-format off
+    auto tree = std::make_unique<BehaviorTreeBuilder>();
+    tree->Build(dataBlock)
+        ->Excute(std::make_shared<SetSamplerStates>())
+        ->Excute(std::make_shared<DrawOnlyDepth>())
+        ->Excute(std::make_shared<SetShadowViewport>())
+        ->Excute(std::make_shared<DrawShadowMap>())
+        ->Excute(std::make_shared<SetMainRenderTarget>())
+        ->Excute(std::make_shared<DrawObjects>())
+        ->Excute(std::make_shared<DrawSkybox>())
+        ->Excute(std::make_shared<DrawMirrorSurface>())
+        ->Excute(std::make_shared<ResolveBuffer>())
+        ->Excute(std::make_shared<DrawPostProcessing>())
+        ->Excute(std::make_shared<DrawSettingUi>())
+        ->Excute(std::make_shared<Present>())
+    ->Run();
+    // clang-format on
+
     return true;
 }
 

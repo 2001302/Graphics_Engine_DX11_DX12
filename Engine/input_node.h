@@ -10,8 +10,8 @@ class InitializeInput : public BehaviorActionNode {
     InitializeInput(HINSTANCE hinstance) { this->hinstance = hinstance; };
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto input = dynamic_cast<Input *>(
-            data_block[EnumDataBlockType::eInput]);
+        auto input =
+            dynamic_cast<Input *>(data_block[EnumDataBlockType::eInput]);
         assert(input != nullptr);
 
         input->Initialize(hinstance);
@@ -22,6 +22,20 @@ class InitializeInput : public BehaviorActionNode {
   private:
     HINSTANCE hinstance;
 };
+
+class ReadInput : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override {
+
+        auto input =
+            dynamic_cast<Input *>(data_block[EnumDataBlockType::eInput]);
+        assert(input != nullptr);
+
+        input->Frame();
+
+        return EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
 } // namespace engine
 
 #endif

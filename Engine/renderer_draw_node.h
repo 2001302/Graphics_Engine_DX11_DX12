@@ -23,6 +23,13 @@ class SetSamplerStates : public BehaviorActionNode {
             0, UINT(Graphics::sampleStates.size()),
             Graphics::sampleStates.data());
 
+        // 공용 텍스춰들: "Common.hlsli"에서 register(t10)부터 시작
+        std::vector<ID3D11ShaderResourceView *> commonSRVs = {
+            manager->m_envSRV.Get(), manager->m_specularSRV.Get(),
+            manager->m_irradianceSRV.Get(), manager->m_brdfSRV.Get()};
+        GraphicsManager::Instance().device_context->PSSetShaderResources(
+            10, UINT(commonSRVs.size()), commonSRVs.data());
+
         return EnumBehaviorTreeStatus::eSuccess;
     }
 };
@@ -180,7 +187,9 @@ class DrawObjects : public BehaviorActionNode {
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
-        GraphicsManager::Instance().SetPipelineState(Graphics::defaultSolidPSO);
+        GraphicsManager::Instance().SetPipelineState(
+            manager->m_drawAsWire ? Graphics::defaultWirePSO
+                                  : Graphics::defaultSolidPSO);
         GraphicsManager::Instance().SetGlobalConsts(manager->m_globalConstsGPU);
 
         for (auto &i : manager->m_basicList) {
@@ -223,7 +232,8 @@ class DrawSkybox : public BehaviorActionNode {
 
         if (true) {
             GraphicsManager::Instance().SetPipelineState(
-                Graphics::skyboxSolidPSO);
+                manager->m_drawAsWire ? Graphics::skyboxWirePSO
+                                      : Graphics::skyboxSolidPSO);
             Renderer *renderer = nullptr;
             manager->skybox->GetComponent(EnumComponentType::eRenderer,
                                           (Component **)(&renderer));

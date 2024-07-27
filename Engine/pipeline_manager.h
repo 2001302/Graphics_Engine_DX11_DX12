@@ -47,7 +47,6 @@ class PipelineManager : public common::IDataBlock, public common::INode {
     std::vector<std::shared_ptr<Model>> m_basicList;
 
     bool m_drawAsWire = false;
-    bool m_useMSAA = false;
     bool m_lightRotate = false;
     
     void OnShow() override{
@@ -59,9 +58,6 @@ class PipelineManager : public common::IDataBlock, public common::INode {
         if (ImGui::TreeNode("General")) {
             //ImGui::Checkbox("Use FPV", &camera->m_useFirstPersonView);
             ImGui::Checkbox("Wireframe", &m_drawAsWire);
-            if (ImGui::Checkbox("MSAA ON", &m_useMSAA)) {
-                GraphicsManager::Instance().CreateBuffer();
-            }
             ImGui::TreePop();
         }
 

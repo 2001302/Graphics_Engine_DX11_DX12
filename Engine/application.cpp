@@ -75,6 +75,7 @@ bool Application::OnUpdate(float dt) {
             ->Excute(std::make_shared<UpdateMirror>())
             //->Excute(std::make_shared<ApplyMouseMovement>())
             ->Excute(std::make_shared<UpdateBasicObjects>())
+            ->Excute(std::make_shared<UpdateLightSpheres>())
         ->Close()
     ->Run();
     // clang-format on
@@ -101,6 +102,7 @@ bool Application::OnRender() {
         ->Excute(std::make_shared<DrawShadowMap>())
         ->Excute(std::make_shared<SetMainRenderTarget>())
         ->Excute(std::make_shared<DrawObjects>())
+        ->Excute(std::make_shared<DrawLightSpheres>())
         ->Excute(std::make_shared<DrawSkybox>())
         ->Excute(std::make_shared<DrawMirrorSurface>())
         ->Excute(std::make_shared<ResolveBuffer>())

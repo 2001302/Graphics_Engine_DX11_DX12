@@ -62,10 +62,6 @@ class InitializeLight : public BehaviorActionNode {
                 manager->light_spheres[i] = std::make_shared<Model>();
                 manager->light_spheres[i]->AddComponent(
                     EnumComponentType::eRenderer, renderer);
-
-                manager->models.insert(
-                    {manager->light_spheres[i]->GetEntityId(),
-                     manager->light_spheres[i]});
             }
         }
 

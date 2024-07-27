@@ -239,6 +239,26 @@ class UpdateBasicObjects : public BehaviorActionNode {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 };
+
+class UpdateLightSpheres : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override {
+
+        auto manager = dynamic_cast<RenderingBlock *>(
+            data_block[EnumDataBlockType::eManager]);
+        assert(manager != nullptr);
+
+        for (auto &i : manager->light_spheres) {
+
+            Renderer *renderer = nullptr;
+            i->GetComponent(EnumComponentType::eRenderer,
+                            (Component **)(&renderer));
+            renderer->UpdateConstantBuffers(
+                GraphicsManager::Instance().device,
+                GraphicsManager::Instance().device_context);
+        }
+        return EnumBehaviorTreeStatus::eSuccess;
+    }
+};
 }
 
 #endif

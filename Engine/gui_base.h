@@ -9,12 +9,11 @@ namespace common {
 class IGui : public IDataBlock {
   public:
     bool Initialize();
-    bool FrameBegin();
-    bool FrameEnd();
+    bool Frame(IDataBlock *dataBlock = nullptr);
     void Shutdown();
 
     virtual void OnStart(){};
-    virtual void OnFrame(){};
+    virtual void OnFrame(IDataBlock *dataBlock){};
 
   protected:
     ImGuiContext *context_ = nullptr;

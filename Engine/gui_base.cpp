@@ -22,13 +22,12 @@ bool IGui::Initialize() {
 
     OnStart();
 
-    FrameBegin();
-    FrameEnd();
-
+    Frame();
+    
     return true;
 }
 
-bool IGui::FrameBegin() {
+bool IGui::Frame(IDataBlock* dataBlock) {
 
     auto &io = ImGui::GetIO();
 
@@ -47,12 +46,7 @@ bool IGui::FrameBegin() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, windowBorderSize);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
 
-    return true;
-}
-
-bool IGui::FrameEnd() {
-
-    OnFrame();
+    OnFrame(dataBlock);
 
     ImGui::PopStyleVar(2);
     ImGui::End();

@@ -15,7 +15,7 @@ class SettingUi : public IGui {
 
   public:
     void OnStart() override;
-    void OnFrame() override;
+    void OnFrame(IDataBlock *dataBlock) override;
     int SelectedId();
     void PushNode(INode *node);
     void ClearNode();
@@ -24,7 +24,7 @@ class SettingUi : public IGui {
     void FrameRate();
     void MenuBar();
     void NodeEditor();
-    void TabBar(std::map<int, std::shared_ptr<engine::Model>> node_map);
+    void TabBar(IDataBlock *dataBlock);
 
   private:
     ed::EditorContext *context_ = nullptr;

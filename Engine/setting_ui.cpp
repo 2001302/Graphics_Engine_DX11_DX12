@@ -7,13 +7,15 @@ void SettingUi::OnStart() {
     config.SettingsFile = "widgets.json";
     context_ = ed::CreateEditor(&config);
 }
-void SettingUi::OnFrame() {
-    // FrameRate();
-    // StyleSetting();
-    // MenuBar();
-    // NodeEditor();
-    // TabBar();
+
+void SettingUi::OnFrame(IDataBlock *dataBlock) {
+     FrameRate();
+     StyleSetting();
+     MenuBar();
+     NodeEditor();
+     TabBar(dataBlock);
 }
+
 void SettingUi::StyleSetting() {
     ImGuiStyle &style = ImGui::GetStyle();
     style.Alpha = 1.0f;
@@ -21,6 +23,7 @@ void SettingUi::StyleSetting() {
     style.FrameRounding = 2.3f;
     style.ScrollbarRounding = 0;
 }
+
 void SettingUi::FrameRate() {
     auto &io = ImGui::GetIO();
 
@@ -29,6 +32,7 @@ void SettingUi::FrameRate() {
                 io.Framerate ? 1000.0f / io.Framerate : 0.0f);
     ImGui::Separator();
 }
+
 void SettingUi::MenuBar() {
     // Add Object
     if (ImGui::Button("Sphere")) {
@@ -48,6 +52,7 @@ void SettingUi::MenuBar() {
     }
     ImGui::Separator();
 }
+
 void SettingUi::NodeEditor() {
     // Node Editor Widget
     ed::SetCurrentEditor(context_);
@@ -61,7 +66,8 @@ void SettingUi::NodeEditor() {
     ed::End();
     ed::SetCurrentEditor(nullptr);
 }
-void SettingUi::TabBar(std::map<int, std::shared_ptr<engine::Model>> node_map) { 
+
+void SettingUi::TabBar(IDataBlock *dataBlock) { 
 
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_FittingPolicyScroll)) {
         if (ImGui::BeginTabItem("Hierarchy")) {
@@ -74,25 +80,25 @@ void SettingUi::TabBar(std::map<int, std::shared_ptr<engine::Model>> node_map) {
             ImGui::TableSetColumnIndex(1);
             ImGui::Text("Name");
 
-            for (auto &model : node_map) {
+            //for (auto &model : node_map) {
 
-                ImGui::TableNextRow();
+            //    ImGui::TableNextRow();
 
-                ImGui::TableSetColumnIndex(0);
-                if (ImGui::Selectable(std::to_string(model.first).c_str(),
-                                      model.first == selected_object_id_,
-                                      ImGuiSelectableFlags_SpanAllColumns)) {
-                    selected_object_id_ = model.first;
-                }
+            //    ImGui::TableSetColumnIndex(0);
+            //    if (ImGui::Selectable(std::to_string(model.first).c_str(),
+            //                          model.first == selected_object_id_,
+            //                          ImGuiSelectableFlags_SpanAllColumns)) {
+            //        selected_object_id_ = model.first;
+            //    }
 
-                ImGui::TableSetColumnIndex(1);
-                ImGui::Text("Node");
+            //    ImGui::TableSetColumnIndex(1);
+            //    ImGui::Text("Node");
 
-                if (selected_object_id_ == model.first) {
-                    ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,
-                                           ImGui::GetColorU32(ImGuiCol_Header));
-                }
-            }
+            //    if (selected_object_id_ == model.first) {
+            //        ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,
+            //                               ImGui::GetColorU32(ImGuiCol_Header));
+            //    }
+            //}
 
             ImGui::EndTable();
 
@@ -102,6 +108,7 @@ void SettingUi::TabBar(std::map<int, std::shared_ptr<engine::Model>> node_map) {
         ImGui::EndTabBar();
     }
 }
+
 int SettingUi::SelectedId() {
     if (selected_object_id_ == -99999)
         return 0;
@@ -109,6 +116,7 @@ int SettingUi::SelectedId() {
         return selected_object_id_;
     }
 }
+
 void SettingUi::PushNode(INode *node) {
     node->uniqueId = unique_id;
     node->position = ImVec2(unique_pos_x, 0);
@@ -117,6 +125,7 @@ void SettingUi::PushNode(INode *node) {
     unique_id = unique_id + 10;
     unique_pos_x = unique_pos_x + 500;
 };
+
 void SettingUi::ClearNode() {
     unique_id = 1;
     unique_pos_x = 0;

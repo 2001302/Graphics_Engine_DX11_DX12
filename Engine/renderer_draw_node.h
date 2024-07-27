@@ -407,14 +407,7 @@ class DrawSettingUi : public BehaviorActionNode {
         assert(gui != nullptr);
 
         gui->PushNode(dynamic_cast<common::INode *>(manager));
-
-        gui->FrameBegin();
-        gui->FrameRate();
-        gui->StyleSetting();
-        gui->MenuBar();
-        gui->NodeEditor();
-        gui->TabBar(manager->models);
-        gui->FrameEnd();
+        gui->Frame(manager);
         gui->ClearNode();
 
         return EnumBehaviorTreeStatus::eSuccess;

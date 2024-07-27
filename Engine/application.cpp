@@ -156,7 +156,8 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
     extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(
         HWND main_window, UINT msg, WPARAM wParam, LPARAM lParam);
 
-    ImGui_ImplWin32_WndProcHandler(main_window, umsg, wparam, lparam);
+    if (ImGui_ImplWin32_WndProcHandler(main_window, umsg, wparam, lparam))
+        return true;
 
     switch (umsg) {
     case WM_MOUSEMOVE: {
@@ -185,7 +186,6 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
         break;
     }
     case WM_RBUTTONDOWN: {
-        // return OnRightClickRequest();
         break;
     }
     case WM_LBUTTONUP: {
@@ -237,6 +237,15 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
 
         break;
     }
+    case WM_KEYDOWN:
+        if (wparam == VK_ESCAPE) {
+            OnStop();
+            DestroyWindow(main_window);
+        }
+        break;
+    case WM_DESTROY:
+        ::PostQuitMessage(0);
+        return 0;
     default: {
         return DefWindowProc(main_window, umsg, wparam, lparam);
     }

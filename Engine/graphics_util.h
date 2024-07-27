@@ -65,14 +65,13 @@ class GraphicsUtil {
 
         D3D11_BUFFER_DESC bufferDesc;
         ZeroMemory(&bufferDesc, sizeof(bufferDesc));
-        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+        bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
         bufferDesc.ByteWidth = UINT(sizeof(T_VERTEX) * vertices.size());
         bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
         bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
         bufferDesc.StructureByteStride = sizeof(T_VERTEX);
 
-        D3D11_SUBRESOURCE_DATA vertexBufferData = {
-            0}; // MS 예제에서 초기화하는 방식
+        D3D11_SUBRESOURCE_DATA vertexBufferData = {0};
         vertexBufferData.pSysMem = vertices.data();
         vertexBufferData.SysMemPitch = 0;
         vertexBufferData.SysMemSlicePitch = 0;
@@ -155,5 +154,5 @@ class GraphicsUtil {
                             const std::string filename);
 };
 
-} // namespace dx11
+} // namespace engine
 #endif

@@ -1,9 +1,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "graphics_util.h"
 
-#include <DirectXTexEXR.h> // EXR 형식 HDRI 읽기
+#include <DirectXTexEXR.h> 
 #include <algorithm>
-#include <directxtk/DDSTextureLoader.h> // 큐브맵 읽을 때 필요
+#include <directxtk/DDSTextureLoader.h> 
 #include <dxgi.h>                       // DXGIFactory
 #include <dxgi1_4.h>                    // DXGIFactory4
 #include <fp16.h>
@@ -21,12 +21,9 @@ using namespace DirectX;
 
 void CheckResult(HRESULT hr, ID3DBlob *errorBlob) {
     if (FAILED(hr)) {
-        // 파일이 없을 경우
         if ((hr & D3D11_ERROR_FILE_NOT_FOUND) != 0) {
             cout << "File not found." << endl;
         }
-
-        // 에러 메시지가 있으면 출력
         if (errorBlob) {
             cout << "Shader compile error\n"
                  << (char *)errorBlob->GetBufferPointer() << endl;
@@ -48,8 +45,6 @@ void GraphicsUtil::CreateVertexShaderAndInputLayout(
     compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
-    // 쉐이더의 시작점의 이름이 "main"인 함수로 지정
-    // D3D_COMPILE_STANDARD_FILE_INCLUDE 추가: 쉐이더에서 include 사용
     HRESULT hr = D3DCompileFromFile(
         filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
         "vs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
@@ -76,8 +71,6 @@ void GraphicsUtil::CreateHullShader(ComPtr<ID3D11Device> &device,
     compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
-    // 쉐이더의 시작점의 이름이 "main"인 함수로 지정
-    // D3D_COMPILE_STANDARD_FILE_INCLUDE 추가: 쉐이더에서 include 사용
     HRESULT hr = D3DCompileFromFile(
         filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
         "hs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
@@ -100,8 +93,6 @@ void GraphicsUtil::CreateDomainShader(
     compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
-    // 쉐이더의 시작점의 이름이 "main"인 함수로 지정
-    // D3D_COMPILE_STANDARD_FILE_INCLUDE 추가: 쉐이더에서 include 사용
     HRESULT hr = D3DCompileFromFile(
         filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
         "ds_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
@@ -124,8 +115,6 @@ void GraphicsUtil::CreatePixelShader(ComPtr<ID3D11Device> &device,
     compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
-    // 쉐이더의 시작점의 이름이 "main"인 함수로 지정
-    // D3D_COMPILE_STANDARD_FILE_INCLUDE 추가: 쉐이더에서 include 사용
     HRESULT hr = D3DCompileFromFile(
         filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
         "ps_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
@@ -141,7 +130,7 @@ void GraphicsUtil::CreateIndexBuffer(ComPtr<ID3D11Device> &device,
                                      const std::vector<uint32_t> &indices,
                                      ComPtr<ID3D11Buffer> &indexBuffer) {
     D3D11_BUFFER_DESC bufferDesc = {};
-    bufferDesc.Usage = D3D11_USAGE_IMMUTABLE; // 초기화 후 변경X
+    bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
     bufferDesc.ByteWidth = UINT(sizeof(uint32_t) * indices.size());
     bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
     bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
@@ -168,13 +157,9 @@ void GraphicsUtil::CreateGeometryShader(
     compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
-    // 쉐이더의 시작점의 이름이 "main"인 함수로 지정
-    // D3D_COMPILE_STANDARD_FILE_INCLUDE 추가: 쉐이더에서 include 사용
     HRESULT hr = D3DCompileFromFile(
         filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
         "gs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
-
-    // CheckResult(hr, errorBlob.Get());
 
     device->CreateGeometryShader(shaderBlob->GetBufferPointer(),
                                  shaderBlob->GetBufferSize(), NULL,
@@ -202,7 +187,6 @@ void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
     image.resize(scratchImage.GetPixelsSize());
     memcpy(image.data(), scratchImage.GetPixels(), image.size());
 
-    // 데이터 범위 확인해보기
     vector<float> f32(image.size() / 2);
     uint16_t *f16 = (uint16_t *)image.data();
     for (int i = 0; i < image.size() / 2; i++) {
@@ -233,7 +217,7 @@ void ReadImage(const std::string filename, std::vector<uint8_t> &image,
     cout << filename << " " << width << " " << height << " " << channels
          << endl;
 
-    // 4채널로 만들어서 복사
+    // to 4 chanel
     image.resize(width * height * 4);
 
     if (channels == 1) {
@@ -278,7 +262,6 @@ CreateStagingTexture(ComPtr<ID3D11Device> &device,
                      const DXGI_FORMAT pixelFormat = DXGI_FORMAT_R8G8B8A8_UNORM,
                      const int mipLevels = 1, const int arraySize = 1) {
 
-    // 스테이징 텍스춰 만들기
     D3D11_TEXTURE2D_DESC txtDesc;
     ZeroMemory(&txtDesc, sizeof(txtDesc));
     txtDesc.Width = width;
@@ -296,7 +279,6 @@ CreateStagingTexture(ComPtr<ID3D11Device> &device,
         cout << "Failed()" << endl;
     }
 
-    // CPU에서 이미지 데이터 복사
     size_t pixelSize = sizeof(uint8_t) * 4;
     if (pixelFormat == DXGI_FORMAT_R16G16B16A16_FLOAT) {
         pixelSize = sizeof(uint16_t) * 4;
@@ -305,7 +287,7 @@ CreateStagingTexture(ComPtr<ID3D11Device> &device,
     D3D11_MAPPED_SUBRESOURCE ms;
     context->Map(stagingTexture.Get(), NULL, D3D11_MAP_WRITE, NULL, &ms);
     uint8_t *pData = (uint8_t *)ms.pData;
-    for (UINT h = 0; h < UINT(height); h++) { // 가로줄 한 줄씩 복사
+    for (UINT h = 0; h < UINT(height); h++) { 
         memcpy(&pData[h * ms.RowPitch], &image[h * width * pixelSize],
                width * pixelSize);
     }
@@ -321,16 +303,14 @@ void CreateTextureHelper(ComPtr<ID3D11Device> &device,
                          ComPtr<ID3D11Texture2D> &texture,
                          ComPtr<ID3D11ShaderResourceView> &srv) {
 
-    // 스테이징 텍스춰 만들고 CPU에서 이미지를 복사합니다.
     ComPtr<ID3D11Texture2D> stagingTexture = CreateStagingTexture(
         device, context, width, height, image, pixelFormat);
 
-    // 실제로 사용할 텍스춰 설정
     D3D11_TEXTURE2D_DESC txtDesc;
     ZeroMemory(&txtDesc, sizeof(txtDesc));
     txtDesc.Width = width;
     txtDesc.Height = height;
-    txtDesc.MipLevels = 0; // 밉맵 레벨 최대
+    txtDesc.MipLevels = 0; 
     txtDesc.ArraySize = 1;
     txtDesc.Format = pixelFormat;
     txtDesc.SampleDesc.Count = 1;

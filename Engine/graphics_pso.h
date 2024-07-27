@@ -5,15 +5,6 @@
 
 namespace engine {
 
-// 참고: DirectX_Graphic-Samples 미니엔진
-// https://github.com/microsoft/DirectX-Graphics-Samples/blob/master/MiniEngine/Core/PipelineState.h
-
-// 참고: D3D12_GRAPHICS_PIPELINE_STATE_DESC
-// https://learn.microsoft.com/en-us/windows/win32/api/d3d12/ns-d3d12-d3d12_graphics_pipeline_state_desc
-
-// PipelineStateObject: 렌더링할 때 Context의 상태를 어떻게 설정해줄지 저장
-// ComputePSO는 별도로 정의
-
 class GraphicsPSO {
   public:
     void operator=(const GraphicsPSO &pso);

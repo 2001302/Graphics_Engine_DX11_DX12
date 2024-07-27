@@ -3,6 +3,7 @@
 
 #include "gui_base.h"
 #include "message.h"
+#include "model.h"
 #include <string>
 #include <map>
 
@@ -23,7 +24,7 @@ class SettingUi : public IGui {
     void FrameRate();
     void MenuBar();
     void NodeEditor();
-    void TabBar(std::map<int, INode *> node_map);
+    void TabBar(std::map<int, std::shared_ptr<engine::Model>> node_map);
 
   private:
     ed::EditorContext *context_ = nullptr;

@@ -10,18 +10,16 @@
 
 namespace engine {
 
-class PipelineManager : public common::IDataBlock, public common::INode {
+class RenderingBlock : public common::IDataBlock, public common::INode {
   public:
     std::unique_ptr<Camera> camera;
-    //std::unique_ptr<Light> light;
     std::shared_ptr<Model> skybox;
-    std::map<int /*id*/, common::INode*> models;
-    std::shared_ptr<Model> m_screenSquare;
-    std::shared_ptr<Model> m_lightSphere[MAX_LIGHTS];
-    std::shared_ptr<Model> m_ground;
+    std::shared_ptr<Model> screen_square;
+    std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
+    std::shared_ptr<Model> ground;
+    std::map<int /*id*/, std::shared_ptr<Model>> models;
 
     //shared resource
-    // 다양한 Pass들을 더 간단히 구현하기 위해 ConstBuffer들 분리
     GlobalConstants m_globalConstsCPU;
     GlobalConstants m_reflectGlobalConstsCPU;
     GlobalConstants m_shadowGlobalConstsCPU[MAX_LIGHTS];
@@ -29,7 +27,7 @@ class PipelineManager : public common::IDataBlock, public common::INode {
     ComPtr<ID3D11Buffer> m_reflectGlobalConstsGPU;
     ComPtr<ID3D11Buffer> m_shadowGlobalConstsGPU[MAX_LIGHTS];
 
-    // 공통으로 사용하는 텍스춰들
+    //shared texture
     ComPtr<ID3D11ShaderResourceView> m_envSRV;
     ComPtr<ID3D11ShaderResourceView> m_irradianceSRV;
     ComPtr<ID3D11ShaderResourceView> m_specularSRV;
@@ -39,12 +37,10 @@ class PipelineManager : public common::IDataBlock, public common::INode {
     ComPtr<ID3D11Buffer> m_postEffectsConstsGPU;
     PostProcess m_postProcess;
 
-    // 거울
+    //mirror
     std::shared_ptr<Model> m_mirror;
     DirectX::SimpleMath::Plane m_mirrorPlane;
-    float m_mirrorAlpha = 1.0f; // Opacity
-
-    std::vector<std::shared_ptr<Model>> m_basicList;
+    float m_mirrorAlpha = 1.0f; // opacity
 
     bool m_drawAsWire = false;
     bool m_lightRotate = false;
@@ -56,7 +52,6 @@ class PipelineManager : public common::IDataBlock, public common::INode {
 
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("General")) {
-            //ImGui::Checkbox("Use FPV", &camera->m_useFirstPersonView);
             ImGui::Checkbox("Wireframe", &m_drawAsWire);
             ImGui::TreePop();
         }
@@ -109,7 +104,7 @@ class PipelineManager : public common::IDataBlock, public common::INode {
             flag += ImGui::SliderFloat(
                 "Gamma", &m_postProcess.m_combineFilter.m_constData.option2,
                 0.1f, 5.0f);
-            // 편의상 사용자 입력이 인식되면 바로 GPU 버퍼를 업데이트
+
             if (flag) {
                 m_postProcess.m_combineFilter.UpdateConstantBuffers(device,
                                                                     context);

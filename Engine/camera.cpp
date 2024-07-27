@@ -1,6 +1,6 @@
 #include "camera.h"
 #include "geometry_generator.h"
-#include "pipeline_manager.h"
+#include "rendering_block.h"
 #include "setting_ui.h"
 
 namespace engine {

@@ -3,7 +3,7 @@
 namespace engine {
 using namespace DirectX::SimpleMath;
 
-bool MessageReceiver::OnMouseRightDragRequest(PipelineManager *manager,
+bool MessageReceiver::OnMouseRightDragRequest(RenderingBlock *manager,
                                          std::shared_ptr<Input> input) {
     DIMOUSESTATE mouseState;
     if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
@@ -45,7 +45,7 @@ bool MessageReceiver::OnMouseRightDragRequest(PipelineManager *manager,
     return true;
 }
 
-bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
+bool MessageReceiver::OnMouseWheelRequest(RenderingBlock *manager,
                                           std::shared_ptr<Input> input) {
     DIMOUSESTATE mouseState;
     if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
@@ -68,7 +68,7 @@ bool MessageReceiver::OnMouseWheelRequest(PipelineManager *manager,
     return true;
 }
 
-bool MessageReceiver::OnMouseWheelDragRequest(PipelineManager *manager,
+bool MessageReceiver::OnMouseWheelDragRequest(RenderingBlock *manager,
                                          std::shared_ptr<Input> input,
                                          int mouseX, int mouseY) {
     DIMOUSESTATE mouseState;
@@ -106,7 +106,7 @@ bool MessageReceiver::OnMouseWheelDragRequest(PipelineManager *manager,
     return true;
 }
 
-bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
+bool MessageReceiver::OnModelLoadRequest(RenderingBlock *manager,
                                          HWND main_window) {
     auto ToString = [](LPWSTR lpwstr) -> std::string {
         if (!lpwstr)
@@ -277,7 +277,7 @@ bool MessageReceiver::OnModelLoadRequest(PipelineManager *manager,
     return true;
 }
 
-bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
+bool MessageReceiver::OnSphereLoadRequest(RenderingBlock *manager) {
 
     //auto mesh_data = GeometryGenerator::MakeSphere(1.5f, 15, 13);
 
@@ -290,7 +290,7 @@ bool MessageReceiver::OnSphereLoadRequest(PipelineManager *manager) {
     return true;
 }
 
-bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
+bool MessageReceiver::OnBoxLoadRequest(RenderingBlock *manager) {
 
     //auto mesh_data = GeometryGenerator::MakeBox(1.0f);
 
@@ -303,7 +303,7 @@ bool MessageReceiver::OnBoxLoadRequest(PipelineManager *manager) {
     return true;
 }
 
-bool MessageReceiver::OnCylinderLoadRequest(PipelineManager *manager) {
+bool MessageReceiver::OnCylinderLoadRequest(RenderingBlock *manager) {
 
     //auto mesh_data = GeometryGenerator::MakeCylinder(5.0f, 5.0f, 15.0f, 30);
 

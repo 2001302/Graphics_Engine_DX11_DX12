@@ -2,7 +2,7 @@
 #define _RENDERER_UPDATE_NODE
 
 #include "behavior_tree_builder.h"
-#include "pipeline_manager.h"
+#include "rendering_block.h"
 #include "renderer.h"
 
 namespace engine {
@@ -10,7 +10,7 @@ namespace engine {
 class UpdateCamera : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -25,7 +25,7 @@ class UpdateLights : public BehaviorActionNode {
     UpdateLights(float dt) { this->dt = dt; }
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -101,7 +101,7 @@ class UpdateLights : public BehaviorActionNode {
         // 조명의 위치 반영
         for (int i = 0; i < MAX_LIGHTS; i++) {
             Renderer *renderer = nullptr;
-            manager->m_lightSphere[i]->GetComponent(
+            manager->light_spheres[i]->GetComponent(
                 EnumComponentType::eRenderer, (Component **)(&renderer));
 
             renderer->UpdateWorldRow(
@@ -120,7 +120,7 @@ class UpdateLights : public BehaviorActionNode {
 class UpdateGlobalConstantBuffers : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -169,7 +169,7 @@ class UpdateGlobalConstantBuffers : public BehaviorActionNode {
 class UpdateMirror : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -186,7 +186,7 @@ class UpdateMirror : public BehaviorActionNode {
 class ApplyMouseMovement : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -223,14 +223,14 @@ class ApplyMouseMovement : public BehaviorActionNode {
 class UpdateBasicObjects : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
-        for (auto &i : manager->m_basicList) {
+        for (auto &i : manager->models) {
 
             Renderer *renderer = nullptr;
-            i->GetComponent(EnumComponentType::eRenderer,
+            i.second->GetComponent(EnumComponentType::eRenderer,
                             (Component **)(&renderer));
             renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context);

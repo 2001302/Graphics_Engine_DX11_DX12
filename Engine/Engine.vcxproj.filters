@@ -118,7 +118,7 @@
     <ClInclude Include="input.h">
       <Filter>Platform</Filter>
     </ClInclude>
-    <ClInclude Include="pipeline_manager.h">
+    <ClInclude Include="rendering_block.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
     <ClInclude Include="model_loader.h">

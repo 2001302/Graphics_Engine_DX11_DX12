@@ -7,7 +7,7 @@
 #include "input.h"
 #include "message.h"
 #include "message_receiver.h"
-#include "pipeline_manager.h"
+#include "rendering_block.h"
 #include "platform.h"
 #include "setting_ui.h"
 
@@ -26,7 +26,7 @@ class Application : public Platform {
     bool OnUpdate(float dt);
     bool OnRender();
 
-    std::shared_ptr<PipelineManager> manager_;
+    std::shared_ptr<RenderingBlock> manager_;
     std::unique_ptr<MessageReceiver> message_receiver_;
     std::shared_ptr<Input> input_;
     std::shared_ptr<common::SettingUi> imgui_;

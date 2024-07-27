@@ -3,14 +3,14 @@
 
 #include "behavior_tree_builder.h"
 #include "geometry_generator.h"
-#include "pipeline_manager.h"
 #include "renderer.h"
+#include "rendering_block.h"
 
 namespace engine {
 class InitializeLight : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -59,12 +59,13 @@ class InitializeLight : public BehaviorActionNode {
                 if (manager->m_globalConstsCPU.lights[i].type == 0)
                     renderer->m_isVisible = false;
 
-                manager->m_lightSphere[i] = std::make_shared<Model>();
-                manager->m_lightSphere[i]->AddComponent(
+                manager->light_spheres[i] = std::make_shared<Model>();
+                manager->light_spheres[i]->AddComponent(
                     EnumComponentType::eRenderer, renderer);
 
-                manager->m_basicList.push_back(
-                    manager->m_lightSphere[i]); // 리스트에 등록
+                manager->models.insert(
+                    {manager->light_spheres[i]->GetEntityId(),
+                     manager->light_spheres[i]});
             }
         }
 
@@ -75,7 +76,7 @@ class InitializeLight : public BehaviorActionNode {
 class InitializeCamera : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -89,7 +90,7 @@ class InitializeCamera : public BehaviorActionNode {
 class InitializeSkybox : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -127,7 +128,7 @@ class InitializeSkybox : public BehaviorActionNode {
 class InitializeMirrorGround : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -147,12 +148,12 @@ class InitializeMirrorGround : public BehaviorActionNode {
         renderer->UpdateWorldRow(Matrix::CreateRotationX(3.141592f * 0.5f) *
                                  Matrix::CreateTranslation(position));
 
-        manager->m_ground = std::make_shared<Model>();
-        manager->m_ground->AddComponent(EnumComponentType::eRenderer, renderer);
+        manager->ground = std::make_shared<Model>();
+        manager->ground->AddComponent(EnumComponentType::eRenderer, renderer);
 
         manager->m_mirrorPlane =
             DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
-        manager->m_mirror = manager->m_ground; // 바닥에 거울처럼 반사 구현
+        manager->m_mirror = manager->ground; // 바닥에 거울처럼 반사 구현
 
         // m_basicList.push_back(m_ground); // 거울은 리스트에 등록 X
 
@@ -163,7 +164,7 @@ class InitializeMirrorGround : public BehaviorActionNode {
 class CreateGlobalConstantBuffer : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -195,7 +196,7 @@ class CreateGlobalConstantBuffer : public BehaviorActionNode {
 class InitializePostEffect : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -204,8 +205,8 @@ class InitializePostEffect : public BehaviorActionNode {
             GraphicsManager::Instance().device,
             GraphicsManager::Instance().device_context, std::vector{meshData});
 
-        manager->m_screenSquare = std::make_shared<Model>();
-        manager->m_screenSquare->AddComponent(EnumComponentType::eRenderer,
+        manager->screen_square = std::make_shared<Model>();
+        manager->screen_square->AddComponent(EnumComponentType::eRenderer,
                                               renderer);
 
         return EnumBehaviorTreeStatus::eSuccess;
@@ -215,7 +216,7 @@ class InitializePostEffect : public BehaviorActionNode {
 class InitializePostProcessing : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -233,7 +234,7 @@ class InitializePostProcessing : public BehaviorActionNode {
 class InitializeBasicModels : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
         // 추가 물체1
@@ -249,13 +250,14 @@ class InitializeBasicModels : public BehaviorActionNode {
             renderer->m_materialConstsCPU.roughnessFactor = 0.2f;
             renderer->m_materialConstsCPU.metallicFactor = 0.6f;
             renderer->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
-            renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
+            renderer->UpdateConstantBuffers(
+                GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context);
 
             auto obj = std::make_shared<Model>();
             obj->AddComponent(EnumComponentType::eRenderer, renderer);
 
-            manager->m_basicList.push_back(obj);
+            manager->models.insert({obj->GetEntityId(), obj});
         }
 
         // 추가 물체2
@@ -271,13 +273,14 @@ class InitializeBasicModels : public BehaviorActionNode {
             renderer->m_materialConstsCPU.roughnessFactor = 0.5f;
             renderer->m_materialConstsCPU.metallicFactor = 0.9f;
             renderer->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
-            renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
+            renderer->UpdateConstantBuffers(
+                GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context);
 
             auto obj = std::make_shared<Model>();
             obj->AddComponent(EnumComponentType::eRenderer, renderer);
 
-            manager->m_basicList.push_back(obj);
+            manager->models.insert({obj->GetEntityId(), obj});
         }
 
         return EnumBehaviorTreeStatus::eSuccess;

@@ -2,7 +2,7 @@
 #define _RENDERER_DRAW_NODE
 
 #include "behavior_tree_builder.h"
-#include "pipeline_manager.h"
+#include "rendering_block.h"
 #include "renderer.h"
 #include "setting_ui.h"
 
@@ -10,7 +10,7 @@ namespace engine {
 class SetSamplerStates : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -37,7 +37,7 @@ class SetSamplerStates : public BehaviorActionNode {
 class DrawOnlyDepth : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -51,9 +51,9 @@ class DrawOnlyDepth : public BehaviorActionNode {
         GraphicsManager::Instance().SetPipelineState(Graphics::depthOnlyPSO);
         GraphicsManager::Instance().SetGlobalConsts(manager->m_globalConstsGPU);
 
-        for (auto &i : manager->m_basicList) {
+        for (auto &i : manager->models) {
             Renderer *renderer = nullptr;
-            i->GetComponent(EnumComponentType::eRenderer,
+            i.second->GetComponent(EnumComponentType::eRenderer,
                             (Component **)(&renderer));
             renderer->Render(GraphicsManager::Instance().device_context);
         }
@@ -88,7 +88,7 @@ class SetShadowViewport : public BehaviorActionNode {
 class DrawShadowMap : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -106,9 +106,9 @@ class DrawShadowMap : public BehaviorActionNode {
                 GraphicsManager::Instance().SetGlobalConsts(
                     manager->m_shadowGlobalConstsGPU[i]);
 
-                for (auto &i : manager->m_basicList) {
+                for (auto &i : manager->models) {
                     Renderer *renderer = nullptr;
-                    i->GetComponent(EnumComponentType::eRenderer,
+                    i.second->GetComponent(EnumComponentType::eRenderer,
                                     (Component **)(&renderer));
 
                     if (renderer->m_castShadow && renderer->m_isVisible)
@@ -142,7 +142,7 @@ class DrawShadowMap : public BehaviorActionNode {
 class SetMainRenderTarget : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -183,7 +183,7 @@ class SetMainRenderTarget : public BehaviorActionNode {
 class DrawObjects : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -192,9 +192,9 @@ class DrawObjects : public BehaviorActionNode {
                                   : Graphics::defaultSolidPSO);
         GraphicsManager::Instance().SetGlobalConsts(manager->m_globalConstsGPU);
 
-        for (auto &i : manager->m_basicList) {
+        for (auto &i : manager->models) {
             Renderer *renderer = nullptr;
-            i->GetComponent(EnumComponentType::eRenderer,
+            i.second->GetComponent(EnumComponentType::eRenderer,
                             (Component **)(&renderer));
             renderer->Render(GraphicsManager::Instance().device_context);
         }
@@ -209,10 +209,10 @@ class DrawObjects : public BehaviorActionNode {
         }
 
         GraphicsManager::Instance().SetPipelineState(Graphics::normalsPSO);
-        for (auto &i : manager->m_basicList) {
+        for (auto &i : manager->models) {
 
             Renderer *renderer = nullptr;
-            i->GetComponent(EnumComponentType::eRenderer,
+            i.second->GetComponent(EnumComponentType::eRenderer,
                             (Component **)(&renderer));
             if (renderer->m_drawNormals)
                 renderer->RenderNormals(
@@ -226,7 +226,7 @@ class DrawObjects : public BehaviorActionNode {
 class DrawSkybox : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -247,7 +247,7 @@ class DrawSkybox : public BehaviorActionNode {
 class DrawMirrorSurface : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -275,9 +275,9 @@ class DrawMirrorSurface : public BehaviorActionNode {
                 GraphicsManager::Instance().m_depthStencilView.Get(),
                 D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-            for (auto &i : manager->m_basicList) {
+            for (auto &i : manager->models) {
                 Renderer *renderer = nullptr;
-                i->GetComponent(EnumComponentType::eRenderer,
+                i.second->GetComponent(EnumComponentType::eRenderer,
                                 (Component **)(&renderer));
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
@@ -313,7 +313,7 @@ class DrawMirrorSurface : public BehaviorActionNode {
 class ResolveBuffer : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -329,7 +329,7 @@ class ResolveBuffer : public BehaviorActionNode {
 class DrawPostProcessing : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
@@ -358,7 +358,7 @@ class DrawPostProcessing : public BehaviorActionNode {
 
         if (true) {
             Renderer *renderer = nullptr;
-            manager->m_screenSquare->GetComponent(EnumComponentType::eRenderer,
+            manager->screen_square->GetComponent(EnumComponentType::eRenderer,
                                                   (Component **)(&renderer));
             renderer->Render(GraphicsManager::Instance().device_context);
         }
@@ -375,7 +375,7 @@ class DrawPostProcessing : public BehaviorActionNode {
 class DrawSettingUi : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<PipelineManager *>(
+        auto manager = dynamic_cast<RenderingBlock *>(
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 

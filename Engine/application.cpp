@@ -9,7 +9,7 @@
 namespace engine {
 
 Application::Application() {
-    manager_ = std::make_shared<PipelineManager>();
+    manager_ = std::make_shared<RenderingBlock>();
     message_receiver_ = std::make_unique<MessageReceiver>();
     input_ = std::make_unique<Input>();
     imgui_ = std::make_shared<common::SettingUi>();
@@ -118,8 +118,7 @@ bool Application::OnStop() {
 
     if (manager_) {
         for (auto &model : manager_->models) {
-            delete model.second;
-            model.second = 0;
+            model.second.reset();
         }
         manager_->camera.reset();
     }

@@ -3,21 +3,21 @@
 
 #include "geometry_generator.h"
 #include "input.h"
-#include "pipeline_manager.h"
+#include "rendering_block.h"
 
 namespace engine {
 class MessageReceiver {
   public:
-    bool OnModelLoadRequest(PipelineManager *manager, HWND main_window);
-    bool OnSphereLoadRequest(PipelineManager *manager);
-    bool OnBoxLoadRequest(PipelineManager *manager);
-    bool OnCylinderLoadRequest(PipelineManager *manager);
+    bool OnModelLoadRequest(RenderingBlock *manager, HWND main_window);
+    bool OnSphereLoadRequest(RenderingBlock *manager);
+    bool OnBoxLoadRequest(RenderingBlock *manager);
+    bool OnCylinderLoadRequest(RenderingBlock *manager);
 
-    bool OnMouseRightDragRequest(PipelineManager *manager,
+    bool OnMouseRightDragRequest(RenderingBlock *manager,
                             std::shared_ptr<Input> input);
-    bool OnMouseWheelRequest(PipelineManager *manager,
+    bool OnMouseWheelRequest(RenderingBlock *manager,
                              std::shared_ptr<Input> input);
-    bool OnMouseWheelDragRequest(PipelineManager *manager,
+    bool OnMouseWheelDragRequest(RenderingBlock *manager,
                             std::shared_ptr<Input> input, int mouseX,
                             int mouseY);
 };

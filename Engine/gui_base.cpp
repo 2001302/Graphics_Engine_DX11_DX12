@@ -45,6 +45,7 @@ bool IGui::Frame(IDataBlock* dataBlock) {
     ImGui::Begin("Menu", nullptr, GetWindowFlags());
     ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, windowBorderSize);
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
+    gui_size = ImGui::GetWindowSize();
 
     OnFrame(dataBlock);
 

@@ -1,10 +1,10 @@
 #include "application.h"
 #include "behavior_tree_builder.h"
-#include "renderer_initialize_node.h"
-#include "renderer_update_node.h"
-#include "renderer_draw_node.h"
 #include "gui_node.h"
 #include "input_node.h"
+#include "renderer_draw_node.h"
+#include "renderer_initialize_node.h"
+#include "renderer_update_node.h"
 
 namespace engine {
 
@@ -79,7 +79,7 @@ bool Application::OnUpdate(float dt) {
         ->Close()
     ->Run();
     // clang-format on
-    
+
     return true;
 }
 
@@ -138,24 +138,15 @@ bool Application::OnStop() {
     return true;
 }
 
-bool CheckIfMouseInViewport() {
+bool CheckIfMouseInViewport(common::SettingUi *ui, int mouseX, int mouseY) {
 
     if (GraphicsManager::Instance().swap_chain) {
 
-        auto cursor = ImGui::GetMousePos();
+        if ((0 < mouseX && mouseX < ui->GetSize().x) &&
+            (0 < mouseY && mouseY < ui->GetSize().y))
+            return false;
 
-        auto left = GraphicsManager::Instance().viewport.TopLeftX +
-                    ImGui::GetWindowSize().x;
-        auto top = GraphicsManager::Instance().viewport.TopLeftY;
-        auto right = GraphicsManager::Instance().viewport.Width + left;
-        auto bottom = GraphicsManager::Instance().viewport.Height + top;
-
-        if (left < cursor.x && cursor.x < right && top < cursor.y &&
-            cursor.y < bottom) {
-            return true;
-        }
-
-        return false;
+        return true;
     }
 }
 
@@ -169,15 +160,15 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
     switch (umsg) {
     case WM_MOUSEMOVE: {
         if (wparam & MK_RBUTTON) {
-            // if (CheckIfMouseInViewport())
-            {
+            if (CheckIfMouseInViewport(imgui_.get(), LOWORD(lparam),
+                                       HIWORD(lparam))) {
                 return message_receiver_->OnMouseRightDragRequest(
                     manager_.get(), input_);
             }
         }
         if (wparam & MK_MBUTTON) {
-            // if (CheckIfMouseInViewport())
-            {
+            if (CheckIfMouseInViewport(imgui_.get(), LOWORD(lparam),
+                                       HIWORD(lparam))) {
                 return message_receiver_->OnMouseWheelDragRequest(
                     manager_.get(), input_, LOWORD(lparam), HIWORD(lparam));
             }
@@ -185,8 +176,8 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
         break;
     }
     case WM_MOUSEWHEEL: {
-        // if (CheckIfMouseInViewport())
-        {
+        if (CheckIfMouseInViewport(imgui_.get(), LOWORD(lparam),
+                                   HIWORD(lparam))) {
             return message_receiver_->OnMouseWheelRequest(manager_.get(),
                                                           input_);
         }

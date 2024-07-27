@@ -15,11 +15,13 @@ class IGui : public IDataBlock {
     virtual void OnStart(){};
     virtual void OnFrame(IDataBlock *dataBlock){};
 
+    ImVec2 GetSize() { return gui_size; }
   protected:
     ImGuiContext *context_ = nullptr;
     std::string ini_file_name_;
     ImFont *default_font_ = nullptr;
     ImFont *header_font = nullptr;
+    ImVec2 gui_size;
 
   private:
     void RecreateFontAtlas();

@@ -6,9 +6,6 @@
 
 namespace engine {
 
-// 참고: DirectX_Graphic-Samples 미니엔진
-// https://github.com/microsoft/DirectX-Graphics-Samples/blob/master/MiniEngine/Core/GraphicsCommon.h
-
 namespace Graphics {
 
 // Samplers
@@ -20,15 +17,15 @@ extern std::vector<ID3D11SamplerState *> sampleStates;
 
 // Rasterizer States
 extern ComPtr<ID3D11RasterizerState> solidRS;
-extern ComPtr<ID3D11RasterizerState> solidCCWRS; // Counter-ClockWise
+extern ComPtr<ID3D11RasterizerState> solidCCWRS;
 extern ComPtr<ID3D11RasterizerState> wireRS;
 extern ComPtr<ID3D11RasterizerState> wireCCWRS;
 extern ComPtr<ID3D11RasterizerState> postProcessingRS;
 
 // Depth Stencil States
-extern ComPtr<ID3D11DepthStencilState> drawDSS; // 일반적으로 그리기
-extern ComPtr<ID3D11DepthStencilState> maskDSS; // 스텐실버퍼에 표시
-extern ComPtr<ID3D11DepthStencilState> drawMaskedDSS; // 스텐실 표시된 곳만
+extern ComPtr<ID3D11DepthStencilState> drawDSS; 
+extern ComPtr<ID3D11DepthStencilState> maskDSS;
+extern ComPtr<ID3D11DepthStencilState> drawMaskedDSS;
 
 // Shaders
 extern ComPtr<ID3D11VertexShader> basicVS;
@@ -74,7 +71,6 @@ extern GraphicsPSO postProcessingPSO;
 
 void InitCommonStates(ComPtr<ID3D11Device> &device);
 
-// 내부적으로 InitCommonStates()에서 사용
 void InitSamplers(ComPtr<ID3D11Device> &device);
 void InitRasterizerStates(ComPtr<ID3D11Device> &device);
 void InitBlendStates(ComPtr<ID3D11Device> &device);

@@ -103,6 +103,7 @@ bool Application::OnRender() {
         ->Excute(std::make_shared<SetMainRenderTarget>())
         ->Excute(std::make_shared<DrawObjects>())
         ->Excute(std::make_shared<DrawLightSpheres>())
+        ->Excute(std::make_shared<DrawRelatedWithCamera>())
         ->Excute(std::make_shared<DrawSkybox>())
         ->Excute(std::make_shared<DrawMirrorSurface>())
         ->Excute(std::make_shared<ResolveBuffer>())

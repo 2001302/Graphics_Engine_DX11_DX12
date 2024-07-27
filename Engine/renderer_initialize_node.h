@@ -77,6 +77,7 @@ class InitializeCamera : public BehaviorActionNode {
         assert(manager != nullptr);
 
         manager->camera = std::make_unique<Camera>();
+        manager->camera->Initialize();
         manager->camera->Update();
 
         return EnumBehaviorTreeStatus::eSuccess;

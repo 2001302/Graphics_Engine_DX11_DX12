@@ -246,6 +246,24 @@ class DrawLightSpheres: public BehaviorActionNode {
     }
 };
 
+class DrawRelatedWithCamera : public BehaviorActionNode {
+    EnumBehaviorTreeStatus OnInvoke() override {
+
+        auto manager = dynamic_cast<RenderingBlock *>(
+            data_block[EnumDataBlockType::eManager]);
+        assert(manager != nullptr);
+
+        GraphicsManager::Instance().SetPipelineState(
+            manager->draw_wire ? Graphics::defaultWirePSO
+                               : Graphics::defaultSolidPSO);
+        GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
+
+        manager->camera->Draw();
+
+        return EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
 class DrawSkybox : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 

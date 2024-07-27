@@ -5,6 +5,7 @@
 #include "env.h"
 #include "graphics_manager.h"
 #include "node_ui.h"
+#include "model.h"
 
 namespace engine {
 class Camera : public common::INode {
@@ -18,9 +19,13 @@ class Camera : public common::INode {
     void SetPosition(Vector3 pos);
     void SetLookAt(Vector3 look);
 
+    void Initialize();
     void Update();
+    void Draw();
 
   private:
+    std::shared_ptr<Model> look_at_target;
+
     Matrix view;
     Vector3 position;
 

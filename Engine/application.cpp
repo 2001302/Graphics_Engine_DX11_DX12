@@ -234,7 +234,7 @@ LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,
 
             imgui_->Initialize();
 
-            manager_->m_postProcess.Initialize(
+            manager_->post_process.Initialize(
                 GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context,
                 {GraphicsManager::Instance().postEffectsSRV},

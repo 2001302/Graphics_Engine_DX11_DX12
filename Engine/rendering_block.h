@@ -20,30 +20,30 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
     std::map<int /*id*/, std::shared_ptr<Model>> models;
 
     //shared resource
-    GlobalConstants m_globalConstsCPU;
-    GlobalConstants m_reflectGlobalConstsCPU;
-    GlobalConstants m_shadowGlobalConstsCPU[MAX_LIGHTS];
-    ComPtr<ID3D11Buffer> m_globalConstsGPU;
-    ComPtr<ID3D11Buffer> m_reflectGlobalConstsGPU;
-    ComPtr<ID3D11Buffer> m_shadowGlobalConstsGPU[MAX_LIGHTS];
+    GlobalConstants global_consts_CPU;
+    GlobalConstants reflect_global_consts_CPU;
+    GlobalConstants shadow_global_consts_CPU[MAX_LIGHTS];
+    ComPtr<ID3D11Buffer> global_consts_GPU;
+    ComPtr<ID3D11Buffer> reflect_global_consts_GPU;
+    ComPtr<ID3D11Buffer> shadow_global_consts_GPU[MAX_LIGHTS];
 
     //shared texture
-    ComPtr<ID3D11ShaderResourceView> m_envSRV;
-    ComPtr<ID3D11ShaderResourceView> m_irradianceSRV;
-    ComPtr<ID3D11ShaderResourceView> m_specularSRV;
-    ComPtr<ID3D11ShaderResourceView> m_brdfSRV;
+    ComPtr<ID3D11ShaderResourceView> env_SRV;
+    ComPtr<ID3D11ShaderResourceView> irradiance_SRV;
+    ComPtr<ID3D11ShaderResourceView> specular_SRV;
+    ComPtr<ID3D11ShaderResourceView> brdf_SRV;
 
-    PostEffectsConstants m_postEffectsConstsCPU;
-    ComPtr<ID3D11Buffer> m_postEffectsConstsGPU;
-    PostProcess m_postProcess;
+    PostEffectsConstants post_effects_consts_CPU;
+    ComPtr<ID3D11Buffer> post_effects_consts_GPU;
+    PostProcess post_process;
 
     //mirror
-    std::shared_ptr<Model> m_mirror;
-    DirectX::SimpleMath::Plane m_mirrorPlane;
-    float m_mirrorAlpha = 1.0f; // opacity
+    std::shared_ptr<Model> mirror;
+    DirectX::SimpleMath::Plane mirror_plane;
+    float mirror_alpha = 1.0f; // opacity
 
-    bool m_drawAsWire = false;
-    bool m_lightRotate = false;
+    bool draw_wire = false;
+    bool light_rotate = false;
     
     void OnShow() override{
 
@@ -52,21 +52,21 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
 
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("General")) {
-            ImGui::Checkbox("Wireframe", &m_drawAsWire);
+            ImGui::Checkbox("Wireframe", &draw_wire);
             ImGui::TreePop();
         }
 
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);
         if (ImGui::TreeNode("Skybox")) {
-            ImGui::SliderFloat("Strength", &m_globalConstsCPU.strengthIBL, 0.0f,
+            ImGui::SliderFloat("Strength", &global_consts_CPU.strengthIBL, 0.0f,
                                5.0f);
-            ImGui::RadioButton("Env", &m_globalConstsCPU.textureToDraw, 0);
+            ImGui::RadioButton("Env", &global_consts_CPU.textureToDraw, 0);
             ImGui::SameLine();
-            ImGui::RadioButton("Specular", &m_globalConstsCPU.textureToDraw, 1);
+            ImGui::RadioButton("Specular", &global_consts_CPU.textureToDraw, 1);
             ImGui::SameLine();
-            ImGui::RadioButton("Irradiance", &m_globalConstsCPU.textureToDraw,
+            ImGui::RadioButton("Irradiance", &global_consts_CPU.textureToDraw,
                                2);
-            ImGui::SliderFloat("EnvLodBias", &m_globalConstsCPU.envLodBias,
+            ImGui::SliderFloat("EnvLodBias", &global_consts_CPU.envLodBias,
                                0.0f, 10.0f);
             ImGui::TreePop();
         }
@@ -75,19 +75,19 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
         if (ImGui::TreeNode("Post Effects")) {
             int flag = 0;
             flag +=
-                ImGui::RadioButton("Render", &m_postEffectsConstsCPU.mode, 1);
+                ImGui::RadioButton("Render", &post_effects_consts_CPU.mode, 1);
             ImGui::SameLine();
             flag +=
-                ImGui::RadioButton("Depth", &m_postEffectsConstsCPU.mode, 2);
+                ImGui::RadioButton("Depth", &post_effects_consts_CPU.mode, 2);
             flag += ImGui::SliderFloat(
-                "DepthScale", &m_postEffectsConstsCPU.depthScale, 0.0, 1.0);
+                "DepthScale", &post_effects_consts_CPU.depthScale, 0.0, 1.0);
             flag += ImGui::SliderFloat(
-                "Fog", &m_postEffectsConstsCPU.fogStrength, 0.0, 10.0);
+                "Fog", &post_effects_consts_CPU.fogStrength, 0.0, 10.0);
 
             if (flag)
                 GraphicsUtil::UpdateBuffer(device, context,
-                                         m_postEffectsConstsCPU,
-                                         m_postEffectsConstsGPU);
+                                         post_effects_consts_CPU,
+                                         post_effects_consts_GPU);
 
             ImGui::TreePop();
         }
@@ -96,17 +96,17 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
             int flag = 0;
             flag += ImGui::SliderFloat(
                 "Bloom Strength",
-                &m_postProcess.m_combineFilter.m_constData.strength, 0.0f,
+                &post_process.m_combineFilter.m_constData.strength, 0.0f,
                 1.0f);
             flag += ImGui::SliderFloat(
-                "Exposure", &m_postProcess.m_combineFilter.m_constData.option1,
+                "Exposure", &post_process.m_combineFilter.m_constData.option1,
                 0.0f, 10.0f);
             flag += ImGui::SliderFloat(
-                "Gamma", &m_postProcess.m_combineFilter.m_constData.option2,
+                "Gamma", &post_process.m_combineFilter.m_constData.option2,
                 0.1f, 5.0f);
 
             if (flag) {
-                m_postProcess.m_combineFilter.UpdateConstantBuffers(device,
+                post_process.m_combineFilter.UpdateConstantBuffers(device,
                                                                     context);
             }
             ImGui::TreePop();
@@ -115,10 +115,10 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);
         if (ImGui::TreeNode("Mirror")) {
 
-            ImGui::SliderFloat("Alpha", &m_mirrorAlpha, 0.0f, 1.0f);
-            const float blendColor[4] = {m_mirrorAlpha, m_mirrorAlpha,
-                                         m_mirrorAlpha, 1.0f};
-            if (m_drawAsWire)
+            ImGui::SliderFloat("Alpha", &mirror_alpha, 0.0f, 1.0f);
+            const float blendColor[4] = {mirror_alpha, mirror_alpha,
+                                         mirror_alpha, 1.0f};
+            if (draw_wire)
                 Graphics::mirrorBlendWirePSO.SetBlendFactor(blendColor);
             else
                 Graphics::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
@@ -139,19 +139,19 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
             // &m_globalConstsCPU.lights[0].position.x,
             //                     -5.0f, 5.0f);
             ImGui::SliderFloat("Halo Radius",
-                               &m_globalConstsCPU.lights[1].haloRadius, 0.0f,
+                               &global_consts_CPU.lights[1].haloRadius, 0.0f,
                                2.0f);
             ImGui::SliderFloat("Halo Strength",
-                               &m_globalConstsCPU.lights[1].haloStrength, 0.0f,
+                               &global_consts_CPU.lights[1].haloStrength, 0.0f,
                                1.0f);
-            ImGui::SliderFloat("Radius", &m_globalConstsCPU.lights[1].radius,
+            ImGui::SliderFloat("Radius", &global_consts_CPU.lights[1].radius,
                                0.0f, 0.5f);
             ImGui::TreePop();
         }
 
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);
         if (ImGui::TreeNode("Material")) {
-            ImGui::SliderFloat("LodBias", &m_globalConstsCPU.lodBias, 0.0f,
+            ImGui::SliderFloat("LodBias", &global_consts_CPU.lodBias, 0.0f,
                                10.0f);
 
             //int flag = 0;

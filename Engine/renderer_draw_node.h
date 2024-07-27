@@ -25,8 +25,8 @@ class SetSamplerStates : public BehaviorActionNode {
 
         // 공용 텍스춰들: "Common.hlsli"에서 register(t10)부터 시작
         std::vector<ID3D11ShaderResourceView *> commonSRVs = {
-            manager->m_envSRV.Get(), manager->m_specularSRV.Get(),
-            manager->m_irradianceSRV.Get(), manager->m_brdfSRV.Get()};
+            manager->env_SRV.Get(), manager->specular_SRV.Get(),
+            manager->irradiance_SRV.Get(), manager->brdf_SRV.Get()};
         GraphicsManager::Instance().device_context->PSSetShaderResources(
             10, UINT(commonSRVs.size()), commonSRVs.data());
 
@@ -49,7 +49,7 @@ class DrawOnlyDepth : public BehaviorActionNode {
             1.0f, 0);
 
         GraphicsManager::Instance().SetPipelineState(Graphics::depthOnlyPSO);
-        GraphicsManager::Instance().SetGlobalConsts(manager->m_globalConstsGPU);
+        GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
 
         for (auto &i : manager->models) {
             Renderer *renderer = nullptr;
@@ -67,7 +67,7 @@ class DrawOnlyDepth : public BehaviorActionNode {
 
         if (true) {
             Renderer *renderer = nullptr;
-            manager->m_mirror->GetComponent(EnumComponentType::eRenderer,
+            manager->mirror->GetComponent(EnumComponentType::eRenderer,
                                             (Component **)(&renderer));
             renderer->Render(GraphicsManager::Instance().device_context);
         }
@@ -95,7 +95,7 @@ class DrawShadowMap : public BehaviorActionNode {
         // 그림자맵 만들기
         GraphicsManager::Instance().SetPipelineState(Graphics::depthOnlyPSO);
         for (int i = 0; i < MAX_LIGHTS; i++) {
-            if (manager->m_globalConstsCPU.lights[i].type & LIGHT_SHADOW) {
+            if (manager->global_consts_CPU.lights[i].type & LIGHT_SHADOW) {
                 // RTS 생략 가능
                 GraphicsManager::Instance().device_context->OMSetRenderTargets(
                     0, NULL, GraphicsManager::Instance().m_shadowDSVs[i].Get());
@@ -104,7 +104,7 @@ class DrawShadowMap : public BehaviorActionNode {
                         GraphicsManager::Instance().m_shadowDSVs[i].Get(),
                         D3D11_CLEAR_DEPTH, 1.0f, 0);
                 GraphicsManager::Instance().SetGlobalConsts(
-                    manager->m_shadowGlobalConstsGPU[i]);
+                    manager->shadow_global_consts_GPU[i]);
 
                 for (auto &i : manager->models) {
                     Renderer *renderer = nullptr;
@@ -126,7 +126,7 @@ class DrawShadowMap : public BehaviorActionNode {
 
                 if (true) {
                     Renderer *renderer = nullptr;
-                    manager->m_mirror->GetComponent(
+                    manager->mirror->GetComponent(
                         EnumComponentType::eRenderer,
                         (Component **)(&renderer));
                     renderer->Render(
@@ -188,9 +188,9 @@ class DrawObjects : public BehaviorActionNode {
         assert(manager != nullptr);
 
         GraphicsManager::Instance().SetPipelineState(
-            manager->m_drawAsWire ? Graphics::defaultWirePSO
+            manager->draw_wire ? Graphics::defaultWirePSO
                                   : Graphics::defaultSolidPSO);
-        GraphicsManager::Instance().SetGlobalConsts(manager->m_globalConstsGPU);
+        GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
 
         for (auto &i : manager->models) {
             Renderer *renderer = nullptr;
@@ -200,10 +200,10 @@ class DrawObjects : public BehaviorActionNode {
         }
 
         // 거울 반사를 그릴 필요가 없으면 불투명 거울만 그리기
-        if (manager->m_mirrorAlpha == 1.0f) {
+        if (manager->mirror_alpha == 1.0f) {
 
             Renderer *renderer = nullptr;
-            manager->m_mirror->GetComponent(EnumComponentType::eRenderer,
+            manager->mirror->GetComponent(EnumComponentType::eRenderer,
                                             (Component **)(&renderer));
             renderer->Render(GraphicsManager::Instance().device_context);
         }
@@ -231,9 +231,9 @@ class DrawLightSpheres: public BehaviorActionNode {
         assert(manager != nullptr);
 
         GraphicsManager::Instance().SetPipelineState(
-            manager->m_drawAsWire ? Graphics::defaultWirePSO
+            manager->draw_wire ? Graphics::defaultWirePSO
                                   : Graphics::defaultSolidPSO);
-        GraphicsManager::Instance().SetGlobalConsts(manager->m_globalConstsGPU);
+        GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
 
         for (auto &i : manager->light_spheres) {
             Renderer *renderer = nullptr;
@@ -255,7 +255,7 @@ class DrawSkybox : public BehaviorActionNode {
 
         if (true) {
             GraphicsManager::Instance().SetPipelineState(
-                manager->m_drawAsWire ? Graphics::skyboxWirePSO
+                manager->draw_wire ? Graphics::skyboxWirePSO
                                       : Graphics::skyboxSolidPSO);
             Renderer *renderer = nullptr;
             manager->skybox->GetComponent(EnumComponentType::eRenderer,
@@ -274,7 +274,7 @@ class DrawMirrorSurface : public BehaviorActionNode {
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
-        if (manager->m_mirrorAlpha < 1.0f) { // 거울을 그려야 하는 상황
+        if (manager->mirror_alpha < 1.0f) { // 거울을 그려야 하는 상황
 
             // 거울 2. 거울 위치만 StencilBuffer에 1로 표기
             GraphicsManager::Instance().SetPipelineState(
@@ -282,17 +282,17 @@ class DrawMirrorSurface : public BehaviorActionNode {
 
             if (true) {
                 Renderer *renderer = nullptr;
-                manager->m_mirror->GetComponent(EnumComponentType::eRenderer,
+                manager->mirror->GetComponent(EnumComponentType::eRenderer,
                                                 (Component **)(&renderer));
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
 
             // 거울 3. 거울 위치에 반사된 물체들을 렌더링
             GraphicsManager::Instance().SetPipelineState(
-                manager->m_drawAsWire ? Graphics::reflectWirePSO
+                manager->draw_wire ? Graphics::reflectWirePSO
                                       : Graphics::reflectSolidPSO);
             GraphicsManager::Instance().SetGlobalConsts(
-                manager->m_reflectGlobalConstsGPU);
+                manager->reflect_global_consts_GPU);
 
             GraphicsManager::Instance().device_context->ClearDepthStencilView(
                 GraphicsManager::Instance().m_depthStencilView.Get(),
@@ -307,7 +307,7 @@ class DrawMirrorSurface : public BehaviorActionNode {
 
             if (true) {
                 GraphicsManager::Instance().SetPipelineState(
-                    manager->m_drawAsWire ? Graphics::reflectSkyboxWirePSO
+                    manager->draw_wire ? Graphics::reflectSkyboxWirePSO
                                           : Graphics::reflectSkyboxSolidPSO);
                 Renderer *renderer = nullptr;
                 manager->skybox->GetComponent(EnumComponentType::eRenderer,
@@ -318,12 +318,12 @@ class DrawMirrorSurface : public BehaviorActionNode {
             if (true) {
                 // 거울 4. 거울 자체의 재질을 "Blend"로 그림
                 GraphicsManager::Instance().SetPipelineState(
-                    manager->m_drawAsWire ? Graphics::mirrorBlendWirePSO
+                    manager->draw_wire ? Graphics::mirrorBlendWirePSO
                                           : Graphics::mirrorBlendSolidPSO);
                 GraphicsManager::Instance().SetGlobalConsts(
-                    manager->m_globalConstsGPU);
+                    manager->global_consts_GPU);
                 Renderer *renderer = nullptr;
-                manager->m_mirror->GetComponent(EnumComponentType::eRenderer,
+                manager->mirror->GetComponent(EnumComponentType::eRenderer,
                                                 (Component **)(&renderer));
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
@@ -364,7 +364,7 @@ class DrawPostProcessing : public BehaviorActionNode {
 
         // 그림자맵 확인용 임시
         // AppBase::SetGlobalConsts(m_shadowGlobalConstsGPU[0]);
-        GraphicsManager::Instance().SetGlobalConsts(manager->m_globalConstsGPU);
+        GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
         // vector<ID3D11ShaderResourceView *> postEffectsSRVs = {
         //  m_resolvedSRV.Get(), m_shadowSRVs[1].Get()};
 
@@ -377,7 +377,7 @@ class DrawPostProcessing : public BehaviorActionNode {
         // m_backBufferRTV.GetAddressOf(), NULL);
 
         GraphicsManager::Instance().device_context->PSSetConstantBuffers(
-            3, 1, manager->m_postEffectsConstsGPU.GetAddressOf());
+            3, 1, manager->post_effects_consts_GPU.GetAddressOf());
 
         if (true) {
             Renderer *renderer = nullptr;
@@ -388,7 +388,7 @@ class DrawPostProcessing : public BehaviorActionNode {
 
         GraphicsManager::Instance().SetPipelineState(
             Graphics::postProcessingPSO);
-        manager->m_postProcess.Render(
+        manager->post_process.Render(
             GraphicsManager::Instance().device_context);
 
         return EnumBehaviorTreeStatus::eSuccess;

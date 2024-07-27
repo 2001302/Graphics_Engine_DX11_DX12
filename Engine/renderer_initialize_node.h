@@ -17,26 +17,26 @@ class InitializeLight : public BehaviorActionNode {
         // 조명 설정
         {
             // 조명 0은 고정
-            manager->m_globalConstsCPU.lights[0].radiance = Vector3(5.0f);
-            manager->m_globalConstsCPU.lights[0].position =
+            manager->global_consts_CPU.lights[0].radiance = Vector3(5.0f);
+            manager->global_consts_CPU.lights[0].position =
                 Vector3(0.0f, 1.5f, 1.1f);
-            manager->m_globalConstsCPU.lights[0].direction =
+            manager->global_consts_CPU.lights[0].direction =
                 Vector3(0.0f, -1.0f, 0.0f);
-            manager->m_globalConstsCPU.lights[0].spotPower = 3.0f;
-            manager->m_globalConstsCPU.lights[0].radius = 0.02f;
-            manager->m_globalConstsCPU.lights[0].type =
+            manager->global_consts_CPU.lights[0].spotPower = 3.0f;
+            manager->global_consts_CPU.lights[0].radius = 0.02f;
+            manager->global_consts_CPU.lights[0].type =
                 LIGHT_SPOT | LIGHT_SHADOW; // Point with shadow
 
             // 조명 1의 위치와 방향은 Update()에서 설정
-            manager->m_globalConstsCPU.lights[1].radiance = Vector3(5.0f);
-            manager->m_globalConstsCPU.lights[1].spotPower = 3.0f;
-            manager->m_globalConstsCPU.lights[1].fallOffEnd = 20.0f;
-            manager->m_globalConstsCPU.lights[1].radius = 0.02f;
-            manager->m_globalConstsCPU.lights[1].type =
+            manager->global_consts_CPU.lights[1].radiance = Vector3(5.0f);
+            manager->global_consts_CPU.lights[1].spotPower = 3.0f;
+            manager->global_consts_CPU.lights[1].fallOffEnd = 20.0f;
+            manager->global_consts_CPU.lights[1].radius = 0.02f;
+            manager->global_consts_CPU.lights[1].type =
                 LIGHT_SPOT | LIGHT_SHADOW; // Point with shadow
 
             // 조명 2는 꺼놓음
-            manager->m_globalConstsCPU.lights[2].type = LIGHT_OFF;
+            manager->global_consts_CPU.lights[2].type = LIGHT_OFF;
         }
 
         // 조명 위치 표시
@@ -50,13 +50,13 @@ class InitializeLight : public BehaviorActionNode {
                                  std::vector{sphere});
 
                 renderer->UpdateWorldRow(Matrix::CreateTranslation(
-                    manager->m_globalConstsCPU.lights[i].position));
+                    manager->global_consts_CPU.lights[i].position));
                 renderer->m_materialConstsCPU.albedoFactor = Vector3(0.0f);
                 renderer->m_materialConstsCPU.emissionFactor =
                     Vector3(1.0f, 1.0f, 0.0f);
                 renderer->m_castShadow = false; // 조명 표시 물체들은 그림자 X
 
-                if (manager->m_globalConstsCPU.lights[i].type == 0)
+                if (manager->global_consts_CPU.lights[i].type == 0)
                     renderer->m_isVisible = false;
 
                 manager->light_spheres[i] = std::make_shared<Model>();
@@ -107,15 +107,15 @@ class InitializeSkybox : public BehaviorActionNode {
         auto brdfFilename = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
         GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                       envFilename, true, manager->m_envSRV);
+                                       envFilename, true, manager->env_SRV);
         GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
                                        specularFilename, true,
-                                       manager->m_specularSRV);
+                                       manager->specular_SRV);
         GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
                                        irradianceFilename, true,
-                                       manager->m_irradianceSRV);
+                                       manager->irradiance_SRV);
         GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                       brdfFilename, true, manager->m_brdfSRV);
+                                       brdfFilename, true, manager->brdf_SRV);
 
         return EnumBehaviorTreeStatus::eSuccess;
     }
@@ -147,9 +147,9 @@ class InitializeMirrorGround : public BehaviorActionNode {
         manager->ground = std::make_shared<Model>();
         manager->ground->AddComponent(EnumComponentType::eRenderer, renderer);
 
-        manager->m_mirrorPlane =
+        manager->mirror_plane =
             DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
-        manager->m_mirror = manager->ground; // 바닥에 거울처럼 반사 구현
+        manager->mirror = manager->ground; // 바닥에 거울처럼 반사 구현
 
         // m_basicList.push_back(m_ground); // 거울은 리스트에 등록 X
 
@@ -165,25 +165,25 @@ class CreateGlobalConstantBuffer : public BehaviorActionNode {
         assert(manager != nullptr);
 
         GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                        manager->m_globalConstsCPU,
-                                        manager->m_globalConstsGPU);
+                                        manager->global_consts_CPU,
+                                        manager->global_consts_GPU);
 
         GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                        manager->m_reflectGlobalConstsCPU,
-                                        manager->m_reflectGlobalConstsGPU);
+                                        manager->reflect_global_consts_CPU,
+                                        manager->reflect_global_consts_GPU);
 
         // 그림자맵 렌더링할 때 사용할 GlobalConsts들 별도 생성
         for (int i = 0; i < MAX_LIGHTS; i++) {
             GraphicsUtil::CreateConstBuffer(
                 GraphicsManager::Instance().device,
-                manager->m_shadowGlobalConstsCPU[i],
-                manager->m_shadowGlobalConstsGPU[i]);
+                manager->shadow_global_consts_CPU[i],
+                manager->shadow_global_consts_GPU[i]);
         }
 
         // 후처리 효과용 ConstBuffer
         GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                        manager->m_postEffectsConstsCPU,
-                                        manager->m_postEffectsConstsGPU);
+                                        manager->post_effects_consts_CPU,
+                                        manager->post_effects_consts_GPU);
 
         return EnumBehaviorTreeStatus::eSuccess;
     }
@@ -216,7 +216,7 @@ class InitializePostProcessing : public BehaviorActionNode {
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
-        manager->m_postProcess.Initialize(
+        manager->post_process.Initialize(
             GraphicsManager::Instance().device,
             GraphicsManager::Instance().device_context,
             {GraphicsManager::Instance().postEffectsSRV},

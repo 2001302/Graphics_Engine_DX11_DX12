@@ -54,16 +54,17 @@ bool MessageReceiver::OnMouseWheelRequest(RenderingBlock *manager,
         // retry
         input->Mouse()->Acquire();
     } else {
-        float wheel = -mouseState.lZ / (600.0);
-        Vector3 origin = manager->camera->GetPosition();
+        float wheel = mouseState.lZ / (600.0);
 
-        Matrix R1(1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f,
-                  0.0f, 0.0f, 0.0f, 1.0f + wheel, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f);
+        auto look_at = manager->camera->GetLookAt();
+        auto position = manager->camera->GetPosition();
 
-        auto origin_prime = Vector3::Transform(origin, R1);
+        auto direction = look_at - position;
+        direction.Normalize();
 
-        manager->camera->SetPosition(
-            Vector3(origin_prime.x, origin_prime.y, origin_prime.z));
+        auto move = wheel * direction;
+        auto new_position = position + move;
+        manager->camera->SetPosition(new_position);
     }
 
     return true;

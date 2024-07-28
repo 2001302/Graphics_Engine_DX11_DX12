@@ -1,6 +1,6 @@
-#include "graphics_common.h"
 #include "post_process.h"
 #include "geometry_generator.h"
+#include "graphics_common.h"
 
 namespace engine {
 
@@ -14,10 +14,10 @@ void PostProcess::Initialize(
 
     m_mesh = std::make_shared<Mesh>();
     GraphicsUtil::CreateVertexBuffer(device, meshData.vertices,
-                                   m_mesh->vertexBuffer);
+                                     m_mesh->vertexBuffer);
     m_mesh->indexCount = UINT(meshData.indices.size());
     GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
-                                  m_mesh->indexBuffer);
+                                    m_mesh->indexBuffer);
 
     // Bloom Down/Up
     m_bloomSRVs.resize(bloomLevels);
@@ -58,8 +58,8 @@ void PostProcess::Initialize(
     m_combineFilter.SetShaderResources({resources[0], m_bloomSRVs[0]});
     m_combineFilter.SetRenderTargets(targets);
     m_combineFilter.m_constData.strength = 0.0f; // Bloom strength
-    m_combineFilter.m_constData.option1 = 1.0f;  // Exposure로 사용
-    m_combineFilter.m_constData.option2 = 2.2f;  // Gamma로 사용
+    m_combineFilter.m_constData.option1 = 1.0f;  // Exposure
+    m_combineFilter.m_constData.option2 = 2.2f;  // Gamma
     m_combineFilter.UpdateConstantBuffers(device, context);
 }
 
@@ -75,7 +75,7 @@ void PostProcess::Render(ComPtr<ID3D11DeviceContext> &context) {
     context->IASetIndexBuffer(m_mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
                               0);
 
-    // 블룸이 필요한 경우에만 계산
+    // need to bloom
     if (m_combineFilter.m_constData.strength > 0.0f) {
         for (int i = 0; i < m_bloomDownFilters.size(); i++) {
             RenderImageFilter(context, m_bloomDownFilters[i]);
@@ -108,7 +108,7 @@ void PostProcess::CreateBuffer(ComPtr<ID3D11Device> &device,
     txtDesc.Width = width;
     txtDesc.Height = height;
     txtDesc.MipLevels = txtDesc.ArraySize = 1;
-    txtDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT; //  이미지 처리용도
+    txtDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT; // for image processing
     txtDesc.SampleDesc.Count = 1;
     txtDesc.Usage = D3D11_USAGE_DEFAULT;
     txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
@@ -123,4 +123,4 @@ void PostProcess::CreateBuffer(ComPtr<ID3D11Device> &device,
                                                    srv.GetAddressOf()));
 }
 
-} // namespace hlab
+} // namespace engine

@@ -20,13 +20,13 @@ struct Env {
 
     const bool full_screen = false;
     const bool vsync_enabled = true;
-    const float field_of_view = PI / 4.0f;
+    const double field_of_view = PI / 4.0f;
     const float screen_depth = 1000.0f;
     const float screen_near = 0.3f;
 
     HWND main_window;
-    float screen_width;
-    float screen_height;
+    int screen_width;
+    int screen_height;
 };
 } // namespace common
 #endif

@@ -33,7 +33,7 @@ class BehaviorTreeBuilder {
   private:
     std::shared_ptr<BehaviorActionNode> tree;
     BehaviorActionNode *current;
-    EnumConditionalStatus conditional_status;
+    EnumConditionalStatus conditional_status = EnumConditionalStatus::ePass;
 };
 } // namespace engine
 #endif

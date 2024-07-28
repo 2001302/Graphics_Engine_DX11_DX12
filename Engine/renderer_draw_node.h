@@ -23,7 +23,7 @@ class SetSamplerStates : public BehaviorActionNode {
             0, UINT(Graphics::sampleStates.size()),
             Graphics::sampleStates.data());
 
-        // 공용 텍스춰들: "Common.hlsli"에서 register(t10)부터 시작
+        //Shared textures: start from register(t10) in 'Common.hlsli'
         std::vector<ID3D11ShaderResourceView *> commonSRVs = {
             manager->env_SRV.Get(), manager->specular_SRV.Get(),
             manager->irradiance_SRV.Get(), manager->brdf_SRV.Get()};
@@ -41,7 +41,7 @@ class DrawOnlyDepth : public BehaviorActionNode {
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
-        // Depth Only Pass (RTS 생략 가능)
+        // Depth Only Pass (no RTS)
         GraphicsManager::Instance().device_context->OMSetRenderTargets(
             0, NULL, GraphicsManager::Instance().m_depthOnlyDSV.Get());
         GraphicsManager::Instance().device_context->ClearDepthStencilView(
@@ -79,7 +79,7 @@ class DrawOnlyDepth : public BehaviorActionNode {
 class SetShadowViewport : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
-        GraphicsManager::Instance().SetShadowViewport(); // 그림자맵 해상도
+        GraphicsManager::Instance().SetShadowViewport(); //shadow map resolution
 
         return EnumBehaviorTreeStatus::eSuccess;
     }
@@ -92,11 +92,11 @@ class DrawShadowMap : public BehaviorActionNode {
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
-        // 그림자맵 만들기
+        // make shadow map
         GraphicsManager::Instance().SetPipelineState(Graphics::depthOnlyPSO);
         for (int i = 0; i < MAX_LIGHTS; i++) {
             if (manager->global_consts_CPU.lights[i].type & LIGHT_SHADOW) {
-                // RTS 생략 가능
+                // no RTS
                 GraphicsManager::Instance().device_context->OMSetRenderTargets(
                     0, NULL, GraphicsManager::Instance().m_shadowDSVs[i].Get());
                 GraphicsManager::Instance()
@@ -146,14 +146,14 @@ class SetMainRenderTarget : public BehaviorActionNode {
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
-        // 다시 렌더링 해상도로 되돌리기
+        // rendering resolution
         GraphicsManager::Instance().SetMainViewport();
 
         const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
         std::vector<ID3D11RenderTargetView *> rtvs = {
             GraphicsManager::Instance().float_RTV.Get()};
 
-        // 거울 1. 거울은 빼고 원래 대로 그리기
+        //Mirror 1. Draw it as it originally is, without the mirror.
         for (size_t i = 0; i < rtvs.size(); i++) {
             GraphicsManager::Instance().device_context->ClearRenderTargetView(
                 rtvs[i], clearColor);
@@ -162,8 +162,8 @@ class SetMainRenderTarget : public BehaviorActionNode {
             UINT(rtvs.size()), rtvs.data(),
             GraphicsManager::Instance().m_depthStencilView.Get());
 
-        // 그림자맵들도 공용 텍스춰들 이후에 추가
-        // 주의: 마지막 shadowDSV를 RenderTarget에서 해제한 후 설정
+        // Shadow textures: start from register(15)
+        // Note: Unbind the last shadowDSV from the RenderTarget before setting it.
         std::vector<ID3D11ShaderResourceView *> shadowSRVs;
         for (int i = 0; i < MAX_LIGHTS; i++) {
             shadowSRVs.push_back(
@@ -199,7 +199,7 @@ class DrawObjects : public BehaviorActionNode {
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 
-        // 거울 반사를 그릴 필요가 없으면 불투명 거울만 그리기
+        // If there is no need to draw mirror reflections, draw only the opaque mirror
         if (manager->mirror_alpha == 1.0f) {
 
             Renderer *renderer = nullptr;
@@ -292,9 +292,10 @@ class DrawMirrorSurface : public BehaviorActionNode {
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
-        if (manager->mirror_alpha < 1.0f) { // 거울을 그려야 하는 상황
+        // on mirror
+        if (manager->mirror_alpha < 1.0f) {
 
-            // 거울 2. 거울 위치만 StencilBuffer에 1로 표기
+            //Mirror 2. Mark only the mirror position as 1 in the StencilBuffer.
             GraphicsManager::Instance().SetPipelineState(
                 Graphics::stencilMaskPSO);
 
@@ -305,7 +306,7 @@ class DrawMirrorSurface : public BehaviorActionNode {
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
 
-            // 거울 3. 거울 위치에 반사된 물체들을 렌더링
+            //Mirror 3. Render the reflected objects at the mirror position.
             GraphicsManager::Instance().SetPipelineState(
                 manager->draw_wire ? Graphics::reflectWirePSO
                                       : Graphics::reflectSolidPSO);
@@ -334,7 +335,7 @@ class DrawMirrorSurface : public BehaviorActionNode {
             }
 
             if (true) {
-                // 거울 4. 거울 자체의 재질을 "Blend"로 그림
+                //Mirror 4. Draw the mirror itself with the 'Blend' material
                 GraphicsManager::Instance().SetPipelineState(
                     manager->draw_wire ? Graphics::mirrorBlendWirePSO
                                           : Graphics::mirrorBlendSolidPSO);
@@ -380,13 +381,9 @@ class DrawPostProcessing : public BehaviorActionNode {
         std::vector<ID3D11ShaderResourceView *> postEffectsSRVs = {
             GraphicsManager::Instance().resolved_SRV.Get(), nullptr};
 
-        // 그림자맵 확인용 임시
-        // AppBase::SetGlobalConsts(m_shadowGlobalConstsGPU[0]);
         GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
-        // vector<ID3D11ShaderResourceView *> postEffectsSRVs = {
-        //  m_resolvedSRV.Get(), m_shadowSRVs[1].Get()};
 
-        // 20번에 넣어줌
+        // post effect textures: start from register(20)
         GraphicsManager::Instance().device_context->PSSetShaderResources(
             20, UINT(postEffectsSRVs.size()), postEffectsSRVs.data());
         GraphicsManager::Instance().device_context->OMSetRenderTargets(

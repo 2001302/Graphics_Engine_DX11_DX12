@@ -121,10 +121,10 @@ bool Platform::InitializeWindow() {
 
     common::Env::Instance().main_window =
         CreateWindow(wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW,
-                     10,                 // 윈도우 좌측 상단의 x 좌표
-                     10,                 // 윈도우 좌측 상단의 y 좌표
-                     wr.right - wr.left, // 윈도우 가로 방향 해상도
-                     wr.bottom - wr.top, // 윈도우 세로 방향 해상도
+                     10,                 
+                     10,                 
+                     wr.right - wr.left, 
+                     wr.bottom - wr.top, 
                      NULL, NULL, wc.hInstance, NULL);
 
     if (!common::Env::Instance().main_window) {

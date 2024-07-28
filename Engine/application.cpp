@@ -146,9 +146,8 @@ bool CheckIfMouseInViewport(common::SettingUi *ui, int mouseX, int mouseY) {
         if ((0 < mouseX && mouseX < ui->GetSize().x) &&
             (0 < mouseY && mouseY < ui->GetSize().y))
             return false;
-
-        return true;
     }
+    return true;
 }
 
 LRESULT CALLBACK Application::MessageHandler(HWND main_window, UINT umsg,

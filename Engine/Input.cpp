@@ -2,15 +2,6 @@
 
 namespace engine {
 
-Input::Input() {
-    direct_input_ = 0;
-    keyboard_ = 0;
-    mouse_ = 0;
-}
-
-Input::Input(const Input &other) {}
-
-
 bool Input::Initialize(HINSTANCE hinstance) {
     HRESULT result;
 
@@ -196,7 +187,7 @@ bool Input::IsRightArrowPressed() {
 }
 
 DirectX::SimpleMath::Vector2 Input::GetMouseLocation() {
-    return DirectX::SimpleMath::Vector2(mouse_x, mouse_y);
+    return DirectX::SimpleMath::Vector2((float)mouse_x, (float)mouse_y);
 }
 
 void Input::SetMouseLocation(int x, int y) {

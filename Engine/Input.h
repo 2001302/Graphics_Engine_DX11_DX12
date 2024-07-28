@@ -14,8 +14,11 @@
 namespace engine {
 class Input : public common::IDataBlock {
   public:
-    Input();
-    Input(const Input &);
+    Input()
+        : direct_input_(0), keyboard_(0), mouse_(0), screen_width(0),
+          screen_height(0), mouse_x(0), mouse_y(0), mouse_state_(){
+        memset(keyboard_state_, 0, sizeof(keyboard_state_));
+    };
 
     bool Initialize(HINSTANCE);
     void Shutdown();

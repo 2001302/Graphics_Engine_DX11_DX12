@@ -27,7 +27,6 @@ void Renderer::Initialize(ComPtr<ID3D11Device> &device,
                           ComPtr<ID3D11DeviceContext> &context,
                           const std::vector<MeshData> &meshes) {
 
-    // ConstantBuffer 만들기
     m_meshConstsCPU.world = Matrix();
 
     GraphicsUtil::CreateConstBuffer(device, m_meshConstsCPU, m_meshConstsGPU);
@@ -79,7 +78,7 @@ void Renderer::Initialize(ComPtr<ID3D11Device> &device,
             m_materialConstsCPU.useAOMap = true;
         }
 
-        // GLTF 방식으로 Metallic과 Roughness를 한 텍스춰에 넣음
+        // GLTF : Metallic + Roughness
         // Green : Roughness, Blue : Metallic(Metalness)
         if (!meshData.metallicTextureFilename.empty() ||
             !meshData.roughnessTextureFilename.empty()) {
@@ -126,7 +125,7 @@ void Renderer::Render(ComPtr<ID3D11DeviceContext> &context) {
 
             context->VSSetShaderResources(0, 1, mesh->heightSRV.GetAddressOf());
 
-            // 물체 렌더링할 때 여러가지 텍스춰 사용 (t0 부터시작)
+            // Start from t0
             std::vector<ID3D11ShaderResourceView *> resViews = {
                 mesh->albedoSRV.Get(), mesh->normalSRV.Get(), mesh->aoSRV.Get(),
                 mesh->metallicRoughnessSRV.Get(), mesh->emissiveSRV.Get()};

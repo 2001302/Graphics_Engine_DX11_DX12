@@ -37,7 +37,7 @@ class Renderer : public Component {
     void UpdateWorldRow(const Matrix &worldRow);
 
 
-    Matrix m_worldRow = Matrix();   // Model(Object) To World 행렬
+    Matrix m_worldRow = Matrix();   // Model(Object) To World 
     Matrix m_worldITRow = Matrix(); // InverseTranspose
 
     MeshConstants m_meshConstsCPU;

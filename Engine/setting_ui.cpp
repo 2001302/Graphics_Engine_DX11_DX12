@@ -119,7 +119,7 @@ int SettingUi::SelectedId() {
 
 void SettingUi::PushNode(INode *node) {
     node->uniqueId = unique_id;
-    node->position = ImVec2(unique_pos_x, 0);
+    node->position = ImVec2((float)unique_pos_x, 0);
 
     nodes.push_back(node);
     unique_id = unique_id + 10;

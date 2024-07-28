@@ -204,7 +204,7 @@ class InitializePostEffect : public BehaviorActionNode {
 
         manager->screen_square = std::make_shared<Model>();
         manager->screen_square->AddComponent(EnumComponentType::eRenderer,
-                                              renderer);
+                                             renderer);
 
         return EnumBehaviorTreeStatus::eSuccess;
     }
@@ -219,11 +219,7 @@ class InitializePostProcessing : public BehaviorActionNode {
 
         manager->post_process.Initialize(
             GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context,
-            {GraphicsManager::Instance().postEffectsSRV},
-            {GraphicsManager::Instance().back_buffer_RTV},
-            common::Env::Instance().screen_width,
-            common::Env::Instance().screen_height, 4);
+            GraphicsManager::Instance().device_context);
 
         return EnumBehaviorTreeStatus::eSuccess;
     }

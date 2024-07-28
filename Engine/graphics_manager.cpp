@@ -92,23 +92,20 @@ bool GraphicsManager::CreateBuffer() {
     ThrowIfFailed(device->CreateRenderTargetView(float_buffer.Get(), NULL,
                                                  float_RTV.GetAddressOf()));
 
-    // FLOAT MSAA를 Relsolve해서 저장할 SRV/RTV
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;
     ThrowIfFailed(
-        device->CreateTexture2D(&desc, NULL, resolved_buffer.GetAddressOf()));
-    ThrowIfFailed(
         device->CreateTexture2D(&desc, NULL, postEffectsBuffer.GetAddressOf()));
-
-    ThrowIfFailed(device->CreateShaderResourceView(
-        resolved_buffer.Get(), NULL, resolved_SRV.GetAddressOf()));
     ThrowIfFailed(device->CreateShaderResourceView(
         postEffectsBuffer.Get(), NULL, postEffectsSRV.GetAddressOf()));
-
-    ThrowIfFailed(device->CreateRenderTargetView(resolved_buffer.Get(), NULL,
-                                                 resolved_RTV.GetAddressOf()));
     ThrowIfFailed(device->CreateRenderTargetView(
         postEffectsBuffer.Get(), NULL, postEffectsRTV.GetAddressOf()));
+
+    // FLOAT MSAA를 Relsolve해서 저장할 SRV/RTV
+    GraphicsUtil::CreateUATexture(
+        device, common::Env::Instance().screen_width,
+        common::Env::Instance().screen_height, DXGI_FORMAT_R16G16B16A16_FLOAT,
+        resolved_buffer, resolved_RTV, resolved_SRV, resolved_UAV);
 
     CreateDepthBuffer();
 

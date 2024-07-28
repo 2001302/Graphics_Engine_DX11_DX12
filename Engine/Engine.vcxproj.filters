@@ -169,6 +169,9 @@
     <ClInclude Include="gui_node.h">
       <Filter>Engine\BehaviorTree\TreeNode</Filter>
     </ClInclude>
+    <ClInclude Include="compute_pso.h">
+      <Filter>Engine\Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -396,6 +399,9 @@
       <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BasicPS.hlsl">
+      <Filter>Engine\Graphics\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="CombineCS.hlsl">
       <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
   </ItemGroup>

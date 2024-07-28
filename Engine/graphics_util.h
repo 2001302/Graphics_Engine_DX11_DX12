@@ -152,6 +152,17 @@ class GraphicsUtil {
                             ComPtr<ID3D11DeviceContext> &context,
                             ComPtr<ID3D11Texture2D> &textureToWrite,
                             const std::string filename);
+
+    static void CreateUATexture(ComPtr<ID3D11Device> &device, const int width,
+                                const int height, const DXGI_FORMAT pixelFormat,
+                                ComPtr<ID3D11Texture2D> &texture,
+                                ComPtr<ID3D11RenderTargetView> &rtv,
+                                ComPtr<ID3D11ShaderResourceView> &srv,
+                                ComPtr<ID3D11UnorderedAccessView> &uav);
+
+    static void CreateComputeShader(ComPtr<ID3D11Device> &device,
+                             const std::wstring &filename,
+                             ComPtr<ID3D11ComputeShader> &computeShader);
 };
 
 } // namespace engine

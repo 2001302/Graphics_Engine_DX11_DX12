@@ -1,11 +1,11 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "graphics_util.h"
 
-#include <DirectXTexEXR.h> 
+#include <DirectXTexEXR.h>
 #include <algorithm>
-#include <directxtk/DDSTextureLoader.h> 
-#include <dxgi.h>                       // DXGIFactory
-#include <dxgi1_4.h>                    // DXGIFactory4
+#include <directxtk/DDSTextureLoader.h>
+#include <dxgi.h>    // DXGIFactory
+#include <dxgi1_4.h> // DXGIFactory4
 #include <fp16.h>
 #include <iostream>
 
@@ -287,7 +287,7 @@ CreateStagingTexture(ComPtr<ID3D11Device> &device,
     D3D11_MAPPED_SUBRESOURCE ms;
     context->Map(stagingTexture.Get(), NULL, D3D11_MAP_WRITE, NULL, &ms);
     uint8_t *pData = (uint8_t *)ms.pData;
-    for (UINT h = 0; h < UINT(height); h++) { 
+    for (UINT h = 0; h < UINT(height); h++) {
         memcpy(&pData[h * ms.RowPitch], &image[h * width * pixelSize],
                width * pixelSize);
     }
@@ -310,7 +310,7 @@ void CreateTextureHelper(ComPtr<ID3D11Device> &device,
     ZeroMemory(&txtDesc, sizeof(txtDesc));
     txtDesc.Width = width;
     txtDesc.Height = height;
-    txtDesc.MipLevels = 0; 
+    txtDesc.MipLevels = 0;
     txtDesc.ArraySize = 1;
     txtDesc.Format = pixelFormat;
     txtDesc.SampleDesc.Count = 1;
@@ -561,4 +561,56 @@ void GraphicsUtil::WriteToFile(ComPtr<ID3D11Device> &device,
     cout << filename << endl;
 }
 
-} // namespace dx11
+void GraphicsUtil::CreateUATexture(ComPtr<ID3D11Device> &device,
+                                   const int width, const int height,
+                                   const DXGI_FORMAT pixelFormat,
+                                   ComPtr<ID3D11Texture2D> &texture,
+                                   ComPtr<ID3D11RenderTargetView> &rtv,
+                                   ComPtr<ID3D11ShaderResourceView> &srv,
+                                   ComPtr<ID3D11UnorderedAccessView> &uav) {
+
+    D3D11_TEXTURE2D_DESC txtDesc;
+    ZeroMemory(&txtDesc, sizeof(txtDesc));
+    txtDesc.Width = width;
+    txtDesc.Height = height;
+    txtDesc.MipLevels = 1;
+    txtDesc.ArraySize = 1;
+    txtDesc.Format = pixelFormat; // 주로 FLOAT 사용
+    txtDesc.SampleDesc.Count = 1;
+    txtDesc.Usage = D3D11_USAGE_DEFAULT;
+    txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET |
+                        D3D11_BIND_UNORDERED_ACCESS;
+    txtDesc.MiscFlags = 0;
+    txtDesc.CPUAccessFlags = 0;
+
+    ThrowIfFailed(
+        device->CreateTexture2D(&txtDesc, NULL, texture.GetAddressOf()));
+    ThrowIfFailed(device->CreateRenderTargetView(texture.Get(), NULL,
+                                                 rtv.GetAddressOf()));
+    ThrowIfFailed(device->CreateShaderResourceView(texture.Get(), NULL,
+                                                   srv.GetAddressOf()));
+    ThrowIfFailed(device->CreateUnorderedAccessView(texture.Get(), NULL,
+                                                    uav.GetAddressOf()));
+}
+
+void GraphicsUtil::CreateComputeShader(
+    ComPtr<ID3D11Device> &device, const std::wstring &filename,
+    ComPtr<ID3D11ComputeShader> &computeShader) {
+
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "cs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
+
+    ThrowIfFailed(device->CreateComputeShader(shaderBlob->GetBufferPointer(),
+                                              shaderBlob->GetBufferSize(), NULL,
+                                              &computeShader));
+}
+} // namespace engine

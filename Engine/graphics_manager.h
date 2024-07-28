@@ -40,6 +40,7 @@ class GraphicsManager {
     ComPtr<ID3D11Texture2D> resolved_buffer;
     ComPtr<ID3D11RenderTargetView> resolved_RTV;
     ComPtr<ID3D11ShaderResourceView> resolved_SRV;
+    ComPtr<ID3D11UnorderedAccessView> resolved_UAV;
 
     ComPtr<ID3D11Texture2D> postEffectsBuffer;
     ComPtr<ID3D11RenderTargetView> postEffectsRTV;

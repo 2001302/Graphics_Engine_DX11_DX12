@@ -93,22 +93,22 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
         }
 
         if (ImGui::TreeNode("Post Processing")) {
-            int flag = 0;
-            flag += ImGui::SliderFloat(
-                "Bloom Strength",
-                &post_process.m_combineFilter.m_constData.strength, 0.0f,
-                1.0f);
-            flag += ImGui::SliderFloat(
-                "Exposure", &post_process.m_combineFilter.m_constData.option1,
-                0.0f, 10.0f);
-            flag += ImGui::SliderFloat(
-                "Gamma", &post_process.m_combineFilter.m_constData.option2,
-                0.1f, 5.0f);
+            //int flag = 0;
+            //flag += ImGui::SliderFloat(
+            //    "Bloom Strength",
+            //    &post_process.m_combineFilter.m_constData.strength, 0.0f,
+            //    1.0f);
+            //flag += ImGui::SliderFloat(
+            //    "Exposure", &post_process.m_combineFilter.m_constData.option1,
+            //    0.0f, 10.0f);
+            //flag += ImGui::SliderFloat(
+            //    "Gamma", &post_process.m_combineFilter.m_constData.option2,
+            //    0.1f, 5.0f);
 
-            if (flag) {
-                post_process.m_combineFilter.UpdateConstantBuffers(device,
-                                                                    context);
-            }
+            //if (flag) {
+            //    post_process.m_combineFilter.UpdateConstantBuffers(device,
+            //                                                        context);
+            //}
             ImGui::TreePop();
         }
 

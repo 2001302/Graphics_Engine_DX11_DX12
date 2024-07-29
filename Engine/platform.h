@@ -5,7 +5,6 @@
 
 #include "env.h"
 #include "graphics_manager.h"
-#include "node.h"
 #include <iostream>
 #include <shellscalingapi.h>
 #pragma comment(lib, "shcore.lib")
@@ -28,10 +27,8 @@ class Platform {
   private:
     bool InitializeWindow();
     bool InitializeDirectX();
-    bool InitializeImGui();
 
   protected:
-    ImGuiContext *context_ = nullptr;
     LPCWSTR application_name_;
     HINSTANCE hinstance_;
 };

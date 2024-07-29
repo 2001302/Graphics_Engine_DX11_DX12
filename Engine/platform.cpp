@@ -33,7 +33,6 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam,
 bool Platform::OnStart() {
     InitializeWindow();
     InitializeDirectX();
-    InitializeImGui();
     return true;
 }
 
@@ -142,16 +141,4 @@ bool Platform::InitializeDirectX() {
     return true;
 }
 
-bool Platform::InitializeImGui() {
-    // Setup Dear ImGui context
-    context_ = ImGui::CreateContext();
-    ImGui::SetCurrentContext(context_);
-
-    ImGui_ImplWin32_Init(common::Env::Instance().main_window);
-    ImGui_ImplDX11_Init(
-        engine::GraphicsManager::Instance().device.Get(),
-        engine::GraphicsManager::Instance().device_context.Get());
-
-    return true;
-}
 } // namespace dx11

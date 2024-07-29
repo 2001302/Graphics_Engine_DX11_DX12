@@ -40,9 +40,6 @@
     <ClInclude Include="image_filter.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
-    <ClInclude Include="node_ui.h">
-      <Filter>Common\Gui</Filter>
-    </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
@@ -131,22 +128,22 @@
       <Filter>Engine\Util</Filter>
     </ClInclude>
     <ClInclude Include="sequence_node.h">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClInclude>
-    <ClInclude Include="behavior_tree.h">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+    <ClInclude Include="action_node.h">
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClInclude>
     <ClInclude Include="behavior_tree_builder.h">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClInclude>
     <ClInclude Include="conditional_node.h">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClInclude>
     <ClInclude Include="parallel_node.h">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClInclude>
     <ClInclude Include="selector_node.h">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClInclude>
     <ClInclude Include="renderer.h">
       <Filter>Engine\Component</Filter>
@@ -171,6 +168,9 @@
     </ClInclude>
     <ClInclude Include="compute_pso.h">
       <Filter>Engine\Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="node.h">
+      <Filter>Common\Structure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -216,9 +216,6 @@
     </ClCompile>
     <ClCompile Include="platform.cpp">
       <Filter>Platform</Filter>
-    </ClCompile>
-    <ClCompile Include="node_ui.cpp">
-      <Filter>Common\Gui</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor.cpp">
       <Filter>Common\Gui\ImGui\NodeEditor</Filter>
@@ -266,25 +263,28 @@
       <Filter>Engine\Util</Filter>
     </ClCompile>
     <ClCompile Include="behavior_tree_builder.cpp">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClCompile>
     <ClCompile Include="conditional_node.cpp">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClCompile>
     <ClCompile Include="parallel_node.cpp">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClCompile>
     <ClCompile Include="selector_node.cpp">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClCompile>
     <ClCompile Include="sequence_node.cpp">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClCompile>
-    <ClCompile Include="behavior_tree.cpp">
-      <Filter>Engine\BehaviorTree\Root</Filter>
+    <ClCompile Include="action_node.cpp">
+      <Filter>Engine\BehaviorTree\TreeBase</Filter>
     </ClCompile>
     <ClCompile Include="renderer.cpp">
       <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="node.cpp">
+      <Filter>Common\Structure</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -315,9 +315,6 @@
     <Filter Include="Engine\Util">
       <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\BehaviorTree\Root">
-      <UniqueIdentifier>{f29ff5f6-1cbe-4545-a200-39f24aba85a3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\BehaviorTree\TreeNode">
       <UniqueIdentifier>{4e61791e-f820-4d29-9be5-fc0a6792dc4c}</UniqueIdentifier>
     </Filter>
@@ -326,6 +323,9 @@
     </Filter>
     <Filter Include="Engine\Component">
       <UniqueIdentifier>{d7d5b87f-7652-45a9-ac58-3878dc145fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\BehaviorTree\TreeBase">
+      <UniqueIdentifier>{f29ff5f6-1cbe-4545-a200-39f24aba85a3}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\Gui">
       <UniqueIdentifier>{9eb6ce6c-e8f1-4912-bd9c-acf6ddd4f248}</UniqueIdentifier>

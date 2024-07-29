@@ -2,7 +2,7 @@
 #define _BehaviorTree
 
 #include "dataBlock.h"
-#include "node_ui.h"
+#include "node.h"
 #include <iostream>
 #include <map>
 #include <vector>
@@ -30,7 +30,7 @@ class IDisposable {
     virtual void Dispose(){};
 };
 
-class BehaviorActionNode : public IDisposable {
+class BehaviorActionNode : public common::INode, public IDisposable {
   public:
     BehaviorActionNode() : parent_node(0), target_object(0){};
     EnumBehaviorTreeStatus Invoke();

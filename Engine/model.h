@@ -3,7 +3,7 @@
 
 #include "component.h"
 #include "graphics_manager.h"
-#include "node_ui.h"
+#include "node.h"
 #include <unordered_map>
 
 namespace engine {

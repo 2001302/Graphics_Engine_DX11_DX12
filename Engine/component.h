@@ -1,7 +1,7 @@
 #ifndef _COMPONENT
 #define _COMPONENT
 
-#include "node_ui.h"
+#include "node.h"
 
 namespace engine {
 enum EnumComponentType {

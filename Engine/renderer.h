@@ -5,7 +5,7 @@
 #include "constant_buffer.h"
 #include "geometry_generator.h"
 #include "mesh.h"
-#include "node_ui.h"
+#include "node.h"
 #include "component.h"
 
 namespace engine {

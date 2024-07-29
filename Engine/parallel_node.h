@@ -1,7 +1,7 @@
 #ifndef PARALLEL_NODE
 #define PARALLEL_NODE
 
-#include "behavior_tree.h"
+#include "action_node.h"
 
 namespace engine {
 

@@ -1,7 +1,7 @@
 #ifndef _CONDITIONALNODE
 #define _CONDITIONALNODE
 
-#include "behavior_tree.h"
+#include "action_node.h"
 
 namespace engine {
 class ConditionalNode : public BehaviorActionNode {

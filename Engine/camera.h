@@ -4,7 +4,7 @@
 #include "behavior_tree_builder.h"
 #include "env.h"
 #include "graphics_manager.h"
-#include "node_ui.h"
+#include "node.h"
 #include "model.h"
 
 namespace engine {

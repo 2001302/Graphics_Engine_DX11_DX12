@@ -161,9 +161,9 @@
     <ClInclude Include="input_node.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="mesh.h" />
-    <ClInclude Include="node_ui.h" />
+    <ClInclude Include="node.h" />
     <ClInclude Include="parallel_node.h" />
-    <ClInclude Include="behavior_tree.h" />
+    <ClInclude Include="action_node.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="message.h" />
     <ClInclude Include="graphics_manager.h" />
@@ -209,9 +209,9 @@
     <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp" />
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor.cpp" />
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor_api.cpp" />
-    <ClCompile Include="node_ui.cpp" />
+    <ClCompile Include="node.cpp" />
     <ClCompile Include="parallel_node.cpp" />
-    <ClCompile Include="behavior_tree.cpp" />
+    <ClCompile Include="action_node.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="graphics_manager.cpp" />
     <ClCompile Include="gui_base.cpp" />

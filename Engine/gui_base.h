@@ -3,7 +3,7 @@
 
 #include "dataBlock.h"
 #include "graphics_manager.h"
-#include "node_ui.h"
+#include "node.h"
 
 namespace common {
 class IGui : public IDataBlock {

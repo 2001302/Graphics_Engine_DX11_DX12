@@ -1,7 +1,7 @@
 #ifndef _APPLICATION
 #define _APPLICATION
 
-#include "behavior_tree.h"
+#include "action_node.h"
 #include "geometry_generator.h"
 #include "graphics_manager.h"
 #include "input.h"
@@ -32,8 +32,8 @@ class Application : public Platform {
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,
                                     LPARAM lparam) {
 
-        auto CheckIfMouseInViewport = [](common::SettingUi *ui,
-                                         int mouseX, int mouseY) -> bool {
+        auto CheckIfMouseInViewport = [](common::SettingUi *ui, int mouseX,
+                                         int mouseY) -> bool {
             if (GraphicsManager::Instance().swap_chain) {
                 if ((0 < mouseX && mouseX < ui->GetSize().x) &&
                     (0 < mouseY && mouseY < ui->GetSize().y))

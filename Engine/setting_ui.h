@@ -1,7 +1,7 @@
 #ifndef _PANEL
 #define _PANEL
 
-#include "gui_base.h"
+#include "ui.h"
 #include "message.h"
 #include "model.h"
 #include <string>

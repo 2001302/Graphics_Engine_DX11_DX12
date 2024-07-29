@@ -170,7 +170,7 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="geometry_generator.h" />
-    <ClInclude Include="gui_base.h" />
+    <ClInclude Include="ui.h" />
     <ClInclude Include="id_generator.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />
@@ -214,7 +214,7 @@
     <ClCompile Include="action_node.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="graphics_manager.cpp" />
-    <ClCompile Include="gui_base.cpp" />
+    <ClCompile Include="ui.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="geometry_generator.cpp" />
     <ClCompile Include="id_generator.cpp" />

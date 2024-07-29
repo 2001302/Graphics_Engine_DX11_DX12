@@ -1,4 +1,4 @@
-#include "gui_base.h"
+#include "ui.h"
 
 using namespace common;
 

@@ -31,7 +31,7 @@
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>Common\Gui\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="gui_base.h">
+    <ClInclude Include="ui.h">
       <Filter>Common\Gui</Filter>
     </ClInclude>
     <ClInclude Include="setting_ui.h">
@@ -202,7 +202,7 @@
     <ClCompile Include="ImGui\imgui_demo.cpp">
       <Filter>Common\Gui\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="gui_base.cpp">
+    <ClCompile Include="ui.cpp">
       <Filter>Common\Gui</Filter>
     </ClCompile>
     <ClCompile Include="setting_ui.cpp">

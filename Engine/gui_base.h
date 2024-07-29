@@ -17,7 +17,6 @@ class IGui : public IDataBlock {
 
     ImVec2 GetSize() { return gui_size; }
   protected:
-    ImGuiContext *context_ = nullptr;
     std::string ini_file_name_;
     ImFont *default_font_ = nullptr;
     ImFont *header_font = nullptr;

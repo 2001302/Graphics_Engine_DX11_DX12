@@ -42,6 +42,10 @@ void PostProcess::Render(ComPtr<ID3D11Device> &device,
                          GlobalConstants* constsCPU,
                          ComPtr<ID3D11Buffer> constsGPU) {
 
+    const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+    context->ClearRenderTargetView(
+        GraphicsManager::Instance().back_buffer_RTV.Get(), clearColor);
+
     // update buffer
     GraphicsUtil::UpdateBuffer(device,context, constsCPU, constsGPU);
 
@@ -50,7 +54,6 @@ void PostProcess::Render(ComPtr<ID3D11Device> &device,
     context->CSSetConstantBuffers(0, 1, constsGPU.GetAddressOf());
     context->CSSetUnorderedAccessViews(
         0, 1, GraphicsManager::Instance().resolved_UAV.GetAddressOf(), NULL);
-
     context->OMSetRenderTargets(
         1, GraphicsManager::Instance().back_buffer_RTV.GetAddressOf(), NULL);
 
@@ -61,6 +64,7 @@ void PostProcess::Render(ComPtr<ID3D11Device> &device,
 
     // 컴퓨터 쉐이더가 하던 일을 끝내게 만들고 Resources 해제
     ComputeShaderBarrier(context);
+
 }
 
 } // namespace engine

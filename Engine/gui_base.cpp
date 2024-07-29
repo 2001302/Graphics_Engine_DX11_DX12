@@ -8,14 +8,6 @@ ImGuiWindowFlags GetWindowFlags() {
 }
 
 bool IGui::Initialize() {
-    // Setup Dear ImGui context
-    context_ = ImGui::CreateContext();
-    ImGui::SetCurrentContext(context_);
-
-    ImGui_ImplWin32_Init(Env::Instance().main_window);
-    ImGui_ImplDX11_Init(
-        engine::GraphicsManager::Instance().device.Get(),
-        engine::GraphicsManager::Instance().device_context.Get());
 
     ImGui::StyleColorsDark();
     RecreateFontAtlas();

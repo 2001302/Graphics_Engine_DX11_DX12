@@ -29,10 +29,10 @@ float3 FilmicToneMapping(float3 color)
 
 float3 LinearToneMapping(float3 color)
 {
-    float3 invGamma = float3(1, 1, 1) / gamma;
+    //float3 invGamma = float3(1, 1, 1) / gamma;
 
-    color = clamp(exposure * color, 0., 1.);
-    color = pow(color, invGamma);
+    //color = clamp(exposure * color, 0., 1.);
+    //color = pow(color, invGamma);
     return color;
 }
 

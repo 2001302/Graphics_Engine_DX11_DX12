@@ -22,6 +22,9 @@ class SetSamplerStates : public BehaviorActionNode {
         GraphicsManager::Instance().device_context->PSSetSamplers(
             0, UINT(Graphics::sampleStates.size()),
             Graphics::sampleStates.data());
+        GraphicsManager::Instance().device_context->CSSetSamplers(
+            0, UINT(Graphics::sampleStates.size()),
+            Graphics::sampleStates.data());
 
         // Shared textures: start from register(t10) in 'Common.hlsli'
         std::vector<ID3D11ShaderResourceView *> commonSRVs = {
@@ -389,21 +392,21 @@ class DrawPostProcessing : public BehaviorActionNode {
         //// post effect textures: start from register(20)
         // GraphicsManager::Instance().device_context->PSSetShaderResources(
         //     20, UINT(postEffectsSRVs.size()), postEffectsSRVs.data());
+        // //GraphicsManager::Instance().device_context->OMSetRenderTargets(
+        // //    1, GraphicsManager::Instance().postEffectsRTV.GetAddressOf(),
+        // //    NULL);
         // GraphicsManager::Instance().device_context->OMSetRenderTargets(
-        //     1, GraphicsManager::Instance().postEffectsRTV.GetAddressOf(),
-        //     NULL);
-        //// m_GraphicsManager::Instance().device_context->OMSetRenderTargets(1,
-        //// m_backBufferRTV.GetAddressOf(), NULL);
+        //     1, GraphicsManager::Instance().resolved_RTV.GetAddressOf(), NULL);
 
         // GraphicsManager::Instance().device_context->PSSetConstantBuffers(
         //     3, 1, manager->post_effects_consts_GPU.GetAddressOf());
 
-        // if (true) {
-        //     Renderer *renderer = nullptr;
-        //     manager->screen_square->GetComponent(EnumComponentType::eRenderer,
-        //                                           (Component **)(&renderer));
-        //     renderer->Render(GraphicsManager::Instance().device_context);
-        // }
+         //if (true) {
+         //    Renderer *renderer = nullptr;
+         //    manager->screen_square->GetComponent(EnumComponentType::eRenderer,
+         //                                          (Component **)(&renderer));
+         //    renderer->Render(GraphicsManager::Instance().device_context);
+         //}
 
         GraphicsManager::Instance().SetPipelineState(
             Graphics::postProcessingPSO);

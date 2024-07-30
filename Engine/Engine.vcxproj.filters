@@ -106,9 +106,6 @@
     <ClInclude Include="graphics_common.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="post_process.h">
-      <Filter>Engine\Model</Filter>
-    </ClInclude>
     <ClInclude Include="input.h">
       <Filter>Platform</Filter>
     </ClInclude>
@@ -174,6 +171,9 @@
     </ClInclude>
     <ClInclude Include="sequence_node.h">
       <Filter>Common\BehaviorTree\TreeBase</Filter>
+    </ClInclude>
+    <ClInclude Include="tone_mapping.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -247,9 +247,6 @@
     <ClCompile Include="graphics_common.cpp">
       <Filter>Engine\Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="post_process.cpp">
-      <Filter>Engine\Model</Filter>
-    </ClCompile>
     <ClCompile Include="input.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
@@ -285,6 +282,9 @@
     </ClCompile>
     <ClCompile Include="sequence_node.cpp">
       <Filter>Common\BehaviorTree\TreeBase</Filter>
+    </ClCompile>
+    <ClCompile Include="tone_mapping.cpp">
+      <Filter>Engine\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

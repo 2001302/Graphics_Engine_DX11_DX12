@@ -42,10 +42,6 @@ class GraphicsManager {
     ComPtr<ID3D11ShaderResourceView> resolved_SRV;
     ComPtr<ID3D11UnorderedAccessView> resolved_UAV;
 
-    ComPtr<ID3D11Texture2D> postEffectsBuffer;
-    ComPtr<ID3D11RenderTargetView> postEffectsRTV;
-    ComPtr<ID3D11ShaderResourceView> postEffectsSRV;
-
     ComPtr<ID3D11Texture2D> m_depthOnlyBuffer; // No MSAA
     ComPtr<ID3D11DepthStencilView> m_depthOnlyDSV;
     ComPtr<ID3D11DepthStencilView> m_depthStencilView;

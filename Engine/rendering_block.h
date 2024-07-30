@@ -6,7 +6,6 @@
 #include "graphics_manager.h"
 #include "model.h"
 #include "constant_buffer.h"
-#include "post_process.h"
 
 namespace engine {
 

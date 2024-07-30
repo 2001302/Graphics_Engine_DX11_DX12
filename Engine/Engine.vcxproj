@@ -183,7 +183,7 @@
     <ClInclude Include="ImGui\imstb_truetype.h" />
     <ClInclude Include="input.h" />
     <ClInclude Include="message_receiver.h" />
-    <ClInclude Include="post_process.h" />
+    <ClInclude Include="tone_mapping.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="renderer_draw_node.h" />
     <ClInclude Include="renderer_initialize_node.h" />
@@ -230,7 +230,7 @@
     <ClCompile Include="model_loader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
-    <ClCompile Include="post_process.cpp" />
+    <ClCompile Include="tone_mapping.cpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="setting_ui.cpp" />
     <ClCompile Include="platform.cpp" />

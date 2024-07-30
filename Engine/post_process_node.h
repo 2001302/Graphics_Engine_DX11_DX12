@@ -4,8 +4,12 @@
 #include "behavior_tree_builder.h"
 #include "rendering_block.h"
 #include "setting_ui.h"
+#include "tone_mapping.h"
 
 namespace engine {
+/// <summary>
+/// Bloom + ToneMapping
+/// </summary>
 class PostProcessingNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
@@ -15,9 +19,8 @@ class PostProcessingNode : public common::BehaviorActionNode {
 
         if (!is_initialized) {
 
-            post_process.Initialize(GraphicsManager::Instance().device,
+            tone_mapping.Initialize(GraphicsManager::Instance().device,
                                     GraphicsManager::Instance().device_context);
-
             GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
                                             post_effects_consts_CPU,
                                             post_effects_consts_GPU);
@@ -28,10 +31,8 @@ class PostProcessingNode : public common::BehaviorActionNode {
 
             GraphicsManager::Instance().SetPipelineState(
                 Graphics::postProcessingPSO);
-            post_process.Render(GraphicsManager::Instance().device,
-                                GraphicsManager::Instance().device_context,
-                                &manager->global_consts_CPU,
-                                manager->global_consts_GPU);
+            tone_mapping.Render(GraphicsManager::Instance().device,
+                                GraphicsManager::Instance().device_context);
         }
 
         return common::EnumBehaviorTreeStatus::eSuccess;
@@ -41,7 +42,7 @@ class PostProcessingNode : public common::BehaviorActionNode {
     PostEffectsConstants post_effects_consts_CPU;
     ComPtr<ID3D11Buffer> post_effects_consts_GPU;
 
-    PostProcess post_process;
+    ToneMapping tone_mapping;
 };
 
 // ImGui::SetNextItemOpen(true, ImGuiCond_Once);

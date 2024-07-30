@@ -100,6 +100,5 @@ __declspec(align(256)) struct PostEffectsConstants {
     float depthScale = 1.0f;
     float fogStrength = 0.0f;
 };
-
 } // namespace engine
 #endif

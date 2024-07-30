@@ -88,18 +88,8 @@ bool GraphicsManager::CreateBuffer() {
 
     ThrowIfFailed(
         device->CreateTexture2D(&desc, NULL, float_buffer.GetAddressOf()));
-
     ThrowIfFailed(device->CreateRenderTargetView(float_buffer.Get(), NULL,
                                                  float_RTV.GetAddressOf()));
-
-    desc.SampleDesc.Count = 1;
-    desc.SampleDesc.Quality = 0;
-    ThrowIfFailed(
-        device->CreateTexture2D(&desc, NULL, postEffectsBuffer.GetAddressOf()));
-    ThrowIfFailed(device->CreateShaderResourceView(
-        postEffectsBuffer.Get(), NULL, postEffectsSRV.GetAddressOf()));
-    ThrowIfFailed(device->CreateRenderTargetView(
-        postEffectsBuffer.Get(), NULL, postEffectsRTV.GetAddressOf()));
 
     // FLOAT MSAA를 Relsolve해서 저장할 SRV/RTV
     GraphicsUtil::CreateUATexture(

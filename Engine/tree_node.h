@@ -45,7 +45,7 @@ class TreeNode {
         present = std::make_shared<PresentNode>();
     }
 
-    std::shared_ptr<InitializeInputNode> InitializeInput(){return initialize_input;}
+    //std::shared_ptr<InitializeInputNode> InitializeInput(){return initialize_input;}
     std::shared_ptr<InitializeImguiNode> InitializeImgui(){return initialize_imgui;}
     std::shared_ptr<InitializeLightNode> InitializeLight(){return initialize_light;}
     std::shared_ptr<InitializeCameraNode> InitializeCamera(){return initialize_camera;}
@@ -78,7 +78,7 @@ class TreeNode {
 
 
   private:
-    std::shared_ptr<InitializeInputNode> initialize_input;
+    //std::shared_ptr<InitializeInputNode> initialize_input;
     std::shared_ptr<InitializeImguiNode> initialize_imgui;
     std::shared_ptr<InitializeLightNode> initialize_light;
     std::shared_ptr<InitializeCameraNode> initialize_camera;

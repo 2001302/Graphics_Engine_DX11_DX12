@@ -11,7 +11,7 @@ class UpdateCameraNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         manager->camera->Update();
@@ -22,14 +22,13 @@ class UpdateCameraNode : public BehaviorActionNode {
 
 class UpdateLightsNode : public BehaviorActionNode {
   public:
-    UpdateLightsNode(float dt) { this->dt = dt; }
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
-        float dt = ImGui::GetIO().DeltaTime;
+        float dt = manager->dt;
 
         // 회전하는 lights[1] 업데이트
         static Vector3 lightDev = Vector3(1.0f, 0.0f, 0.0f);
@@ -112,16 +111,13 @@ class UpdateLightsNode : public BehaviorActionNode {
         }
         return EnumBehaviorTreeStatus::eSuccess;
     }
-
-  private:
-    float dt;
 };
 
 class UpdateGlobalConstantBuffersNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         const Vector3 eyeWorld = manager->camera->GetPosition();
@@ -170,7 +166,7 @@ class UpdateMirrorNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         auto renderer = (Renderer *)manager->mirror->GetComponent(
@@ -188,7 +184,7 @@ class ApplyMouseMovementNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         //// 마우스 이동/회전 반영
@@ -225,7 +221,7 @@ class UpdateBasicObjectsNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         for (auto &i : manager->models) {
@@ -244,7 +240,7 @@ class UpdateLightSpheresNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         for (auto &i : manager->light_spheres) {

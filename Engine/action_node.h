@@ -9,7 +9,7 @@
 
 namespace engine {
 enum EnumDataBlockType {
-    eManager = 0,
+    eRenderBlock = 0,
     eGui = 1,
     eInput = 2,
 };

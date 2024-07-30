@@ -29,8 +29,8 @@ class Platform {
     bool InitializeDirectX();
 
   protected:
-    LPCWSTR application_name_;
-    HINSTANCE hinstance_;
+    LPCWSTR application_name;
+    HINSTANCE hinstance;
 };
 } // namespace dx11
 #endif

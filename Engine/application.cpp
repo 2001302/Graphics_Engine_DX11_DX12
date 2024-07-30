@@ -9,27 +9,28 @@
 namespace engine {
 
 Application::Application() {
-    manager_ = std::make_shared<RenderingBlock>();
-    message_receiver_ = std::make_unique<MessageReceiver>();
-    input_ = std::make_unique<Input>();
-    imgui_ = std::make_shared<common::SettingUi>();
+    render_block = std::make_shared<RenderingBlock>();
+    message_receiver = std::make_unique<MessageReceiver>();
+    input = std::make_unique<Input>();
+    gui = std::make_shared<common::SettingUi>();
 };
 
 bool Application::OnStart() {
 
     Platform::OnStart();
 
+    input->Initialize(hinstance);
+
     std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {EnumDataBlockType::eManager, manager_.get()},
-        {EnumDataBlockType::eGui, imgui_.get()},
-        {EnumDataBlockType::eInput, input_.get()},
+        {EnumDataBlockType::eRenderBlock, render_block.get()},
+        {EnumDataBlockType::eGui, gui.get()},
+        {EnumDataBlockType::eInput, input.get()},
     };
 
     // clang-format off
     auto tree = std::make_shared<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
         ->Sequence()
-            ->Excute(std::make_shared<InitializeInputNode>(hinstance_))
             ->Excute(InitializeImgui())
             ->Excute(InitializeLight())
             ->Excute(InitializeCamera())
@@ -58,10 +59,12 @@ bool Application::OnFrame() {
 
 bool Application::OnUpdate(float dt) {
 
+    render_block->dt = dt;
+
     std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {EnumDataBlockType::eManager, manager_.get()},
-        {EnumDataBlockType::eGui, imgui_.get()},
-        {EnumDataBlockType::eInput, input_.get()},
+        {EnumDataBlockType::eRenderBlock, render_block.get()},
+        {EnumDataBlockType::eGui, gui.get()},
+        {EnumDataBlockType::eInput, input.get()},
     };
 
     // clang-format off
@@ -70,7 +73,7 @@ bool Application::OnUpdate(float dt) {
         ->Sequence()
             ->Excute(ReadInput())
             ->Excute(UpdateCamera())
-            ->Excute(std::make_shared<UpdateLightsNode>(dt))
+            ->Excute(UpdateLights())
             ->Excute(UpdateGlobalConstantBuffers())
             ->Excute(UpdateMirror())
             //->Excute(ApplyMouseMove())
@@ -85,31 +88,33 @@ bool Application::OnUpdate(float dt) {
 
 bool Application::OnRender() {
 
-    input_->Frame();
+    input->Frame();
 
     std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {EnumDataBlockType::eManager, manager_.get()},
-        {EnumDataBlockType::eGui, imgui_.get()},
-        {EnumDataBlockType::eInput, input_.get()},
+        {EnumDataBlockType::eRenderBlock, render_block.get()},
+        {EnumDataBlockType::eGui, gui.get()},
+        {EnumDataBlockType::eInput, input.get()},
     };
 
     // clang-format off
     auto tree = std::make_shared<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
-        ->Excute(SetSamplerStates())
-        ->Excute(DrawOnlyDepth())
-        ->Excute(SetShadowViewport())
-        ->Excute(DrawShadowMap())
-        ->Excute(SetMainRenderTarget())
-        ->Excute(DrawObjects())
-        ->Excute(DrawLightSpheres())
-        ->Excute(DrawRelatedWithCamera())
-        ->Excute(DrawSkybox())
-        ->Excute(DrawMirrorSurface())
-        ->Excute(ResolveBuffer())
-        ->Excute(DrawPostProcessing())
-        ->Excute(DrawSettingUi())
-        ->Excute(Present())
+        ->Sequence()
+            ->Excute(SetSamplerStates())
+            ->Excute(DrawOnlyDepth())
+            ->Excute(SetShadowViewport())
+            ->Excute(DrawShadowMap())
+            ->Excute(SetMainRenderTarget())
+            ->Excute(DrawObjects())
+            ->Excute(DrawLightSpheres())
+            ->Excute(DrawRelatedWithCamera())
+            ->Excute(DrawSkybox())
+            ->Excute(DrawMirrorSurface())
+            ->Excute(ResolveBuffer())
+            ->Excute(DrawPostProcessing())
+            ->Excute(DrawSettingUi())
+            ->Excute(Present())
+        ->Close()
     ->Run();
     // clang-format on
 
@@ -119,21 +124,21 @@ bool Application::OnRender() {
 bool Application::OnStop() {
     Platform::OnStop();
 
-    if (manager_) {
-        for (auto &model : manager_->models) {
+    if (render_block) {
+        for (auto &model : render_block->models) {
             model.second.reset();
         }
-        manager_->camera.reset();
+        render_block->camera.reset();
     }
 
-    if (imgui_) {
-        imgui_->Shutdown();
-        imgui_.reset();
+    if (gui) {
+        gui->Shutdown();
+        gui.reset();
     }
 
-    if (input_) {
-        input_->Shutdown();
-        input_.reset();
+    if (input) {
+        input->Shutdown();
+        input.reset();
     }
 
     return true;

@@ -12,6 +12,8 @@ namespace engine {
 
 class RenderingBlock : public common::IDataBlock, public common::INode {
   public:
+    float dt;
+
     std::unique_ptr<Camera> camera;
     std::shared_ptr<Model> skybox;
     std::shared_ptr<Model> screen_square;

@@ -11,7 +11,7 @@ class InitializeLightNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         // 조명 설정
@@ -73,7 +73,7 @@ class InitializeCameraNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         manager->camera = std::make_unique<Camera>();
@@ -88,7 +88,7 @@ class InitializeSkyboxNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         auto mesh_data = GeometryGenerator::MakeBox(40.0f);
@@ -127,7 +127,7 @@ class InitializeMirrorGroundNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         auto mesh = GeometryGenerator::MakeSquare(5.0);
@@ -164,7 +164,7 @@ class CreateGlobalConstantBufferNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
@@ -196,7 +196,7 @@ class InitializePostEffectNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         MeshData meshData = GeometryGenerator::MakeSquare();
@@ -217,7 +217,7 @@ class InitializeBasicModelsNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
         // 추가 물체1
         {

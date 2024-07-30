@@ -7,7 +7,7 @@ namespace engine {
 /// </summary>
 static Platform *g_system = nullptr;
 
-Platform::Platform() : application_name_(0), hinstance_(0) {
+Platform::Platform() : application_name(0), hinstance(0) {
     g_system = this;
 }
 
@@ -80,8 +80,8 @@ bool Platform::OnStop() {
     common::Env::Instance().main_window = NULL;
 
     // Remove the application instance.
-    UnregisterClass(application_name_, hinstance_);
-    hinstance_ = NULL;
+    UnregisterClass(application_name, hinstance);
+    hinstance = NULL;
 
     // Release the pointer to this class.
     g_system = NULL;
@@ -91,14 +91,14 @@ bool Platform::OnStop() {
 bool Platform::InitializeWindow() {
     SetProcessDpiAwareness(PROCESS_DPI_AWARENESS::PROCESS_SYSTEM_DPI_AWARE);
 
-    hinstance_ = GetModuleHandle(NULL);
+    hinstance = GetModuleHandle(NULL);
 
     WNDCLASSEX wc = {sizeof(WNDCLASSEX),
                      CS_CLASSDC,
                      WndProc,
                      0L,
                      0L,
-                     hinstance_,
+                     hinstance,
                      NULL,
                      NULL,
                      NULL,

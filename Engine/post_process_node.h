@@ -10,7 +10,7 @@ class InitializePostProcessingNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         manager->post_process.Initialize(
@@ -25,7 +25,7 @@ class DrawPostProcessingNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         //// PostEffects

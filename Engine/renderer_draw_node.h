@@ -11,7 +11,7 @@ class SetSamplerStatesNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsManager::Instance().SetMainViewport();
@@ -41,7 +41,7 @@ class DrawOnlyDepthNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         // Depth Only Pass (no RTS)
@@ -90,7 +90,7 @@ class DrawShadowMapNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         // make shadow map
@@ -139,7 +139,7 @@ class SetMainRenderTargetNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         // rendering resolution
@@ -181,7 +181,7 @@ class DrawObjectsNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsManager::Instance().SetPipelineState(
@@ -220,7 +220,7 @@ class DrawLightSpheresNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsManager::Instance().SetPipelineState(
@@ -242,7 +242,7 @@ class DrawRelatedWithCameraNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsManager::Instance().SetPipelineState(
@@ -260,7 +260,7 @@ class DrawSkyboxNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         if (true) {
@@ -280,7 +280,7 @@ class DrawMirrorSurfaceNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         // on mirror
@@ -344,7 +344,7 @@ class ResolveBufferNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsManager::Instance().device_context->ResolveSubresource(
@@ -360,7 +360,7 @@ class DrawSettingUiNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
+            data_block[EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         auto gui = dynamic_cast<common::SettingUi *>(

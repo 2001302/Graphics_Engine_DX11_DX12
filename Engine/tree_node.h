@@ -13,8 +13,7 @@ namespace engine {
 class TreeNode {
   public:
     TreeNode() {
-        initialize_post_processing =
-            std::make_shared<InitializePostProcessingNode>();
+        initialize_post_processing = std::make_shared<InitializePostProcessingNode>();
         draw_post_processing = std::make_shared<DrawPostProcessingNode>();
         //initialize_input = std::make_shared<InitializeInputNode>();
         initialize_imgui = std::make_shared<InitializeImguiNode>();
@@ -27,7 +26,7 @@ class TreeNode {
         initialize_basic_models = std::make_shared<InitializeBasicModelsNode>();
         read_input = std::make_shared<ReadInputNode>();
         update_camera = std::make_shared<UpdateCameraNode>();
-        //update_lights = std::make_shared<UpdateLightsNode>();
+        update_lights = std::make_shared<UpdateLightsNode>();
         update_global_constant_buffers = std::make_shared<UpdateGlobalConstantBuffersNode>();
         update_mirror = std::make_shared<UpdateMirrorNode>();
         update_basic_objects = std::make_shared<UpdateBasicObjectsNode>();

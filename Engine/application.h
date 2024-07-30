@@ -25,10 +25,10 @@ class Application : public Platform, TreeNode {
     bool OnUpdate(float dt);
     bool OnRender();
 
-    std::shared_ptr<RenderingBlock> manager_;
-    std::unique_ptr<MessageReceiver> message_receiver_;
-    std::shared_ptr<Input> input_;
-    std::shared_ptr<common::SettingUi> imgui_;
+    std::shared_ptr<RenderingBlock> render_block;
+    std::unique_ptr<MessageReceiver> message_receiver;
+    std::shared_ptr<Input> input;
+    std::shared_ptr<common::SettingUi> gui;
 
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,
                                     LPARAM lparam) {
@@ -59,7 +59,7 @@ class Application : public Platform, TreeNode {
                 common::Env::Instance().screen_height) {
                 if (GraphicsManager::Instance().swap_chain) {
 
-                    imgui_->Shutdown();
+                    gui->Shutdown();
 
                     GraphicsManager::Instance().back_buffer_RTV.Reset();
                     GraphicsManager::Instance().swap_chain->ResizeBuffers(
@@ -69,33 +69,33 @@ class Application : public Platform, TreeNode {
                     GraphicsManager::Instance().CreateBuffer();
                     GraphicsManager::Instance().SetMainViewport();
 
-                    imgui_->Initialize();
+                    gui->Initialize();
                 }
             }
             break;
         }
         case WM_MOUSEMOVE: {
             if (wparam & MK_RBUTTON) {
-                if (CheckIfMouseInViewport(imgui_.get(), LOWORD(lparam),
+                if (CheckIfMouseInViewport(gui.get(), LOWORD(lparam),
                                            HIWORD(lparam))) {
-                    return message_receiver_->OnMouseRightDragRequest(
-                        manager_.get(), input_);
+                    return message_receiver->OnMouseRightDragRequest(
+                        render_block.get(), input);
                 }
             }
             if (wparam & MK_MBUTTON) {
-                if (CheckIfMouseInViewport(imgui_.get(), LOWORD(lparam),
+                if (CheckIfMouseInViewport(gui.get(), LOWORD(lparam),
                                            HIWORD(lparam))) {
-                    return message_receiver_->OnMouseWheelDragRequest(
-                        manager_.get(), input_, LOWORD(lparam), HIWORD(lparam));
+                    return message_receiver->OnMouseWheelDragRequest(
+                        render_block.get(), input, LOWORD(lparam), HIWORD(lparam));
                 }
             }
             break;
         }
         case WM_MOUSEWHEEL: {
-            if (CheckIfMouseInViewport(imgui_.get(), LOWORD(lparam),
+            if (CheckIfMouseInViewport(gui.get(), LOWORD(lparam),
                                        HIWORD(lparam))) {
-                return message_receiver_->OnMouseWheelRequest(manager_.get(),
-                                                              input_);
+                return message_receiver->OnMouseWheelRequest(render_block.get(),
+                                                              input);
             }
             break;
         }
@@ -106,20 +106,20 @@ class Application : public Platform, TreeNode {
             break;
         }
         case WM_MODEL_LOAD: {
-            return message_receiver_->OnModelLoadRequest(manager_.get(),
+            return message_receiver->OnModelLoadRequest(render_block.get(),
                                                          main_window);
             break;
         }
         case WM_SPHERE_LOAD: {
-            return message_receiver_->OnSphereLoadRequest(manager_.get());
+            return message_receiver->OnSphereLoadRequest(render_block.get());
             break;
         }
         case WM_BOX_LOAD: {
-            return message_receiver_->OnBoxLoadRequest(manager_.get());
+            return message_receiver->OnBoxLoadRequest(render_block.get());
             break;
         }
         case WM_CYLINDER_LOAD: {
-            return message_receiver_->OnCylinderLoadRequest(manager_.get());
+            return message_receiver->OnCylinderLoadRequest(render_block.get());
             break;
         }
         case WM_KEYDOWN:

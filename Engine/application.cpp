@@ -26,19 +26,19 @@ bool Application::OnStart() {
     };
 
     // clang-format off
-    auto tree = new BehaviorTreeBuilder();
+    auto tree = std::make_shared<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
         ->Sequence()
             ->Excute(std::make_shared<InitializeInputNode>(hinstance_))
-            ->Excute(std::make_shared<InitializeImguiNode>())
-            ->Excute(std::make_shared<InitializeLightNode>())
-            ->Excute(std::make_shared<InitializeCameraNode>())
-            ->Excute(std::make_shared<InitializeSkyboxNode>())
-            ->Excute(std::make_shared<InitializeMirrorGroundNode>())
-            ->Excute(std::make_shared<CreateGlobalConstantBufferNode>())
-            ->Excute(std::make_shared<InitializePostEffectNode>())
+            ->Excute(InitializeImgui())
+            ->Excute(InitializeLight())
+            ->Excute(InitializeCamera())
+            ->Excute(InitializeSkybox())
+            ->Excute(InitializeMirrorGround())
+            ->Excute(CreateGlobalConstantBuffer())
+            ->Excute(InitializePostEffect())
             ->Excute(InitializePostProcessing())
-            ->Excute(std::make_shared<InitializeBasicModelsNode>())
+            ->Excute(InitializeBasicModels())
         ->Close()
     ->Run();
     // clang-format on
@@ -65,17 +65,17 @@ bool Application::OnUpdate(float dt) {
     };
 
     // clang-format off
-    auto tree = new BehaviorTreeBuilder();
+    auto tree = std::make_shared<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
         ->Sequence()
-            ->Excute(std::make_shared<ReadInputNode>())
-            ->Excute(std::make_shared<UpdateCameraNode>())
+            ->Excute(ReadInput())
+            ->Excute(UpdateCamera())
             ->Excute(std::make_shared<UpdateLightsNode>(dt))
-            ->Excute(std::make_shared<UpdateGlobalConstantBuffersNode>())
-            ->Excute(std::make_shared<UpdateMirrorNode>())
-            //->Excute(std::make_shared<ApplyMouseMovement>())
-            ->Excute(std::make_shared<UpdateBasicObjectsNode>())
-            ->Excute(std::make_shared<UpdateLightSpheresNode>())
+            ->Excute(UpdateGlobalConstantBuffers())
+            ->Excute(UpdateMirror())
+            //->Excute(ApplyMouseMove())
+            ->Excute(UpdateBasicObjects())
+            ->Excute(UpdateLightSpheres())
         ->Close()
     ->Run();
     // clang-format on
@@ -94,22 +94,22 @@ bool Application::OnRender() {
     };
 
     // clang-format off
-    auto tree = std::make_unique<BehaviorTreeBuilder>();
+    auto tree = std::make_shared<BehaviorTreeBuilder>();
     tree->Build(dataBlock)
-        ->Excute(std::make_shared<SetSamplerStatesNode>())
-        ->Excute(std::make_shared<DrawOnlyDepthNode>())
-        ->Excute(std::make_shared<SetShadowViewportNode>())
-        ->Excute(std::make_shared<DrawShadowMapNode>())
-        ->Excute(std::make_shared<SetMainRenderTargetNode>())
-        ->Excute(std::make_shared<DrawObjectsNode>())
-        ->Excute(std::make_shared<DrawLightSpheresNode>())
-        ->Excute(std::make_shared<DrawRelatedWithCameraNode>())
-        ->Excute(std::make_shared<DrawSkyboxNode>())
-        ->Excute(std::make_shared<DrawMirrorSurfaceNode>())
-        ->Excute(std::make_shared<ResolveBufferNode>())
+        ->Excute(SetSamplerStates())
+        ->Excute(DrawOnlyDepth())
+        ->Excute(SetShadowViewport())
+        ->Excute(DrawShadowMap())
+        ->Excute(SetMainRenderTarget())
+        ->Excute(DrawObjects())
+        ->Excute(DrawLightSpheres())
+        ->Excute(DrawRelatedWithCamera())
+        ->Excute(DrawSkybox())
+        ->Excute(DrawMirrorSurface())
+        ->Excute(ResolveBuffer())
         ->Excute(DrawPostProcessing())
-        ->Excute(std::make_shared<DrawSettingUiNode>())
-        ->Excute(std::make_shared<PresentNode>())
+        ->Excute(DrawSettingUi())
+        ->Excute(Present())
     ->Run();
     // clang-format on
 

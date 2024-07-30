@@ -19,7 +19,6 @@ class BehaviorTreeBuilder {
     }
     void Run() {
         tree->Invoke();
-        tree->Dispose();
         tree.reset();
     }
     BehaviorTreeBuilder *Excute(std::shared_ptr<BehaviorActionNode> node);

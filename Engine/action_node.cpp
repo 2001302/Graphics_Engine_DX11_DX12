@@ -22,10 +22,4 @@ void BehaviorActionNode::PushNode(std::shared_ptr<BehaviorActionNode> node) {
 
 void BehaviorActionNode::PopNode() { child_nodes.pop_back(); }
 
-void BehaviorActionNode::Dispose() {
-    for (auto &child : child_nodes) {
-        child->Dispose();
-        child.reset();
-    }
-};
 } // namespace engine

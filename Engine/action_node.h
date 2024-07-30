@@ -30,12 +30,11 @@ class IDisposable {
     virtual void Dispose(){};
 };
 
-class BehaviorActionNode : public common::INode, public IDisposable {
+class BehaviorActionNode : public common::INode {
   public:
     BehaviorActionNode() : parent_node(0), target_object(0){};
     EnumBehaviorTreeStatus Invoke();
     BehaviorActionNode *GetParent();
-    void Dispose() override;
     void PushNode(std::shared_ptr<BehaviorActionNode> node);
     void PopNode();
 

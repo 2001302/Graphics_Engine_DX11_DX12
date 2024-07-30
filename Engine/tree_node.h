@@ -5,6 +5,8 @@
 #include "renderer_draw_node.h"
 #include "renderer_initialize_node.h"
 #include "renderer_update_node.h"
+#include "gui_node.h"
+#include "input_node.h"
 
 // clang-format off
 namespace engine {
@@ -14,7 +16,7 @@ class TreeNode {
         initialize_post_processing =
             std::make_shared<InitializePostProcessingNode>();
         draw_post_processing = std::make_shared<DrawPostProcessingNode>();
-        initialize_input = std::make_shared<InitializeInputNode>();
+        //initialize_input = std::make_shared<InitializeInputNode>();
         initialize_imgui = std::make_shared<InitializeImguiNode>();
         initialize_light = std::make_shared<InitializeLightNode>();
         initialize_camera = std::make_shared<InitializeCameraNode>();
@@ -25,7 +27,7 @@ class TreeNode {
         initialize_basic_models = std::make_shared<InitializeBasicModelsNode>();
         read_input = std::make_shared<ReadInputNode>();
         update_camera = std::make_shared<UpdateCameraNode>();
-        update_lights = std::make_shared<UpdateLightsNode>();
+        //update_lights = std::make_shared<UpdateLightsNode>();
         update_global_constant_buffers = std::make_shared<UpdateGlobalConstantBuffersNode>();
         update_mirror = std::make_shared<UpdateMirrorNode>();
         update_basic_objects = std::make_shared<UpdateBasicObjectsNode>();

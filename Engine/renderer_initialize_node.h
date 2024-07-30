@@ -183,11 +183,6 @@ class CreateGlobalConstantBufferNode : public common::BehaviorActionNode {
                 manager->shadow_global_consts_GPU[i]);
         }
 
-        // 후처리 효과용 ConstBuffer
-        GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                        manager->post_effects_consts_CPU,
-                                        manager->post_effects_consts_GPU);
-
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };

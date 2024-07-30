@@ -13,8 +13,6 @@ namespace engine {
 class TreeNode {
   public:
     TreeNode() {
-        initialize_post_processing = std::make_shared<InitializePostProcessingNode>();
-        draw_post_processing = std::make_shared<DrawPostProcessingNode>();
         //initialize_input = std::make_shared<InitializeInputNode>();
         initialize_imgui = std::make_shared<InitializeImguiNode>();
         initialize_light = std::make_shared<InitializeLightNode>();
@@ -43,11 +41,10 @@ class TreeNode {
         draw_mirror_surface = std::make_shared<DrawMirrorSurfaceNode>();
         resolve_buffer = std::make_shared<ResolveBufferNode>();
         draw_setting_ui = std::make_shared<DrawSettingUiNode>();
+        post_processing = std::make_shared<PostProcessingNode>();
         present = std::make_shared<PresentNode>();
     }
 
-    std::shared_ptr<InitializePostProcessingNode> InitializePostProcessing() {return initialize_post_processing;}
-    std::shared_ptr<DrawPostProcessingNode> DrawPostProcessing() {return draw_post_processing;}
     std::shared_ptr<InitializeInputNode> InitializeInput(){return initialize_input;}
     std::shared_ptr<InitializeImguiNode> InitializeImgui(){return initialize_imgui;}
     std::shared_ptr<InitializeLightNode> InitializeLight(){return initialize_light;}
@@ -76,6 +73,7 @@ class TreeNode {
     std::shared_ptr<DrawMirrorSurfaceNode> DrawMirrorSurface(){return draw_mirror_surface;}
     std::shared_ptr<ResolveBufferNode> ResolveBuffer(){return resolve_buffer;}
     std::shared_ptr<DrawSettingUiNode> DrawSettingUi(){return draw_setting_ui;}
+    std::shared_ptr<PostProcessingNode> PostProcessing() {return post_processing;}
     std::shared_ptr<PresentNode> Present(){return present;}
 
 
@@ -108,9 +106,8 @@ class TreeNode {
     std::shared_ptr<DrawMirrorSurfaceNode> draw_mirror_surface;
     std::shared_ptr<ResolveBufferNode> resolve_buffer;
     std::shared_ptr<DrawSettingUiNode> draw_setting_ui;
+    std::shared_ptr<PostProcessingNode> post_processing;
     std::shared_ptr<PresentNode> present;
-    std::shared_ptr<InitializePostProcessingNode> initialize_post_processing;
-    std::shared_ptr<DrawPostProcessingNode> draw_post_processing;
 };
 } // namespace engine
 

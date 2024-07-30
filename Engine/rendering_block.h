@@ -35,10 +35,6 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
     ComPtr<ID3D11ShaderResourceView> specular_SRV;
     ComPtr<ID3D11ShaderResourceView> brdf_SRV;
 
-    PostEffectsConstants post_effects_consts_CPU;
-    ComPtr<ID3D11Buffer> post_effects_consts_GPU;
-    PostProcess post_process;
-
     //mirror
     std::shared_ptr<Model> mirror;
     DirectX::SimpleMath::Plane mirror_plane;
@@ -70,47 +66,6 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
                                2);
             ImGui::SliderFloat("EnvLodBias", &global_consts_CPU.envLodBias,
                                0.0f, 10.0f);
-            ImGui::TreePop();
-        }
-
-        ImGui::SetNextItemOpen(true, ImGuiCond_Once);
-        if (ImGui::TreeNode("Post Effects")) {
-            int flag = 0;
-            flag +=
-                ImGui::RadioButton("Render", &post_effects_consts_CPU.mode, 1);
-            ImGui::SameLine();
-            flag +=
-                ImGui::RadioButton("Depth", &post_effects_consts_CPU.mode, 2);
-            flag += ImGui::SliderFloat(
-                "DepthScale", &post_effects_consts_CPU.depthScale, 0.0, 1.0);
-            flag += ImGui::SliderFloat(
-                "Fog", &post_effects_consts_CPU.fogStrength, 0.0, 10.0);
-
-            if (flag)
-                GraphicsUtil::UpdateBuffer(device, context,
-                                         post_effects_consts_CPU,
-                                         post_effects_consts_GPU);
-
-            ImGui::TreePop();
-        }
-
-        if (ImGui::TreeNode("Post Processing")) {
-            //int flag = 0;
-            //flag += ImGui::SliderFloat(
-            //    "Bloom Strength",
-            //    &post_process.m_combineFilter.m_constData.strength, 0.0f,
-            //    1.0f);
-            //flag += ImGui::SliderFloat(
-            //    "Exposure", &post_process.m_combineFilter.m_constData.option1,
-            //    0.0f, 10.0f);
-            //flag += ImGui::SliderFloat(
-            //    "Gamma", &post_process.m_combineFilter.m_constData.option2,
-            //    0.1f, 5.0f);
-
-            //if (flag) {
-            //    post_process.m_combineFilter.UpdateConstantBuffers(device,
-            //                                                        context);
-            //}
             ImGui::TreePop();
         }
 

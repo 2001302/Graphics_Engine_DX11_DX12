@@ -33,7 +33,7 @@ bool Application::OnStart() {
             ->Excute(InitializeMirrorGround())
             ->Excute(CreateGlobalConstantBuffer())
             ->Excute(InitializePostEffect())
-            ->Excute(InitializePostProcessing())
+            ->Excute(PostProcessing())
             ->Excute(InitializeBasicModels())
         ->Close()
     ->Run();
@@ -106,7 +106,7 @@ bool Application::OnRender() {
             ->Excute(DrawSkybox())
             ->Excute(DrawMirrorSurface())
             ->Excute(ResolveBuffer())
-            ->Excute(DrawPostProcessing())
+            ->Excute(PostProcessing())
             ->Excute(DrawSettingUi())
             ->Excute(Present())
         ->Close()

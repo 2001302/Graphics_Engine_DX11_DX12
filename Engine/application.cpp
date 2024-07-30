@@ -1,10 +1,5 @@
 #include "application.h"
 #include "behavior_tree_builder.h"
-#include "gui_node.h"
-#include "input_node.h"
-#include "renderer_draw_node.h"
-#include "renderer_initialize_node.h"
-#include "renderer_update_node.h"
 
 namespace engine {
 

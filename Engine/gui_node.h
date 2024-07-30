@@ -17,6 +17,26 @@ class InitializeImguiNode : public common::BehaviorActionNode {
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
+
+class DrawSettingUiNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
+
+        auto manager = dynamic_cast<RenderingBlock *>(
+            data_block[common::EnumDataBlockType::eRenderBlock]);
+        assert(manager != nullptr);
+
+        auto gui = dynamic_cast<common::SettingUi *>(
+            data_block[common::EnumDataBlockType::eGui]);
+        assert(gui != nullptr);
+
+        gui->PushNode(dynamic_cast<common::INode *>(manager));
+        gui->Frame(manager);
+        gui->ClearNode();
+
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
 } // namespace engine
 
 #endif

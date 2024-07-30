@@ -24,33 +24,13 @@ BehaviorTreeBuilder *BehaviorTreeBuilder::Selector() {
     return this;
 }
 
-BehaviorTreeBuilder *
-BehaviorTreeBuilder::Conditional(std::shared_ptr<ConditionalNode> node) {
-
-    current->PushNode(node);
-    if (node->CheckCondition() == EnumBehaviorTreeStatus::eSuccess) {
-        conditional_status = EnumConditionalStatus::ePass;
-    } else {
-        conditional_status = EnumConditionalStatus::eSkip;
-    }
-    current->PopNode();
-    return this;
-}
-
-BehaviorTreeBuilder *BehaviorTreeBuilder::End() {
-    if (conditional_status == EnumConditionalStatus::eSkip) {
-        current->PopNode();
-    }
-    return this;
-}
-
 BehaviorTreeBuilder *BehaviorTreeBuilder::Close() {
     current = current->GetParent();
     return this;
 }
 
 BehaviorTreeBuilder *
-BehaviorTreeBuilder::Parallel(std::map<int, common::INode *> target_objects) {
+BehaviorTreeBuilder::Loop(std::map<int, common::INode *> target_objects) {
     auto node = std::make_shared<ParallelNode>(target_objects);
     current->PushNode(node);
     current = node.get();

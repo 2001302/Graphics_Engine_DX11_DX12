@@ -24,15 +24,12 @@ class BehaviorTreeBuilder {
     BehaviorTreeBuilder *Excute(std::shared_ptr<BehaviorActionNode> node);
     BehaviorTreeBuilder *Sequence();
     BehaviorTreeBuilder *Selector();
+    BehaviorTreeBuilder *Loop(std::map<int, common::INode *> target_ids);
     BehaviorTreeBuilder *Close();
-    BehaviorTreeBuilder *Conditional(std::shared_ptr<ConditionalNode> node);
-    BehaviorTreeBuilder *End();
-    BehaviorTreeBuilder *Parallel(std::map<int, common::INode *> target_ids);
 
   private:
     std::shared_ptr<BehaviorActionNode> tree;
     BehaviorActionNode *current;
-    EnumConditionalStatus conditional_status = EnumConditionalStatus::ePass;
 };
 } // namespace common
 #endif

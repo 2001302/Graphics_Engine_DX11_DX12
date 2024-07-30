@@ -5,9 +5,9 @@
 #include "input.h"
 
 namespace engine {
-class InitializeInput : public BehaviorActionNode {
+class InitializeInputNode : public BehaviorActionNode {
   public:
-    InitializeInput(HINSTANCE hinstance) { this->hinstance = hinstance; };
+    InitializeInputNode(HINSTANCE hinstance) { this->hinstance = hinstance; };
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto input =
@@ -23,7 +23,7 @@ class InitializeInput : public BehaviorActionNode {
     HINSTANCE hinstance;
 };
 
-class ReadInput : public BehaviorActionNode {
+class ReadInputNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto input =

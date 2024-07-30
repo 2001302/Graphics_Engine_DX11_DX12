@@ -10,9 +10,10 @@
 #include "platform.h"
 #include "rendering_block.h"
 #include "setting_ui.h"
+#include "tree_node.h"
 
 namespace engine {
-class Application : public Platform {
+class Application : public Platform, TreeNode {
   public:
     Application();
 

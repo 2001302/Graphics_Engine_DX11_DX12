@@ -7,7 +7,7 @@
 #include "setting_ui.h"
 
 namespace engine {
-class SetSamplerStates : public BehaviorActionNode {
+class SetSamplerStatesNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -37,7 +37,7 @@ class SetSamplerStates : public BehaviorActionNode {
     }
 };
 
-class DrawOnlyDepth : public BehaviorActionNode {
+class DrawOnlyDepthNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -76,7 +76,7 @@ class DrawOnlyDepth : public BehaviorActionNode {
     }
 };
 
-class SetShadowViewport : public BehaviorActionNode {
+class SetShadowViewportNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         GraphicsManager::Instance().SetShadowViewport(); // shadow map
@@ -86,7 +86,7 @@ class SetShadowViewport : public BehaviorActionNode {
     }
 };
 
-class DrawShadowMap : public BehaviorActionNode {
+class DrawShadowMapNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -135,7 +135,7 @@ class DrawShadowMap : public BehaviorActionNode {
     }
 };
 
-class SetMainRenderTarget : public BehaviorActionNode {
+class SetMainRenderTargetNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -177,7 +177,7 @@ class SetMainRenderTarget : public BehaviorActionNode {
     }
 };
 
-class DrawObjects : public BehaviorActionNode {
+class DrawObjectsNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -216,7 +216,7 @@ class DrawObjects : public BehaviorActionNode {
     }
 };
 
-class DrawLightSpheres : public BehaviorActionNode {
+class DrawLightSpheresNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -238,7 +238,7 @@ class DrawLightSpheres : public BehaviorActionNode {
     }
 };
 
-class DrawRelatedWithCamera : public BehaviorActionNode {
+class DrawRelatedWithCameraNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -256,7 +256,7 @@ class DrawRelatedWithCamera : public BehaviorActionNode {
     }
 };
 
-class DrawSkybox : public BehaviorActionNode {
+class DrawSkyboxNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -276,7 +276,7 @@ class DrawSkybox : public BehaviorActionNode {
     }
 };
 
-class DrawMirrorSurface : public BehaviorActionNode {
+class DrawMirrorSurfaceNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -340,7 +340,7 @@ class DrawMirrorSurface : public BehaviorActionNode {
     }
 };
 
-class ResolveBuffer : public BehaviorActionNode {
+class ResolveBufferNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -356,53 +356,7 @@ class ResolveBuffer : public BehaviorActionNode {
     }
 };
 
-class DrawPostProcessing : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
-
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
-        assert(manager != nullptr);
-
-        //// PostEffects
-        // GraphicsManager::Instance().SetPipelineState(Graphics::postEffectsPSO);
-
-        // std::vector<ID3D11ShaderResourceView *> postEffectsSRVs = {
-        //     GraphicsManager::Instance().resolved_SRV.Get(), nullptr};
-
-        // GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
-
-        //// post effect textures: start from register(20)
-        // GraphicsManager::Instance().device_context->PSSetShaderResources(
-        //     20, UINT(postEffectsSRVs.size()), postEffectsSRVs.data());
-        // //GraphicsManager::Instance().device_context->OMSetRenderTargets(
-        // //    1, GraphicsManager::Instance().postEffectsRTV.GetAddressOf(),
-        // //    NULL);
-        // GraphicsManager::Instance().device_context->OMSetRenderTargets(
-        //     1, GraphicsManager::Instance().resolved_RTV.GetAddressOf(),
-        //     NULL);
-
-        // GraphicsManager::Instance().device_context->PSSetConstantBuffers(
-        //     3, 1, manager->post_effects_consts_GPU.GetAddressOf());
-
-        // if (true) {
-        //     Renderer *renderer = nullptr;
-        //     manager->screen_square->GetComponent(EnumComponentType::eRenderer,
-        //                                           (Component **)(&renderer));
-        //     renderer->Render(GraphicsManager::Instance().device_context);
-        // }
-
-        GraphicsManager::Instance().SetPipelineState(
-            Graphics::postProcessingPSO);
-        manager->post_process.Render(GraphicsManager::Instance().device,
-                                     GraphicsManager::Instance().device_context,
-                                     &manager->global_consts_CPU,
-                                     manager->global_consts_GPU);
-
-        return EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-
-class DrawSettingUi : public BehaviorActionNode {
+class DrawSettingUiNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -421,7 +375,7 @@ class DrawSettingUi : public BehaviorActionNode {
     }
 };
 
-class Present : public BehaviorActionNode {
+class PresentNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         // Present the rendered scene to the screen.

@@ -169,6 +169,12 @@
     <ClInclude Include="node.h">
       <Filter>Common\Structure</Filter>
     </ClInclude>
+    <ClInclude Include="tree_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="post_process_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

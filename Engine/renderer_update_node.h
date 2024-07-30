@@ -7,7 +7,7 @@
 
 namespace engine {
 
-class UpdateCamera : public BehaviorActionNode {
+class UpdateCameraNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -20,9 +20,9 @@ class UpdateCamera : public BehaviorActionNode {
     }
 };
 
-class UpdateLights : public BehaviorActionNode {
+class UpdateLightsNode : public BehaviorActionNode {
   public:
-    UpdateLights(float dt) { this->dt = dt; }
+    UpdateLightsNode(float dt) { this->dt = dt; }
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -117,7 +117,7 @@ class UpdateLights : public BehaviorActionNode {
     float dt;
 };
 
-class UpdateGlobalConstantBuffers : public BehaviorActionNode {
+class UpdateGlobalConstantBuffersNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -166,7 +166,7 @@ class UpdateGlobalConstantBuffers : public BehaviorActionNode {
     }
 };
 
-class UpdateMirror : public BehaviorActionNode {
+class UpdateMirrorNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -184,7 +184,7 @@ class UpdateMirror : public BehaviorActionNode {
     }
 };
 
-class ApplyMouseMovement : public BehaviorActionNode {
+class ApplyMouseMovementNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -221,7 +221,7 @@ class ApplyMouseMovement : public BehaviorActionNode {
     }
 };
 
-class UpdateBasicObjects : public BehaviorActionNode {
+class UpdateBasicObjectsNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -240,7 +240,7 @@ class UpdateBasicObjects : public BehaviorActionNode {
     }
 };
 
-class UpdateLightSpheres : public BehaviorActionNode {
+class UpdateLightSpheresNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(

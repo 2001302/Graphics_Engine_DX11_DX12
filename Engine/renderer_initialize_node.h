@@ -7,7 +7,7 @@
 #include "rendering_block.h"
 
 namespace engine {
-class InitializeLight : public BehaviorActionNode {
+class InitializeLightNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -69,7 +69,7 @@ class InitializeLight : public BehaviorActionNode {
     }
 };
 
-class InitializeCamera : public BehaviorActionNode {
+class InitializeCameraNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -84,7 +84,7 @@ class InitializeCamera : public BehaviorActionNode {
     }
 };
 
-class InitializeSkybox : public BehaviorActionNode {
+class InitializeSkyboxNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -123,7 +123,7 @@ class InitializeSkybox : public BehaviorActionNode {
     }
 };
 
-class InitializeMirrorGround : public BehaviorActionNode {
+class InitializeMirrorGroundNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -160,7 +160,7 @@ class InitializeMirrorGround : public BehaviorActionNode {
     }
 };
 
-class CreateGlobalConstantBuffer : public BehaviorActionNode {
+class CreateGlobalConstantBufferNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -192,7 +192,7 @@ class CreateGlobalConstantBuffer : public BehaviorActionNode {
     }
 };
 
-class InitializePostEffect : public BehaviorActionNode {
+class InitializePostEffectNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
@@ -213,21 +213,7 @@ class InitializePostEffect : public BehaviorActionNode {
     }
 };
 
-class InitializePostProcessing : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
-
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eManager]);
-        assert(manager != nullptr);
-
-        manager->post_process.Initialize(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context);
-
-        return EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-class InitializeBasicModels : public BehaviorActionNode {
+class InitializeBasicModelsNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(

@@ -5,7 +5,7 @@
 #include "setting_ui.h"
 
 namespace engine {
-class InitializeImgui : public BehaviorActionNode {
+class InitializeImguiNode : public BehaviorActionNode {
     EnumBehaviorTreeStatus OnInvoke() override {
 
         auto gui = dynamic_cast<common::SettingUi *>(

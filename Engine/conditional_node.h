@@ -3,7 +3,7 @@
 
 #include "action_node.h"
 
-namespace engine {
+namespace common {
 class ConditionalNode : public BehaviorActionNode {
   public:
     virtual EnumBehaviorTreeStatus CheckCondition();
@@ -13,5 +13,5 @@ class ConditionalNode : public BehaviorActionNode {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 };
-} // namespace dx11
+} // namespace common
 #endif

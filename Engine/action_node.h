@@ -7,7 +7,7 @@
 #include <map>
 #include <vector>
 
-namespace engine {
+namespace common {
 enum EnumDataBlockType {
     eRenderBlock = 0,
     eGui = 1,
@@ -45,5 +45,5 @@ class BehaviorActionNode : public common::INode {
     std::map<EnumDataBlockType, common::IDataBlock *> data_block;
     common::INode *target_object;
 };
-} // namespace engine
+} // namespace common
 #endif

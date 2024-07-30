@@ -21,14 +21,14 @@ bool Application::OnStart() {
 
     input->Initialize(hinstance);
 
-    std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {EnumDataBlockType::eRenderBlock, render_block.get()},
-        {EnumDataBlockType::eGui, gui.get()},
-        {EnumDataBlockType::eInput, input.get()},
+    std::map<common::EnumDataBlockType, common::IDataBlock *> dataBlock = {
+        {common::EnumDataBlockType::eRenderBlock, render_block.get()},
+        {common::EnumDataBlockType::eGui, gui.get()},
+        {common::EnumDataBlockType::eInput, input.get()},
     };
 
     // clang-format off
-    auto tree = std::make_shared<BehaviorTreeBuilder>();
+    auto tree = std::make_shared<common::BehaviorTreeBuilder>();
     tree->Build(dataBlock)
         ->Sequence()
             ->Excute(InitializeImgui())
@@ -61,14 +61,14 @@ bool Application::OnUpdate(float dt) {
 
     render_block->dt = dt;
 
-    std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {EnumDataBlockType::eRenderBlock, render_block.get()},
-        {EnumDataBlockType::eGui, gui.get()},
-        {EnumDataBlockType::eInput, input.get()},
+    std::map<common::EnumDataBlockType, common::IDataBlock *> dataBlock = {
+        {common::EnumDataBlockType::eRenderBlock, render_block.get()},
+        {common::EnumDataBlockType::eGui, gui.get()},
+        {common::EnumDataBlockType::eInput, input.get()},
     };
 
     // clang-format off
-    auto tree = std::make_shared<BehaviorTreeBuilder>();
+    auto tree = std::make_shared<common::BehaviorTreeBuilder>();
     tree->Build(dataBlock)
         ->Sequence()
             ->Excute(ReadInput())
@@ -90,14 +90,14 @@ bool Application::OnRender() {
 
     input->Frame();
 
-    std::map<EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {EnumDataBlockType::eRenderBlock, render_block.get()},
-        {EnumDataBlockType::eGui, gui.get()},
-        {EnumDataBlockType::eInput, input.get()},
+    std::map<common::EnumDataBlockType, common::IDataBlock *> dataBlock = {
+        {common::EnumDataBlockType::eRenderBlock, render_block.get()},
+        {common::EnumDataBlockType::eGui, gui.get()},
+        {common::EnumDataBlockType::eInput, input.get()},
     };
 
     // clang-format off
-    auto tree = std::make_shared<BehaviorTreeBuilder>();
+    auto tree = std::make_shared<common::BehaviorTreeBuilder>();
     tree->Build(dataBlock)
         ->Sequence()
             ->Excute(SetSamplerStates())

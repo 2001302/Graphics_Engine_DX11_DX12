@@ -1,9 +1,9 @@
 #include "conditional_node.h"
 
-namespace engine {
+namespace common {
 
 // check condition
 EnumBehaviorTreeStatus ConditionalNode::CheckCondition() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
-} // namespace engine
+} // namespace common

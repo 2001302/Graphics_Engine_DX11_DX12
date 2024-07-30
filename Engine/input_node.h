@@ -5,34 +5,34 @@
 #include "input.h"
 
 namespace engine {
-class InitializeInputNode : public BehaviorActionNode {
+class InitializeInputNode : public common::BehaviorActionNode {
   public:
     InitializeInputNode(HINSTANCE hinstance) { this->hinstance = hinstance; };
-    EnumBehaviorTreeStatus OnInvoke() override {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto input =
-            dynamic_cast<Input *>(data_block[EnumDataBlockType::eInput]);
+        auto input = dynamic_cast<Input *>(
+            data_block[common::EnumDataBlockType::eInput]);
         assert(input != nullptr);
 
         input->Initialize(hinstance);
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 
   private:
     HINSTANCE hinstance;
 };
 
-class ReadInputNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class ReadInputNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto input =
-            dynamic_cast<Input *>(data_block[EnumDataBlockType::eInput]);
+        auto input = dynamic_cast<Input *>(
+            data_block[common::EnumDataBlockType::eInput]);
         assert(input != nullptr);
 
         input->Frame();
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 

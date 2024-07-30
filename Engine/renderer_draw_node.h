@@ -7,11 +7,11 @@
 #include "setting_ui.h"
 
 namespace engine {
-class SetSamplerStatesNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class SetSamplerStatesNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsManager::Instance().SetMainViewport();
@@ -33,15 +33,15 @@ class SetSamplerStatesNode : public BehaviorActionNode {
         GraphicsManager::Instance().device_context->PSSetShaderResources(
             10, UINT(commonSRVs.size()), commonSRVs.data());
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class DrawOnlyDepthNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class DrawOnlyDepthNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         // Depth Only Pass (no RTS)
@@ -72,25 +72,25 @@ class DrawOnlyDepthNode : public BehaviorActionNode {
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class SetShadowViewportNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class SetShadowViewportNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         GraphicsManager::Instance().SetShadowViewport(); // shadow map
                                                          // resolution
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class DrawShadowMapNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class DrawShadowMapNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         // make shadow map
@@ -131,15 +131,15 @@ class DrawShadowMapNode : public BehaviorActionNode {
             }
         }
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class SetMainRenderTargetNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class SetMainRenderTargetNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         // rendering resolution
@@ -173,15 +173,15 @@ class SetMainRenderTargetNode : public BehaviorActionNode {
             GraphicsManager::Instance().m_depthStencilView.Get(),
             D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class DrawObjectsNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class DrawObjectsNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsManager::Instance().SetPipelineState(
@@ -212,15 +212,15 @@ class DrawObjectsNode : public BehaviorActionNode {
                     GraphicsManager::Instance().device_context);
         }
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class DrawLightSpheresNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class DrawLightSpheresNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsManager::Instance().SetPipelineState(
@@ -229,20 +229,20 @@ class DrawLightSpheresNode : public BehaviorActionNode {
         GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
 
         for (auto &i : manager->light_spheres) {
-            auto renderer = (Renderer *)i->GetComponent(
-                EnumComponentType::eRenderer);
+            auto renderer =
+                (Renderer *)i->GetComponent(EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class DrawRelatedWithCameraNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class DrawRelatedWithCameraNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsManager::Instance().SetPipelineState(
@@ -252,15 +252,15 @@ class DrawRelatedWithCameraNode : public BehaviorActionNode {
 
         manager->camera->Draw();
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class DrawSkyboxNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class DrawSkyboxNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         if (true) {
@@ -272,15 +272,15 @@ class DrawSkyboxNode : public BehaviorActionNode {
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class DrawMirrorSurfaceNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class DrawMirrorSurfaceNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         // on mirror
@@ -336,15 +336,15 @@ class DrawMirrorSurfaceNode : public BehaviorActionNode {
             }
 
         } // end of if (m_mirrorAlpha < 1.0f)
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class ResolveBufferNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class ResolveBufferNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsManager::Instance().device_context->ResolveSubresource(
@@ -352,31 +352,31 @@ class ResolveBufferNode : public BehaviorActionNode {
             GraphicsManager::Instance().float_buffer.Get(), 0,
             DXGI_FORMAT_R16G16B16A16_FLOAT);
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class DrawSettingUiNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class DrawSettingUiNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         auto gui = dynamic_cast<common::SettingUi *>(
-            data_block[EnumDataBlockType::eGui]);
+            data_block[common::EnumDataBlockType::eGui]);
         assert(gui != nullptr);
 
         gui->PushNode(dynamic_cast<common::INode *>(manager));
         gui->Frame(manager);
         gui->ClearNode();
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class PresentNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class PresentNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         // Present the rendered scene to the screen.
         if (common::Env::Instance().vsync_enabled) {
@@ -385,7 +385,7 @@ class PresentNode : public BehaviorActionNode {
             GraphicsManager::Instance().swap_chain->Present(0, 0);
         }
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 

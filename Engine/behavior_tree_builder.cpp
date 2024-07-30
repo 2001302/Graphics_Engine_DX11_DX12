@@ -1,6 +1,6 @@
 #include "behavior_tree_builder.h"
 
-namespace engine {
+namespace common {
 
 BehaviorTreeBuilder *
 BehaviorTreeBuilder::Excute(std::shared_ptr<BehaviorActionNode> node) {
@@ -57,4 +57,4 @@ BehaviorTreeBuilder::Parallel(std::map<int, common::INode *> target_objects) {
 
     return this;
 }
-} // namespace engine
+} // namespace common

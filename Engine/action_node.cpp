@@ -1,6 +1,6 @@
 #include "action_node.h"
 
-namespace engine {
+namespace common {
 
 EnumBehaviorTreeStatus BehaviorActionNode::Invoke() {
     if (parent_node)
@@ -22,4 +22,4 @@ void BehaviorActionNode::PushNode(std::shared_ptr<BehaviorActionNode> node) {
 
 void BehaviorActionNode::PopNode() { child_nodes.pop_back(); }
 
-} // namespace engine
+} // namespace common

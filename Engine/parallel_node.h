@@ -3,7 +3,7 @@
 
 #include "action_node.h"
 
-namespace engine {
+namespace common {
 
 class ParallelNode : public BehaviorActionNode {
   public:
@@ -13,8 +13,8 @@ class ParallelNode : public BehaviorActionNode {
 
   protected:
     EnumBehaviorTreeStatus OnInvoke() override;
-    std::map<int, common::INode*> target_objects;
+    std::map<int, common::INode *> target_objects;
 };
 
-} // namespace dx11
+} // namespace common
 #endif

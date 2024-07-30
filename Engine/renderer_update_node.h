@@ -7,25 +7,25 @@
 
 namespace engine {
 
-class UpdateCameraNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class UpdateCameraNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         manager->camera->Update();
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class UpdateLightsNode : public BehaviorActionNode {
+class UpdateLightsNode : public common::BehaviorActionNode {
   public:
-    EnumBehaviorTreeStatus OnInvoke() override {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         float dt = manager->dt;
@@ -109,15 +109,15 @@ class UpdateLightsNode : public BehaviorActionNode {
                 Matrix::CreateTranslation(
                     manager->global_consts_CPU.lights[i].position));
         }
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class UpdateGlobalConstantBuffersNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class UpdateGlobalConstantBuffersNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         const Vector3 eyeWorld = manager->camera->GetPosition();
@@ -158,15 +158,15 @@ class UpdateGlobalConstantBuffersNode : public BehaviorActionNode {
                                    manager->reflect_global_consts_CPU,
                                    manager->reflect_global_consts_GPU);
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class UpdateMirrorNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class UpdateMirrorNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         auto renderer = (Renderer *)manager->mirror->GetComponent(
@@ -176,15 +176,15 @@ class UpdateMirrorNode : public BehaviorActionNode {
             GraphicsManager::Instance().device,
             GraphicsManager::Instance().device_context);
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class ApplyMouseMovementNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class ApplyMouseMovementNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         //// 마우스 이동/회전 반영
@@ -213,15 +213,15 @@ class ApplyMouseMovementNode : public BehaviorActionNode {
         //} else {
         //    m_cursorSphere->m_isVisible = false;
         //}
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class UpdateBasicObjectsNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class UpdateBasicObjectsNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         for (auto &i : manager->models) {
@@ -232,25 +232,25 @@ class UpdateBasicObjectsNode : public BehaviorActionNode {
                 GraphicsManager::Instance().device_context);
         }
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class UpdateLightSpheresNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class UpdateLightSpheresNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         for (auto &i : manager->light_spheres) {
-            auto renderer = (Renderer *)i->GetComponent(
-                EnumComponentType::eRenderer);
+            auto renderer =
+                (Renderer *)i->GetComponent(EnumComponentType::eRenderer);
             renderer->UpdateConstantBuffers(
                 GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context);
         }
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 } // namespace engine

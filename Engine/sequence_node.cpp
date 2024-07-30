@@ -1,6 +1,6 @@
 #include "sequence_node.H"
 
-namespace engine {
+namespace common {
 
 EnumBehaviorTreeStatus SequenceNode::OnInvoke() {
     for (auto &child : child_nodes) {
@@ -9,4 +9,4 @@ EnumBehaviorTreeStatus SequenceNode::OnInvoke() {
     }
     return EnumBehaviorTreeStatus::eSuccess;
 }
-} // namespace engine
+} // namespace common

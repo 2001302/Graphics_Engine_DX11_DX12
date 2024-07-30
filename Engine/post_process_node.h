@@ -6,26 +6,26 @@
 #include "setting_ui.h"
 
 namespace engine {
-class InitializePostProcessingNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class InitializePostProcessingNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         manager->post_process.Initialize(
             GraphicsManager::Instance().device,
             GraphicsManager::Instance().device_context);
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class DrawPostProcessingNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class DrawPostProcessingNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         //// PostEffects
@@ -63,7 +63,7 @@ class DrawPostProcessingNode : public BehaviorActionNode {
                                      &manager->global_consts_CPU,
                                      manager->global_consts_GPU);
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 

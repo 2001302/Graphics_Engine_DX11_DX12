@@ -7,11 +7,11 @@
 #include "rendering_block.h"
 
 namespace engine {
-class InitializeLightNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class InitializeLightNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         // 조명 설정
@@ -65,30 +65,30 @@ class InitializeLightNode : public BehaviorActionNode {
             }
         }
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class InitializeCameraNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class InitializeCameraNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         manager->camera = std::make_unique<Camera>();
         manager->camera->Initialize();
         manager->camera->Update();
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class InitializeSkyboxNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class InitializeSkyboxNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         auto mesh_data = GeometryGenerator::MakeBox(40.0f);
@@ -119,15 +119,15 @@ class InitializeSkyboxNode : public BehaviorActionNode {
         GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
                                        brdfFilename, true, manager->brdf_SRV);
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class InitializeMirrorGroundNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class InitializeMirrorGroundNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         auto mesh = GeometryGenerator::MakeSquare(5.0);
@@ -156,15 +156,15 @@ class InitializeMirrorGroundNode : public BehaviorActionNode {
 
         // m_basicList.push_back(m_ground); // 거울은 리스트에 등록 X
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class CreateGlobalConstantBufferNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class CreateGlobalConstantBufferNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
@@ -188,15 +188,15 @@ class CreateGlobalConstantBufferNode : public BehaviorActionNode {
                                         manager->post_effects_consts_CPU,
                                         manager->post_effects_consts_GPU);
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class InitializePostEffectNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class InitializePostEffectNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
         MeshData meshData = GeometryGenerator::MakeSquare();
@@ -209,15 +209,15 @@ class InitializePostEffectNode : public BehaviorActionNode {
         manager->screen_square->AddComponent(EnumComponentType::eRenderer,
                                              renderer);
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class InitializeBasicModelsNode : public BehaviorActionNode {
-    EnumBehaviorTreeStatus OnInvoke() override {
+class InitializeBasicModelsNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[EnumDataBlockType::eRenderBlock]);
+            data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
         // 추가 물체1
         {
@@ -269,7 +269,7 @@ class InitializeBasicModelsNode : public BehaviorActionNode {
             manager->models.insert({obj->GetEntityId(), obj});
         }
 
-        return EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 } // namespace engine

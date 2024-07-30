@@ -7,7 +7,7 @@
 #include "selector_node.h"
 #include "sequence_node.h"
 
-namespace engine {
+namespace common {
 
 class BehaviorTreeBuilder {
   public:
@@ -34,5 +34,5 @@ class BehaviorTreeBuilder {
     BehaviorActionNode *current;
     EnumConditionalStatus conditional_status = EnumConditionalStatus::ePass;
 };
-} // namespace engine
+} // namespace common
 #endif

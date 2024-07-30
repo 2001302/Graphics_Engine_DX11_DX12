@@ -175,6 +175,9 @@
     <ClInclude Include="tone_mapping.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
+    <ClInclude Include="image_filter.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -284,6 +287,9 @@
       <Filter>Common\BehaviorTree\TreeBase</Filter>
     </ClCompile>
     <ClCompile Include="tone_mapping.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="image_filter.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
   </ItemGroup>

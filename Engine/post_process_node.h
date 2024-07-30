@@ -2,6 +2,7 @@
 #define _POSTPROCESSNODE
 
 #include "behavior_tree_builder.h"
+#include "image_filter.h"
 #include "rendering_block.h"
 #include "setting_ui.h"
 #include "tone_mapping.h"
@@ -17,31 +18,35 @@ class PostProcessingNode : public common::BehaviorActionNode {
             data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
-        if (!is_initialized) {
-
+        switch (manager->stage_type) {
+        case EnumStageType::eInitialize: {
             tone_mapping.Initialize(GraphicsManager::Instance().device,
                                     GraphicsManager::Instance().device_context);
-            GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                            post_effects_consts_CPU,
-                                            post_effects_consts_GPU);
 
-            is_initialized = true;
-
-        } else {
-
+            //GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
+            //                                post_effects_consts_CPU,
+            //                                post_effects_consts_GPU);
+            break;
+        }
+        case EnumStageType::eRender: {
             GraphicsManager::Instance().SetPipelineState(
                 Graphics::postProcessingPSO);
             tone_mapping.Render(GraphicsManager::Instance().device,
                                 GraphicsManager::Instance().device_context);
+            break;
         }
-
+        default:
+            break;
+        }
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
 
-    bool is_initialized = false;
-    PostEffectsConstants post_effects_consts_CPU;
-    ComPtr<ID3D11Buffer> post_effects_consts_GPU;
+    //PostEffectsConstants post_effects_consts_CPU;
+    //ComPtr<ID3D11Buffer> post_effects_consts_GPU;
 
+    const int bloom_level = 4;
+    std::vector<ImageFilter> bloom_up_filters;
+    std::vector<ImageFilter> bloom_down_filters;
     ToneMapping tone_mapping;
 };
 

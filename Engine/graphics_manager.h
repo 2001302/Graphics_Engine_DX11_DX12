@@ -23,6 +23,7 @@ class GraphicsManager {
     void SetShadowViewport();
     bool CreateBuffer();
     void SetPipelineState(const GraphicsPSO &pso);
+    void SetPipelineState(const ComputePSO &pso);
     void SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU);
 
     bool useMSAA = true;

@@ -124,20 +124,19 @@ void GraphicsManager::CreateDepthBuffer() {
 
     ComPtr<ID3D11Texture2D> depthStencilBuffer;
 
-    ThrowIfFailed(device->CreateTexture2D(&desc, 0,
-                                          depthStencilBuffer.GetAddressOf()));
+    ThrowIfFailed(
+        device->CreateTexture2D(&desc, 0, depthStencilBuffer.GetAddressOf()));
 
     ThrowIfFailed(device->CreateDepthStencilView(
         depthStencilBuffer.Get(), 0, m_depthStencilView.GetAddressOf()));
 
-    
     // Depth 전용
     desc.Format = DXGI_FORMAT_R32_TYPELESS;
     desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
     desc.SampleDesc.Count = 1;
     desc.SampleDesc.Quality = 0;
-    ThrowIfFailed(device->CreateTexture2D(&desc, NULL,
-                                            m_depthOnlyBuffer.GetAddressOf()));
+    ThrowIfFailed(
+        device->CreateTexture2D(&desc, NULL, m_depthOnlyBuffer.GetAddressOf()));
 
     // 그림자 Buffers (Depth 전용)
     desc.Width = m_shadowWidth;
@@ -158,7 +157,7 @@ void GraphicsManager::CreateDepthBuffer() {
     for (int i = 0; i < MAX_LIGHTS; i++) {
         ThrowIfFailed(
             device->CreateDepthStencilView(m_shadowBuffers[i].Get(), &dsvDesc,
-                                             m_shadowDSVs[i].GetAddressOf()));
+                                           m_shadowDSVs[i].GetAddressOf()));
     }
 
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
@@ -171,9 +170,9 @@ void GraphicsManager::CreateDepthBuffer() {
 
     // 그림자 SRVs
     for (int i = 0; i < MAX_LIGHTS; i++) {
-        ThrowIfFailed(device->CreateShaderResourceView(
-            m_shadowBuffers[i].Get(), &srvDesc,
-            m_shadowSRVs[i].GetAddressOf()));
+        ThrowIfFailed(
+            device->CreateShaderResourceView(m_shadowBuffers[i].Get(), &srvDesc,
+                                             m_shadowSRVs[i].GetAddressOf()));
     }
 }
 
@@ -220,6 +219,15 @@ void GraphicsManager::SetPipelineState(const GraphicsPSO &pso) {
     device_context->OMSetDepthStencilState(pso.m_depthStencilState.Get(),
                                            pso.m_stencilRef);
     device_context->IASetPrimitiveTopology(pso.m_primitiveTopology);
+}
+
+void GraphicsManager::SetPipelineState(const ComputePSO &pso) {
+    device_context->VSSetShader(NULL, 0, 0);
+    device_context->PSSetShader(NULL, 0, 0);
+    device_context->HSSetShader(NULL, 0, 0);
+    device_context->DSSetShader(NULL, 0, 0);
+    device_context->GSSetShader(NULL, 0, 0);
+    device_context->CSSetShader(pso.m_computeShader.Get(), 0, 0);
 }
 
 void GraphicsManager::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {

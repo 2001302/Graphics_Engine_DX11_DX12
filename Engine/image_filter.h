@@ -5,28 +5,18 @@
 #include "compute_pso.h"
 
 namespace engine {
- void SetPipelineState(ComPtr<ID3D11DeviceContext> &context,
-                       const ComputePSO &pso) {
-     context->VSSetShader(NULL, 0, 0);
-     context->PSSetShader(NULL, 0, 0);
-     context->HSSetShader(NULL, 0, 0);
-     context->DSSetShader(NULL, 0, 0);
-     context->GSSetShader(NULL, 0, 0);
-     context->CSSetShader(pso.m_computeShader.Get(), 0, 0);
- }
+ //void ComputeShaderBarrier(ComPtr<ID3D11DeviceContext> &context) {
 
- void ComputeShaderBarrier(ComPtr<ID3D11DeviceContext> &context) {
-
-     // 예제들에서 최대 사용하는 SRV, UAV 갯수가 6개
-     ID3D11ShaderResourceView *nullSRV[6] = {
-         0,
-     };
-     context->CSSetShaderResources(0, 6, nullSRV);
-     ID3D11UnorderedAccessView *nullUAV[6] = {
-         0,
-     };
-     context->CSSetUnorderedAccessViews(0, 6, nullUAV, NULL);
- }
+ //    // 예제들에서 최대 사용하는 SRV, UAV 갯수가 6개
+ //    ID3D11ShaderResourceView *nullSRV[6] = {
+ //        0,
+ //    };
+ //    context->CSSetShaderResources(0, 6, nullSRV);
+ //    ID3D11UnorderedAccessView *nullUAV[6] = {
+ //        0,
+ //    };
+ //    context->CSSetUnorderedAccessViews(0, 6, nullUAV, NULL);
+ //}
 
 class ImageFilter : public Component {
   public:

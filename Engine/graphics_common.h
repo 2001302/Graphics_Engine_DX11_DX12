@@ -1,6 +1,7 @@
 #ifndef _GRAPHICSCOMMON
 #define _GRAPHICSCOMMON
 
+#include "compute_pso.h"
 #include "graphics_pso.h"
 #include "graphics_util.h"
 

@@ -2,16 +2,25 @@
 #define _PIPELINEMANAGER
 
 #include "camera.h"
+#include "constant_buffer.h"
 #include "dataBlock.h"
 #include "graphics_manager.h"
 #include "model.h"
-#include "constant_buffer.h"
 
 namespace engine {
+enum EnumStageType {
+    eInitialize = 0,
+    eUpdate = 1,
+    eRender = 2,
+};
 
-class RenderingBlock : public common::IDataBlock, public common::INode {
+class RenderingBlock : public common::IDataBlock,
+    public common::INode {
   public:
     float dt;
+    bool draw_wire = false;
+    bool light_rotate = false;
+    EnumStageType stage_type;
 
     std::unique_ptr<Camera> camera;
     std::shared_ptr<Model> skybox;
@@ -20,7 +29,7 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
     std::shared_ptr<Model> ground;
     std::map<int /*id*/, std::shared_ptr<Model>> models;
 
-    //shared resource
+    // shared resource
     GlobalConstants global_consts_CPU;
     GlobalConstants reflect_global_consts_CPU;
     GlobalConstants shadow_global_consts_CPU[MAX_LIGHTS];
@@ -28,21 +37,18 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
     ComPtr<ID3D11Buffer> reflect_global_consts_GPU;
     ComPtr<ID3D11Buffer> shadow_global_consts_GPU[MAX_LIGHTS];
 
-    //shared texture
+    // shared texture
     ComPtr<ID3D11ShaderResourceView> env_SRV;
     ComPtr<ID3D11ShaderResourceView> irradiance_SRV;
     ComPtr<ID3D11ShaderResourceView> specular_SRV;
     ComPtr<ID3D11ShaderResourceView> brdf_SRV;
 
-    //mirror
+    // mirror
     std::shared_ptr<Model> mirror;
     DirectX::SimpleMath::Plane mirror_plane;
     float mirror_alpha = 1.0f; // opacity
 
-    bool draw_wire = false;
-    bool light_rotate = false;
-    
-    void OnShow() override{
+    void OnShow() override {
 
         auto device = GraphicsManager::Instance().device;
         auto context = GraphicsManager::Instance().device_context;
@@ -79,12 +85,12 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
             else
                 Graphics::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
 
-            //ImGui::SliderFloat("Metallic",
-            //                   &m_mirror->m_materialConstsCPU.metallicFactor,
-            //                   0.0f, 1.0f);
-            //ImGui::SliderFloat("Roughness",
-            //                   &m_mirror->m_materialConstsCPU.roughnessFactor,
-            //                   0.0f, 1.0f);
+            // ImGui::SliderFloat("Metallic",
+            //                    &m_mirror->m_materialConstsCPU.metallicFactor,
+            //                    0.0f, 1.0f);
+            // ImGui::SliderFloat("Roughness",
+            //                    &m_mirror->m_materialConstsCPU.roughnessFactor,
+            //                    0.0f, 1.0f);
 
             ImGui::TreePop();
         }
@@ -110,47 +116,47 @@ class RenderingBlock : public common::IDataBlock, public common::INode {
             ImGui::SliderFloat("LodBias", &global_consts_CPU.lodBias, 0.0f,
                                10.0f);
 
-            //int flag = 0;
+            // int flag = 0;
 
-            //flag += ImGui::SliderFloat(
-            //    "Metallic", &m_mainObj->m_materialConstsCPU.metallicFactor,
-            //    0.0f, 1.0f);
-            //flag += ImGui::SliderFloat(
-            //    "Roughness", &m_mainObj->m_materialConstsCPU.roughnessFactor,
-            //    0.0f, 1.0f);
-            //flag += ImGui::CheckboxFlags(
-            //    "AlbedoTexture", &m_mainObj->m_materialConstsCPU.useAlbedoMap,
-            //    1);
-            //flag += ImGui::CheckboxFlags(
-            //    "EmissiveTexture",
-            //    &m_mainObj->m_materialConstsCPU.useEmissiveMap, 1);
-            //flag += ImGui::CheckboxFlags(
-            //    "Use NormalMapping",
-            //    &m_mainObj->m_materialConstsCPU.useNormalMap, 1);
-            //flag += ImGui::CheckboxFlags(
-            //    "Use AO", &m_mainObj->m_materialConstsCPU.useAOMap, 1);
-            //flag += ImGui::CheckboxFlags(
-            //    "Use HeightMapping", &m_mainObj->m_meshConstsCPU.useHeightMap,
-            //    1);
-            //flag += ImGui::SliderFloat("HeightScale",
-            //                           &m_mainObj->m_meshConstsCPU.heightScale,
-            //                           0.0f, 0.1f);
-            //flag += ImGui::CheckboxFlags(
-            //    "Use MetallicMap",
-            //    &m_mainObj->m_materialConstsCPU.useMetallicMap, 1);
-            //flag += ImGui::CheckboxFlags(
-            //    "Use RoughnessMap",
-            //    &m_mainObj->m_materialConstsCPU.useRoughnessMap, 1);
+            // flag += ImGui::SliderFloat(
+            //     "Metallic", &m_mainObj->m_materialConstsCPU.metallicFactor,
+            //     0.0f, 1.0f);
+            // flag += ImGui::SliderFloat(
+            //     "Roughness", &m_mainObj->m_materialConstsCPU.roughnessFactor,
+            //     0.0f, 1.0f);
+            // flag += ImGui::CheckboxFlags(
+            //     "AlbedoTexture",
+            //     &m_mainObj->m_materialConstsCPU.useAlbedoMap, 1);
+            // flag += ImGui::CheckboxFlags(
+            //     "EmissiveTexture",
+            //     &m_mainObj->m_materialConstsCPU.useEmissiveMap, 1);
+            // flag += ImGui::CheckboxFlags(
+            //     "Use NormalMapping",
+            //     &m_mainObj->m_materialConstsCPU.useNormalMap, 1);
+            // flag += ImGui::CheckboxFlags(
+            //     "Use AO", &m_mainObj->m_materialConstsCPU.useAOMap, 1);
+            // flag += ImGui::CheckboxFlags(
+            //     "Use HeightMapping",
+            //     &m_mainObj->m_meshConstsCPU.useHeightMap, 1);
+            // flag += ImGui::SliderFloat("HeightScale",
+            //                            &m_mainObj->m_meshConstsCPU.heightScale,
+            //                            0.0f, 0.1f);
+            // flag += ImGui::CheckboxFlags(
+            //     "Use MetallicMap",
+            //     &m_mainObj->m_materialConstsCPU.useMetallicMap, 1);
+            // flag += ImGui::CheckboxFlags(
+            //     "Use RoughnessMap",
+            //     &m_mainObj->m_materialConstsCPU.useRoughnessMap, 1);
 
-            //if (flag) {
-            //    m_mainObj->UpdateConstantBuffers(m_device, m_context);
-            //}
+            // if (flag) {
+            //     m_mainObj->UpdateConstantBuffers(m_device, m_context);
+            // }
 
-            //ImGui::Checkbox("Draw Normals", &m_mainObj->m_drawNormals);
+            // ImGui::Checkbox("Draw Normals", &m_mainObj->m_drawNormals);
 
             ImGui::TreePop();
         }
     }
 };
-} // namespace dx11
+} // namespace engine
 #endif

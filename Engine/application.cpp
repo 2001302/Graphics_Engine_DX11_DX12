@@ -15,6 +15,7 @@ bool Application::OnStart() {
     Platform::OnStart();
 
     input->Initialize(hinstance);
+    render_block->stage_type = EnumStageType::eInitialize;
 
     std::map<common::EnumDataBlockType, common::IDataBlock *> dataBlock = {
         {common::EnumDataBlockType::eRenderBlock, render_block.get()},
@@ -55,6 +56,7 @@ bool Application::OnFrame() {
 bool Application::OnUpdate(float dt) {
 
     render_block->dt = dt;
+    render_block->stage_type = EnumStageType::eUpdate;
 
     std::map<common::EnumDataBlockType, common::IDataBlock *> dataBlock = {
         {common::EnumDataBlockType::eRenderBlock, render_block.get()},
@@ -84,6 +86,7 @@ bool Application::OnUpdate(float dt) {
 bool Application::OnRender() {
 
     input->Frame();
+    render_block->stage_type = EnumStageType::eRender;
 
     std::map<common::EnumDataBlockType, common::IDataBlock *> dataBlock = {
         {common::EnumDataBlockType::eRenderBlock, render_block.get()},

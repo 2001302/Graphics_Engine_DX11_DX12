@@ -5,7 +5,7 @@ namespace engine {
 using namespace DirectX::SimpleMath;
 
 bool MessageReceiver::OnMouseRightDragRequest(RenderingBlock *manager,
-                                         std::shared_ptr<Input> input) {
+                                              std::shared_ptr<Input> input) {
     DIMOUSESTATE mouseState;
     if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
                                               &mouseState))) {
@@ -71,8 +71,8 @@ bool MessageReceiver::OnMouseWheelRequest(RenderingBlock *manager,
 }
 
 bool MessageReceiver::OnMouseWheelDragRequest(RenderingBlock *manager,
-                                         std::shared_ptr<Input> input,
-                                         int mouseX, int mouseY) {
+                                              std::shared_ptr<Input> input,
+                                              int mouseX, int mouseY) {
     DIMOUSESTATE mouseState;
     if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
                                               &mouseState))) {
@@ -147,10 +147,10 @@ bool MessageReceiver::OnModelLoadRequest(RenderingBlock *manager,
         std::string fileName = fullPath.substr(lastSlash + 1);
         std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
-        Renderer *renderer = new Renderer(
+        auto renderer = std::make_shared<Renderer>(
             GraphicsManager::Instance().device,
-                         GraphicsManager::Instance().device_context,
-                         directoryPath, fileName);
+            GraphicsManager::Instance().device_context, directoryPath,
+            fileName);
 
         renderer->UpdateConstantBuffers(
             GraphicsManager::Instance().device,
@@ -171,7 +171,7 @@ bool MessageReceiver::OnModelLoadRequest(RenderingBlock *manager,
 bool MessageReceiver::OnSphereLoadRequest(RenderingBlock *manager) {
 
     MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
-    Renderer *renderer = new Renderer(
+    auto renderer = std::make_shared<Renderer>(
         GraphicsManager::Instance().device,
         GraphicsManager::Instance().device_context, std::vector{mesh});
     renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
@@ -189,7 +189,7 @@ bool MessageReceiver::OnSphereLoadRequest(RenderingBlock *manager) {
 bool MessageReceiver::OnBoxLoadRequest(RenderingBlock *manager) {
 
     MeshData mesh = GeometryGenerator::MakeBox(1.0f);
-    Renderer *renderer = new Renderer(
+    auto renderer = std::make_shared<Renderer>(
         GraphicsManager::Instance().device,
         GraphicsManager::Instance().device_context, std::vector{mesh});
     renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
@@ -207,7 +207,7 @@ bool MessageReceiver::OnBoxLoadRequest(RenderingBlock *manager) {
 bool MessageReceiver::OnCylinderLoadRequest(RenderingBlock *manager) {
 
     MeshData mesh = GeometryGenerator::MakeCylinder(5.0f, 5.0f, 15.0f, 30);
-    Renderer *renderer = new Renderer(
+    auto renderer = std::make_shared<Renderer>(
         GraphicsManager::Instance().device,
         GraphicsManager::Instance().device_context, std::vector{mesh});
     renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,

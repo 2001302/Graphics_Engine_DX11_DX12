@@ -49,6 +49,30 @@ class Application : public Platform {
             return true;
 
         switch (umsg) {
+        case WM_SIZE: {
+
+            common::Env::Instance().screen_width = int(LOWORD(lparam));
+            common::Env::Instance().screen_height = int(HIWORD(lparam));
+
+            if (common::Env::Instance().screen_width &&
+                common::Env::Instance().screen_height) {
+                if (GraphicsManager::Instance().swap_chain) {
+
+                    imgui_->Shutdown();
+
+                    GraphicsManager::Instance().back_buffer_RTV.Reset();
+                    GraphicsManager::Instance().swap_chain->ResizeBuffers(
+                        0, (UINT)LOWORD(lparam), (UINT)HIWORD(lparam),
+                        DXGI_FORMAT_UNKNOWN, 0);
+
+                    GraphicsManager::Instance().CreateBuffer();
+                    GraphicsManager::Instance().SetMainViewport();
+
+                    imgui_->Initialize();
+                }
+            }
+            break;
+        }
         case WM_MOUSEMOVE: {
             if (wparam & MK_RBUTTON) {
                 if (CheckIfMouseInViewport(imgui_.get(), LOWORD(lparam),
@@ -95,27 +119,6 @@ class Application : public Platform {
         }
         case WM_CYLINDER_LOAD: {
             return message_receiver_->OnCylinderLoadRequest(manager_.get());
-            break;
-        }
-        case WM_SIZE: {
-            if (GraphicsManager::Instance().swap_chain) {
-
-                imgui_->Shutdown();
-
-                common::Env::Instance().screen_width = int(LOWORD(lparam));
-                common::Env::Instance().screen_height = int(HIWORD(lparam));
-
-                GraphicsManager::Instance().back_buffer_RTV.Reset();
-                GraphicsManager::Instance().swap_chain->ResizeBuffers(
-                    0, (UINT)LOWORD(lparam), (UINT)HIWORD(lparam),
-                    DXGI_FORMAT_UNKNOWN, 0);
-
-                GraphicsManager::Instance().CreateBuffer();
-                GraphicsManager::Instance().SetMainViewport();
-
-                imgui_->Initialize();
-            }
-
             break;
         }
         case WM_KEYDOWN:

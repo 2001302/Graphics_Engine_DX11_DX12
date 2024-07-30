@@ -3,26 +3,23 @@
 namespace engine {
 Model::~Model() {
     for (auto component : components) {
-        delete component.second;
-        component.second = 0;
+        component.second.reset();
     }
 }
-bool Model::AddComponent(EnumComponentType type, Component *component) {
+void Model::AddComponent(EnumComponentType type,
+                         std::shared_ptr<Component>component) {
     if (components.find(type) == components.end()) {
-        components.insert({type, component});
-        return true;
-    } else
-        return false;
+        components.insert({type, component}); 
+    } 
 }
 
-bool Model::GetComponent(EnumComponentType type, OUT Component **component) {
+Component*
+Model::GetComponent(EnumComponentType type) {
     auto it = components.find(type);
     if (it != components.end()) {
-        *component = it->second;
-        return true;
+        return it->second.get();
     } else {
-        *component = nullptr;
-        return false;
+        return nullptr;
     }
 };
 }

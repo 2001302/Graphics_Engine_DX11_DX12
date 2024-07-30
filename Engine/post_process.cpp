@@ -22,17 +22,13 @@ void PostProcess::Initialize(ComPtr<ID3D11Device> &device,
     // compute_PSO.m_computeShader = combine_CS;
 
     // Combine + ToneMapping
-    m_combineFilter.Initialize(device, context, Graphics::combinePS,
-                               common::Env::Instance().screen_width,
-                               common::Env::Instance().screen_height);
-    m_combineFilter.SetShaderResources(
-        {GraphicsManager::Instance().resolved_SRV, nullptr});
-    m_combineFilter.SetRenderTargets(
-        {GraphicsManager::Instance().back_buffer_RTV});
-    m_combineFilter.m_constData.strength = 0.0f; // Bloom strength
-    m_combineFilter.m_constData.option1 = 1.0f;  // Exposure
-    m_combineFilter.m_constData.option2 = 2.2f;  // Gamma
-    m_combineFilter.UpdateConstantBuffers(device, context);
+    m_constData.dx = 1.0f / common::Env::Instance().screen_width;
+    m_constData.dy = 1.0f / common::Env::Instance().screen_height;
+    m_constData.strength = 0.0f; // Bloom strength
+    m_constData.option1 = 1.0f;  // Exposure
+    m_constData.option2 = 2.2f;  // Gamma
+    CreateConstBuffer(device, m_constData, m_constBuffer);
+    UpdateBuffer(device, context, m_constData, m_constBuffer);
 }
 
 void SetPipelineState(ComPtr<ID3D11DeviceContext> &context,
@@ -96,11 +92,13 @@ void PostProcess::Render(ComPtr<ID3D11Device> &device,
     context->IASetIndexBuffer(m_mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
                               0);
 
-    RenderImageFilter(context, m_combineFilter);
-}
-void PostProcess::RenderImageFilter(ComPtr<ID3D11DeviceContext> &context,
-                                    const ImageFilter &imageFilter) {
-    imageFilter.Render(context);
+    context->RSSetViewports(1, &GraphicsManager::Instance().viewport);
+    context->OMSetRenderTargets(
+        1, GraphicsManager::Instance().back_buffer_RTV.GetAddressOf(), NULL);
+    context->PSSetShaderResources(
+        0, 1, GraphicsManager::Instance().resolved_SRV.GetAddressOf());
+    context->PSSetShader(Graphics::combinePS.Get(), 0, 0);
+    context->PSSetConstantBuffers(0, 1, m_constBuffer.GetAddressOf());
     context->DrawIndexed(m_mesh->indexCount, 0, 0);
 }
 } // namespace engine

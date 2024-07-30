@@ -41,7 +41,7 @@ void Camera::SetLookAt(Vector3 look) { lookAtVector = look; }
 void Camera::Initialize() {
     MeshData sphere = GeometryGenerator::MakeSphere(0.01f, 10, 10);
 
-    Renderer *renderer = new Renderer(
+    auto renderer = std::make_shared<Renderer>(
         GraphicsManager::Instance().device,
         GraphicsManager::Instance().device_context, std::vector{sphere});
 
@@ -60,9 +60,8 @@ void Camera::Update() {
     auto up = XMVector3TransformCoord(upVector, rotationMatrix);
     view = XMMatrixLookAtLH(position, lookAtVector, up);
 
-    Renderer *renderer = nullptr;
-    look_at_target->GetComponent(EnumComponentType::eRenderer,
-                                 (Component **)(&renderer));
+    auto renderer =
+        (Renderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
 
     renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
                              Matrix::CreateTranslation(lookAtVector));
@@ -71,9 +70,8 @@ void Camera::Update() {
 }
 
 void Camera::Draw() {
-    Renderer *renderer = nullptr;
-    look_at_target->GetComponent(EnumComponentType::eRenderer,
-                                 (Component **)(&renderer));
+    auto renderer =
+        (Renderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
     renderer->Render(GraphicsManager::Instance().device_context);
 }
 } // namespace engine

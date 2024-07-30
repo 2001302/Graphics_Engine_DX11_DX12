@@ -37,9 +37,6 @@
     <ClInclude Include="setting_ui.h">
       <Filter>Common\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="image_filter.h">
-      <Filter>Engine\Model</Filter>
-    </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
@@ -207,9 +204,6 @@
     </ClCompile>
     <ClCompile Include="setting_ui.cpp">
       <Filter>Common\Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="image_filter.cpp">
-      <Filter>Engine\Model</Filter>
     </ClCompile>
     <ClCompile Include="application.cpp">
       <Filter>Platform</Filter>

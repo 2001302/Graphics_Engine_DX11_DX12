@@ -44,10 +44,10 @@ class InitializeLight : public BehaviorActionNode {
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 MeshData sphere = GeometryGenerator::MakeSphere(1.0f, 20, 20);
 
-                Renderer *renderer =
-                    new Renderer(GraphicsManager::Instance().device,
-                                 GraphicsManager::Instance().device_context,
-                                 std::vector{sphere});
+                auto renderer = std::make_shared<Renderer>(
+                    GraphicsManager::Instance().device,
+                    GraphicsManager::Instance().device_context,
+                    std::vector{sphere});
 
                 renderer->UpdateWorldRow(Matrix::CreateTranslation(
                     manager->global_consts_CPU.lights[i].position));
@@ -93,7 +93,8 @@ class InitializeSkybox : public BehaviorActionNode {
 
         auto mesh_data = GeometryGenerator::MakeBox(40.0f);
         std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
-        Renderer *renderer = new Renderer(
+
+        auto renderer = std::make_shared<Renderer>(
             GraphicsManager::Instance().device,
             GraphicsManager::Instance().device_context, std::vector{mesh_data});
 
@@ -130,7 +131,8 @@ class InitializeMirrorGround : public BehaviorActionNode {
         assert(manager != nullptr);
 
         auto mesh = GeometryGenerator::MakeSquare(5.0);
-        Renderer *renderer = new Renderer(
+
+        auto renderer = std::make_shared<Renderer>(
             GraphicsManager::Instance().device,
             GraphicsManager::Instance().device_context, std::vector{mesh});
 
@@ -198,7 +200,8 @@ class InitializePostEffect : public BehaviorActionNode {
         assert(manager != nullptr);
 
         MeshData meshData = GeometryGenerator::MakeSquare();
-        Renderer *renderer = new Renderer(
+
+        auto renderer = std::make_shared<Renderer>(
             GraphicsManager::Instance().device,
             GraphicsManager::Instance().device_context, std::vector{meshData});
 
@@ -234,9 +237,11 @@ class InitializeBasicModels : public BehaviorActionNode {
         {
             MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
             Vector3 center(0.5f, 0.5f, 2.0f);
-            Renderer *renderer = new Renderer(
+
+            auto renderer = std::make_shared<Renderer>(
                 GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context, std::vector{mesh});
+
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
             renderer->m_materialConstsCPU.albedoFactor =
                 Vector3(0.1f, 0.1f, 1.0f);
@@ -257,9 +262,11 @@ class InitializeBasicModels : public BehaviorActionNode {
         {
             MeshData mesh = GeometryGenerator::MakeBox(0.2f);
             Vector3 center(0.0f, 0.5f, 2.5f);
-            Renderer *renderer = new Renderer(
+
+            auto renderer = std::make_shared<Renderer>(
                 GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context, std::vector{mesh});
+
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
             renderer->m_materialConstsCPU.albedoFactor =
                 Vector3(1.0f, 0.2f, 0.2f);

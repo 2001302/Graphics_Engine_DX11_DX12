@@ -2,8 +2,8 @@
 #define _RENDERER_UPDATE_NODE
 
 #include "behavior_tree_builder.h"
-#include "rendering_block.h"
 #include "renderer.h"
+#include "rendering_block.h"
 
 namespace engine {
 
@@ -82,10 +82,11 @@ class UpdateLights : public BehaviorActionNode {
                 // cout << "LIGHT_FRUSTUM_WIDTH = " << xRight.x - xLeft.x <<
                 // endl;
 
-                GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device,
+                GraphicsUtil::UpdateBuffer(
+                    GraphicsManager::Instance().device,
                     GraphicsManager::Instance().device_context,
-                                           manager->shadow_global_consts_CPU[i],
-                                           manager->shadow_global_consts_GPU[i]);
+                    manager->shadow_global_consts_CPU[i],
+                    manager->shadow_global_consts_GPU[i]);
 
                 // 그림자를 실제로 렌더링할 때 필요
                 manager->global_consts_CPU.lights[i].viewProj =
@@ -100,9 +101,8 @@ class UpdateLights : public BehaviorActionNode {
 
         // 조명의 위치 반영
         for (int i = 0; i < MAX_LIGHTS; i++) {
-            Renderer *renderer = nullptr;
-            manager->light_spheres[i]->GetComponent(
-                EnumComponentType::eRenderer, (Component **)(&renderer));
+            auto renderer = (Renderer *)manager->light_spheres[i]->GetComponent(
+                EnumComponentType::eRenderer);
 
             renderer->UpdateWorldRow(
                 Matrix::CreateScale((std::max)(
@@ -173,10 +173,11 @@ class UpdateMirror : public BehaviorActionNode {
             data_block[EnumDataBlockType::eManager]);
         assert(manager != nullptr);
 
-        Renderer *renderer = nullptr;
-        manager->mirror->GetComponent(EnumComponentType::eRenderer,
-                                         (Component **)(&renderer));
-        renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
+        auto renderer = (Renderer *)manager->mirror->GetComponent(
+            EnumComponentType::eRenderer);
+
+        renderer->UpdateConstantBuffers(
+            GraphicsManager::Instance().device,
             GraphicsManager::Instance().device_context);
 
         return EnumBehaviorTreeStatus::eSuccess;
@@ -228,11 +229,10 @@ class UpdateBasicObjects : public BehaviorActionNode {
         assert(manager != nullptr);
 
         for (auto &i : manager->models) {
-
-            Renderer *renderer = nullptr;
-            i.second->GetComponent(EnumComponentType::eRenderer,
-                            (Component **)(&renderer));
-            renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
+            auto renderer = (Renderer *)i.second->GetComponent(
+                EnumComponentType::eRenderer);
+            renderer->UpdateConstantBuffers(
+                GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context);
         }
 
@@ -248,10 +248,8 @@ class UpdateLightSpheres : public BehaviorActionNode {
         assert(manager != nullptr);
 
         for (auto &i : manager->light_spheres) {
-
-            Renderer *renderer = nullptr;
-            i->GetComponent(EnumComponentType::eRenderer,
-                            (Component **)(&renderer));
+            auto renderer = (Renderer *)i->GetComponent(
+                EnumComponentType::eRenderer);
             renderer->UpdateConstantBuffers(
                 GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context);
@@ -259,6 +257,6 @@ class UpdateLightSpheres : public BehaviorActionNode {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 };
-}
+} // namespace engine
 
 #endif

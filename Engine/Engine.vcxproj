@@ -150,7 +150,6 @@
     <ClInclude Include="graphics_pso.h" />
     <ClInclude Include="graphics_util.h" />
     <ClInclude Include="gui_node.h" />
-    <ClInclude Include="image_filter.h" />
     <ClInclude Include="ImGui\NodeEditor\crude_json.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_bezier_math.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_canvas.h" />
@@ -204,7 +203,6 @@
     <ClCompile Include="graphics_common.cpp" />
     <ClCompile Include="graphics_pso.cpp" />
     <ClCompile Include="graphics_util.cpp" />
-    <ClCompile Include="image_filter.cpp" />
     <ClCompile Include="ImGui\NodeEditor\crude_json.cpp" />
     <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp" />
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor.cpp" />

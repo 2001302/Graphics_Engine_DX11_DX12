@@ -13,11 +13,13 @@ class Model : public common::INode {
   public:
     Model(){};
     ~Model();
-    bool AddComponent(EnumComponentType type, Component *component);
-    bool GetComponent(EnumComponentType type, OUT Component **component);
+    void AddComponent(EnumComponentType type,
+                      std::shared_ptr<Component> component);
+    Component *GetComponent(EnumComponentType type);
 
   private:
-    std::unordered_map<EnumComponentType, Component *> components;
+    std::unordered_map<EnumComponentType, std::shared_ptr<Component>>
+        components;
 };
 } // namespace engine
 #endif

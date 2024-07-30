@@ -55,23 +55,20 @@ class DrawOnlyDepth : public BehaviorActionNode {
         GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
 
         for (auto &i : manager->models) {
-            Renderer *renderer = nullptr;
-            i.second->GetComponent(EnumComponentType::eRenderer,
-                                   (Component **)(&renderer));
+            auto renderer = (Renderer *)i.second->GetComponent(
+                EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 
         if (true) {
-            Renderer *renderer = nullptr;
-            manager->skybox->GetComponent(EnumComponentType::eRenderer,
-                                          (Component **)(&renderer));
+            auto renderer = (Renderer *)manager->skybox->GetComponent(
+                EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 
         if (true) {
-            Renderer *renderer = nullptr;
-            manager->mirror->GetComponent(EnumComponentType::eRenderer,
-                                          (Component **)(&renderer));
+            auto renderer = (Renderer *)manager->mirror->GetComponent(
+                EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 
@@ -111,27 +108,23 @@ class DrawShadowMap : public BehaviorActionNode {
                     manager->shadow_global_consts_GPU[i]);
 
                 for (auto &i : manager->models) {
-                    Renderer *renderer = nullptr;
-                    i.second->GetComponent(EnumComponentType::eRenderer,
-                                           (Component **)(&renderer));
-
+                    auto renderer = (Renderer *)i.second->GetComponent(
+                        EnumComponentType::eRenderer);
                     if (renderer->m_castShadow && renderer->m_isVisible)
                         renderer->Render(
                             GraphicsManager::Instance().device_context);
                 }
 
                 if (true) {
-                    Renderer *renderer = nullptr;
-                    manager->skybox->GetComponent(EnumComponentType::eRenderer,
-                                                  (Component **)(&renderer));
+                    auto renderer = (Renderer *)manager->skybox->GetComponent(
+                        EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);
                 }
 
                 if (true) {
-                    Renderer *renderer = nullptr;
-                    manager->mirror->GetComponent(EnumComponentType::eRenderer,
-                                                  (Component **)(&renderer));
+                    auto renderer = (Renderer *)manager->mirror->GetComponent(
+                        EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);
                 }
@@ -197,28 +190,23 @@ class DrawObjects : public BehaviorActionNode {
         GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
 
         for (auto &i : manager->models) {
-            Renderer *renderer = nullptr;
-            i.second->GetComponent(EnumComponentType::eRenderer,
-                                   (Component **)(&renderer));
+            auto renderer = (Renderer *)i.second->GetComponent(
+                EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 
         // If there is no need to draw mirror reflections, draw only the opaque
         // mirror
         if (manager->mirror_alpha == 1.0f) {
-
-            Renderer *renderer = nullptr;
-            manager->mirror->GetComponent(EnumComponentType::eRenderer,
-                                          (Component **)(&renderer));
+            auto renderer = (Renderer *)manager->mirror->GetComponent(
+                EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 
         GraphicsManager::Instance().SetPipelineState(Graphics::normalsPSO);
         for (auto &i : manager->models) {
-
-            Renderer *renderer = nullptr;
-            i.second->GetComponent(EnumComponentType::eRenderer,
-                                   (Component **)(&renderer));
+            auto renderer = (Renderer *)i.second->GetComponent(
+                EnumComponentType::eRenderer);
             if (renderer->m_drawNormals)
                 renderer->RenderNormals(
                     GraphicsManager::Instance().device_context);
@@ -241,9 +229,8 @@ class DrawLightSpheres : public BehaviorActionNode {
         GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
 
         for (auto &i : manager->light_spheres) {
-            Renderer *renderer = nullptr;
-            i->GetComponent(EnumComponentType::eRenderer,
-                            (Component **)(&renderer));
+            auto renderer = (Renderer *)i->GetComponent(
+                EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 
@@ -280,9 +267,8 @@ class DrawSkybox : public BehaviorActionNode {
             GraphicsManager::Instance().SetPipelineState(
                 manager->draw_wire ? Graphics::skyboxWirePSO
                                    : Graphics::skyboxSolidPSO);
-            Renderer *renderer = nullptr;
-            manager->skybox->GetComponent(EnumComponentType::eRenderer,
-                                          (Component **)(&renderer));
+            auto renderer = (Renderer *)manager->skybox->GetComponent(
+                EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 
@@ -306,9 +292,8 @@ class DrawMirrorSurface : public BehaviorActionNode {
                 Graphics::stencilMaskPSO);
 
             if (true) {
-                Renderer *renderer = nullptr;
-                manager->mirror->GetComponent(EnumComponentType::eRenderer,
-                                              (Component **)(&renderer));
+                auto renderer = (Renderer *)manager->mirror->GetComponent(
+                    EnumComponentType::eRenderer);
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
 
@@ -324,9 +309,8 @@ class DrawMirrorSurface : public BehaviorActionNode {
                 D3D11_CLEAR_DEPTH, 1.0f, 0);
 
             for (auto &i : manager->models) {
-                Renderer *renderer = nullptr;
-                i.second->GetComponent(EnumComponentType::eRenderer,
-                                       (Component **)(&renderer));
+                auto renderer = (Renderer *)i.second->GetComponent(
+                    EnumComponentType::eRenderer);
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
 
@@ -334,9 +318,8 @@ class DrawMirrorSurface : public BehaviorActionNode {
                 GraphicsManager::Instance().SetPipelineState(
                     manager->draw_wire ? Graphics::reflectSkyboxWirePSO
                                        : Graphics::reflectSkyboxSolidPSO);
-                Renderer *renderer = nullptr;
-                manager->skybox->GetComponent(EnumComponentType::eRenderer,
-                                              (Component **)(&renderer));
+                auto renderer = (Renderer *)manager->skybox->GetComponent(
+                    EnumComponentType::eRenderer);
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
 
@@ -347,9 +330,8 @@ class DrawMirrorSurface : public BehaviorActionNode {
                                        : Graphics::mirrorBlendSolidPSO);
                 GraphicsManager::Instance().SetGlobalConsts(
                     manager->global_consts_GPU);
-                Renderer *renderer = nullptr;
-                manager->mirror->GetComponent(EnumComponentType::eRenderer,
-                                              (Component **)(&renderer));
+                auto renderer = (Renderer *)manager->mirror->GetComponent(
+                    EnumComponentType::eRenderer);
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
 
@@ -396,17 +378,18 @@ class DrawPostProcessing : public BehaviorActionNode {
         // //    1, GraphicsManager::Instance().postEffectsRTV.GetAddressOf(),
         // //    NULL);
         // GraphicsManager::Instance().device_context->OMSetRenderTargets(
-        //     1, GraphicsManager::Instance().resolved_RTV.GetAddressOf(), NULL);
+        //     1, GraphicsManager::Instance().resolved_RTV.GetAddressOf(),
+        //     NULL);
 
         // GraphicsManager::Instance().device_context->PSSetConstantBuffers(
         //     3, 1, manager->post_effects_consts_GPU.GetAddressOf());
 
-         //if (true) {
-         //    Renderer *renderer = nullptr;
-         //    manager->screen_square->GetComponent(EnumComponentType::eRenderer,
-         //                                          (Component **)(&renderer));
-         //    renderer->Render(GraphicsManager::Instance().device_context);
-         //}
+        // if (true) {
+        //     Renderer *renderer = nullptr;
+        //     manager->screen_square->GetComponent(EnumComponentType::eRenderer,
+        //                                           (Component **)(&renderer));
+        //     renderer->Render(GraphicsManager::Instance().device_context);
+        // }
 
         GraphicsManager::Instance().SetPipelineState(
             Graphics::postProcessingPSO);

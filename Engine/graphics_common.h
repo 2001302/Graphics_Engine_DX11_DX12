@@ -43,6 +43,10 @@ extern ComPtr<ID3D11PixelShader> normalPS;
 extern ComPtr<ID3D11PixelShader> depthOnlyPS;
 extern ComPtr<ID3D11PixelShader> postEffectsPS;
 extern ComPtr<ID3D11GeometryShader> normalGS;
+extern ComPtr<ID3D11ComputeShader> brightPassCS;
+extern ComPtr<ID3D11ComputeShader> blurVerticalCS;
+extern ComPtr<ID3D11ComputeShader> blurHorizontalCS;
+extern ComPtr<ID3D11ComputeShader> bloomComposite;
 
 // Input Layouts
 extern ComPtr<ID3D11InputLayout> basicIL;

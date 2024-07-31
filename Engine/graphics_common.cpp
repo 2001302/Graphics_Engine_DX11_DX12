@@ -44,6 +44,11 @@ ComPtr<ID3D11PixelShader> postEffectsPS;
 
 ComPtr<ID3D11GeometryShader> normalGS;
 
+ComPtr<ID3D11ComputeShader> brightPassCS;
+ComPtr<ID3D11ComputeShader> blurVerticalCS;
+ComPtr<ID3D11ComputeShader> blurHorizontalCS;
+ComPtr<ID3D11ComputeShader> bloomComposite;
+
 // Input Layouts
 ComPtr<ID3D11InputLayout> basicIL;
 ComPtr<ID3D11InputLayout> samplingIL;
@@ -314,6 +319,15 @@ void Graphics::InitShaders(ComPtr<ID3D11Device> &device) {
                                     postEffectsPS);
 
     GraphicsUtil::CreateGeometryShader(device, L"NormalGS.hlsl", normalGS);
+
+    GraphicsUtil::CreateComputeShader(device, L"BrightPassCS.hlsl",
+                                      brightPassCS);
+    GraphicsUtil::CreateComputeShader(device, L"BlurVertical.hlsl",
+                                      blurVerticalCS);
+    GraphicsUtil::CreateComputeShader(device, L"BlurHorizontal.hlsl",
+                                      blurHorizontalCS);
+    GraphicsUtil::CreateComputeShader(device, L"BloomCompositeCS.hlsl",
+                                      bloomComposite);
 }
 
 void Graphics::InitPipelineStates(ComPtr<ID3D11Device> &device) {

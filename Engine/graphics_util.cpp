@@ -613,4 +613,16 @@ void GraphicsUtil::CreateComputeShader(
                                               shaderBlob->GetBufferSize(), NULL,
                                               &computeShader));
 }
+void GraphicsUtil::ComputeShaderBarrier(ComPtr<ID3D11DeviceContext> &context) {
+
+    // 최대 사용하는 SRV, UAV 갯수가 6개
+    ID3D11ShaderResourceView *nullSRV[6] = {
+        0,
+    };
+    context->CSSetShaderResources(0, 6, nullSRV);
+    ID3D11UnorderedAccessView *nullUAV[6] = {
+        0,
+    };
+    context->CSSetUnorderedAccessViews(0, 6, nullUAV, NULL);
+}
 } // namespace engine

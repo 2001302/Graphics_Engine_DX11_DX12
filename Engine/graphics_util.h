@@ -163,6 +163,7 @@ class GraphicsUtil {
     static void CreateComputeShader(ComPtr<ID3D11Device> &device,
                              const std::wstring &filename,
                              ComPtr<ID3D11ComputeShader> &computeShader);
+    static void ComputeShaderBarrier(ComPtr<ID3D11DeviceContext> &context);
 };
 
 } // namespace engine

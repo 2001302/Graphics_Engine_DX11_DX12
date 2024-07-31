@@ -413,5 +413,17 @@
     <FxCompile Include="CombineCS.hlsl">
       <Filter>Engine\Graphics\Shader</Filter>
     </FxCompile>
+    <FxCompile Include="BlurHorizontal.hlsl">
+      <Filter>Engine\Graphics\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="BrightPassCS.hlsl">
+      <Filter>Engine\Graphics\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="BloomCompositeCS.hlsl">
+      <Filter>Engine\Graphics\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="BlurVertical.hlsl">
+      <Filter>Engine\Graphics\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

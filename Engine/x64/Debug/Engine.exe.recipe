@@ -13,7 +13,16 @@
       <FullPath>C:\Users\source\Engine\x64\Debug\BasicVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
+      <FullPath>C:\Users\source\Engine\x64\Debug\BlurVertical.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\source\Engine\x64\Debug\BrightPassCS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
       <FullPath>C:\Users\source\Engine\x64\Debug\BloomDownPS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\source\Engine\x64\Debug\BlurHorizontal.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\source\Engine\x64\Debug\BloomUpPS.cso</FullPath>
@@ -23,6 +32,9 @@
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\source\Engine\x64\Debug\CombinePS.cso</FullPath>
+    </ContentFile>
+    <ContentFile>
+      <FullPath>C:\Users\source\Engine\x64\Debug\BloomCompositeCS.cso</FullPath>
     </ContentFile>
     <ContentFile>
       <FullPath>C:\Users\source\Engine\x64\Debug\DepthOnlyPS.cso</FullPath>

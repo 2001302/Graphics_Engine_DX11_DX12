@@ -18,72 +18,67 @@ class PostProcessingNode : public common::BehaviorActionNode {
             data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
+        auto device = GraphicsManager::Instance().device;
+        auto context = GraphicsManager::Instance().device_context;
+
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
-            GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                            const_data, const_buffer);
-            GraphicsUtil::UpdateBuffer(
-                GraphicsManager::Instance().device,
-                GraphicsManager::Instance().device_context, const_data,
-                const_buffer);
+            const_data.strength = 0.5f; // Bloom strength
+
+            GraphicsUtil::CreateConstBuffer(device, const_data, const_buffer);
+            GraphicsUtil::UpdateBuffer(device, context, const_data,
+                                       const_buffer);
             // bloom
-            GraphicsUtil::CreateUATexture(GraphicsManager::Instance().device,
-                                          common::Env::Instance().screen_width,
-                                          common::Env::Instance().screen_height,
-                                          DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                          bright_pass_buffer, bright_pass_RTV,
-                                          bright_pass_SRV, bright_pass_UAV);
+            GraphicsUtil::CreateUATexture(
+                device, common::Env::Instance().screen_width,
+                common::Env::Instance().screen_height,
+                DXGI_FORMAT_R16G16B16A16_FLOAT, bright_pass_buffer,
+                bright_pass_RTV, bright_pass_SRV, bright_pass_UAV);
 
             GraphicsUtil::CreateUATexture(
-                GraphicsManager::Instance().device,
-                common::Env::Instance().screen_width,
+                device, common::Env::Instance().screen_width,
                 common::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_vertical_buffer,
                 blur_vertical_RTV, blur_vertical_SRV, blur_vertical_UAV);
 
             GraphicsUtil::CreateUATexture(
-                GraphicsManager::Instance().device,
-                common::Env::Instance().screen_width,
+                device, common::Env::Instance().screen_width,
                 common::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_horizontal_buffer,
                 blur_horizontal_RTV, blur_horizontal_SRV, blur_horizontal_UAV);
 
             // tone mapping
-            tone_mapping.Initialize(GraphicsManager::Instance().device,
-                                    GraphicsManager::Instance().device_context);
+            tone_mapping.Initialize(device, context);
             break;
         }
         case EnumStageType::eRender: {
-            // bloom
-            GraphicsManager::Instance().device_context->CSSetShader(
-                Graphics::brightPassCS.Get(), 0, 0);
-            bright_pass.Render(
-                GraphicsManager::Instance().device_context, const_buffer,
-                GraphicsManager::Instance().resolved_SRV, bright_pass_UAV);
+            // bloom filter
+            // bright pass->blur vertical->blur horizontal->composite
+            bright_pass.Render(context, Graphics::brightPassCS, const_buffer,
+                               {GraphicsManager::Instance().resolved_SRV},
+                               bright_pass_UAV);
 
-            GraphicsManager::Instance().device_context->CSSetShader(
-                Graphics::blurVerticalCS.Get(), 0, 0);
-            blur_vertical.Render(GraphicsManager::Instance().device_context,
-                                 const_buffer, bright_pass_SRV,
+            blur_vertical.Render(context, Graphics::blurVerticalCS,
+                                 const_buffer, {bright_pass_SRV},
                                  blur_vertical_UAV);
 
-            GraphicsManager::Instance().device_context->CSSetShader(
-                Graphics::brightPassCS.Get(), 0, 0);
-            blur_horizontal.Render(GraphicsManager::Instance().device_context,
-                                   const_buffer, blur_vertical_SRV,
+            blur_horizontal.Render(context, Graphics::blurHorizontalCS,
+                                   const_buffer, {blur_vertical_SRV},
                                    blur_horizontal_UAV);
 
-            GraphicsManager::Instance().device_context->CSSetShader(
-                Graphics::brightPassCS.Get(), 0, 0);
-            bloom_composite.Render(GraphicsManager::Instance().device_context,
-                                   const_buffer, blur_horizontal_SRV,
-                                   GraphicsManager::Instance().resolved_UAV);
+            bloom_composite.Render(
+                context, Graphics::bloomComposite, const_buffer,
+                {GraphicsManager::Instance().resolved_SRV, blur_horizontal_SRV},
+                bright_pass_UAV);
 
+            context->CopyResource(
+                GraphicsManager::Instance().resolved_buffer.Get(),
+                bright_pass_buffer.Get());
+
+            // tone mapping
             GraphicsManager::Instance().SetPipelineState(
                 Graphics::postProcessingPSO);
-            // tone mapping
-            tone_mapping.Render(GraphicsManager::Instance().device,
-                                GraphicsManager::Instance().device_context);
+            tone_mapping.Render(device, context);
             break;
         }
         default:

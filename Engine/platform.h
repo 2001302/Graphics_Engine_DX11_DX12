@@ -26,7 +26,6 @@ class Platform {
 
   private:
     bool InitializeWindow();
-    bool InitializeDirectX();
 
   protected:
     LPCWSTR application_name;

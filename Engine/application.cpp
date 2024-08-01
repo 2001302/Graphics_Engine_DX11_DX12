@@ -14,6 +14,7 @@ bool Application::OnStart() {
 
     Platform::OnStart();
 
+    GraphicsManager::Instance().Initialize();
     input->Initialize(hinstance);
     render_block->stage_type = EnumStageType::eInitialize;
 

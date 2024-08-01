@@ -32,7 +32,6 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam,
 
 bool Platform::OnStart() {
     InitializeWindow();
-    InitializeDirectX();
     return true;
 }
 
@@ -135,10 +134,4 @@ bool Platform::InitializeWindow() {
     ShowWindow(common::Env::Instance().main_window, SW_SHOWDEFAULT);
     UpdateWindow(common::Env::Instance().main_window);
 }
-
-bool Platform::InitializeDirectX() {
-    GraphicsManager::Instance().Initialize();
-    return true;
-}
-
 } // namespace dx11

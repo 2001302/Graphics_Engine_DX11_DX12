@@ -350,7 +350,6 @@
     <None Include="ImGui\config.h.in">
       <Filter>Common\Gui\ImGui</Filter>
     </None>
-    <None Include="packages.config" />
     <None Include="ImGui\NodeEditor\imgui_node_editor_internal.inl">
       <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </None>

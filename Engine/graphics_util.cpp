@@ -255,6 +255,27 @@ void ReadImage(const std::string filename, std::vector<uint8_t> &image,
     delete[] img;
 }
 
+void ReadImage(const std::string albedoFilename,
+               const std::string opacityFilename, std::vector<uint8_t> &image,
+               int &width, int &height) {
+
+    ReadImage(albedoFilename, image, width, height);
+
+    std::vector<uint8_t> opacityImage;
+    int opaWidth, opaHeight;
+
+    ReadImage(opacityFilename, opacityImage, opaWidth, opaHeight);
+
+    assert(width == opaWidth && height == opaHeight);
+
+    for (int j = 0; j < height; j++)
+        for (int i = 0; i < width; i++) {
+            image[3 + 4 * i + 4 * width * j] =
+                opacityImage[4 * i + 4 * width * j]; // Copy alpha channel
+        }
+}
+
+
 ComPtr<ID3D11Texture2D>
 CreateStagingTexture(ComPtr<ID3D11Device> &device,
                      ComPtr<ID3D11DeviceContext> &context, const int width,
@@ -410,6 +431,25 @@ void GraphicsUtil::CreateTexture(ComPtr<ID3D11Device> &device,
 
     CreateTextureHelper(device, context, width, height, image, pixelFormat, tex,
                         srv);
+}
+
+void GraphicsUtil::CreateTexture(ComPtr<ID3D11Device> &device,
+                               ComPtr<ID3D11DeviceContext> &context,
+                               const std::string albedoFilename,
+                               const std::string opacityFilename,
+                               const bool usSRGB,
+                               ComPtr<ID3D11Texture2D> &texture,
+                               ComPtr<ID3D11ShaderResourceView> &srv) {
+
+    int width = 0, height = 0;
+    std::vector<uint8_t> image;
+    DXGI_FORMAT pixelFormat =
+        usSRGB ? DXGI_FORMAT_R8G8B8A8_UNORM_SRGB : DXGI_FORMAT_R8G8B8A8_UNORM;
+
+    ReadImage(albedoFilename, opacityFilename, image, width, height);
+
+    CreateTextureHelper(device, context, width, height, image, pixelFormat,
+                        texture, srv);
 }
 
 void GraphicsUtil::CreateTextureArray(
@@ -625,4 +665,98 @@ void GraphicsUtil::ComputeShaderBarrier(ComPtr<ID3D11DeviceContext> &context) {
     };
     context->CSSetUnorderedAccessViews(0, 6, nullUAV, NULL);
 }
+
+ComPtr<ID3D11Texture3D> GraphicsUtil::CreateStagingTexture3D(
+    ComPtr<ID3D11Device> &device, const int width, const int height,
+    const int depth, const DXGI_FORMAT pixelFormat) {
+
+    // 스테이징 텍스춰 만들기
+    D3D11_TEXTURE3D_DESC txtDesc;
+    ZeroMemory(&txtDesc, sizeof(txtDesc));
+    txtDesc.Width = width;
+    txtDesc.Height = height;
+    txtDesc.Depth = depth;
+    txtDesc.MipLevels = 1;
+    txtDesc.Format = pixelFormat;
+    txtDesc.Usage = D3D11_USAGE_STAGING;
+    txtDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
+
+    ComPtr<ID3D11Texture3D> stagingTexture;
+    if (FAILED(device->CreateTexture3D(&txtDesc, NULL,
+                                       stagingTexture.GetAddressOf()))) {
+        cout << "CreateStagingTexture3D() failed." << endl;
+    }
+
+    return stagingTexture;
+}
+
+size_t GraphicsUtil::GetPixelSize(DXGI_FORMAT pixelFormat) {
+
+    switch (pixelFormat) {
+    case DXGI_FORMAT_R16G16B16A16_FLOAT:
+        return sizeof(uint16_t) * 4;
+    case DXGI_FORMAT_R32G32B32A32_FLOAT:
+        return sizeof(uint32_t) * 4;
+    case DXGI_FORMAT_R32_FLOAT:
+        return sizeof(uint32_t) * 1;
+    case DXGI_FORMAT_R8G8B8A8_UNORM:
+        return sizeof(uint8_t) * 4;
+    case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
+        return sizeof(uint8_t) * 4;
+    case DXGI_FORMAT_R32_SINT:
+        return sizeof(int32_t) * 1;
+    case DXGI_FORMAT_R16_FLOAT:
+        return sizeof(uint16_t) * 1;
+    }
+
+    cout << "PixelFormat not implemented " << pixelFormat << endl;
+
+    return sizeof(uint8_t) * 4;
+}
+
+void GraphicsUtil::CreateTexture3D(
+    ComPtr<ID3D11Device> &device, const int width,
+                                 const int height, const int depth,
+                                 const DXGI_FORMAT pixelFormat,
+                                 const vector<float> &initData,
+                                 ComPtr<ID3D11Texture3D> &texture,
+                                 ComPtr<ID3D11RenderTargetView> &rtv,
+                                 ComPtr<ID3D11ShaderResourceView> &srv,
+                                 ComPtr<ID3D11UnorderedAccessView> &uav) {
+
+    D3D11_TEXTURE3D_DESC txtDesc;
+    ZeroMemory(&txtDesc, sizeof(txtDesc));
+    txtDesc.Width = width;
+    txtDesc.Height = height;
+    txtDesc.Depth = depth;
+    txtDesc.MipLevels = 1;
+    txtDesc.Format = pixelFormat;
+    txtDesc.Usage = D3D11_USAGE_DEFAULT;
+    txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET |
+                        D3D11_BIND_UNORDERED_ACCESS;
+    txtDesc.MiscFlags = 0;
+    txtDesc.CPUAccessFlags = 0;
+
+    if (initData.size() > 0) {
+        size_t pixelSize = GetPixelSize(pixelFormat);
+        D3D11_SUBRESOURCE_DATA bufferData;
+        ZeroMemory(&bufferData, sizeof(bufferData));
+        bufferData.pSysMem = initData.data();
+        bufferData.SysMemPitch = UINT(width * pixelSize);
+        bufferData.SysMemSlicePitch = UINT(width * height * pixelSize);
+        ThrowIfFailed(device->CreateTexture3D(&txtDesc, &bufferData,
+                                              texture.GetAddressOf()));
+    } else {
+        ThrowIfFailed(
+            device->CreateTexture3D(&txtDesc, NULL, texture.GetAddressOf()));
+    }
+
+    ThrowIfFailed(device->CreateRenderTargetView(texture.Get(), NULL,
+                                                 rtv.GetAddressOf()));
+    ThrowIfFailed(device->CreateShaderResourceView(texture.Get(), NULL,
+                                                   srv.GetAddressOf()));
+    ThrowIfFailed(device->CreateUnorderedAccessView(texture.Get(), NULL,
+                                                    uav.GetAddressOf()));
+}
+
 } // namespace engine

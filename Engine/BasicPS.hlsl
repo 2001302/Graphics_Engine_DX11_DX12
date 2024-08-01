@@ -1,33 +1,17 @@
-#include "Common.hlsli" // ½¦ÀÌ´õ¿¡¼­µµ include »ç¿ë °¡´É
+#include "Common.hlsli" // ì‰ì´ë”ì—ì„œë„ include ì‚¬ìš© ê°€ëŠ¥
+#include "DiskSamples.hlsli"
 
-// Âü°íÀÚ·á
+// ì°¸ê³ ìë£Œ
 // https://github.com/Nadrin/PBR/blob/master/data/shaders/hlsl/pbr.hlsl
 
-// ¸Ş½¬ ÀçÁú ÅØ½ºÃçµé t0 ºÎÅÍ ½ÃÀÛ
+// ë©”ì‰¬ ì¬ì§ˆ í…ìŠ¤ì¶°ë“¤ t0 ë¶€í„° ì‹œì‘
 Texture2D albedoTex : register(t0);
 Texture2D normalTex : register(t1);
 Texture2D aoTex : register(t2);
 Texture2D metallicRoughnessTex : register(t3);
 Texture2D emissiveTex : register(t4);
 
-static const float3 Fdielectric = 0.04; // ºñ±İ¼Ó(Dielectric) ÀçÁúÀÇ F0
-
-cbuffer MaterialConstants : register(b0)
-{
-    float3 albedoFactor; // baseColor
-    float roughnessFactor;
-    float metallicFactor;
-    float3 emissionFactor;
-
-    int useAlbedoMap;
-    int useNormalMap;
-    int useAOMap; // Ambient Occlusion
-    int invertNormalMapY;
-    int useMetallicMap;
-    int useRoughnessMap;
-    int useEmissiveMap;
-    float dummy;
-};
+static const float3 Fdielectric = 0.04; // ë¹„ê¸ˆì†(Dielectric) ì¬ì§ˆì˜ F0
 
 float3 SchlickFresnel(float3 F0, float NdotH)
 {
@@ -44,19 +28,19 @@ float3 GetNormal(PixelShaderInput input)
 {
     float3 normalWorld = normalize(input.normalWorld);
     
-    if (useNormalMap) // NormalWorld¸¦ ±³Ã¼
+    if (useNormalMap) // NormalWorldë¥¼ êµì²´
     {
         float3 normal = normalTex.SampleLevel(linearWrapSampler, input.texcoord, lodBias).rgb;
-        normal = 2.0 * normal - 1.0; // ¹üÀ§ Á¶Àı [-1.0, 1.0]
+        normal = 2.0 * normal - 1.0; // ë²”ìœ„ ì¡°ì ˆ [-1.0, 1.0]
 
-        // OpenGL ¿ë ³ë¸Ö¸ÊÀÏ °æ¿ì¿¡´Â y ¹æÇâÀ» µÚÁı¾îÁİ´Ï´Ù.
+        // OpenGL ìš© ë…¸ë©€ë§µì¼ ê²½ìš°ì—ëŠ” y ë°©í–¥ì„ ë’¤ì§‘ì–´ì¤ë‹ˆë‹¤.
         normal.y = invertNormalMapY ? -normal.y : normal.y;
         
         float3 N = normalWorld;
         float3 T = normalize(input.tangentWorld - dot(input.tangentWorld, N) * N);
         float3 B = cross(N, T);
         
-        // matrix´Â float4x4, ¿©±â¼­´Â º¤ÅÍ º¯È¯¿ëÀÌ¶ó¼­ 3x3 »ç¿ë
+        // matrixëŠ” float4x4, ì—¬ê¸°ì„œëŠ” ë²¡í„° ë³€í™˜ìš©ì´ë¼ì„œ 3x3 ì‚¬ìš©
         float3x3 TBN = float3x3(T, B, N);
         normalWorld = normalize(mul(normal, TBN));
     }
@@ -81,7 +65,7 @@ float3 SpecularIBL(float3 albedo, float3 normalWorld, float3 pixelToEye,
     float2 specularBRDF = brdfTex.SampleLevel(linearClampSampler, float2(dot(normalWorld, pixelToEye), 1.0 - roughness), 0.0f).rg;
     float3 specularIrradiance = specularIBLTex.SampleLevel(linearWrapSampler, reflect(-pixelToEye, normalWorld),
                                                             2 + roughness * 5.0f).rgb;
-    const float3 Fdielectric = 0.04; // ºñ±İ¼Ó(Dielectric) ÀçÁúÀÇ F0
+    const float3 Fdielectric = 0.04; // ë¹„ê¸ˆì†(Dielectric) ì¬ì§ˆì˜ F0
     float3 F0 = lerp(Fdielectric, albedo, metallic);
 
     return (F0 * specularBRDF.x + specularBRDF.y) * specularIrradiance;
@@ -98,13 +82,12 @@ float3 AmbientLightingByIBL(float3 albedo, float3 normalW, float3 pixelToEye, fl
 
 // GGX/Towbridge-Reitz normal distribution function.
 // Uses Disney's reparametrization of alpha = roughness^2.
-float NdfGGX(float NdotH, float roughness)
+float NdfGGX(float NdotH, float roughness, float alphaPrime)
 {
     float alpha = roughness * roughness;
     float alphaSq = alpha * alpha;
     float denom = (NdotH * NdotH) * (alphaSq - 1.0) + 1.0;
-
-    return alphaSq / (3.141592 * denom * denom);
+    return alphaPrime * alphaPrime / (3.141592 * denom * denom);
 }
 
 // Single term for separable Schlick-GGX below.
@@ -121,7 +104,7 @@ float SchlickGGX(float NdotI, float NdotO, float roughness)
     return SchlickG1(NdotI, k) * SchlickG1(NdotO, k);
 }
 
-// Âü°í: https://github.com/opengl-tutorials/ogl/blob/master/tutorial16_shadowmaps/ShadowMapping.fragmentshader
+// ì°¸ê³ : https://github.com/opengl-tutorials/ogl/blob/master/tutorial16_shadowmaps/ShadowMapping.fragmentshader
 float random(float3 seed, int i)
 {
     float4 seed4 = float4(seed, i);
@@ -138,7 +121,7 @@ float N2V(float ndcDepth, matrix invProj)
 
 #define NEAR_PLANE 0.1
 // #define LIGHT_WORLD_RADIUS 0.001
-#define LIGHT_FRUSTUM_WIDTH 0.34641 // <- °è»êÇØ¼­ Ã£Àº °ª
+#define LIGHT_FRUSTUM_WIDTH 0.34641 // <- ê³„ì‚°í•´ì„œ ì°¾ì€ ê°’
 
 // Assuming that LIGHT_FRUSTUM_WIDTH == LIGHT_FRUSTUM_HEIGHT
 // #define LIGHT_RADIUS_UV (LIGHT_WORLD_RADIUS / LIGHT_FRUSTUM_WIDTH)
@@ -146,16 +129,16 @@ float N2V(float ndcDepth, matrix invProj)
 float PCF_Filter(float2 uv, float zReceiverNdc, float filterRadiusUV, Texture2D shadowMap)
 {
     float sum = 0.0f;
-    for (int i = 0; i < 128; ++i)
+    for (int i = 0; i < 64; ++i)
     {
-        float2 offset = diskSamples128[i] * filterRadiusUV;
+        float2 offset = diskSamples64[i] * filterRadiusUV;
         sum += shadowMap.SampleCmpLevelZero(
             shadowCompareSampler, uv + offset, zReceiverNdc);
     }
-    return sum / 128;
+    return sum / 64;
 }
 
-// void Func(out float a) <- c++ÀÇ void Func(float& a) Ã³·³ Ãâ·Â°ª ÀúÀå °¡´É
+// void Func(out float a) <- c++ì˜ void Func(float& a) ì²˜ëŸ¼ ì¶œë ¥ê°’ ì €ì¥ ê°€ëŠ¥
 
 void FindBlocker(out float avgBlockerDepthView, out float numBlockers, float2 uv,
                  float zReceiverView, Texture2D shadowMap, matrix invProj, float lightRadiusWorld)
@@ -166,10 +149,10 @@ void FindBlocker(out float avgBlockerDepthView, out float numBlockers, float2 uv
 
     float blockerSum = 0;
     numBlockers = 0;
-    for (int i = 0; i < 128; ++i)
+    for (int i = 0; i < 64; ++i)
     {
         float shadowMapDepth =
-            shadowMap.SampleLevel(shadowPointSampler, float2(uv + diskSamples128[i] * searchRadius), 0).r;
+            shadowMap.SampleLevel(shadowPointSampler, float2(uv + diskSamples64[i] * searchRadius), 0).r;
 
         shadowMapDepth = N2V(shadowMapDepth, invProj);
         
@@ -234,21 +217,21 @@ float3 LightRadiance(Light light, float3 representativePoint, float3 posWorld, f
 
     if (light.type & LIGHT_SHADOW)
     {
-        const float nearZ = 0.01; // Ä«¸Ş¶ó ¼³Á¤°ú µ¿ÀÏ
+        const float nearZ = 0.01; // ì¹´ë©”ë¼ ì„¤ì •ê³¼ ë™ì¼
         
         // 1. Project posWorld to light screen    
         float4 lightScreen = mul(float4(posWorld, 1.0), light.viewProj);
         lightScreen.xyz /= lightScreen.w;
         
-        // 2. Ä«¸Ş¶ó(±¤¿ø)¿¡¼­ º¼ ¶§ÀÇ ÅØ½ºÃç ÁÂÇ¥ °è»ê
+        // 2. ì¹´ë©”ë¼(ê´‘ì›)ì—ì„œ ë³¼ ë•Œì˜ í…ìŠ¤ì¶° ì¢Œí‘œ ê³„ì‚°
         float2 lightTexcoord = float2(lightScreen.x, -lightScreen.y);
         lightTexcoord += 1.0;
         lightTexcoord *= 0.5;
         
-        // 3. ½¦µµ¿ì¸Ê¿¡¼­ °ª °¡Á®¿À±â
+        // 3. ì‰ë„ìš°ë§µì—ì„œ ê°’ ê°€ì ¸ì˜¤ê¸°
         //float depth = shadowMap.Sample(shadowPointSampler, lightTexcoord).r;
         
-        // 4. °¡·ÁÁ® ÀÖ´Ù¸é ±×¸²ÀÚ·Î Ç¥½Ã
+        // 4. ê°€ë ¤ì ¸ ìˆë‹¤ë©´ ê·¸ë¦¼ìë¡œ í‘œì‹œ
         //if (depth + 0.001 < lightScreen.z)
           //  shadowFactor = 0.0;
         
@@ -257,7 +240,9 @@ float3 LightRadiance(Light light, float3 representativePoint, float3 posWorld, f
         
         // float dx = 5.0 / (float) width;
         // shadowFactor = PCF_Filter(lightTexcoord.xy, lightScreen.z - 0.001, dx, shadowMap);
-        shadowFactor = PCSS(lightTexcoord, lightScreen.z - 0.01, shadowMap, light.invProj, light.radius);
+        
+        float radiusScale = 0.5; // ê´‘ì›ì˜ ë°˜ì§€ë¦„ì„ í‚¤ì› ì„ ë•Œ ê¹¨ì§€ëŠ” ê²ƒ ë°©ì§€
+        shadowFactor = PCSS(lightTexcoord, lightScreen.z - 0.001, shadowMap, light.invProj, light.radius * radiusScale);
     }
 
     float3 radiance = light.radiance * spotFator * att * shadowFactor;
@@ -270,8 +255,11 @@ PixelShaderOutput main(PixelShaderInput input)
     float3 pixelToEye = normalize(eyeWorld - input.posWorld);
     float3 normalWorld = GetNormal(input);
     
-    float3 albedo = useAlbedoMap ? albedoTex.SampleLevel(linearWrapSampler, input.texcoord, lodBias).rgb * albedoFactor
-                                 : albedoFactor;
+    float4 albedo = useAlbedoMap ? albedoTex.SampleLevel(linearWrapSampler, input.texcoord, lodBias) * float4(albedoFactor, 1)
+                                 : float4(albedoFactor, 1);
+    
+    clip(albedo.a - 0.5); // Tree leaves
+    
     float ao = useAOMap ? aoTex.SampleLevel(linearWrapSampler, input.texcoord, lodBias).r : 1.0;
     float metallic = useMetallicMap ? metallicRoughnessTex.SampleLevel(linearWrapSampler, input.texcoord, lodBias).b * metallicFactor
                                     : metallicFactor;
@@ -280,22 +268,24 @@ PixelShaderOutput main(PixelShaderInput input)
     float3 emission = useEmissiveMap ? emissiveTex.SampleLevel(linearWrapSampler, input.texcoord, lodBias).rgb
                                      : emissionFactor;
 
-    float3 ambientLighting = AmbientLightingByIBL(albedo, normalWorld, pixelToEye, ao, metallic, roughness) * strengthIBL;
+    float3 ambientLighting = AmbientLightingByIBL(albedo.rgb, normalWorld, pixelToEye, ao, metallic, roughness) * strengthIBL;
     
     float3 directLighting = float3(0, 0, 0);
 
-    // ÀÓ½Ã·Î unroll »ç¿ë
+    // ì„ì‹œë¡œ unroll ì‚¬ìš©
     [unroll] // warning X3550: sampler array index must be a literal expression, forcing loop to unroll
     for (int i = 0; i < MAX_LIGHTS; ++i)
     {
         if (lights[i].type)
         {
-            // TODO: ¿©±â¼­ SphereLight ±¸Çö
-            float3 representativePoint = lights[i].position;
-            
+            float3 L = lights[i].position - input.posWorld;
+            float3 r = normalize(reflect(eyeWorld - input.posWorld, normalWorld));
+            float3 centerToRay = dot(L, r) * r - L;
+            float3 representativePoint = L + centerToRay * clamp(lights[i].radius / length(centerToRay), 0.0, 1.0);
+            representativePoint += input.posWorld;
             float3 lightVec = representativePoint - input.posWorld;
+
             //float3 lightVec = lights[i].position - input.posWorld;
-            
             float lightDist = length(lightVec);
             lightVec /= lightDist;
             float3 halfway = normalize(pixelToEye + lightVec);
@@ -304,21 +294,21 @@ PixelShaderOutput main(PixelShaderInput input)
             float NdotH = max(0.0, dot(normalWorld, halfway));
             float NdotO = max(0.0, dot(normalWorld, pixelToEye));
         
-            const float3 Fdielectric = 0.04; // ºñ±İ¼Ó(Dielectric) ÀçÁúÀÇ F0
-            float3 F0 = lerp(Fdielectric, albedo, metallic);
+            const float3 Fdielectric = 0.04; // ë¹„ê¸ˆì†(Dielectric) ì¬ì§ˆì˜ F0
+            float3 F0 = lerp(Fdielectric, albedo.rgb, metallic);
             float3 F = SchlickFresnel(F0, max(0.0, dot(halfway, pixelToEye)));
             float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metallic);
-            float3 diffuseBRDF = kd * albedo;
+            float3 diffuseBRDF = kd * albedo.rgb;
 
-            // TODO: Sphere Normalization
+            // Sphere Normalization
+            float alpha = roughness * roughness;
+            float alphaPrime = saturate(alpha + lights[i].radius / (2.0 * lightDist));
 
-            float D = NdfGGX(NdotH, roughness);
+            float D = NdfGGX(NdotH, roughness, alphaPrime);
             float3 G = SchlickGGX(NdotI, NdotO, roughness);
             float3 specularBRDF = (F * D * G) / max(1e-5, 4.0 * NdotI * NdotO);
 
-            float3 radiance = 0.0f;
-            
-            radiance = LightRadiance(lights[i], representativePoint, input.posWorld, normalWorld, shadowMaps[i]);
+            float3 radiance = LightRadiance(lights[i], representativePoint, input.posWorld, normalWorld, shadowMaps[i]);
             
             /*if (i == 0)
                 radiance = LightRadiance(lights[i], input.posWorld, normalWorld, shadowMap0);
@@ -326,8 +316,10 @@ PixelShaderOutput main(PixelShaderInput input)
                 radiance = LightRadiance(lights[i], input.posWorld, normalWorld, shadowMap1);
             if (i == 2)
                 radiance = LightRadiance(lights[i], input.posWorld, normalWorld, shadowMap2);*/
-                
-            directLighting += (diffuseBRDF + specularBRDF) * radiance * NdotI;
+            
+            // ì˜¤ë¥˜ ì„ì‹œ ìˆ˜ì • (radianceê°€ (0,0,0)ì¼ ê²½ìš°  directLighting += ... ì¸ë°ë„ 0 ë²¡í„°ê°€ ë˜ì–´ë²„ë¦¼
+            if (abs(dot(float3(1, 1, 1), radiance)) > 1e-5)
+                directLighting += (diffuseBRDF + specularBRDF) * radiance * NdotI;
         }
     }
     

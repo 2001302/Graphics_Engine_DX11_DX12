@@ -82,7 +82,6 @@ class UpdateLightsNode : public common::BehaviorActionNode {
                 // endl;
 
                 GraphicsUtil::UpdateBuffer(
-                    GraphicsManager::Instance().device,
                     GraphicsManager::Instance().device_context,
                     manager->shadow_global_consts_CPU[i],
                     manager->shadow_global_consts_GPU[i]);
@@ -148,13 +147,11 @@ class UpdateGlobalConstantBuffersNode : public common::BehaviorActionNode {
         manager->reflect_global_consts_CPU.invViewProj =
             manager->reflect_global_consts_CPU.viewProj.Invert();
 
-        GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device,
-                                   GraphicsManager::Instance().device_context,
+        GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device_context,
                                    manager->global_consts_CPU,
                                    manager->global_consts_GPU);
 
-        GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device,
-                                   GraphicsManager::Instance().device_context,
+        GraphicsUtil::UpdateBuffer(GraphicsManager::Instance().device_context,
                                    manager->reflect_global_consts_CPU,
                                    manager->reflect_global_consts_GPU);
 

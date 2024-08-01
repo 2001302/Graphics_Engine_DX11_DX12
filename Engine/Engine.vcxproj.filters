@@ -178,6 +178,9 @@
     <ClInclude Include="image_filter.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
+    <ClInclude Include="texture_3d.h">
+      <Filter>Engine\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -360,6 +363,9 @@
       <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </None>
     <None Include="Common.hlsli">
+      <Filter>Engine\Graphics\Shader</Filter>
+    </None>
+    <None Include="DiskSamples.hlsli">
       <Filter>Engine\Graphics\Shader</Filter>
     </None>
   </ItemGroup>

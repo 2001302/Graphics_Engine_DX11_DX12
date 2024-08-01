@@ -12,9 +12,11 @@ using DirectX::SimpleMath::Vector3;
 __declspec(align(256)) struct MeshConstants {
     Matrix world;
     Matrix worldIT;
+    Matrix worldInv;
     int useHeightMap = 0;
     float heightScale = 0.0f;
-    Vector2 dummy;
+    float windTrunk = 0.0f;
+    float windLeaves = 0.0f;
 };
 
 __declspec(align(256)) struct MaterialConstants {
@@ -24,6 +26,7 @@ __declspec(align(256)) struct MaterialConstants {
     float metallicFactor = 1.0f;
     Vector3 emissionFactor = Vector3(0.0f);
 
+    // 여러 옵션들에 uint 플래그 하나만 사용할 수도 있습니다.
     int useAlbedoMap = 0;
     int useNormalMap = 0;
     int useAOMap = 0;
@@ -33,6 +36,7 @@ __declspec(align(256)) struct MaterialConstants {
     int useEmissiveMap = 0;
     float dummy = 0.0f;
 
+    // 참고 flags 구현
     /* union {
         uint32_t flags;
         struct {
@@ -81,7 +85,8 @@ __declspec(align(256)) struct GlobalConstants {
     Matrix proj;
     Matrix invProj; 
     Matrix viewProj;
-    Matrix invViewProj; 
+    Matrix invViewProj;
+    Matrix invView;
 
     Vector3 eyeWorld;
     float strengthIBL = 0.0f;
@@ -94,11 +99,39 @@ __declspec(align(256)) struct GlobalConstants {
     Light lights[MAX_LIGHTS];
 };
 
-// register(b3), PostEffectsPS.hlsl
 __declspec(align(256)) struct PostEffectsConstants {
     int mode = 1; // 1: Rendered image, 2: DepthOnly
     float depthScale = 1.0f;
     float fogStrength = 0.0f;
 };
+
+__declspec(align(256)) struct VolumeConsts {
+    Vector3 uvwOffset = Vector3(0.0f);
+    float lightAbsorption = 5.0f;
+    Vector3 lightDir = Vector3(0.0f, 1.0f, 0.0f);
+    float densityAbsorption = 10.0f;
+    Vector3 lightColor = Vector3(1, 1, 1) * 40.0f;
+    float aniso = 0.3f;
+};
+
+template <typename T_CONSTS> class ConstantBuffer {
+  public:
+    void Initialize(ComPtr<ID3D11Device> &device) {
+        GraphicsUtil::CreateConstBuffer(device, m_cpu, m_gpu);
+    }
+
+    void Upload(ComPtr<ID3D11DeviceContext> &context) {
+        GraphicsUtil::UpdateBuffer(context, m_cpu, m_gpu);
+    }
+
+  public:
+    T_CONSTS &GetCpu() { return m_cpu; }
+    const auto Get() { return m_gpu.Get(); }
+    const auto GetAddressOf() { return m_gpu.GetAddressOf(); }
+
+    T_CONSTS m_cpu;
+    ComPtr<ID3D11Buffer> m_gpu;
+};
+
 } // namespace engine
 #endif

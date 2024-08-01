@@ -1,51 +1,94 @@
-#include "Common.hlsli" // ½¦ÀÌ´õ¿¡¼­µµ include »ç¿ë °¡´É
+#include "Common.hlsli" // ì‰ì´ë”ì—ì„œë„ include ì‚¬ìš© ê°€ëŠ¥
 
-// Vertex Shader¿¡¼­µµ ÅØ½ºÃç »ç¿ë
+// Vertex Shaderì—ì„œë„ í…ìŠ¤ì¶° ì‚¬ìš©
 Texture2D g_heightTexture : register(t0);
-
-cbuffer MeshConstants : register(b0)
-{
-    matrix world; // Model(¶Ç´Â Object) ÁÂÇ¥°è -> World·Î º¯È¯
-    matrix worldIT; // WorldÀÇ InverseTranspose
-    int useHeightMap;
-    float heightScale;
-    float2 dummy;
-};
 
 PixelShaderInput main(VertexShaderInput input)
 {
-    // ºä ÁÂÇ¥°è´Â NDCÀÌ±â ¶§¹®¿¡ ¿ùµå ÁÂÇ¥¸¦ ÀÌ¿ëÇØ¼­ Á¶¸í °è»ê
+    // ë·° ì¢Œí‘œê³„ëŠ” NDCì´ê¸° ë•Œë¬¸ì— ì›”ë“œ ì¢Œí‘œë¥¼ ì´ìš©í•´ì„œ ì¡°ëª… ê³„ì‚°
     
     PixelShaderInput output;
     
-    // Normal º¤ÅÍ ¸ÕÀú º¯È¯ (Height Mapping)
-    float4 normal = float4(input.normalModel, 0.0f);
-    output.normalWorld = mul(normal, worldIT).xyz;
-    output.normalWorld = normalize(output.normalWorld);
+#ifdef SKINNED
     
-    // Tangent º¤ÅÍ´Â world·Î º¯È¯
-    float4 tangentWorld = float4(input.tangentModel, 0.0f);
-    tangentWorld = mul(tangentWorld, world);
+    // ì°¸ê³  ìë£Œ: Luna DX 12 êµì¬
+    
+    float weights[8];
+    weights[0] = input.boneWeights0.x;
+    weights[1] = input.boneWeights0.y;
+    weights[2] = input.boneWeights0.z;
+    weights[3] = input.boneWeights0.w;
+    weights[4] = input.boneWeights1.x;
+    weights[5] = input.boneWeights1.y;
+    weights[6] = input.boneWeights1.z;
+    weights[7] = input.boneWeights1.w;
+    
+    uint indices[8]; // íŒíŠ¸: ê¼­ ì‚¬ìš©!
+    indices[0] = input.boneIndices0.x;
+    indices[1] = input.boneIndices0.y;
+    indices[2] = input.boneIndices0.z;
+    indices[3] = input.boneIndices0.w;
+    indices[4] = input.boneIndices1.x;
+    indices[5] = input.boneIndices1.y;
+    indices[6] = input.boneIndices1.z;
+    indices[7] = input.boneIndices1.w;
 
-    float4 pos = float4(input.posModel, 1.0f);
-    pos = mul(pos, world);
+    float3 posModel = float3(0.0f, 0.0f, 0.0f);
+    float3 normalModel = float3(0.0f, 0.0f, 0.0f);
+    float3 tangentModel = float3(0.0f, 0.0f, 0.0f);
     
-    if (useHeightMap)
+    // Uniform Scaling ê°€ì •
+    // (float3x3)boneTransforms ìºìŠ¤íŒ…ìœ¼ë¡œ Translation ì œì™¸
+    for(int i = 0; i < 8; ++i)
     {
-        // VertexShader¿¡¼­´Â SampleLevel »ç¿ë
-        // HeightmapÀº º¸Åë Èæ¹éÀÌ¶ó¼­ ¸¶Áö¸·¿¡ .r·Î float ÇÏ³ª¸¸ »ç¿ë
-        float height = g_heightTexture.SampleLevel(linearClampSampler, input.texcoord, 0).r;
-        height = height * 2.0 - 1.0;
-        pos += float4(output.normalWorld * height * heightScale, 0.0);
+        // TODO:
     }
 
-    output.posWorld = pos.xyz; // ¿ùµå À§Ä¡ µû·Î ÀúÀå
+    //input.posModel = posModel;
+    //input.normalModel = normalModel;
+    //input.tangentModel = tangentModel;
 
-    pos = mul(pos, viewProj);
+#endif
 
-    output.posProj = pos;
-    output.texcoord = input.texcoord;
-    output.tangentWorld = tangentWorld.xyz;
+    //ì°¸ê³ : windTrunk, windLeaves ì˜µì…˜ë„ skinnedMeshì²˜ëŸ¼ ë§¤í¬ë¡œ ì‚¬ìš© ê°€ëŠ¥
+    if (windTrunk != 0.0)
+    {
+        float2 rotCenter = float2(0.0f, -0.5f);
+        float2 temp = (input.posModel.xy - rotCenter);
+        float coeff = windTrunk * pow(max(0, temp.y), 2.0) * sin(globalTime);
+        
+        float2x2 rot = float2x2(cos(coeff), sin(coeff), -sin(coeff), cos(coeff));
+        
+        input.posModel.xy = mul(temp, rot);
+        input.posModel.xy += rotCenter;
+    }
     
+    if (windLeaves != 0.0)
+    {
+        float3 windVel = float3(sin(input.posModel.x * 100.0 + globalTime * 0.1)
+                                * cos(input.posModel.y * 100 + globalTime * 0.1), 0, 0)
+                                * sin(globalTime * 10.0);
+
+        // float3 coeff = windLeaves * ... ;
+        
+        // input.posModel.xyz += coeff;
+    }
+    
+    output.posModel = input.posModel;
+    output.normalWorld = mul(float4(input.normalModel, 0.0f), worldIT).xyz;
+    output.normalWorld = normalize(output.normalWorld);
+    output.posWorld = mul(float4(input.posModel, 1.0f), world).xyz;
+
+    if (useHeightMap)
+    {
+        float height = g_heightTexture.SampleLevel(linearClampSampler, input.texcoord, 0).r;
+        height = height * 2.0 - 1.0;
+        output.posWorld += output.normalWorld * height * heightScale;
+    }
+
+    output.posProj = mul(float4(output.posWorld, 1.0), viewProj);
+    output.texcoord = input.texcoord;
+    output.tangentWorld = mul(float4(input.tangentModel, 0.0f), world).xyz;
+
     return output;
 }

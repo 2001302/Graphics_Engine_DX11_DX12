@@ -108,8 +108,23 @@ class GraphicsUtil {
     }
 
     template <typename T_DATA>
-    static void UpdateBuffer(ComPtr<ID3D11Device> &device,
-                             ComPtr<ID3D11DeviceContext> &context,
+    static void UpdateBuffer(ComPtr<ID3D11DeviceContext> &context,
+                             const std::vector<T_DATA> &bufferData,
+                             ComPtr<ID3D11Buffer> &buffer) {
+
+        if (!buffer) {
+            std::cout << "UpdateBuffer() buffer was not initialized."
+                      << std::endl;
+        }
+
+        D3D11_MAPPED_SUBRESOURCE ms;
+        context->Map(buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+        memcpy(ms.pData, bufferData.data(), sizeof(T_DATA) * bufferData.size());
+        context->Unmap(buffer.Get(), NULL);
+    }
+
+    template <typename T_DATA>
+    static void UpdateBuffer(ComPtr<ID3D11DeviceContext> &context,
                              const T_DATA &bufferData,
                              ComPtr<ID3D11Buffer> &buffer) {
 
@@ -130,6 +145,12 @@ class GraphicsUtil {
                   const std::string filename, const bool usSRGB,
                   ComPtr<ID3D11Texture2D> &texture,
                   ComPtr<ID3D11ShaderResourceView> &textureResourceView);
+
+    static void CreateTexture(
+        ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
+        const std::string albedoFilename, const std::string opacityFilename,
+        const bool usSRGB, ComPtr<ID3D11Texture2D> &texture,
+        ComPtr<ID3D11ShaderResourceView> &textureResourceView);
 
     static void CreateMetallicRoughnessTexture(
         ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
@@ -160,9 +181,25 @@ class GraphicsUtil {
                                 ComPtr<ID3D11ShaderResourceView> &srv,
                                 ComPtr<ID3D11UnorderedAccessView> &uav);
 
+    static void CreateTexture3D(ComPtr<ID3D11Device> &device, const int width,
+                                const int height, const int depth,
+                                const DXGI_FORMAT pixelFormat,
+                                const std::vector<float> &initData,
+                                ComPtr<ID3D11Texture3D> &texture,
+                                ComPtr<ID3D11RenderTargetView> &rtv,
+                                ComPtr<ID3D11ShaderResourceView> &srv,
+                                ComPtr<ID3D11UnorderedAccessView> &uav);
+
+    static ComPtr<ID3D11Texture3D>
+    CreateStagingTexture3D(ComPtr<ID3D11Device> &device, const int width,
+                           const int height, const int depth,
+                           const DXGI_FORMAT pixelFormat);
+
+    static size_t GetPixelSize(DXGI_FORMAT pixelFormat);
+
     static void CreateComputeShader(ComPtr<ID3D11Device> &device,
-                             const std::wstring &filename,
-                             ComPtr<ID3D11ComputeShader> &computeShader);
+                                    const std::wstring &filename,
+                                    ComPtr<ID3D11ComputeShader> &computeShader);
     static void ComputeShaderBarrier(ComPtr<ID3D11DeviceContext> &context);
 };
 

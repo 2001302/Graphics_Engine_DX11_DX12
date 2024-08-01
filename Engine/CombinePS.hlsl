@@ -2,7 +2,7 @@ Texture2D g_texture0 : register(t0);
 Texture2D g_texture1 : register(t1);
 SamplerState g_sampler : register(s0);
 
-cbuffer ImageFilterConstData : register(b0) {
+cbuffer ImageFilterConstData : register(b1) {
     float dx;
     float dy;
     float threshold;

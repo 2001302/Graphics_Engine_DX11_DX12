@@ -26,7 +26,7 @@ class PostProcessingNode : public common::BehaviorActionNode {
             const_data.strength = 0.5f; // Bloom strength
 
             GraphicsUtil::CreateConstBuffer(device, const_data, const_buffer);
-            GraphicsUtil::UpdateBuffer(device, context, const_data,
+            GraphicsUtil::UpdateBuffer(context, const_data,
                                        const_buffer);
             // bloom
             GraphicsUtil::CreateUATexture(

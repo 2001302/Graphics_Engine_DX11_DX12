@@ -51,8 +51,9 @@ class InitializeLightNode : public common::BehaviorActionNode {
 
                 renderer->UpdateWorldRow(Matrix::CreateTranslation(
                     manager->global_consts_CPU.lights[i].position));
-                renderer->m_materialConstsCPU.albedoFactor = Vector3(0.0f);
-                renderer->m_materialConstsCPU.emissionFactor =
+                renderer->m_materialConsts.GetCpu().albedoFactor =
+                    Vector3(0.0f);
+                renderer->m_materialConsts.GetCpu().emissionFactor =
                     Vector3(1.0f, 1.0f, 0.0f);
                 renderer->m_castShadow = false; // 조명 표시 물체들은 그림자 X
 
@@ -138,10 +139,10 @@ class InitializeMirrorGroundNode : public common::BehaviorActionNode {
 
         // mesh.albedoTextureFilename =
         //     "../Assets/Textures/blender_uv_grid_2k.png";
-        renderer->m_materialConstsCPU.albedoFactor = Vector3(0.1f);
-        renderer->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
-        renderer->m_materialConstsCPU.metallicFactor = 0.5f;
-        renderer->m_materialConstsCPU.roughnessFactor = 0.3f;
+        renderer->m_materialConsts.GetCpu().albedoFactor = Vector3(0.1f);
+        renderer->m_materialConsts.GetCpu().emissionFactor = Vector3(0.0f);
+        renderer->m_materialConsts.GetCpu().metallicFactor = 0.5f;
+        renderer->m_materialConsts.GetCpu().roughnessFactor = 0.3f;
 
         Vector3 position = Vector3(0.0f, -0.5f, 2.0f);
         renderer->UpdateWorldRow(Matrix::CreateRotationX(3.141592f * 0.5f) *
@@ -224,11 +225,11 @@ class InitializeBasicModelsNode : public common::BehaviorActionNode {
                 GraphicsManager::Instance().device_context, std::vector{mesh});
 
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
-            renderer->m_materialConstsCPU.albedoFactor =
+            renderer->m_materialConsts.GetCpu().albedoFactor =
                 Vector3(0.1f, 0.1f, 1.0f);
-            renderer->m_materialConstsCPU.roughnessFactor = 0.2f;
-            renderer->m_materialConstsCPU.metallicFactor = 0.6f;
-            renderer->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
+            renderer->m_materialConsts.GetCpu().roughnessFactor = 0.2f;
+            renderer->m_materialConsts.GetCpu().metallicFactor = 0.6f;
+            renderer->m_materialConsts.GetCpu().emissionFactor = Vector3(0.0f);
             renderer->UpdateConstantBuffers(
                 GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context);
@@ -249,11 +250,11 @@ class InitializeBasicModelsNode : public common::BehaviorActionNode {
                 GraphicsManager::Instance().device_context, std::vector{mesh});
 
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
-            renderer->m_materialConstsCPU.albedoFactor =
+            renderer->m_materialConsts.GetCpu().albedoFactor =
                 Vector3(1.0f, 0.2f, 0.2f);
-            renderer->m_materialConstsCPU.roughnessFactor = 0.5f;
-            renderer->m_materialConstsCPU.metallicFactor = 0.9f;
-            renderer->m_materialConstsCPU.emissionFactor = Vector3(0.0f);
+            renderer->m_materialConsts.GetCpu().roughnessFactor = 0.5f;
+            renderer->m_materialConsts.GetCpu().metallicFactor = 0.9f;
+            renderer->m_materialConsts.GetCpu().emissionFactor = Vector3(0.0f);
             renderer->UpdateConstantBuffers(
                 GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context);

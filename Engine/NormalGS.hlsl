@@ -1,14 +1,5 @@
 #include "Common.hlsli"
 
-cbuffer MeshConstants : register(b0)
-{
-    matrix world;
-    matrix worldIT;
-    int useHeightMap;
-    float heightScale;
-    float2 dummy;
-};
-
 struct NormalGeometryShaderInput
 {
     float4 posModel : SV_POSITION;

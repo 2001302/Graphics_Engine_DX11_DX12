@@ -171,6 +171,7 @@
     <ClInclude Include="env.h" />
     <ClInclude Include="geometry_generator.h" />
     <ClInclude Include="post_process_node.h" />
+    <ClInclude Include="texture_3d.h" />
     <ClInclude Include="tree_node.h" />
     <ClInclude Include="ui.h" />
     <ClInclude Include="id_generator.h" />
@@ -241,6 +242,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Common.hlsli" />
+    <None Include="DiskSamples.hlsli" />
     <None Include="ImGui\config.h.in" />
     <None Include="ImGui\NodeEditor\imgui_bezier_math.inl" />
     <None Include="ImGui\NodeEditor\imgui_extra_math.inl" />

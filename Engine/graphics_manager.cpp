@@ -231,10 +231,10 @@ void GraphicsManager::SetPipelineState(const ComputePSO &pso) {
 }
 
 void GraphicsManager::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
-    // 쉐이더와 일관성 유지 register(b1)
-    device_context->VSSetConstantBuffers(1, 1, globalConstsGPU.GetAddressOf());
-    device_context->PSSetConstantBuffers(1, 1, globalConstsGPU.GetAddressOf());
-    device_context->GSSetConstantBuffers(1, 1, globalConstsGPU.GetAddressOf());
+    // 쉐이더와 일관성 유지 cbuffer GlobalConstants : register(b0)
+    device_context->VSSetConstantBuffers(0, 1, globalConstsGPU.GetAddressOf());
+    device_context->PSSetConstantBuffers(0, 1, globalConstsGPU.GetAddressOf());
+    device_context->GSSetConstantBuffers(0, 1, globalConstsGPU.GetAddressOf());
 }
 
 } // namespace engine

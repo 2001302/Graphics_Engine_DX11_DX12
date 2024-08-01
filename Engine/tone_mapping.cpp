@@ -24,7 +24,7 @@ void ToneMapping::Initialize(ComPtr<ID3D11Device> &device,
     const_data.option1 = 1.0f;  // Exposure
     const_data.option2 = 2.2f;  // Gamma
     GraphicsUtil::CreateConstBuffer(device, const_data, const_buffer);
-    GraphicsUtil::UpdateBuffer(device, context, const_data, const_buffer);
+    GraphicsUtil::UpdateBuffer(context, const_data, const_buffer);
 }
 
 void ToneMapping::Render(ComPtr<ID3D11Device> &device,
@@ -46,7 +46,7 @@ void ToneMapping::Render(ComPtr<ID3D11Device> &device,
     context->PSSetShaderResources(
         0, 1, GraphicsManager::Instance().resolved_SRV.GetAddressOf());
     context->PSSetShader(Graphics::combinePS.Get(), 0, 0);
-    context->PSSetConstantBuffers(0, 1, const_buffer.GetAddressOf());
+    context->PSSetConstantBuffers(1, 1, const_buffer.GetAddressOf());
     context->DrawIndexed(mesh->indexCount, 0, 0);
 }
 

@@ -324,8 +324,7 @@ MeshData GeometryGenerator::MakeSphere(const float radius, const int numSlices,
             // texcoord가 위로 갈수록 증가
             Vector3 biTangent = Vector3(0.0f, 1.0f, 0.0f);
 
-            Vector3 normalOrth =
-                v.normal - biTangent.Dot(v.normal) * v.normal;
+            Vector3 normalOrth = v.normal - biTangent.Dot(v.normal) * v.normal;
             normalOrth.Normalize();
 
             v.tangent = biTangent.Cross(normalOrth);
@@ -575,5 +574,123 @@ vector<MeshData> GeometryGenerator::ReadFromFile(std::string basePath,
     }
 
     return meshes;
+}
+
+MeshData GeometryGenerator::MakeWireBox(const Vector3 center,
+                                        const Vector3 extents) {
+
+    // 상자를 와이어 프레임으로 그리는 용도
+
+    vector<Vector3> positions;
+
+    // 앞면
+    positions.push_back(center + Vector3(-1.0f, -1.0f, -1.0f) * extents);
+    positions.push_back(center + Vector3(-1.0f, 1.0f, -1.0f) * extents);
+    positions.push_back(center + Vector3(1.0f, 1.0f, -1.0f) * extents);
+    positions.push_back(center + Vector3(1.0f, -1.0f, -1.0f) * extents);
+
+    // 뒷면
+    positions.push_back(center + Vector3(-1.0f, -1.0f, 1.0f) * extents);
+    positions.push_back(center + Vector3(-1.0f, 1.0f, 1.0f) * extents);
+    positions.push_back(center + Vector3(1.0f, 1.0f, 1.0f) * extents);
+    positions.push_back(center + Vector3(1.0f, -1.0f, 1.0f) * extents);
+
+    MeshData meshData;
+    for (size_t i = 0; i < positions.size(); i++) {
+        Vertex v;
+        v.position = positions[i];
+        v.normal = positions[i] - center;
+        v.normal.Normalize();
+        v.texcoord = Vector2(0.0f); // 미사용
+        meshData.vertices.push_back(v);
+    }
+
+    // Line list
+    meshData.indices = {
+        0, 1, 1, 2, 2, 3, 3, 0, // 앞면
+        4, 5, 5, 6, 6, 7, 7, 4, // 뒷면
+        0, 4, 1, 5, 2, 6, 3, 7  // 옆면
+    };
+
+    return meshData;
+}
+
+MeshData GeometryGenerator::MakeWireSphere(const Vector3 center,
+                                           const float radius) {
+    MeshData meshData;
+    vector<Vertex> &vertices = meshData.vertices;
+    vector<uint32_t> &indices = meshData.indices;
+
+    const int numPoints = 30;
+    const float dTheta = XM_2PI / float(numPoints);
+
+    // XY plane
+    {
+        int offset = int(vertices.size());
+        Vector3 start(1.0f, 0.0f, 0.0f);
+        for (int i = 0; i < numPoints; i++) {
+            Vertex v;
+            v.position =
+                center + Vector3::Transform(start, Matrix::CreateRotationZ(
+                                                       dTheta * float(i))) *
+                             radius;
+            vertices.push_back(v);
+            indices.push_back(i + offset);
+            if (i != 0) {
+                indices.push_back(i + offset);
+            }
+        }
+        indices.push_back(offset);
+    }
+
+    // YZ
+    {
+        int offset = int(vertices.size());
+        Vector3 start(0.0f, 1.0f, 0.0f);
+        for (int i = 0; i < numPoints; i++) {
+            Vertex v;
+            v.position =
+                center + Vector3::Transform(start, Matrix::CreateRotationX(
+                                                       dTheta * float(i))) *
+                             radius;
+            vertices.push_back(v);
+            indices.push_back(i + offset);
+            if (i != 0) {
+                indices.push_back(i + offset);
+            }
+        }
+        indices.push_back(offset);
+    }
+
+    // XZ
+    {
+        int offset = int(vertices.size());
+        Vector3 start(1.0f, 0.0f, 0.0f);
+        for (int i = 0; i < numPoints; i++) {
+            Vertex v;
+            v.position =
+                center + Vector3::Transform(start, Matrix::CreateRotationY(
+                                                       dTheta * float(i))) *
+                             radius;
+            vertices.push_back(v);
+            indices.push_back(i + offset);
+            if (i != 0) {
+                indices.push_back(i + offset);
+            }
+        }
+        indices.push_back(offset);
+    }
+
+    // for (auto &v : vertices) {
+    //     cout << v.position.x << " " << v.position.y << " " << v.position.z
+    //          << endl;
+    // }
+
+    // for (int i = 0; i < indices.size(); i++) {
+    //     cout << indices[i] << " ";
+    // }
+    // cout << endl;
+
+    return meshData;
 }
 } // namespace engine

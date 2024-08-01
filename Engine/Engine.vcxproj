@@ -241,8 +241,14 @@
     <ClCompile Include="sequence_node.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Common.hlsli" />
-    <None Include="DiskSamples.hlsli" />
+    <None Include="Common.hlsli">
+      <FileType>Document</FileType>
+    </None>
+    <None Include="DiskSamples.hlsli">
+      <FileType>Document</FileType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4.0_level_9_3</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4.0_level_9_3</ShaderModel>
+    </None>
     <None Include="ImGui\config.h.in" />
     <None Include="ImGui\NodeEditor\imgui_bezier_math.inl" />
     <None Include="ImGui\NodeEditor\imgui_extra_math.inl" />

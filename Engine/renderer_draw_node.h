@@ -93,6 +93,10 @@ class DrawShadowMapNode : public common::BehaviorActionNode {
             data_block[common::EnumDataBlockType::eRenderBlock]);
         assert(manager != nullptr);
 
+        std::vector<ID3D11ShaderResourceView *> nullSRV(MAX_LIGHTS, nullptr);
+        GraphicsManager::Instance().device_context->PSSetShaderResources(
+            15, UINT(nullSRV.size()), nullSRV.data());
+
         // make shadow map
         GraphicsManager::Instance().SetPipelineState(Graphics::depthOnlyPSO);
         for (int i = 0; i < MAX_LIGHTS; i++) {

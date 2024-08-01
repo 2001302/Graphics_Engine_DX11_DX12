@@ -1,4 +1,4 @@
-#include "Common.hlsli" // 쉐이더에서도 include 사용 가능
+#include "Common.hlsli" 
 
 struct DepthOnlyPixelShaderInput {
     float4 posProj : SV_POSITION;

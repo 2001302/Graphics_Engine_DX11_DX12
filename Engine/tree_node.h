@@ -6,7 +6,6 @@
 #include "renderer_initialize_node.h"
 #include "renderer_update_node.h"
 #include "gui_node.h"
-#include "input_node.h"
 
 // clang-format off
 namespace engine {
@@ -22,7 +21,6 @@ class TreeNode {
         create_global_constant_buffer = std::make_shared<CreateGlobalConstantBufferNode>();
         initialize_post_effect = std::make_shared<InitializePostEffectNode>();
         initialize_basic_models = std::make_shared<InitializeBasicModelsNode>();
-        read_input = std::make_shared<ReadInputNode>();
         update_camera = std::make_shared<UpdateCameraNode>();
         update_lights = std::make_shared<UpdateLightsNode>();
         update_global_constant_buffers = std::make_shared<UpdateGlobalConstantBuffersNode>();
@@ -54,7 +52,6 @@ class TreeNode {
     std::shared_ptr<CreateGlobalConstantBufferNode> CreateGlobalConstantBuffer(){return create_global_constant_buffer;}
     std::shared_ptr<InitializePostEffectNode> InitializePostEffect(){return initialize_post_effect;}
     std::shared_ptr<InitializeBasicModelsNode> InitializeBasicModels(){return initialize_basic_models;}
-    std::shared_ptr<ReadInputNode> ReadInput(){return read_input;}
     std::shared_ptr<UpdateCameraNode> UpdateCamera(){return update_camera;}
     std::shared_ptr<UpdateLightsNode> UpdateLights(){return update_lights;}
     std::shared_ptr<UpdateGlobalConstantBuffersNode> UpdateGlobalConstantBuffers(){return update_global_constant_buffers;}
@@ -87,7 +84,6 @@ class TreeNode {
     std::shared_ptr<CreateGlobalConstantBufferNode> create_global_constant_buffer;
     std::shared_ptr<InitializePostEffectNode> initialize_post_effect;
     std::shared_ptr<InitializeBasicModelsNode> initialize_basic_models;
-    std::shared_ptr<ReadInputNode> read_input;
     std::shared_ptr<UpdateCameraNode> update_camera;
     std::shared_ptr<UpdateLightsNode> update_lights;
     std::shared_ptr<UpdateGlobalConstantBuffersNode> update_global_constant_buffers;

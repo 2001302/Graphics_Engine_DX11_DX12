@@ -79,7 +79,8 @@ class Application : public Platform, TreeNode {
                 if (CheckIfMouseInViewport(gui.get(), LOWORD(lparam),
                                            HIWORD(lparam))) {
                     return message_receiver->OnMouseRightDragRequest(
-                        render_block.get(), input);
+                        render_block.get(), input, LOWORD(lparam),
+                        HIWORD(lparam));
                 }
             }
             if (wparam & MK_MBUTTON) {
@@ -94,15 +95,17 @@ class Application : public Platform, TreeNode {
         case WM_MOUSEWHEEL: {
             if (CheckIfMouseInViewport(gui.get(), LOWORD(lparam),
                                        HIWORD(lparam))) {
-                return message_receiver->OnMouseWheelRequest(render_block.get(),
-                                                              input);
+                return message_receiver->OnMouseWheelRequest(
+                    render_block.get(), input, GET_WHEEL_DELTA_WPARAM(wparam));
             }
             break;
         }
-        case WM_RBUTTONDOWN: {
-            break;
-        }
-        case WM_LBUTTONUP: {
+        case WM_RBUTTONDOWN:
+        case WM_LBUTTONDOWN:
+        case WM_MBUTTONDOWN: 
+        {
+            return message_receiver->OnMouseDownRequest(input, LOWORD(lparam),
+                                                        HIWORD(lparam));
             break;
         }
         case WM_MODEL_LOAD: {

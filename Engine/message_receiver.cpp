@@ -4,107 +4,73 @@
 namespace engine {
 using namespace DirectX::SimpleMath;
 
+bool MessageReceiver::OnMouseDownRequest(std::shared_ptr<Input> input,
+                                         int mouseX, int mouseY) {
+    input->SetMouse(mouseX, mouseY);
+    return true;
+}
+
 bool MessageReceiver::OnMouseRightDragRequest(RenderingBlock *manager,
-                                              std::shared_ptr<Input> input) {
-    DIMOUSESTATE mouseState;
-    if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
-                                              &mouseState))) {
-        // retry
-        input->Mouse()->Acquire();
-    } else {
-        auto viewPort = GraphicsManager::Instance().viewport;
+                                              std::shared_ptr<Input> input,
+                                              int mouseX, int mouseY) {
 
-        // mouse move vector
-        Vector2 vector = Vector2(-mouseState.lX, -mouseState.lY);
+    Vector2 move = Vector2(input->MouseX() - mouseX, input->MouseY() - mouseY);
+    move = move / -1000.0f;
 
-        Vector3 origin = manager->camera->GetPosition();
+    Vector3 relative_position =
+        manager->camera->GetPosition() - manager->camera->GetLookAt();
+    Matrix rotation_matrix =
+        Matrix::CreateRotationX(move.y) * Matrix::CreateRotationY(move.x);
+    Vector3 rotated_position =
+        Vector3::Transform(relative_position, rotation_matrix);
+    Vector3 position = rotated_position + manager->camera->GetLookAt();
 
-        // convert to spherical coordinates
-        double r = origin.Length();
-        double phi = acos(origin.y / r);
-        double theta = atan2(origin.z, origin.x);
+    manager->camera->SetPosition(Vector3(position.x, position.y, position.z));
 
-        // rotation
-        double deltaTheta = (2 * PI) * (vector.x / viewPort.Width);
-        double deltaPhi = (2 * PI) * (vector.y / viewPort.Width);
-
-        theta += deltaTheta;
-        phi += deltaPhi;
-
-        // convert to Cartesian coordinates after rotation
-        double x = r * sin(phi) * cos(theta);
-        double y = r * cos(phi);
-        double z = r * sin(phi) * sin(theta);
-
-        Vector3 origin_prime(x, y, z);
-
-        if (0.0f < phi && phi < PI)
-            manager->camera->SetPosition(
-                Vector3(origin_prime.x, origin_prime.y, origin_prime.z));
-    }
-
+    input->SetMouse(mouseX, mouseY);
     return true;
 }
 
 bool MessageReceiver::OnMouseWheelRequest(RenderingBlock *manager,
-                                          std::shared_ptr<Input> input) {
-    DIMOUSESTATE mouseState;
-    if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
-                                              &mouseState))) {
-        // retry
-        input->Mouse()->Acquire();
-    } else {
-        float wheel = mouseState.lZ / (600.0);
+                                          std::shared_ptr<Input> input,
+                                          int wheel) {
 
-        auto look_at = manager->camera->GetLookAt();
-        auto position = manager->camera->GetPosition();
+    auto look_at = manager->camera->GetLookAt();
+    auto position = manager->camera->GetPosition();
 
-        auto direction = look_at - position;
-        direction.Normalize();
+    auto direction = look_at - position;
+    direction.Normalize();
 
-        auto move = wheel * direction;
-        auto new_position = position + move;
-        manager->camera->SetPosition(new_position);
-    }
-
+    auto move = wheel * direction / 1000.0f;
+    auto new_position = position + move;
+    manager->camera->SetPosition(new_position);
     return true;
 }
 
 bool MessageReceiver::OnMouseWheelDragRequest(RenderingBlock *manager,
                                               std::shared_ptr<Input> input,
                                               int mouseX, int mouseY) {
-    DIMOUSESTATE mouseState;
-    if (FAILED(input->Mouse()->GetDeviceState(sizeof(DIMOUSESTATE),
-                                              &mouseState))) {
-        // retry
-        input->Mouse()->Acquire();
-    } else {
+    auto offsetX = input->MouseX() - mouseX;
+    auto offsetY = input->MouseY() - mouseY;
 
-        Vector2 current = Vector2(mouseX, mouseY);
-        Vector2 before =
-            Vector2(mouseX + mouseState.lX, mouseY - mouseState.lY);
+    Vector3 cursorNdcCurrent = Vector3(mouseX, mouseY, 0.0f);
+    Vector3 cursorNdcBefore = Vector3(mouseX - offsetX, mouseY + offsetY, 0.0f);
 
-        Vector3 cursorNdcCurrent = Vector3(current.x, current.y, 0.0f);
-        Vector3 cursorNdcBefore = Vector3(before.x, before.y, 0.0f);
+    Matrix inverseProjView =
+        (manager->camera->GetView() * manager->camera->GetProjection())
+            .Invert();
 
-        auto env = common::Env::Instance();
+    Vector3 cursorWorldCurrent =
+        Vector3::Transform(cursorNdcCurrent, inverseProjView);
+    Vector3 cursorWorldBefore =
+        Vector3::Transform(cursorNdcBefore, inverseProjView);
 
-        auto projRow = manager->camera->GetProjection();
-        auto viewRow = manager->camera->GetView();
+    auto move = cursorWorldCurrent - cursorWorldBefore;
 
-        Matrix inverseProjView = (viewRow * projRow).Invert();
+    manager->camera->SetPosition(manager->camera->GetPosition() + move);
+    manager->camera->SetLookAt(manager->camera->GetLookAt() + move);
 
-        Vector3 cursorWorldCurrent =
-            Vector3::Transform(cursorNdcCurrent, inverseProjView);
-        Vector3 cursorWorldBefore =
-            Vector3::Transform(cursorNdcBefore, inverseProjView);
-
-        auto move = cursorWorldCurrent - cursorWorldBefore;
-
-        manager->camera->SetPosition(manager->camera->GetPosition() + move);
-        manager->camera->SetLookAt(manager->camera->GetLookAt() + move);
-    }
-
+    input->SetMouse(mouseX, mouseY);
     return true;
 }
 

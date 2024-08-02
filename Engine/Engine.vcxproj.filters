@@ -136,9 +136,6 @@
     <ClInclude Include="renderer_draw_node.h">
       <Filter>Engine\BehaviorTree\TreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="input_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
     <ClInclude Include="gui_node.h">
       <Filter>Engine\BehaviorTree\TreeNode</Filter>
     </ClInclude>
@@ -261,9 +258,6 @@
     </ClCompile>
     <ClCompile Include="graphics_common.cpp">
       <Filter>Engine\Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="input.cpp">
-      <Filter>Platform</Filter>
     </ClCompile>
     <ClCompile Include="geometry_generator.cpp">
       <Filter>Engine\Util</Filter>

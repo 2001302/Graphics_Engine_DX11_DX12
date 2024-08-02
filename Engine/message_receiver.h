@@ -12,15 +12,17 @@ class MessageReceiver {
     bool OnSphereLoadRequest(RenderingBlock *manager);
     bool OnBoxLoadRequest(RenderingBlock *manager);
     bool OnCylinderLoadRequest(RenderingBlock *manager);
-
-    bool OnMouseRightDragRequest(RenderingBlock *manager,
-                            std::shared_ptr<Input> input);
-    bool OnMouseWheelRequest(RenderingBlock *manager,
-                             std::shared_ptr<Input> input);
-    bool OnMouseWheelDragRequest(RenderingBlock *manager,
-                            std::shared_ptr<Input> input, int mouseX,
+    bool OnMouseDownRequest(std::shared_ptr<Input> input, int mouseX,
                             int mouseY);
+    bool OnMouseRightDragRequest(RenderingBlock *manager,
+                                 std::shared_ptr<Input> input, int mouseX,
+                                 int mouseY);
+    bool OnMouseWheelRequest(RenderingBlock *manager,
+                             std::shared_ptr<Input> input, int wheel);
+    bool OnMouseWheelDragRequest(RenderingBlock *manager,
+                                 std::shared_ptr<Input> input, int mouseX,
+                                 int mouseY);
 };
-} // namespace dx11
+} // namespace engine
 
 #endif

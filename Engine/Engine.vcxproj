@@ -159,7 +159,6 @@
     <ClInclude Include="ImGui\NodeEditor\imgui_extra_math.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_node_editor.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_node_editor_internal.h" />
-    <ClInclude Include="input_node.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="node.h" />
@@ -232,7 +231,6 @@
     <ClCompile Include="ImGui\imgui_impl_win32.cpp" />
     <ClCompile Include="ImGui\imgui_tables.cpp" />
     <ClCompile Include="ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="input.cpp" />
     <ClCompile Include="message_receiver.cpp" />
     <ClCompile Include="model_loader.cpp" />
     <ClCompile Include="main.cpp" />

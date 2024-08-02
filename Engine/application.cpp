@@ -15,7 +15,6 @@ bool Application::OnStart() {
     Platform::OnStart();
 
     GraphicsManager::Instance().Initialize();
-    input->Initialize(hinstance);
     render_block->stage_type = EnumStageType::eInitialize;
 
     std::map<common::EnumDataBlockType, common::IDataBlock *> dataBlock = {
@@ -69,7 +68,6 @@ bool Application::OnUpdate(float dt) {
     auto tree = std::make_shared<common::BehaviorTreeBuilder>();
     tree->Build(dataBlock)
         ->Sequence()
-            ->Excute(ReadInput())
             ->Excute(UpdateCamera())
             ->Excute(UpdateLights())
             ->Excute(UpdateGlobalConstantBuffers())
@@ -86,7 +84,7 @@ bool Application::OnUpdate(float dt) {
 
 bool Application::OnRender() {
 
-    input->Frame();
+    //input->Frame();
     render_block->stage_type = EnumStageType::eRender;
 
     std::map<common::EnumDataBlockType, common::IDataBlock *> dataBlock = {
@@ -136,7 +134,6 @@ bool Application::OnStop() {
     }
 
     if (input) {
-        input->Shutdown();
         input.reset();
     }
 

@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="animation_clip.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="behavior_tree_builder.h" />
     <ClInclude Include="bone.h" />
@@ -171,6 +172,8 @@
     <ClInclude Include="env.h" />
     <ClInclude Include="geometry_generator.h" />
     <ClInclude Include="post_process_node.h" />
+    <ClInclude Include="skinned_mesh_renderer.h" />
+    <ClInclude Include="structured_buffer.h" />
     <ClInclude Include="texture_3d.h" />
     <ClInclude Include="tree_node.h" />
     <ClInclude Include="ui.h" />
@@ -217,6 +220,7 @@
     <ClCompile Include="action_node.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="graphics_manager.cpp" />
+    <ClCompile Include="skinned_mesh_renderer.cpp" />
     <ClCompile Include="ui.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="geometry_generator.cpp" />

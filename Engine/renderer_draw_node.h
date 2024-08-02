@@ -3,6 +3,7 @@
 
 #include "behavior_tree_builder.h"
 #include "renderer.h"
+#include "skinned_mesh_renderer.h"
 #include "rendering_block.h"
 #include "setting_ui.h"
 
@@ -203,6 +204,15 @@ class DrawObjectsNode : public common::BehaviorActionNode {
         // mirror
         if (manager->mirror_alpha == 1.0f) {
             auto renderer = (Renderer *)manager->mirror->GetComponent(
+                EnumComponentType::eRenderer);
+            renderer->Render(GraphicsManager::Instance().device_context);
+        }
+
+        {
+            GraphicsManager::Instance().SetPipelineState(
+                manager->draw_wire ? Graphics::skinnedWirePSO
+                                   : Graphics::skinnedSolidPSO);
+            auto renderer = (SkinnedMeshRenderer *)manager->m_character->GetComponent(
                 EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
         }

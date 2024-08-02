@@ -23,7 +23,7 @@ PixelShaderInput main(VertexShaderInput input)
     weights[6] = input.boneWeights1.z;
     weights[7] = input.boneWeights1.w;
     
-    uint indices[8]; // 힌트: 꼭 사용!
+    uint indices[8]; 
     indices[0] = input.boneIndices0.x;
     indices[1] = input.boneIndices0.y;
     indices[2] = input.boneIndices0.z;
@@ -41,12 +41,15 @@ PixelShaderInput main(VertexShaderInput input)
     // (float3x3)boneTransforms 캐스팅으로 Translation 제외
     for(int i = 0; i < 8; ++i)
     {
-        // TODO:
+        float4x4 boneTransform = boneTransforms[indices[i]];
+        posModel += weights[i] * mul(float4(input.posModel, 1.0f), boneTransform).xyz;
+        normalModel += weights[i] * normalize(mul(input.normalModel, (float3x3) boneTransform));
+        tangentModel += weights[i] * normalize(mul(input.tangentModel, (float3x3) boneTransform));
     }
 
-    //input.posModel = posModel;
-    //input.normalModel = normalModel;
-    //input.tangentModel = tangentModel;
+    input.posModel = posModel;
+    input.normalModel = normalModel;
+    input.tangentModel = tangentModel;
 
 #endif
 

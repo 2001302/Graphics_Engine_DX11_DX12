@@ -544,7 +544,7 @@ vector<MeshData> GeometryGenerator::ReadFromFile(std::string basePath,
 
     ModelLoader modelLoader;
     modelLoader.Load(basePath, filename, revertNormals);
-    vector<MeshData> &meshes = modelLoader.meshes;
+    vector<MeshData> &meshes = modelLoader.m_meshes;
 
     // Normalize vertices
     Vector3 vmin(1000, 1000, 1000);
@@ -693,4 +693,60 @@ MeshData GeometryGenerator::MakeWireSphere(const Vector3 center,
 
     return meshData;
 }
+
+auto GeometryGenerator::ReadAnimationFromFile(string basePath, string filename,
+                                              bool revertNormals)
+    -> tuple<vector<MeshData>, AnimationData> {
+
+    ModelLoader modelLoader;
+    modelLoader.Load(basePath, filename, revertNormals);
+
+    GeometryGenerator::Normalize(Vector3(0.0f), 1.0f, modelLoader.m_meshes,
+                                 modelLoader.m_aniData);
+
+    return {modelLoader.m_meshes, modelLoader.m_aniData};
+}
+
+void GeometryGenerator::Normalize(const Vector3 center,
+                                  const float longestLength,
+                                  vector<MeshData> &meshes,
+                                  AnimationData &aniData) {
+
+    // 모델의 중심을 원점으로 옮기고 크기를 [-1,1]^3으로 스케일
+
+    using namespace DirectX;
+
+    // Normalize vertices
+    Vector3 vmin(1000, 1000, 1000);
+    Vector3 vmax(-1000, -1000, -1000);
+    for (auto &mesh : meshes) {
+        for (auto &v : mesh.vertices) {
+            vmin.x = XMMin(vmin.x, v.position.x);
+            vmin.y = XMMin(vmin.y, v.position.y);
+            vmin.z = XMMin(vmin.z, v.position.z);
+            vmax.x = XMMax(vmax.x, v.position.x);
+            vmax.y = XMMax(vmax.y, v.position.y);
+            vmax.z = XMMax(vmax.z, v.position.z);
+        }
+    }
+
+    float dx = vmax.x - vmin.x, dy = vmax.y - vmin.y, dz = vmax.z - vmin.z;
+    float scale = longestLength / XMMax(XMMax(dx, dy), dz);
+    Vector3 translation = -(vmin + vmax) * 0.5f + center;
+
+    for (auto &mesh : meshes) {
+        for (auto &v : mesh.vertices) {
+            v.position = (v.position + translation) * scale;
+        }
+
+        for (auto &v : mesh.skinnedVertices) {
+            v.position = (v.position + translation) * scale;
+        }
+    }
+
+    // 애니메이션 데이터 보정에 사용
+    aniData.defaultTransform =
+        Matrix::CreateTranslation(translation) * Matrix::CreateScale(scale);
+}
+
 } // namespace engine

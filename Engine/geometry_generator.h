@@ -4,6 +4,8 @@
 #include "graphics_manager.h"
 #include "model.h"
 #include "model_loader.h"
+#include "animation_clip.h"
+#include <tuple>
 
 namespace engine {
 class GeometryGenerator {
@@ -15,6 +17,15 @@ class GeometryGenerator {
     static std::vector<MeshData> ReadFromFile(std::string basePath,
                                               std::string filename,
                                               bool revertNormals = false);
+
+    static auto ReadAnimationFromFile(std::string basePath,
+                                      std::string filename,
+                                      bool revertNormals = false)
+        -> std::tuple<std::vector<MeshData>, AnimationData>;
+
+    static void Normalize(const Vector3 center, const float longestLength,
+                          std::vector<MeshData> &meshes,
+                          AnimationData &aniData);
 
     static MeshData MakeSquare(const float scale = 1.0f,
                                const Vector2 texScale = Vector2(1.0f));

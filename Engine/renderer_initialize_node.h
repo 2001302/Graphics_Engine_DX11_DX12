@@ -1,10 +1,12 @@
 #ifndef _RENDERER_INITIALIZE_NODE
 #define _RENDERER_INITIALIZE_NODE
 
+#include "animation_clip.h"
 #include "behavior_tree_builder.h"
 #include "geometry_generator.h"
 #include "renderer.h"
 #include "rendering_block.h"
+#include "skinned_mesh_renderer.h"
 
 namespace engine {
 class InitializeLightNode : public common::BehaviorActionNode {
@@ -263,6 +265,46 @@ class InitializeBasicModelsNode : public common::BehaviorActionNode {
             obj->AddComponent(EnumComponentType::eRenderer, renderer);
 
             manager->models.insert({obj->GetEntityId(), obj});
+        }
+
+        // main object
+        {
+            std::string path = "Assets/Characters/Mixamo/";
+            std::vector<std::string> clipNames = {
+                "CatwalkIdle.fbx", "CatwalkIdleToWalkForward.fbx",
+                "CatwalkWalkForward.fbx", "CatwalkWalkStop.fbx",
+                "BreakdanceFreezeVar2.fbx"};
+
+            AnimationData aniData;
+
+            auto [meshes, _] =
+                GeometryGenerator::ReadAnimationFromFile(path, "character.fbx");
+
+            for (auto &name : clipNames) {
+                auto [_, ani] =
+                    GeometryGenerator::ReadAnimationFromFile(path, name);
+
+                if (aniData.clips.empty()) {
+                    aniData = ani;
+                } else {
+                    aniData.clips.push_back(ani.clips.front());
+                }
+            }
+
+            Vector3 center(0.0f, 0.5f, 2.0f);
+            auto renderer = std::make_shared<SkinnedMeshRenderer>(
+                GraphicsManager::Instance().device,
+                GraphicsManager::Instance().device_context, meshes, aniData);
+
+            renderer->m_materialConsts.GetCpu().albedoFactor = Vector3(1.0f);
+            renderer->m_materialConsts.GetCpu().roughnessFactor = 0.8f;
+            renderer->m_materialConsts.GetCpu().metallicFactor = 0.0f;
+            renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
+                                     Matrix::CreateTranslation(center));
+
+            manager->m_character = std::make_shared<Model>();
+            manager->m_character->AddComponent(EnumComponentType::eRenderer,
+                                               renderer);
         }
 
         return common::EnumBehaviorTreeStatus::eSuccess;

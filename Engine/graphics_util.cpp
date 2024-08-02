@@ -32,24 +32,37 @@ void CheckResult(HRESULT hr, ID3DBlob *errorBlob) {
 }
 
 void GraphicsUtil::CreateVertexShaderAndInputLayout(
-    ComPtr<ID3D11Device> &device, const wstring &filename,
-    const vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
+    ComPtr<ID3D11Device> &device, wstring filename,
+    const std::vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
     ComPtr<ID3D11VertexShader> &m_vertexShader,
-    ComPtr<ID3D11InputLayout> &m_inputLayout) {
+    ComPtr<ID3D11InputLayout> &m_inputLayout,
+    const std::vector<D3D_SHADER_MACRO> shaderMacros) {
 
     ComPtr<ID3DBlob> shaderBlob;
-    ComPtr<ID3DBlob> errorBlob;
 
     UINT compileFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)
     compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
 #endif
 
+    ComPtr<ID3DBlob> errorBlob;
     HRESULT hr = D3DCompileFromFile(
-        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
-        "vs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
-
+        filename.c_str(), shaderMacros.empty() ? NULL : shaderMacros.data(),
+        D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", compileFlags, 0,
+        &shaderBlob, &errorBlob);
     CheckResult(hr, errorBlob.Get());
+
+    /*
+        // .cso 파일을 읽어들이는 방식, D3DReadFileToBlob() 사용
+        wstring path = L"x64/Release/";
+    #if defined(DEBUG) || defined(_DEBUG)
+        path = L"x64/Debug/";
+    #endif
+        filename.erase(filename.end() - 4, filename.end()); // 확장자 hlsl 삭제
+        filename = path + filename + L"cso";
+        HRESULT hr = D3DReadFileToBlob(filename.c_str(),
+    shaderBlob.GetAddressOf());
+    */
 
     device->CreateVertexShader(shaderBlob->GetBufferPointer(),
                                shaderBlob->GetBufferSize(), NULL,
@@ -757,6 +770,75 @@ void GraphicsUtil::CreateTexture3D(
                                                    srv.GetAddressOf()));
     ThrowIfFailed(device->CreateUnorderedAccessView(texture.Get(), NULL,
                                                     uav.GetAddressOf()));
+}
+
+void GraphicsUtil::CreateStructuredBuffer(
+    ComPtr<ID3D11Device> &device, const UINT numElements,
+    const UINT sizeElement, const void *initData, ComPtr<ID3D11Buffer> &buffer,
+    ComPtr<ID3D11ShaderResourceView> &srv,
+    ComPtr<ID3D11UnorderedAccessView> &uav) {
+
+    D3D11_BUFFER_DESC bufferDesc;
+    ZeroMemory(&bufferDesc, sizeof(bufferDesc));
+    bufferDesc.Usage = D3D11_USAGE_DEFAULT;
+    bufferDesc.ByteWidth = numElements * sizeElement;
+    bufferDesc.BindFlags = D3D11_BIND_UNORDERED_ACCESS | // Compute Shader
+                           D3D11_BIND_SHADER_RESOURCE;   // Vertex Shader
+    bufferDesc.StructureByteStride = sizeElement;
+    bufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
+
+    // 참고: Structured는 D3D11_BIND_VERTEX_BUFFER로 사용 불가
+
+    if (initData) {
+        D3D11_SUBRESOURCE_DATA bufferData;
+        ZeroMemory(&bufferData, sizeof(bufferData));
+        bufferData.pSysMem = initData;
+        ThrowIfFailed(device->CreateBuffer(&bufferDesc, &bufferData,
+                                           buffer.GetAddressOf()));
+    } else {
+        ThrowIfFailed(
+            device->CreateBuffer(&bufferDesc, NULL, buffer.GetAddressOf()));
+    }
+
+    D3D11_UNORDERED_ACCESS_VIEW_DESC uavDesc;
+    ZeroMemory(&uavDesc, sizeof(uavDesc));
+    uavDesc.Format = DXGI_FORMAT_UNKNOWN;
+    uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
+    uavDesc.Buffer.NumElements = numElements;
+    device->CreateUnorderedAccessView(buffer.Get(), &uavDesc,
+                                      uav.GetAddressOf());
+
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
+    ZeroMemory(&srvDesc, sizeof(srvDesc));
+    srvDesc.Format = DXGI_FORMAT_UNKNOWN;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
+    srvDesc.BufferEx.NumElements = numElements;
+    device->CreateShaderResourceView(buffer.Get(), &srvDesc,
+                                     srv.GetAddressOf());
+}
+
+void GraphicsUtil::CreateStagingBuffer(ComPtr<ID3D11Device> &device,
+                                     const UINT numElements,
+                                     const UINT sizeElement,
+                                     const void *initData,
+                                     ComPtr<ID3D11Buffer> &buffer) {
+
+    D3D11_BUFFER_DESC desc;
+    ZeroMemory(&desc, sizeof(desc));
+    desc.ByteWidth = numElements * sizeElement;
+    desc.Usage = D3D11_USAGE_STAGING;
+    desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
+    desc.StructureByteStride = sizeElement;
+
+    if (initData) {
+        D3D11_SUBRESOURCE_DATA bufferData;
+        ZeroMemory(&bufferData, sizeof(bufferData));
+        bufferData.pSysMem = initData;
+        ThrowIfFailed(
+            device->CreateBuffer(&desc, &bufferData, buffer.GetAddressOf()));
+    } else {
+        ThrowIfFailed(device->CreateBuffer(&desc, NULL, buffer.GetAddressOf()));
+    }
 }
 
 } // namespace engine

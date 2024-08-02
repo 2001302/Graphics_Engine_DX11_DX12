@@ -229,6 +229,20 @@ class UpdateBasicObjectsNode : public common::BehaviorActionNode {
                 GraphicsManager::Instance().device_context);
         }
 
+        {
+            auto renderer = (SkinnedMeshRenderer *)manager->m_character->GetComponent(
+                EnumComponentType::eRenderer);
+            static int frameCount = 0;
+            static int state = 0;
+            renderer->UpdateAnimation(
+                GraphicsManager::Instance().device_context, state, frameCount);
+            frameCount += 1;
+
+            renderer->UpdateConstantBuffers(
+                GraphicsManager::Instance().device,
+                GraphicsManager::Instance().device_context);
+        }
+
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };

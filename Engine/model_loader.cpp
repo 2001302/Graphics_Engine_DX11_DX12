@@ -59,6 +59,45 @@ string GetExtension(const string filename) {
     return ext;
 }
 
+void ModelLoader::ReadAnimation(const aiScene *pScene) {
+
+    m_aniData.clips.resize(pScene->mNumAnimations);
+
+    for (uint32_t i = 0; i < pScene->mNumAnimations; i++) {
+
+        auto &clip = m_aniData.clips[i];
+
+        const aiAnimation *ani = pScene->mAnimations[i];
+
+        clip.duration = ani->mDuration;
+        clip.ticksPerSec = ani->mTicksPerSecond;
+        clip.keys.resize(m_aniData.boneNameToId.size());
+        clip.numChannels = ani->mNumChannels;
+
+        for (uint32_t c = 0; c < ani->mNumChannels; c++) {
+            const aiNodeAnim *nodeAnim = ani->mChannels[c];
+            const int boneId =
+                m_aniData.boneNameToId[nodeAnim->mNodeName.C_Str()];
+            clip.keys[boneId].resize(nodeAnim->mNumPositionKeys);
+            for (uint32_t k = 0; k < nodeAnim->mNumPositionKeys; k++) {
+                const auto pos = nodeAnim->mPositionKeys[k].mValue;
+                const auto rot = nodeAnim->mRotationKeys[k].mValue;
+                const auto scale = nodeAnim->mScalingKeys[k].mValue;
+                auto &key = clip.keys[boneId][k];
+                key.pos = {pos.x, pos.y, pos.z};
+                key.rot = Quaternion(rot.x, rot.y, rot.z, rot.w);
+                key.scale = {scale.x, scale.y, scale.z};
+            }
+        }
+    }
+}
+
+/*
+ * 여러개의 뼈들이 있고 트리 구조임
+ * 그 중에서 Vertex에 영향을 주는 것들은 일부임
+ * Vertex에 영향을 주는 뼈들과 부모들까지 포함해서
+ * 트래버스 순서로 저장
+ */
 void ModelLoader::Load(std::string basePath, std::string filename,
                        bool revertNormals) {
 
@@ -67,25 +106,94 @@ void ModelLoader::Load(std::string basePath, std::string filename,
         m_revertNormals = revertNormals;
     }
 
-    this->basePath = basePath;
+    m_basePath = basePath; // 텍스춰 읽어들일 때 필요
 
     Assimp::Importer importer;
 
     const aiScene *pScene = importer.ReadFile(
-        this->basePath + filename,
+        m_basePath + filename,
         aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
+    // ReadFile()에서 경우에 따라서 여러가지 옵션들 설정 가능
+    // aiProcess_JoinIdenticalVertices | aiProcess_PopulateArmatureData |
+    // aiProcess_SplitByBoneCount |
+    // aiProcess_Debone); // aiProcess_LimitBoneWeights
 
-    if (!pScene) {
-        std::cout << "Failed to read file: " << this->basePath + filename
-                  << std::endl;
-    } else {
+    if (pScene) {
+
+        // 1. 모든 메쉬에 대해서 버텍스에 영향을 주는 뼈들의 목록을 만든다.
+        FindDeformingBones(pScene);
+
+        // 2. 트리 구조를 따라 업데이트 순서대로 뼈들의 인덱스를 결정한다
+        int counter = 0;
+        UpdateBoneIDs(pScene->mRootNode, &counter);
+
+        // 3. 업데이트 순서대로 뼈 이름 저장 (boneIdToName)
+        m_aniData.boneIdToName.resize(m_aniData.boneNameToId.size());
+        for (auto &i : m_aniData.boneNameToId)
+            m_aniData.boneIdToName[i.second] = i.first;
+
+        // 디버깅용
+        // cout << "Num boneNameToId : " << m_aniData.boneNameToId.size() <<
+        // endl; for (auto &i : m_aniData.boneNameToId) {
+        //    cout << "NameId pair : " << i.first << " " << i.second << endl;
+        //}
+        // cout << "Num boneIdToName : " << m_aniData.boneIdToName.size() <<
+        // endl; for (size_t i = 0; i < m_aniData.boneIdToName.size(); i++) {
+        //    cout << "BoneId: " << i << " " << m_aniData.boneIdToName[i] <<
+        //    endl;
+        //}
+        // exit(-1);
+
+        // 각 뼈의 부모 인덱스를 저장할 준비
+        m_aniData.boneParents.resize(m_aniData.boneNameToId.size(), -1);
+
         Matrix tr; // Initial transformation
         ProcessNode(pScene->mRootNode, pScene, tr);
+
+        // 디버깅용
+        // cout << "Num boneIdToName : " << m_aniData.boneIdToName.size() <<
+        // endl; for (size_t i = 0; i < m_aniData.boneIdToName.size(); i++) {
+        //    cout << "BoneId: " << i << " " << m_aniData.boneIdToName[i]
+        //         << " , Parent: "
+        //         << (m_aniData.boneParents[i] == -1
+        //                 ? "NONE"
+        //                 : m_aniData.boneIdToName[m_aniData.boneParents[i]])
+        //         << endl;
+        //}
+
+        // 애니메이션 정보 읽기
+        if (pScene->HasAnimations())
+            ReadAnimation(pScene);
+
+        // UpdateNormals(this->meshes); // Vertex Normal을 직접 계산 (참고용)
+
+        UpdateTangents();
+    } else {
+        std::cout << "Failed to read file: " << m_basePath + filename
+                  << std::endl;
+        auto errorDescription = importer.GetErrorString();
+        std::cout << "Assimp error: " << errorDescription << endl;
     }
+}
 
-    // UpdateNormals(this->meshes); // Vertex Normal을 직접 계산 (참고용)
+void ModelLoader::LoadAnimation(string basePath, string filename) {
 
-    UpdateTangents();
+    m_basePath = basePath;
+
+    Assimp::Importer importer;
+
+    const aiScene *pScene = importer.ReadFile(
+        m_basePath + filename,
+        aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
+
+    if (pScene && pScene->HasAnimations()) {
+        ReadAnimation(pScene);
+    } else {
+        std::cout << "Failed to read animation from file: "
+                  << m_basePath + filename << std::endl;
+        auto errorDescription = importer.GetErrorString();
+        std::cout << "Assimp error: " << errorDescription << endl;
+    }
 }
 
 void ModelLoader::UpdateTangents() {
@@ -95,7 +203,7 @@ void ModelLoader::UpdateTangents() {
 
     // https://github.com/microsoft/DirectXMesh/wiki/ComputeTangentFrame
 
-    for (auto &m : this->meshes) {
+    for (auto &m : this->m_meshes) {
 
         vector<XMFLOAT3> positions(m.vertices.size());
         vector<XMFLOAT3> normals(m.vertices.size());
@@ -118,32 +226,70 @@ void ModelLoader::UpdateTangents() {
         for (size_t i = 0; i < m.vertices.size(); i++) {
             m.vertices[i].tangent = tangents[i];
         }
+
+        if (m.skinnedVertices.size() > 0) {
+            for (size_t i = 0; i < m.skinnedVertices.size(); i++) {
+                m.skinnedVertices[i].tangentModel = tangents[i];
+            }
+        }
     }
+}
+
+// 버텍스의 변형에 직접적으로 참여하는 뼈들의 목록을 만듭니다.
+
+void ModelLoader::FindDeformingBones(const aiScene *scene) {
+    for (uint32_t i = 0; i < scene->mNumMeshes; i++) {
+        const auto *mesh = scene->mMeshes[i];
+        if (mesh->HasBones()) {
+            for (uint32_t i = 0; i < mesh->mNumBones; i++) {
+                const aiBone *bone = mesh->mBones[i];
+
+                // bone과 대응되는 node의 이름은 동일
+                // 뒤에서 node 이름으로 부모를 찾을 수 있음
+                m_aniData.boneNameToId[bone->mName.C_Str()] = -1;
+
+                // 주의: 뼈의 순서가 업데이트 순서는 아님
+
+                // 기타: bone->mWeights == 0일 경우에도 포함시켰음
+                // 기타: bone->mNode = 0이라서 사용 불가
+            }
+        }
+    }
+}
+
+// 디자인을 위한 노드들을 건너뛰고 부모 노드 찾기
+const aiNode *ModelLoader::FindParent(const aiNode *node) {
+    if (!node)
+        return nullptr;
+    if (m_aniData.boneNameToId.count(node->mName.C_Str()) > 0)
+        return node;
+    return FindParent(node->mParent);
 }
 
 void ModelLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
 
-    // std::cout << node->mName.C_Str() << " : " << node->mNumMeshes << " "
-    //           << node->mNumChildren << std::endl;
+    // https://ogldev.org/www/tutorial38/tutorial38.html
+    // If a node represents a bone in the hierarchy then the node name must
+    // match the bone name.
 
-    Matrix m;
-    ai_real *temp = &node->mTransformation.a1;
-    float *mTemp = &m._11;
-    for (int t = 0; t < 16; t++) {
-        mTemp[t] = float(temp[t]);
+    // 사용되는 부모 뼈를 찾아서 부모의 인덱스 저장
+    if (node->mParent && m_aniData.boneNameToId.count(node->mName.C_Str()) &&
+        FindParent(node->mParent)) {
+        const auto boneId = m_aniData.boneNameToId[node->mName.C_Str()];
+        m_aniData.boneParents[boneId] =
+            m_aniData.boneNameToId[FindParent(node->mParent)->mName.C_Str()];
     }
+
+    Matrix m(&node->mTransformation.a1);
     m = m.Transpose() * tr;
 
     for (UINT i = 0; i < node->mNumMeshes; i++) {
-
         aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
         auto newMesh = this->ProcessMesh(mesh, scene);
-
         for (auto &v : newMesh.vertices) {
             v.position = DirectX::SimpleMath::Vector3::Transform(v.position, m);
         }
-
-        meshes.push_back(newMesh);
+        m_meshes.push_back(newMesh);
     }
 
     for (UINT i = 0; i < node->mNumChildren; i++) {
@@ -151,18 +297,42 @@ void ModelLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
     }
 }
 
-string ModelLoader::ReadFilename(aiMaterial *material, aiTextureType type) {
+string ModelLoader::ReadTextureFilename(const aiScene *scene,
+                                        aiMaterial *material,
+                                        aiTextureType type) {
 
     if (material->GetTextureCount(type) > 0) {
         aiString filepath;
         material->GetTexture(type, 0, &filepath);
 
-        std::string fullPath =
-            this->basePath +
-            std::string(
-                std::filesystem::path(filepath.C_Str()).filename().string());
+        string fullPath =
+            m_basePath +
+            string(filesystem::path(filepath.C_Str()).filename().string());
+
+        // 1. 실제로 파일이 존재하는지 확인
+        if (!filesystem::exists(fullPath)) {
+            // 2. 파일이 없을 경우 혹시 fbx 자체에 Embedded인지 확인
+            const aiTexture *texture =
+                scene->GetEmbeddedTexture(filepath.C_Str());
+            if (texture) {
+                // 3. Embedded texture가 존재하고 png일 경우 저장
+                if (string(texture->achFormatHint).find("png") !=
+                    string::npos) {
+                    std::ofstream fs(fullPath.c_str(), ios::binary | ios::out);
+                    fs.write((char *)texture->pcData, texture->mWidth);
+                    fs.close();
+                    // 참고: compressed format일 경우 texture->mHeight가 0
+                }
+            } else {
+                cout << fullPath << " doesn't exists. Return empty filename."
+                     << endl;
+            }
+        } else {
+            return fullPath;
+        }
 
         return fullPath;
+
     } else {
         return "";
     }
@@ -170,9 +340,10 @@ string ModelLoader::ReadFilename(aiMaterial *material, aiTextureType type) {
 
 MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
 
-    // Data to fill
-    std::vector<Vertex> vertices;
-    std::vector<uint32_t> indices;
+    MeshData newMesh;
+    auto &vertices = newMesh.vertices;
+    auto &indices = newMesh.indices;
+    auto &skinnedVertices = newMesh.skinnedVertices;
 
     // Walk through each of the mesh's vertices
     for (UINT i = 0; i < mesh->mNumVertices; i++) {
@@ -211,9 +382,73 @@ MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
             indices.push_back(face.mIndices[j]);
     }
 
-    MeshData newMesh;
-    newMesh.vertices = vertices;
-    newMesh.indices = indices;
+    if (mesh->HasBones()) {
+
+        vector<vector<float>> boneWeights(vertices.size());
+        vector<vector<uint8_t>> boneIndices(vertices.size());
+
+        m_aniData.offsetMatrices.resize(m_aniData.boneNameToId.size());
+        m_aniData.boneTransforms.resize(m_aniData.boneNameToId.size());
+
+        int count = 0;
+        for (uint32_t i = 0; i < mesh->mNumBones; i++) {
+            const aiBone *bone = mesh->mBones[i];
+
+            // 디버깅
+            // cout << "BoneMap " << count++ << " : " << bone->mName.C_Str()
+            //     << " NumBoneWeights = " << bone->mNumWeights << endl;
+
+            const uint32_t boneId = m_aniData.boneNameToId[bone->mName.C_Str()];
+
+            m_aniData.offsetMatrices[boneId] =
+                Matrix((float *)&bone->mOffsetMatrix).Transpose();
+
+            // 이 뼈가 영향을 주는 Vertex의 개수
+            for (uint32_t j = 0; j < bone->mNumWeights; j++) {
+                aiVertexWeight weight = bone->mWeights[j];
+                assert(weight.mVertexId < boneIndices.size());
+                boneIndices[weight.mVertexId].push_back(boneId);
+                boneWeights[weight.mVertexId].push_back(weight.mWeight);
+            }
+        }
+
+        // 예전에는 Vertex 하나에 영향을 주는 Bone은 최대 4개
+        // 요즘은 더 많을 수도 있는데 모델링 소프트웨어에서 조정하거나
+        // 읽어들이면서 weight가 너무 작은 것들은 뺄 수도 있음
+
+        int maxBones = 0;
+        for (int i = 0; i < boneWeights.size(); i++) {
+            maxBones = (std::max)(maxBones, int(boneWeights[i].size()));
+        }
+
+        cout << "Max number of influencing bones per vertex = " << maxBones
+             << endl;
+
+        skinnedVertices.resize(vertices.size());
+        for (int i = 0; i < vertices.size(); i++) {
+            skinnedVertices[i].position = vertices[i].position;
+            skinnedVertices[i].normalModel = vertices[i].normal;
+            skinnedVertices[i].texcoord = vertices[i].texcoord;
+
+            for (int j = 0; j < boneWeights[i].size(); j++) {
+                skinnedVertices[i].blendWeights[j] = boneWeights[i][j];
+                skinnedVertices[i].boneIndices[j] = boneIndices[i][j];
+            }
+        }
+
+        // 디버깅용 출력 (boneWeights)
+        // for (int i = 0; i < boneWeights.size(); i++) {
+        //    cout << boneWeights[i].size() << " : ";
+        //    for (int j = 0; j < boneWeights[i].size(); j++) {
+        //        cout << boneWeights[i][j] << " ";
+        //    }
+        //    cout << " | ";
+        //    for (int j = 0; j < boneIndices[i].size(); j++) {
+        //        cout << int(boneIndices[i][j]) << " ";
+        //    }
+        //    cout << endl;
+        //}
+    }
 
     // http://assimp.sourceforge.net/lib_html/materials.html
     if (mesh->mMaterialIndex >= 0) {
@@ -221,33 +456,39 @@ MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
         newMesh.albedoTextureFilename =
-            ReadFilename(material, aiTextureType_BASE_COLOR);
-        if (newMesh.aoTextureFilename.empty()) {
-            newMesh.aoTextureFilename =
-                ReadFilename(material, aiTextureType_DIFFUSE);
+            ReadTextureFilename(scene, material, aiTextureType_BASE_COLOR);
+        if (newMesh.albedoTextureFilename.empty()) {
+            newMesh.albedoTextureFilename =
+                ReadTextureFilename(scene, material, aiTextureType_DIFFUSE);
         }
-
         newMesh.emissiveTextureFilename =
-            ReadFilename(material, aiTextureType_EMISSIVE);
+            ReadTextureFilename(scene, material, aiTextureType_EMISSIVE);
         newMesh.heightTextureFilename =
-            ReadFilename(material, aiTextureType_HEIGHT);
+            ReadTextureFilename(scene, material, aiTextureType_HEIGHT);
         newMesh.normalTextureFilename =
-            ReadFilename(material, aiTextureType_NORMALS);
+            ReadTextureFilename(scene, material, aiTextureType_NORMALS);
         newMesh.metallicTextureFilename =
-            ReadFilename(material, aiTextureType_METALNESS);
-        newMesh.roughnessTextureFilename =
-            ReadFilename(material, aiTextureType_DIFFUSE_ROUGHNESS);
-
-        newMesh.aoTextureFilename =
-            ReadFilename(material, aiTextureType_AMBIENT_OCCLUSION);
+            ReadTextureFilename(scene, material, aiTextureType_METALNESS);
+        newMesh.roughnessTextureFilename = ReadTextureFilename(
+            scene, material, aiTextureType_DIFFUSE_ROUGHNESS);
+        newMesh.aoTextureFilename = ReadTextureFilename(
+            scene, material, aiTextureType_AMBIENT_OCCLUSION);
         if (newMesh.aoTextureFilename.empty()) {
             newMesh.aoTextureFilename =
-                ReadFilename(material, aiTextureType_LIGHTMAP);
+                ReadTextureFilename(scene, material, aiTextureType_LIGHTMAP);
+        }
+        newMesh.opacityTextureFilename =
+            ReadTextureFilename(scene, material, aiTextureType_OPACITY);
+
+        if (!newMesh.opacityTextureFilename.empty()) {
+            cout << newMesh.albedoTextureFilename << endl;
+            cout << "Opacity " << newMesh.opacityTextureFilename << endl;
         }
 
         // 디버깅용
         // for (size_t i = 0; i < 22; i++) {
-        //    cout << i << " " << ReadFilename(material, aiTextureType(i))
+        //    cout << i << " " << ReadTextureFilename(material,
+        //    aiTextureType(i))
         //         << endl;
         //}
     }

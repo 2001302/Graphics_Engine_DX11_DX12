@@ -28,10 +28,12 @@ ComPtr<ID3D11BlendState> mirrorBS;
 
 // Shaders
 ComPtr<ID3D11VertexShader> basicVS;
+ComPtr<ID3D11VertexShader> skinnedVS;
 ComPtr<ID3D11VertexShader> skyboxVS;
 ComPtr<ID3D11VertexShader> samplingVS;
 ComPtr<ID3D11VertexShader> normalVS;
 ComPtr<ID3D11VertexShader> depthOnlyVS;
+ComPtr<ID3D11VertexShader> depthOnlySkinnedVS;
 
 ComPtr<ID3D11PixelShader> basicPS;
 ComPtr<ID3D11PixelShader> skyboxPS;
@@ -51,16 +53,21 @@ ComPtr<ID3D11ComputeShader> bloomComposite;
 
 // Input Layouts
 ComPtr<ID3D11InputLayout> basicIL;
+ComPtr<ID3D11InputLayout> skinnedIL;
 ComPtr<ID3D11InputLayout> samplingIL;
 ComPtr<ID3D11InputLayout> skyboxIL;
 ComPtr<ID3D11InputLayout> postProcessingIL;
 
 // Graphics Pipeline States
 GraphicsPSO defaultSolidPSO;
+GraphicsPSO skinnedSolidPSO;
 GraphicsPSO defaultWirePSO;
+GraphicsPSO skinnedWirePSO;
 GraphicsPSO stencilMaskPSO;
 GraphicsPSO reflectSolidPSO;
+GraphicsPSO reflectSkinnedSolidPSO;
 GraphicsPSO reflectWirePSO;
+GraphicsPSO reflectSkinnedWirePSO;
 GraphicsPSO mirrorBlendSolidPSO;
 GraphicsPSO mirrorBlendWirePSO;
 GraphicsPSO skyboxSolidPSO;
@@ -69,6 +76,7 @@ GraphicsPSO reflectSkyboxSolidPSO;
 GraphicsPSO reflectSkyboxWirePSO;
 GraphicsPSO normalsPSO;
 GraphicsPSO depthOnlyPSO;
+GraphicsPSO depthOnlySkinnedPSO;
 GraphicsPSO postEffectsPSO;
 GraphicsPSO postProcessingPSO;
 
@@ -273,6 +281,25 @@ void Graphics::InitShaders(ComPtr<ID3D11Device> &device) {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
+    std::vector<D3D11_INPUT_ELEMENT_DESC> skinnedIEs = {
+        {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"BLENDWEIGHT", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 44,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"BLENDWEIGHT", 1, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 60,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"BLENDINDICES", 0, DXGI_FORMAT_R8G8B8A8_UINT, 0, 76,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+        {"BLENDINDICES", 1, DXGI_FORMAT_R8G8B8A8_UINT, 0, 80,
+         D3D11_INPUT_PER_VERTEX_DATA, 0},
+    };
+
     std::vector<D3D11_INPUT_ELEMENT_DESC> samplingIED = {
         {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
          D3D11_INPUT_PER_VERTEX_DATA, 0},
@@ -295,6 +322,9 @@ void Graphics::InitShaders(ComPtr<ID3D11Device> &device) {
 
     GraphicsUtil::CreateVertexShaderAndInputLayout(device, L"BasicVS.hlsl",
                                                    basicIEs, basicVS, basicIL);
+    GraphicsUtil::CreateVertexShaderAndInputLayout(
+        device, L"BasicVS.hlsl", skinnedIEs, skinnedVS, skinnedIL,
+        std::vector<D3D_SHADER_MACRO>{{"SKINNED", "1"}, {NULL, NULL}});
     GraphicsUtil::CreateVertexShaderAndInputLayout(device, L"NormalVS.hlsl",
                                                    basicIEs, normalVS, basicIL);
     GraphicsUtil::CreateVertexShaderAndInputLayout(
@@ -305,6 +335,9 @@ void Graphics::InitShaders(ComPtr<ID3D11Device> &device) {
 
     GraphicsUtil::CreateVertexShaderAndInputLayout(
         device, L"DepthOnlyVS.hlsl", basicIEs, depthOnlyVS, skyboxIL);
+    GraphicsUtil::CreateVertexShaderAndInputLayout(
+        device, L"DepthOnlyVS.hlsl", skinnedIEs, depthOnlySkinnedVS, skinnedIL,
+        std::vector<D3D_SHADER_MACRO>{{"SKINNED", "1"}, {NULL, NULL}});
 
     GraphicsUtil::CreatePixelShader(device, L"BasicPS.hlsl", basicPS);
     GraphicsUtil::CreatePixelShader(device, L"NormalPS.hlsl", normalPS);
@@ -339,9 +372,18 @@ void Graphics::InitPipelineStates(ComPtr<ID3D11Device> &device) {
     defaultSolidPSO.m_rasterizerState = solidRS;
     defaultSolidPSO.m_primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
+    // Skinned mesh solid
+    skinnedSolidPSO = defaultSolidPSO;
+    skinnedSolidPSO.m_vertexShader = skinnedVS;
+    skinnedSolidPSO.m_inputLayout = skinnedIL;
+
     // defaultWirePSO
     defaultWirePSO = defaultSolidPSO;
     defaultWirePSO.m_rasterizerState = wireRS;
+
+    // Skinned mesh wire
+    skinnedWirePSO = skinnedSolidPSO;
+    skinnedWirePSO.m_rasterizerState = wireRS;
 
     // stencilMarkPSO;
     stencilMaskPSO = defaultSolidPSO;
@@ -356,10 +398,18 @@ void Graphics::InitPipelineStates(ComPtr<ID3D11Device> &device) {
     reflectSolidPSO.m_rasterizerState = solidCCWRS; // 반시계
     reflectSolidPSO.m_stencilRef = 1;
 
+    reflectSkinnedSolidPSO = reflectSolidPSO;
+    reflectSkinnedSolidPSO.m_vertexShader = skinnedVS;
+    reflectSkinnedSolidPSO.m_inputLayout = skinnedIL;
+
     // reflectWirePSO: 반사되면 Winding 반대
     reflectWirePSO = reflectSolidPSO;
     reflectWirePSO.m_rasterizerState = wireCCWRS; // 반시계
     reflectWirePSO.m_stencilRef = 1;
+
+    reflectSkinnedWirePSO = reflectSkinnedSolidPSO;
+    reflectSkinnedWirePSO.m_rasterizerState = wireCCWRS; // 반시계
+    reflectSkinnedWirePSO.m_stencilRef = 1;
 
     // mirrorBlendSolidPSO;
     mirrorBlendSolidPSO = defaultSolidPSO;
@@ -405,6 +455,10 @@ void Graphics::InitPipelineStates(ComPtr<ID3D11Device> &device) {
     depthOnlyPSO = defaultSolidPSO;
     depthOnlyPSO.m_vertexShader = depthOnlyVS;
     depthOnlyPSO.m_pixelShader = depthOnlyPS;
+
+    depthOnlySkinnedPSO = depthOnlyPSO;
+    depthOnlySkinnedPSO.m_vertexShader = depthOnlySkinnedVS;
+    depthOnlySkinnedPSO.m_inputLayout = skinnedIL;
 
     // postEffectsPSO
     postEffectsPSO.m_vertexShader = samplingVS;

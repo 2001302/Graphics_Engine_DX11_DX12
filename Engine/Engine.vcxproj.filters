@@ -181,6 +181,15 @@
     <ClInclude Include="texture_3d.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
+    <ClInclude Include="skinned_mesh_renderer.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="animation_clip.h">
+      <Filter>Engine\Data</Filter>
+    </ClInclude>
+    <ClInclude Include="structured_buffer.h">
+      <Filter>Engine\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -293,6 +302,9 @@
       <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="image_filter.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="skinned_mesh_renderer.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
   </ItemGroup>

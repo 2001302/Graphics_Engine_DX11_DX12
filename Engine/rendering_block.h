@@ -28,6 +28,7 @@ class RenderingBlock : public common::IDataBlock,
     std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
     std::shared_ptr<Model> ground;
     std::map<int /*id*/, std::shared_ptr<Model>> models;
+    std::shared_ptr<Model> m_character;
 
     // shared resource
     GlobalConstants global_consts_CPU;

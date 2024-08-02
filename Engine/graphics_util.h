@@ -29,10 +29,12 @@ inline void ThrowIfFailed(HRESULT hr) {
 class GraphicsUtil {
   public:
     static void CreateVertexShaderAndInputLayout(
-        ComPtr<ID3D11Device> &device, const std::wstring &filename,
+        ComPtr<ID3D11Device> &device, std::wstring filename,
         const std::vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
         ComPtr<ID3D11VertexShader> &m_vertexShader,
-        ComPtr<ID3D11InputLayout> &m_inputLayout);
+        ComPtr<ID3D11InputLayout> &m_inputLayout,
+        const std::vector<D3D_SHADER_MACRO> shaderMacros = {
+            /* Empty default */});
 
     static void CreateHullShader(ComPtr<ID3D11Device> &device,
                                  const std::wstring &filename,
@@ -201,7 +203,29 @@ class GraphicsUtil {
                                     const std::wstring &filename,
                                     ComPtr<ID3D11ComputeShader> &computeShader);
     static void ComputeShaderBarrier(ComPtr<ID3D11DeviceContext> &context);
-};
 
+    static void CreateStructuredBuffer(ComPtr<ID3D11Device> &device,
+                                       const UINT numElements,
+                                       const UINT sizeElement,
+                                       const void *initData,
+                                       ComPtr<ID3D11Buffer> &buffer,
+                                       ComPtr<ID3D11ShaderResourceView> &srv,
+                                       ComPtr<ID3D11UnorderedAccessView> &uav);
+
+    static void CreateStagingBuffer(ComPtr<ID3D11Device> &device,
+                                    const UINT numElements,
+                                    const UINT sizeElement,
+                                    const void *initData,
+                                    ComPtr<ID3D11Buffer> &buffer);
+
+    static void CopyToStagingBuffer(ComPtr<ID3D11DeviceContext> &context,
+                                    ComPtr<ID3D11Buffer> &buffer, UINT size,
+                                    void *src) {
+        D3D11_MAPPED_SUBRESOURCE ms;
+        context->Map(buffer.Get(), NULL, D3D11_MAP_WRITE, NULL, &ms);
+        memcpy(ms.pData, src, size);
+        context->Unmap(buffer.Get(), NULL);
+    }
+};
 } // namespace engine
 #endif

@@ -30,10 +30,13 @@ extern ComPtr<ID3D11DepthStencilState> drawMaskedDSS;
 
 // Shaders
 extern ComPtr<ID3D11VertexShader> basicVS;
+extern ComPtr<ID3D11VertexShader> skinnedVS;
 extern ComPtr<ID3D11VertexShader> skyboxVS;
 extern ComPtr<ID3D11VertexShader> samplingVS;
 extern ComPtr<ID3D11VertexShader> normalVS;
 extern ComPtr<ID3D11VertexShader> depthOnlyVS;
+extern ComPtr<ID3D11VertexShader> depthOnlySkinnedVS;
+
 extern ComPtr<ID3D11PixelShader> basicPS;
 extern ComPtr<ID3D11PixelShader> skyboxPS;
 extern ComPtr<ID3D11PixelShader> combinePS;
@@ -59,10 +62,14 @@ extern ComPtr<ID3D11BlendState> mirrorBS;
 
 // Graphics Pipeline States
 extern GraphicsPSO defaultSolidPSO;
+extern GraphicsPSO skinnedSolidPSO;
 extern GraphicsPSO defaultWirePSO;
+extern GraphicsPSO skinnedWirePSO;
 extern GraphicsPSO stencilMaskPSO;
 extern GraphicsPSO reflectSolidPSO;
+extern GraphicsPSO reflectSkinnedSolidPSO;
 extern GraphicsPSO reflectWirePSO;
+extern GraphicsPSO reflectSkinnedWirePSO;
 extern GraphicsPSO mirrorBlendSolidPSO;
 extern GraphicsPSO mirrorBlendWirePSO;
 extern GraphicsPSO skyboxSolidPSO;
@@ -71,6 +78,7 @@ extern GraphicsPSO reflectSkyboxSolidPSO;
 extern GraphicsPSO reflectSkyboxWirePSO;
 extern GraphicsPSO normalsPSO;
 extern GraphicsPSO depthOnlyPSO;
+extern GraphicsPSO depthOnlySkinnedPSO;
 extern GraphicsPSO postEffectsPSO;
 extern GraphicsPSO postProcessingPSO;
 

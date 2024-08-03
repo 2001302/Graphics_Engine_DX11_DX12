@@ -138,42 +138,6 @@ void GraphicsManager::CreateDepthBuffer() {
     ThrowIfFailed(
         device->CreateTexture2D(&desc, NULL, m_depthOnlyBuffer.GetAddressOf()));
 
-    // 그림자 Buffers (Depth 전용)
-    desc.Width = m_shadowWidth;
-    desc.Height = m_shadowHeight;
-    for (int i = 0; i < MAX_LIGHTS; i++) {
-        ThrowIfFailed(device->CreateTexture2D(
-            &desc, NULL, m_shadowBuffers[i].GetAddressOf()));
-    }
-
-    D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
-    ZeroMemory(&dsvDesc, sizeof(dsvDesc));
-    dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
-    dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-    ThrowIfFailed(device->CreateDepthStencilView(
-        m_depthOnlyBuffer.Get(), &dsvDesc, m_depthOnlyDSV.GetAddressOf()));
-
-    // 그림자 DSVs
-    for (int i = 0; i < MAX_LIGHTS; i++) {
-        ThrowIfFailed(
-            device->CreateDepthStencilView(m_shadowBuffers[i].Get(), &dsvDesc,
-                                           m_shadowDSVs[i].GetAddressOf()));
-    }
-
-    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
-    ZeroMemory(&srvDesc, sizeof(srvDesc));
-    srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
-    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = 1;
-    ThrowIfFailed(device->CreateShaderResourceView(
-        m_depthOnlyBuffer.Get(), &srvDesc, m_depthOnlySRV.GetAddressOf()));
-
-    // 그림자 SRVs
-    for (int i = 0; i < MAX_LIGHTS; i++) {
-        ThrowIfFailed(
-            device->CreateShaderResourceView(m_shadowBuffers[i].Get(), &srvDesc,
-                                             m_shadowSRVs[i].GetAddressOf()));
-    }
 }
 
 void GraphicsManager::SetMainViewport() {
@@ -188,21 +152,6 @@ void GraphicsManager::SetMainViewport() {
     viewport.MaxDepth = 1.0f;
 
     device_context->RSSetViewports(1, &viewport);
-}
-
-void GraphicsManager::SetShadowViewport() {
-
-    // Set the viewport
-    D3D11_VIEWPORT shadowViewport;
-    ZeroMemory(&shadowViewport, sizeof(D3D11_VIEWPORT));
-    shadowViewport.TopLeftX = 0;
-    shadowViewport.TopLeftY = 0;
-    shadowViewport.Width = float(m_shadowWidth);
-    shadowViewport.Height = float(m_shadowHeight);
-    shadowViewport.MinDepth = 0.0f;
-    shadowViewport.MaxDepth = 1.0f;
-
-    device_context->RSSetViewports(1, &shadowViewport);
 }
 
 void GraphicsManager::SetPipelineState(const GraphicsPSO &pso) {

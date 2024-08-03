@@ -19,6 +19,7 @@ bool Application::OnStart() {
     auto tree = std::make_shared<common::BehaviorTreeBuilder>();
     tree->Build(black_board.get())
         ->Sequence()
+            ->Excute(ShadowEffectNode())
             ->Excute(ImGuiNode())
             ->Excute(LightNode())
             ->Excute(CameraNode())

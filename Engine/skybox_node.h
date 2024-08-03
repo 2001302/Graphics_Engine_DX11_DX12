@@ -3,10 +3,11 @@
 
 #include "behavior_tree_builder.h"
 #include "black_board.h"
+#include "renderer.h"
 
 namespace engine {
 
-class SkyboxNode : public common::BehaviorActionNode {
+class SkyboxNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
@@ -17,10 +18,48 @@ class SkyboxNode : public common::BehaviorActionNode {
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
 
+            auto mesh_data = GeometryGenerator::MakeBox(40.0f);
+            std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
+
+            auto renderer = std::make_shared<Renderer>(
+                GraphicsManager::Instance().device,
+                GraphicsManager::Instance().device_context,
+                std::vector{mesh_data});
+
+            manager->skybox = std::make_shared<Model>();
+            manager->skybox->AddComponent(EnumComponentType::eRenderer,
+                                          renderer);
+
+            auto envFilename =
+                L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
+            auto specularFilename =
+                L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
+            auto irradianceFilename =
+                L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
+            auto brdfFilename =
+                L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
+
+            GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                           envFilename, true, manager->env_SRV);
+            GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                           specularFilename, true,
+                                           manager->specular_SRV);
+            GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                           irradianceFilename, true,
+                                           manager->irradiance_SRV);
+            GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+                                           brdfFilename, true,
+                                           manager->brdf_SRV);
             break;
         }
         case EnumStageType::eRender: {
 
+            GraphicsManager::Instance().SetPipelineState(
+                manager->draw_wire ? Graphics::skyboxWirePSO
+                                   : Graphics::skyboxSolidPSO);
+            auto renderer = (Renderer *)manager->skybox->GetComponent(
+                EnumComponentType::eRenderer);
+            renderer->Render(GraphicsManager::Instance().device_context);
             break;
         }
         default:

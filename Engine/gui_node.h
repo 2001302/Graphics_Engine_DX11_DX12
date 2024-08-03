@@ -6,7 +6,7 @@
 
 namespace engine {
 
-class GuiNode : public common::BehaviorActionNode {
+class GuiNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);

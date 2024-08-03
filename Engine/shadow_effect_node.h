@@ -86,8 +86,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
 
-            SetShadowViewport(GraphicsManager::Instance().device_context,
-                              m_shadowWidth, m_shadowHeight);
+            SetShadowViewport(GraphicsManager::Instance().device_context);
 
             std::vector<ID3D11ShaderResourceView *> nullSRV(MAX_LIGHTS,
                                                             nullptr);
@@ -172,16 +171,15 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
-    void SetShadowViewport(ComPtr<ID3D11DeviceContext> context, int width,
-                           int height) {
+    void SetShadowViewport(ComPtr<ID3D11DeviceContext> context) {
 
         // Set the viewport
         D3D11_VIEWPORT shadowViewport;
         ZeroMemory(&shadowViewport, sizeof(D3D11_VIEWPORT));
         shadowViewport.TopLeftX = 0;
         shadowViewport.TopLeftY = 0;
-        shadowViewport.Width = float(width);
-        shadowViewport.Height = float(height);
+        shadowViewport.Width = float(m_shadowWidth);
+        shadowViewport.Height = float(m_shadowHeight);
         shadowViewport.MinDepth = 0.0f;
         shadowViewport.MaxDepth = 1.0f;
 

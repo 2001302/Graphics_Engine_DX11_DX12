@@ -257,25 +257,6 @@ class DrawLightSpheresNode : public common::BehaviorActionNode {
     }
 };
 
-class DrawRelatedWithCameraNode : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
-
-        auto black_board = dynamic_cast<BlackBoard *>(data_block);
-        assert(black_board != nullptr);
-
-        auto manager = black_board->render_block;
-
-        GraphicsManager::Instance().SetPipelineState(
-            manager->draw_wire ? Graphics::defaultWirePSO
-                               : Graphics::defaultSolidPSO);
-        GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
-
-        manager->camera->Draw();
-
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-
 class DrawSkyboxNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 

@@ -73,22 +73,6 @@ class InitializeLightNode : public common::BehaviorActionNode {
     }
 };
 
-class InitializeCameraNode : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
-
-        auto black_board = dynamic_cast<BlackBoard *>(data_block);
-        assert(black_board != nullptr);
-
-        auto manager = black_board->render_block;
-
-        manager->camera = std::make_unique<Camera>();
-        manager->camera->Initialize();
-        manager->camera->Update();
-
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-
 class InitializeSkyboxNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 

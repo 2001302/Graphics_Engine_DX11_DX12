@@ -190,6 +190,21 @@
     <ClInclude Include="black_board.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
+    <ClInclude Include="light_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="skybox_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="mirror_effect_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="shadow_effect_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

@@ -6,21 +6,19 @@
 #include "renderer_initialize_node.h"
 #include "renderer_update_node.h"
 #include "gui_node.h"
+#include "camera_node.h"
 
 // clang-format off
 namespace engine {
 class TreeNode {
   public:
     TreeNode() {
-        //initialize_input = std::make_shared<InitializeInputNode>();
-        initialize_imgui = std::make_shared<InitializeImguiNode>();
         initialize_light = std::make_shared<InitializeLightNode>();
-        initialize_camera = std::make_shared<InitializeCameraNode>();
+        camera_node = std::make_shared<CameraNodeInvoker>();
         initialize_skybox = std::make_shared<InitializeSkyboxNode>();
         initialize_mirror_ground = std::make_shared<InitializeMirrorGroundNode>();
         create_global_constant_buffer = std::make_shared<CreateGlobalConstantBufferNode>();
         initialize_basic_models = std::make_shared<InitializeBasicModelsNode>();
-        update_camera = std::make_shared<UpdateCameraNode>();
         update_lights = std::make_shared<UpdateLightsNode>();
         update_global_constant_buffers = std::make_shared<UpdateGlobalConstantBuffersNode>();
         update_mirror = std::make_shared<UpdateMirrorNode>();
@@ -33,24 +31,20 @@ class TreeNode {
         set_main_render_target = std::make_shared<SetMainRenderTargetNode>();
         draw_objects = std::make_shared<DrawObjectsNode>();
         draw_light_spheres = std::make_shared<DrawLightSpheresNode>();
-        draw_related_with_camera = std::make_shared<DrawRelatedWithCameraNode>();
         draw_skybox = std::make_shared<DrawSkyboxNode>();
         draw_mirror_surface = std::make_shared<DrawMirrorSurfaceNode>();
         resolve_buffer = std::make_shared<ResolveBufferNode>();
-        draw_setting_ui = std::make_shared<DrawSettingUiNode>();
+        imgui = std::make_shared<GuiNode>();
         post_processing = std::make_shared<PostProcessingNode>();
         present = std::make_shared<PresentNode>();
     }
 
-    //std::shared_ptr<InitializeInputNode> InitializeInput(){return initialize_input;}
-    std::shared_ptr<InitializeImguiNode> InitializeImgui(){return initialize_imgui;}
     std::shared_ptr<InitializeLightNode> InitializeLight(){return initialize_light;}
-    std::shared_ptr<InitializeCameraNode> InitializeCamera(){return initialize_camera;}
+    std::shared_ptr<CameraNodeInvoker> CameraNode(){return camera_node;}
     std::shared_ptr<InitializeSkyboxNode> InitializeSkybox(){return initialize_skybox;}
     std::shared_ptr<InitializeMirrorGroundNode> InitializeMirrorGround(){return initialize_mirror_ground;}
     std::shared_ptr<CreateGlobalConstantBufferNode> CreateGlobalConstantBuffer(){return create_global_constant_buffer;}
     std::shared_ptr<InitializeBasicModelsNode> InitializeBasicModels(){return initialize_basic_models;}
-    std::shared_ptr<UpdateCameraNode> UpdateCamera(){return update_camera;}
     std::shared_ptr<UpdateLightsNode> UpdateLights(){return update_lights;}
     std::shared_ptr<UpdateGlobalConstantBuffersNode> UpdateGlobalConstantBuffers(){return update_global_constant_buffers;}
     std::shared_ptr<UpdateMirrorNode> UpdateMirror(){return update_mirror;}
@@ -63,25 +57,21 @@ class TreeNode {
     std::shared_ptr<SetMainRenderTargetNode> SetMainRenderTarget(){return set_main_render_target;}
     std::shared_ptr<DrawObjectsNode> DrawObjects(){return draw_objects;}
     std::shared_ptr<DrawLightSpheresNode> DrawLightSpheres(){return draw_light_spheres;}
-    std::shared_ptr<DrawRelatedWithCameraNode> DrawRelatedWithCamera(){return draw_related_with_camera;}
     std::shared_ptr<DrawSkyboxNode> DrawSkybox(){return draw_skybox;}
     std::shared_ptr<DrawMirrorSurfaceNode> DrawMirrorSurface(){return draw_mirror_surface;}
     std::shared_ptr<ResolveBufferNode> ResolveBuffer(){return resolve_buffer;}
-    std::shared_ptr<DrawSettingUiNode> DrawSettingUi(){return draw_setting_ui;}
+    std::shared_ptr<GuiNode> ImGuiNode(){return imgui;}
     std::shared_ptr<PostProcessingNode> PostProcessing() {return post_processing;}
     std::shared_ptr<PresentNode> Present(){return present;}
 
 
   private:
-    //std::shared_ptr<InitializeInputNode> initialize_input;
-    std::shared_ptr<InitializeImguiNode> initialize_imgui;
     std::shared_ptr<InitializeLightNode> initialize_light;
-    std::shared_ptr<InitializeCameraNode> initialize_camera;
+    std::shared_ptr<CameraNodeInvoker> camera_node;
     std::shared_ptr<InitializeSkyboxNode> initialize_skybox;
     std::shared_ptr<InitializeMirrorGroundNode> initialize_mirror_ground;
     std::shared_ptr<CreateGlobalConstantBufferNode> create_global_constant_buffer;
     std::shared_ptr<InitializeBasicModelsNode> initialize_basic_models;
-    std::shared_ptr<UpdateCameraNode> update_camera;
     std::shared_ptr<UpdateLightsNode> update_lights;
     std::shared_ptr<UpdateGlobalConstantBuffersNode> update_global_constant_buffers;
     std::shared_ptr<UpdateMirrorNode> update_mirror;
@@ -94,11 +84,10 @@ class TreeNode {
     std::shared_ptr<SetMainRenderTargetNode> set_main_render_target;
     std::shared_ptr<DrawObjectsNode> draw_objects;
     std::shared_ptr<DrawLightSpheresNode> draw_light_spheres;
-    std::shared_ptr<DrawRelatedWithCameraNode> draw_related_with_camera;
     std::shared_ptr<DrawSkyboxNode> draw_skybox;
     std::shared_ptr<DrawMirrorSurfaceNode> draw_mirror_surface;
     std::shared_ptr<ResolveBufferNode> resolve_buffer;
-    std::shared_ptr<DrawSettingUiNode> draw_setting_ui;
+    std::shared_ptr<GuiNode> imgui;
     std::shared_ptr<PostProcessingNode> post_processing;
     std::shared_ptr<PresentNode> present;
 };

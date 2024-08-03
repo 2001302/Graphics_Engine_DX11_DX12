@@ -7,20 +7,6 @@
 
 namespace engine {
 
-class UpdateCameraNode : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
-
-        auto black_board = dynamic_cast<BlackBoard *>(data_block);
-        assert(black_board != nullptr);
-
-        auto manager = black_board->render_block;
-
-        manager->camera->Update();
-
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-
 class UpdateLightsNode : public common::BehaviorActionNode {
   public:
     common::EnumBehaviorTreeStatus OnInvoke() override {

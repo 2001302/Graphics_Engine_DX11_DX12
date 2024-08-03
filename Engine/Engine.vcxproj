@@ -176,6 +176,7 @@
     <ClInclude Include="geometry_generator.h" />
     <ClInclude Include="post_process_node.h" />
     <ClInclude Include="shadow_effect_node.h" />
+    <ClInclude Include="shared_resource_node.h" />
     <ClInclude Include="skinned_mesh_renderer.h" />
     <ClInclude Include="skybox_node.h" />
     <ClInclude Include="structured_buffer.h" />
@@ -195,9 +196,7 @@
     <ClInclude Include="message_receiver.h" />
     <ClInclude Include="tone_mapping.h" />
     <ClInclude Include="renderer.h" />
-    <ClInclude Include="renderer_draw_node.h" />
-    <ClInclude Include="renderer_initialize_node.h" />
-    <ClInclude Include="renderer_update_node.h" />
+    <ClInclude Include="game_objects_node.h" />
     <ClInclude Include="setting_ui.h" />
     <ClInclude Include="selector_node.h" />
     <ClInclude Include="sequence_node.h" />

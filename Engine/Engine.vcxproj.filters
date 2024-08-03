@@ -127,13 +127,7 @@
     <ClInclude Include="component.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="renderer_initialize_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer_update_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer_draw_node.h">
+    <ClInclude Include="game_objects_node.h">
       <Filter>Engine\BehaviorTree\TreeNode</Filter>
     </ClInclude>
     <ClInclude Include="gui_node.h">
@@ -203,6 +197,9 @@
       <Filter>Engine\BehaviorTree\TreeNode</Filter>
     </ClInclude>
     <ClInclude Include="shadow_effect_node.h">
+      <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_resource_node.h">
       <Filter>Engine\BehaviorTree\TreeNode</Filter>
     </ClInclude>
   </ItemGroup>

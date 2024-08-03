@@ -4,6 +4,7 @@
 #include "geometry_generator.h"
 #include "input.h"
 #include "rendering_block.h"
+#include "setting_ui.h"
 
 namespace engine {
 class MessageReceiver {
@@ -22,6 +23,7 @@ class MessageReceiver {
     bool OnMouseWheelDragRequest(RenderingBlock *manager,
                                  std::shared_ptr<Input> input, int mouseX,
                                  int mouseY);
+    bool OnWindowSizeRequest(common::SettingUi* gui, int size_x, int size_y);
 };
 } // namespace engine
 

@@ -3,9 +3,8 @@
 
 #include "behavior_tree_builder.h"
 #include "image_filter.h"
-#include "rendering_block.h"
-#include "setting_ui.h"
 #include "tone_mapping.h"
+#include "black_board.h"
 
 namespace engine {
 /// <summary>
@@ -14,9 +13,10 @@ namespace engine {
 class PostProcessingNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         auto device = GraphicsManager::Instance().device;
         auto context = GraphicsManager::Instance().device_context;

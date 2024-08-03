@@ -4,16 +4,16 @@
 #include "behavior_tree_builder.h"
 #include "renderer.h"
 #include "skinned_mesh_renderer.h"
-#include "rendering_block.h"
-#include "setting_ui.h"
+#include "black_board.h"
 
 namespace engine {
 class SetSamplerStatesNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         GraphicsManager::Instance().SetMainViewport();
 
@@ -41,9 +41,10 @@ class SetSamplerStatesNode : public common::BehaviorActionNode {
 class DrawOnlyDepthNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         // Depth Only Pass (no RTS)
         GraphicsManager::Instance().device_context->OMSetRenderTargets(
@@ -90,9 +91,10 @@ class SetShadowViewportNode : public common::BehaviorActionNode {
 class DrawShadowMapNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         std::vector<ID3D11ShaderResourceView *> nullSRV(MAX_LIGHTS, nullptr);
         GraphicsManager::Instance().device_context->PSSetShaderResources(
@@ -143,9 +145,10 @@ class DrawShadowMapNode : public common::BehaviorActionNode {
 class SetMainRenderTargetNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         // rendering resolution
         GraphicsManager::Instance().SetMainViewport();
@@ -185,9 +188,10 @@ class SetMainRenderTargetNode : public common::BehaviorActionNode {
 class DrawObjectsNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         GraphicsManager::Instance().SetPipelineState(
             manager->draw_wire ? Graphics::defaultWirePSO
@@ -233,9 +237,10 @@ class DrawObjectsNode : public common::BehaviorActionNode {
 class DrawLightSpheresNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         GraphicsManager::Instance().SetPipelineState(
             manager->draw_wire ? Graphics::defaultWirePSO
@@ -255,9 +260,10 @@ class DrawLightSpheresNode : public common::BehaviorActionNode {
 class DrawRelatedWithCameraNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         GraphicsManager::Instance().SetPipelineState(
             manager->draw_wire ? Graphics::defaultWirePSO
@@ -273,9 +279,10 @@ class DrawRelatedWithCameraNode : public common::BehaviorActionNode {
 class DrawSkyboxNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         if (true) {
             GraphicsManager::Instance().SetPipelineState(
@@ -293,9 +300,10 @@ class DrawSkyboxNode : public common::BehaviorActionNode {
 class DrawMirrorSurfaceNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         // on mirror
         if (manager->mirror_alpha < 1.0f) {
@@ -357,9 +365,10 @@ class DrawMirrorSurfaceNode : public common::BehaviorActionNode {
 class ResolveBufferNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         GraphicsManager::Instance().device_context->ResolveSubresource(
             GraphicsManager::Instance().resolved_buffer.Get(), 0,

@@ -187,6 +187,9 @@
     <ClInclude Include="structured_buffer.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
+    <ClInclude Include="black_board.h">
+      <Filter>Engine\Data</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

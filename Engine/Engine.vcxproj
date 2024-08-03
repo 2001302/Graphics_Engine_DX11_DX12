@@ -142,6 +142,7 @@
     <ClInclude Include="animation_clip.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="behavior_tree_builder.h" />
+    <ClInclude Include="black_board.h" />
     <ClInclude Include="bone.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="compute_pso.h" />

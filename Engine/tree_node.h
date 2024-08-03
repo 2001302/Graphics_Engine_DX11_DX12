@@ -19,7 +19,6 @@ class TreeNode {
         initialize_skybox = std::make_shared<InitializeSkyboxNode>();
         initialize_mirror_ground = std::make_shared<InitializeMirrorGroundNode>();
         create_global_constant_buffer = std::make_shared<CreateGlobalConstantBufferNode>();
-        initialize_post_effect = std::make_shared<InitializePostEffectNode>();
         initialize_basic_models = std::make_shared<InitializeBasicModelsNode>();
         update_camera = std::make_shared<UpdateCameraNode>();
         update_lights = std::make_shared<UpdateLightsNode>();
@@ -50,7 +49,6 @@ class TreeNode {
     std::shared_ptr<InitializeSkyboxNode> InitializeSkybox(){return initialize_skybox;}
     std::shared_ptr<InitializeMirrorGroundNode> InitializeMirrorGround(){return initialize_mirror_ground;}
     std::shared_ptr<CreateGlobalConstantBufferNode> CreateGlobalConstantBuffer(){return create_global_constant_buffer;}
-    std::shared_ptr<InitializePostEffectNode> InitializePostEffect(){return initialize_post_effect;}
     std::shared_ptr<InitializeBasicModelsNode> InitializeBasicModels(){return initialize_basic_models;}
     std::shared_ptr<UpdateCameraNode> UpdateCamera(){return update_camera;}
     std::shared_ptr<UpdateLightsNode> UpdateLights(){return update_lights;}
@@ -82,7 +80,6 @@ class TreeNode {
     std::shared_ptr<InitializeSkyboxNode> initialize_skybox;
     std::shared_ptr<InitializeMirrorGroundNode> initialize_mirror_ground;
     std::shared_ptr<CreateGlobalConstantBufferNode> create_global_constant_buffer;
-    std::shared_ptr<InitializePostEffectNode> initialize_post_effect;
     std::shared_ptr<InitializeBasicModelsNode> initialize_basic_models;
     std::shared_ptr<UpdateCameraNode> update_camera;
     std::shared_ptr<UpdateLightsNode> update_lights;

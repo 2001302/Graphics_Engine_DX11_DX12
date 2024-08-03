@@ -2,8 +2,7 @@
 #define _IDATABLOCK
 
 namespace common {
-class IDataBlock {
-  public:
+struct IDataBlock {
     virtual ~IDataBlock(){};
 };
 

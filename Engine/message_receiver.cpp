@@ -4,6 +4,30 @@
 namespace engine {
 using namespace DirectX::SimpleMath;
 
+bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
+                                          int size_y) {
+
+    common::Env::Instance().screen_width = size_x;
+    common::Env::Instance().screen_height = size_y;
+
+    if (common::Env::Instance().screen_width &&
+        common::Env::Instance().screen_height) {
+        if (GraphicsManager::Instance().swap_chain) {
+
+            gui->Shutdown();
+
+            GraphicsManager::Instance().back_buffer_RTV.Reset();
+            GraphicsManager::Instance().swap_chain->ResizeBuffers(
+                0, size_x, size_y, DXGI_FORMAT_UNKNOWN, 0);
+
+            GraphicsManager::Instance().CreateBuffer();
+            GraphicsManager::Instance().SetMainViewport();
+
+            gui->Initialize();
+        }
+    }
+    return true;
+}
 bool MessageReceiver::OnMouseDownRequest(std::shared_ptr<Input> input,
                                          int mouseX, int mouseY) {
     input->SetMouse(mouseX, mouseY);

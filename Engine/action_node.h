@@ -8,12 +8,6 @@
 #include <vector>
 
 namespace common {
-enum EnumDataBlockType {
-    eRenderBlock = 0,
-    eGui = 1,
-    eInput = 2,
-};
-
 enum EnumBehaviorTreeStatus {
     eSuccess = 0,
     eFail = 1,
@@ -32,7 +26,7 @@ class IDisposable {
 
 class BehaviorActionNode : public common::INode {
   public:
-    BehaviorActionNode() : parent_node(0), target_object(0){};
+    BehaviorActionNode() : parent_node(0), target_object(0), data_block(0){};
     EnumBehaviorTreeStatus Invoke();
     BehaviorActionNode *GetParent();
     void PushNode(std::shared_ptr<BehaviorActionNode> node);
@@ -40,9 +34,9 @@ class BehaviorActionNode : public common::INode {
 
   protected:
     virtual EnumBehaviorTreeStatus OnInvoke();
-    BehaviorActionNode *parent_node;
+    BehaviorActionNode * parent_node;
     std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
-    std::map<EnumDataBlockType, common::IDataBlock *> data_block;
+    common::IDataBlock * data_block;
     common::INode *target_object;
 };
 } // namespace common

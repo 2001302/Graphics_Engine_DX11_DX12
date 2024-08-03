@@ -8,7 +8,7 @@ namespace common {
 class SelectorNode : public BehaviorActionNode {
   public:
     SelectorNode(){};
-    SelectorNode(std::map<EnumDataBlockType, common::IDataBlock *> dataBlock) {
+    SelectorNode(common::IDataBlock * dataBlock) {
         data_block = dataBlock;
     };
 

@@ -8,7 +8,7 @@ namespace common {
 class SequenceNode : public BehaviorActionNode {
   public:
     SequenceNode(){};
-    SequenceNode(std::map<EnumDataBlockType, common::IDataBlock *> dataBlock) {
+    SequenceNode(common::IDataBlock * dataBlock) {
         data_block = dataBlock;
     };
 

@@ -4,7 +4,7 @@
 #include "env.h"
 
 namespace engine {
-class Input : public common::IDataBlock {
+class Input {
   public:
     Input() : mouse_x(0), mouse_y(0){};
     void SetMouse(int mouse_x, int mouse_y) {

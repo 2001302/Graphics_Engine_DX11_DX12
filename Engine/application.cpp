@@ -4,10 +4,8 @@
 namespace engine {
 
 Application::Application() {
-    render_block = std::make_shared<RenderingBlock>();
+    black_board = std::make_shared<BlackBoard>();
     message_receiver = std::make_unique<MessageReceiver>();
-    input = std::make_unique<Input>();
-    gui = std::make_shared<common::SettingUi>();
 };
 
 bool Application::OnStart() {
@@ -15,17 +13,11 @@ bool Application::OnStart() {
     Platform::OnStart();
 
     GraphicsManager::Instance().Initialize();
-    render_block->stage_type = EnumStageType::eInitialize;
-
-    std::map<common::EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {common::EnumDataBlockType::eRenderBlock, render_block.get()},
-        {common::EnumDataBlockType::eGui, gui.get()},
-        {common::EnumDataBlockType::eInput, input.get()},
-    };
+    black_board->render_block->stage_type = EnumStageType::eInitialize;
 
     // clang-format off
     auto tree = std::make_shared<common::BehaviorTreeBuilder>();
-    tree->Build(dataBlock)
+    tree->Build(black_board.get())
         ->Sequence()
             ->Excute(InitializeImgui())
             ->Excute(InitializeLight())
@@ -33,7 +25,6 @@ bool Application::OnStart() {
             ->Excute(InitializeSkybox())
             ->Excute(InitializeMirrorGround())
             ->Excute(CreateGlobalConstantBuffer())
-            ->Excute(InitializePostEffect())
             ->Excute(PostProcessing())
             ->Excute(InitializeBasicModels())
         ->Close()
@@ -55,18 +46,12 @@ bool Application::OnFrame() {
 
 bool Application::OnUpdate(float dt) {
 
-    render_block->dt = dt;
-    render_block->stage_type = EnumStageType::eUpdate;
-
-    std::map<common::EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {common::EnumDataBlockType::eRenderBlock, render_block.get()},
-        {common::EnumDataBlockType::eGui, gui.get()},
-        {common::EnumDataBlockType::eInput, input.get()},
-    };
+    black_board->render_block->dt = dt;
+    black_board->render_block->stage_type = EnumStageType::eUpdate;
 
     // clang-format off
     auto tree = std::make_shared<common::BehaviorTreeBuilder>();
-    tree->Build(dataBlock)
+    tree->Build(black_board.get())
         ->Sequence()
             ->Excute(UpdateCamera())
             ->Excute(UpdateLights())
@@ -85,17 +70,11 @@ bool Application::OnUpdate(float dt) {
 bool Application::OnRender() {
 
     //input->Frame();
-    render_block->stage_type = EnumStageType::eRender;
-
-    std::map<common::EnumDataBlockType, common::IDataBlock *> dataBlock = {
-        {common::EnumDataBlockType::eRenderBlock, render_block.get()},
-        {common::EnumDataBlockType::eGui, gui.get()},
-        {common::EnumDataBlockType::eInput, input.get()},
-    };
+    black_board->render_block->stage_type = EnumStageType::eRender;
 
     // clang-format off
     auto tree = std::make_shared<common::BehaviorTreeBuilder>();
-    tree->Build(dataBlock)
+    tree->Build(black_board.get())
         ->Sequence()
             ->Excute(SetSamplerStates())
             ->Excute(DrawOnlyDepth())
@@ -121,21 +100,21 @@ bool Application::OnRender() {
 bool Application::OnStop() {
     Platform::OnStop();
 
-    if (render_block) {
-        for (auto &model : render_block->models) {
-            model.second.reset();
-        }
-        render_block->camera.reset();
-    }
+    //if (render_block) {
+    //    for (auto &model : render_block->models) {
+    //        model.second.reset();
+    //    }
+    //    render_block->camera.reset();
+    //}
 
-    if (gui) {
-        gui->Shutdown();
-        gui.reset();
-    }
+    //if (gui) {
+    //    gui->Shutdown();
+    //    gui.reset();
+    //}
 
-    if (input) {
-        input.reset();
-    }
+    //if (input) {
+    //    input.reset();
+    //}
 
     return true;
 }

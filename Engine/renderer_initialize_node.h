@@ -3,18 +3,19 @@
 
 #include "animation_clip.h"
 #include "behavior_tree_builder.h"
+#include "black_board.h"
 #include "geometry_generator.h"
 #include "renderer.h"
-#include "rendering_block.h"
 #include "skinned_mesh_renderer.h"
 
 namespace engine {
 class InitializeLightNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         // 조명 설정
         {
@@ -75,9 +76,10 @@ class InitializeLightNode : public common::BehaviorActionNode {
 class InitializeCameraNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         manager->camera = std::make_unique<Camera>();
         manager->camera->Initialize();
@@ -90,9 +92,10 @@ class InitializeCameraNode : public common::BehaviorActionNode {
 class InitializeSkyboxNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         auto mesh_data = GeometryGenerator::MakeBox(40.0f);
         std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
@@ -129,9 +132,10 @@ class InitializeSkyboxNode : public common::BehaviorActionNode {
 class InitializeMirrorGroundNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         auto mesh = GeometryGenerator::MakeSquare(5.0);
 
@@ -166,9 +170,10 @@ class InitializeMirrorGroundNode : public common::BehaviorActionNode {
 class CreateGlobalConstantBufferNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
                                         manager->global_consts_CPU,
@@ -190,33 +195,14 @@ class CreateGlobalConstantBufferNode : public common::BehaviorActionNode {
     }
 };
 
-class InitializePostEffectNode : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
-
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
-
-        MeshData meshData = GeometryGenerator::MakeSquare();
-
-        auto renderer = std::make_shared<Renderer>(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context, std::vector{meshData});
-
-        manager->screen_square = std::make_shared<Model>();
-        manager->screen_square->AddComponent(EnumComponentType::eRenderer,
-                                             renderer);
-
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-
 class InitializeBasicModelsNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
+
         // 추가 물체1
         {
             MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);

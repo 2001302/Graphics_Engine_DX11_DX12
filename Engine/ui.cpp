@@ -26,7 +26,7 @@ bool IGui::Initialize() {
     return true;
 }
 
-bool IGui::Frame(IDataBlock* dataBlock) {
+bool IGui::Frame(INode * node) {
 
     auto &io = ImGui::GetIO();
 
@@ -46,7 +46,7 @@ bool IGui::Frame(IDataBlock* dataBlock) {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
     gui_size = ImGui::GetWindowSize();
 
-    OnFrame(dataBlock);
+    OnFrame(node);
 
     ImGui::PopStyleVar(2);
     ImGui::End();

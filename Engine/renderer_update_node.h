@@ -3,16 +3,17 @@
 
 #include "behavior_tree_builder.h"
 #include "renderer.h"
-#include "rendering_block.h"
+#include "black_board.h"
 
 namespace engine {
 
 class UpdateCameraNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         manager->camera->Update();
 
@@ -24,9 +25,10 @@ class UpdateLightsNode : public common::BehaviorActionNode {
   public:
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         float dt = manager->dt;
 
@@ -115,9 +117,10 @@ class UpdateLightsNode : public common::BehaviorActionNode {
 class UpdateGlobalConstantBuffersNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         const Vector3 eyeWorld = manager->camera->GetPosition();
         const Matrix reflectRow =
@@ -162,9 +165,10 @@ class UpdateGlobalConstantBuffersNode : public common::BehaviorActionNode {
 class UpdateMirrorNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         auto renderer = (Renderer *)manager->mirror->GetComponent(
             EnumComponentType::eRenderer);
@@ -180,9 +184,10 @@ class UpdateMirrorNode : public common::BehaviorActionNode {
 class ApplyMouseMovementNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         //// 마우스 이동/회전 반영
         // if (m_leftButton || m_rightButton) {
@@ -217,9 +222,10 @@ class ApplyMouseMovementNode : public common::BehaviorActionNode {
 class UpdateBasicObjectsNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         for (auto &i : manager->models) {
             auto renderer = (Renderer *)i.second->GetComponent(
@@ -250,9 +256,10 @@ class UpdateBasicObjectsNode : public common::BehaviorActionNode {
 class UpdateLightSpheresNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
 
         for (auto &i : manager->light_spheres) {
             auto renderer =

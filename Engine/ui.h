@@ -9,11 +9,11 @@ namespace common {
 class IGui : public IDataBlock {
   public:
     bool Initialize();
-    bool Frame(IDataBlock *dataBlock = nullptr);
+    bool Frame(INode *node = nullptr);
     void Shutdown();
 
     virtual void OnStart(){};
-    virtual void OnFrame(IDataBlock *dataBlock){};
+    virtual void OnFrame(INode *node){};
 
     ImVec2 GetSize() { return gui_size; }
 

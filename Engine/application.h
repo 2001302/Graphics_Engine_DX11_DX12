@@ -4,15 +4,14 @@
 #include "action_node.h"
 #include "geometry_generator.h"
 #include "graphics_manager.h"
-#include "input.h"
 #include "message.h"
 #include "message_receiver.h"
 #include "platform.h"
-#include "rendering_block.h"
-#include "setting_ui.h"
 #include "tree_node.h"
+#include "black_board.h"
 
 namespace engine {
+
 class Application : public Platform, TreeNode {
   public:
     Application();
@@ -25,10 +24,8 @@ class Application : public Platform, TreeNode {
     bool OnUpdate(float dt);
     bool OnRender();
 
-    std::shared_ptr<RenderingBlock> render_block;
+    std::shared_ptr<BlackBoard> black_board;
     std::unique_ptr<MessageReceiver> message_receiver;
-    std::shared_ptr<Input> input;
-    std::shared_ptr<common::SettingUi> gui;
 
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,
                                     LPARAM lparam) {
@@ -51,78 +48,64 @@ class Application : public Platform, TreeNode {
 
         switch (umsg) {
         case WM_SIZE: {
-
-            common::Env::Instance().screen_width = int(LOWORD(lparam));
-            common::Env::Instance().screen_height = int(HIWORD(lparam));
-
-            if (common::Env::Instance().screen_width &&
-                common::Env::Instance().screen_height) {
-                if (GraphicsManager::Instance().swap_chain) {
-
-                    gui->Shutdown();
-
-                    GraphicsManager::Instance().back_buffer_RTV.Reset();
-                    GraphicsManager::Instance().swap_chain->ResizeBuffers(
-                        0, (UINT)LOWORD(lparam), (UINT)HIWORD(lparam),
-                        DXGI_FORMAT_UNKNOWN, 0);
-
-                    GraphicsManager::Instance().CreateBuffer();
-                    GraphicsManager::Instance().SetMainViewport();
-
-                    gui->Initialize();
-                }
-            }
+            return message_receiver->OnWindowSizeRequest(black_board->gui.get(),
+                                                         int(LOWORD(lparam)),
+                                                         int(HIWORD(lparam)));
             break;
         }
         case WM_MOUSEMOVE: {
             if (wparam & MK_RBUTTON) {
-                if (CheckIfMouseInViewport(gui.get(), LOWORD(lparam),
-                                           HIWORD(lparam))) {
+                if (CheckIfMouseInViewport(black_board->gui.get(),
+                                           LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseRightDragRequest(
-                        render_block.get(), input, LOWORD(lparam),
-                        HIWORD(lparam));
+                        black_board->render_block.get(), black_board->input,
+                        LOWORD(lparam), HIWORD(lparam));
                 }
             }
             if (wparam & MK_MBUTTON) {
-                if (CheckIfMouseInViewport(gui.get(), LOWORD(lparam),
-                                           HIWORD(lparam))) {
+                if (CheckIfMouseInViewport(black_board->gui.get(),
+                                           LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseWheelDragRequest(
-                        render_block.get(), input, LOWORD(lparam), HIWORD(lparam));
+                        black_board->render_block.get(), black_board->input,
+                        LOWORD(lparam), HIWORD(lparam));
                 }
             }
             break;
         }
         case WM_MOUSEWHEEL: {
-            if (CheckIfMouseInViewport(gui.get(), LOWORD(lparam),
+            if (CheckIfMouseInViewport(black_board->gui.get(), LOWORD(lparam),
                                        HIWORD(lparam))) {
                 return message_receiver->OnMouseWheelRequest(
-                    render_block.get(), input, GET_WHEEL_DELTA_WPARAM(wparam));
+                    black_board->render_block.get(), black_board->input,
+                    GET_WHEEL_DELTA_WPARAM(wparam));
             }
             break;
         }
         case WM_RBUTTONDOWN:
         case WM_LBUTTONDOWN:
-        case WM_MBUTTONDOWN: 
-        {
-            return message_receiver->OnMouseDownRequest(input, LOWORD(lparam),
-                                                        HIWORD(lparam));
+        case WM_MBUTTONDOWN: {
+            return message_receiver->OnMouseDownRequest(
+                black_board->input, LOWORD(lparam), HIWORD(lparam));
             break;
         }
         case WM_MODEL_LOAD: {
-            return message_receiver->OnModelLoadRequest(render_block.get(),
-                                                         main_window);
+            return message_receiver->OnModelLoadRequest(
+                black_board->render_block.get(), main_window);
             break;
         }
         case WM_SPHERE_LOAD: {
-            return message_receiver->OnSphereLoadRequest(render_block.get());
+            return message_receiver->OnSphereLoadRequest(
+                black_board->render_block.get());
             break;
         }
         case WM_BOX_LOAD: {
-            return message_receiver->OnBoxLoadRequest(render_block.get());
+            return message_receiver->OnBoxLoadRequest(
+                black_board->render_block.get());
             break;
         }
         case WM_CYLINDER_LOAD: {
-            return message_receiver->OnCylinderLoadRequest(render_block.get());
+            return message_receiver->OnCylinderLoadRequest(
+                black_board->render_block.get());
             break;
         }
         case WM_KEYDOWN:

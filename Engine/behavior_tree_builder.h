@@ -11,8 +11,7 @@ namespace common {
 
 class BehaviorTreeBuilder {
   public:
-    BehaviorTreeBuilder *
-    Build(std::map<EnumDataBlockType, common::IDataBlock *> dataBlock) {
+    BehaviorTreeBuilder *Build(common::IDataBlock *dataBlock) {
         tree = std::make_shared<SequenceNode>(dataBlock);
         current = tree.get();
         return this;

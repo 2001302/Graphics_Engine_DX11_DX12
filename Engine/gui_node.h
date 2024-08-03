@@ -2,16 +2,16 @@
 #define _GUINODE
 
 #include "behavior_tree_builder.h"
-#include "setting_ui.h"
+#include "black_board.h"
 
 namespace engine {
 class InitializeImguiNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto gui = dynamic_cast<common::SettingUi *>(
-            data_block[common::EnumDataBlockType::eGui]);
-        assert(gui != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
 
+        auto gui = black_board->gui;
         gui->Initialize();
 
         return common::EnumBehaviorTreeStatus::eSuccess;
@@ -21,13 +21,11 @@ class InitializeImguiNode : public common::BehaviorActionNode {
 class DrawSettingUiNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto manager = dynamic_cast<RenderingBlock *>(
-            data_block[common::EnumDataBlockType::eRenderBlock]);
-        assert(manager != nullptr);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
 
-        auto gui = dynamic_cast<common::SettingUi *>(
-            data_block[common::EnumDataBlockType::eGui]);
-        assert(gui != nullptr);
+        auto manager = black_board->render_block.get();
+        auto gui = black_board->gui;
 
         gui->PushNode(dynamic_cast<common::INode *>(manager));
         gui->Frame(manager);

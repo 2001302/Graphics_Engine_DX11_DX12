@@ -14,8 +14,7 @@ enum EnumStageType {
     eRender = 2,
 };
 
-class RenderingBlock : public common::IDataBlock,
-    public common::INode {
+class RenderingBlock : public common::INode {
   public:
     float dt;
     bool draw_wire = false;
@@ -24,7 +23,6 @@ class RenderingBlock : public common::IDataBlock,
 
     std::unique_ptr<Camera> camera;
     std::shared_ptr<Model> skybox;
-    std::shared_ptr<Model> screen_square;
     std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
     std::shared_ptr<Model> ground;
     std::map<int /*id*/, std::shared_ptr<Model>> models;

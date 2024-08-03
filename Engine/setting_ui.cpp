@@ -8,12 +8,12 @@ void SettingUi::OnStart() {
     context_ = ed::CreateEditor(&config);
 }
 
-void SettingUi::OnFrame(IDataBlock *dataBlock) {
+void SettingUi::OnFrame(INode *node) {
      FrameRate();
      StyleSetting();
      MenuBar();
      NodeEditor();
-     TabBar(dataBlock);
+     TabBar(node);
 }
 
 void SettingUi::StyleSetting() {
@@ -67,7 +67,7 @@ void SettingUi::NodeEditor() {
     ed::SetCurrentEditor(nullptr);
 }
 
-void SettingUi::TabBar(IDataBlock *dataBlock) { 
+void SettingUi::TabBar(INode *node) { 
 
     if (ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_FittingPolicyScroll)) {
         if (ImGui::BeginTabItem("Hierarchy")) {

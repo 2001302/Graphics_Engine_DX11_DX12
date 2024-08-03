@@ -22,9 +22,7 @@ class TreeNode {
         mirror_effect_node = std::make_shared<MirrorEffectNodeInvoker>();
         shared_resource_node = std::make_shared<SharedResourceNodeInvoker>();
         game_objects_node = std::make_shared<GameObjectNodeInvoker>();
-        update_light_spheres = std::make_shared<UpdateLightSpheresNode>();
         shadow_effect_node = std::make_shared<ShadowEffectNodeInvoker>();
-        draw_light_spheres = std::make_shared<DrawLightSpheresNode>();
         resolve_buffer = std::make_shared<ResolveBufferNode>();
         imgui_node = std::make_shared<GuiNodeInvoker>();
         post_processing = std::make_shared<PostProcessingNode>();
@@ -37,9 +35,7 @@ class TreeNode {
     std::shared_ptr<MirrorEffectNodeInvoker> MirrorEffectNode(){return mirror_effect_node;}
     std::shared_ptr<SharedResourceNodeInvoker> SharedResourceNode(){return shared_resource_node;}
     std::shared_ptr<GameObjectNodeInvoker> GameObjectsNode(){return game_objects_node;}
-    std::shared_ptr<UpdateLightSpheresNode> UpdateLightSpheres(){return update_light_spheres;}
     std::shared_ptr<ShadowEffectNodeInvoker> ShadowEffectNode(){return shadow_effect_node;}
-    std::shared_ptr<DrawLightSpheresNode> DrawLightSpheres(){return draw_light_spheres;}
     std::shared_ptr<ResolveBufferNode> ResolveBuffer(){return resolve_buffer;}
     std::shared_ptr<GuiNodeInvoker> ImGuiNode(){return imgui_node;}
     std::shared_ptr<PostProcessingNode> PostProcessing() {return post_processing;}
@@ -53,9 +49,7 @@ class TreeNode {
     std::shared_ptr<MirrorEffectNodeInvoker> mirror_effect_node;
     std::shared_ptr<SharedResourceNodeInvoker> shared_resource_node;
     std::shared_ptr<GameObjectNodeInvoker> game_objects_node;
-    std::shared_ptr<UpdateLightSpheresNode> update_light_spheres;
     std::shared_ptr<ShadowEffectNodeInvoker> shadow_effect_node;
-    std::shared_ptr<DrawLightSpheresNode> draw_light_spheres;
     std::shared_ptr<ResolveBufferNode> resolve_buffer;
     std::shared_ptr<GuiNodeInvoker> imgui_node;
     std::shared_ptr<PostProcessingNode> post_processing;

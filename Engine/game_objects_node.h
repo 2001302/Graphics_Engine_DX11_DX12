@@ -143,6 +143,16 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                     GraphicsManager::Instance().device,
                     GraphicsManager::Instance().device_context);
             }
+
+            {
+                for (auto &i : manager->light_spheres) {
+                    auto renderer = (Renderer *)i->GetComponent(
+                        EnumComponentType::eRenderer);
+                    renderer->UpdateConstantBuffers(
+                        GraphicsManager::Instance().device,
+                        GraphicsManager::Instance().device_context);
+                }
+            }
             break;
         }
         case EnumStageType::eRender: {
@@ -185,6 +195,20 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                     renderer->RenderNormals(
                         GraphicsManager::Instance().device_context);
             }
+
+            {
+                GraphicsManager::Instance().SetPipelineState(
+                    manager->draw_wire ? Graphics::defaultWirePSO
+                                       : Graphics::defaultSolidPSO);
+                GraphicsManager::Instance().SetGlobalConsts(
+                    manager->global_consts_GPU);
+                for (auto &i : manager->light_spheres) {
+                    auto renderer = (Renderer *)i->GetComponent(
+                        EnumComponentType::eRenderer);
+                    renderer->Render(
+                        GraphicsManager::Instance().device_context);
+                }
+            }
             break;
         }
         default:
@@ -195,24 +219,6 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
     }
 };
 
-class UpdateLightSpheresNode : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
-
-        auto black_board = dynamic_cast<BlackBoard *>(data_block);
-        assert(black_board != nullptr);
-
-        auto manager = black_board->render_block;
-
-        for (auto &i : manager->light_spheres) {
-            auto renderer =
-                (Renderer *)i->GetComponent(EnumComponentType::eRenderer);
-            renderer->UpdateConstantBuffers(
-                GraphicsManager::Instance().device,
-                GraphicsManager::Instance().device_context);
-        }
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
 class DrawOnlyDepthNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
@@ -246,29 +252,6 @@ class DrawOnlyDepthNode : public common::BehaviorActionNode {
         if (true) {
             auto renderer = (Renderer *)manager->mirror->GetComponent(
                 EnumComponentType::eRenderer);
-            renderer->Render(GraphicsManager::Instance().device_context);
-        }
-
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-
-class DrawLightSpheresNode : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
-
-        auto black_board = dynamic_cast<BlackBoard *>(data_block);
-        assert(black_board != nullptr);
-
-        auto manager = black_board->render_block;
-
-        GraphicsManager::Instance().SetPipelineState(
-            manager->draw_wire ? Graphics::defaultWirePSO
-                               : Graphics::defaultSolidPSO);
-        GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
-
-        for (auto &i : manager->light_spheres) {
-            auto renderer =
-                (Renderer *)i->GetComponent(EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
         }
 

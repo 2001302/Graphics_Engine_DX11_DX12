@@ -94,21 +94,24 @@ bool Application::OnRender() {
 bool Application::OnStop() {
     Platform::OnStop();
 
-    //if (render_block) {
-    //    for (auto &model : render_block->models) {
-    //        model.second.reset();
-    //    }
-    //    render_block->camera.reset();
-    //}
+    if (black_board) {
 
-    //if (gui) {
-    //    gui->Shutdown();
-    //    gui.reset();
-    //}
+        if (black_board->render_block) {
+            for (auto &model : black_board->render_block->models) {
+                model.second.reset();
+            }
+            black_board->render_block->camera.reset();
+        }
 
-    //if (input) {
-    //    input.reset();
-    //}
+        if (black_board->gui) {
+            black_board->gui->Shutdown();
+            black_board->gui.reset();
+        }
+
+        if (black_board->input) {
+            black_board->input.reset();
+        }
+    }
 
     return true;
 }

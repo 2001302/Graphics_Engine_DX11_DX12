@@ -366,5 +366,5 @@ void Renderer::UpdateWorldRow(const Matrix &worldRow) {
     m_meshConsts.GetCpu().worldInv = m_meshConsts.GetCpu().world.Invert();
 }
 
-void Renderer::OnShow() {}
+void Renderer::OnShowNode() {}
 } // namespace engine

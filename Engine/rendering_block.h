@@ -47,11 +47,7 @@ class RenderingBlock : public common::INode {
     DirectX::SimpleMath::Plane mirror_plane;
     float mirror_alpha = 1.0f; // opacity
 
-    void OnShow() override {
-
-        auto device = GraphicsManager::Instance().device;
-        auto context = GraphicsManager::Instance().device_context;
-
+    void OnShowPanel() override {
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("General")) {
             ImGui::Checkbox("Wireframe", &draw_wire);

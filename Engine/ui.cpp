@@ -2,11 +2,6 @@
 
 using namespace common;
 
-ImGuiWindowFlags GetWindowFlags() {
-    return ImGuiWindowFlags_NoTitleBar |
-           ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoMove;
-}
-
 bool IGui::Initialize() {
 
     context_ = ImGui::CreateContext();
@@ -22,11 +17,11 @@ bool IGui::Initialize() {
 
     OnStart();
     Frame();
-    
+
     return true;
 }
 
-bool IGui::Frame(INode * node) {
+bool IGui::Frame() {
 
     auto &io = ImGui::GetIO();
 
@@ -36,20 +31,13 @@ bool IGui::Frame(INode * node) {
     ImGui::NewFrame();
 
     ImGui::SetNextWindowPos(ImVec2(0, 0));
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize,
+                        ImGui::GetStyle().WindowBorderSize);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding,
+                        ImGui::GetStyle().WindowRounding);
 
-    const auto windowBorderSize = ImGui::GetStyle().WindowBorderSize;
-    const auto windowRounding = ImGui::GetStyle().WindowRounding;
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-    ImGui::Begin("Menu", nullptr, GetWindowFlags());
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, windowBorderSize);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, windowRounding);
-    gui_size = ImGui::GetWindowSize();
+    OnFrame();
 
-    OnFrame(node);
-
-    ImGui::PopStyleVar(2);
-    ImGui::End();
     ImGui::PopStyleVar(2);
 
     ImGui::Render();
@@ -76,10 +64,8 @@ void IGui::RecreateFontAtlas() {
     config.OversampleV = 4;
     config.PixelSnapH = false;
 
-    default_font_ = io.Fonts->AddFontFromFileTTF(
-        "Assets/Fonts/Play-Regular.ttf", 18.0f, &config);
-    header_font = io.Fonts->AddFontFromFileTTF("Assets/Fonts/Cuprum-Bold.ttf",
-                                               20.0f, &config);
+    io.Fonts->AddFontFromFileTTF(
+        "Assets/Fonts/Cuprum-Bold.ttf", 20.0f, &config);
 
     io.Fonts->Build();
 }

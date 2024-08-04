@@ -18,12 +18,12 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
             gui->Initialize();
+            gui->PushPanelItem(manager);
             break;
         }
         case EnumStageType::eRender: {
-            gui->PushNode(dynamic_cast<common::INode *>(manager));
-            gui->Frame(manager);
-            gui->ClearNode();
+            gui->Frame();
+            gui->ClearNodeItem();
 
             break;
         }

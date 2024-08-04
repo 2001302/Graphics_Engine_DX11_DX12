@@ -9,19 +9,17 @@ namespace common {
 class IGui : public IDataBlock {
   public:
     bool Initialize();
-    bool Frame(INode *node = nullptr);
+    bool Frame();
     void Shutdown();
 
     virtual void OnStart(){};
-    virtual void OnFrame(INode *node){};
+    virtual void OnFrame(){};
 
     ImVec2 GetSize() { return gui_size; }
 
   protected:
     ImGuiContext *context_ = nullptr;
     std::string ini_file_name_;
-    ImFont *default_font_ = nullptr;
-    ImFont *header_font = nullptr;
     ImVec2 gui_size;
 
   private:

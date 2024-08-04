@@ -29,12 +29,9 @@ class RenderingBlock : public common::INode {
     std::map<int /*id*/, std::shared_ptr<Model>> models;
     std::shared_ptr<Model> character;
 
-    // shared resource
+    // shared buffer
     GlobalConstants global_consts_CPU;
-    GlobalConstants reflect_global_consts_CPU;
-
     ComPtr<ID3D11Buffer> global_consts_GPU;
-    ComPtr<ID3D11Buffer> reflect_global_consts_GPU;
 
     // shared texture
     ComPtr<ID3D11ShaderResourceView> env_SRV;

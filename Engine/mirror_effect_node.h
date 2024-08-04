@@ -44,9 +44,36 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
             manager->mirror = manager->ground; // 바닥에 거울처럼 반사 구현
 
             // m_basicList.push_back(m_ground); // 거울은 리스트에 등록 X
+
+            GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
+                                            reflect_global_consts_CPU,
+                                            reflect_global_consts_GPU);
+
             break;
         }
         case EnumStageType::eUpdate: {
+            // constant buffer
+            {
+                const Matrix reflectRow =
+                    Matrix::CreateReflection(manager->mirror_plane);
+
+                reflect_global_consts_CPU = manager->global_consts_CPU;
+                memcpy(&reflect_global_consts_CPU, &manager->global_consts_CPU,
+                       sizeof(manager->global_consts_CPU));
+                reflect_global_consts_CPU.view =
+                    (reflectRow * manager->camera->GetView()).Transpose();
+                reflect_global_consts_CPU.viewProj =
+                    (reflectRow * manager->camera->GetView() *
+                     manager->camera->GetProjection())
+                        .Transpose();
+
+                reflect_global_consts_CPU.invViewProj =
+                    reflect_global_consts_CPU.viewProj.Invert();
+
+                GraphicsUtil::UpdateBuffer(
+                    GraphicsManager::Instance().device_context,
+                    reflect_global_consts_CPU, reflect_global_consts_GPU);
+            }
 
             auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
                 EnumComponentType::eRenderer);
@@ -68,8 +95,9 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     Graphics::stencilMaskPSO);
 
                 if (true) {
-                    auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
-                        EnumComponentType::eRenderer);
+                    auto renderer =
+                        (MeshRenderer *)manager->mirror->GetComponent(
+                            EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);
                 }
@@ -80,7 +108,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     manager->draw_wire ? Graphics::reflectWirePSO
                                        : Graphics::reflectSolidPSO);
                 GraphicsManager::Instance().SetGlobalConsts(
-                    manager->reflect_global_consts_GPU);
+                    reflect_global_consts_GPU);
 
                 GraphicsManager::Instance()
                     .device_context->ClearDepthStencilView(
@@ -98,8 +126,9 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     GraphicsManager::Instance().SetPipelineState(
                         manager->draw_wire ? Graphics::reflectSkyboxWirePSO
                                            : Graphics::reflectSkyboxSolidPSO);
-                    auto renderer = (MeshRenderer *)manager->skybox->GetComponent(
-                        EnumComponentType::eRenderer);
+                    auto renderer =
+                        (MeshRenderer *)manager->skybox->GetComponent(
+                            EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);
                 }
@@ -112,8 +141,9 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                                            : Graphics::mirrorBlendSolidPSO);
                     GraphicsManager::Instance().SetGlobalConsts(
                         manager->global_consts_GPU);
-                    auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
-                        EnumComponentType::eRenderer);
+                    auto renderer =
+                        (MeshRenderer *)manager->mirror->GetComponent(
+                            EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);
                 }
@@ -127,6 +157,9 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
+
+    GlobalConstants reflect_global_consts_CPU;
+    ComPtr<ID3D11Buffer> reflect_global_consts_GPU;
 };
 
 } // namespace engine

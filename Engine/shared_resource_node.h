@@ -22,10 +22,6 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
                                             manager->global_consts_CPU,
                                             manager->global_consts_GPU);
 
-            GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
-                                            manager->reflect_global_consts_CPU,
-                                            manager->reflect_global_consts_GPU);
-
             break;
         }
         case EnumStageType::eUpdate: {
@@ -43,32 +39,14 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
             manager->global_consts_CPU.viewProj =
                 (viewRow * projRow).Transpose();
 
-            // 그림자 렌더링에 사용
+            //used to shadow rendering
             manager->global_consts_CPU.invViewProj =
                 manager->global_consts_CPU.viewProj.Invert();
-
-            manager->reflect_global_consts_CPU = manager->global_consts_CPU;
-            memcpy(&manager->reflect_global_consts_CPU,
-                   &manager->global_consts_CPU,
-                   sizeof(manager->global_consts_CPU));
-            manager->reflect_global_consts_CPU.view =
-                (reflectRow * viewRow).Transpose();
-            manager->reflect_global_consts_CPU.viewProj =
-                (reflectRow * viewRow * projRow).Transpose();
-
-            // 그림자 렌더링에 사용 (TODO: 광원의 위치도 반사시킨 후에 계산해야
-            // 함)
-            manager->reflect_global_consts_CPU.invViewProj =
-                manager->reflect_global_consts_CPU.viewProj.Invert();
 
             GraphicsUtil::UpdateBuffer(
                 GraphicsManager::Instance().device_context,
                 manager->global_consts_CPU, manager->global_consts_GPU);
 
-            GraphicsUtil::UpdateBuffer(
-                GraphicsManager::Instance().device_context,
-                manager->reflect_global_consts_CPU,
-                manager->reflect_global_consts_GPU);
             break;
         }
         case EnumStageType::eRender: 

@@ -31,11 +31,11 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                     std::vector{mesh});
 
                 renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
-                renderer->m_materialConsts.GetCpu().albedoFactor =
+                renderer->material_consts.GetCpu().albedoFactor =
                     Vector3(0.1f, 0.1f, 1.0f);
-                renderer->m_materialConsts.GetCpu().roughnessFactor = 0.2f;
-                renderer->m_materialConsts.GetCpu().metallicFactor = 0.6f;
-                renderer->m_materialConsts.GetCpu().emissionFactor =
+                renderer->material_consts.GetCpu().roughnessFactor = 0.2f;
+                renderer->material_consts.GetCpu().metallicFactor = 0.6f;
+                renderer->material_consts.GetCpu().emissionFactor =
                     Vector3(0.0f);
                 renderer->UpdateConstantBuffers(
                     GraphicsManager::Instance().device,
@@ -58,11 +58,11 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                     std::vector{mesh});
 
                 renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
-                renderer->m_materialConsts.GetCpu().albedoFactor =
+                renderer->material_consts.GetCpu().albedoFactor =
                     Vector3(1.0f, 0.2f, 0.2f);
-                renderer->m_materialConsts.GetCpu().roughnessFactor = 0.5f;
-                renderer->m_materialConsts.GetCpu().metallicFactor = 0.9f;
-                renderer->m_materialConsts.GetCpu().emissionFactor =
+                renderer->material_consts.GetCpu().roughnessFactor = 0.5f;
+                renderer->material_consts.GetCpu().metallicFactor = 0.9f;
+                renderer->material_consts.GetCpu().emissionFactor =
                     Vector3(0.0f);
                 renderer->UpdateConstantBuffers(
                     GraphicsManager::Instance().device,
@@ -104,10 +104,10 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                     GraphicsManager::Instance().device_context, meshes,
                     aniData);
 
-                renderer->m_materialConsts.GetCpu().albedoFactor =
+                renderer->material_consts.GetCpu().albedoFactor =
                     Vector3(1.0f);
-                renderer->m_materialConsts.GetCpu().roughnessFactor = 0.8f;
-                renderer->m_materialConsts.GetCpu().metallicFactor = 0.0f;
+                renderer->material_consts.GetCpu().roughnessFactor = 0.8f;
+                renderer->material_consts.GetCpu().metallicFactor = 0.0f;
                 renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
                                          Matrix::CreateTranslation(center));
 
@@ -191,7 +191,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
             for (auto &i : manager->models) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
-                if (renderer->m_drawNormals)
+                if (renderer->draw_normals)
                     renderer->RenderNormals(
                         GraphicsManager::Instance().device_context);
             }

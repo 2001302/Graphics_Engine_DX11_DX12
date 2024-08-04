@@ -80,11 +80,11 @@ class RenderingBlock : public common::INode {
             auto renderer =
                 (MeshRenderer *)mirror->GetComponent(EnumComponentType::eRenderer);
             ImGui::SliderFloat(
-                "Metallic", &renderer->m_materialConsts.GetCpu().metallicFactor,
+                "Metallic", &renderer->material_consts.GetCpu().metallicFactor,
                 0.0f, 1.0f);
             ImGui::SliderFloat(
                 "Roughness",
-                &renderer->m_materialConsts.GetCpu().roughnessFactor, 0.0f,
+                &renderer->material_consts.GetCpu().roughnessFactor, 0.0f,
                 1.0f);
 
             ImGui::TreePop();

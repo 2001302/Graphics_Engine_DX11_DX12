@@ -46,10 +46,10 @@ void Camera::Initialize() {
         GraphicsManager::Instance().device_context, std::vector{sphere});
 
     renderer->UpdateWorldRow(Matrix::CreateTranslation(lookAtVector));
-    renderer->m_materialConsts.GetCpu().albedoFactor = Vector3(0.0f);
-    renderer->m_materialConsts.GetCpu().emissionFactor =
+    renderer->material_consts.GetCpu().albedoFactor = Vector3(0.0f);
+    renderer->material_consts.GetCpu().emissionFactor =
         Vector3(1.0f, 0.0f, 0.0f);
-    renderer->m_castShadow = false;
+    renderer->cast_shadow = false;
 
     look_at_target = std::make_shared<Model>();
     look_at_target->AddComponent(EnumComponentType::eRenderer, renderer);

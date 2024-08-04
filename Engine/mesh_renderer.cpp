@@ -86,9 +86,9 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
     // 일반적으로는 Mesh들이 m_mesh/materialConsts를 각자 소유 가능
     // 여기서는 한 Renderer 안의 여러 Mesh들이 Consts를 모두 공유
 
-    m_meshConsts.GetCpu().world = Matrix();
-    m_meshConsts.Initialize(device);
-    m_materialConsts.Initialize(device);
+    mesh_consts.GetCpu().world = Matrix();
+    mesh_consts.Initialize(device);
+    material_consts.Initialize(device);
 
     for (const auto &meshData : meshes) {
         auto newMesh = std::make_shared<Mesh>();
@@ -108,7 +108,7 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
                         newMesh->albedoTexture, newMesh->albedoSRV);
                 }
 
-                m_materialConsts.GetCpu().useAlbedoMap = true;
+                material_consts.GetCpu().useAlbedoMap = true;
             } else {
                 cout << meshData.albedoTextureFilename
                      << " does not exists. Skip texture reading." << endl;
@@ -120,7 +120,7 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
                 GraphicsUtil::CreateTexture(
                     device, context, meshData.emissiveTextureFilename, true,
                     newMesh->emissiveTexture, newMesh->emissiveSRV);
-                m_materialConsts.GetCpu().useEmissiveMap = true;
+                material_consts.GetCpu().useEmissiveMap = true;
             } else {
                 cout << meshData.emissiveTextureFilename
                      << " does not exists. Skip texture reading." << endl;
@@ -132,7 +132,7 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
                 GraphicsUtil::CreateTexture(
                     device, context, meshData.normalTextureFilename, false,
                     newMesh->normalTexture, newMesh->normalSRV);
-                m_materialConsts.GetCpu().useNormalMap = true;
+                material_consts.GetCpu().useNormalMap = true;
             } else {
                 cout << meshData.normalTextureFilename
                      << " does not exists. Skip texture reading." << endl;
@@ -144,7 +144,7 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
                 GraphicsUtil::CreateTexture(
                     device, context, meshData.heightTextureFilename, false,
                     newMesh->heightTexture, newMesh->heightSRV);
-                m_meshConsts.GetCpu().useHeightMap = true;
+                mesh_consts.GetCpu().useHeightMap = true;
             } else {
                 cout << meshData.heightTextureFilename
                      << " does not exists. Skip texture reading." << endl;
@@ -156,7 +156,7 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
                 GraphicsUtil::CreateTexture(device, context,
                                             meshData.aoTextureFilename, false,
                                             newMesh->aoTexture, newMesh->aoSRV);
-                m_materialConsts.GetCpu().useAOMap = true;
+                material_consts.GetCpu().useAOMap = true;
             } else {
                 cout << meshData.aoTextureFilename
                      << " does not exists. Skip texture reading." << endl;
@@ -184,39 +184,39 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
         }
 
         if (!meshData.metallicTextureFilename.empty()) {
-            m_materialConsts.GetCpu().useMetallicMap = true;
+            material_consts.GetCpu().useMetallicMap = true;
         }
 
         if (!meshData.roughnessTextureFilename.empty()) {
-            m_materialConsts.GetCpu().useRoughnessMap = true;
+            material_consts.GetCpu().useRoughnessMap = true;
         }
 
-        newMesh->meshConstsGPU = m_meshConsts.Get();
-        newMesh->materialConstsGPU = m_materialConsts.Get();
+        newMesh->meshConstsGPU = mesh_consts.Get();
+        newMesh->materialConstsGPU = material_consts.Get();
 
-        this->m_meshes.push_back(newMesh);
+        this->meshes.push_back(newMesh);
     }
 
     // Initialize Bounding Box
     {
-        m_boundingBox = GetBoundingBox(meshes[0].vertices);
+        bounding_box = GetBoundingBox(meshes[0].vertices);
         for (size_t i = 1; i < meshes.size(); i++) {
             auto bb = GetBoundingBox(meshes[0].vertices);
-            ExtendBoundingBox(bb, m_boundingBox);
+            ExtendBoundingBox(bb, bounding_box);
         }
         auto meshData = GeometryGenerator::MakeWireBox(
-            m_boundingBox.Center,
-            Vector3(m_boundingBox.Extents) + Vector3(1e-3f));
-        m_boundingBoxMesh = std::make_shared<Mesh>();
+            bounding_box.Center,
+            Vector3(bounding_box.Extents) + Vector3(1e-3f));
+        bounding_box_mesh = std::make_shared<Mesh>();
         GraphicsUtil::CreateVertexBuffer(device, meshData.vertices,
-                                         m_boundingBoxMesh->vertexBuffer);
-        m_boundingBoxMesh->indexCount = UINT(meshData.indices.size());
-        m_boundingBoxMesh->vertexCount = UINT(meshData.vertices.size());
-        m_boundingBoxMesh->stride = UINT(sizeof(Vertex));
+                                         bounding_box_mesh->vertexBuffer);
+        bounding_box_mesh->indexCount = UINT(meshData.indices.size());
+        bounding_box_mesh->vertexCount = UINT(meshData.vertices.size());
+        bounding_box_mesh->stride = UINT(sizeof(Vertex));
         GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
-                                        m_boundingBoxMesh->indexBuffer);
-        m_boundingBoxMesh->meshConstsGPU = m_meshConsts.Get();
-        m_boundingBoxMesh->materialConstsGPU = m_materialConsts.Get();
+                                        bounding_box_mesh->indexBuffer);
+        bounding_box_mesh->meshConstsGPU = mesh_consts.Get();
+        bounding_box_mesh->materialConstsGPU = material_consts.Get();
     }
 
     // Initialize Bounding Sphere
@@ -225,32 +225,32 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
         for (auto &mesh : meshes) {
             for (auto &v : mesh.vertices) {
                 maxRadius = (std::max)(
-                    (Vector3(m_boundingBox.Center) - v.position).Length(),
+                    (Vector3(bounding_box.Center) - v.position).Length(),
                     maxRadius);
             }
         }
         maxRadius += 1e-2f; // 살짝 크게 설정
-        m_boundingSphere = BoundingSphere(m_boundingBox.Center, maxRadius);
+        bounding_sphere = BoundingSphere(bounding_box.Center, maxRadius);
         auto meshData = GeometryGenerator::MakeWireSphere(
-            m_boundingSphere.Center, m_boundingSphere.Radius);
-        m_boundingSphereMesh = std::make_shared<Mesh>();
+            bounding_sphere.Center, bounding_sphere.Radius);
+        bounding_sphere_mesh = std::make_shared<Mesh>();
         GraphicsUtil::CreateVertexBuffer(device, meshData.vertices,
-                                         m_boundingSphereMesh->vertexBuffer);
-        m_boundingSphereMesh->indexCount = UINT(meshData.indices.size());
-        m_boundingSphereMesh->vertexCount = UINT(meshData.vertices.size());
-        m_boundingSphereMesh->stride = UINT(sizeof(Vertex));
+                                         bounding_sphere_mesh->vertexBuffer);
+        bounding_sphere_mesh->indexCount = UINT(meshData.indices.size());
+        bounding_sphere_mesh->vertexCount = UINT(meshData.vertices.size());
+        bounding_sphere_mesh->stride = UINT(sizeof(Vertex));
         GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
-                                        m_boundingSphereMesh->indexBuffer);
-        m_boundingSphereMesh->meshConstsGPU = m_meshConsts.Get();
-        m_boundingSphereMesh->materialConstsGPU = m_materialConsts.Get();
+                                        bounding_sphere_mesh->indexBuffer);
+        bounding_sphere_mesh->meshConstsGPU = mesh_consts.Get();
+        bounding_sphere_mesh->materialConstsGPU = material_consts.Get();
     }
 }
 
 void MeshRenderer::UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
                                      ComPtr<ID3D11DeviceContext> &context) {
-    if (m_isVisible) {
-        m_meshConsts.Upload(context);
-        m_materialConsts.Upload(context);
+    if (is_visible) {
+        mesh_consts.Upload(context);
+        material_consts.Upload(context);
     }
 }
 
@@ -265,8 +265,8 @@ GraphicsPSO &MeshRenderer::GetReflectPSO(const bool wired) {
 }
 
 void MeshRenderer::Render(ComPtr<ID3D11DeviceContext> &context) {
-    if (m_isVisible) {
-        for (const auto &mesh : m_meshes) {
+    if (is_visible) {
+        for (const auto &mesh : meshes) {
 
             ID3D11Buffer *constBuffers[2] = {mesh->meshConstsGPU.Get(),
                                              mesh->materialConstsGPU.Get()};
@@ -314,7 +314,7 @@ void MeshRenderer::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int cli
 }
 
 void MeshRenderer::RenderNormals(ComPtr<ID3D11DeviceContext> &context) {
-    for (const auto &mesh : m_meshes) {
+    for (const auto &mesh : meshes) {
         ID3D11Buffer *constBuffers[2] = {mesh->meshConstsGPU.Get(),
                                          mesh->materialConstsGPU.Get()};
         context->GSSetConstantBuffers(1, 2, constBuffers);
@@ -326,44 +326,44 @@ void MeshRenderer::RenderNormals(ComPtr<ID3D11DeviceContext> &context) {
 
 void MeshRenderer::RenderWireBoundingBox(ComPtr<ID3D11DeviceContext> &context) {
     ID3D11Buffer *constBuffers[2] = {
-        m_boundingBoxMesh->meshConstsGPU.Get(),
-        m_boundingBoxMesh->materialConstsGPU.Get()};
+        bounding_box_mesh->meshConstsGPU.Get(),
+        bounding_box_mesh->materialConstsGPU.Get()};
     context->VSSetConstantBuffers(1, 2, constBuffers);
     context->IASetVertexBuffers(
-        0, 1, m_boundingBoxMesh->vertexBuffer.GetAddressOf(),
-        &m_boundingBoxMesh->stride, &m_boundingBoxMesh->offset);
-    context->IASetIndexBuffer(m_boundingBoxMesh->indexBuffer.Get(),
+        0, 1, bounding_box_mesh->vertexBuffer.GetAddressOf(),
+        &bounding_box_mesh->stride, &bounding_box_mesh->offset);
+    context->IASetIndexBuffer(bounding_box_mesh->indexBuffer.Get(),
                               DXGI_FORMAT_R32_UINT, 0);
-    context->DrawIndexed(m_boundingBoxMesh->indexCount, 0, 0);
+    context->DrawIndexed(bounding_box_mesh->indexCount, 0, 0);
 }
 
 void MeshRenderer::RenderWireBoundingSphere(ComPtr<ID3D11DeviceContext> &context) {
     ID3D11Buffer *constBuffers[2] = {
-        m_boundingBoxMesh->meshConstsGPU.Get(),
-        m_boundingBoxMesh->materialConstsGPU.Get()};
+        bounding_box_mesh->meshConstsGPU.Get(),
+        bounding_box_mesh->materialConstsGPU.Get()};
     context->VSSetConstantBuffers(1, 2, constBuffers);
     context->IASetVertexBuffers(
-        0, 1, m_boundingSphereMesh->vertexBuffer.GetAddressOf(),
-        &m_boundingSphereMesh->stride, &m_boundingSphereMesh->offset);
-    context->IASetIndexBuffer(m_boundingSphereMesh->indexBuffer.Get(),
+        0, 1, bounding_sphere_mesh->vertexBuffer.GetAddressOf(),
+        &bounding_sphere_mesh->stride, &bounding_sphere_mesh->offset);
+    context->IASetIndexBuffer(bounding_sphere_mesh->indexBuffer.Get(),
                               DXGI_FORMAT_R32_UINT, 0);
-    context->DrawIndexed(m_boundingSphereMesh->indexCount, 0, 0);
+    context->DrawIndexed(bounding_sphere_mesh->indexCount, 0, 0);
 }
 
 void MeshRenderer::UpdateWorldRow(const Matrix &worldRow) {
-    this->m_worldRow = worldRow;
-    this->m_worldITRow = worldRow;
-    m_worldITRow.Translation(Vector3(0.0f));
-    m_worldITRow = m_worldITRow.Invert().Transpose();
+    this->world_row = worldRow;
+    this->world_row_IT = worldRow;
+    world_row_IT.Translation(Vector3(0.0f));
+    world_row_IT = world_row_IT.Invert().Transpose();
 
     // 바운딩스피어 위치 업데이트
     // 스케일까지 고려하고 싶다면 x, y, z 스케일 중 가장 큰 값으로 스케일
     // 구(sphere)라서 회전은 고려할 필요 없음
-    m_boundingSphere.Center = this->m_worldRow.Translation();
+    bounding_sphere.Center = this->world_row.Translation();
 
-    m_meshConsts.GetCpu().world = worldRow.Transpose();
-    m_meshConsts.GetCpu().worldIT = m_worldITRow.Transpose();
-    m_meshConsts.GetCpu().worldInv = m_meshConsts.GetCpu().world.Invert();
+    mesh_consts.GetCpu().world = worldRow.Transpose();
+    mesh_consts.GetCpu().worldIT = world_row_IT.Transpose();
+    mesh_consts.GetCpu().worldInv = mesh_consts.GetCpu().world.Invert();
 }
 
 void MeshRenderer::OnShowNode() {}

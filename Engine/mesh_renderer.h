@@ -52,26 +52,26 @@ class MeshRenderer : public Component {
     void UpdateWorldRow(const Matrix &worldRow);
 
   public:
-    Matrix m_worldRow = Matrix();   // Model(Object) To World
-    Matrix m_worldITRow = Matrix(); // InverseTranspose
+    Matrix world_row = Matrix();   // Model(Object) To World
+    Matrix world_row_IT = Matrix(); // InverseTranspose
 
-    bool m_drawNormals = false;
-    bool m_isVisible = true;
-    bool m_castShadow = true;
-    bool m_isPickable = false; // 마우스로 선택/조작 가능 여부
+    bool draw_normals = false;
+    bool is_visible = true;
+    bool cast_shadow = true;
+    bool is_pickable = false; 
 
-    std::vector<std::shared_ptr<Mesh>> m_meshes;
+    std::vector<std::shared_ptr<Mesh>> meshes;
 
-    ConstantBuffer<MeshConstants> m_meshConsts;
-    ConstantBuffer<MaterialConstants> m_materialConsts;
+    ConstantBuffer<MeshConstants> mesh_consts;
+    ConstantBuffer<MaterialConstants> material_consts;
 
-    DirectX::BoundingBox m_boundingBox;
-    DirectX::BoundingSphere m_boundingSphere;
+    DirectX::BoundingBox bounding_box;
+    DirectX::BoundingSphere bounding_sphere;
 
   private:
     void OnShowNode() override;
-    std::shared_ptr<Mesh> m_boundingBoxMesh;
-    std::shared_ptr<Mesh> m_boundingSphereMesh;
+    std::shared_ptr<Mesh> bounding_box_mesh;
+    std::shared_ptr<Mesh> bounding_sphere_mesh;
 };
 
 } // namespace engine

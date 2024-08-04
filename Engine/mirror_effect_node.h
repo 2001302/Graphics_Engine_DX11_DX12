@@ -26,10 +26,10 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
             // mesh.albedoTextureFilename =
             //     "../Assets/Textures/blender_uv_grid_2k.png";
-            renderer->m_materialConsts.GetCpu().albedoFactor = Vector3(0.1f);
-            renderer->m_materialConsts.GetCpu().emissionFactor = Vector3(0.0f);
-            renderer->m_materialConsts.GetCpu().metallicFactor = 0.5f;
-            renderer->m_materialConsts.GetCpu().roughnessFactor = 0.3f;
+            renderer->material_consts.GetCpu().albedoFactor = Vector3(0.1f);
+            renderer->material_consts.GetCpu().emissionFactor = Vector3(0.0f);
+            renderer->material_consts.GetCpu().metallicFactor = 0.5f;
+            renderer->material_consts.GetCpu().roughnessFactor = 0.3f;
 
             Vector3 position = Vector3(0.0f, -0.5f, 2.0f);
             renderer->UpdateWorldRow(Matrix::CreateRotationX(3.141592f * 0.5f) *

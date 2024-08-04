@@ -141,7 +141,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                     for (auto &i : manager->models) {
                         auto renderer = (MeshRenderer *)i.second->GetComponent(
                             EnumComponentType::eRenderer);
-                        if (renderer->m_castShadow && renderer->m_isVisible)
+                        if (renderer->cast_shadow && renderer->is_visible)
                             renderer->Render(
                                 GraphicsManager::Instance().device_context);
                     }

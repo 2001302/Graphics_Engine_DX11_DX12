@@ -56,15 +56,15 @@ class LightNodeInvoker : public common::BehaviorActionNode {
 
                     renderer->UpdateWorldRow(Matrix::CreateTranslation(
                         manager->global_consts_CPU.lights[i].position));
-                    renderer->m_materialConsts.GetCpu().albedoFactor =
+                    renderer->material_consts.GetCpu().albedoFactor =
                         Vector3(0.0f);
-                    renderer->m_materialConsts.GetCpu().emissionFactor =
+                    renderer->material_consts.GetCpu().emissionFactor =
                         Vector3(1.0f, 1.0f, 0.0f);
-                    renderer->m_castShadow =
+                    renderer->cast_shadow =
                         false; // 조명 표시 물체들은 그림자 X
 
                     if (manager->global_consts_CPU.lights[i].type == 0)
-                        renderer->m_isVisible = false;
+                        renderer->is_visible = false;
 
                     manager->light_spheres[i] = std::make_shared<Model>();
                     manager->light_spheres[i]->AddComponent(

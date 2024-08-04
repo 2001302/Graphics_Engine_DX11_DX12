@@ -6,7 +6,7 @@
 #include "dataBlock.h"
 #include "graphics_manager.h"
 #include "model.h"
-#include "renderer.h"
+#include "mesh_renderer.h"
 
 namespace engine {
 enum EnumStageType {
@@ -27,7 +27,7 @@ class RenderingBlock : public common::INode {
     std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
     std::shared_ptr<Model> ground;
     std::map<int /*id*/, std::shared_ptr<Model>> models;
-    std::shared_ptr<Model> m_character;
+    std::shared_ptr<Model> character;
 
     // shared resource
     GlobalConstants global_consts_CPU;
@@ -82,7 +82,7 @@ class RenderingBlock : public common::INode {
                 Graphics::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
 
             auto renderer =
-                (Renderer *)mirror->GetComponent(EnumComponentType::eRenderer);
+                (MeshRenderer *)mirror->GetComponent(EnumComponentType::eRenderer);
             ImGui::SliderFloat(
                 "Metallic", &renderer->m_materialConsts.GetCpu().metallicFactor,
                 0.0f, 1.0f);

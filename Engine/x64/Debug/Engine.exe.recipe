@@ -2,69 +2,69 @@
 <Project>
   <ProjectOutputs>
     <ProjectOutput>
-      <FullPath>C:\Users\source\Engine\x64\Debug\Engine.exe</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\Engine.exe</FullPath>
     </ProjectOutput>
   </ProjectOutputs>
   <ContentFiles>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\BasicPS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\BasicPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\BasicVS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\BasicVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\BlurVertical.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\BlurVertical.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\BrightPassCS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\BrightPassCS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\BloomDownPS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\BloomDownPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\BlurHorizontal.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\BlurHorizontal.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\BloomUpPS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\BloomUpPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\CombineCS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\CombineCS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\CombinePS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\CombinePS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\BloomCompositeCS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\BloomCompositeCS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\DepthOnlyPS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\DepthOnlyPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\DepthOnlyVS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\DepthOnlyVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\NormalGS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\NormalGS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\NormalPS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\NormalPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\NormalVS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\NormalVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\PostEffectsPS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\PostEffectsPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\SamplingPS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\SamplingPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\SamplingVS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\SamplingVS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\SkyboxPS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\SkyboxPS.cso</FullPath>
     </ContentFile>
     <ContentFile>
-      <FullPath>C:\Users\source\Engine\x64\Debug\SkyboxVS.cso</FullPath>
+      <FullPath>C:\Users\source\engine\x64\Debug\SkyboxVS.cso</FullPath>
     </ContentFile>
   </ContentFiles>
   <SatelliteDlls />

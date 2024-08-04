@@ -1,5 +1,5 @@
 #include "message_receiver.h"
-#include "renderer.h"
+#include "mesh_renderer.h"
 
 namespace engine {
 using namespace DirectX::SimpleMath;
@@ -137,7 +137,7 @@ bool MessageReceiver::OnModelLoadRequest(RenderingBlock *manager,
         std::string fileName = fullPath.substr(lastSlash + 1);
         std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
-        auto renderer = std::make_shared<Renderer>(
+        auto renderer = std::make_shared<MeshRenderer>(
             GraphicsManager::Instance().device,
             GraphicsManager::Instance().device_context, directoryPath,
             fileName);
@@ -161,7 +161,7 @@ bool MessageReceiver::OnModelLoadRequest(RenderingBlock *manager,
 bool MessageReceiver::OnSphereLoadRequest(RenderingBlock *manager) {
 
     MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
-    auto renderer = std::make_shared<Renderer>(
+    auto renderer = std::make_shared<MeshRenderer>(
         GraphicsManager::Instance().device,
         GraphicsManager::Instance().device_context, std::vector{mesh});
     renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
@@ -179,7 +179,7 @@ bool MessageReceiver::OnSphereLoadRequest(RenderingBlock *manager) {
 bool MessageReceiver::OnBoxLoadRequest(RenderingBlock *manager) {
 
     MeshData mesh = GeometryGenerator::MakeBox(1.0f);
-    auto renderer = std::make_shared<Renderer>(
+    auto renderer = std::make_shared<MeshRenderer>(
         GraphicsManager::Instance().device,
         GraphicsManager::Instance().device_context, std::vector{mesh});
     renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
@@ -197,7 +197,7 @@ bool MessageReceiver::OnBoxLoadRequest(RenderingBlock *manager) {
 bool MessageReceiver::OnCylinderLoadRequest(RenderingBlock *manager) {
 
     MeshData mesh = GeometryGenerator::MakeCylinder(5.0f, 5.0f, 15.0f, 30);
-    auto renderer = std::make_shared<Renderer>(
+    auto renderer = std::make_shared<MeshRenderer>(
         GraphicsManager::Instance().device,
         GraphicsManager::Instance().device_context, std::vector{mesh});
     renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,

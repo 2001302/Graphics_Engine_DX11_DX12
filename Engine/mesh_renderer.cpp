@@ -1,23 +1,23 @@
-#include "renderer.h"
+#include "mesh_renderer.h"
 
 namespace engine {
 
 using namespace std;
 using namespace DirectX;
 
-Renderer::Renderer(ComPtr<ID3D11Device> &device,
+MeshRenderer::MeshRenderer(ComPtr<ID3D11Device> &device,
                    ComPtr<ID3D11DeviceContext> &context,
                    const std::string &basePath, const std::string &filename) {
     Initialize(device, context, basePath, filename);
 }
 
-Renderer::Renderer(ComPtr<ID3D11Device> &device,
+MeshRenderer::MeshRenderer(ComPtr<ID3D11Device> &device,
                    ComPtr<ID3D11DeviceContext> &context,
                    const std::vector<MeshData> &meshes) {
     Initialize(device, context, meshes);
 }
 
-void Renderer::Initialize(ComPtr<ID3D11Device> &device,
+void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
                           ComPtr<ID3D11DeviceContext> &context) {
     std::cout << "Renderer::Initialize(ComPtr<ID3D11Device> &device, "
                  "ComPtr<ID3D11DeviceContext> &context) was not implemented."
@@ -25,7 +25,7 @@ void Renderer::Initialize(ComPtr<ID3D11Device> &device,
     exit(-1);
 }
 
-void Renderer::InitMeshBuffers(ComPtr<ID3D11Device> &device,
+void MeshRenderer::InitMeshBuffers(ComPtr<ID3D11Device> &device,
                                const MeshData &meshData,
                                shared_ptr<Mesh> &newMesh) {
 
@@ -38,7 +38,7 @@ void Renderer::InitMeshBuffers(ComPtr<ID3D11Device> &device,
                                     newMesh->indexBuffer);
 }
 
-void Renderer::Initialize(ComPtr<ID3D11Device> &device,
+void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
                           ComPtr<ID3D11DeviceContext> &context,
                           const std::string &basePath,
                           const std::string &filename) {
@@ -79,7 +79,7 @@ void ExtendBoundingBox(const BoundingBox &inBox, BoundingBox &outBox) {
     outBox.Extents = maxCorner - outBox.Center;
 }
 
-void Renderer::Initialize(ComPtr<ID3D11Device> &device,
+void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
                           ComPtr<ID3D11DeviceContext> &context,
                           const vector<MeshData> &meshes) {
 
@@ -246,7 +246,7 @@ void Renderer::Initialize(ComPtr<ID3D11Device> &device,
     }
 }
 
-void Renderer::UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
+void MeshRenderer::UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
                                      ComPtr<ID3D11DeviceContext> &context) {
     if (m_isVisible) {
         m_meshConsts.Upload(context);
@@ -254,17 +254,17 @@ void Renderer::UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
     }
 }
 
-GraphicsPSO &Renderer::GetPSO(const bool wired) {
+GraphicsPSO &MeshRenderer::GetPSO(const bool wired) {
     return wired ? Graphics::defaultWirePSO : Graphics::defaultSolidPSO;
 }
 
-GraphicsPSO &Renderer::GetDepthOnlyPSO() { return Graphics::depthOnlyPSO; }
+GraphicsPSO &MeshRenderer::GetDepthOnlyPSO() { return Graphics::depthOnlyPSO; }
 
-GraphicsPSO &Renderer::GetReflectPSO(const bool wired) {
+GraphicsPSO &MeshRenderer::GetReflectPSO(const bool wired) {
     return wired ? Graphics::reflectWirePSO : Graphics::reflectSolidPSO;
 }
 
-void Renderer::Render(ComPtr<ID3D11DeviceContext> &context) {
+void MeshRenderer::Render(ComPtr<ID3D11DeviceContext> &context) {
     if (m_isVisible) {
         for (const auto &mesh : m_meshes) {
 
@@ -304,7 +304,7 @@ void Renderer::Render(ComPtr<ID3D11DeviceContext> &context) {
     }
 }
 
-void Renderer::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
+void MeshRenderer::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
                                int frame) {
     // class SkinnedMeshRenderer에서 override
     cout << "Renderer::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, "
@@ -313,7 +313,7 @@ void Renderer::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
     exit(-1);
 }
 
-void Renderer::RenderNormals(ComPtr<ID3D11DeviceContext> &context) {
+void MeshRenderer::RenderNormals(ComPtr<ID3D11DeviceContext> &context) {
     for (const auto &mesh : m_meshes) {
         ID3D11Buffer *constBuffers[2] = {mesh->meshConstsGPU.Get(),
                                          mesh->materialConstsGPU.Get()};
@@ -324,7 +324,7 @@ void Renderer::RenderNormals(ComPtr<ID3D11DeviceContext> &context) {
     }
 }
 
-void Renderer::RenderWireBoundingBox(ComPtr<ID3D11DeviceContext> &context) {
+void MeshRenderer::RenderWireBoundingBox(ComPtr<ID3D11DeviceContext> &context) {
     ID3D11Buffer *constBuffers[2] = {
         m_boundingBoxMesh->meshConstsGPU.Get(),
         m_boundingBoxMesh->materialConstsGPU.Get()};
@@ -337,7 +337,7 @@ void Renderer::RenderWireBoundingBox(ComPtr<ID3D11DeviceContext> &context) {
     context->DrawIndexed(m_boundingBoxMesh->indexCount, 0, 0);
 }
 
-void Renderer::RenderWireBoundingSphere(ComPtr<ID3D11DeviceContext> &context) {
+void MeshRenderer::RenderWireBoundingSphere(ComPtr<ID3D11DeviceContext> &context) {
     ID3D11Buffer *constBuffers[2] = {
         m_boundingBoxMesh->meshConstsGPU.Get(),
         m_boundingBoxMesh->materialConstsGPU.Get()};
@@ -350,7 +350,7 @@ void Renderer::RenderWireBoundingSphere(ComPtr<ID3D11DeviceContext> &context) {
     context->DrawIndexed(m_boundingSphereMesh->indexCount, 0, 0);
 }
 
-void Renderer::UpdateWorldRow(const Matrix &worldRow) {
+void MeshRenderer::UpdateWorldRow(const Matrix &worldRow) {
     this->m_worldRow = worldRow;
     this->m_worldITRow = worldRow;
     m_worldITRow.Translation(Vector3(0.0f));
@@ -366,5 +366,5 @@ void Renderer::UpdateWorldRow(const Matrix &worldRow) {
     m_meshConsts.GetCpu().worldInv = m_meshConsts.GetCpu().world.Invert();
 }
 
-void Renderer::OnShowNode() {}
+void MeshRenderer::OnShowNode() {}
 } // namespace engine

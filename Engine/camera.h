@@ -31,8 +31,8 @@ class Camera : public common::INode {
 
     Vector3 upVector;
     Vector3 lookAtVector;
-    float m_yaw; 
-    float m_pitch;
+    float yaw; 
+    float pitch;
 
     float projection_fov_angle_y;
     float near_z;

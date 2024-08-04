@@ -7,8 +7,6 @@
 #include <unordered_map>
 
 namespace engine {
-using Microsoft::WRL::ComPtr;
-
 class Model : public common::INode {
   public:
     Model(){};

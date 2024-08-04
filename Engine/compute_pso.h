@@ -7,11 +7,11 @@ namespace engine {
 class ComputePSO {
   public:
     void operator=(const ComputePSO &pso) {
-        m_computeShader = pso.m_computeShader;
+        compute_shader = pso.compute_shader;
     };
 
   public:
-    ComPtr<ID3D11ComputeShader> m_computeShader;
+    ComPtr<ID3D11ComputeShader> compute_shader;
 };
 
 } // namespace engine

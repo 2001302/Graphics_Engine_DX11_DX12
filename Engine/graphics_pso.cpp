@@ -3,23 +3,23 @@
 namespace engine {
 
 void GraphicsPSO::operator=(const GraphicsPSO &pso) {
-    m_vertexShader = pso.m_vertexShader;
-    m_pixelShader = pso.m_pixelShader;
-    m_hullShader = pso.m_hullShader;
-    m_domainShader = pso.m_domainShader;
-    m_geometryShader = pso.m_geometryShader;
-    m_inputLayout = pso.m_inputLayout;
-    m_blendState = pso.m_blendState;
-    m_depthStencilState = pso.m_depthStencilState;
-    m_rasterizerState = pso.m_rasterizerState;
-    m_stencilRef = pso.m_stencilRef;
+    vertex_shader = pso.vertex_shader;
+    pixel_shader = pso.pixel_shader;
+    hull_shader = pso.hull_shader;
+    domain_shader = pso.domain_shader;
+    geometry_shader = pso.geometry_shader;
+    input_layout = pso.input_layout;
+    blend_state = pso.blend_state;
+    depth_stencil_state = pso.depth_stencil_state;
+    rasterizer_state = pso.rasterizer_state;
+    stencil_ref = pso.stencil_ref;
     for (int i = 0; i < 4; i++)
-        m_blendFactor[i] = pso.m_blendFactor[i];
-    m_primitiveTopology = pso.m_primitiveTopology;
+        blend_factor[i] = pso.blend_factor[i];
+    primitive_topology = pso.primitive_topology;
 }
 
 void GraphicsPSO::SetBlendFactor(const float blendFactor[4]) {
-    memcpy(m_blendFactor, blendFactor, sizeof(float) * 4);
+    memcpy(blend_factor, blendFactor, sizeof(float) * 4);
 }
 
 } // namespace engine

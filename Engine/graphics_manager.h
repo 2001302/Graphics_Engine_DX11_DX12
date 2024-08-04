@@ -44,10 +44,6 @@ class GraphicsManager {
 
     ComPtr<ID3D11DepthStencilView> m_depthStencilView;
 
-    ComPtr<ID3D11Texture2D> m_depthOnlyBuffer; // No MSAA
-    ComPtr<ID3D11DepthStencilView> m_depthOnlyDSV;
-    ComPtr<ID3D11ShaderResourceView> m_depthOnlySRV;
-
     D3D11_VIEWPORT viewport;
 
   private:

@@ -11,21 +11,21 @@ class GraphicsPSO {
     void SetBlendFactor(const float blendFactor[4]);
 
   public:
-    ComPtr<ID3D11VertexShader> m_vertexShader;
-    ComPtr<ID3D11PixelShader> m_pixelShader;
-    ComPtr<ID3D11HullShader> m_hullShader;
-    ComPtr<ID3D11DomainShader> m_domainShader;
-    ComPtr<ID3D11GeometryShader> m_geometryShader;
-    ComPtr<ID3D11InputLayout> m_inputLayout;
+    ComPtr<ID3D11VertexShader> vertex_shader;
+    ComPtr<ID3D11PixelShader> pixel_shader;
+    ComPtr<ID3D11HullShader> hull_shader;
+    ComPtr<ID3D11DomainShader> domain_shader;
+    ComPtr<ID3D11GeometryShader> geometry_shader;
+    ComPtr<ID3D11InputLayout> input_layout;
 
-    ComPtr<ID3D11BlendState> m_blendState;
-    ComPtr<ID3D11DepthStencilState> m_depthStencilState;
-    ComPtr<ID3D11RasterizerState> m_rasterizerState;
+    ComPtr<ID3D11BlendState> blend_state;
+    ComPtr<ID3D11DepthStencilState> depth_stencil_state;
+    ComPtr<ID3D11RasterizerState> rasterizer_state;
 
-    float m_blendFactor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-    UINT m_stencilRef = 0;
+    float blend_factor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+    UINT stencil_ref = 0;
 
-    D3D11_PRIMITIVE_TOPOLOGY m_primitiveTopology =
+    D3D11_PRIMITIVE_TOPOLOGY primitive_topology =
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 };
 

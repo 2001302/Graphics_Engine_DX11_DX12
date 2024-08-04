@@ -3,7 +3,7 @@
 
 #include "behavior_tree_builder.h"
 #include "black_board.h"
-#include "renderer.h"
+#include "mesh_renderer.h"
 
 namespace engine {
 
@@ -20,7 +20,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
             auto mesh = GeometryGenerator::MakeSquare(5.0);
 
-            auto renderer = std::make_shared<Renderer>(
+            auto renderer = std::make_shared<MeshRenderer>(
                 GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context, std::vector{mesh});
 
@@ -48,7 +48,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eUpdate: {
 
-            auto renderer = (Renderer *)manager->mirror->GetComponent(
+            auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
                 EnumComponentType::eRenderer);
 
             renderer->UpdateConstantBuffers(
@@ -68,7 +68,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     Graphics::stencilMaskPSO);
 
                 if (true) {
-                    auto renderer = (Renderer *)manager->mirror->GetComponent(
+                    auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
                         EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);
@@ -88,7 +88,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                         D3D11_CLEAR_DEPTH, 1.0f, 0);
 
                 for (auto &i : manager->models) {
-                    auto renderer = (Renderer *)i.second->GetComponent(
+                    auto renderer = (MeshRenderer *)i.second->GetComponent(
                         EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);
@@ -98,7 +98,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     GraphicsManager::Instance().SetPipelineState(
                         manager->draw_wire ? Graphics::reflectSkyboxWirePSO
                                            : Graphics::reflectSkyboxSolidPSO);
-                    auto renderer = (Renderer *)manager->skybox->GetComponent(
+                    auto renderer = (MeshRenderer *)manager->skybox->GetComponent(
                         EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);
@@ -112,7 +112,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                                            : Graphics::mirrorBlendSolidPSO);
                     GraphicsManager::Instance().SetGlobalConsts(
                         manager->global_consts_GPU);
-                    auto renderer = (Renderer *)manager->mirror->GetComponent(
+                    auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
                         EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);

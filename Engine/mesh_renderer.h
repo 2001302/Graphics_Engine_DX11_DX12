@@ -13,12 +13,12 @@
 namespace engine {
 using Microsoft::WRL::ComPtr;
 
-class Renderer : public Component {
+class MeshRenderer : public Component {
   public:
-    Renderer() {}
-    Renderer(ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
+    MeshRenderer() {}
+    MeshRenderer(ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
              const std::string &basePath, const std::string &filename);
-    Renderer(ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
+    MeshRenderer(ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
              const std::vector<MeshData> &meshes);
 
     virtual void Initialize(ComPtr<ID3D11Device> &device,

@@ -195,7 +195,7 @@
     <ClInclude Include="input.h" />
     <ClInclude Include="message_receiver.h" />
     <ClInclude Include="tone_mapping.h" />
-    <ClInclude Include="renderer.h" />
+    <ClInclude Include="mesh_renderer.h" />
     <ClInclude Include="game_objects_node.h" />
     <ClInclude Include="setting_ui.h" />
     <ClInclude Include="selector_node.h" />
@@ -241,7 +241,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="model.cpp" />
     <ClCompile Include="tone_mapping.cpp" />
-    <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="mesh_renderer.cpp" />
     <ClCompile Include="setting_ui.cpp" />
     <ClCompile Include="platform.cpp" />
     <ClCompile Include="selector_node.cpp" />

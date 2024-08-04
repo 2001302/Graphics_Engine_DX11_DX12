@@ -121,7 +121,7 @@
     <ClInclude Include="message_receiver.h">
       <Filter>Engine\Util</Filter>
     </ClInclude>
-    <ClInclude Include="renderer.h">
+    <ClInclude Include="mesh_renderer.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="component.h">
@@ -283,7 +283,7 @@
     <ClCompile Include="model_loader.cpp">
       <Filter>Engine\Util</Filter>
     </ClCompile>
-    <ClCompile Include="renderer.cpp">
+    <ClCompile Include="mesh_renderer.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="node.cpp">
@@ -348,9 +348,6 @@
     <Filter Include="Engine\BehaviorTree\TreeNode">
       <UniqueIdentifier>{4e61791e-f820-4d29-9be5-fc0a6792dc4c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Graphics\Shader">
-      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Component">
       <UniqueIdentifier>{d7d5b87f-7652-45a9-ac58-3878dc145fe9}</UniqueIdentifier>
     </Filter>
@@ -369,6 +366,9 @@
     <Filter Include="Common\BehaviorTree\TreeBase">
       <UniqueIdentifier>{afe9fac1-d0fe-4d6e-8414-6d977ec15803}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Shader">
+      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ImGui\config.h.in">
@@ -384,72 +384,72 @@
       <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </None>
     <None Include="Common.hlsli">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </None>
     <None Include="DiskSamples.hlsli">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CombinePS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SamplingVS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SamplingPS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxPS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxVS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BloomDownPS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BloomUpPS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="DepthOnlyVS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="DepthOnlyPS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalPS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalVS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="PostEffectsPS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalGS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BasicVS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BasicPS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="CombineCS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BlurHorizontal.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BrightPassCS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BloomCompositeCS.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BlurVertical.hlsl">
-      <Filter>Engine\Graphics\Shader</Filter>
+      <Filter>Engine\Shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

@@ -7,7 +7,7 @@
 #include "geometry_generator.h"
 #include "mesh.h"
 #include "node.h"
-#include "renderer.h"
+#include "mesh_renderer.h"
 #include "animation_clip.h"
 #include "structured_buffer.h"
 #include <filesystem>
@@ -16,7 +16,7 @@
 namespace engine {
 using Microsoft::WRL::ComPtr;
 
-class SkinnedMeshRenderer : public Renderer {
+class SkinnedMeshRenderer : public MeshRenderer {
   public:
     SkinnedMeshRenderer(ComPtr<ID3D11Device> &device,
                      ComPtr<ID3D11DeviceContext> &context,
@@ -30,7 +30,7 @@ class SkinnedMeshRenderer : public Renderer {
                     const vector<MeshData> &meshes,
                     const AnimationData &aniData) {
         InitAnimationData(device, aniData);
-        Renderer::Initialize(device, context, meshes);
+        MeshRenderer::Initialize(device, context, meshes);
     }
 
     GraphicsPSO &GetPSO(const bool wired) override {
@@ -97,7 +97,7 @@ class SkinnedMeshRenderer : public Renderer {
         // Skinned VS/PS는 GetPSO()를 통해서 지정되기 때문에
         // SkinnedMeshRenderer::Render(.)를 같이 사용 가능
 
-        Renderer::Render(context);
+        MeshRenderer::Render(context);
     };
 
     // SkinnedMesh는 BoundingBox를 그릴 때 Root의 Transform을 반영해야 합니다.

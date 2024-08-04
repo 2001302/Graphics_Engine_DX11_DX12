@@ -3,7 +3,7 @@
 
 #include "behavior_tree_builder.h"
 #include "black_board.h"
-#include "renderer.h"
+#include "mesh_renderer.h"
 
 namespace engine {
 
@@ -49,7 +49,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                     MeshData sphere =
                         GeometryGenerator::MakeSphere(1.0f, 20, 20);
 
-                    auto renderer = std::make_shared<Renderer>(
+                    auto renderer = std::make_shared<MeshRenderer>(
                         GraphicsManager::Instance().device,
                         GraphicsManager::Instance().device_context,
                         std::vector{sphere});
@@ -148,7 +148,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
             // 조명의 위치 반영
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 auto renderer =
-                    (Renderer *)manager->light_spheres[i]->GetComponent(
+                    (MeshRenderer *)manager->light_spheres[i]->GetComponent(
                         EnumComponentType::eRenderer);
 
                 renderer->UpdateWorldRow(

@@ -3,7 +3,7 @@
 
 #include "behavior_tree_builder.h"
 #include "black_board.h"
-#include "renderer.h"
+#include "mesh_renderer.h"
 
 namespace engine {
 class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
@@ -109,7 +109,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                         manager->shadow_global_consts_GPU[i]);
 
                     for (auto &i : manager->models) {
-                        auto renderer = (Renderer *)i.second->GetComponent(
+                        auto renderer = (MeshRenderer *)i.second->GetComponent(
                             EnumComponentType::eRenderer);
                         if (renderer->m_castShadow && renderer->m_isVisible)
                             renderer->Render(
@@ -118,7 +118,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
 
                     if (true) {
                         auto renderer =
-                            (Renderer *)manager->skybox->GetComponent(
+                            (MeshRenderer *)manager->skybox->GetComponent(
                                 EnumComponentType::eRenderer);
                         renderer->Render(
                             GraphicsManager::Instance().device_context);
@@ -126,7 +126,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
 
                     if (true) {
                         auto renderer =
-                            (Renderer *)manager->mirror->GetComponent(
+                            (MeshRenderer *)manager->mirror->GetComponent(
                                 EnumComponentType::eRenderer);
                         renderer->Render(
                             GraphicsManager::Instance().device_context);

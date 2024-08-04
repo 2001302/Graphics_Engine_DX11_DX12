@@ -3,7 +3,7 @@
 
 #include "behavior_tree_builder.h"
 #include "black_board.h"
-#include "renderer.h"
+#include "mesh_renderer.h"
 
 namespace engine {
 
@@ -21,7 +21,7 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             auto mesh_data = GeometryGenerator::MakeBox(40.0f);
             std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
 
-            auto renderer = std::make_shared<Renderer>(
+            auto renderer = std::make_shared<MeshRenderer>(
                 GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context,
                 std::vector{mesh_data});
@@ -57,7 +57,7 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             GraphicsManager::Instance().SetPipelineState(
                 manager->draw_wire ? Graphics::skyboxWirePSO
                                    : Graphics::skyboxSolidPSO);
-            auto renderer = (Renderer *)manager->skybox->GetComponent(
+            auto renderer = (MeshRenderer *)manager->skybox->GetComponent(
                 EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
             break;

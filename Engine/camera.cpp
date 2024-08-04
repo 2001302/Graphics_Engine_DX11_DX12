@@ -1,6 +1,6 @@
 #include "camera.h"
 #include "geometry_generator.h"
-#include "renderer.h"
+#include "mesh_renderer.h"
 #include "rendering_block.h"
 #include "setting_ui.h"
 
@@ -19,8 +19,8 @@ Camera::Camera() {
     near_z = 0.01f;
     far_z = 100.0f;
 
-    m_yaw = -0.019635f;
-    m_pitch = -0.120477f;
+    yaw = -0.019635f;
+    pitch = -0.120477f;
 }
 
 Matrix Camera::GetView() { return view; }
@@ -41,7 +41,7 @@ void Camera::SetLookAt(Vector3 look) { lookAtVector = look; }
 void Camera::Initialize() {
     MeshData sphere = GeometryGenerator::MakeSphere(0.01f, 10, 10);
 
-    auto renderer = std::make_shared<Renderer>(
+    auto renderer = std::make_shared<MeshRenderer>(
         GraphicsManager::Instance().device,
         GraphicsManager::Instance().device_context, std::vector{sphere});
 
@@ -57,12 +57,12 @@ void Camera::Initialize() {
 
 void Camera::Update() {
     Matrix rotationMatrix =
-        DirectX::XMMatrixRotationRollPitchYaw(m_pitch, m_yaw, 0.0f);
+        DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, 0.0f);
     auto up = XMVector3TransformCoord(upVector, rotationMatrix);
     view = XMMatrixLookAtLH(position, lookAtVector, up);
 
     auto renderer =
-        (Renderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
+        (MeshRenderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
 
     renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
                              Matrix::CreateTranslation(lookAtVector));
@@ -72,7 +72,7 @@ void Camera::Update() {
 
 void Camera::Draw() {
     auto renderer =
-        (Renderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
+        (MeshRenderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
     renderer->Render(GraphicsManager::Instance().device_context);
 }
 } // namespace engine

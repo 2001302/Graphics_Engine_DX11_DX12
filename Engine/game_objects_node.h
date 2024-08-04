@@ -2,12 +2,12 @@
 #define _RENDERER_DRAW_NODE
 
 #include "behavior_tree_builder.h"
-#include "renderer.h"
-#include "skinned_mesh_renderer.h"
 #include "black_board.h"
+#include "mesh_renderer.h"
+#include "skinned_mesh_renderer.h"
 
 namespace engine {
-    
+
 class GameObjectNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
@@ -25,7 +25,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
                 Vector3 center(0.5f, 0.5f, 2.0f);
 
-                auto renderer = std::make_shared<Renderer>(
+                auto renderer = std::make_shared<MeshRenderer>(
                     GraphicsManager::Instance().device,
                     GraphicsManager::Instance().device_context,
                     std::vector{mesh});
@@ -52,7 +52,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 MeshData mesh = GeometryGenerator::MakeBox(0.2f);
                 Vector3 center(0.0f, 0.5f, 2.5f);
 
-                auto renderer = std::make_shared<Renderer>(
+                auto renderer = std::make_shared<MeshRenderer>(
                     GraphicsManager::Instance().device,
                     GraphicsManager::Instance().device_context,
                     std::vector{mesh});
@@ -111,8 +111,8 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
                                          Matrix::CreateTranslation(center));
 
-                manager->m_character = std::make_shared<Model>();
-                manager->m_character->AddComponent(EnumComponentType::eRenderer,
+                manager->character = std::make_shared<Model>();
+                manager->character->AddComponent(EnumComponentType::eRenderer,
                                                    renderer);
             }
 
@@ -121,7 +121,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eUpdate: {
 
             for (auto &i : manager->models) {
-                auto renderer = (Renderer *)i.second->GetComponent(
+                auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 renderer->UpdateConstantBuffers(
                     GraphicsManager::Instance().device,
@@ -130,7 +130,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
 
             {
                 auto renderer =
-                    (SkinnedMeshRenderer *)manager->m_character->GetComponent(
+                    (SkinnedMeshRenderer *)manager->character->GetComponent(
                         EnumComponentType::eRenderer);
                 static int frameCount = 0;
                 static int state = 0;
@@ -146,7 +146,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
 
             {
                 for (auto &i : manager->light_spheres) {
-                    auto renderer = (Renderer *)i->GetComponent(
+                    auto renderer = (MeshRenderer *)i->GetComponent(
                         EnumComponentType::eRenderer);
                     renderer->UpdateConstantBuffers(
                         GraphicsManager::Instance().device,
@@ -164,7 +164,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 manager->global_consts_GPU);
 
             for (auto &i : manager->models) {
-                auto renderer = (Renderer *)i.second->GetComponent(
+                auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
@@ -172,7 +172,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
             // If there is no need to draw mirror reflections, draw only the
             // opaque mirror
             if (manager->mirror_alpha == 1.0f) {
-                auto renderer = (Renderer *)manager->mirror->GetComponent(
+                auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
                     EnumComponentType::eRenderer);
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
@@ -182,14 +182,14 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                     manager->draw_wire ? Graphics::skinnedWirePSO
                                        : Graphics::skinnedSolidPSO);
                 auto renderer =
-                    (SkinnedMeshRenderer *)manager->m_character->GetComponent(
+                    (SkinnedMeshRenderer *)manager->character->GetComponent(
                         EnumComponentType::eRenderer);
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
 
             GraphicsManager::Instance().SetPipelineState(Graphics::normalsPSO);
             for (auto &i : manager->models) {
-                auto renderer = (Renderer *)i.second->GetComponent(
+                auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 if (renderer->m_drawNormals)
                     renderer->RenderNormals(
@@ -203,7 +203,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 GraphicsManager::Instance().SetGlobalConsts(
                     manager->global_consts_GPU);
                 for (auto &i : manager->light_spheres) {
-                    auto renderer = (Renderer *)i->GetComponent(
+                    auto renderer = (MeshRenderer *)i->GetComponent(
                         EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);
@@ -219,7 +219,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
     }
 };
 
-class DrawOnlyDepthNode : public common::BehaviorActionNode {
+class OnlyDepthNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
@@ -227,36 +227,69 @@ class DrawOnlyDepthNode : public common::BehaviorActionNode {
 
         auto manager = black_board->render_block;
 
-        // Depth Only Pass (no RTS)
-        GraphicsManager::Instance().device_context->OMSetRenderTargets(
-            0, NULL, GraphicsManager::Instance().m_depthOnlyDSV.Get());
-        GraphicsManager::Instance().device_context->ClearDepthStencilView(
-            GraphicsManager::Instance().m_depthOnlyDSV.Get(), D3D11_CLEAR_DEPTH,
-            1.0f, 0);
+        switch (manager->stage_type) {
+        case EnumStageType::eInitialize: {
 
-        GraphicsManager::Instance().SetPipelineState(Graphics::depthOnlyPSO);
-        GraphicsManager::Instance().SetGlobalConsts(manager->global_consts_GPU);
+            D3D11_TEXTURE2D_DESC desc;
+            desc.Width = common::Env::Instance().screen_width;
+            desc.Height = common::Env::Instance().screen_height;
+            desc.MipLevels = 1;
+            desc.ArraySize = 1;
+            desc.Usage = D3D11_USAGE_DEFAULT;
+            desc.CPUAccessFlags = 0;
+            desc.MiscFlags = 0;
 
-        for (auto &i : manager->models) {
-            auto renderer = (Renderer *)i.second->GetComponent(
-                EnumComponentType::eRenderer);
-            renderer->Render(GraphicsManager::Instance().device_context);
+            // Depth 전용
+            desc.Format = DXGI_FORMAT_R32_TYPELESS;
+            desc.BindFlags =
+                D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+            ThrowIfFailed(GraphicsManager::Instance().device->CreateTexture2D(
+                &desc, NULL, depthOnlyBuffer.GetAddressOf()));
+            break;
         }
+        case EnumStageType::eRender: {
+            // Depth Only Pass (no RTS)
+            GraphicsManager::Instance().device_context->OMSetRenderTargets(
+                0, NULL, depthOnlyDSV.Get());
+            GraphicsManager::Instance().device_context->ClearDepthStencilView(
+                depthOnlyDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-        if (true) {
-            auto renderer = (Renderer *)manager->skybox->GetComponent(
-                EnumComponentType::eRenderer);
-            renderer->Render(GraphicsManager::Instance().device_context);
+            GraphicsManager::Instance().SetPipelineState(
+                Graphics::depthOnlyPSO);
+            GraphicsManager::Instance().SetGlobalConsts(
+                manager->global_consts_GPU);
+
+            for (auto &i : manager->models) {
+                auto renderer = (MeshRenderer *)i.second->GetComponent(
+                    EnumComponentType::eRenderer);
+                renderer->Render(GraphicsManager::Instance().device_context);
+            }
+
+            if (true) {
+                auto renderer = (MeshRenderer *)manager->skybox->GetComponent(
+                    EnumComponentType::eRenderer);
+                renderer->Render(GraphicsManager::Instance().device_context);
+            }
+
+            if (true) {
+                auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
+                    EnumComponentType::eRenderer);
+                renderer->Render(GraphicsManager::Instance().device_context);
+            }
+            break;
         }
-
-        if (true) {
-            auto renderer = (Renderer *)manager->mirror->GetComponent(
-                EnumComponentType::eRenderer);
-            renderer->Render(GraphicsManager::Instance().device_context);
+        default:
+            break;
         }
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
+
+    ComPtr<ID3D11Texture2D> depthOnlyBuffer; // No MSAA
+    ComPtr<ID3D11DepthStencilView> depthOnlyDSV;
+    ComPtr<ID3D11ShaderResourceView> depthOnlySRV;
 };
 
 class ResolveBufferNode : public common::BehaviorActionNode {

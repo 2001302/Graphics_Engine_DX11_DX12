@@ -129,15 +129,6 @@ void GraphicsManager::CreateDepthBuffer() {
 
     ThrowIfFailed(device->CreateDepthStencilView(
         depthStencilBuffer.Get(), 0, m_depthStencilView.GetAddressOf()));
-
-    // Depth 전용
-    desc.Format = DXGI_FORMAT_R32_TYPELESS;
-    desc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
-    desc.SampleDesc.Count = 1;
-    desc.SampleDesc.Quality = 0;
-    ThrowIfFailed(
-        device->CreateTexture2D(&desc, NULL, m_depthOnlyBuffer.GetAddressOf()));
-
 }
 
 void GraphicsManager::SetMainViewport() {
@@ -156,18 +147,18 @@ void GraphicsManager::SetMainViewport() {
 
 void GraphicsManager::SetPipelineState(const GraphicsPSO &pso) {
 
-    device_context->VSSetShader(pso.m_vertexShader.Get(), 0, 0);
-    device_context->PSSetShader(pso.m_pixelShader.Get(), 0, 0);
-    device_context->HSSetShader(pso.m_hullShader.Get(), 0, 0);
-    device_context->DSSetShader(pso.m_domainShader.Get(), 0, 0);
-    device_context->GSSetShader(pso.m_geometryShader.Get(), 0, 0);
-    device_context->IASetInputLayout(pso.m_inputLayout.Get());
-    device_context->RSSetState(pso.m_rasterizerState.Get());
-    device_context->OMSetBlendState(pso.m_blendState.Get(), pso.m_blendFactor,
+    device_context->VSSetShader(pso.vertex_shader.Get(), 0, 0);
+    device_context->PSSetShader(pso.pixel_shader.Get(), 0, 0);
+    device_context->HSSetShader(pso.hull_shader.Get(), 0, 0);
+    device_context->DSSetShader(pso.domain_shader.Get(), 0, 0);
+    device_context->GSSetShader(pso.geometry_shader.Get(), 0, 0);
+    device_context->IASetInputLayout(pso.input_layout.Get());
+    device_context->RSSetState(pso.rasterizer_state.Get());
+    device_context->OMSetBlendState(pso.blend_state.Get(), pso.blend_factor,
                                     0xffffffff);
-    device_context->OMSetDepthStencilState(pso.m_depthStencilState.Get(),
-                                           pso.m_stencilRef);
-    device_context->IASetPrimitiveTopology(pso.m_primitiveTopology);
+    device_context->OMSetDepthStencilState(pso.depth_stencil_state.Get(),
+                                           pso.stencil_ref);
+    device_context->IASetPrimitiveTopology(pso.primitive_topology);
 }
 
 void GraphicsManager::SetPipelineState(const ComputePSO &pso) {
@@ -176,7 +167,7 @@ void GraphicsManager::SetPipelineState(const ComputePSO &pso) {
     device_context->HSSetShader(NULL, 0, 0);
     device_context->DSSetShader(NULL, 0, 0);
     device_context->GSSetShader(NULL, 0, 0);
-    device_context->CSSetShader(pso.m_computeShader.Get(), 0, 0);
+    device_context->CSSetShader(pso.compute_shader.Get(), 0, 0);
 }
 
 void GraphicsManager::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {

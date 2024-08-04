@@ -57,6 +57,7 @@ bool Application::OnUpdate(float dt) {
             ->Excute(CameraNode())
             ->Excute(LightNode())
             ->Excute(SharedResourceNode())
+            ->Excute(ShadowEffectNode())
             ->Excute(MirrorEffectNode())
             ->Excute(GameObjectsNode())
         ->Close()

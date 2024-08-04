@@ -32,10 +32,9 @@ class RenderingBlock : public common::INode {
     // shared resource
     GlobalConstants global_consts_CPU;
     GlobalConstants reflect_global_consts_CPU;
-    GlobalConstants shadow_global_consts_CPU[MAX_LIGHTS];
+
     ComPtr<ID3D11Buffer> global_consts_GPU;
     ComPtr<ID3D11Buffer> reflect_global_consts_GPU;
-    ComPtr<ID3D11Buffer> shadow_global_consts_GPU[MAX_LIGHTS];
 
     // shared texture
     ComPtr<ID3D11ShaderResourceView> env_SRV;

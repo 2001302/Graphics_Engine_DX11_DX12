@@ -21,27 +21,16 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             D3D11_TEXTURE2D_DESC desc;
             desc.MipLevels = 1;
             desc.ArraySize = 1;
-            desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-            if (GraphicsManager::Instance().num_quality_levels > 0) {
-                desc.SampleDesc.Count = 4; // how many multisamples
-                desc.SampleDesc.Quality =
-                    GraphicsManager::Instance().num_quality_levels - 1;
-            } else {
-                desc.SampleDesc.Count = 1; // how many multisamples
-                desc.SampleDesc.Quality = 0;
-            }
             desc.Usage = D3D11_USAGE_DEFAULT;
-            desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
             desc.CPUAccessFlags = 0;
             desc.MiscFlags = 0;
-
             desc.Format = DXGI_FORMAT_R32_TYPELESS;
             desc.BindFlags =
                 D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
             desc.SampleDesc.Count = 1;
             desc.SampleDesc.Quality = 0;
 
-            // 그림자 Buffers (Depth 전용)
+            // shadow buffers (depth only)
             desc.Width = m_shadowWidth;
             desc.Height = m_shadowHeight;
             for (int i = 0; i < MAX_LIGHTS; i++) {
@@ -54,11 +43,8 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             ZeroMemory(&dsvDesc, sizeof(dsvDesc));
             dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
             dsvDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-            // ThrowIfFailed(device->CreateDepthStencilView(
-            //     m_depthOnlyBuffer.Get(), &dsvDesc,
-            //     m_depthOnlyDSV.GetAddressOf()));
 
-            // 그림자 DSVs
+            // shadow DSVs
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 ThrowIfFailed(
                     GraphicsManager::Instance().device->CreateDepthStencilView(
@@ -71,16 +57,60 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             srvDesc.Format = DXGI_FORMAT_R32_FLOAT;
             srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
             srvDesc.Texture2D.MipLevels = 1;
-            // ThrowIfFailed(device->CreateShaderResourceView(
-            //     m_depthOnlyBuffer.Get(), &srvDesc,
-            //     m_depthOnlySRV.GetAddressOf()));
 
-            // 그림자 SRVs
+            // shadow SRVs
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 ThrowIfFailed(GraphicsManager::Instance()
                                   .device->CreateShaderResourceView(
                                       m_shadowBuffers[i].Get(), &srvDesc,
                                       m_shadowSRVs[i].GetAddressOf()));
+            }
+            
+            // shadow global constant buffer
+            for (int i = 0; i < MAX_LIGHTS; i++) {
+                GraphicsUtil::CreateConstBuffer(
+                    GraphicsManager::Instance().device,
+                    shadow_global_consts_CPU[i],
+                    shadow_global_consts_GPU[i]);
+            }
+
+            break;
+        }
+        case EnumStageType::eUpdate: {
+
+            // viewpoint for creating the shadow map
+            for (int i = 0; i < MAX_LIGHTS; i++) {
+                const auto &light = manager->global_consts_CPU.lights[i];
+                if (light.type & LIGHT_SHADOW) {
+
+                    Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
+                    if (abs(up.Dot(light.direction) + 1.0f) < 1e-5)
+                        up = Vector3(1.0f, 0.0f, 0.0f);
+
+                    Matrix lightViewRow = DirectX::XMMatrixLookAtLH(
+                        light.position, light.position + light.direction, up);
+
+                    Matrix lightProjRow = DirectX::XMMatrixPerspectiveFovLH(
+                        DirectX::XMConvertToRadians(120.0f), 1.0f, 0.1f, 10.0f);
+
+                    shadow_global_consts_CPU[i].eyeWorld = light.position;
+                    shadow_global_consts_CPU[i].view = lightViewRow.Transpose();
+                    shadow_global_consts_CPU[i].proj = lightProjRow.Transpose();
+                    shadow_global_consts_CPU[i].invProj =
+                        lightProjRow.Invert().Transpose();
+                    shadow_global_consts_CPU[i].viewProj =
+                        (lightViewRow * lightProjRow).Transpose();
+
+                    GraphicsUtil::UpdateBuffer(
+                        GraphicsManager::Instance().device_context,
+                        shadow_global_consts_CPU[i],
+                        shadow_global_consts_GPU[i]);
+
+                    manager->global_consts_CPU.lights[i].viewProj =
+                        shadow_global_consts_CPU[i].viewProj;
+                    manager->global_consts_CPU.lights[i].invProj =
+                        shadow_global_consts_CPU[i].invProj;
+                }
             }
             break;
         }
@@ -106,7 +136,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                         .device_context->ClearDepthStencilView(
                             m_shadowDSVs[i].Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
                     GraphicsManager::Instance().SetGlobalConsts(
-                        manager->shadow_global_consts_GPU[i]);
+                        shadow_global_consts_GPU[i]);
 
                     for (auto &i : manager->models) {
                         auto renderer = (MeshRenderer *)i.second->GetComponent(
@@ -114,22 +144,6 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                         if (renderer->m_castShadow && renderer->m_isVisible)
                             renderer->Render(
                                 GraphicsManager::Instance().device_context);
-                    }
-
-                    if (true) {
-                        auto renderer =
-                            (MeshRenderer *)manager->skybox->GetComponent(
-                                EnumComponentType::eRenderer);
-                        renderer->Render(
-                            GraphicsManager::Instance().device_context);
-                    }
-
-                    if (true) {
-                        auto renderer =
-                            (MeshRenderer *)manager->mirror->GetComponent(
-                                EnumComponentType::eRenderer);
-                        renderer->Render(
-                            GraphicsManager::Instance().device_context);
                     }
                 }
             }
@@ -191,6 +205,9 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
     ComPtr<ID3D11Texture2D> m_shadowBuffers[MAX_LIGHTS]; // No MSAA
     ComPtr<ID3D11DepthStencilView> m_shadowDSVs[MAX_LIGHTS];
     ComPtr<ID3D11ShaderResourceView> m_shadowSRVs[MAX_LIGHTS];
+
+    GlobalConstants shadow_global_consts_CPU[MAX_LIGHTS];
+    ComPtr<ID3D11Buffer> shadow_global_consts_GPU[MAX_LIGHTS];
 };
 
 } // namespace engine

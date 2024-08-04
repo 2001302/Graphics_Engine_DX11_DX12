@@ -91,60 +91,6 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                 focusPosition - manager->global_consts_CPU.lights[1].position;
             manager->global_consts_CPU.lights[1].direction.Normalize();
 
-            // 그림자맵을 만들기 위한 시점
-            for (int i = 0; i < MAX_LIGHTS; i++) {
-                const auto &light = manager->global_consts_CPU.lights[i];
-                if (light.type & LIGHT_SHADOW) {
-
-                    Vector3 up = Vector3(0.0f, 1.0f, 0.0f);
-                    if (abs(up.Dot(light.direction) + 1.0f) < 1e-5)
-                        up = Vector3(1.0f, 0.0f, 0.0f);
-
-                    // 그림자맵을 만들 때 필요
-                    Matrix lightViewRow = DirectX::XMMatrixLookAtLH(
-                        light.position, light.position + light.direction, up);
-
-                    Matrix lightProjRow = DirectX::XMMatrixPerspectiveFovLH(
-                        DirectX::XMConvertToRadians(120.0f), 1.0f, 0.1f, 10.0f);
-
-                    manager->shadow_global_consts_CPU[i].eyeWorld =
-                        light.position;
-                    manager->shadow_global_consts_CPU[i].view =
-                        lightViewRow.Transpose();
-                    manager->shadow_global_consts_CPU[i].proj =
-                        lightProjRow.Transpose();
-                    manager->shadow_global_consts_CPU[i].invProj =
-                        lightProjRow.Invert().Transpose();
-                    manager->shadow_global_consts_CPU[i].viewProj =
-                        (lightViewRow * lightProjRow).Transpose();
-
-                    // LIGHT_FRUSTUM_WIDTH 확인
-                    // Vector4 eye(0.0f, 0.0f, 0.0f, 1.0f);
-                    // Vector4 xLeft(-1.0f, -1.0f, 0.0f, 1.0f);
-                    // Vector4 xRight(1.0f, 1.0f, 0.0f, 1.0f);
-                    // eye = Vector4::Transform(eye, lightProjRow);
-                    // xLeft = Vector4::Transform(xLeft, lightProjRow.Invert());
-                    // xRight = Vector4::Transform(xRight,
-                    // lightProjRow.Invert()); xLeft /= xLeft.w; xRight /=
-                    // xRight.w; cout << "LIGHT_FRUSTUM_WIDTH = " << xRight.x -
-                    // xLeft.x << endl;
-
-                    GraphicsUtil::UpdateBuffer(
-                        GraphicsManager::Instance().device_context,
-                        manager->shadow_global_consts_CPU[i],
-                        manager->shadow_global_consts_GPU[i]);
-
-                    // 그림자를 실제로 렌더링할 때 필요
-                    manager->global_consts_CPU.lights[i].viewProj =
-                        manager->shadow_global_consts_CPU[i].viewProj;
-                    manager->global_consts_CPU.lights[i].invProj =
-                        manager->shadow_global_consts_CPU[i].invProj;
-
-                    // 반사된 장면에서도 그림자를 그리고 싶다면 조명도
-                    // 반사시켜서 넣어주면 됩니다.
-                }
-            }
-
             // 조명의 위치 반영
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 auto renderer =

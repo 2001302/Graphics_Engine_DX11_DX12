@@ -26,14 +26,6 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
                                             manager->reflect_global_consts_CPU,
                                             manager->reflect_global_consts_GPU);
 
-            // 그림자맵 렌더링할 때 사용할 GlobalConsts들 별도 생성
-            for (int i = 0; i < MAX_LIGHTS; i++) {
-                GraphicsUtil::CreateConstBuffer(
-                    GraphicsManager::Instance().device,
-                    manager->shadow_global_consts_CPU[i],
-                    manager->shadow_global_consts_GPU[i]);
-            }
-
             break;
         }
         case EnumStageType::eUpdate: {

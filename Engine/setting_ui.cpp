@@ -13,6 +13,25 @@ void FrameRate() {
                 io.Framerate ? 1000.0f / io.Framerate : 0.0f);
 }
 
+void SettingUi::PushNodeItem(INode *node) {
+    node->uniqueId = unique_id;
+    node->position = ImVec2((float)unique_pos_x, 0);
+
+    node_items.push_back(node);
+    unique_id = unique_id + 10;
+    unique_pos_x = unique_pos_x + 500;
+};
+
+void SettingUi::ClearNodeItem() {
+    unique_id = 1;
+    unique_pos_x = 0;
+    node_items.clear();
+};
+
+void SettingUi::PushPanelItem(INode *node) { panel_items.push_back(node); };
+
+void SettingUi::ClearPanelItem() { panel_items.clear(); };
+
 void SettingUi::OnStart() {
     ed::Config config;
     config.SettingsFile = "widgets.json";
@@ -32,7 +51,7 @@ void SettingUi::TopBar() {
     SetWindowLocation(0.0f, 0.0f, screen_width, offset_top);
     const float button_width = 150.0f;
 
-    ImGui::Begin("TOP BAR", nullptr,
+    ImGui::Begin("Top Bar", nullptr,
                  ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize |
                      ImGuiWindowFlags_NoScrollbar);
     FrameRate();
@@ -82,27 +101,40 @@ void SettingUi::MainView() {
 }
 
 void SettingUi::LeftPanel() {
-    if (ImGui::Button("Sphere")) {
-        SendMessage(Env::Instance().main_window, WM_SPHERE_LOAD, 0, 0);
+    ImGui::PushItemWidth(left_panel_width / 2.0f);
+
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    if (ImGui::TreeNode("Assets")) {
+
+        if (ImGui::Button("Sphere")) {
+            SendMessage(Env::Instance().main_window, WM_SPHERE_LOAD, 0, 0);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Box")) {
+            SendMessage(Env::Instance().main_window, WM_BOX_LOAD, 0, 0);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Cylinder")) {
+            SendMessage(Env::Instance().main_window, WM_CYLINDER_LOAD, 0, 0);
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Search")) {
+            SendMessage(Env::Instance().main_window, WM_MODEL_LOAD, 0, 0);
+        }
+        ImGui::TreePop();
     }
-    ImGui::SameLine();
-    if (ImGui::Button("Box")) {
-        SendMessage(Env::Instance().main_window, WM_BOX_LOAD, 0, 0);
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Cylinder")) {
-        SendMessage(Env::Instance().main_window, WM_CYLINDER_LOAD, 0, 0);
-    }
-    ImGui::SameLine();
-    if (ImGui::Button("Search")) {
-        SendMessage(Env::Instance().main_window, WM_MODEL_LOAD, 0, 0);
-    }
-    ImGui::Separator();
 
     for (auto node : panel_items) {
         node->ShowPanel();
     }
-    Hierarchy();
+
+    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    if (ImGui::TreeNode("Hierarchy")) {
+        Hierarchy();
+        ImGui::TreePop();
+    }
+
+    ImGui::PopItemWidth();
 }
 
 void SettingUi::NodeEditor() {
@@ -130,52 +162,26 @@ void SettingUi::Hierarchy() {
     ImGui::TableSetColumnIndex(1);
     ImGui::Text("Name");
 
-    for (auto &model : node_items) {
+    // for (auto model : node_items) {
 
-        ImGui::TableNextRow();
+    //    ImGui::TableNextRow();
 
-        ImGui::TableSetColumnIndex(0);
-        if (ImGui::Selectable(model->GetName().c_str(),
-                              model->GetEntityId() == selected_object_id_,
-                              ImGuiSelectableFlags_SpanAllColumns)) {
-            selected_object_id_ = model->GetEntityId();
-        }
+    //    ImGui::TableSetColumnIndex(0);
+    //    if (ImGui::Selectable(model->GetName().c_str(),
+    //            model->GetEntityId() == selected_object.GetEntityId(),
+    //                          ImGuiSelectableFlags_None,
+    //                          ImVec2(left_panel_width, 0.0f))) {
+    //        selected_object = *model;
+    //    }
 
-        ImGui::TableSetColumnIndex(1);
-        ImGui::Text("Node");
+    //    ImGui::TableSetColumnIndex(1);
+    //    ImGui::Text("Node");
 
-        if (selected_object_id_ == model->GetEntityId()) {
-            ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,
-                                   ImGui::GetColorU32(ImGuiCol_Header));
-        }
-    }
+    //    if (selected_object.GetEntityId() == model->GetEntityId()) {
+    //        ImGui::TableSetBgColor(ImGuiTableBgTarget_RowBg0,
+    //                               ImGui::GetColorU32(ImGuiCol_Header));
+    //    }
+    //}
 
     ImGui::EndTable();
 }
-
-// int SettingUi::SelectedId() {
-//     if (selected_object_id_ == -99999)
-//         return 0;
-//     else {
-//         return selected_object_id_;
-//     }
-// }
-
-void SettingUi::PushNodeItem(INode *node) {
-    node->uniqueId = unique_id;
-    node->position = ImVec2((float)unique_pos_x, 0);
-
-    node_items.push_back(node);
-    unique_id = unique_id + 10;
-    unique_pos_x = unique_pos_x + 500;
-};
-
-void SettingUi::ClearNodeItem() {
-    unique_id = 1;
-    unique_pos_x = 0;
-    node_items.clear();
-};
-
-void SettingUi::PushPanelItem(INode *node) { panel_items.push_back(node); };
-
-void SettingUi::ClearPanelItem() { panel_items.clear(); };

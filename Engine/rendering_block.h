@@ -6,6 +6,7 @@
 #include "dataBlock.h"
 #include "graphics_manager.h"
 #include "model.h"
+#include "renderer.h"
 
 namespace engine {
 enum EnumStageType {
@@ -80,21 +81,24 @@ class RenderingBlock : public common::INode {
             else
                 Graphics::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
 
-            // ImGui::SliderFloat("Metallic",
-            //                    &m_mirror->m_materialConstsCPU.metallicFactor,
-            //                    0.0f, 1.0f);
-            // ImGui::SliderFloat("Roughness",
-            //                    &m_mirror->m_materialConstsCPU.roughnessFactor,
-            //                    0.0f, 1.0f);
+            auto renderer =
+                (Renderer *)mirror->GetComponent(EnumComponentType::eRenderer);
+            ImGui::SliderFloat(
+                "Metallic", &renderer->m_materialConsts.GetCpu().metallicFactor,
+                0.0f, 1.0f);
+            ImGui::SliderFloat(
+                "Roughness",
+                &renderer->m_materialConsts.GetCpu().roughnessFactor, 0.0f,
+                1.0f);
 
             ImGui::TreePop();
         }
 
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);
         if (ImGui::TreeNode("Light")) {
-            // ImGui::SliderFloat3("Position",
-            // &m_globalConstsCPU.lights[0].position.x,
-            //                     -5.0f, 5.0f);
+            ImGui::DragFloat3("Position",
+                                &global_consts_CPU.lights[0].position.x,0.1f, -5.0f,
+                                5.0f);
             ImGui::SliderFloat("Halo Radius",
                                &global_consts_CPU.lights[1].haloRadius, 0.0f,
                                2.0f);
@@ -110,44 +114,6 @@ class RenderingBlock : public common::INode {
         if (ImGui::TreeNode("Material")) {
             ImGui::SliderFloat("LodBias", &global_consts_CPU.lodBias, 0.0f,
                                10.0f);
-
-            // int flag = 0;
-
-            // flag += ImGui::SliderFloat(
-            //     "Metallic", &m_mainObj->m_materialConstsCPU.metallicFactor,
-            //     0.0f, 1.0f);
-            // flag += ImGui::SliderFloat(
-            //     "Roughness", &m_mainObj->m_materialConstsCPU.roughnessFactor,
-            //     0.0f, 1.0f);
-            // flag += ImGui::CheckboxFlags(
-            //     "AlbedoTexture",
-            //     &m_mainObj->m_materialConstsCPU.useAlbedoMap, 1);
-            // flag += ImGui::CheckboxFlags(
-            //     "EmissiveTexture",
-            //     &m_mainObj->m_materialConstsCPU.useEmissiveMap, 1);
-            // flag += ImGui::CheckboxFlags(
-            //     "Use NormalMapping",
-            //     &m_mainObj->m_materialConstsCPU.useNormalMap, 1);
-            // flag += ImGui::CheckboxFlags(
-            //     "Use AO", &m_mainObj->m_materialConstsCPU.useAOMap, 1);
-            // flag += ImGui::CheckboxFlags(
-            //     "Use HeightMapping",
-            //     &m_mainObj->m_meshConstsCPU.useHeightMap, 1);
-            // flag += ImGui::SliderFloat("HeightScale",
-            //                            &m_mainObj->m_meshConstsCPU.heightScale,
-            //                            0.0f, 0.1f);
-            // flag += ImGui::CheckboxFlags(
-            //     "Use MetallicMap",
-            //     &m_mainObj->m_materialConstsCPU.useMetallicMap, 1);
-            // flag += ImGui::CheckboxFlags(
-            //     "Use RoughnessMap",
-            //     &m_mainObj->m_materialConstsCPU.useRoughnessMap, 1);
-
-            // if (flag) {
-            //     m_mainObj->UpdateConstantBuffers(m_device, m_context);
-            // }
-
-            // ImGui::Checkbox("Draw Normals", &m_mainObj->m_drawNormals);
 
             ImGui::TreePop();
         }

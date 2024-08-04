@@ -19,42 +19,38 @@ class SettingUi : public IGui {
     };
 
   public:
-    void OnStart() override;
-    void OnFrame() override;
     void PushNodeItem(INode *node);
     void ClearNodeItem();
     void PushPanelItem(INode *node);
     void ClearPanelItem();
 
-    //int SelectedId();
-
   private:
+    void OnStart() override;
+    void OnFrame() override;
     void TopBar();
     void MainView();
-
     void LeftPanel();
     void Hierarchy();
-
     void NodeEditor();
+
+    float screen_width;
+    float screen_hieght;
+
+    std::vector<INode *> node_items;
+    std::vector<INode *> panel_items;
 
     ed::EditorContext *context_ = nullptr;
 
     ImVector<INode::LinkInfo> links_;
     int next_link_Id = 100;
-
-    int selected_object_id_ = -99999;
     int unique_id = 1;
     int unique_pos_x = 0;
     
-    std::vector<INode *> node_items;
-    std::vector<INode *> panel_items;
-
+    EnumViewType view_type;
     const float offset_top = 35.0f;
     const float left_panel_width = 300.0f;
-    EnumViewType view_type;
 
-    float screen_width;
-    float screen_hieght;
+    INode selected_object;
 };
 } // namespace common
 #endif

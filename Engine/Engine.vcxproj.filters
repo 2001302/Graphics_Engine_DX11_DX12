@@ -106,9 +106,6 @@
     <ClInclude Include="graphics_common.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
     <ClInclude Include="rendering_block.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
@@ -201,6 +198,9 @@
     </ClInclude>
     <ClInclude Include="shared_resource_node.h">
       <Filter>Engine\BehaviorTree\TreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="input.h">
+      <Filter>Common\Structure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -28,15 +28,15 @@ bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
     }
     return true;
 }
-bool MessageReceiver::OnMouseDownRequest(std::shared_ptr<Input> input,
+bool MessageReceiver::OnMouseDownRequest(std::shared_ptr<common::Input> input,
                                          int mouseX, int mouseY) {
     input->SetMouse(mouseX, mouseY);
     return true;
 }
 
-bool MessageReceiver::OnMouseRightDragRequest(RenderingBlock *manager,
-                                              std::shared_ptr<Input> input,
-                                              int mouseX, int mouseY) {
+bool MessageReceiver::OnMouseRightDragRequest(
+    RenderingBlock *manager, std::shared_ptr<common::Input> input, int mouseX,
+    int mouseY) {
 
     Vector2 move = Vector2(input->MouseX() - mouseX, input->MouseY() - mouseY);
     move = move / -1000.0f;
@@ -56,7 +56,7 @@ bool MessageReceiver::OnMouseRightDragRequest(RenderingBlock *manager,
 }
 
 bool MessageReceiver::OnMouseWheelRequest(RenderingBlock *manager,
-                                          std::shared_ptr<Input> input,
+                                          std::shared_ptr<common::Input> input,
                                           int wheel) {
 
     auto look_at = manager->camera->GetLookAt();
@@ -71,9 +71,9 @@ bool MessageReceiver::OnMouseWheelRequest(RenderingBlock *manager,
     return true;
 }
 
-bool MessageReceiver::OnMouseWheelDragRequest(RenderingBlock *manager,
-                                              std::shared_ptr<Input> input,
-                                              int mouseX, int mouseY) {
+bool MessageReceiver::OnMouseWheelDragRequest(
+    RenderingBlock *manager, std::shared_ptr<common::Input> input, int mouseX,
+    int mouseY) {
     auto offsetX = input->MouseX() - mouseX;
     auto offsetY = input->MouseY() - mouseY;
 

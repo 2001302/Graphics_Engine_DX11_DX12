@@ -3,7 +3,7 @@
 #include "dataBlock.h"
 #include "env.h"
 
-namespace engine {
+namespace common {
 class Input {
   public:
     Input() : mouse_x(0), mouse_y(0){};

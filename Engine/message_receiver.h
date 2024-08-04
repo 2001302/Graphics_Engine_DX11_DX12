@@ -13,17 +13,17 @@ class MessageReceiver {
     bool OnSphereLoadRequest(RenderingBlock *manager);
     bool OnBoxLoadRequest(RenderingBlock *manager);
     bool OnCylinderLoadRequest(RenderingBlock *manager);
-    bool OnMouseDownRequest(std::shared_ptr<Input> input, int mouseX,
+    bool OnMouseDownRequest(std::shared_ptr<common::Input> input, int mouseX,
                             int mouseY);
     bool OnMouseRightDragRequest(RenderingBlock *manager,
-                                 std::shared_ptr<Input> input, int mouseX,
-                                 int mouseY);
+                                 std::shared_ptr<common::Input> input,
+                                 int mouseX, int mouseY);
     bool OnMouseWheelRequest(RenderingBlock *manager,
-                             std::shared_ptr<Input> input, int wheel);
+                             std::shared_ptr<common::Input> input, int wheel);
     bool OnMouseWheelDragRequest(RenderingBlock *manager,
-                                 std::shared_ptr<Input> input, int mouseX,
-                                 int mouseY);
-    bool OnWindowSizeRequest(common::SettingUi* gui, int size_x, int size_y);
+                                 std::shared_ptr<common::Input> input,
+                                 int mouseX, int mouseY);
+    bool OnWindowSizeRequest(common::SettingUi *gui, int size_x, int size_y);
 };
 } // namespace engine
 

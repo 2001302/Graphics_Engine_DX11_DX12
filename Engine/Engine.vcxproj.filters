@@ -1,12 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="model.h">
-      <Filter>Engine\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Engine\Model</Filter>
-    </ClInclude>
     <ClInclude Include="ImGui\imgui.h">
       <Filter>Common\Gui\ImGui</Filter>
     </ClInclude>
@@ -33,18 +27,6 @@
     </ClInclude>
     <ClInclude Include="ui.h">
       <Filter>Common\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="setting_ui.h">
-      <Filter>Common\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>Engine\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="vertex.h">
-      <Filter>Engine\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>Engine\Data</Filter>
     </ClInclude>
     <ClInclude Include="platform.h">
       <Filter>Common\Platform</Filter>
@@ -91,17 +73,11 @@
     <ClInclude Include="dataBlock.h">
       <Filter>Common\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="constant_buffer.h">
-      <Filter>Engine\Data</Filter>
-    </ClInclude>
     <ClInclude Include="graphics_pso.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics_common.h">
       <Filter>Engine\Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="rendering_block.h">
-      <Filter>Engine\Data</Filter>
     </ClInclude>
     <ClInclude Include="model_loader.h">
       <Filter>Engine\Util</Filter>
@@ -148,20 +124,8 @@
     <ClInclude Include="image_filter.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="texture_3d.h">
-      <Filter>Engine\Data</Filter>
-    </ClInclude>
     <ClInclude Include="skinned_mesh_renderer.h">
       <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="animation_clip.h">
-      <Filter>Engine\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="structured_buffer.h">
-      <Filter>Engine\Data</Filter>
-    </ClInclude>
-    <ClInclude Include="black_board.h">
-      <Filter>Engine\Data</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
       <Filter>Common\Structure</Filter>
@@ -199,15 +163,45 @@
     <ClInclude Include="application.h">
       <Filter>Engine\Application</Filter>
     </ClInclude>
+    <ClInclude Include="vertex.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="animation_clip.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="constant_buffer.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="structured_buffer.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_3d.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="rendering_block.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="black_board.h">
+      <Filter>Engine\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="setting_ui.h">
+      <Filter>Engine\Application</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="model.cpp">
-      <Filter>Engine\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>Engine\Model</Filter>
-    </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>Common\Gui\ImGui</Filter>
     </ClCompile>
@@ -230,9 +224,6 @@
       <Filter>Common\Gui\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="ui.cpp">
-      <Filter>Common\Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="setting_ui.cpp">
       <Filter>Common\Gui</Filter>
     </ClCompile>
     <ClCompile Include="platform.cpp">
@@ -310,6 +301,15 @@
     <ClCompile Include="application.cpp">
       <Filter>Engine\Application</Filter>
     </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>Engine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>Engine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="setting_ui.cpp">
+      <Filter>Engine\Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Common">
@@ -320,9 +320,6 @@
     </Filter>
     <Filter Include="Engine\Model">
       <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Data">
-      <UniqueIdentifier>{3fc71904-4c1d-43d0-b771-a258e5fba9b8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Graphics">
       <UniqueIdentifier>{1a58e045-98f9-419c-972d-1f2ad2b6a109}</UniqueIdentifier>

@@ -2,20 +2,16 @@
 
 using namespace common;
 
-bool IGui::Initialize() {
+bool IGui::Start() {
 
     context_ = ImGui::CreateContext();
     ImGui::SetCurrentContext(context_);
 
-    ImGui_ImplWin32_Init(common::Env::Instance().main_window);
-    ImGui_ImplDX11_Init(
-        engine::GraphicsManager::Instance().device.Get(),
-        engine::GraphicsManager::Instance().device_context.Get());
+    OnStart();
 
     ImGui::StyleColorsDark();
     RecreateFontAtlas();
 
-    OnStart();
     Frame();
 
     return true;

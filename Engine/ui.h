@@ -2,13 +2,12 @@
 #define _BASEGUI
 
 #include "dataBlock.h"
-#include "graphics_manager.h"
 #include "node.h"
 
 namespace common {
 class IGui : public IDataBlock {
   public:
-    bool Initialize();
+    bool Start();
     bool Frame();
     void Shutdown();
 

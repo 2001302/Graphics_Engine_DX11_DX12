@@ -30,7 +30,7 @@ class Application : public common::Platform, TreeNode {
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,
                                     LPARAM lparam) {
 
-        auto CheckIfMouseInViewport = [](common::SettingUi *ui, int mouseX,
+        auto CheckIfMouseInViewport = [](SettingUi *ui, int mouseX,
                                          int mouseY) -> bool {
             if (GraphicsManager::Instance().swap_chain) {
                 if ((0 < mouseX && mouseX < ui->GetSize().x) &&

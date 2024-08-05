@@ -1,7 +1,5 @@
 #ifndef _INPUT
 #define _INPUT
-#include "dataBlock.h"
-#include "env.h"
 
 namespace common {
 class Input {

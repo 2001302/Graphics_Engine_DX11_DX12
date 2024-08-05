@@ -11,11 +11,11 @@ struct BlackBoard : public common::IDataBlock {
     BlackBoard() {
         render_block = std::make_shared<RenderingBlock>();
         input = std::make_unique<common::Input>();
-        gui = std::make_shared<common::SettingUi>();
+        gui = std::make_shared<SettingUi>();
     }
     std::shared_ptr<RenderingBlock> render_block;
     std::shared_ptr<common::Input> input;
-    std::shared_ptr<common::SettingUi> gui;
+    std::shared_ptr<SettingUi> gui;
 };
 
 } // namespace engine

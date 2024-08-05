@@ -1,6 +1,6 @@
 #include "setting_ui.h"
 
-using namespace common;
+namespace engine {
 void SetWindowLocation(float x, float y, float width, float height) {
 
     ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);
@@ -13,7 +13,7 @@ void FrameRate() {
                 io.Framerate ? 1000.0f / io.Framerate : 0.0f);
 }
 
-void SettingUi::PushNodeItem(INode *node) {
+void SettingUi::PushNodeItem(common::INode *node) {
     node->uniqueId = unique_id;
     node->position = ImVec2((float)unique_pos_x, 0);
 
@@ -28,11 +28,19 @@ void SettingUi::ClearNodeItem() {
     node_items.clear();
 };
 
-void SettingUi::PushPanelItem(INode *node) { panel_items.push_back(node); };
+void SettingUi::PushPanelItem(common::INode *node) {
+    panel_items.push_back(node);
+};
 
 void SettingUi::ClearPanelItem() { panel_items.clear(); };
 
 void SettingUi::OnStart() {
+
+    ImGui_ImplWin32_Init(common::Env::Instance().main_window);
+    ImGui_ImplDX11_Init(
+        engine::GraphicsManager::Instance().device.Get(),
+        engine::GraphicsManager::Instance().device_context.Get());
+
     ed::Config config;
     config.SettingsFile = "widgets.json";
     context_ = ed::CreateEditor(&config);
@@ -40,8 +48,8 @@ void SettingUi::OnStart() {
 
 void SettingUi::OnFrame() {
 
-    screen_width = (float)Env::Instance().screen_width;
-    screen_hieght = (float)Env::Instance().screen_height;
+    screen_width = (float)common::Env::Instance().screen_width;
+    screen_hieght = (float)common::Env::Instance().screen_height;
 
     TopBar();
     MainView();
@@ -107,19 +115,22 @@ void SettingUi::LeftPanel() {
     if (ImGui::TreeNode("Assets")) {
 
         if (ImGui::Button("Sphere")) {
-            SendMessage(Env::Instance().main_window, WM_SPHERE_LOAD, 0, 0);
+            SendMessage(common::Env::Instance().main_window, WM_SPHERE_LOAD, 0,
+                        0);
         }
         ImGui::SameLine();
         if (ImGui::Button("Box")) {
-            SendMessage(Env::Instance().main_window, WM_BOX_LOAD, 0, 0);
+            SendMessage(common::Env::Instance().main_window, WM_BOX_LOAD, 0, 0);
         }
         ImGui::SameLine();
         if (ImGui::Button("Cylinder")) {
-            SendMessage(Env::Instance().main_window, WM_CYLINDER_LOAD, 0, 0);
+            SendMessage(common::Env::Instance().main_window, WM_CYLINDER_LOAD,
+                        0, 0);
         }
         ImGui::SameLine();
         if (ImGui::Button("Search")) {
-            SendMessage(Env::Instance().main_window, WM_MODEL_LOAD, 0, 0);
+            SendMessage(common::Env::Instance().main_window, WM_MODEL_LOAD, 0,
+                        0);
         }
         ImGui::TreePop();
     }
@@ -185,3 +196,4 @@ void SettingUi::Hierarchy() {
 
     ImGui::EndTable();
 }
+} // namespace engine

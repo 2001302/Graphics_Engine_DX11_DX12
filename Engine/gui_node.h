@@ -17,7 +17,7 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
 
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
-            gui->Initialize();
+            gui->Start();
             gui->PushPanelItem(manager);
             break;
         }

@@ -40,20 +40,14 @@
     <ClInclude Include="mesh.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
-    <ClInclude Include="bone.h">
-      <Filter>Engine\Data</Filter>
-    </ClInclude>
     <ClInclude Include="vertex.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
     <ClInclude Include="material.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
-    <ClInclude Include="application.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
     <ClInclude Include="platform.h">
-      <Filter>Platform</Filter>
+      <Filter>Common\Platform</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\NodeEditor\imgui_node_editor.h">
       <Filter>Common\Gui\ImGui\NodeEditor</Filter>
@@ -124,23 +118,11 @@
     <ClInclude Include="component.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="game_objects_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="gui_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
     <ClInclude Include="compute_pso.h">
       <Filter>Engine\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="node.h">
       <Filter>Common\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="tree_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="post_process_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
     </ClInclude>
     <ClInclude Include="action_node.h">
       <Filter>Common\BehaviorTree\TreeBase</Filter>
@@ -181,26 +163,41 @@
     <ClInclude Include="black_board.h">
       <Filter>Engine\Data</Filter>
     </ClInclude>
-    <ClInclude Include="light_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="camera_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="skybox_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="mirror_effect_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="shadow_effect_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="shared_resource_node.h">
-      <Filter>Engine\BehaviorTree\TreeNode</Filter>
-    </ClInclude>
     <ClInclude Include="input.h">
       <Filter>Common\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="camera_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="game_objects_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="gui_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="light_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="mirror_effect_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="post_process_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="shadow_effect_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_resource_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="skybox_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="tree_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="application.h">
+      <Filter>Engine\Application</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -238,11 +235,8 @@
     <ClCompile Include="setting_ui.cpp">
       <Filter>Common\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="application.cpp">
-      <Filter>Platform</Filter>
-    </ClCompile>
     <ClCompile Include="platform.cpp">
-      <Filter>Platform</Filter>
+      <Filter>Common\Platform</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor.cpp">
       <Filter>Common\Gui\ImGui\NodeEditor</Filter>
@@ -310,25 +304,19 @@
     <ClCompile Include="tone_mapping.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="image_filter.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
     <ClCompile Include="skinned_mesh_renderer.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
+    <ClCompile Include="application.cpp">
+      <Filter>Engine\Application</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Platform">
-      <UniqueIdentifier>{d0845f2f-5aa8-41c5-a240-d5a81d8a26fe}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common">
       <UniqueIdentifier>{cd4d1aed-5e7a-4f54-8223-c66fbe383b80}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine">
       <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\BehaviorTree">
-      <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Model">
       <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
@@ -345,9 +333,6 @@
     <Filter Include="Engine\Util">
       <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\BehaviorTree\TreeNode">
-      <UniqueIdentifier>{4e61791e-f820-4d29-9be5-fc0a6792dc4c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Component">
       <UniqueIdentifier>{d7d5b87f-7652-45a9-ac58-3878dc145fe9}</UniqueIdentifier>
     </Filter>
@@ -360,14 +345,23 @@
     <Filter Include="Common\Gui\ImGui\NodeEditor">
       <UniqueIdentifier>{30855cc5-8d09-42a4-bb3c-c5aea4725478}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Shader">
+      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common\Platform">
+      <UniqueIdentifier>{d0845f2f-5aa8-41c5-a240-d5a81d8a26fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\BehaviorTreeNode">
+      <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Common\BehaviorTree">
       <UniqueIdentifier>{3ab7e496-c4a5-4740-8b84-b148f06891df}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\BehaviorTree\TreeBase">
       <UniqueIdentifier>{afe9fac1-d0fe-4d6e-8414-6d977ec15803}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Shader">
-      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
+    <Filter Include="Engine\Application">
+      <UniqueIdentifier>{782ccc14-aa2b-4b1c-a0be-d9883c9299f6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

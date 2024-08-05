@@ -143,7 +143,6 @@
     <ClInclude Include="application.h" />
     <ClInclude Include="behavior_tree_builder.h" />
     <ClInclude Include="black_board.h" />
-    <ClInclude Include="bone.h" />
     <ClInclude Include="camera_node.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="compute_pso.h" />
@@ -214,7 +213,6 @@
     <ClCompile Include="graphics_common.cpp" />
     <ClCompile Include="graphics_pso.cpp" />
     <ClCompile Include="graphics_util.cpp" />
-    <ClCompile Include="image_filter.cpp" />
     <ClCompile Include="ImGui\NodeEditor\crude_json.cpp" />
     <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp" />
     <ClCompile Include="ImGui\NodeEditor\imgui_node_editor.cpp" />

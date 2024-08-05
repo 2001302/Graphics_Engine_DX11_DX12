@@ -1,7 +1,6 @@
 #ifndef _SKINNED_MESH_RENDERER
 #define _SKINNED_MESH_RENDERER
 
-#include "bone.h"
 #include "component.h"
 #include "constant_buffer.h"
 #include "geometry_generator.h"

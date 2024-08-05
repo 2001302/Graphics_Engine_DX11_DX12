@@ -1,7 +1,6 @@
 #ifndef _RENDERER
 #define _RENDERER
 
-#include "bone.h"
 #include "component.h"
 #include "constant_buffer.h"
 #include "geometry_generator.h"

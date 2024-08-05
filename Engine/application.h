@@ -12,7 +12,7 @@
 
 namespace engine {
 
-class Application : public Platform, TreeNode {
+class Application : public common::Platform, TreeNode {
   public:
     Application();
 

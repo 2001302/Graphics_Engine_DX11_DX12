@@ -1,6 +1,6 @@
 #include "platform.h"
 
-namespace engine {
+namespace common {
 
 /// <summary>
 /// NOTE : Global

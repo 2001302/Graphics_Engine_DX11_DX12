@@ -172,7 +172,10 @@ class ReadKeyboard : public common::BehaviorActionNode {
 
         auto key_flag = animation_block->input->KeyState(87);
 
-        if (key_flag && animation_block->state != EnumAnimationState::eWalk) {
+        if (key_flag &&
+            (animation_block->state != EnumAnimationState::eIdleToWalk) &&
+            (animation_block->state != EnumAnimationState::eWalk) &&
+            (animation_block->state != EnumAnimationState::eWalkToIdle)) {
 
             animation_block->frame_count = 0;
             animation_block->state = EnumAnimationState::eIdleToWalk;
@@ -226,7 +229,7 @@ class Walk : public common::BehaviorActionNode {
         auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
         assert(animation_block != nullptr);
 
-        if (animation_block->state != EnumAnimationState::eIdleToWalk)
+        if (animation_block->state != EnumAnimationState::eWalk)
             return common::EnumBehaviorTreeStatus::eFail;
 
         animation_block->renderer->UpdateAnimation(
@@ -239,6 +242,7 @@ class Walk : public common::BehaviorActionNode {
         if (!key_flag && animation_block->state == EnumAnimationState::eWalk) {
 
             animation_block->frame_count = 0;
+            animation_block->state = EnumAnimationState::eWalkToIdle;
             return common::EnumBehaviorTreeStatus::eFail;
         }
 
@@ -287,6 +291,9 @@ class Idle : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
         auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
         assert(animation_block != nullptr);
+
+        if (animation_block->state != EnumAnimationState::eIdle)
+            return common::EnumBehaviorTreeStatus::eFail;
 
         animation_block->renderer->UpdateAnimation(
             GraphicsManager::Instance().device_context,

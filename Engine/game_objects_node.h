@@ -20,7 +20,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
 
-            // 추가 물체1
+            // additional object 1
             {
                 MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
                 Vector3 center(0.5f, 0.5f, 2.0f);
@@ -47,7 +47,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 manager->models.insert({obj->GetEntityId(), obj});
             }
 
-            // 추가 물체2
+            // additional object 2
             {
                 MeshData mesh = GeometryGenerator::MakeBox(0.2f);
                 Vector3 center(0.0f, 0.5f, 2.5f);
@@ -74,48 +74,6 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 manager->models.insert({obj->GetEntityId(), obj});
             }
 
-            // main object
-            {
-                std::string path = "Assets/Characters/Mixamo/";
-                std::vector<std::string> clipNames = {
-                    "CatwalkIdle.fbx", "CatwalkIdleToWalkForward.fbx",
-                    "CatwalkWalkForward.fbx", "CatwalkWalkStop.fbx",
-                    "BreakdanceFreezeVar2.fbx"};
-
-                AnimationData aniData;
-
-                auto [meshes, _] = GeometryGenerator::ReadAnimationFromFile(
-                    path, "character.fbx");
-
-                for (auto &name : clipNames) {
-                    auto [_, ani] =
-                        GeometryGenerator::ReadAnimationFromFile(path, name);
-
-                    if (aniData.clips.empty()) {
-                        aniData = ani;
-                    } else {
-                        aniData.clips.push_back(ani.clips.front());
-                    }
-                }
-
-                Vector3 center(0.0f, 0.5f, 2.0f);
-                auto renderer = std::make_shared<SkinnedMeshRenderer>(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context, meshes,
-                    aniData);
-
-                renderer->material_consts.GetCpu().albedoFactor =
-                    Vector3(1.0f);
-                renderer->material_consts.GetCpu().roughnessFactor = 0.8f;
-                renderer->material_consts.GetCpu().metallicFactor = 0.0f;
-                renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
-                                         Matrix::CreateTranslation(center));
-
-                manager->character = std::make_shared<Model>();
-                manager->character->AddComponent(EnumComponentType::eRenderer,
-                                                   renderer);
-            }
-
             break;
         }
         case EnumStageType::eUpdate: {
@@ -128,30 +86,12 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                     GraphicsManager::Instance().device_context);
             }
 
-            {
-                auto renderer =
-                    (SkinnedMeshRenderer *)manager->character->GetComponent(
-                        EnumComponentType::eRenderer);
-                static int frameCount = 0;
-                static int state = 0;
-                renderer->UpdateAnimation(
-                    GraphicsManager::Instance().device_context, state,
-                    frameCount);
-                frameCount += 1;
-
+            for (auto &i : manager->light_spheres) {
+                auto renderer = (MeshRenderer *)i->GetComponent(
+                    EnumComponentType::eRenderer);
                 renderer->UpdateConstantBuffers(
                     GraphicsManager::Instance().device,
                     GraphicsManager::Instance().device_context);
-            }
-
-            {
-                for (auto &i : manager->light_spheres) {
-                    auto renderer = (MeshRenderer *)i->GetComponent(
-                        EnumComponentType::eRenderer);
-                    renderer->UpdateConstantBuffers(
-                        GraphicsManager::Instance().device,
-                        GraphicsManager::Instance().device_context);
-                }
             }
             break;
         }
@@ -174,16 +114,6 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
             if (manager->mirror_alpha == 1.0f) {
                 auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->Render(GraphicsManager::Instance().device_context);
-            }
-
-            {
-                GraphicsManager::Instance().SetPipelineState(
-                    manager->draw_wire ? Graphics::skinnedWirePSO
-                                       : Graphics::skinnedSolidPSO);
-                auto renderer =
-                    (SkinnedMeshRenderer *)manager->character->GetComponent(
-                        EnumComponentType::eRenderer);
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
 
@@ -218,6 +148,93 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
+
+class PlayerNodeInvoker : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
+
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto manager = black_board->render_block;
+        auto gui = black_board->gui;
+
+        switch (manager->stage_type) {
+        case EnumStageType::eInitialize: {
+            std::string path = "Assets/Characters/Mixamo/";
+            std::vector<std::string> clipNames = {
+                "CatwalkIdle.fbx", "CatwalkIdleToWalkForward.fbx",
+                "CatwalkWalkForward.fbx", "CatwalkWalkStop.fbx",
+                "BreakdanceFreezeVar2.fbx"};
+
+            AnimationData aniData;
+            auto [meshes, _] = GeometryGenerator::ReadAnimationFromFile(
+                path, "character.fbx");
+
+            for (auto &name : clipNames) {
+                auto [_, ani] =
+                    GeometryGenerator::ReadAnimationFromFile(path, name);
+
+                if (aniData.clips.empty()) {
+                    aniData = ani;
+                } else {
+                    aniData.clips.push_back(ani.clips.front());
+                }
+            }
+
+            Vector3 center(0.0f, 0.0f, 2.0f);
+            auto renderer = std::make_shared<SkinnedMeshRenderer>(
+                GraphicsManager::Instance().device,
+                GraphicsManager::Instance().device_context, meshes,
+                aniData);
+
+            renderer->material_consts.GetCpu().albedoFactor = Vector3(1.0f);
+            renderer->material_consts.GetCpu().roughnessFactor = 0.8f;
+            renderer->material_consts.GetCpu().metallicFactor = 0.0f;
+            renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
+                                        Matrix::CreateTranslation(center));
+
+            manager->player = std::make_shared<Model>();
+            manager->player->AddComponent(EnumComponentType::eRenderer,
+                                            renderer);
+
+            break;
+        }
+        case EnumStageType::eUpdate: {
+            auto renderer =
+                (SkinnedMeshRenderer *)manager->player->GetComponent(
+                    EnumComponentType::eRenderer);
+            static int frameCount = 0;
+            static int state = 0;
+            renderer->UpdateAnimation(
+                GraphicsManager::Instance().device_context, state,
+                frameCount);
+            frameCount += 1;
+
+            renderer->UpdateConstantBuffers(
+                GraphicsManager::Instance().device,
+                GraphicsManager::Instance().device_context);
+
+            break;
+        }
+        case EnumStageType::eRender: {
+            GraphicsManager::Instance().SetPipelineState(
+                manager->draw_wire ? Graphics::skinnedWirePSO
+                                    : Graphics::skinnedSolidPSO);
+            auto renderer =
+                (SkinnedMeshRenderer *)manager->player->GetComponent(
+                    EnumComponentType::eRenderer);
+            renderer->Render(GraphicsManager::Instance().device_context);
+            
+            break;
+        }
+        default:
+            break;
+        }
+
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
 
 class OnlyDepthNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {

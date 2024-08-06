@@ -27,6 +27,7 @@ class TreeNode {
         imgui_node = std::make_shared<GuiNodeInvoker>();
         post_processing = std::make_shared<PostProcessingNode>();
         present = std::make_shared<PresentNode>();
+        player_node =  std::make_shared<PlayerNodeInvoker>();
     }
 
     std::shared_ptr<LightNodeInvoker> LightNode(){return light_node;}
@@ -40,6 +41,7 @@ class TreeNode {
     std::shared_ptr<GuiNodeInvoker> ImGuiNode(){return imgui_node;}
     std::shared_ptr<PostProcessingNode> PostProcessing() {return post_processing;}
     std::shared_ptr<PresentNode> Present(){return present;}
+    std::shared_ptr<PlayerNodeInvoker> PlayerNode(){return player_node;}
 
 
   private:
@@ -54,6 +56,7 @@ class TreeNode {
     std::shared_ptr<GuiNodeInvoker> imgui_node;
     std::shared_ptr<PostProcessingNode> post_processing;
     std::shared_ptr<PresentNode> present;
+    std::shared_ptr<PlayerNodeInvoker> player_node;
 };
 } // namespace engine
 

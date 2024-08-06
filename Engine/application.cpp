@@ -28,6 +28,7 @@ bool Application::OnStart() {
             ->Excute(SharedResourceNode())
             ->Excute(PostProcessing())
             ->Excute(GameObjectsNode())
+            ->Excute(PlayerNode())
         ->Close()
     ->Run();
     // clang-format on
@@ -60,6 +61,7 @@ bool Application::OnUpdate(float dt) {
             ->Excute(ShadowEffectNode())
             ->Excute(MirrorEffectNode())
             ->Excute(GameObjectsNode())
+            ->Excute(PlayerNode())
         ->Close()
     ->Run();
     // clang-format on
@@ -79,6 +81,7 @@ bool Application::OnRender() {
             ->Excute(SharedResourceNode())
             ->Excute(ShadowEffectNode())
             ->Excute(GameObjectsNode())
+            ->Excute(PlayerNode())
             ->Excute(CameraNode())
             ->Excute(SkyboxNode())
             ->Excute(MirrorEffectNode())

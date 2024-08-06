@@ -160,6 +160,7 @@
     <ClInclude Include="ImGui\NodeEditor\imgui_extra_math.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_node_editor.h" />
     <ClInclude Include="ImGui\NodeEditor\imgui_node_editor_internal.h" />
+    <ClInclude Include="info.h" />
     <ClInclude Include="light_node.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="mesh.h" />
@@ -202,7 +203,7 @@
     <ClInclude Include="model_loader.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="dataBlock.h" />
-    <ClInclude Include="rendering_block.h" />
+    <ClInclude Include="job_context.h" />
     <ClInclude Include="platform.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>

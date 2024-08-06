@@ -68,7 +68,7 @@ class MeshRenderer : public Component {
     DirectX::BoundingSphere bounding_sphere;
 
   private:
-    void OnShowNode() override;
+    void OnShow() override;
     std::shared_ptr<Mesh> bounding_box_mesh;
     std::shared_ptr<Mesh> bounding_sphere_mesh;
 };

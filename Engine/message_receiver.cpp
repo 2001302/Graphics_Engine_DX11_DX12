@@ -35,7 +35,7 @@ bool MessageReceiver::OnMouseDownRequest(std::shared_ptr<common::Input> input,
 }
 
 bool MessageReceiver::OnMouseRightDragRequest(
-    RenderingBlock *manager, std::shared_ptr<common::Input> input, int mouseX,
+    JobContext *manager, std::shared_ptr<common::Input> input, int mouseX,
     int mouseY) {
 
     Vector2 move = Vector2(input->MouseX() - mouseX, input->MouseY() - mouseY);
@@ -55,7 +55,7 @@ bool MessageReceiver::OnMouseRightDragRequest(
     return true;
 }
 
-bool MessageReceiver::OnMouseWheelRequest(RenderingBlock *manager,
+bool MessageReceiver::OnMouseWheelRequest(JobContext *manager,
                                           std::shared_ptr<common::Input> input,
                                           int wheel) {
 
@@ -72,7 +72,7 @@ bool MessageReceiver::OnMouseWheelRequest(RenderingBlock *manager,
 }
 
 bool MessageReceiver::OnMouseWheelDragRequest(
-    RenderingBlock *manager, std::shared_ptr<common::Input> input, int mouseX,
+    JobContext *manager, std::shared_ptr<common::Input> input, int mouseX,
     int mouseY) {
     auto offsetX = input->MouseX() - mouseX;
     auto offsetY = input->MouseY() - mouseY;
@@ -98,7 +98,7 @@ bool MessageReceiver::OnMouseWheelDragRequest(
     return true;
 }
 
-bool MessageReceiver::OnModelLoadRequest(RenderingBlock *manager,
+bool MessageReceiver::OnModelLoadRequest(JobContext *manager,
                                          HWND main_window) {
     auto ToString = [](LPWSTR lpwstr) -> std::string {
         if (!lpwstr)
@@ -158,7 +158,7 @@ bool MessageReceiver::OnModelLoadRequest(RenderingBlock *manager,
     return true;
 }
 
-bool MessageReceiver::OnSphereLoadRequest(RenderingBlock *manager) {
+bool MessageReceiver::OnSphereLoadRequest(JobContext *manager) {
 
     MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
     auto renderer = std::make_shared<MeshRenderer>(
@@ -176,7 +176,7 @@ bool MessageReceiver::OnSphereLoadRequest(RenderingBlock *manager) {
     return true;
 }
 
-bool MessageReceiver::OnBoxLoadRequest(RenderingBlock *manager) {
+bool MessageReceiver::OnBoxLoadRequest(JobContext *manager) {
 
     MeshData mesh = GeometryGenerator::MakeBox(1.0f);
     auto renderer = std::make_shared<MeshRenderer>(
@@ -194,7 +194,7 @@ bool MessageReceiver::OnBoxLoadRequest(RenderingBlock *manager) {
     return true;
 }
 
-bool MessageReceiver::OnCylinderLoadRequest(RenderingBlock *manager) {
+bool MessageReceiver::OnCylinderLoadRequest(JobContext *manager) {
 
     MeshData mesh = GeometryGenerator::MakeCylinder(5.0f, 5.0f, 15.0f, 30);
     auto renderer = std::make_shared<MeshRenderer>(

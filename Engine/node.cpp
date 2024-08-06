@@ -2,7 +2,7 @@
 
 using namespace common;
 
-void INode::ShowNode() {
+void INode::Show() {
     auto &io = ImGui::GetIO();
 
     // Pin
@@ -20,7 +20,7 @@ void INode::ShowNode() {
     ImGui::Text("Out ->");
     ed::EndPin();
 
-    OnShowNode();
+    OnShow();
 
     ed::EndNode();
     if (firstframe) {

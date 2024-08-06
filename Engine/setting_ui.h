@@ -5,6 +5,7 @@
 #include "message.h"
 #include "model.h"
 #include "ui.h"
+#include "info.h"
 #include <map>
 #include <string>
 
@@ -21,8 +22,8 @@ class SettingUi : public common::IGui {
   public:
     void PushNodeItem(common::INode *node);
     void ClearNodeItem();
-    void PushPanelItem(common::INode *node);
-    void ClearPanelItem();
+    void PushInfoItem(common::IInfo *node);
+    void ClearInfoItem();
 
   private:
     void OnStart() override;
@@ -37,7 +38,7 @@ class SettingUi : public common::IGui {
     float screen_hieght;
 
     std::vector<common::INode *> node_items;
-    std::vector<common::INode *> panel_items;
+    std::vector<common::IInfo *> info_items;
 
     ed::EditorContext *context_ = nullptr;
 

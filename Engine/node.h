@@ -20,15 +20,13 @@ struct INode : public IEntity {
         ed::PinId OutputId;
     };
 
-    void ShowNode();
-    void ShowPanel() { OnShowPanel(); };
+    void Show();
 
     int uniqueId = 1;
     ImVec2 position = ImVec2(0, 0);
 
   private:
-    virtual void OnShowPanel() {}
-    virtual void OnShowNode() {}
+    virtual void OnShow() {}
 
   protected:
     ImVector<LinkInfo> links_;

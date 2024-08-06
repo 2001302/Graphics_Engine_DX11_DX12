@@ -3,24 +3,24 @@
 
 #include "geometry_generator.h"
 #include "input.h"
-#include "rendering_block.h"
+#include "job_context.h"
 #include "setting_ui.h"
 
 namespace engine {
 class MessageReceiver {
   public:
-    bool OnModelLoadRequest(RenderingBlock *manager, HWND main_window);
-    bool OnSphereLoadRequest(RenderingBlock *manager);
-    bool OnBoxLoadRequest(RenderingBlock *manager);
-    bool OnCylinderLoadRequest(RenderingBlock *manager);
+    bool OnModelLoadRequest(JobContext *manager, HWND main_window);
+    bool OnSphereLoadRequest(JobContext *manager);
+    bool OnBoxLoadRequest(JobContext *manager);
+    bool OnCylinderLoadRequest(JobContext *manager);
     bool OnMouseDownRequest(std::shared_ptr<common::Input> input, int mouseX,
                             int mouseY);
-    bool OnMouseRightDragRequest(RenderingBlock *manager,
+    bool OnMouseRightDragRequest(JobContext *manager,
                                  std::shared_ptr<common::Input> input,
                                  int mouseX, int mouseY);
-    bool OnMouseWheelRequest(RenderingBlock *manager,
+    bool OnMouseWheelRequest(JobContext *manager,
                              std::shared_ptr<common::Input> input, int wheel);
-    bool OnMouseWheelDragRequest(RenderingBlock *manager,
+    bool OnMouseWheelDragRequest(JobContext *manager,
                                  std::shared_ptr<common::Input> input,
                                  int mouseX, int mouseY);
     bool OnWindowSizeRequest(SettingUi *gui, int size_x, int size_y);

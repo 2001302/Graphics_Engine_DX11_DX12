@@ -190,7 +190,7 @@
     <ClInclude Include="texture_3d.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
-    <ClInclude Include="rendering_block.h">
+    <ClInclude Include="job_context.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
     <ClInclude Include="black_board.h">
@@ -198,6 +198,9 @@
     </ClInclude>
     <ClInclude Include="setting_ui.h">
       <Filter>Engine\Application</Filter>
+    </ClInclude>
+    <ClInclude Include="info.h">
+      <Filter>Common\Structure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

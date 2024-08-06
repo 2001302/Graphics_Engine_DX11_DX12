@@ -28,11 +28,11 @@ void SettingUi::ClearNodeItem() {
     node_items.clear();
 };
 
-void SettingUi::PushPanelItem(common::INode *node) {
-    panel_items.push_back(node);
+void SettingUi::PushInfoItem(common::IInfo *node) {
+    info_items.push_back(node);
 };
 
-void SettingUi::ClearPanelItem() { panel_items.clear(); };
+void SettingUi::ClearInfoItem() { info_items.clear(); };
 
 void SettingUi::OnStart() {
 
@@ -135,8 +135,8 @@ void SettingUi::LeftPanel() {
         ImGui::TreePop();
     }
 
-    for (auto node : panel_items) {
-        node->ShowPanel();
+    for (auto node : info_items) {
+        node->Show();
     }
 
     ImGui::SetNextItemOpen(true, ImGuiCond_Once);
@@ -154,7 +154,7 @@ void SettingUi::NodeEditor() {
     auto &io = ImGui::GetIO();
 
     for (auto node : node_items) {
-        node->ShowNode();
+        node->Show();
     }
 
     ed::End();

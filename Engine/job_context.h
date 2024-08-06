@@ -1,6 +1,7 @@
 #ifndef _PIPELINEMANAGER
 #define _PIPELINEMANAGER
 
+#include "info.h"
 #include "camera.h"
 #include "constant_buffer.h"
 #include "dataBlock.h"
@@ -15,7 +16,7 @@ enum EnumStageType {
     eRender = 2,
 };
 
-class RenderingBlock : public common::INode {
+class JobContext : public common::IInfo {
   public:
     float dt;
     bool draw_wire = false;
@@ -44,7 +45,7 @@ class RenderingBlock : public common::INode {
     DirectX::SimpleMath::Plane mirror_plane;
     float mirror_alpha = 1.0f; // opacity
 
-    void OnShowPanel() override {
+    void Show() override {
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("General")) {
             ImGui::Checkbox("Wireframe", &draw_wire);

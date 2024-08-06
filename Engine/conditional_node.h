@@ -5,7 +5,7 @@
 
 namespace common {
 class ConditionalNode : public BehaviorActionNode {
-  private:
+  protected:
     EnumBehaviorTreeStatus OnInvoke() override;
 };
 } // namespace common

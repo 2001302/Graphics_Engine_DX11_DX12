@@ -24,6 +24,14 @@ BehaviorTreeBuilder *BehaviorTreeBuilder::Selector() {
     return this;
 }
 
+BehaviorTreeBuilder *
+BehaviorTreeBuilder::Conditional(std::shared_ptr<ConditionalNode> node) {
+    current->PushNode(node);
+    current = node.get();
+
+    return this;
+}
+
 BehaviorTreeBuilder *BehaviorTreeBuilder::Close() {
     current = current->GetParent();
     return this;

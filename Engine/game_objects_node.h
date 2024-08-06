@@ -149,6 +149,187 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
     }
 };
 
+enum EnumAnimationState {
+    eIdle = 0,
+    eIdleToWalk = 1,
+    eWalk = 2,
+    eWalkToIdle = 3,
+    eDance = 4,
+};
+
+struct AnimationBlock : public common::IDataBlock {
+    AnimationData *aniData;
+    SkinnedMeshRenderer *renderer;
+    common::Input *input;
+    EnumAnimationState state;
+    int frame_count = 0;
+};
+
+class ReadKeyboard : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
+        auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
+        assert(animation_block != nullptr);
+
+        auto key_flag = animation_block->input->KeyState(87);
+
+        if (key_flag && animation_block->state != EnumAnimationState::eWalk) {
+
+            animation_block->frame_count = 0;
+            animation_block->state = EnumAnimationState::eIdleToWalk;
+        }
+
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
+class CheckWalk : public common::ConditionalNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
+        auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
+        assert(animation_block != nullptr);
+
+        if ((animation_block->state != EnumAnimationState::eIdleToWalk) &&
+            (animation_block->state != EnumAnimationState::eWalk) &&
+            (animation_block->state != EnumAnimationState::eWalkToIdle))
+            return common::EnumBehaviorTreeStatus::eSuccess;
+
+        common::ConditionalNode::OnInvoke();
+
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
+class IdleToWalk : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
+        auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
+        assert(animation_block != nullptr);
+
+        if (animation_block->state != EnumAnimationState::eIdleToWalk)
+            return common::EnumBehaviorTreeStatus::eFail;
+
+        animation_block->renderer->UpdateAnimation(
+            GraphicsManager::Instance().device_context,
+            EnumAnimationState::eIdleToWalk, animation_block->frame_count);
+        animation_block->frame_count += 1;
+
+        if (animation_block->aniData->clips[EnumAnimationState::eIdleToWalk]
+                .keys.size() <= animation_block->frame_count) {
+            animation_block->frame_count = 0;
+            animation_block->state = EnumAnimationState::eWalk;
+            return common::EnumBehaviorTreeStatus::eFail;
+        }
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
+class Walk : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
+        auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
+        assert(animation_block != nullptr);
+
+        if (animation_block->state != EnumAnimationState::eIdleToWalk)
+            return common::EnumBehaviorTreeStatus::eFail;
+
+        animation_block->renderer->UpdateAnimation(
+            GraphicsManager::Instance().device_context,
+            EnumAnimationState::eWalk, animation_block->frame_count);
+        animation_block->frame_count += 1;
+
+        auto key_flag = animation_block->input->KeyState(87);
+
+        if (!key_flag && animation_block->state == EnumAnimationState::eWalk) {
+
+            animation_block->frame_count = 0;
+            return common::EnumBehaviorTreeStatus::eFail;
+        }
+
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
+class WalkToIdle : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
+        auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
+        assert(animation_block != nullptr);
+
+        if (animation_block->state != EnumAnimationState::eWalkToIdle)
+            return common::EnumBehaviorTreeStatus::eFail;
+
+        animation_block->renderer->UpdateAnimation(
+            GraphicsManager::Instance().device_context,
+            EnumAnimationState::eWalkToIdle, animation_block->frame_count);
+        animation_block->frame_count += 1;
+
+        if (animation_block->aniData->clips[EnumAnimationState::eWalkToIdle]
+                .keys.size() <= animation_block->frame_count) {
+            animation_block->frame_count = 0;
+            animation_block->state = EnumAnimationState::eIdle;
+            return common::EnumBehaviorTreeStatus::eFail;
+        }
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
+class CheckIdle : public common::ConditionalNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
+        auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
+        assert(animation_block != nullptr);
+
+        if (animation_block->state != EnumAnimationState::eIdle)
+            return common::EnumBehaviorTreeStatus::eSuccess;
+
+        common::ConditionalNode::OnInvoke();
+
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
+class Idle : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
+        auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
+        assert(animation_block != nullptr);
+
+        animation_block->renderer->UpdateAnimation(
+            GraphicsManager::Instance().device_context,
+            EnumAnimationState::eIdle, animation_block->frame_count);
+        animation_block->frame_count += 1;
+
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
+}; // must be success
+
+class Animator : public Component, public common::BehaviorTreeBuilder {
+  public:
+    void Initialize(AnimationData *aniData, SkinnedMeshRenderer *renderer,
+                    common::Input *input) {
+        block.aniData = aniData;
+        block.renderer = renderer;
+        block.input = input;
+    };
+    void Updete() {
+        // clang-format off
+        Build(&block)
+            ->Sequence()
+                ->Excute(std::make_shared<ReadKeyboard>())
+                ->Conditional(std::make_shared<CheckWalk>())
+                    ->Selector()
+                        ->Excute(std::make_shared<IdleToWalk>())
+                        ->Excute(std::make_shared<Walk>())
+                        ->Excute(std::make_shared<WalkToIdle>())
+                    ->Close()
+                ->Close()
+                ->Conditional(std::make_shared<CheckIdle>())
+                    ->Excute(std::make_shared<Idle>())
+                ->Close()
+            ->Close()
+        ->Run();
+        // clang-format on
+    };
+    void Show(){};
+
+  private:
+    AnimationBlock block;
+};
+
 class PlayerNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
@@ -167,8 +348,8 @@ class PlayerNodeInvoker : public common::BehaviorActionNode {
                 "BreakdanceFreezeVar2.fbx"};
 
             AnimationData aniData;
-            auto [meshes, _] = GeometryGenerator::ReadAnimationFromFile(
-                path, "character.fbx");
+            auto [meshes, _] =
+                GeometryGenerator::ReadAnimationFromFile(path, "character.fbx");
 
             for (auto &name : clipNames) {
                 auto [_, ani] =
@@ -184,31 +365,27 @@ class PlayerNodeInvoker : public common::BehaviorActionNode {
             Vector3 center(0.0f, 0.0f, 2.0f);
             auto renderer = std::make_shared<SkinnedMeshRenderer>(
                 GraphicsManager::Instance().device,
-                GraphicsManager::Instance().device_context, meshes,
-                aniData);
+                GraphicsManager::Instance().device_context, meshes, aniData);
 
             renderer->material_consts.GetCpu().albedoFactor = Vector3(1.0f);
             renderer->material_consts.GetCpu().roughnessFactor = 0.8f;
             renderer->material_consts.GetCpu().metallicFactor = 0.0f;
             renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
-                                        Matrix::CreateTranslation(center));
+                                     Matrix::CreateTranslation(center));
 
             manager->player = std::make_shared<Model>();
             manager->player->AddComponent(EnumComponentType::eRenderer,
-                                            renderer);
-
+                                          renderer);
+            animator.Initialize(&renderer->m_aniData, renderer.get(),
+                                black_board->input.get());
             break;
         }
         case EnumStageType::eUpdate: {
             auto renderer =
                 (SkinnedMeshRenderer *)manager->player->GetComponent(
                     EnumComponentType::eRenderer);
-            static int frameCount = 0;
-            static int state = 0;
-            renderer->UpdateAnimation(
-                GraphicsManager::Instance().device_context, state,
-                frameCount);
-            frameCount += 1;
+
+            animator.Updete();
 
             renderer->UpdateConstantBuffers(
                 GraphicsManager::Instance().device,
@@ -219,12 +396,12 @@ class PlayerNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eRender: {
             GraphicsManager::Instance().SetPipelineState(
                 manager->draw_wire ? Graphics::skinnedWirePSO
-                                    : Graphics::skinnedSolidPSO);
+                                   : Graphics::skinnedSolidPSO);
             auto renderer =
                 (SkinnedMeshRenderer *)manager->player->GetComponent(
                     EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
-            
+
             break;
         }
         default:
@@ -233,8 +410,8 @@ class PlayerNodeInvoker : public common::BehaviorActionNode {
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
+    Animator animator;
 };
-
 
 class OnlyDepthNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {

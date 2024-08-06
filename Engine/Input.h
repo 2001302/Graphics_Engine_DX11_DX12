@@ -11,8 +11,14 @@ class Input {
     }
     int MouseX() { return mouse_x; }
     int MouseY() { return mouse_y; }
+    void KeyPressed(int key, bool flag) { key_pressed[key] = flag; }
+    bool KeyState(int key) { return key_pressed[key]; }
+
   private:
     int mouse_x, mouse_y;
+    bool key_pressed[256] = {
+        false,
+    };
 };
-} // namespace engine
+} // namespace common
 #endif

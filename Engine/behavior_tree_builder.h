@@ -23,6 +23,7 @@ class BehaviorTreeBuilder {
     BehaviorTreeBuilder *Excute(std::shared_ptr<BehaviorActionNode> node);
     BehaviorTreeBuilder *Sequence();
     BehaviorTreeBuilder *Selector();
+    BehaviorTreeBuilder *Conditional(std::shared_ptr<ConditionalNode> node);
     BehaviorTreeBuilder *Loop(std::map<int, common::INode *> target_ids);
     BehaviorTreeBuilder *Close();
 

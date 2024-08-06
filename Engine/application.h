@@ -109,10 +109,14 @@ class Application : public common::Platform, TreeNode {
             break;
         }
         case WM_KEYDOWN:
+            black_board->input->KeyPressed(wparam,true);
             if (wparam == VK_ESCAPE) {
                 OnStop();
                 DestroyWindow(main_window);
             }
+            break;
+        case WM_KEYUP:
+            black_board->input->KeyPressed(wparam, false);
             break;
         case WM_DESTROY:
             ::PostQuitMessage(0);

@@ -10,6 +10,9 @@
 #include "mirror_effect_node.h"
 #include "shadow_effect_node.h"
 #include "shared_resource_node.h"
+#include "player_node.h"
+#include "gpu_node.h"
+#include "shared_resource_node.h"
 
 // clang-format off
 namespace engine {

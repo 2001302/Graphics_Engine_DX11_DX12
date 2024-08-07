@@ -205,6 +205,15 @@
     <ClInclude Include="animation_node.h">
       <Filter>Common\BehaviorTree\TreeBase</Filter>
     </ClInclude>
+    <ClInclude Include="gpu_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="depth_only_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="player_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />

@@ -149,6 +149,8 @@
     <ClInclude Include="compute_pso.h" />
     <ClInclude Include="conditional_node.h" />
     <ClInclude Include="constant_buffer.h" />
+    <ClInclude Include="depth_only_node.h" />
+    <ClInclude Include="gpu_node.h" />
     <ClInclude Include="graphics_common.h" />
     <ClInclude Include="graphics_pso.h" />
     <ClInclude Include="graphics_util.h" />
@@ -175,6 +177,7 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="geometry_generator.h" />
+    <ClInclude Include="player_node.h" />
     <ClInclude Include="post_process_node.h" />
     <ClInclude Include="shadow_effect_node.h" />
     <ClInclude Include="shared_resource_node.h" />

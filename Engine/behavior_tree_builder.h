@@ -6,6 +6,7 @@
 #include "parallel_node.h"
 #include "selector_node.h"
 #include "sequence_node.h"
+#include "animation_node.h"
 
 namespace common {
 
@@ -16,10 +17,8 @@ class BehaviorTreeBuilder {
         current = tree.get();
         return this;
     }
-    void Run() {
-        tree->Invoke();
-        tree.reset();
-    }
+    void Run() { tree->Invoke(); }
+    void Reset() { tree->Reset(); }
     BehaviorTreeBuilder *Excute(std::shared_ptr<BehaviorActionNode> node);
     BehaviorTreeBuilder *Sequence();
     BehaviorTreeBuilder *Selector();

@@ -202,6 +202,9 @@
     <ClInclude Include="info.h">
       <Filter>Common\Structure</Filter>
     </ClInclude>
+    <ClInclude Include="animation_node.h">
+      <Filter>Common\BehaviorTree\TreeBase</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -312,6 +315,9 @@
     </ClCompile>
     <ClCompile Include="setting_ui.cpp">
       <Filter>Engine\Application</Filter>
+    </ClCompile>
+    <ClCompile Include="animation_node.cpp">
+      <Filter>Common\BehaviorTree\TreeBase</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

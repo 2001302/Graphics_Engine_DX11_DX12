@@ -20,7 +20,6 @@ bool Application::OnStart() {
     tree->Build(black_board.get())
         ->Sequence()
             ->Excute(ShadowEffectNode())
-            ->Excute(ImGuiNode())
             ->Excute(LightNode())
             ->Excute(CameraNode())
             ->Excute(SkyboxNode())
@@ -29,6 +28,7 @@ bool Application::OnStart() {
             ->Excute(PostProcessing())
             ->Excute(GameObjectsNode())
             ->Excute(PlayerNode())
+            ->Excute(ImGuiNode())
         ->Close()
     ->Run();
     // clang-format on

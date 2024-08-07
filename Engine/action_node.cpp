@@ -8,9 +8,18 @@ EnumBehaviorTreeStatus BehaviorActionNode::Invoke() {
     return OnInvoke();
 }
 
-BehaviorActionNode *BehaviorActionNode::GetParent() { return parent_node; }
+EnumBehaviorTreeStatus BehaviorActionNode::Reset() {
+    for (auto &child : child_nodes) {
+        child->Reset();
+    }
+    return OnReset();
+}
 
 EnumBehaviorTreeStatus BehaviorActionNode::OnInvoke() {
+    return EnumBehaviorTreeStatus::eSuccess;
+}
+
+EnumBehaviorTreeStatus BehaviorActionNode::OnReset() {
     return EnumBehaviorTreeStatus::eSuccess;
 }
 
@@ -19,6 +28,8 @@ void BehaviorActionNode::PushNode(std::shared_ptr<BehaviorActionNode> node) {
     node->data_block = data_block;
     child_nodes.push_back(node);
 }
+
+BehaviorActionNode *BehaviorActionNode::GetParent() { return parent_node; }
 
 void BehaviorActionNode::PopNode() { child_nodes.pop_back(); }
 

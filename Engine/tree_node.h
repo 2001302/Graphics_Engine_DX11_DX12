@@ -30,21 +30,7 @@ class TreeNode {
         player_node =  std::make_shared<PlayerNodeInvoker>();
     }
 
-    std::shared_ptr<LightNodeInvoker> LightNode(){return light_node;}
-    std::shared_ptr<CameraNodeInvoker> CameraNode(){return camera_node;}
-    std::shared_ptr<SkyboxNodeInvoker> SkyboxNode(){return skybox_node;}
-    std::shared_ptr<MirrorEffectNodeInvoker> MirrorEffectNode(){return mirror_effect_node;}
-    std::shared_ptr<SharedResourceNodeInvoker> SharedResourceNode(){return shared_resource_node;}
-    std::shared_ptr<GameObjectNodeInvoker> GameObjectsNode(){return game_objects_node;}
-    std::shared_ptr<ShadowEffectNodeInvoker> ShadowEffectNode(){return shadow_effect_node;}
-    std::shared_ptr<ResolveBufferNode> ResolveBuffer(){return resolve_buffer;}
-    std::shared_ptr<GuiNodeInvoker> ImGuiNode(){return imgui_node;}
-    std::shared_ptr<PostProcessingNode> PostProcessing() {return post_processing;}
-    std::shared_ptr<PresentNode> Present(){return present;}
-    std::shared_ptr<PlayerNodeInvoker> PlayerNode(){return player_node;}
-
-
-  private:
+  protected:
     std::shared_ptr<LightNodeInvoker> light_node;
     std::shared_ptr<CameraNodeInvoker> camera_node;
     std::shared_ptr<SkyboxNodeInvoker> skybox_node;

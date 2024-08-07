@@ -192,9 +192,7 @@ class CheckWalk : public common::ConditionalNode {
         auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
         assert(animation_block != nullptr);
 
-        if ((animation_block->state != EnumAnimationState::eIdleToWalk) &&
-            (animation_block->state != EnumAnimationState::eWalk) &&
-            (animation_block->state != EnumAnimationState::eWalkToIdle))
+        if (animation_block->state != EnumAnimationState::eWalk)
             return common::EnumBehaviorTreeStatus::eSuccess;
 
         common::ConditionalNode::OnInvoke();
@@ -233,6 +231,7 @@ class IdleToWalk : public common::AnimationNode {
         if (animation_block->aniData->clips[EnumAnimationState::eIdleToWalk]
                 .keys.size() <= frame_count) {
             is_done = true;
+            std::cout << "finish IdleToWalk" << std::endl;
             return common::EnumBehaviorTreeStatus::eSuccess;
         }
         return common::EnumBehaviorTreeStatus::eRunning;
@@ -244,18 +243,16 @@ class Walk : public common::AnimationNode {
         auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
         assert(animation_block != nullptr);
 
-        if (is_done)
+        if (animation_block->state != EnumAnimationState::eWalk || is_done) {
+            is_done = true;
             return common::EnumBehaviorTreeStatus::eSuccess;
+        }
 
         animation_block->renderer->UpdateAnimation(
             GraphicsManager::Instance().device_context,
             EnumAnimationState::eWalk, frame_count);
         frame_count += 1;
 
-        if (animation_block->state != EnumAnimationState::eWalk) {
-            is_done = true;
-            return common::EnumBehaviorTreeStatus::eSuccess;
-        }
         return common::EnumBehaviorTreeStatus::eRunning;
     }
 };
@@ -302,7 +299,7 @@ class Idle : public common::AnimationNode {
 
         return common::EnumBehaviorTreeStatus::eRunning;
     }
-}; // must be success
+};
 
 class Animator : public Component, public common::BehaviorTreeBuilder {
   public:
@@ -325,10 +322,12 @@ class Animator : public Component, public common::BehaviorTreeBuilder {
         Build(&block)
             ->Sequence()
                 ->Excute(animation_state)
-                ->Conditional(check_walk)
-                    ->Sequence()
+                ->Sequence()
+                    ->Conditional(check_walk)
                         ->Excute(idle_to_walk)
-                        ->Excute(walk)
+                    ->Close()
+                    ->Excute(walk)
+                    ->Conditional(check_idle)
                         ->Excute(walk_to_idle)
                     ->Close()
                 ->Close()

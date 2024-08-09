@@ -304,15 +304,6 @@ void MeshRenderer::Render(ComPtr<ID3D11DeviceContext> &context) {
     }
 }
 
-void MeshRenderer::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
-                               int frame) {
-    // class SkinnedMeshRenderer에서 override
-    cout << "Renderer::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, "
-            "int clipId, int frame) was not implemented."
-         << endl;
-    exit(-1);
-}
-
 void MeshRenderer::RenderNormals(ComPtr<ID3D11DeviceContext> &context) {
     for (const auto &mesh : meshes) {
         ID3D11Buffer *constBuffers[2] = {mesh->meshConstsGPU.Get(),

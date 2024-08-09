@@ -141,6 +141,7 @@
   <ItemGroup>
     <ClInclude Include="animation_clip.h" />
     <ClInclude Include="animation_node.h" />
+    <ClInclude Include="animator.h" />
     <ClInclude Include="application.h" />
     <ClInclude Include="behavior_tree_builder.h" />
     <ClInclude Include="black_board.h" />
@@ -213,6 +214,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="animation_node.cpp" />
+    <ClCompile Include="animator.cpp" />
     <ClCompile Include="application.cpp" />
     <ClCompile Include="behavior_tree_builder.cpp" />
     <ClCompile Include="conditional_node.cpp" />
@@ -228,6 +230,7 @@
     <ClCompile Include="action_node.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="graphics_manager.cpp" />
+    <ClCompile Include="player_node.cpp" />
     <ClCompile Include="skinned_mesh_renderer.cpp" />
     <ClCompile Include="ui.cpp" />
     <ClCompile Include="entity.cpp" />

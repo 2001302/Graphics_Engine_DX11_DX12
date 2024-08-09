@@ -214,6 +214,9 @@
     <ClInclude Include="player_node.h">
       <Filter>Engine\DirectX\DirectX11\BehaviorTreeNode</Filter>
     </ClInclude>
+    <ClInclude Include="animator.h">
+      <Filter>Engine\DirectX\DirectX11\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -327,6 +330,12 @@
     </ClCompile>
     <ClCompile Include="animation_node.cpp">
       <Filter>Common\BehaviorTree\TreeBase</Filter>
+    </ClCompile>
+    <ClCompile Include="animator.cpp">
+      <Filter>Engine\DirectX\DirectX11\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="player_node.cpp">
+      <Filter>Engine\DirectX\DirectX11\BehaviorTreeNode</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

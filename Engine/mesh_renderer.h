@@ -43,8 +43,6 @@ class MeshRenderer : public Component {
     virtual GraphicsPSO &GetReflectPSO(const bool wired);
 
     virtual void Render(ComPtr<ID3D11DeviceContext> &context);
-    virtual void UpdateAnimation(ComPtr<ID3D11DeviceContext> &context,
-                                 int clipId, int frame);
     virtual void RenderNormals(ComPtr<ID3D11DeviceContext> &context);
     virtual void RenderWireBoundingBox(ComPtr<ID3D11DeviceContext> &context);
     virtual void RenderWireBoundingSphere(ComPtr<ID3D11DeviceContext> &context);

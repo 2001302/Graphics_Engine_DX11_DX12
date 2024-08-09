@@ -51,6 +51,12 @@ struct AnimationData {
     Matrix accumulatedRootTransform = Matrix();
     Vector3 prevPos = Vector3(0.0f);
 
+    bool IsClipEnd(int clipId, int frame) {
+        if (clips[clipId].numKeys <= frame)
+            return true;
+        return false;
+    }
+
     Matrix Get(int clipId, int boneId, int frame) {
 
         return defaultTransform.Invert() * offsetMatrices[boneId] *

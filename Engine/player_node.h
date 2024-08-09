@@ -24,7 +24,7 @@ struct AnimationBlock : public common::IDataBlock {
     EnumAnimationState state;
 };
 
-class AnimationState : public common::BehaviorActionNode {
+class SetAnimationState : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
         auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
         assert(animation_block != nullptr);
@@ -65,9 +65,8 @@ class IdleToWalk : public common::AnimationNode {
             EnumAnimationState::eIdleToWalk, frame_count);
         frame_count += 1;
 
-        if (animation_block->aniData->clips[EnumAnimationState::eIdleToWalk]
-                .keys[0]
-                .size() <= frame_count) {
+        if (animation_block->aniData->IsClipEnd(EnumAnimationState::eIdleToWalk,
+                                                frame_count)) {
             is_done = true;
             return common::EnumBehaviorTreeStatus::eSuccess;
         }
@@ -85,7 +84,7 @@ class Walk : public common::AnimationNode {
 
         animation_block->renderer->UpdateAnimation(
             GraphicsManager::Instance().device_context,
-            EnumAnimationState::eWalk, frame_count);
+            EnumAnimationState::eWalk, frame_count/3);
         frame_count += 1;
 
         auto forward =
@@ -99,7 +98,7 @@ class Walk : public common::AnimationNode {
             Vector3(0.0f));
 
         animation_block->renderer->UpdateWorldRow(
-            Matrix::CreateTranslation(translation+(forward*0.01f)) *
+            Matrix::CreateTranslation(translation + (forward * 0.01f)) *
             animation_block->renderer->mesh_consts.GetCpu().world);
 
         return common::EnumBehaviorTreeStatus::eRunning;
@@ -119,9 +118,8 @@ class WalkToIdle : public common::AnimationNode {
             EnumAnimationState::eWalkToIdle, frame_count);
         frame_count += 1;
 
-        if (animation_block->aniData->clips[EnumAnimationState::eWalkToIdle]
-                .keys[0]
-                .size() <= frame_count) {
+        if (animation_block->aniData->IsClipEnd(EnumAnimationState::eWalkToIdle,
+                                                frame_count)) {
             is_done = true;
             return common::EnumBehaviorTreeStatus::eSuccess;
         }
@@ -129,7 +127,7 @@ class WalkToIdle : public common::AnimationNode {
     }
 };
 
-class FinishWalk : public common::AnimationNode {
+class StopWalk : public common::AnimationNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
         auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
         assert(animation_block != nullptr);
@@ -164,24 +162,25 @@ class Animator : public Component, public common::BehaviorTreeBuilder {
         block.renderer = renderer;
         block.input = input;
 
-        animation_state = std::make_shared<AnimationState>();
+        set_state = std::make_shared<SetAnimationState>();
         check_walk = std::make_shared<CheckWalk>();
         idle_to_walk = std::make_shared<IdleToWalk>();
         walk = std::make_shared<Walk>();
         walk_to_idle = std::make_shared<WalkToIdle>();
         idle = std::make_shared<Idle>();
-        finish_walk = std::make_shared<FinishWalk>();
+        stop_walk = std::make_shared<StopWalk>();
 
         // clang-format off
         Build(&block)
-            ->Excute(animation_state)
+            ->Excute(set_state)
             ->Selector()
                 ->Conditional(check_walk)
                     ->Sequence()
+                        //move forward
                         ->Excute(idle_to_walk)
                         ->Excute(walk)
                         ->Excute(walk_to_idle)
-                        ->Excute(finish_walk)
+                        ->Excute(stop_walk)
                     ->Close()
                 ->Close()
                 ->Excute(idle)
@@ -194,12 +193,12 @@ class Animator : public Component, public common::BehaviorTreeBuilder {
   private:
     AnimationBlock block;
 
-    std::shared_ptr<AnimationState> animation_state;
+    std::shared_ptr<SetAnimationState> set_state;
     std::shared_ptr<IdleToWalk> idle_to_walk;
     std::shared_ptr<Walk> walk;
     std::shared_ptr<WalkToIdle> walk_to_idle;
     std::shared_ptr<Idle> idle;
-    std::shared_ptr<FinishWalk> finish_walk;
+    std::shared_ptr<StopWalk> stop_walk;
     std::shared_ptr<CheckWalk> check_walk;
 };
 
@@ -235,7 +234,7 @@ class PlayerNodeInvoker : public common::BehaviorActionNode {
                 }
             }
 
-            Vector3 center(0.0f, 0.0f, 0.0f);
+            Vector3 center(0.0f, 0.0f, 1.5f);
             auto renderer = std::make_shared<SkinnedMeshRenderer>(
                 GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context, meshes, aniData);

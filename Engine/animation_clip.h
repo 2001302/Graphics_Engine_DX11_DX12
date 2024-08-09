@@ -55,12 +55,6 @@ struct AnimationData {
 
         return defaultTransform.Invert() * offsetMatrices[boneId] *
                boneTransforms[boneId] * defaultTransform;
-
-        // defaultTransform은 모델을 읽어들일때 GeometryGenerator::Normalize()
-        // 에서 계산 defaultTransform.Invert() * offsetMatrices[boneId]를 미리
-        // 계산해서 합치고 defaultTransform * rootTransform을 미리 계산해놓을
-        // 수도 있습니다. 여기는 교육용 예제라서 좌표계 변환 사례로 참고하시라고
-        // 남겨놨습니다.
     }
 
     void Update(int clipId, int frame) {
@@ -82,23 +76,22 @@ struct AnimationData {
                            ? keys[frame % keys.size()]
                            : AnimationClip::Key(); // key가 reference 아님
 
-            // Root일 경우
+            // Root
             if (parentIdx < 0) {
                 if (frame != 0) {
-                    accumulatedRootTransform =
-                        Matrix::CreateTranslation(key.pos - prevPos) *
-                        accumulatedRootTransform;
+                    //accumulatedRootTransform =
+                    //    Matrix::CreateTranslation(key.pos - prevPos) *
+                    //    accumulatedRootTransform;
                 } else {
                     auto temp = accumulatedRootTransform.Translation();
-                    temp.y = key.pos.y; // 높이 방향만 첫 프레임으로 보정
+                    temp.y = key.pos.y;
                     accumulatedRootTransform.Translation(temp);
                 }
 
                 prevPos = key.pos;
-                key.pos = Vector3(0.0f); // 대신에 이동 취소
+                key.pos = Vector3(0.0f);
             }
 
-            // TODO: parentMatrix 사용
             boneTransforms[boneId] = Matrix::CreateFromQuaternion(key.rot) *
                                      Matrix::CreateTranslation(key.pos) *
                                      parentMatrix;

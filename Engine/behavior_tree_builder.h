@@ -17,7 +17,9 @@ class BehaviorTreeBuilder {
         current = tree.get();
         return this;
     }
-    void Run() { tree->Invoke(); }
+    void Run() {
+        tree->Invoke();
+    }
     void Reset() { tree->Reset(); }
     BehaviorTreeBuilder *Excute(std::shared_ptr<BehaviorActionNode> node);
     BehaviorTreeBuilder *Sequence();

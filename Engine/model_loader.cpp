@@ -73,6 +73,7 @@ void ModelLoader::ReadAnimation(const aiScene *pScene) {
         clip.ticksPerSec = ani->mTicksPerSecond;
         clip.keys.resize(m_aniData.boneNameToId.size());
         clip.numChannels = ani->mNumChannels;
+        clip.numKeys = clip.keys.size();
 
         for (uint32_t c = 0; c < ani->mNumChannels; c++) {
             const aiNodeAnim *nodeAnim = ani->mChannels[c];

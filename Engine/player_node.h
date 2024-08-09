@@ -69,7 +69,6 @@ class IdleToWalk : public common::AnimationNode {
                 .keys[0]
                 .size() <= frame_count) {
             is_done = true;
-            std::cout << "IdleToWalk" << frame_count << std::endl;
             return common::EnumBehaviorTreeStatus::eSuccess;
         }
         return common::EnumBehaviorTreeStatus::eRunning;
@@ -81,7 +80,7 @@ class Walk : public common::AnimationNode {
         auto animation_block = dynamic_cast<AnimationBlock *>(data_block);
         assert(animation_block != nullptr);
 
-        if (!animation_block->input->KeyState(VK_UP)) 
+        if (!animation_block->input->KeyState(VK_UP))
             return common::EnumBehaviorTreeStatus::eSuccess;
 
         animation_block->renderer->UpdateAnimation(
@@ -89,20 +88,9 @@ class Walk : public common::AnimationNode {
             EnumAnimationState::eWalk, frame_count);
         frame_count += 1;
 
-        // DirectX::SimpleMath::Matrix rotationMatrix =
-        //     animation_block->renderer->mesh_consts.GetCpu().world;
-        // rotationMatrix.Translation(Vector3(0.0f)); // 이동 성분 제거
-
-        // Vector3 moveDirection = Vector3(0, 0, 1); // Z 축 방향
-
-        // Vector3 moveVector =
-        //     Vector3::TransformNormal(moveDirection, rotationMatrix) *
-        //     0.0000001f;
-
-        // Vector3 translation =
-        //     animation_block->renderer->mesh_consts.GetCpu().world.Translation();
-
-        // animation_block->renderer->mesh_consts.GetCpu().world.Translation(Vector3(0.0f));
+        auto forward =
+            animation_block->renderer->mesh_consts.GetCpu().world.Forward();
+        forward.Normalize();
 
         Vector3 translation =
             animation_block->renderer->mesh_consts.GetCpu().world.Translation();
@@ -111,14 +99,8 @@ class Walk : public common::AnimationNode {
             Vector3(0.0f));
 
         animation_block->renderer->UpdateWorldRow(
-            Matrix::CreateTranslation(Vector3(0.0f, 0.0f, 0.1f) * 0.01f *
-                                      frame_count) *
+            Matrix::CreateTranslation(translation+(forward*0.01f)) *
             animation_block->renderer->mesh_consts.GetCpu().world);
-
-        auto debug =
-            animation_block->renderer->mesh_consts.GetCpu().world.Translation();
-
-        std::cout << "Walk" << frame_count << std::endl;
 
         return common::EnumBehaviorTreeStatus::eRunning;
     }
@@ -141,7 +123,6 @@ class WalkToIdle : public common::AnimationNode {
                 .keys[0]
                 .size() <= frame_count) {
             is_done = true;
-            std::cout << "WalkToIdle" << frame_count << std::endl;
             return common::EnumBehaviorTreeStatus::eSuccess;
         }
         return common::EnumBehaviorTreeStatus::eRunning;
@@ -207,9 +188,7 @@ class Animator : public Component, public common::BehaviorTreeBuilder {
             ->Close();
         // clang-format on
     };
-    void Updete() {
-        Run();
-    };
+    void Updete() { Run(); };
     void Show(){};
 
   private:
@@ -222,7 +201,6 @@ class Animator : public Component, public common::BehaviorTreeBuilder {
     std::shared_ptr<Idle> idle;
     std::shared_ptr<FinishWalk> finish_walk;
     std::shared_ptr<CheckWalk> check_walk;
-    
 };
 
 class PlayerNodeInvoker : public common::BehaviorActionNode {

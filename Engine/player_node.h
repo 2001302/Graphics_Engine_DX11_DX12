@@ -234,7 +234,7 @@ class PlayerNodeInvoker : public common::BehaviorActionNode {
                 }
             }
 
-            Vector3 center(0.0f, 0.0f, 1.5f);
+            Vector3 center(0.0f, 0.0f, 0.0f);
             auto renderer = std::make_shared<SkinnedMeshRenderer>(
                 GraphicsManager::Instance().device,
                 GraphicsManager::Instance().device_context, meshes, aniData);

@@ -52,7 +52,7 @@ struct AnimationData {
     Vector3 prevPos = Vector3(0.0f);
 
     bool IsClipEnd(int clipId, int frame) {
-        if (clips[clipId].numKeys <= frame)
+        if (clips[clipId].keys[0].size()<= frame)
             return true;
         return false;
     }

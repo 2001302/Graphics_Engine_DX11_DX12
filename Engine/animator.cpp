@@ -46,10 +46,11 @@ void Animator::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
     bone_transforms.Upload(context);
 }
 
-void Animator::UploadBoneBuffer() {
+void Animator::UploadBoneData() {
     GraphicsManager::Instance().device_context->VSSetShaderResources(
         9, 1, bone_transforms.GetAddressOfSRV());
 }
+
 void Animator::Move(MeshRenderer *renderer, Vector3 direction, float speed) {
     Vector3 translation = renderer->world_row.Translation();
     Quaternion rotation =
@@ -59,6 +60,7 @@ void Animator::Move(MeshRenderer *renderer, Vector3 direction, float speed) {
         Matrix::CreateFromQuaternion(rotation) *
         Matrix::CreateTranslation(translation + (direction * speed * 0.01f)));
 }
+
 void Animator::Turn(MeshRenderer *renderer, Vector3 direction, float speed) {
     Quaternion additional =
         Quaternion::CreateFromAxisAngle(direction, speed * 0.01f);

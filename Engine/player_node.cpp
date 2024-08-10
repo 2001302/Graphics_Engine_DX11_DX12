@@ -11,24 +11,24 @@ PlayerAnimator::PlayerAnimator(ComPtr<ID3D11Device> &device,
     block.renderer = renderer;
     block.input = input;
 
-    behavior_tree = std::make_shared<common::BehaviorTreeBuilder>();
-    set_state = std::make_shared<SetAnimationState>();
+    read_input = std::make_shared<ReadInput>();
     check_walk = std::make_shared<CheckWalk>();
     idle_to_walk = std::make_shared<IdleToWalk>();
     walk = std::make_shared<Walk>();
     walk_to_idle = std::make_shared<WalkToIdle>();
     idle = std::make_shared<Idle>();
     stop_walk = std::make_shared<StopWalk>();
+
+    Build();
 };
 
 void PlayerAnimator::Build() {
     // clang-format off
-        behavior_tree->Build(&block)
-            ->Excute(set_state)
+        behavior_tree.Build(&block)
+            ->Excute(read_input)
             ->Selector()
                 ->Conditional(check_walk)
                     ->Sequence()
-                        //move forward
                         ->Excute(idle_to_walk)
                         ->Excute(walk)
                         ->Excute(walk_to_idle)
@@ -40,7 +40,7 @@ void PlayerAnimator::Build() {
     // clang-format on
 };
 
-common::EnumBehaviorTreeStatus PlayerAnimator::SetAnimationState::OnInvoke() {
+common::EnumBehaviorTreeStatus PlayerAnimator::ReadInput::OnInvoke() {
     auto block = dynamic_cast<PlayerAnimator::AnimationBlock *>(data_block);
     assert(block != nullptr);
 

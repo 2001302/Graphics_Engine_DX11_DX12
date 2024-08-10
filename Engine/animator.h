@@ -23,7 +23,7 @@ class Animator : public Component {
                          int frame);
     void UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
                          float elapse_time);
-    void UploadBoneBuffer();
+    void UploadBoneData();
 
     void Move(MeshRenderer *renderer, Vector3 direction, float speed);
     void Turn(MeshRenderer *renderer, Vector3 direction, float speed);

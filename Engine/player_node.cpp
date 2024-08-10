@@ -51,6 +51,12 @@ common::EnumBehaviorTreeStatus PlayerAnimator::SetAnimationState::OnInvoke() {
         }
     }
 
+    if (block->input->KeyState(VK_LEFT)) {
+        block->animator->Turn(block->renderer, -Vector3::UnitY, 1.0f);
+    } else if (block->input->KeyState(VK_RIGHT)) {
+        block->animator->Turn(block->renderer, Vector3::UnitY, 1.0f);
+    }
+
     return common::EnumBehaviorTreeStatus::eSuccess;
 }
 
@@ -75,6 +81,8 @@ common::EnumBehaviorTreeStatus PlayerAnimator::IdleToWalk::OnInvoke() {
         GraphicsManager::Instance().device_context,
         PlayerAnimator::EnumAnimationState::eIdleToWalk, elapsed_time);
     elapsed_time += block->dt;
+    block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
+                          0.3f);
 
     if (block->animator->animation_data.IsClipEnd(
             PlayerAnimator::EnumAnimationState::eIdleToWalk, elapsed_time)) {
@@ -95,18 +103,8 @@ common::EnumBehaviorTreeStatus PlayerAnimator::Walk::OnInvoke() {
                                      PlayerAnimator::EnumAnimationState::eWalk,
                                      elapsed_time);
     elapsed_time += block->dt;
-
-    auto forward = block->renderer->mesh_consts.GetCpu().world.Forward();
-    forward.Normalize();
-
-    Vector3 translation =
-        block->renderer->mesh_consts.GetCpu().world.Translation();
-
-    block->renderer->mesh_consts.GetCpu().world.Translation(Vector3(0.0f));
-
-    block->renderer->UpdateWorldRow(
-        Matrix::CreateTranslation(translation + (forward * 0.01f)) *
-        block->renderer->mesh_consts.GetCpu().world);
+    block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
+                          1.0f);
 
     return common::EnumBehaviorTreeStatus::eRunning;
 }
@@ -122,6 +120,8 @@ common::EnumBehaviorTreeStatus PlayerAnimator::WalkToIdle::OnInvoke() {
         GraphicsManager::Instance().device_context,
         PlayerAnimator::EnumAnimationState::eWalkToIdle, elapsed_time);
     elapsed_time += block->dt;
+    block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
+                          0.3f);
 
     if (block->animator->animation_data.IsClipEnd(
             PlayerAnimator::EnumAnimationState::eWalkToIdle, elapsed_time)) {

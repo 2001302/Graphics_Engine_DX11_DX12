@@ -40,9 +40,9 @@ struct AnimationClip {
 
 struct AnimationData {
 
-    map<string, int32_t> boneNameToId; // 뼈 이름과 인덱스 정수
-    vector<string> boneIdToName; // boneNameToId의 Id 순서대로 뼈 이름 저장
-    vector<int32_t> boneParents; // 부모 뼈의 인덱스
+    map<string, int32_t> boneNameToId;  // 뼈 이름과 인덱스 정수
+    vector<string> boneIdToName;        // boneNameToId의 Id 순서대로 뼈 이름 저장
+    vector<int32_t> boneParents;        // 부모 뼈의 인덱스
     vector<Matrix> offsetMatrices;
     vector<Matrix> boneTransforms;
     vector<AnimationClip> clips;
@@ -51,8 +51,8 @@ struct AnimationData {
     Matrix accumulatedRootTransform = Matrix();
     Vector3 prevPos = Vector3(0.0f);
 
-    bool IsClipEnd(int clipId, int frame) {
-        if (clips[clipId].keys[0].size()<= frame)
+    bool IsClipEnd(int clipId, float elapse_time) {
+        if (clips[clipId].duration <= elapse_time)
             return true;
         return false;
     }

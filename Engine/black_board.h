@@ -9,11 +9,11 @@ namespace engine {
 
 struct BlackBoard : public common::IDataBlock {
     BlackBoard() {
-        render_block = std::make_shared<JobContext>();
+        job_context = std::make_shared<JobContext>();
         input = std::make_unique<common::Input>();
         gui = std::make_shared<SettingUi>();
     }
-    std::shared_ptr<JobContext> render_block;
+    std::shared_ptr<JobContext> job_context;
     std::shared_ptr<common::Input> input;
     std::shared_ptr<SettingUi> gui;
 };

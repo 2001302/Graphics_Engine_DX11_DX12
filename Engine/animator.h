@@ -20,6 +20,8 @@ class Animator : public Component {
                            const AnimationData &aniData);
     void UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
                          int frame);
+    void UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
+                         float elapse_time);
     void UploadBoneBuffer();
 
   public:

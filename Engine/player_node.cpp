@@ -73,11 +73,11 @@ common::EnumBehaviorTreeStatus PlayerAnimator::IdleToWalk::OnInvoke() {
 
     block->animator->UpdateAnimation(
         GraphicsManager::Instance().device_context,
-        PlayerAnimator::EnumAnimationState::eIdleToWalk, frame_count);
-    frame_count += 1;
+        PlayerAnimator::EnumAnimationState::eIdleToWalk, elapsed_time);
+    elapsed_time += block->dt;
 
     if (block->animator->animation_data.IsClipEnd(
-            PlayerAnimator::EnumAnimationState::eIdleToWalk, frame_count)) {
+            PlayerAnimator::EnumAnimationState::eIdleToWalk, elapsed_time)) {
         is_done = true;
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
@@ -93,8 +93,8 @@ common::EnumBehaviorTreeStatus PlayerAnimator::Walk::OnInvoke() {
 
     block->animator->UpdateAnimation(GraphicsManager::Instance().device_context,
                                      PlayerAnimator::EnumAnimationState::eWalk,
-                                     frame_count / 3);
-    frame_count += 1;
+                                     elapsed_time);
+    elapsed_time += block->dt;
 
     auto forward = block->renderer->mesh_consts.GetCpu().world.Forward();
     forward.Normalize();
@@ -120,11 +120,11 @@ common::EnumBehaviorTreeStatus PlayerAnimator::WalkToIdle::OnInvoke() {
 
     block->animator->UpdateAnimation(
         GraphicsManager::Instance().device_context,
-        PlayerAnimator::EnumAnimationState::eWalkToIdle, frame_count);
-    frame_count += 1;
+        PlayerAnimator::EnumAnimationState::eWalkToIdle, elapsed_time);
+    elapsed_time += block->dt;
 
     if (block->animator->animation_data.IsClipEnd(
-            PlayerAnimator::EnumAnimationState::eWalkToIdle, frame_count)) {
+            PlayerAnimator::EnumAnimationState::eWalkToIdle, elapsed_time)) {
         is_done = true;
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
@@ -148,8 +148,8 @@ common::EnumBehaviorTreeStatus PlayerAnimator::Idle::OnInvoke() {
 
     block->animator->UpdateAnimation(GraphicsManager::Instance().device_context,
                                      PlayerAnimator::EnumAnimationState::eIdle,
-                                     frame_count);
-    frame_count += 1;
+                                     elapsed_time);
+    elapsed_time += block->dt;
 
     return common::EnumBehaviorTreeStatus::eRunning;
 }

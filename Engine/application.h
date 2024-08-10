@@ -58,7 +58,7 @@ class Application : public common::Platform, TreeNode {
                 if (CheckIfMouseInViewport(black_board->gui.get(),
                                            LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseRightDragRequest(
-                        black_board->render_block.get(), black_board->input,
+                        black_board->job_context.get(), black_board->input,
                         LOWORD(lparam), HIWORD(lparam));
                 }
             }
@@ -66,7 +66,7 @@ class Application : public common::Platform, TreeNode {
                 if (CheckIfMouseInViewport(black_board->gui.get(),
                                            LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseWheelDragRequest(
-                        black_board->render_block.get(), black_board->input,
+                        black_board->job_context.get(), black_board->input,
                         LOWORD(lparam), HIWORD(lparam));
                 }
             }
@@ -76,7 +76,7 @@ class Application : public common::Platform, TreeNode {
             if (CheckIfMouseInViewport(black_board->gui.get(), LOWORD(lparam),
                                        HIWORD(lparam))) {
                 return message_receiver->OnMouseWheelRequest(
-                    black_board->render_block.get(), black_board->input,
+                    black_board->job_context.get(), black_board->input,
                     GET_WHEEL_DELTA_WPARAM(wparam));
             }
             break;
@@ -90,22 +90,22 @@ class Application : public common::Platform, TreeNode {
         }
         case WM_MODEL_LOAD: {
             return message_receiver->OnModelLoadRequest(
-                black_board->render_block.get(), main_window);
+                black_board->job_context.get(), main_window);
             break;
         }
         case WM_SPHERE_LOAD: {
             return message_receiver->OnSphereLoadRequest(
-                black_board->render_block.get());
+                black_board->job_context.get());
             break;
         }
         case WM_BOX_LOAD: {
             return message_receiver->OnBoxLoadRequest(
-                black_board->render_block.get());
+                black_board->job_context.get());
             break;
         }
         case WM_CYLINDER_LOAD: {
             return message_receiver->OnCylinderLoadRequest(
-                black_board->render_block.get());
+                black_board->job_context.get());
             break;
         }
         case WM_KEYDOWN:

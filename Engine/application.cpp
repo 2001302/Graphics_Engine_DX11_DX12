@@ -13,7 +13,7 @@ bool Application::OnStart() {
     Platform::OnStart();
 
     GraphicsManager::Instance().Initialize();
-    black_board->render_block->stage_type = EnumStageType::eInitialize;
+    black_board->job_context->stage_type = EnumStageType::eInitialize;
 
     // clang-format off
     auto tree = std::make_shared<common::BehaviorTreeBuilder>();
@@ -48,8 +48,8 @@ bool Application::OnFrame() {
 
 bool Application::OnUpdate(float dt) {
 
-    black_board->render_block->dt = dt;
-    black_board->render_block->stage_type = EnumStageType::eUpdate;
+    black_board->job_context->dt = dt;
+    black_board->job_context->stage_type = EnumStageType::eUpdate;
 
     // clang-format off
     auto tree = std::make_shared<common::BehaviorTreeBuilder>();
@@ -72,7 +72,7 @@ bool Application::OnUpdate(float dt) {
 bool Application::OnRender() {
 
     //input->Frame();
-    black_board->render_block->stage_type = EnumStageType::eRender;
+    black_board->job_context->stage_type = EnumStageType::eRender;
 
     // clang-format off
     auto tree = std::make_shared<common::BehaviorTreeBuilder>();
@@ -101,11 +101,11 @@ bool Application::OnStop() {
 
     if (black_board) {
 
-        if (black_board->render_block) {
-            for (auto &model : black_board->render_block->models) {
+        if (black_board->job_context) {
+            for (auto &model : black_board->job_context->models) {
                 model.second.reset();
             }
-            black_board->render_block->camera.reset();
+            black_board->job_context->camera.reset();
         }
 
         if (black_board->gui) {

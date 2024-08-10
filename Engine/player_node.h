@@ -30,6 +30,7 @@ class PlayerAnimator : public Animator {
         PlayerAnimator *animator = 0;
         SkinnedMeshRenderer *renderer = 0;
         Input *input = 0;
+        float dt = 0.0f;
         EnumAnimationState state = EnumAnimationState::eIdle;
     };
 
@@ -62,7 +63,10 @@ class PlayerAnimator : public Animator {
     };
 
     void Build();
-    void Run() { behavior_tree->Run(); }
+    void Run(float dt) {
+        block.dt = dt;
+        behavior_tree->Run();
+    }
     void Show(){};
 
   private:
@@ -84,7 +88,7 @@ class PlayerNodeInvoker : public BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto manager = black_board->render_block;
+        auto manager = black_board->job_context;
         auto gui = black_board->gui;
 
         switch (manager->stage_type) {
@@ -141,7 +145,7 @@ class PlayerNodeInvoker : public BehaviorActionNode {
             auto animator = (PlayerAnimator *)manager->player->GetComponent(
                 EnumComponentType::eAnimator);
 
-            animator->Run();
+            animator->Run(manager->dt);
 
             renderer->UpdateConstantBuffers(
                 GraphicsManager::Instance().device,

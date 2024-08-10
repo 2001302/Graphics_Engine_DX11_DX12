@@ -69,7 +69,7 @@ void ModelLoader::ReadAnimation(const aiScene *pScene) {
 
         const aiAnimation *ani = pScene->mAnimations[i];
 
-        clip.duration = ani->mDuration;
+        clip.duration = ani->mDuration / 100.0f;
         clip.ticksPerSec = ani->mTicksPerSecond;
         clip.keys.resize(m_aniData.boneNameToId.size());
         clip.numChannels = ani->mNumChannels;

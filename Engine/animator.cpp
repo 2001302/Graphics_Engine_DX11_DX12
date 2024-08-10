@@ -6,7 +6,7 @@ Animator::Animator(ComPtr<ID3D11Device> &device, const AnimationData &aniData) {
 }
 
 void Animator::InitAnimationData(ComPtr<ID3D11Device> &device,
-                       const AnimationData &aniData) {
+                                 const AnimationData &aniData) {
     if (!aniData.clips.empty()) {
         animation_data = aniData;
 
@@ -19,7 +19,7 @@ void Animator::InitAnimationData(ComPtr<ID3D11Device> &device,
 }
 
 void Animator::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
-                     int frame) {
+                               int frame) {
 
     animation_data.Update(clipId, frame);
 
@@ -30,6 +30,22 @@ void Animator::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
 
     bone_transforms.Upload(context);
 }
+
+void Animator::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
+                               float elapse_time) {
+    auto frame = animation_data.clips[clipId].keys[0].size() *
+                 (elapse_time / (animation_data.clips[clipId].duration));
+
+    animation_data.Update(clipId, frame);
+
+    for (int i = 0; i < bone_transforms.m_cpu.size(); i++) {
+        bone_transforms.m_cpu[i] =
+            animation_data.Get(clipId, i, frame).Transpose();
+    }
+
+    bone_transforms.Upload(context);
+}
+
 void Animator::UploadBoneBuffer() {
     GraphicsManager::Instance().device_context->VSSetShaderResources(
         9, 1, bone_transforms.GetAddressOfSRV());

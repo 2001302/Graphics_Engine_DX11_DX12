@@ -16,7 +16,7 @@ class PostProcessingNode : public common::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto manager = black_board->render_block;
+        auto manager = black_board->job_context;
 
         auto device = GraphicsManager::Instance().device;
         auto context = GraphicsManager::Instance().device_context;

@@ -52,7 +52,7 @@ class JobContext : public common::IInfo {
             ImGui::TreePop();
         }
 
-        ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+        ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("Skybox")) {
             ImGui::SliderFloat("Strength", &global_consts_CPU.strengthIBL, 0.0f,
                                5.0f);
@@ -67,7 +67,7 @@ class JobContext : public common::IInfo {
             ImGui::TreePop();
         }
 
-        ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+        ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("Mirror")) {
 
             ImGui::SliderFloat("Alpha", &mirror_alpha, 0.0f, 1.0f);
@@ -91,7 +91,7 @@ class JobContext : public common::IInfo {
             ImGui::TreePop();
         }
 
-        ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+        ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("Light")) {
             ImGui::Checkbox("Light Rotate", &light_rotate);
             ImGui::DragFloat3("Position",
@@ -108,7 +108,7 @@ class JobContext : public common::IInfo {
             ImGui::TreePop();
         }
 
-        ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+        ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("Material")) {
             ImGui::SliderFloat("LodBias", &global_consts_CPU.lodBias, 0.0f,
                                10.0f);

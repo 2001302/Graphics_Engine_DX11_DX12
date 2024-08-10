@@ -64,7 +64,7 @@ void SettingUi::TopBar() {
                      ImGuiWindowFlags_NoScrollbar);
     FrameRate();
 
-    ImGui::SameLine(left_panel_width, 0.0f);
+    ImGui::SameLine(left_panel_width + 3.0f, 0.0f);
     if (ImGui::Selectable("3D Viewport", view_type == EnumViewType::e3dViewport,
                           ImGuiSelectableFlags_None,
                           ImVec2(button_width, 0.0f))) {
@@ -111,7 +111,7 @@ void SettingUi::MainView() {
 void SettingUi::LeftPanel() {
     ImGui::PushItemWidth(left_panel_width / 2.0f);
 
-    ImGui::SetNextItemOpen(true, ImGuiCond_Once);
+    ImGui::SetNextItemOpen(false, ImGuiCond_Once);
     if (ImGui::TreeNode("Assets")) {
 
         if (ImGui::Button("Sphere")) {

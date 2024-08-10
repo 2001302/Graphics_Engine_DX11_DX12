@@ -9,7 +9,7 @@ enum EnumComponentType {
     eAnimator = 1,
 };
 
-class Component : public common::INode {
+class Component {
   public:
     Component(){};
 };

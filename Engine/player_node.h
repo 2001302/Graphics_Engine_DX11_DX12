@@ -13,10 +13,6 @@ using namespace common;
 
 class PlayerAnimator : public Animator {
   public:
-    PlayerAnimator(){};
-    PlayerAnimator(ComPtr<ID3D11Device> &device, const AnimationData &aniData,
-                   SkinnedMeshRenderer *renderer, Input *input);
-
     enum EnumAnimationState {
         eIdle = 0,
         eIdleToWalk = 1,
@@ -27,12 +23,30 @@ class PlayerAnimator : public Animator {
     };
 
     struct AnimationBlock : public IDataBlock {
-        PlayerAnimator *animator = 0;
-        SkinnedMeshRenderer *renderer = 0;
-        Input *input = 0;
-        float dt = 0.0f;
-        EnumAnimationState state = EnumAnimationState::eIdle;
+        AnimationBlock()
+            : state(EnumAnimationState::eIdle), animator(0), renderer(0),
+              input(0), dt(0.0f){};
+
+        EnumAnimationState state;
+        PlayerAnimator *animator;
+        SkinnedMeshRenderer *renderer;
+        Input *input;
+        float dt;
     };
+
+    PlayerAnimator(){};
+    PlayerAnimator(ComPtr<ID3D11Device> &device, const AnimationData &aniData,
+                   SkinnedMeshRenderer *renderer, Input *input);
+
+    void Build();
+    void Run(float dt) {
+        block.dt = dt;
+        behavior_tree.Run();
+    }
+
+  private:
+    AnimationBlock block;
+    BehaviorTreeBuilder behavior_tree;
 
     struct ReadInput : public BehaviorActionNode {
         EnumBehaviorTreeStatus OnInvoke() override;
@@ -61,18 +75,6 @@ class PlayerAnimator : public Animator {
     struct Idle : public AnimationNode {
         EnumBehaviorTreeStatus OnInvoke() override;
     };
-
-    void Build();
-    void Run(float dt) {
-        block.dt = dt;
-        behavior_tree.Run();
-    }
-    void Show(){};
-
-  private:
-    AnimationBlock block;
-    BehaviorTreeBuilder behavior_tree;
-
     std::shared_ptr<ReadInput> read_input;
     std::shared_ptr<IdleToWalk> idle_to_walk;
     std::shared_ptr<Walk> walk;
@@ -121,7 +123,8 @@ class PlayerNodeInvoker : public BehaviorActionNode {
             renderer->material_consts.GetCpu().albedoFactor = Vector3(1.0f);
             renderer->material_consts.GetCpu().roughnessFactor = 0.8f;
             renderer->material_consts.GetCpu().metallicFactor = 0.0f;
-            renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
+            renderer->UpdateWorldRow(
+                Matrix::CreateScale(1.0f) *
                 Matrix::CreateTranslation(0.0f, 0.0f, 0.0f));
 
             auto animator = std::make_shared<PlayerAnimator>(
@@ -130,9 +133,9 @@ class PlayerNodeInvoker : public BehaviorActionNode {
 
             job_context->player = std::make_shared<Model>();
             job_context->player->AddComponent(EnumComponentType::eRenderer,
-                                          renderer);
+                                              renderer);
             job_context->player->AddComponent(EnumComponentType::eAnimator,
-                                          animator);
+                                              animator);
 
             break;
         }
@@ -154,7 +157,7 @@ class PlayerNodeInvoker : public BehaviorActionNode {
         case EnumStageType::eRender: {
             GraphicsManager::Instance().SetPipelineState(
                 job_context->draw_wire ? Graphics::skinnedWirePSO
-                                   : Graphics::skinnedSolidPSO);
+                                       : Graphics::skinnedSolidPSO);
             auto renderer =
                 (SkinnedMeshRenderer *)job_context->player->GetComponent(
                     EnumComponentType::eRenderer);

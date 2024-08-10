@@ -88,7 +88,7 @@ common::EnumBehaviorTreeStatus PlayerAnimator::IdleToWalk::OnInvoke() {
         GraphicsManager::Instance().device_context,
         PlayerAnimator::EnumAnimationState::eIdleToWalk, elapsed_time);
     block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
-                          0.3f);
+                          0.2f);
 
     return common::EnumBehaviorTreeStatus::eRunning;
 }
@@ -128,7 +128,7 @@ common::EnumBehaviorTreeStatus PlayerAnimator::WalkToIdle::OnInvoke() {
         GraphicsManager::Instance().device_context,
         PlayerAnimator::EnumAnimationState::eWalkToIdle, elapsed_time);
     block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
-                          0.3f);
+                          0.2f);
 
     return common::EnumBehaviorTreeStatus::eRunning;
 }

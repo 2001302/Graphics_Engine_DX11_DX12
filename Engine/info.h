@@ -7,7 +7,10 @@ namespace common {
 
 struct IInfo : public IEntity {
   public:
-    virtual void Show(){};
+    void Show() { OnShow(); };
+
+  private:
+    virtual void OnShow(){};
 };
 } // namespace common
 #endif

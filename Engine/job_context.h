@@ -45,7 +45,7 @@ class JobContext : public common::IInfo {
     DirectX::SimpleMath::Plane mirror_plane;
     float mirror_alpha = 1.0f; // opacity
 
-    void Show() override {
+    void OnShow() override {
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("General")) {
             ImGui::Checkbox("Wireframe", &draw_wire);
@@ -93,6 +93,7 @@ class JobContext : public common::IInfo {
 
         ImGui::SetNextItemOpen(true, ImGuiCond_Once);
         if (ImGui::TreeNode("Light")) {
+            ImGui::Checkbox("Light Rotate", &light_rotate);
             ImGui::DragFloat3("Position",
                                 &global_consts_CPU.lights[0].position.x,0.1f, -5.0f,
                                 5.0f);
@@ -111,7 +112,6 @@ class JobContext : public common::IInfo {
         if (ImGui::TreeNode("Material")) {
             ImGui::SliderFloat("LodBias", &global_consts_CPU.lodBias, 0.0f,
                                10.0f);
-
             ImGui::TreePop();
         }
     }

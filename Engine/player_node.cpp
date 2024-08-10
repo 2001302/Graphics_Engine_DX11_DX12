@@ -77,18 +77,19 @@ common::EnumBehaviorTreeStatus PlayerAnimator::IdleToWalk::OnInvoke() {
     if (is_done)
         return common::EnumBehaviorTreeStatus::eSuccess;
 
-    block->animator->UpdateAnimation(
-        GraphicsManager::Instance().device_context,
-        PlayerAnimator::EnumAnimationState::eIdleToWalk, elapsed_time);
-    elapsed_time += block->dt;
-    block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
-                          0.3f);
-
     if (block->animator->animation_data.IsClipEnd(
             PlayerAnimator::EnumAnimationState::eIdleToWalk, elapsed_time)) {
         is_done = true;
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
+    elapsed_time += block->dt;
+
+    block->animator->UpdateAnimation(
+        GraphicsManager::Instance().device_context,
+        PlayerAnimator::EnumAnimationState::eIdleToWalk, elapsed_time);
+    block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
+                          0.3f);
+
     return common::EnumBehaviorTreeStatus::eRunning;
 }
 
@@ -98,11 +99,11 @@ common::EnumBehaviorTreeStatus PlayerAnimator::Walk::OnInvoke() {
 
     if (!block->input->KeyState(VK_UP))
         return common::EnumBehaviorTreeStatus::eSuccess;
+    elapsed_time += block->dt;
 
     block->animator->UpdateAnimation(GraphicsManager::Instance().device_context,
                                      PlayerAnimator::EnumAnimationState::eWalk,
                                      elapsed_time);
-    elapsed_time += block->dt;
     block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
                           1.0f);
 
@@ -116,18 +117,19 @@ common::EnumBehaviorTreeStatus PlayerAnimator::WalkToIdle::OnInvoke() {
     if (is_done)
         return common::EnumBehaviorTreeStatus::eSuccess;
 
-    block->animator->UpdateAnimation(
-        GraphicsManager::Instance().device_context,
-        PlayerAnimator::EnumAnimationState::eWalkToIdle, elapsed_time);
-    elapsed_time += block->dt;
-    block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
-                          0.3f);
-
     if (block->animator->animation_data.IsClipEnd(
             PlayerAnimator::EnumAnimationState::eWalkToIdle, elapsed_time)) {
         is_done = true;
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
+    elapsed_time += block->dt;
+
+    block->animator->UpdateAnimation(
+        GraphicsManager::Instance().device_context,
+        PlayerAnimator::EnumAnimationState::eWalkToIdle, elapsed_time);
+    block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
+                          0.3f);
+
     return common::EnumBehaviorTreeStatus::eRunning;
 }
 

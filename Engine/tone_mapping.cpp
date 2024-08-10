@@ -16,19 +16,11 @@ void ToneMapping::Initialize(ComPtr<ID3D11Device> &device,
     mesh->indexCount = UINT(meshData.indices.size());
     GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
                                     mesh->indexBuffer);
-
-    // Combine + ToneMapping
-    const_data.dx = 1.0f / common::Env::Instance().screen_width;
-    const_data.dy = 1.0f / common::Env::Instance().screen_height;
-    const_data.strength = 0.0f; // Bloom strength
-    const_data.option1 = 1.0f;  // Exposure
-    const_data.option2 = 2.2f;  // Gamma
-    GraphicsUtil::CreateConstBuffer(device, const_data, const_buffer);
-    GraphicsUtil::UpdateBuffer(context, const_data, const_buffer);
 }
 
 void ToneMapping::Render(ComPtr<ID3D11Device> &device,
-                         ComPtr<ID3D11DeviceContext> &context) {
+                         ComPtr<ID3D11DeviceContext> &context,
+                         ComPtr<ID3D11Buffer> const_buffer) {
 
     context->PSSetSamplers(0, 1, Graphics::linearClampSS.GetAddressOf());
 

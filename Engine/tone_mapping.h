@@ -24,11 +24,10 @@ class ToneMapping : public Component {
                     ComPtr<ID3D11DeviceContext> &context);
 
     void Render(ComPtr<ID3D11Device> &device,
-                ComPtr<ID3D11DeviceContext> &context);
+                ComPtr<ID3D11DeviceContext> &context,
+                ComPtr<ID3D11Buffer> const_buffer);
 
   private:
-    ImageFilterConstData const_data = {};
-    ComPtr<ID3D11Buffer> const_buffer;
     std::shared_ptr<Mesh> mesh;
 };
 } // namespace engine

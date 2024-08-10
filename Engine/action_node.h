@@ -20,7 +20,7 @@ class IDisposable {
     virtual void Dispose(){};
 };
 
-class BehaviorActionNode : public common::INode {
+class BehaviorActionNode {
   public:
     BehaviorActionNode() : parent_node(0), target_object(0), data_block(0){};
     EnumBehaviorTreeStatus Invoke();

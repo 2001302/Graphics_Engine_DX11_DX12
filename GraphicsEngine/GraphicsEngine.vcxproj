@@ -143,7 +143,7 @@
     <ClInclude Include="animation_clip.h" />
     <ClInclude Include="animation_node.h" />
     <ClInclude Include="animator.h" />
-    <ClInclude Include="application.h" />
+    <ClInclude Include="engine.h" />
     <ClInclude Include="behavior_tree_builder.h" />
     <ClInclude Include="black_board.h" />
     <ClInclude Include="camera_node.h" />
@@ -218,7 +218,7 @@
   <ItemGroup>
     <ClCompile Include="animation_node.cpp" />
     <ClCompile Include="animator.cpp" />
-    <ClCompile Include="application.cpp" />
+    <ClCompile Include="engine.cpp" />
     <ClCompile Include="behavior_tree_builder.cpp" />
     <ClCompile Include="conditional_node.cpp" />
     <ClCompile Include="graphics_common.cpp" />

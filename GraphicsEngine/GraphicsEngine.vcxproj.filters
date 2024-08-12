@@ -160,9 +160,6 @@
     <ClInclude Include="tree_node.h">
       <Filter>Engine\DirectX\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="application.h">
-      <Filter>Engine\Application</Filter>
-    </ClInclude>
     <ClInclude Include="vertex.h">
       <Filter>Engine\DirectX\Model</Filter>
     </ClInclude>
@@ -193,9 +190,6 @@
     <ClInclude Include="job_context.h">
       <Filter>Engine\DirectX\Model</Filter>
     </ClInclude>
-    <ClInclude Include="black_board.h">
-      <Filter>Engine\Application</Filter>
-    </ClInclude>
     <ClInclude Include="info.h">
       <Filter>Common\Structure</Filter>
     </ClInclude>
@@ -222,6 +216,12 @@
     </ClInclude>
     <ClInclude Include="ground.h">
       <Filter>Engine\DirectX\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="black_board.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -322,9 +322,6 @@
     <ClCompile Include="skinned_mesh_renderer.cpp">
       <Filter>Engine\DirectX\Component</Filter>
     </ClCompile>
-    <ClCompile Include="application.cpp">
-      <Filter>Engine\Application</Filter>
-    </ClCompile>
     <ClCompile Include="camera.cpp">
       <Filter>Engine\DirectX\Model</Filter>
     </ClCompile>
@@ -342,6 +339,9 @@
     </ClCompile>
     <ClCompile Include="setting_ui.cpp">
       <Filter>Common\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="engine.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -374,9 +374,6 @@
     </Filter>
     <Filter Include="Engine\Util">
       <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Application">
-      <UniqueIdentifier>{782ccc14-aa2b-4b1c-a0be-d9883c9299f6}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\DirectX">
       <UniqueIdentifier>{4539fe58-1b22-43c4-a68f-931a52a07149}</UniqueIdentifier>

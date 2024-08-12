@@ -14,9 +14,9 @@ class Platform {
     Platform();
     ~Platform();
 
-    virtual bool OnStart();
+    virtual bool Start();
     virtual bool OnFrame();
-    virtual bool OnStop();
+    virtual bool Stop();
     void Run();
     virtual LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg,
                                             WPARAM wparam, LPARAM lparam) {

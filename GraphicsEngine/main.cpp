@@ -1,14 +1,11 @@
-#include "application.h"
+#include "engine.h"
 
-int main() {
-    std::unique_ptr<engine::Application> application =
-        std::make_unique<engine::Application>();
+void main() {
+    std::unique_ptr<engine::Engine> engine = std::make_unique<engine::Engine>();
 
-    if (application->OnStart()) {
-        application->Run();
+    if (engine->Start()) {
+        engine->Run();
     }
 
-    application->OnStop();
-
-    return 0;
+    engine->Stop();
 }

@@ -30,7 +30,7 @@ static LRESULT CALLBACK WndProc(HWND hwnd, UINT umessage, WPARAM wparam,
     }
 }
 
-bool Platform::OnStart() {
+bool Platform::Start() {
     InitializeWindow();
     return true;
 }
@@ -68,7 +68,7 @@ void Platform::Run() {
     return;
 }
 
-bool Platform::OnStop() {
+bool Platform::Stop() {
     // Shutdown the window.
     if (common::Env::Instance().full_screen) {
         ChangeDisplaySettings(NULL, 0);

@@ -1,16 +1,16 @@
-#include "application.h"
+#include "engine.h"
 #include "behavior_tree_builder.h"
 
 namespace engine {
 
-Application::Application() {
+Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
     message_receiver = std::make_unique<MessageReceiver>();
 };
 
-bool Application::OnStart() {
+bool Engine::Start() {
 
-    Platform::OnStart();
+    Platform::Start();
 
     GraphicsManager::Instance().Initialize();
     black_board->job_context->stage_type = EnumStageType::eInitialize;
@@ -38,7 +38,7 @@ bool Application::OnStart() {
     return true;
 }
 
-bool Application::OnFrame() {
+bool Engine::OnFrame() {
 
     OnUpdate(ImGui::GetIO().DeltaTime);
     OnRender();
@@ -46,7 +46,7 @@ bool Application::OnFrame() {
     return true;
 }
 
-bool Application::OnUpdate(float dt) {
+bool Engine::OnUpdate(float dt) {
 
     black_board->job_context->dt = dt;
     black_board->job_context->stage_type = EnumStageType::eUpdate;
@@ -69,9 +69,8 @@ bool Application::OnUpdate(float dt) {
     return true;
 }
 
-bool Application::OnRender() {
+bool Engine::OnRender() {
 
-    //input->Frame();
     black_board->job_context->stage_type = EnumStageType::eRender;
 
     // clang-format off
@@ -97,8 +96,8 @@ bool Application::OnRender() {
     return true;
 }
 
-bool Application::OnStop() {
-    Platform::OnStop();
+bool Engine::Stop() {
+    Platform::Stop();
 
     if (black_board) {
 

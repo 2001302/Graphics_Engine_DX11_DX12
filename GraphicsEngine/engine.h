@@ -12,13 +12,13 @@
 
 namespace engine {
 
-class Application : public common::Platform, TreeNode {
+class Engine : public common::Platform, TreeNode {
   public:
-    Application();
+    Engine();
 
-    bool OnStart() override final;
+    bool Start() override final;
     bool OnFrame() override final;
-    bool OnStop() override final;
+    bool Stop() override final;
 
   private:
     bool OnUpdate(float dt);
@@ -111,7 +111,7 @@ class Application : public common::Platform, TreeNode {
         case WM_KEYDOWN:
             black_board->input->KeyPressed(wparam,true);
             if (wparam == VK_ESCAPE) {
-                OnStop();
+                Stop();
                 DestroyWindow(main_window);
             }
             break;

@@ -111,9 +111,10 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
 
             // If there is no need to draw mirror reflections, draw only the
             // opaque mirror
-            if (manager->mirror_alpha == 1.0f) {
-                auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
-                    EnumComponentType::eRenderer);
+            if (manager->ground->mirror_alpha == 1.0f) {
+                auto renderer =
+                    (MeshRenderer *)manager->ground->mirror->GetComponent(
+                        EnumComponentType::eRenderer);
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
 

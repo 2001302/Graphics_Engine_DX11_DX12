@@ -28,7 +28,7 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
 
             const Vector3 eyeWorld = manager->camera->GetPosition();
             const Matrix reflectRow =
-                Matrix::CreateReflection(manager->mirror_plane);
+                Matrix::CreateReflection(manager->ground->mirror_plane);
             const Matrix viewRow = manager->camera->GetView();
             const Matrix projRow = manager->camera->GetProjection();
 
@@ -65,8 +65,10 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
 
             // Shared textures: start from register(t10) in 'Common.hlsli'
             std::vector<ID3D11ShaderResourceView *> commonSRVs = {
-                manager->env_SRV.Get(), manager->specular_SRV.Get(),
-                manager->irradiance_SRV.Get(), manager->brdf_SRV.Get()};
+                manager->skybox->env_SRV.Get(),
+                manager->skybox->specular_SRV.Get(),
+                manager->skybox->irradiance_SRV.Get(),
+                manager->skybox->brdf_SRV.Get()};
             GraphicsManager::Instance().device_context->PSSetShaderResources(
                 10, UINT(commonSRVs.size()), commonSRVs.data());
 

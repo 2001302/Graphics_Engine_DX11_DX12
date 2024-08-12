@@ -26,9 +26,10 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
                 GraphicsManager::Instance().device_context,
                 std::vector{mesh_data});
 
-            manager->skybox = std::make_shared<Model>();
-            manager->skybox->AddComponent(EnumComponentType::eRenderer,
-                                          renderer);
+            manager->skybox = std::make_shared<Skybox>();
+            manager->skybox->model = std::make_shared<Model>();
+            manager->skybox->model->AddComponent(EnumComponentType::eRenderer,
+                                                 renderer);
 
             auto envFilename =
                 L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
@@ -40,16 +41,17 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
                 L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
             GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
-                                           envFilename, true, manager->env_SRV);
+                                           envFilename, true,
+                                           manager->skybox->env_SRV);
             GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
                                            specularFilename, true,
-                                           manager->specular_SRV);
+                                           manager->skybox->specular_SRV);
             GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
                                            irradianceFilename, true,
-                                           manager->irradiance_SRV);
+                                           manager->skybox->irradiance_SRV);
             GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
                                            brdfFilename, true,
-                                           manager->brdf_SRV);
+                                           manager->skybox->brdf_SRV);
             break;
         }
         case EnumStageType::eRender: {
@@ -57,8 +59,9 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             GraphicsManager::Instance().SetPipelineState(
                 manager->draw_wire ? Graphics::skyboxWirePSO
                                    : Graphics::skyboxSolidPSO);
-            auto renderer = (MeshRenderer *)manager->skybox->GetComponent(
-                EnumComponentType::eRenderer);
+            auto renderer =
+                (MeshRenderer *)manager->skybox->model->GetComponent(
+                    EnumComponentType::eRenderer);
             renderer->Render(GraphicsManager::Instance().device_context);
             break;
         }

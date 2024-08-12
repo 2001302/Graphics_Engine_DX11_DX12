@@ -35,13 +35,15 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
             renderer->UpdateWorldRow(Matrix::CreateRotationX(3.141592f * 0.5f) *
                                      Matrix::CreateTranslation(position));
 
-            manager->ground = std::make_shared<Model>();
-            manager->ground->AddComponent(EnumComponentType::eRenderer,
-                                          renderer);
+            manager->ground = std::make_shared<Ground>();
+            manager->ground->model = std::make_shared<Model>();
+            manager->ground->model->AddComponent(EnumComponentType::eRenderer,
+                                                 renderer);
 
-            manager->mirror_plane =
+            manager->ground->mirror_plane =
                 DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
-            manager->mirror = manager->ground; // 바닥에 거울처럼 반사 구현
+            manager->ground->mirror =
+                manager->ground->model; // 바닥에 거울처럼 반사 구현
 
             // m_basicList.push_back(m_ground); // 거울은 리스트에 등록 X
 
@@ -55,7 +57,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
             // constant buffer
             {
                 const Matrix reflectRow =
-                    Matrix::CreateReflection(manager->mirror_plane);
+                    Matrix::CreateReflection(manager->ground->mirror_plane);
 
                 reflect_global_consts_CPU = manager->global_consts_CPU;
                 memcpy(&reflect_global_consts_CPU, &manager->global_consts_CPU,
@@ -75,8 +77,9 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     reflect_global_consts_CPU, reflect_global_consts_GPU);
             }
 
-            auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
-                EnumComponentType::eRenderer);
+            auto renderer =
+                (MeshRenderer *)manager->ground->mirror->GetComponent(
+                    EnumComponentType::eRenderer);
 
             renderer->UpdateConstantBuffers(
                 GraphicsManager::Instance().device,
@@ -87,7 +90,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eRender: {
 
             // on mirror
-            if (manager->mirror_alpha < 1.0f) {
+            if (manager->ground->mirror_alpha < 1.0f) {
 
                 // Mirror 2. Mark only the mirror position as 1 in the
                 // StencilBuffer.
@@ -96,7 +99,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
                 if (true) {
                     auto renderer =
-                        (MeshRenderer *)manager->mirror->GetComponent(
+                        (MeshRenderer *)manager->ground->mirror->GetComponent(
                             EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);
@@ -127,7 +130,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                         manager->draw_wire ? Graphics::reflectSkyboxWirePSO
                                            : Graphics::reflectSkyboxSolidPSO);
                     auto renderer =
-                        (MeshRenderer *)manager->skybox->GetComponent(
+                        (MeshRenderer *)manager->skybox->model->GetComponent(
                             EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);
@@ -142,7 +145,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     GraphicsManager::Instance().SetGlobalConsts(
                         manager->global_consts_GPU);
                     auto renderer =
-                        (MeshRenderer *)manager->mirror->GetComponent(
+                        (MeshRenderer *)manager->ground->mirror->GetComponent(
                             EnumComponentType::eRenderer);
                     renderer->Render(
                         GraphicsManager::Instance().device_context);

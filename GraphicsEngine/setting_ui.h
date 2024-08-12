@@ -11,18 +11,18 @@
 
 namespace ed = ax::NodeEditor;
 
-namespace engine {
+namespace common {
 
-class SettingUi : public common::IGui {
+class SettingUi : public IGui {
     enum EnumViewType {
         e3dViewport = 0,
         eNodeEditor = 1,
     };
 
   public:
-    void PushNodeItem(common::INode *node);
+    void PushNodeItem(INode *node);
     void ClearNodeItem();
-    void PushInfoItem(common::IInfo *node);
+    void PushInfoItem(IInfo *node);
     void ClearInfoItem();
 
   private:
@@ -37,12 +37,12 @@ class SettingUi : public common::IGui {
     float screen_width;
     float screen_hieght;
 
-    std::vector<common::INode *> node_items;
-    std::vector<common::IInfo *> info_items;
+    std::vector<INode *> node_items;
+    std::vector<IInfo *> info_items;
 
     ed::EditorContext *context_ = nullptr;
 
-    ImVector<common::INode::LinkInfo> links_;
+    ImVector<INode::LinkInfo> links_;
     int next_link_Id = 100;
     int unique_id = 1;
     int unique_pos_x = 0;
@@ -51,7 +51,7 @@ class SettingUi : public common::IGui {
     const float offset_top = 35.0f;
     const float left_panel_width = 300.0f;
 
-    common::INode selected_object;
+    INode selected_object;
 };
 } // namespace engine
 #endif

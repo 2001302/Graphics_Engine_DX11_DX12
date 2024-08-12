@@ -1,13 +1,15 @@
 #ifndef _PIPELINEMANAGER
 #define _PIPELINEMANAGER
 
-#include "info.h"
 #include "camera.h"
 #include "constant_buffer.h"
 #include "dataBlock.h"
 #include "graphics_manager.h"
-#include "model.h"
+#include "ground.h"
+#include "info.h"
 #include "mesh_renderer.h"
+#include "model.h"
+#include "skybox.h"
 
 namespace engine {
 enum EnumStageType {
@@ -24,27 +26,16 @@ class JobContext : public common::IInfo {
     EnumStageType stage_type;
 
     std::unique_ptr<Camera> camera;
-    std::shared_ptr<Model> ground;
-    std::map<int /*id*/, std::shared_ptr<Model>> objects;
+    std::shared_ptr<Ground> ground;
+    std::shared_ptr<Skybox> skybox;
     std::shared_ptr<Model> player;
+    std::map<int /*id*/, std::shared_ptr<Model>> objects;
 
     // shared buffer
     GlobalConstants global_consts_CPU;
     ComPtr<ID3D11Buffer> global_consts_GPU;
 
-    // skybox
-    std::shared_ptr<Model> skybox;
-    ComPtr<ID3D11ShaderResourceView> env_SRV;
-    ComPtr<ID3D11ShaderResourceView> irradiance_SRV;
-    ComPtr<ID3D11ShaderResourceView> specular_SRV;
-    ComPtr<ID3D11ShaderResourceView> brdf_SRV;
-
-    // mirror
-    std::shared_ptr<Model> mirror;
-    DirectX::SimpleMath::Plane mirror_plane;
-    float mirror_alpha = 1.0f; // opacity
-
-    //light spheres
+    // light spheres
     std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
 
     void OnShow() override {
@@ -72,16 +63,17 @@ class JobContext : public common::IInfo {
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("Mirror")) {
 
-            ImGui::SliderFloat("Alpha", &mirror_alpha, 0.0f, 1.0f);
-            const float blendColor[4] = {mirror_alpha, mirror_alpha,
-                                         mirror_alpha, 1.0f};
+            ImGui::SliderFloat("Alpha", &ground->mirror_alpha, 0.0f, 1.0f);
+            const float blendColor[4] = {ground->mirror_alpha,
+                                         ground->mirror_alpha,
+                                         ground->mirror_alpha, 1.0f};
             if (draw_wire)
                 Graphics::mirrorBlendWirePSO.SetBlendFactor(blendColor);
             else
                 Graphics::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
 
-            auto renderer =
-                (MeshRenderer *)mirror->GetComponent(EnumComponentType::eRenderer);
+            auto renderer = (MeshRenderer *)ground->mirror->GetComponent(
+                EnumComponentType::eRenderer);
             ImGui::SliderFloat(
                 "Metallic", &renderer->material_consts.GetCpu().metallicFactor,
                 0.0f, 1.0f);
@@ -97,8 +89,8 @@ class JobContext : public common::IInfo {
         if (ImGui::TreeNode("Light")) {
             ImGui::Checkbox("Light Rotate", &light_rotate);
             ImGui::DragFloat3("Position",
-                                &global_consts_CPU.lights[0].position.x,0.1f, -5.0f,
-                                5.0f);
+                              &global_consts_CPU.lights[0].position.x, 0.1f,
+                              -5.0f, 5.0f);
             ImGui::SliderFloat("Halo Radius",
                                &global_consts_CPU.lights[1].haloRadius, 0.0f,
                                2.0f);

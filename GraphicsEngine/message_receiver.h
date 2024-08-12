@@ -23,7 +23,7 @@ class MessageReceiver {
     bool OnMouseWheelDragRequest(JobContext *manager,
                                  std::shared_ptr<common::Input> input,
                                  int mouseX, int mouseY);
-    bool OnWindowSizeRequest(SettingUi *gui, int size_x, int size_y);
+    bool OnWindowSizeRequest(common::SettingUi *gui, int size_x, int size_y);
 };
 } // namespace engine
 

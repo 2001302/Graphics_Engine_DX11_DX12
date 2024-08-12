@@ -4,7 +4,7 @@
 namespace engine {
 using namespace DirectX::SimpleMath;
 
-bool MessageReceiver::OnWindowSizeRequest(SettingUi *gui, int size_x,
+bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
                                           int size_y) {
 
     common::Env::Instance().screen_width = size_x;

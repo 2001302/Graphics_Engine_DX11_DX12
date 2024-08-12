@@ -80,6 +80,7 @@ bool Application::OnRender() {
         ->Sequence()
             ->Excute(shared_resource_node)
             ->Excute(shadow_effect_node)
+            ->Excute(light_node)
             ->Excute(game_objects_node)
             ->Excute(player_node)
             ->Excute(camera_node)

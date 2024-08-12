@@ -20,23 +20,19 @@ enum EnumStageType {
 
 class JobContext : public common::IInfo {
   public:
-    float dt;
-    bool draw_wire = false;
-    bool light_rotate = false;
-    EnumStageType stage_type;
-
     std::unique_ptr<Camera> camera;
     std::shared_ptr<Ground> ground;
     std::shared_ptr<Skybox> skybox;
     std::shared_ptr<Model> player;
     std::map<int /*id*/, std::shared_ptr<Model>> objects;
 
-    // shared buffer
+    //condition
     GlobalConstants global_consts_CPU;
     ComPtr<ID3D11Buffer> global_consts_GPU;
-
-    // light spheres
-    std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
+    float dt;
+    bool draw_wire = false;
+    bool light_rotate = false;
+    EnumStageType stage_type;
 
     void OnShow() override {
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);

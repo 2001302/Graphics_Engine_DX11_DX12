@@ -86,13 +86,6 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                     GraphicsManager::Instance().device_context);
             }
 
-            for (auto &i : manager->light_spheres) {
-                auto renderer = (MeshRenderer *)i->GetComponent(
-                    EnumComponentType::eRenderer);
-                renderer->UpdateConstantBuffers(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context);
-            }
             break;
         }
         case EnumStageType::eRender: {
@@ -127,19 +120,6 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                         GraphicsManager::Instance().device_context);
             }
 
-            {
-                GraphicsManager::Instance().SetPipelineState(
-                    manager->draw_wire ? Graphics::defaultWirePSO
-                                       : Graphics::defaultSolidPSO);
-                GraphicsManager::Instance().SetGlobalConsts(
-                    manager->global_consts_GPU);
-                for (auto &i : manager->light_spheres) {
-                    auto renderer = (MeshRenderer *)i->GetComponent(
-                        EnumComponentType::eRenderer);
-                    renderer->Render(
-                        GraphicsManager::Instance().device_context);
-                }
-            }
             break;
         }
         default:

@@ -102,7 +102,7 @@ bool Application::OnStop() {
     if (black_board) {
 
         if (black_board->job_context) {
-            for (auto &model : black_board->job_context->models) {
+            for (auto &model : black_board->job_context->objects) {
                 model.second.reset();
             }
             black_board->job_context->camera.reset();

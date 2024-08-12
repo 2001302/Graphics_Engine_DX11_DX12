@@ -342,14 +342,8 @@
     <Filter Include="Common">
       <UniqueIdentifier>{cd4d1aed-5e7a-4f54-8223-c66fbe383b80}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine">
-      <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Common\Structure">
       <UniqueIdentifier>{ba2eaf2e-7ce0-4495-9423-86319442efbd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Util">
-      <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
     </Filter>
     <Filter Include="Common\Gui">
       <UniqueIdentifier>{9eb6ce6c-e8f1-4912-bd9c-acf6ddd4f248}</UniqueIdentifier>
@@ -368,6 +362,12 @@
     </Filter>
     <Filter Include="Common\BehaviorTree\TreeBase">
       <UniqueIdentifier>{afe9fac1-d0fe-4d6e-8414-6d977ec15803}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Util">
+      <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Application">
       <UniqueIdentifier>{782ccc14-aa2b-4b1c-a0be-d9883c9299f6}</UniqueIdentifier>

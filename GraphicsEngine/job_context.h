@@ -24,17 +24,16 @@ class JobContext : public common::IInfo {
     EnumStageType stage_type;
 
     std::unique_ptr<Camera> camera;
-    std::shared_ptr<Model> skybox;
-    std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
     std::shared_ptr<Model> ground;
-    std::map<int /*id*/, std::shared_ptr<Model>> models;
+    std::map<int /*id*/, std::shared_ptr<Model>> objects;
     std::shared_ptr<Model> player;
 
     // shared buffer
     GlobalConstants global_consts_CPU;
     ComPtr<ID3D11Buffer> global_consts_GPU;
 
-    // shared texture
+    // skybox
+    std::shared_ptr<Model> skybox;
     ComPtr<ID3D11ShaderResourceView> env_SRV;
     ComPtr<ID3D11ShaderResourceView> irradiance_SRV;
     ComPtr<ID3D11ShaderResourceView> specular_SRV;
@@ -44,6 +43,9 @@ class JobContext : public common::IInfo {
     std::shared_ptr<Model> mirror;
     DirectX::SimpleMath::Plane mirror_plane;
     float mirror_alpha = 1.0f; // opacity
+
+    //light spheres
+    std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
 
     void OnShow() override {
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);

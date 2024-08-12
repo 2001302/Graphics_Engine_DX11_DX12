@@ -48,7 +48,7 @@ class OnlyDepthNode : public common::BehaviorActionNode {
             GraphicsManager::Instance().SetGlobalConsts(
                 manager->global_consts_GPU);
 
-            for (auto &i : manager->models) {
+            for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 renderer->Render(GraphicsManager::Instance().device_context);

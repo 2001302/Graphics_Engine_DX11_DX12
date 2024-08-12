@@ -150,7 +150,7 @@ bool MessageReceiver::OnModelLoadRequest(JobContext *manager,
         obj->AddComponent(EnumComponentType::eRenderer, renderer);
         obj->SetName(fileName);
 
-        manager->models.insert({obj->GetEntityId(), obj});
+        manager->objects.insert({obj->GetEntityId(), obj});
 
     } else {
         // need logger
@@ -171,7 +171,7 @@ bool MessageReceiver::OnSphereLoadRequest(JobContext *manager) {
     obj->AddComponent(EnumComponentType::eRenderer, renderer);
     obj->SetName("sphere");
 
-    manager->models.insert({obj->GetEntityId(), obj});
+    manager->objects.insert({obj->GetEntityId(), obj});
 
     return true;
 }
@@ -189,7 +189,7 @@ bool MessageReceiver::OnBoxLoadRequest(JobContext *manager) {
     obj->AddComponent(EnumComponentType::eRenderer, renderer);
     obj->SetName("box");
 
-    manager->models.insert({obj->GetEntityId(), obj});
+    manager->objects.insert({obj->GetEntityId(), obj});
 
     return true;
 }
@@ -207,7 +207,7 @@ bool MessageReceiver::OnCylinderLoadRequest(JobContext *manager) {
     obj->AddComponent(EnumComponentType::eRenderer, renderer);
     obj->SetName("box");
 
-    manager->models.insert({obj->GetEntityId(), obj});
+    manager->objects.insert({obj->GetEntityId(), obj});
 
     return true;
 }

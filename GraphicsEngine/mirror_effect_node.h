@@ -115,7 +115,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                         GraphicsManager::Instance().m_depthStencilView.Get(),
                         D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-                for (auto &i : manager->models) {
+                for (auto &i : manager->objects) {
                     auto renderer = (MeshRenderer *)i.second->GetComponent(
                         EnumComponentType::eRenderer);
                     renderer->Render(

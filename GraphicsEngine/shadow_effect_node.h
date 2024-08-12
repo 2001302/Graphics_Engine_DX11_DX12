@@ -138,7 +138,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                     GraphicsManager::Instance().SetGlobalConsts(
                         shadow_global_consts_GPU[i]);
 
-                    for (auto &i : manager->models) {
+                    for (auto &i : manager->objects) {
                         auto renderer = (MeshRenderer *)i.second->GetComponent(
                             EnumComponentType::eRenderer);
                         if (renderer->cast_shadow && renderer->is_visible)

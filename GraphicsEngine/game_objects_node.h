@@ -44,7 +44,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 auto obj = std::make_shared<Model>();
                 obj->AddComponent(EnumComponentType::eRenderer, renderer);
 
-                manager->models.insert({obj->GetEntityId(), obj});
+                manager->objects.insert({obj->GetEntityId(), obj});
             }
 
             // additional object 2
@@ -71,14 +71,14 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 auto obj = std::make_shared<Model>();
                 obj->AddComponent(EnumComponentType::eRenderer, renderer);
 
-                manager->models.insert({obj->GetEntityId(), obj});
+                manager->objects.insert({obj->GetEntityId(), obj});
             }
 
             break;
         }
         case EnumStageType::eUpdate: {
 
-            for (auto &i : manager->models) {
+            for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 renderer->UpdateConstantBuffers(
@@ -103,7 +103,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
             GraphicsManager::Instance().SetGlobalConsts(
                 manager->global_consts_GPU);
 
-            for (auto &i : manager->models) {
+            for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 renderer->Render(GraphicsManager::Instance().device_context);
@@ -118,7 +118,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
             }
 
             GraphicsManager::Instance().SetPipelineState(Graphics::normalsPSO);
-            for (auto &i : manager->models) {
+            for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 if (renderer->draw_normals)

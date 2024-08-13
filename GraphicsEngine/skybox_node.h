@@ -21,10 +21,8 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             auto mesh_data = GeometryGenerator::MakeBox(40.0f);
             std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
 
-            auto renderer = std::make_shared<MeshRenderer>(
-                GraphicsCore::Instance().device,
-                GraphicsCore::Instance().device_context,
-                std::vector{mesh_data});
+            auto renderer =
+                std::make_shared<MeshRenderer>(std::vector{mesh_data});
 
             manager->skybox = std::make_shared<Skybox>();
             manager->skybox->model = std::make_shared<Model>();
@@ -58,7 +56,7 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             auto renderer =
                 (MeshRenderer *)manager->skybox->model->GetComponent(
                     EnumComponentType::eRenderer);
-            renderer->Render(GraphicsCore::Instance().device_context);
+            renderer->Render();
             break;
         }
         default:

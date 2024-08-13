@@ -50,10 +50,8 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                     MeshData sphere =
                         GeometryGenerator::MakeSphere(1.0f, 20, 20);
 
-                    auto renderer = std::make_shared<MeshRenderer>(
-                        GraphicsCore::Instance().device,
-                        GraphicsCore::Instance().device_context,
-                        std::vector{sphere});
+                    auto renderer =
+                        std::make_shared<MeshRenderer>(std::vector{sphere});
 
                     renderer->UpdateWorldRow(Matrix::CreateTranslation(
                         job_context->global_consts_CPU.lights[i].position));
@@ -109,9 +107,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
             for (auto &i : light_spheres) {
                 auto renderer = (MeshRenderer *)i->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->UpdateConstantBuffers(
-                    GraphicsCore::Instance().device,
-                    GraphicsCore::Instance().device_context);
+                renderer->UpdateConstantBuffers();
             }
             break;
         }
@@ -124,7 +120,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
             for (auto &i : light_spheres) {
                 auto renderer = (MeshRenderer *)i->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->Render(GraphicsCore::Instance().device_context);
+                renderer->Render();
             }
             break;
         }

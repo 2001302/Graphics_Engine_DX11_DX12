@@ -25,9 +25,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
                 Vector3 center(0.5f, 0.5f, 2.0f);
 
-                auto renderer = std::make_shared<MeshRenderer>(
-                    GraphicsCore::Instance().device,
-                    GraphicsCore::Instance().device_context, std::vector{mesh});
+                auto renderer = std::make_shared<MeshRenderer>( std::vector{mesh});
 
                 renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
                 renderer->material_consts.GetCpu().albedoFactor =
@@ -36,9 +34,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 renderer->material_consts.GetCpu().metallicFactor = 0.6f;
                 renderer->material_consts.GetCpu().emissionFactor =
                     Vector3(0.0f);
-                renderer->UpdateConstantBuffers(
-                    GraphicsCore::Instance().device,
-                    GraphicsCore::Instance().device_context);
+                renderer->UpdateConstantBuffers();
 
                 auto obj = std::make_shared<Model>();
                 obj->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -51,9 +47,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 MeshData mesh = GeometryGenerator::MakeBox(0.2f);
                 Vector3 center(0.0f, 0.5f, 2.5f);
 
-                auto renderer = std::make_shared<MeshRenderer>(
-                    GraphicsCore::Instance().device,
-                    GraphicsCore::Instance().device_context, std::vector{mesh});
+                auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
 
                 renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
                 renderer->material_consts.GetCpu().albedoFactor =
@@ -62,9 +56,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 renderer->material_consts.GetCpu().metallicFactor = 0.9f;
                 renderer->material_consts.GetCpu().emissionFactor =
                     Vector3(0.0f);
-                renderer->UpdateConstantBuffers(
-                    GraphicsCore::Instance().device,
-                    GraphicsCore::Instance().device_context);
+                renderer->UpdateConstantBuffers();
 
                 auto obj = std::make_shared<Model>();
                 obj->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -79,9 +71,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->UpdateConstantBuffers(
-                    GraphicsCore::Instance().device,
-                    GraphicsCore::Instance().device_context);
+                renderer->UpdateConstantBuffers();
             }
 
             break;
@@ -96,7 +86,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->Render(GraphicsCore::Instance().device_context);
+                renderer->Render();
             }
 
             // If there is no need to draw mirror reflections, draw only the
@@ -105,7 +95,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 auto renderer =
                     (MeshRenderer *)manager->ground->mirror->GetComponent(
                         EnumComponentType::eRenderer);
-                renderer->Render(GraphicsCore::Instance().device_context);
+                renderer->Render();
             }
 
             GraphicsUtil::SetPipelineState(graphics::normalsPSO);
@@ -113,8 +103,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 if (renderer->draw_normals)
-                    renderer->RenderNormals(
-                        GraphicsCore::Instance().device_context);
+                    renderer->RenderNormals();
             }
 
             break;

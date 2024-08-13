@@ -11,49 +11,42 @@ using std::vector;
 
 template <typename T_ELEMENT> class StructuredBuffer {
   public:
-    virtual void Initialize(ComPtr<ID3D11Device> &device,
-                            const UINT numElements) {
+    virtual void Initialize(const UINT numElements) {
         m_cpu.resize(numElements);
-        Initialize(device);
+        Initialize();
     }
 
-    virtual void Initialize(ComPtr<ID3D11Device> &device) {
+    virtual void Initialize() {
         GraphicsUtil::CreateStructuredBuffer(UINT(m_cpu.size()),
                                              sizeof(T_ELEMENT), m_cpu.data(),
                                              m_gpu, m_srv, m_uav);
         // Staging은 주로 디버깅 용도입니다.
-        GraphicsUtil::CreateStagingBuffer(UINT(m_cpu.size()),
-                                          sizeof(T_ELEMENT), NULL, m_staging);
+        GraphicsUtil::CreateStagingBuffer(UINT(m_cpu.size()), sizeof(T_ELEMENT),
+                                          NULL, m_staging);
     }
 
-    void Upload(ComPtr<ID3D11DeviceContext> &context) {
-        Upload(context, m_cpu);
-    }
+    void Upload() { Upload(m_cpu); }
 
-    void Upload(ComPtr<ID3D11DeviceContext> &context,
-                vector<T_ELEMENT> &arrCpu) {
+    void Upload(vector<T_ELEMENT> &arrCpu) {
 
         assert(arrCpu.size() == m_cpu.size());
 
         GraphicsUtil::CopyToStagingBuffer(
-            m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)),
-            arrCpu.data());
-        context->CopyResource(m_gpu.Get(), m_staging.Get());
+            m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)), arrCpu.data());
+        GraphicsCore::Instance().device_context->CopyResource(m_gpu.Get(),
+                                                              m_staging.Get());
     }
 
-    void Download(ComPtr<ID3D11DeviceContext> &context) {
-        Download(context, m_cpu);
-    }
+    void Download() { Download(m_cpu); }
 
-    void Download(ComPtr<ID3D11DeviceContext> &context,
-                  vector<T_ELEMENT> &arrCpu) {
+    void Download(vector<T_ELEMENT> &arrCpu) {
 
         assert(arrCpu.size() == m_cpu.size());
 
-        context->CopyResource(m_staging.Get(), m_gpu.Get());
+        GraphicsCore::Instance().device_context->CopyResource(m_staging.Get(),
+                                                              m_gpu.Get());
         GraphicsUtil::CopyFromStagingBuffer(
-            context, m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)),
-            arrCpu.data());
+            m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)), arrCpu.data());
     }
 
     const auto GetBuffer() { return m_gpu.Get(); }
@@ -78,8 +71,8 @@ class AppendBuffer : public StructuredBuffer<T_ELEMENT> {
     typedef StructuredBuffer<T_ELEMENT> BASE;
 
   public:
-    void Initialize(ComPtr<ID3D11Device> &device) {
-        GraphicsUtil::CreateAppendBuffer(device, UINT(BASE::m_cpu.size()),
+    void Initialize() {
+        GraphicsUtil::CreateAppendBuffer(UINT(BASE::m_cpu.size()),
                                          sizeof(T_ELEMENT), BASE::m_cpu.data(),
                                          BASE::m_gpu, BASE::m_srv, BASE::m_uav);
     }
@@ -95,5 +88,5 @@ class AppendBuffer : public StructuredBuffer<T_ELEMENT> {
         std::swap(lhs.m_uav, rhs.m_uav);
     }
 };
-} // namespace engine
+} // namespace core
 #endif

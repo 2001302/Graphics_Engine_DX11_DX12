@@ -1,12 +1,9 @@
 #include "animator.h"
 
 namespace core {
-Animator::Animator(ComPtr<ID3D11Device> &device, const AnimationData &aniData) {
-    InitAnimationData(device, aniData);
-}
+Animator::Animator(const AnimationData &aniData) { InitAnimationData(aniData); }
 
-void Animator::InitAnimationData(ComPtr<ID3D11Device> &device,
-                                 const AnimationData &aniData) {
+void Animator::InitAnimationData(const AnimationData &aniData) {
     if (!aniData.clips.empty()) {
         animation_data = aniData;
 
@@ -14,12 +11,11 @@ void Animator::InitAnimationData(ComPtr<ID3D11Device> &device,
 
         for (int i = 0; i < aniData.clips.front().keys.size(); i++)
             bone_transforms.m_cpu[i] = Matrix();
-        bone_transforms.Initialize(device);
+        bone_transforms.Initialize();
     }
 }
 
-void Animator::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
-                               int frame) {
+void Animator::UpdateAnimation(int clipId, int frame) {
 
     animation_data.Update(clipId, frame);
 
@@ -28,11 +24,10 @@ void Animator::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
             animation_data.Get(clipId, i, frame).Transpose();
     }
 
-    bone_transforms.Upload(context);
+    bone_transforms.Upload();
 }
 
-void Animator::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
-                               float elapse_time) {
+void Animator::UpdateAnimation(int clipId, float elapse_time) {
     auto frame = animation_data.clips[clipId].keys[0].size() *
                  (elapse_time / (animation_data.clips[clipId].duration));
 
@@ -43,7 +38,7 @@ void Animator::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
             animation_data.Get(clipId, i, frame).Transpose();
     }
 
-    bone_transforms.Upload(context);
+    bone_transforms.Upload();
 }
 
 void Animator::UploadBoneData() {
@@ -70,6 +65,6 @@ void Animator::Turn(MeshRenderer *renderer, Vector3 direction, float speed) {
         additional * Quaternion::CreateFromRotationMatrix(renderer->world_row);
 
     renderer->UpdateWorldRow(Matrix::CreateFromQuaternion(rotation) *
-                                    Matrix::CreateTranslation(translation));
+                             Matrix::CreateTranslation(translation));
 }
-} // namespace engine
+} // namespace core

@@ -5,29 +5,23 @@ namespace core {
 using namespace std;
 using namespace DirectX;
 
-MeshRenderer::MeshRenderer(ComPtr<ID3D11Device> &device,
-                           ComPtr<ID3D11DeviceContext> &context,
-                           const std::string &basePath,
+MeshRenderer::MeshRenderer(const std::string &basePath,
                            const std::string &filename) {
-    Initialize(device, context, basePath, filename);
+    Initialize(basePath, filename);
 }
 
-MeshRenderer::MeshRenderer(ComPtr<ID3D11Device> &device,
-                           ComPtr<ID3D11DeviceContext> &context,
-                           const std::vector<MeshData> &meshes) {
-    Initialize(device, context, meshes);
+MeshRenderer::MeshRenderer(const std::vector<MeshData> &meshes) {
+    Initialize(meshes);
 }
 
-void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
-                              ComPtr<ID3D11DeviceContext> &context) {
-    std::cout << "Renderer::Initialize(ComPtr<ID3D11Device> &device, "
-                 "ComPtr<ID3D11DeviceContext> &context) was not implemented."
+void MeshRenderer::Initialize() {
+    std::cout << "Renderer::Initialize("
+                 ") was not implemented."
               << std::endl;
     exit(-1);
 }
 
-void MeshRenderer::InitMeshBuffers(ComPtr<ID3D11Device> &device,
-                                   const MeshData &meshData,
+void MeshRenderer::InitMeshBuffers(const MeshData &meshData,
                                    shared_ptr<Mesh> &newMesh) {
 
     GraphicsUtil::CreateVertexBuffer(meshData.vertices, newMesh->vertexBuffer);
@@ -37,12 +31,10 @@ void MeshRenderer::InitMeshBuffers(ComPtr<ID3D11Device> &device,
     GraphicsUtil::CreateIndexBuffer(meshData.indices, newMesh->indexBuffer);
 }
 
-void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
-                              ComPtr<ID3D11DeviceContext> &context,
-                              const std::string &basePath,
+void MeshRenderer::Initialize(const std::string &basePath,
                               const std::string &filename) {
     auto meshes = GeometryGenerator::ReadFromFile(basePath, filename);
-    Initialize(device, context, meshes);
+    Initialize(meshes);
 }
 
 BoundingBox GetBoundingBox(const vector<Vertex> &vertices) {
@@ -78,9 +70,7 @@ void ExtendBoundingBox(const BoundingBox &inBox, BoundingBox &outBox) {
     outBox.Extents = maxCorner - outBox.Center;
 }
 
-void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
-                              ComPtr<ID3D11DeviceContext> &context,
-                              const vector<MeshData> &meshes) {
+void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
     // 일반적으로는 Mesh들이 m_mesh/materialConsts를 각자 소유 가능
     // 여기서는 한 Renderer 안의 여러 Mesh들이 Consts를 모두 공유
@@ -92,7 +82,7 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
     for (const auto &meshData : meshes) {
         auto newMesh = std::make_shared<Mesh>();
 
-        InitMeshBuffers(device, meshData, newMesh);
+        InitMeshBuffers(meshData, newMesh);
 
         if (!meshData.albedoTextureFilename.empty()) {
             if (filesystem::exists(meshData.albedoTextureFilename)) {
@@ -244,8 +234,7 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
     }
 }
 
-void MeshRenderer::UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
-                                         ComPtr<ID3D11DeviceContext> &context) {
+void MeshRenderer::UpdateConstantBuffers() {
     if (is_visible) {
         mesh_consts.Upload();
         material_consts.Upload();
@@ -264,82 +253,93 @@ PipelineState &MeshRenderer::GetReflectPSO(const bool wired) {
     return wired ? graphics::reflectWirePSO : graphics::reflectSolidPSO;
 }
 
-void MeshRenderer::Render(ComPtr<ID3D11DeviceContext> &context) {
+void MeshRenderer::Render() {
     if (is_visible) {
         for (const auto &mesh : meshes) {
 
             ID3D11Buffer *constBuffers[2] = {mesh->meshConstsGPU.Get(),
                                              mesh->materialConstsGPU.Get()};
-            context->VSSetConstantBuffers(1, 2, constBuffers);
+            GraphicsCore::Instance().device_context->VSSetConstantBuffers(
+                1, 2, constBuffers);
 
-            context->VSSetShaderResources(0, 1, mesh->heightSRV.GetAddressOf());
+            GraphicsCore::Instance().device_context->VSSetShaderResources(
+                0, 1, mesh->heightSRV.GetAddressOf());
 
             // 물체 렌더링할 때 여러가지 텍스춰 사용 (t0 부터시작)
             vector<ID3D11ShaderResourceView *> resViews = {
                 mesh->albedoSRV.Get(), mesh->normalSRV.Get(), mesh->aoSRV.Get(),
                 mesh->metallicRoughnessSRV.Get(), mesh->emissiveSRV.Get()};
-            context->PSSetShaderResources(0, // register(t0)
-                                          UINT(resViews.size()),
-                                          resViews.data());
-            context->PSSetConstantBuffers(1, 2, constBuffers);
+            GraphicsCore::Instance().device_context->PSSetShaderResources(
+                0, // register(t0)
+                UINT(resViews.size()), resViews.data());
+            GraphicsCore::Instance().device_context->PSSetConstantBuffers(
+                1, 2, constBuffers);
 
             // Volume Rendering
             if (mesh->densityTex.GetSRV())
-                context->PSSetShaderResources(
+                GraphicsCore::Instance().device_context->PSSetShaderResources(
                     5, 1, mesh->densityTex.GetAddressOfSRV());
             if (mesh->lightingTex.GetSRV())
-                context->PSSetShaderResources(
+                GraphicsCore::Instance().device_context->PSSetShaderResources(
                     6, 1, mesh->lightingTex.GetAddressOfSRV());
 
-            context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
-                                        &mesh->stride, &mesh->offset);
-            context->IASetIndexBuffer(mesh->indexBuffer.Get(),
-                                      DXGI_FORMAT_R32_UINT, 0);
-            context->DrawIndexed(mesh->indexCount, 0, 0);
+            GraphicsCore::Instance().device_context->IASetVertexBuffers(
+                0, 1, mesh->vertexBuffer.GetAddressOf(), &mesh->stride,
+                &mesh->offset);
+            GraphicsCore::Instance().device_context->IASetIndexBuffer(
+                mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+            GraphicsCore::Instance().device_context->DrawIndexed(
+                mesh->indexCount, 0, 0);
 
             // Release resources
             ID3D11ShaderResourceView *nulls[3] = {NULL, NULL, NULL};
-            context->PSSetShaderResources(5, 3, nulls);
+            GraphicsCore::Instance().device_context->PSSetShaderResources(
+                5, 3, nulls);
         }
     }
 }
 
-void MeshRenderer::RenderNormals(ComPtr<ID3D11DeviceContext> &context) {
+void MeshRenderer::RenderNormals() {
     for (const auto &mesh : meshes) {
         ID3D11Buffer *constBuffers[2] = {mesh->meshConstsGPU.Get(),
                                          mesh->materialConstsGPU.Get()};
-        context->GSSetConstantBuffers(1, 2, constBuffers);
-        context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
-                                    &mesh->stride, &mesh->offset);
-        context->Draw(mesh->vertexCount, 0);
+        GraphicsCore::Instance().device_context->GSSetConstantBuffers(
+            1, 2, constBuffers);
+        GraphicsCore::Instance().device_context->IASetVertexBuffers(
+            0, 1, mesh->vertexBuffer.GetAddressOf(), &mesh->stride,
+            &mesh->offset);
+        GraphicsCore::Instance().device_context->Draw(mesh->vertexCount, 0);
     }
 }
 
-void MeshRenderer::RenderWireBoundingBox(ComPtr<ID3D11DeviceContext> &context) {
+void MeshRenderer::RenderWireBoundingBox() {
     ID3D11Buffer *constBuffers[2] = {
         bounding_box_mesh->meshConstsGPU.Get(),
         bounding_box_mesh->materialConstsGPU.Get()};
-    context->VSSetConstantBuffers(1, 2, constBuffers);
-    context->IASetVertexBuffers(
+    GraphicsCore::Instance().device_context->VSSetConstantBuffers(1, 2,
+                                                                  constBuffers);
+    GraphicsCore::Instance().device_context->IASetVertexBuffers(
         0, 1, bounding_box_mesh->vertexBuffer.GetAddressOf(),
         &bounding_box_mesh->stride, &bounding_box_mesh->offset);
-    context->IASetIndexBuffer(bounding_box_mesh->indexBuffer.Get(),
-                              DXGI_FORMAT_R32_UINT, 0);
-    context->DrawIndexed(bounding_box_mesh->indexCount, 0, 0);
+    GraphicsCore::Instance().device_context->IASetIndexBuffer(
+        bounding_box_mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+    GraphicsCore::Instance().device_context->DrawIndexed(
+        bounding_box_mesh->indexCount, 0, 0);
 }
 
-void MeshRenderer::RenderWireBoundingSphere(
-    ComPtr<ID3D11DeviceContext> &context) {
+void MeshRenderer::RenderWireBoundingSphere() {
     ID3D11Buffer *constBuffers[2] = {
         bounding_box_mesh->meshConstsGPU.Get(),
         bounding_box_mesh->materialConstsGPU.Get()};
-    context->VSSetConstantBuffers(1, 2, constBuffers);
-    context->IASetVertexBuffers(
+    GraphicsCore::Instance().device_context->VSSetConstantBuffers(1, 2,
+                                                                  constBuffers);
+    GraphicsCore::Instance().device_context->IASetVertexBuffers(
         0, 1, bounding_sphere_mesh->vertexBuffer.GetAddressOf(),
         &bounding_sphere_mesh->stride, &bounding_sphere_mesh->offset);
-    context->IASetIndexBuffer(bounding_sphere_mesh->indexBuffer.Get(),
-                              DXGI_FORMAT_R32_UINT, 0);
-    context->DrawIndexed(bounding_sphere_mesh->indexCount, 0, 0);
+    GraphicsCore::Instance().device_context->IASetIndexBuffer(
+        bounding_sphere_mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+    GraphicsCore::Instance().device_context->DrawIndexed(
+        bounding_sphere_mesh->indexCount, 0, 0);
 }
 
 void MeshRenderer::UpdateWorldRow(const Matrix &worldRow) {

@@ -43,27 +43,27 @@ class OnlyDepthNode : public common::BehaviorActionNode {
             GraphicsCore::Instance().device_context->ClearDepthStencilView(
                 depthOnlyDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-            GraphicsCore::Instance().SetPipelineState(
-                graphics::depthOnlyPSO);
-            GraphicsCore::Instance().SetGlobalConsts(
-                manager->global_consts_GPU);
+            GraphicsUtil::SetPipelineState(graphics::depthOnlyPSO);
+            GraphicsUtil::SetGlobalConsts(manager->global_consts_GPU);
 
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->Render(GraphicsCore::Instance().device_context);
+                renderer->Render();
             }
 
             if (true) {
-                auto renderer = (MeshRenderer *)manager->skybox->GetComponent(
-                    EnumComponentType::eRenderer);
-                renderer->Render(GraphicsCore::Instance().device_context);
+                auto renderer =
+                    (MeshRenderer *)manager->skybox->model->GetComponent(
+                        EnumComponentType::eRenderer);
+                renderer->Render();
             }
 
             if (true) {
-                auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
-                    EnumComponentType::eRenderer);
-                renderer->Render(GraphicsCore::Instance().device_context);
+                auto renderer =
+                    (MeshRenderer *)manager->ground->mirror->GetComponent(
+                        EnumComponentType::eRenderer);
+                renderer->Render();
             }
             break;
         }
@@ -78,6 +78,6 @@ class OnlyDepthNode : public common::BehaviorActionNode {
     ComPtr<ID3D11DepthStencilView> depthOnlyDSV;
     ComPtr<ID3D11ShaderResourceView> depthOnlySRV;
 };
-} // namespace engine
+} // namespace core
 
 #endif

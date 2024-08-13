@@ -137,14 +137,9 @@ bool MessageReceiver::OnModelLoadRequest(JobContext *manager,
         std::string fileName = fullPath.substr(lastSlash + 1);
         std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
-        auto renderer = std::make_shared<MeshRenderer>(
-            GraphicsCore::Instance().device,
-            GraphicsCore::Instance().device_context, directoryPath,
-            fileName);
+        auto renderer = std::make_shared<MeshRenderer>(directoryPath, fileName);
 
-        renderer->UpdateConstantBuffers(
-            GraphicsCore::Instance().device,
-            GraphicsCore::Instance().device_context);
+        renderer->UpdateConstantBuffers();
 
         auto obj = std::make_shared<Model>();
         obj->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -161,11 +156,8 @@ bool MessageReceiver::OnModelLoadRequest(JobContext *manager,
 bool MessageReceiver::OnSphereLoadRequest(JobContext *manager) {
 
     MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
-    auto renderer = std::make_shared<MeshRenderer>(
-        GraphicsCore::Instance().device,
-        GraphicsCore::Instance().device_context, std::vector{mesh});
-    renderer->UpdateConstantBuffers(GraphicsCore::Instance().device,
-                                    GraphicsCore::Instance().device_context);
+    auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
+    renderer->UpdateConstantBuffers();
 
     auto obj = std::make_shared<Model>();
     obj->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -179,11 +171,8 @@ bool MessageReceiver::OnSphereLoadRequest(JobContext *manager) {
 bool MessageReceiver::OnBoxLoadRequest(JobContext *manager) {
 
     MeshData mesh = GeometryGenerator::MakeBox(1.0f);
-    auto renderer = std::make_shared<MeshRenderer>(
-        GraphicsCore::Instance().device,
-        GraphicsCore::Instance().device_context, std::vector{mesh});
-    renderer->UpdateConstantBuffers(GraphicsCore::Instance().device,
-                                    GraphicsCore::Instance().device_context);
+    auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
+    renderer->UpdateConstantBuffers();
 
     auto obj = std::make_shared<Model>();
     obj->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -197,11 +186,8 @@ bool MessageReceiver::OnBoxLoadRequest(JobContext *manager) {
 bool MessageReceiver::OnCylinderLoadRequest(JobContext *manager) {
 
     MeshData mesh = GeometryGenerator::MakeCylinder(5.0f, 5.0f, 15.0f, 30);
-    auto renderer = std::make_shared<MeshRenderer>(
-        GraphicsCore::Instance().device,
-        GraphicsCore::Instance().device_context, std::vector{mesh});
-    renderer->UpdateConstantBuffers(GraphicsCore::Instance().device,
-                                    GraphicsCore::Instance().device_context);
+    auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
+    renderer->UpdateConstantBuffers();
 
     auto obj = std::make_shared<Model>();
     obj->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -211,4 +197,4 @@ bool MessageReceiver::OnCylinderLoadRequest(JobContext *manager) {
 
     return true;
 }
-} // namespace engine
+} // namespace core

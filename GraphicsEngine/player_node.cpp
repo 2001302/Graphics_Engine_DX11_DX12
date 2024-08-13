@@ -1,11 +1,10 @@
 #include "player_node.h"
 
 namespace core {
-PlayerAnimator::PlayerAnimator(ComPtr<ID3D11Device> &device,
-                               const AnimationData &aniData,
+PlayerAnimator::PlayerAnimator(const AnimationData &aniData,
                                SkinnedMeshRenderer *renderer,
                                common::Input *input)
-    : Animator(device, aniData) {
+    : Animator(aniData) {
 
     block.animator = this;
     block.renderer = renderer;
@@ -85,7 +84,6 @@ common::EnumBehaviorTreeStatus PlayerAnimator::IdleToWalk::OnInvoke() {
     elapsed_time += block->dt;
 
     block->animator->UpdateAnimation(
-        GraphicsCore::Instance().device_context,
         PlayerAnimator::EnumAnimationState::eIdleToWalk, elapsed_time);
     block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
                           0.2f);
@@ -101,8 +99,7 @@ common::EnumBehaviorTreeStatus PlayerAnimator::Walk::OnInvoke() {
         return common::EnumBehaviorTreeStatus::eSuccess;
     elapsed_time += block->dt;
 
-    block->animator->UpdateAnimation(GraphicsCore::Instance().device_context,
-                                     PlayerAnimator::EnumAnimationState::eWalk,
+    block->animator->UpdateAnimation(PlayerAnimator::EnumAnimationState::eWalk,
                                      elapsed_time);
     block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
                           1.0f);
@@ -125,7 +122,6 @@ common::EnumBehaviorTreeStatus PlayerAnimator::WalkToIdle::OnInvoke() {
     elapsed_time += block->dt;
 
     block->animator->UpdateAnimation(
-        GraphicsCore::Instance().device_context,
         PlayerAnimator::EnumAnimationState::eWalkToIdle, elapsed_time);
     block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
                           0.2f);
@@ -148,12 +144,11 @@ common::EnumBehaviorTreeStatus PlayerAnimator::Idle::OnInvoke() {
 
     block->state = PlayerAnimator::EnumAnimationState::eIdle;
 
-    block->animator->UpdateAnimation(GraphicsCore::Instance().device_context,
-                                     PlayerAnimator::EnumAnimationState::eIdle,
+    block->animator->UpdateAnimation(PlayerAnimator::EnumAnimationState::eIdle,
                                      elapsed_time);
     elapsed_time += block->dt;
 
     return common::EnumBehaviorTreeStatus::eRunning;
 }
 
-} // namespace engine
+} // namespace core

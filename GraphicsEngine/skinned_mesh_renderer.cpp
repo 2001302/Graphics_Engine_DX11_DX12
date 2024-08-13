@@ -1,16 +1,12 @@
 #include "skinned_mesh_renderer.h"
 
 namespace core {
-SkinnedMeshRenderer::SkinnedMeshRenderer(ComPtr<ID3D11Device> &device,
-                                         ComPtr<ID3D11DeviceContext> &context,
-                                         const vector<MeshData> &meshes) {
-    Initialize(device, context, meshes);
+SkinnedMeshRenderer::SkinnedMeshRenderer(const vector<MeshData> &meshes) {
+    Initialize(meshes);
 }
 
-void SkinnedMeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
-                                     ComPtr<ID3D11DeviceContext> &context,
-                                     const vector<MeshData> &meshes) {
-    MeshRenderer::Initialize(device, context, meshes);
+void SkinnedMeshRenderer::Initialize(const vector<MeshData> &meshes) {
+    MeshRenderer::Initialize(meshes);
 }
 
 PipelineState &SkinnedMeshRenderer::GetPSO(const bool wired) {
@@ -26,8 +22,7 @@ PipelineState &SkinnedMeshRenderer::GetDepthOnlyPSO() {
     return graphics::depthOnlySkinnedPSO;
 }
 
-void SkinnedMeshRenderer::InitMeshBuffers(ComPtr<ID3D11Device> &device,
-                                          const MeshData &meshData,
+void SkinnedMeshRenderer::InitMeshBuffers(const MeshData &meshData,
                                           std::shared_ptr<Mesh> &newMesh) {
     GraphicsUtil::CreateVertexBuffer(meshData.skinnedVertices,
                                      newMesh->vertexBuffer);

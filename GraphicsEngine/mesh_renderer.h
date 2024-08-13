@@ -15,47 +15,38 @@ using Microsoft::WRL::ComPtr;
 class MeshRenderer : public Component {
   public:
     MeshRenderer() {}
-    MeshRenderer(ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
-             const std::string &basePath, const std::string &filename);
-    MeshRenderer(ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
-             const std::vector<MeshData> &meshes);
+    MeshRenderer(const std::string &basePath, const std::string &filename);
+    MeshRenderer(const std::vector<MeshData> &meshes);
 
-    virtual void Initialize(ComPtr<ID3D11Device> &device,
-                            ComPtr<ID3D11DeviceContext> &context);
+    virtual void Initialize();
 
-    virtual void InitMeshBuffers(ComPtr<ID3D11Device> &device,
-                                 const MeshData &meshData,
+    virtual void InitMeshBuffers(const MeshData &meshData,
                                  std::shared_ptr<Mesh> &newMesh);
 
-    void Initialize(ComPtr<ID3D11Device> &device,
-                    ComPtr<ID3D11DeviceContext> &context,
-                    const std::string &basePath, const std::string &filename);
+    void Initialize(const std::string &basePath, const std::string &filename);
 
-    void Initialize(ComPtr<ID3D11Device> &device,
-                    ComPtr<ID3D11DeviceContext> &context,
-                    const std::vector<MeshData> &meshes);
+    void Initialize(const std::vector<MeshData> &meshes);
 
-    void UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
-                               ComPtr<ID3D11DeviceContext> &context);
+    void UpdateConstantBuffers();
 
     virtual PipelineState &GetPSO(const bool wired);
     virtual PipelineState &GetDepthOnlyPSO();
     virtual PipelineState &GetReflectPSO(const bool wired);
 
-    virtual void Render(ComPtr<ID3D11DeviceContext> &context);
-    virtual void RenderNormals(ComPtr<ID3D11DeviceContext> &context);
-    virtual void RenderWireBoundingBox(ComPtr<ID3D11DeviceContext> &context);
-    virtual void RenderWireBoundingSphere(ComPtr<ID3D11DeviceContext> &context);
+    virtual void Render();
+    virtual void RenderNormals();
+    virtual void RenderWireBoundingBox();
+    virtual void RenderWireBoundingSphere();
     void UpdateWorldRow(const Matrix &worldRow);
 
   public:
-    Matrix world_row = Matrix();   // Model(Object) To World
+    Matrix world_row = Matrix();    // Model(Object) To World
     Matrix world_row_IT = Matrix(); // InverseTranspose
 
     bool draw_normals = false;
     bool is_visible = true;
     bool cast_shadow = true;
-    bool is_pickable = false; 
+    bool is_pickable = false;
 
     std::vector<std::shared_ptr<Mesh>> meshes;
 
@@ -70,5 +61,5 @@ class MeshRenderer : public Component {
     std::shared_ptr<Mesh> bounding_sphere_mesh;
 };
 
-} // namespace engine
+} // namespace core
 #endif

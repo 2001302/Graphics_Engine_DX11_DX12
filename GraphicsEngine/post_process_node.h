@@ -19,9 +19,6 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
         auto job_context = black_board->job_context;
 
-        auto device = GraphicsCore::Instance().device;
-        auto context = GraphicsCore::Instance().device_context;
-
         switch (job_context->stage_type) {
         case EnumStageType::eInitialize: {
             const_data.dx = 1.0f / common::Env::Instance().screen_width;
@@ -62,32 +59,31 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
             if (use_bloom) {
                 // bright pass->blur vertical->blur horizontal->composite
-                bright_pass.Render(
-                    context, graphics::brightPassCS, const_buffer,
+                bright_pass.Render(graphics::brightPassCS, const_buffer,
                     {GraphicsCore::Instance().resolved_SRV}, bright_pass_UAV);
 
-                blur_vertical.Render(context, graphics::blurVerticalCS,
+                blur_vertical.Render( graphics::blurVerticalCS,
                                      const_buffer, {bright_pass_SRV},
                                      blur_vertical_UAV);
 
-                blur_horizontal.Render(context, graphics::blurHorizontalCS,
+                blur_horizontal.Render(graphics::blurHorizontalCS,
                                        const_buffer, {blur_vertical_SRV},
                                        blur_horizontal_UAV);
 
-                bloom_composite.Render(context, graphics::bloomComposite,
+                bloom_composite.Render(graphics::bloomComposite,
                                        const_buffer,
                                        {GraphicsCore::Instance().resolved_SRV,
                                         blur_horizontal_SRV},
                                        bright_pass_UAV);
 
-                context->CopyResource(
+                GraphicsCore::Instance().device_context->CopyResource(
                     GraphicsCore::Instance().resolved_buffer.Get(),
                     bright_pass_buffer.Get());
             }
 
             // tone mapping
             GraphicsUtil::SetPipelineState(graphics::postProcessingPSO);
-            tone_mapping.Render(device, context, const_buffer);
+            tone_mapping.Render(const_buffer);
             break;
         }
         default:

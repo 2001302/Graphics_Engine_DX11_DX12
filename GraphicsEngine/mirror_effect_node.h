@@ -20,9 +20,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
             auto mesh = GeometryGenerator::MakeSquare(5.0);
 
-            auto renderer = std::make_shared<MeshRenderer>(
-                GraphicsCore::Instance().device,
-                GraphicsCore::Instance().device_context, std::vector{mesh});
+            auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
 
             // mesh.albedoTextureFilename =
             //     "../Assets/Textures/blender_uv_grid_2k.png";
@@ -79,9 +77,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 (MeshRenderer *)manager->ground->mirror->GetComponent(
                     EnumComponentType::eRenderer);
 
-            renderer->UpdateConstantBuffers(
-                GraphicsCore::Instance().device,
-                GraphicsCore::Instance().device_context);
+            renderer->UpdateConstantBuffers();
 
             break;
         }
@@ -98,7 +94,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     auto renderer =
                         (MeshRenderer *)manager->ground->mirror->GetComponent(
                             EnumComponentType::eRenderer);
-                    renderer->Render(GraphicsCore::Instance().device_context);
+                    renderer->Render();
                 }
 
                 // Mirror 3. Render the reflected objects at the mirror
@@ -115,7 +111,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 for (auto &i : manager->objects) {
                     auto renderer = (MeshRenderer *)i.second->GetComponent(
                         EnumComponentType::eRenderer);
-                    renderer->Render(GraphicsCore::Instance().device_context);
+                    renderer->Render();
                 }
 
                 if (true) {
@@ -125,7 +121,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     auto renderer =
                         (MeshRenderer *)manager->skybox->model->GetComponent(
                             EnumComponentType::eRenderer);
-                    renderer->Render(GraphicsCore::Instance().device_context);
+                    renderer->Render();
                 }
 
                 if (true) {
@@ -138,7 +134,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     auto renderer =
                         (MeshRenderer *)manager->ground->mirror->GetComponent(
                             EnumComponentType::eRenderer);
-                    renderer->Render(GraphicsCore::Instance().device_context);
+                    renderer->Render();
                 }
 
             } // end of if (m_mirrorAlpha < 1.0f)

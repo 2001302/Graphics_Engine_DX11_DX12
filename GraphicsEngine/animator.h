@@ -4,9 +4,9 @@
 #include "animation_clip.h"
 #include "component.h"
 #include "graphics_util.h"
+#include "mesh_renderer.h"
 #include "node.h"
 #include "structured_buffer.h"
-#include "mesh_renderer.h"
 #include <filesystem>
 #include <iostream>
 
@@ -16,13 +16,10 @@ using Microsoft::WRL::ComPtr;
 class Animator : public Component {
   public:
     Animator(){};
-    Animator(ComPtr<ID3D11Device> &device, const AnimationData &aniData);
-    void InitAnimationData(ComPtr<ID3D11Device> &device,
-                           const AnimationData &aniData);
-    void UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
-                         int frame);
-    void UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
-                         float elapse_time);
+    Animator(const AnimationData &aniData);
+    void InitAnimationData(const AnimationData &aniData);
+    void UpdateAnimation(int clipId, int frame);
+    void UpdateAnimation(int clipId, float elapse_time);
     void UploadBoneData();
 
     void Move(MeshRenderer *renderer, Vector3 direction, float speed);
@@ -32,5 +29,5 @@ class Animator : public Component {
     StructuredBuffer<Matrix> bone_transforms;
     AnimationData animation_data;
 };
-} // namespace engine
+} // namespace core
 #endif

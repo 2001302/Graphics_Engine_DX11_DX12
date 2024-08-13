@@ -1,10 +1,10 @@
 #ifndef _TONEMAPPING
 #define _TONEMAPPING
 
+#include "component.h"
 #include "constant_buffer.h"
 #include "env.h"
 #include "mesh.h"
-#include "component.h"
 
 namespace core {
 struct ImageFilterConstData {
@@ -21,13 +21,10 @@ struct ImageFilterConstData {
 class ToneMapping : public Component {
   public:
     void Initialize();
-
-    void Render(ComPtr<ID3D11Device> &device,
-                ComPtr<ID3D11DeviceContext> &context,
-                ComPtr<ID3D11Buffer> const_buffer);
+    void Render(ComPtr<ID3D11Buffer> const_buffer);
 
   private:
     std::shared_ptr<Mesh> mesh;
 };
-} // namespace engine
+} // namespace core
 #endif

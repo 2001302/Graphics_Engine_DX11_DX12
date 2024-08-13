@@ -15,27 +15,31 @@ void ToneMapping::Initialize() {
     GraphicsUtil::CreateIndexBuffer(meshData.indices, mesh->indexBuffer);
 }
 
-void ToneMapping::Render(ComPtr<ID3D11Device> &device,
-                         ComPtr<ID3D11DeviceContext> &context,
-                         ComPtr<ID3D11Buffer> const_buffer) {
+void ToneMapping::Render(ComPtr<ID3D11Buffer> const_buffer) {
 
-    context->PSSetSamplers(0, 1, graphics::linearClampSS.GetAddressOf());
+    GraphicsCore::Instance().device_context->PSSetSamplers(
+        0, 1, graphics::linearClampSS.GetAddressOf());
 
     UINT stride = sizeof(Vertex);
     UINT offset = 0;
 
-    context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
-                                &stride, &offset);
-    context->IASetIndexBuffer(mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+    GraphicsCore::Instance().device_context->IASetVertexBuffers(
+        0, 1, mesh->vertexBuffer.GetAddressOf(), &stride, &offset);
+    GraphicsCore::Instance().device_context->IASetIndexBuffer(
+        mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-    context->RSSetViewports(1, &GraphicsCore::Instance().viewport);
-    context->OMSetRenderTargets(
+    GraphicsCore::Instance().device_context->RSSetViewports(
+        1, &GraphicsCore::Instance().viewport);
+    GraphicsCore::Instance().device_context->OMSetRenderTargets(
         1, GraphicsCore::Instance().back_buffer_RTV.GetAddressOf(), NULL);
-    context->PSSetShaderResources(
+    GraphicsCore::Instance().device_context->PSSetShaderResources(
         0, 1, GraphicsCore::Instance().resolved_SRV.GetAddressOf());
-    context->PSSetShader(graphics::combinePS.Get(), 0, 0);
-    context->PSSetConstantBuffers(1, 1, const_buffer.GetAddressOf());
-    context->DrawIndexed(mesh->indexCount, 0, 0);
+    GraphicsCore::Instance().device_context->PSSetShader(
+        graphics::combinePS.Get(), 0, 0);
+    GraphicsCore::Instance().device_context->PSSetConstantBuffers(
+        1, 1, const_buffer.GetAddressOf());
+    GraphicsCore::Instance().device_context->DrawIndexed(mesh->indexCount, 0,
+                                                         0);
 }
 
 } // namespace core

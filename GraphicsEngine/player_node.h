@@ -35,8 +35,8 @@ class PlayerAnimator : public Animator {
     };
 
     PlayerAnimator(){};
-    PlayerAnimator(ComPtr<ID3D11Device> &device, const AnimationData &aniData,
-                   SkinnedMeshRenderer *renderer, Input *input);
+    PlayerAnimator(const AnimationData &aniData, SkinnedMeshRenderer *renderer,
+                   Input *input);
 
     void Build();
     void Run(float dt) {
@@ -116,9 +116,7 @@ class PlayerNodeInvoker : public BehaviorActionNode {
                 }
             }
 
-            auto renderer = std::make_shared<SkinnedMeshRenderer>(
-                GraphicsCore::Instance().device,
-                GraphicsCore::Instance().device_context, meshes);
+            auto renderer = std::make_shared<SkinnedMeshRenderer>(meshes);
 
             renderer->material_consts.GetCpu().albedoFactor = Vector3(1.0f);
             renderer->material_consts.GetCpu().roughnessFactor = 0.8f;
@@ -128,8 +126,7 @@ class PlayerNodeInvoker : public BehaviorActionNode {
                 Matrix::CreateTranslation(0.0f, 0.0f, 0.0f));
 
             auto animator = std::make_shared<PlayerAnimator>(
-                GraphicsCore::Instance().device, aniData, renderer.get(),
-                black_board->input.get());
+                aniData, renderer.get(), black_board->input.get());
 
             job_context->player = std::make_shared<Model>();
             job_context->player->AddComponent(EnumComponentType::eRenderer,
@@ -148,16 +145,14 @@ class PlayerNodeInvoker : public BehaviorActionNode {
 
             animator->Run(job_context->dt);
 
-            renderer->UpdateConstantBuffers(
-                GraphicsCore::Instance().device,
-                GraphicsCore::Instance().device_context);
+            renderer->UpdateConstantBuffers();
 
             break;
         }
         case EnumStageType::eRender: {
-            GraphicsUtil::SetPipelineState(
-                job_context->draw_wire ? graphics::skinnedWirePSO
-                                       : graphics::skinnedSolidPSO);
+            GraphicsUtil::SetPipelineState(job_context->draw_wire
+                                               ? graphics::skinnedWirePSO
+                                               : graphics::skinnedSolidPSO);
             auto renderer =
                 (SkinnedMeshRenderer *)job_context->player->GetComponent(
                     EnumComponentType::eRenderer);
@@ -165,7 +160,7 @@ class PlayerNodeInvoker : public BehaviorActionNode {
                 EnumComponentType::eAnimator);
 
             animator->UploadBoneData();
-            renderer->Render(GraphicsCore::Instance().device_context);
+            renderer->Render();
 
             break;
         }
@@ -176,6 +171,6 @@ class PlayerNodeInvoker : public BehaviorActionNode {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 };
-} // namespace engine
+} // namespace core
 
 #endif

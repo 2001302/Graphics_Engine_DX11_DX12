@@ -111,7 +111,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
 
-            SetShadowViewport(GraphicsCore::Instance().device_context);
+            SetShadowViewport();
 
             std::vector<ID3D11ShaderResourceView *> nullSRV(MAX_LIGHTS,
                                                             nullptr);
@@ -134,8 +134,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                         auto renderer = (MeshRenderer *)i.second->GetComponent(
                             EnumComponentType::eRenderer);
                         if (renderer->cast_shadow && renderer->is_visible)
-                            renderer->Render(
-                                GraphicsCore::Instance().device_context);
+                            renderer->Render();
                     }
                 }
             }
@@ -177,7 +176,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
-    void SetShadowViewport(ComPtr<ID3D11DeviceContext> context) {
+    void SetShadowViewport() {
 
         // Set the viewport
         D3D11_VIEWPORT shadowViewport;
@@ -189,7 +188,8 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
         shadowViewport.MinDepth = 0.0f;
         shadowViewport.MaxDepth = 1.0f;
 
-        context->RSSetViewports(1, &shadowViewport);
+        GraphicsCore::Instance().device_context->RSSetViewports(
+            1, &shadowViewport);
     }
 
     int m_shadowWidth = 1280;

@@ -9,21 +9,19 @@
 #define LIGHT_SHADOW 0x10
 
 #include "graphics_common.h"
-#include "graphics_util.h"
+#include "env.h"
 
 namespace core {
-class GraphicsManager {
+class GraphicsCore {
   public:
-    static GraphicsManager &Instance() {
-        static GraphicsManager instance;
+    static GraphicsCore &Instance() {
+        static GraphicsCore instance;
         return instance;
     }
     bool Initialize();
-    void SetMainViewport();
     bool CreateBuffer();
-    void SetPipelineState(const GraphicsPSO &pso);
-    void SetPipelineState(const ComputePSO &pso);
-    void SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU);
+
+    void SetMainViewport();
 
     bool useMSAA = true;
     UINT num_quality_levels = 0;
@@ -47,7 +45,7 @@ class GraphicsManager {
     D3D11_VIEWPORT viewport;
 
   private:
-    GraphicsManager()
+    GraphicsCore()
         : swap_chain(0), device(0), device_context(0),
           viewport(D3D11_VIEWPORT()) {}
     void CreateDepthBuffer();

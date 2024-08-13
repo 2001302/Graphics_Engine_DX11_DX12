@@ -27,11 +27,10 @@ class CameraNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
 
-            GraphicsManager::Instance().SetPipelineState(
-                manager->draw_wire ? graphics::defaultWirePSO
-                                   : graphics::defaultSolidPSO);
-            GraphicsManager::Instance().SetGlobalConsts(
-                manager->global_consts_GPU);
+            GraphicsUtil::SetPipelineState(manager->draw_wire
+                                               ? graphics::defaultWirePSO
+                                               : graphics::defaultSolidPSO);
+            GraphicsUtil::SetGlobalConsts(manager->global_consts_GPU);
 
             manager->camera->Draw();
             break;
@@ -44,6 +43,6 @@ class CameraNodeInvoker : public common::BehaviorActionNode {
     }
 };
 
-} // namespace engine
+} // namespace core
 
 #endif

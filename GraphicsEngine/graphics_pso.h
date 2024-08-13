@@ -1,13 +1,26 @@
 #ifndef _GRAPHICSPSO
 #define _GRAPHICSPSO
 
-#include "graphics_util.h"
+#include <d3d11.h>
+#include <d3dcompiler.h>
+#include <directxtk/SimpleMath.h>
+#include <iostream>
+#include <memory>
+#include <string>
+#include <vector>
+#include <windows.h>
+#include <wrl/client.h> // ComPtr
 
 namespace core {
+using DirectX::SimpleMath::Matrix;
+using DirectX::SimpleMath::Vector2;
+using DirectX::SimpleMath::Vector3;
+using DirectX::SimpleMath::Vector4;
+using Microsoft::WRL::ComPtr;
 
-class GraphicsPSO {
+class PipelineState {
   public:
-    void operator=(const GraphicsPSO &pso);
+    void operator=(const PipelineState &pso);
     void SetBlendFactor(const float blendFactor[4]);
 
   public:
@@ -16,6 +29,7 @@ class GraphicsPSO {
     ComPtr<ID3D11HullShader> hull_shader;
     ComPtr<ID3D11DomainShader> domain_shader;
     ComPtr<ID3D11GeometryShader> geometry_shader;
+    ComPtr<ID3D11ComputeShader> compute_shader;
     ComPtr<ID3D11InputLayout> input_layout;
 
     ComPtr<ID3D11BlendState> blend_state;

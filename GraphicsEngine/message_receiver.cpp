@@ -12,16 +12,16 @@ bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
 
     if (common::Env::Instance().screen_width &&
         common::Env::Instance().screen_height) {
-        if (GraphicsManager::Instance().swap_chain) {
+        if (GraphicsCore::Instance().swap_chain) {
 
             gui->Shutdown();
 
-            GraphicsManager::Instance().back_buffer_RTV.Reset();
-            GraphicsManager::Instance().swap_chain->ResizeBuffers(
+            GraphicsCore::Instance().back_buffer_RTV.Reset();
+            GraphicsCore::Instance().swap_chain->ResizeBuffers(
                 0, size_x, size_y, DXGI_FORMAT_UNKNOWN, 0);
 
-            GraphicsManager::Instance().CreateBuffer();
-            GraphicsManager::Instance().SetMainViewport();
+            GraphicsCore::Instance().CreateBuffer();
+            GraphicsCore::Instance().SetMainViewport();
 
             gui->Start();
         }
@@ -138,13 +138,13 @@ bool MessageReceiver::OnModelLoadRequest(JobContext *manager,
         std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
         auto renderer = std::make_shared<MeshRenderer>(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context, directoryPath,
+            GraphicsCore::Instance().device,
+            GraphicsCore::Instance().device_context, directoryPath,
             fileName);
 
         renderer->UpdateConstantBuffers(
-            GraphicsManager::Instance().device,
-            GraphicsManager::Instance().device_context);
+            GraphicsCore::Instance().device,
+            GraphicsCore::Instance().device_context);
 
         auto obj = std::make_shared<Model>();
         obj->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -162,10 +162,10 @@ bool MessageReceiver::OnSphereLoadRequest(JobContext *manager) {
 
     MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
     auto renderer = std::make_shared<MeshRenderer>(
-        GraphicsManager::Instance().device,
-        GraphicsManager::Instance().device_context, std::vector{mesh});
-    renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
-                                    GraphicsManager::Instance().device_context);
+        GraphicsCore::Instance().device,
+        GraphicsCore::Instance().device_context, std::vector{mesh});
+    renderer->UpdateConstantBuffers(GraphicsCore::Instance().device,
+                                    GraphicsCore::Instance().device_context);
 
     auto obj = std::make_shared<Model>();
     obj->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -180,10 +180,10 @@ bool MessageReceiver::OnBoxLoadRequest(JobContext *manager) {
 
     MeshData mesh = GeometryGenerator::MakeBox(1.0f);
     auto renderer = std::make_shared<MeshRenderer>(
-        GraphicsManager::Instance().device,
-        GraphicsManager::Instance().device_context, std::vector{mesh});
-    renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
-                                    GraphicsManager::Instance().device_context);
+        GraphicsCore::Instance().device,
+        GraphicsCore::Instance().device_context, std::vector{mesh});
+    renderer->UpdateConstantBuffers(GraphicsCore::Instance().device,
+                                    GraphicsCore::Instance().device_context);
 
     auto obj = std::make_shared<Model>();
     obj->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -198,10 +198,10 @@ bool MessageReceiver::OnCylinderLoadRequest(JobContext *manager) {
 
     MeshData mesh = GeometryGenerator::MakeCylinder(5.0f, 5.0f, 15.0f, 30);
     auto renderer = std::make_shared<MeshRenderer>(
-        GraphicsManager::Instance().device,
-        GraphicsManager::Instance().device_context, std::vector{mesh});
-    renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
-                                    GraphicsManager::Instance().device_context);
+        GraphicsCore::Instance().device,
+        GraphicsCore::Instance().device_context, std::vector{mesh});
+    renderer->UpdateConstantBuffers(GraphicsCore::Instance().device,
+                                    GraphicsCore::Instance().device_context);
 
     auto obj = std::make_shared<Model>();
     obj->AddComponent(EnumComponentType::eRenderer, renderer);

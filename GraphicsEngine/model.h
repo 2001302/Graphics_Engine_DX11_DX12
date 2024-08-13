@@ -2,7 +2,7 @@
 #define _MODEL
 
 #include "component.h"
-#include "graphics_manager.h"
+#include "graphics_util.h"
 #include "node.h"
 #include <unordered_map>
 

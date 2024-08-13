@@ -1,7 +1,7 @@
 #ifndef _PANEL
 #define _PANEL
 
-#include "graphics_manager.h"
+#include "graphics_util.h"
 #include "message.h"
 #include "model.h"
 #include "ui.h"

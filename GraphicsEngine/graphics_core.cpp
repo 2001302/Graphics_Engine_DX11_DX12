@@ -1,8 +1,8 @@
-#include "graphics_manager.h"
+#include "graphics_core.h"
 
 namespace core {
 
-bool GraphicsManager::Initialize() {
+bool GraphicsCore::Initialize() {
     const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
 
     UINT createDeviceFlags = 0;
@@ -55,7 +55,7 @@ bool GraphicsManager::Initialize() {
     return true;
 }
 
-bool GraphicsManager::CreateBuffer() {
+bool GraphicsCore::CreateBuffer() {
 
     // 레스터화 -> float/depthBuffer(MSAA) -> resolved -> backBuffer
 
@@ -70,39 +70,61 @@ bool GraphicsManager::CreateBuffer() {
     ThrowIfFailed(device->CheckMultisampleQualityLevels(
         DXGI_FORMAT_R16G16B16A16_FLOAT, 4, &num_quality_levels));
 
-    D3D11_TEXTURE2D_DESC desc;
-    backBuffer->GetDesc(&desc);
-    desc.MipLevels = desc.ArraySize = 1;
-    desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-    desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-    desc.Usage = D3D11_USAGE_DEFAULT; // 스테이징 텍스춰로부터 복사 가능
-    desc.MiscFlags = 0;
-    desc.CPUAccessFlags = 0;
-    if (useMSAA && num_quality_levels) {
-        desc.SampleDesc.Count = 4;
-        desc.SampleDesc.Quality = num_quality_levels - 1;
-    } else {
-        desc.SampleDesc.Count = 1;
-        desc.SampleDesc.Quality = 0;
+    {
+        D3D11_TEXTURE2D_DESC desc;
+        backBuffer->GetDesc(&desc);
+        desc.MipLevels = desc.ArraySize = 1;
+        desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+        desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        desc.Usage = D3D11_USAGE_DEFAULT; // 스테이징 텍스춰로부터 복사 가능
+        desc.MiscFlags = 0;
+        desc.CPUAccessFlags = 0;
+        if (useMSAA && num_quality_levels) {
+            desc.SampleDesc.Count = 4;
+            desc.SampleDesc.Quality = num_quality_levels - 1;
+        } else {
+            desc.SampleDesc.Count = 1;
+            desc.SampleDesc.Quality = 0;
+        }
+
+        ThrowIfFailed(
+            device->CreateTexture2D(&desc, NULL, float_buffer.GetAddressOf()));
+        ThrowIfFailed(device->CreateRenderTargetView(float_buffer.Get(), NULL,
+                                                     float_RTV.GetAddressOf()));
     }
 
-    ThrowIfFailed(
-        device->CreateTexture2D(&desc, NULL, float_buffer.GetAddressOf()));
-    ThrowIfFailed(device->CreateRenderTargetView(float_buffer.Get(), NULL,
-                                                 float_RTV.GetAddressOf()));
+    {
+        D3D11_TEXTURE2D_DESC txtDesc;
+        ZeroMemory(&txtDesc, sizeof(txtDesc));
+        txtDesc.Width = common::Env::Instance().screen_width;
+        txtDesc.Height = common::Env::Instance().screen_height;
+        txtDesc.MipLevels = 1;
+        txtDesc.ArraySize = 1;
+        txtDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        txtDesc.SampleDesc.Count = 1;
+        txtDesc.Usage = D3D11_USAGE_DEFAULT;
+        txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE |
+                            D3D11_BIND_RENDER_TARGET |
+                            D3D11_BIND_UNORDERED_ACCESS;
+        txtDesc.MiscFlags = 0;
+        txtDesc.CPUAccessFlags = 0;
 
-    // FLOAT MSAA를 Relsolve해서 저장할 SRV/RTV
-    GraphicsUtil::CreateUATexture(
-        device, common::Env::Instance().screen_width,
-        common::Env::Instance().screen_height, DXGI_FORMAT_R16G16B16A16_FLOAT,
-        resolved_buffer, resolved_RTV, resolved_SRV, resolved_UAV);
+        ThrowIfFailed(device->CreateTexture2D(&txtDesc, NULL,
+                                              resolved_buffer.GetAddressOf()));
+        ThrowIfFailed(device->CreateRenderTargetView(resolved_buffer.Get(),
+                                                     NULL, resolved_RTV.GetAddressOf()));
+        ThrowIfFailed(device->CreateShaderResourceView(
+            resolved_buffer.Get(), NULL, resolved_SRV.GetAddressOf()));
+        ThrowIfFailed(device->CreateUnorderedAccessView(
+            resolved_buffer.Get(), NULL, resolved_UAV.GetAddressOf()));
+    }
 
     CreateDepthBuffer();
 
     return true;
 }
 
-void GraphicsManager::CreateDepthBuffer() {
+void GraphicsCore::CreateDepthBuffer() {
 
     D3D11_TEXTURE2D_DESC desc;
     desc.Width = common::Env::Instance().screen_width;
@@ -131,7 +153,7 @@ void GraphicsManager::CreateDepthBuffer() {
         depthStencilBuffer.Get(), 0, m_depthStencilView.GetAddressOf()));
 }
 
-void GraphicsManager::SetMainViewport() {
+void GraphicsCore::SetMainViewport() {
 
     // Set the viewport
     ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
@@ -143,38 +165,6 @@ void GraphicsManager::SetMainViewport() {
     viewport.MaxDepth = 1.0f;
 
     device_context->RSSetViewports(1, &viewport);
-}
-
-void GraphicsManager::SetPipelineState(const GraphicsPSO &pso) {
-
-    device_context->VSSetShader(pso.vertex_shader.Get(), 0, 0);
-    device_context->PSSetShader(pso.pixel_shader.Get(), 0, 0);
-    device_context->HSSetShader(pso.hull_shader.Get(), 0, 0);
-    device_context->DSSetShader(pso.domain_shader.Get(), 0, 0);
-    device_context->GSSetShader(pso.geometry_shader.Get(), 0, 0);
-    device_context->IASetInputLayout(pso.input_layout.Get());
-    device_context->RSSetState(pso.rasterizer_state.Get());
-    device_context->OMSetBlendState(pso.blend_state.Get(), pso.blend_factor,
-                                    0xffffffff);
-    device_context->OMSetDepthStencilState(pso.depth_stencil_state.Get(),
-                                           pso.stencil_ref);
-    device_context->IASetPrimitiveTopology(pso.primitive_topology);
-}
-
-void GraphicsManager::SetPipelineState(const ComputePSO &pso) {
-    device_context->VSSetShader(NULL, 0, 0);
-    device_context->PSSetShader(NULL, 0, 0);
-    device_context->HSSetShader(NULL, 0, 0);
-    device_context->DSSetShader(NULL, 0, 0);
-    device_context->GSSetShader(NULL, 0, 0);
-    device_context->CSSetShader(pso.compute_shader.Get(), 0, 0);
-}
-
-void GraphicsManager::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
-    // 쉐이더와 일관성 유지 cbuffer GlobalConstants : register(b0)
-    device_context->VSSetConstantBuffers(0, 1, globalConstsGPU.GetAddressOf());
-    device_context->PSSetConstantBuffers(0, 1, globalConstsGPU.GetAddressOf());
-    device_context->GSSetConstantBuffers(0, 1, globalConstsGPU.GetAddressOf());
 }
 
 } // namespace engine

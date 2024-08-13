@@ -3,7 +3,7 @@
 
 #include "behavior_tree_builder.h"
 #include "env.h"
-#include "graphics_manager.h"
+#include "graphics_util.h"
 #include "node.h"
 #include "model.h"
 

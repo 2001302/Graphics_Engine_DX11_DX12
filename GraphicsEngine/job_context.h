@@ -4,7 +4,7 @@
 #include "camera.h"
 #include "constant_buffer.h"
 #include "dataBlock.h"
-#include "graphics_manager.h"
+#include "graphics_util.h"
 #include "ground.h"
 #include "info.h"
 #include "mesh_renderer.h"

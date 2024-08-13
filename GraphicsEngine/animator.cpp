@@ -47,7 +47,7 @@ void Animator::UpdateAnimation(ComPtr<ID3D11DeviceContext> &context, int clipId,
 }
 
 void Animator::UploadBoneData() {
-    GraphicsManager::Instance().device_context->VSSetShaderResources(
+    GraphicsCore::Instance().device_context->VSSetShaderResources(
         9, 1, bone_transforms.GetAddressOfSRV());
 }
 

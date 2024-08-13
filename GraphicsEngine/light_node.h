@@ -51,8 +51,8 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                         GeometryGenerator::MakeSphere(1.0f, 20, 20);
 
                     auto renderer = std::make_shared<MeshRenderer>(
-                        GraphicsManager::Instance().device,
-                        GraphicsManager::Instance().device_context,
+                        GraphicsCore::Instance().device,
+                        GraphicsCore::Instance().device_context,
                         std::vector{sphere});
 
                     renderer->UpdateWorldRow(Matrix::CreateTranslation(
@@ -110,22 +110,21 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                 auto renderer = (MeshRenderer *)i->GetComponent(
                     EnumComponentType::eRenderer);
                 renderer->UpdateConstantBuffers(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context);
+                    GraphicsCore::Instance().device,
+                    GraphicsCore::Instance().device_context);
             }
             break;
         }
         case EnumStageType::eRender: {
 
-            GraphicsManager::Instance().SetPipelineState(
-                job_context->draw_wire ? graphics::defaultWirePSO
-                                       : graphics::defaultSolidPSO);
-            GraphicsManager::Instance().SetGlobalConsts(
-                job_context->global_consts_GPU);
+            GraphicsUtil::SetPipelineState(job_context->draw_wire
+                                               ? graphics::defaultWirePSO
+                                               : graphics::defaultSolidPSO);
+            GraphicsUtil::SetGlobalConsts(job_context->global_consts_GPU);
             for (auto &i : light_spheres) {
                 auto renderer = (MeshRenderer *)i->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->Render(GraphicsManager::Instance().device_context);
+                renderer->Render(GraphicsCore::Instance().device_context);
             }
             break;
         }
@@ -139,6 +138,6 @@ class LightNodeInvoker : public common::BehaviorActionNode {
     std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
 };
 
-} // namespace engine
+} // namespace core
 
 #endif

@@ -38,8 +38,8 @@ void SettingUi::OnStart() {
 
     ImGui_ImplWin32_Init(Env::Instance().main_window);
     ImGui_ImplDX11_Init(
-        core::GraphicsManager::Instance().device.Get(),
-        core::GraphicsManager::Instance().device_context.Get());
+        core::GraphicsCore::Instance().device.Get(),
+        core::GraphicsCore::Instance().device_context.Get());
 
     ed::Config config;
     config.SettingsFile = "widgets.json";

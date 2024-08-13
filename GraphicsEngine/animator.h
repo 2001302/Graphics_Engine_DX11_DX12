@@ -3,7 +3,7 @@
 
 #include "animation_clip.h"
 #include "component.h"
-#include "graphics_manager.h"
+#include "graphics_util.h"
 #include "node.h"
 #include "structured_buffer.h"
 #include "mesh_renderer.h"

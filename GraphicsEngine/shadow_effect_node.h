@@ -34,9 +34,8 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             desc.Width = m_shadowWidth;
             desc.Height = m_shadowHeight;
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                ThrowIfFailed(
-                    GraphicsManager::Instance().device->CreateTexture2D(
-                        &desc, NULL, m_shadowBuffers[i].GetAddressOf()));
+                ThrowIfFailed(GraphicsCore::Instance().device->CreateTexture2D(
+                    &desc, NULL, m_shadowBuffers[i].GetAddressOf()));
             }
 
             D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
@@ -47,7 +46,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             // shadow DSVs
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 ThrowIfFailed(
-                    GraphicsManager::Instance().device->CreateDepthStencilView(
+                    GraphicsCore::Instance().device->CreateDepthStencilView(
                         m_shadowBuffers[i].Get(), &dsvDesc,
                         m_shadowDSVs[i].GetAddressOf()));
             }
@@ -60,18 +59,17 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
 
             // shadow SRVs
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                ThrowIfFailed(GraphicsManager::Instance()
-                                  .device->CreateShaderResourceView(
-                                      m_shadowBuffers[i].Get(), &srvDesc,
-                                      m_shadowSRVs[i].GetAddressOf()));
+                ThrowIfFailed(
+                    GraphicsCore::Instance().device->CreateShaderResourceView(
+                        m_shadowBuffers[i].Get(), &srvDesc,
+                        m_shadowSRVs[i].GetAddressOf()));
             }
-            
+
             // shadow global constant buffer
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                GraphicsUtil::CreateConstBuffer(
-                    GraphicsManager::Instance().device,
-                    shadow_global_consts_CPU[i],
-                    shadow_global_consts_GPU[i]);
+                GraphicsUtil::CreateConstBuffer(GraphicsCore::Instance().device,
+                                                shadow_global_consts_CPU[i],
+                                                shadow_global_consts_GPU[i]);
             }
 
             break;
@@ -102,7 +100,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                         (lightViewRow * lightProjRow).Transpose();
 
                     GraphicsUtil::UpdateBuffer(
-                        GraphicsManager::Instance().device_context,
+                        GraphicsCore::Instance().device_context,
                         shadow_global_consts_CPU[i],
                         shadow_global_consts_GPU[i]);
 
@@ -116,34 +114,31 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
 
-            SetShadowViewport(GraphicsManager::Instance().device_context);
+            SetShadowViewport(GraphicsCore::Instance().device_context);
 
             std::vector<ID3D11ShaderResourceView *> nullSRV(MAX_LIGHTS,
                                                             nullptr);
-            GraphicsManager::Instance().device_context->PSSetShaderResources(
+            GraphicsCore::Instance().device_context->PSSetShaderResources(
                 15, UINT(nullSRV.size()), nullSRV.data());
 
             // make shadow map
-            GraphicsManager::Instance().SetPipelineState(
-                graphics::depthOnlyPSO);
+            GraphicsUtil::SetPipelineState(graphics::depthOnlyPSO);
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 if (manager->global_consts_CPU.lights[i].type & LIGHT_SHADOW) {
                     // no RTS
-                    GraphicsManager::Instance()
-                        .device_context->OMSetRenderTargets(
-                            0, NULL, m_shadowDSVs[i].Get());
-                    GraphicsManager::Instance()
+                    GraphicsCore::Instance().device_context->OMSetRenderTargets(
+                        0, NULL, m_shadowDSVs[i].Get());
+                    GraphicsCore::Instance()
                         .device_context->ClearDepthStencilView(
                             m_shadowDSVs[i].Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
-                    GraphicsManager::Instance().SetGlobalConsts(
-                        shadow_global_consts_GPU[i]);
+                    GraphicsUtil::SetGlobalConsts(shadow_global_consts_GPU[i]);
 
                     for (auto &i : manager->objects) {
                         auto renderer = (MeshRenderer *)i.second->GetComponent(
                             EnumComponentType::eRenderer);
                         if (renderer->cast_shadow && renderer->is_visible)
                             renderer->Render(
-                                GraphicsManager::Instance().device_context);
+                                GraphicsCore::Instance().device_context);
                     }
                 }
             }
@@ -154,20 +149,20 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
         }
 
         // rendering resolution
-        GraphicsManager::Instance().SetMainViewport();
+        GraphicsCore::Instance().SetMainViewport();
 
         const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
         std::vector<ID3D11RenderTargetView *> rtvs = {
-            GraphicsManager::Instance().float_RTV.Get()};
+            GraphicsCore::Instance().float_RTV.Get()};
 
         // Mirror 1. Draw it as it originally is, without the mirror.
         for (size_t i = 0; i < rtvs.size(); i++) {
-            GraphicsManager::Instance().device_context->ClearRenderTargetView(
+            GraphicsCore::Instance().device_context->ClearRenderTargetView(
                 rtvs[i], clearColor);
         }
-        GraphicsManager::Instance().device_context->OMSetRenderTargets(
+        GraphicsCore::Instance().device_context->OMSetRenderTargets(
             UINT(rtvs.size()), rtvs.data(),
-            GraphicsManager::Instance().m_depthStencilView.Get());
+            GraphicsCore::Instance().m_depthStencilView.Get());
 
         // Shadow textures: start from register(15)
         // Note: Unbind the last shadowDSV from the RenderTarget before setting
@@ -176,11 +171,11 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
         for (int i = 0; i < MAX_LIGHTS; i++) {
             shadowSRVs.push_back(m_shadowSRVs[i].Get());
         }
-        GraphicsManager::Instance().device_context->PSSetShaderResources(
+        GraphicsCore::Instance().device_context->PSSetShaderResources(
             15, UINT(shadowSRVs.size()), shadowSRVs.data());
 
-        GraphicsManager::Instance().device_context->ClearDepthStencilView(
-            GraphicsManager::Instance().m_depthStencilView.Get(),
+        GraphicsCore::Instance().device_context->ClearDepthStencilView(
+            GraphicsCore::Instance().m_depthStencilView.Get(),
             D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
         return common::EnumBehaviorTreeStatus::eSuccess;
@@ -210,6 +205,6 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
     ComPtr<ID3D11Buffer> shadow_global_consts_GPU[MAX_LIGHTS];
 };
 
-} // namespace engine
+} // namespace core
 
 #endif

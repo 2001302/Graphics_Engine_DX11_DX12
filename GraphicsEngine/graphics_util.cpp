@@ -19,126 +19,6 @@ namespace core {
 using namespace std;
 using namespace DirectX;
 
-void CheckResult(HRESULT hr, ID3DBlob *errorBlob) {
-    if (FAILED(hr)) {
-        if ((hr & D3D11_ERROR_FILE_NOT_FOUND) != 0) {
-            cout << "File not found." << endl;
-        }
-        if (errorBlob) {
-            cout << "Shader compile error\n"
-                 << (char *)errorBlob->GetBufferPointer() << endl;
-        }
-    }
-}
-
-void GraphicsUtil::CreateVertexShaderAndInputLayout(
-    ComPtr<ID3D11Device> &device, wstring filename,
-    const std::vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
-    ComPtr<ID3D11VertexShader> &m_vertexShader,
-    ComPtr<ID3D11InputLayout> &m_inputLayout,
-    const std::vector<D3D_SHADER_MACRO> shaderMacros) {
-
-    ComPtr<ID3DBlob> shaderBlob;
-
-    UINT compileFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)
-    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-    ComPtr<ID3DBlob> errorBlob;
-    HRESULT hr = D3DCompileFromFile(
-        filename.c_str(), shaderMacros.empty() ? NULL : shaderMacros.data(),
-        D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", compileFlags, 0,
-        &shaderBlob, &errorBlob);
-    CheckResult(hr, errorBlob.Get());
-
-    /*
-        // .cso 파일을 읽어들이는 방식, D3DReadFileToBlob() 사용
-        wstring path = L"x64/Release/";
-    #if defined(DEBUG) || defined(_DEBUG)
-        path = L"x64/Debug/";
-    #endif
-        filename.erase(filename.end() - 4, filename.end()); // 확장자 hlsl 삭제
-        filename = path + filename + L"cso";
-        HRESULT hr = D3DReadFileToBlob(filename.c_str(),
-    shaderBlob.GetAddressOf());
-    */
-
-    device->CreateVertexShader(shaderBlob->GetBufferPointer(),
-                               shaderBlob->GetBufferSize(), NULL,
-                               &m_vertexShader);
-
-    device->CreateInputLayout(inputElements.data(), UINT(inputElements.size()),
-                              shaderBlob->GetBufferPointer(),
-                              shaderBlob->GetBufferSize(), &m_inputLayout);
-}
-
-void GraphicsUtil::CreateHullShader(ComPtr<ID3D11Device> &device,
-                                    const wstring &filename,
-                                    ComPtr<ID3D11HullShader> &m_hullShader) {
-    ComPtr<ID3DBlob> shaderBlob;
-    ComPtr<ID3DBlob> errorBlob;
-
-    UINT compileFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)
-    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-    HRESULT hr = D3DCompileFromFile(
-        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
-        "hs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
-
-    CheckResult(hr, errorBlob.Get());
-
-    device->CreateHullShader(shaderBlob->GetBufferPointer(),
-                             shaderBlob->GetBufferSize(), NULL, &m_hullShader);
-}
-
-void GraphicsUtil::CreateDomainShader(
-    ComPtr<ID3D11Device> &device, const wstring &filename,
-    ComPtr<ID3D11DomainShader> &m_domainShader) {
-
-    ComPtr<ID3DBlob> shaderBlob;
-    ComPtr<ID3DBlob> errorBlob;
-
-    UINT compileFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)
-    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-    HRESULT hr = D3DCompileFromFile(
-        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
-        "ds_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
-
-    CheckResult(hr, errorBlob.Get());
-
-    device->CreateDomainShader(shaderBlob->GetBufferPointer(),
-                               shaderBlob->GetBufferSize(), NULL,
-                               &m_domainShader);
-}
-
-void GraphicsUtil::CreatePixelShader(ComPtr<ID3D11Device> &device,
-                                     const wstring &filename,
-                                     ComPtr<ID3D11PixelShader> &m_pixelShader) {
-    ComPtr<ID3DBlob> shaderBlob;
-    ComPtr<ID3DBlob> errorBlob;
-
-    UINT compileFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)
-    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-    HRESULT hr = D3DCompileFromFile(
-        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
-        "ps_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
-
-    CheckResult(hr, errorBlob.Get());
-
-    device->CreatePixelShader(shaderBlob->GetBufferPointer(),
-                              shaderBlob->GetBufferSize(), NULL,
-                              &m_pixelShader);
-}
-
 void GraphicsUtil::CreateIndexBuffer(ComPtr<ID3D11Device> &device,
                                      const std::vector<uint32_t> &indices,
                                      ComPtr<ID3D11Buffer> &indexBuffer) {
@@ -156,27 +36,6 @@ void GraphicsUtil::CreateIndexBuffer(ComPtr<ID3D11Device> &device,
 
     device->CreateBuffer(&bufferDesc, &indexBufferData,
                          indexBuffer.GetAddressOf());
-}
-
-void GraphicsUtil::CreateGeometryShader(
-    ComPtr<ID3D11Device> &device, const wstring &filename,
-    ComPtr<ID3D11GeometryShader> &geometryShader) {
-
-    ComPtr<ID3DBlob> shaderBlob;
-    ComPtr<ID3DBlob> errorBlob;
-
-    UINT compileFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)
-    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-    HRESULT hr = D3DCompileFromFile(
-        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
-        "gs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
-
-    device->CreateGeometryShader(shaderBlob->GetBufferPointer(),
-                                 shaderBlob->GetBufferSize(), NULL,
-                                 &geometryShader);
 }
 
 void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
@@ -287,7 +146,6 @@ void ReadImage(const std::string albedoFilename,
                 opacityImage[4 * i + 4 * width * j]; // Copy alpha channel
         }
 }
-
 
 ComPtr<ID3D11Texture2D>
 CreateStagingTexture(ComPtr<ID3D11Device> &device,
@@ -447,12 +305,12 @@ void GraphicsUtil::CreateTexture(ComPtr<ID3D11Device> &device,
 }
 
 void GraphicsUtil::CreateTexture(ComPtr<ID3D11Device> &device,
-                               ComPtr<ID3D11DeviceContext> &context,
-                               const std::string albedoFilename,
-                               const std::string opacityFilename,
-                               const bool usSRGB,
-                               ComPtr<ID3D11Texture2D> &texture,
-                               ComPtr<ID3D11ShaderResourceView> &srv) {
+                                 ComPtr<ID3D11DeviceContext> &context,
+                                 const std::string albedoFilename,
+                                 const std::string opacityFilename,
+                                 const bool usSRGB,
+                                 ComPtr<ID3D11Texture2D> &texture,
+                                 ComPtr<ID3D11ShaderResourceView> &srv) {
 
     int width = 0, height = 0;
     std::vector<uint8_t> image;
@@ -646,26 +504,6 @@ void GraphicsUtil::CreateUATexture(ComPtr<ID3D11Device> &device,
                                                     uav.GetAddressOf()));
 }
 
-void GraphicsUtil::CreateComputeShader(
-    ComPtr<ID3D11Device> &device, const std::wstring &filename,
-    ComPtr<ID3D11ComputeShader> &computeShader) {
-
-    ComPtr<ID3DBlob> shaderBlob;
-    ComPtr<ID3DBlob> errorBlob;
-
-    UINT compileFlags = 0;
-#if defined(DEBUG) || defined(_DEBUG)
-    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
-#endif
-
-    HRESULT hr = D3DCompileFromFile(
-        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
-        "cs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
-
-    ThrowIfFailed(device->CreateComputeShader(shaderBlob->GetBufferPointer(),
-                                              shaderBlob->GetBufferSize(), NULL,
-                                              &computeShader));
-}
 void GraphicsUtil::ComputeShaderBarrier(ComPtr<ID3D11DeviceContext> &context) {
 
     // 최대 사용하는 SRV, UAV 갯수가 6개
@@ -728,14 +566,11 @@ size_t GraphicsUtil::GetPixelSize(DXGI_FORMAT pixelFormat) {
 }
 
 void GraphicsUtil::CreateTexture3D(
-    ComPtr<ID3D11Device> &device, const int width,
-                                 const int height, const int depth,
-                                 const DXGI_FORMAT pixelFormat,
-                                 const vector<float> &initData,
-                                 ComPtr<ID3D11Texture3D> &texture,
-                                 ComPtr<ID3D11RenderTargetView> &rtv,
-                                 ComPtr<ID3D11ShaderResourceView> &srv,
-                                 ComPtr<ID3D11UnorderedAccessView> &uav) {
+    ComPtr<ID3D11Device> &device, const int width, const int height,
+    const int depth, const DXGI_FORMAT pixelFormat,
+    const vector<float> &initData, ComPtr<ID3D11Texture3D> &texture,
+    ComPtr<ID3D11RenderTargetView> &rtv, ComPtr<ID3D11ShaderResourceView> &srv,
+    ComPtr<ID3D11UnorderedAccessView> &uav) {
 
     D3D11_TEXTURE3D_DESC txtDesc;
     ZeroMemory(&txtDesc, sizeof(txtDesc));
@@ -818,10 +653,10 @@ void GraphicsUtil::CreateStructuredBuffer(
 }
 
 void GraphicsUtil::CreateStagingBuffer(ComPtr<ID3D11Device> &device,
-                                     const UINT numElements,
-                                     const UINT sizeElement,
-                                     const void *initData,
-                                     ComPtr<ID3D11Buffer> &buffer) {
+                                       const UINT numElements,
+                                       const UINT sizeElement,
+                                       const void *initData,
+                                       ComPtr<ID3D11Buffer> &buffer) {
 
     D3D11_BUFFER_DESC desc;
     ZeroMemory(&desc, sizeof(desc));
@@ -841,4 +676,38 @@ void GraphicsUtil::CreateStagingBuffer(ComPtr<ID3D11Device> &device,
     }
 }
 
-} // namespace engine
+void GraphicsUtil::SetPipelineState(const PipelineState &pso) {
+
+    GraphicsCore::Instance().device_context->VSSetShader(
+        pso.vertex_shader.Get(), 0, 0);
+    GraphicsCore::Instance().device_context->PSSetShader(pso.pixel_shader.Get(),
+                                                         0, 0);
+    GraphicsCore::Instance().device_context->HSSetShader(pso.hull_shader.Get(),
+                                                         0, 0);
+    GraphicsCore::Instance().device_context->DSSetShader(
+        pso.domain_shader.Get(), 0, 0);
+    GraphicsCore::Instance().device_context->GSSetShader(
+        pso.geometry_shader.Get(), 0, 0);
+    GraphicsCore::Instance().device_context->IASetInputLayout(
+        pso.input_layout.Get());
+    GraphicsCore::Instance().device_context->RSSetState(
+        pso.rasterizer_state.Get());
+    GraphicsCore::Instance().device_context->OMSetBlendState(
+        pso.blend_state.Get(), pso.blend_factor, 0xffffffff);
+    GraphicsCore::Instance().device_context->OMSetDepthStencilState(
+        pso.depth_stencil_state.Get(), pso.stencil_ref);
+    GraphicsCore::Instance().device_context->IASetPrimitiveTopology(
+        pso.primitive_topology);
+}
+
+void GraphicsUtil::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
+    // 쉐이더와 일관성 유지 cbuffer GlobalConstants : register(b0)
+    GraphicsCore::Instance().device_context->VSSetConstantBuffers(
+        0, 1, globalConstsGPU.GetAddressOf());
+    GraphicsCore::Instance().device_context->PSSetConstantBuffers(
+        0, 1, globalConstsGPU.GetAddressOf());
+    GraphicsCore::Instance().device_context->GSSetConstantBuffers(
+        0, 1, globalConstsGPU.GetAddressOf());
+}
+
+} // namespace core

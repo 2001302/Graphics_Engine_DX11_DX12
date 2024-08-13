@@ -18,7 +18,7 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
 
-            GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
+            GraphicsUtil::CreateConstBuffer(GraphicsCore::Instance().device,
                                             manager->global_consts_CPU,
                                             manager->global_consts_GPU);
 
@@ -44,22 +44,22 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
                 manager->global_consts_CPU.viewProj.Invert();
 
             GraphicsUtil::UpdateBuffer(
-                GraphicsManager::Instance().device_context,
+                GraphicsCore::Instance().device_context,
                 manager->global_consts_CPU, manager->global_consts_GPU);
 
             break;
         }
         case EnumStageType::eRender: 
         {
-            GraphicsManager::Instance().SetMainViewport();
+            GraphicsCore::Instance().SetMainViewport();
 
-            GraphicsManager::Instance().device_context->VSSetSamplers(
+            GraphicsCore::Instance().device_context->VSSetSamplers(
                 0, UINT(graphics::sampleStates.size()),
                 graphics::sampleStates.data());
-            GraphicsManager::Instance().device_context->PSSetSamplers(
+            GraphicsCore::Instance().device_context->PSSetSamplers(
                 0, UINT(graphics::sampleStates.size()),
                 graphics::sampleStates.data());
-            GraphicsManager::Instance().device_context->CSSetSamplers(
+            GraphicsCore::Instance().device_context->CSSetSamplers(
                 0, UINT(graphics::sampleStates.size()),
                 graphics::sampleStates.data());
 
@@ -69,7 +69,7 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
                 manager->skybox->specular_SRV.Get(),
                 manager->skybox->irradiance_SRV.Get(),
                 manager->skybox->brdf_SRV.Get()};
-            GraphicsManager::Instance().device_context->PSSetShaderResources(
+            GraphicsCore::Instance().device_context->PSSetShaderResources(
                 10, UINT(commonSRVs.size()), commonSRVs.data());
 
             break;

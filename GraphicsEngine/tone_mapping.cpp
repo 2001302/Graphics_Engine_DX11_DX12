@@ -32,11 +32,11 @@ void ToneMapping::Render(ComPtr<ID3D11Device> &device,
     context->IASetIndexBuffer(mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
                               0);
 
-    context->RSSetViewports(1, &GraphicsManager::Instance().viewport);
+    context->RSSetViewports(1, &GraphicsCore::Instance().viewport);
     context->OMSetRenderTargets(
-        1, GraphicsManager::Instance().back_buffer_RTV.GetAddressOf(), NULL);
+        1, GraphicsCore::Instance().back_buffer_RTV.GetAddressOf(), NULL);
     context->PSSetShaderResources(
-        0, 1, GraphicsManager::Instance().resolved_SRV.GetAddressOf());
+        0, 1, GraphicsCore::Instance().resolved_SRV.GetAddressOf());
     context->PSSetShader(graphics::combinePS.Get(), 0, 0);
     context->PSSetConstantBuffers(1, 1, const_buffer.GetAddressOf());
     context->DrawIndexed(mesh->indexCount, 0, 0);

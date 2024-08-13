@@ -22,8 +22,8 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
 
             auto renderer = std::make_shared<MeshRenderer>(
-                GraphicsManager::Instance().device,
-                GraphicsManager::Instance().device_context,
+                GraphicsCore::Instance().device,
+                GraphicsCore::Instance().device_context,
                 std::vector{mesh_data});
 
             manager->skybox = std::make_shared<Skybox>();
@@ -40,29 +40,29 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             auto brdfFilename =
                 L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-            GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+            GraphicsUtil::CreateDDSTexture(GraphicsCore::Instance().device,
                                            envFilename, true,
                                            manager->skybox->env_SRV);
-            GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+            GraphicsUtil::CreateDDSTexture(GraphicsCore::Instance().device,
                                            specularFilename, true,
                                            manager->skybox->specular_SRV);
-            GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+            GraphicsUtil::CreateDDSTexture(GraphicsCore::Instance().device,
                                            irradianceFilename, true,
                                            manager->skybox->irradiance_SRV);
-            GraphicsUtil::CreateDDSTexture(GraphicsManager::Instance().device,
+            GraphicsUtil::CreateDDSTexture(GraphicsCore::Instance().device,
                                            brdfFilename, true,
                                            manager->skybox->brdf_SRV);
             break;
         }
         case EnumStageType::eRender: {
 
-            GraphicsManager::Instance().SetPipelineState(
-                manager->draw_wire ? graphics::skyboxWirePSO
-                                   : graphics::skyboxSolidPSO);
+            GraphicsUtil::SetPipelineState(manager->draw_wire
+                                               ? graphics::skyboxWirePSO
+                                               : graphics::skyboxSolidPSO);
             auto renderer =
                 (MeshRenderer *)manager->skybox->model->GetComponent(
                     EnumComponentType::eRenderer);
-            renderer->Render(GraphicsManager::Instance().device_context);
+            renderer->Render(GraphicsCore::Instance().device_context);
             break;
         }
         default:
@@ -73,6 +73,6 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
     }
 };
 
-} // namespace engine
+} // namespace core
 
 #endif

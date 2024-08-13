@@ -117,8 +117,8 @@ class PlayerNodeInvoker : public BehaviorActionNode {
             }
 
             auto renderer = std::make_shared<SkinnedMeshRenderer>(
-                GraphicsManager::Instance().device,
-                GraphicsManager::Instance().device_context, meshes);
+                GraphicsCore::Instance().device,
+                GraphicsCore::Instance().device_context, meshes);
 
             renderer->material_consts.GetCpu().albedoFactor = Vector3(1.0f);
             renderer->material_consts.GetCpu().roughnessFactor = 0.8f;
@@ -128,7 +128,7 @@ class PlayerNodeInvoker : public BehaviorActionNode {
                 Matrix::CreateTranslation(0.0f, 0.0f, 0.0f));
 
             auto animator = std::make_shared<PlayerAnimator>(
-                GraphicsManager::Instance().device, aniData, renderer.get(),
+                GraphicsCore::Instance().device, aniData, renderer.get(),
                 black_board->input.get());
 
             job_context->player = std::make_shared<Model>();
@@ -149,13 +149,13 @@ class PlayerNodeInvoker : public BehaviorActionNode {
             animator->Run(job_context->dt);
 
             renderer->UpdateConstantBuffers(
-                GraphicsManager::Instance().device,
-                GraphicsManager::Instance().device_context);
+                GraphicsCore::Instance().device,
+                GraphicsCore::Instance().device_context);
 
             break;
         }
         case EnumStageType::eRender: {
-            GraphicsManager::Instance().SetPipelineState(
+            GraphicsUtil::SetPipelineState(
                 job_context->draw_wire ? graphics::skinnedWirePSO
                                        : graphics::skinnedSolidPSO);
             auto renderer =
@@ -165,7 +165,7 @@ class PlayerNodeInvoker : public BehaviorActionNode {
                 EnumComponentType::eAnimator);
 
             animator->UploadBoneData();
-            renderer->Render(GraphicsManager::Instance().device_context);
+            renderer->Render(GraphicsCore::Instance().device_context);
 
             break;
         }

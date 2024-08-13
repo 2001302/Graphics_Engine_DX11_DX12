@@ -1,7 +1,7 @@
 #ifndef _IMAGEFILTER
 #define _IMAGEFILTER
 
-#include "compute_pso.h"
+#include "graphics_pso.h"
 #include "tone_mapping.h"
 
 namespace core {

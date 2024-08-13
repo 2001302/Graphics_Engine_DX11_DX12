@@ -59,28 +59,190 @@ ComPtr<ID3D11InputLayout> skyboxIL;
 ComPtr<ID3D11InputLayout> postProcessingIL;
 
 // Graphics Pipeline States
-GraphicsPSO defaultSolidPSO;
-GraphicsPSO skinnedSolidPSO;
-GraphicsPSO defaultWirePSO;
-GraphicsPSO skinnedWirePSO;
-GraphicsPSO stencilMaskPSO;
-GraphicsPSO reflectSolidPSO;
-GraphicsPSO reflectSkinnedSolidPSO;
-GraphicsPSO reflectWirePSO;
-GraphicsPSO reflectSkinnedWirePSO;
-GraphicsPSO mirrorBlendSolidPSO;
-GraphicsPSO mirrorBlendWirePSO;
-GraphicsPSO skyboxSolidPSO;
-GraphicsPSO skyboxWirePSO;
-GraphicsPSO reflectSkyboxSolidPSO;
-GraphicsPSO reflectSkyboxWirePSO;
-GraphicsPSO normalsPSO;
-GraphicsPSO depthOnlyPSO;
-GraphicsPSO depthOnlySkinnedPSO;
-GraphicsPSO postEffectsPSO;
-GraphicsPSO postProcessingPSO;
+PipelineState defaultSolidPSO;
+PipelineState skinnedSolidPSO;
+PipelineState defaultWirePSO;
+PipelineState skinnedWirePSO;
+PipelineState stencilMaskPSO;
+PipelineState reflectSolidPSO;
+PipelineState reflectSkinnedSolidPSO;
+PipelineState reflectWirePSO;
+PipelineState reflectSkinnedWirePSO;
+PipelineState mirrorBlendSolidPSO;
+PipelineState mirrorBlendWirePSO;
+PipelineState skyboxSolidPSO;
+PipelineState skyboxWirePSO;
+PipelineState reflectSkyboxSolidPSO;
+PipelineState reflectSkyboxWirePSO;
+PipelineState normalsPSO;
+PipelineState depthOnlyPSO;
+PipelineState depthOnlySkinnedPSO;
+PipelineState postEffectsPSO;
+PipelineState postProcessingPSO;
 
-} // namespace Graphics
+} // namespace graphics
+
+void CheckResult(HRESULT hr, ID3DBlob *errorBlob) {
+    if (FAILED(hr)) {
+        if ((hr & D3D11_ERROR_FILE_NOT_FOUND) != 0) {
+            std::cout << "File not found." << std::endl;
+        }
+        if (errorBlob) {
+            std::cout << "Shader compile error\n"
+                      << (char *)errorBlob->GetBufferPointer() << std::endl;
+        }
+    }
+}
+
+void graphics::CreateVertexShaderAndInputLayout(
+    ComPtr<ID3D11Device> &device, std::wstring filename,
+    const std::vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
+    ComPtr<ID3D11VertexShader> &m_vertexShader,
+    ComPtr<ID3D11InputLayout> &m_inputLayout,
+    const std::vector<D3D_SHADER_MACRO> shaderMacros) {
+
+    ComPtr<ID3DBlob> shaderBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    ComPtr<ID3DBlob> errorBlob;
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), shaderMacros.empty() ? NULL : shaderMacros.data(),
+        D3D_COMPILE_STANDARD_FILE_INCLUDE, "main", "vs_5_0", compileFlags, 0,
+        &shaderBlob, &errorBlob);
+    CheckResult(hr, errorBlob.Get());
+
+    /*
+        // .cso 파일을 읽어들이는 방식, D3DReadFileToBlob() 사용
+        wstring path = L"x64/Release/";
+    #if defined(DEBUG) || defined(_DEBUG)
+        path = L"x64/Debug/";
+    #endif
+        filename.erase(filename.end() - 4, filename.end()); // 확장자 hlsl 삭제
+        filename = path + filename + L"cso";
+        HRESULT hr = D3DReadFileToBlob(filename.c_str(),
+    shaderBlob.GetAddressOf());
+    */
+
+    device->CreateVertexShader(shaderBlob->GetBufferPointer(),
+                               shaderBlob->GetBufferSize(), NULL,
+                               &m_vertexShader);
+
+    device->CreateInputLayout(inputElements.data(), UINT(inputElements.size()),
+                              shaderBlob->GetBufferPointer(),
+                              shaderBlob->GetBufferSize(), &m_inputLayout);
+}
+
+void graphics::CreateHullShader(ComPtr<ID3D11Device> &device,
+                                const std::wstring &filename,
+                                ComPtr<ID3D11HullShader> &m_hullShader) {
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "hs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
+
+    CheckResult(hr, errorBlob.Get());
+
+    device->CreateHullShader(shaderBlob->GetBufferPointer(),
+                             shaderBlob->GetBufferSize(), NULL, &m_hullShader);
+}
+
+void graphics::CreateDomainShader(ComPtr<ID3D11Device> &device,
+                                  const std::wstring &filename,
+                                  ComPtr<ID3D11DomainShader> &m_domainShader) {
+
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "ds_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
+
+    CheckResult(hr, errorBlob.Get());
+
+    device->CreateDomainShader(shaderBlob->GetBufferPointer(),
+                               shaderBlob->GetBufferSize(), NULL,
+                               &m_domainShader);
+}
+
+void graphics::CreatePixelShader(ComPtr<ID3D11Device> &device,
+                                 const std::wstring &filename,
+                                 ComPtr<ID3D11PixelShader> &m_pixelShader) {
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "ps_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
+
+    CheckResult(hr, errorBlob.Get());
+
+    device->CreatePixelShader(shaderBlob->GetBufferPointer(),
+                              shaderBlob->GetBufferSize(), NULL,
+                              &m_pixelShader);
+}
+
+void graphics::CreateGeometryShader(
+    ComPtr<ID3D11Device> &device, const std::wstring &filename,
+    ComPtr<ID3D11GeometryShader> &geometryShader) {
+
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "gs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
+
+    device->CreateGeometryShader(shaderBlob->GetBufferPointer(),
+                                 shaderBlob->GetBufferSize(), NULL,
+                                 &geometryShader);
+}
+
+void graphics::CreateComputeShader(ComPtr<ID3D11Device> &device,
+                                   const std::wstring &filename,
+                                   ComPtr<ID3D11ComputeShader> &computeShader) {
+
+    ComPtr<ID3DBlob> shaderBlob;
+    ComPtr<ID3DBlob> errorBlob;
+
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "cs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
+
+    ThrowIfFailed(device->CreateComputeShader(shaderBlob->GetBufferPointer(),
+                                              shaderBlob->GetBufferSize(), NULL,
+                                              &computeShader));
+}
 
 void graphics::InitCommonStates(ComPtr<ID3D11Device> &device) {
 
@@ -320,47 +482,42 @@ void graphics::InitShaders(ComPtr<ID3D11Device> &device) {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    GraphicsUtil::CreateVertexShaderAndInputLayout(device, L"BasicVS.hlsl",
-                                                   basicIEs, basicVS, basicIL);
-    GraphicsUtil::CreateVertexShaderAndInputLayout(
+    CreateVertexShaderAndInputLayout(device, L"BasicVS.hlsl", basicIEs, basicVS,
+                                     basicIL);
+    CreateVertexShaderAndInputLayout(
         device, L"BasicVS.hlsl", skinnedIEs, skinnedVS, skinnedIL,
         std::vector<D3D_SHADER_MACRO>{{"SKINNED", "1"}, {NULL, NULL}});
-    GraphicsUtil::CreateVertexShaderAndInputLayout(device, L"NormalVS.hlsl",
-                                                   basicIEs, normalVS, basicIL);
-    GraphicsUtil::CreateVertexShaderAndInputLayout(
-        device, L"SamplingVS.hlsl", samplingIED, samplingVS, samplingIL);
+    CreateVertexShaderAndInputLayout(device, L"NormalVS.hlsl", basicIEs,
+                                     normalVS, basicIL);
+    CreateVertexShaderAndInputLayout(device, L"SamplingVS.hlsl", samplingIED,
+                                     samplingVS, samplingIL);
 
-    GraphicsUtil::CreateVertexShaderAndInputLayout(
-        device, L"SkyboxVS.hlsl", skyboxIE, skyboxVS, skyboxIL);
+    CreateVertexShaderAndInputLayout(device, L"SkyboxVS.hlsl", skyboxIE,
+                                     skyboxVS, skyboxIL);
 
-    GraphicsUtil::CreateVertexShaderAndInputLayout(
-        device, L"DepthOnlyVS.hlsl", basicIEs, depthOnlyVS, skyboxIL);
-    GraphicsUtil::CreateVertexShaderAndInputLayout(
+    CreateVertexShaderAndInputLayout(device, L"DepthOnlyVS.hlsl", basicIEs,
+                                     depthOnlyVS, skyboxIL);
+    CreateVertexShaderAndInputLayout(
         device, L"DepthOnlyVS.hlsl", skinnedIEs, depthOnlySkinnedVS, skinnedIL,
         std::vector<D3D_SHADER_MACRO>{{"SKINNED", "1"}, {NULL, NULL}});
 
-    GraphicsUtil::CreatePixelShader(device, L"BasicPS.hlsl", basicPS);
-    GraphicsUtil::CreatePixelShader(device, L"NormalPS.hlsl", normalPS);
+    CreatePixelShader(device, L"BasicPS.hlsl", basicPS);
+    CreatePixelShader(device, L"NormalPS.hlsl", normalPS);
 
-    GraphicsUtil::CreatePixelShader(device, L"SkyboxPS.hlsl", skyboxPS);
+    CreatePixelShader(device, L"SkyboxPS.hlsl", skyboxPS);
 
-    GraphicsUtil::CreatePixelShader(device, L"CombinePS.hlsl", combinePS);
-    GraphicsUtil::CreatePixelShader(device, L"BloomDownPS.hlsl", bloomDownPS);
-    GraphicsUtil::CreatePixelShader(device, L"BloomUpPS.hlsl", bloomUpPS);
-    GraphicsUtil::CreatePixelShader(device, L"DepthOnlyPS.hlsl", depthOnlyPS);
-    GraphicsUtil::CreatePixelShader(device, L"PostEffectsPS.hlsl",
-                                    postEffectsPS);
+    CreatePixelShader(device, L"CombinePS.hlsl", combinePS);
+    CreatePixelShader(device, L"BloomDownPS.hlsl", bloomDownPS);
+    CreatePixelShader(device, L"BloomUpPS.hlsl", bloomUpPS);
+    CreatePixelShader(device, L"DepthOnlyPS.hlsl", depthOnlyPS);
+    CreatePixelShader(device, L"PostEffectsPS.hlsl", postEffectsPS);
 
-    GraphicsUtil::CreateGeometryShader(device, L"NormalGS.hlsl", normalGS);
+    CreateGeometryShader(device, L"NormalGS.hlsl", normalGS);
 
-    GraphicsUtil::CreateComputeShader(device, L"BrightPassCS.hlsl",
-                                      brightPassCS);
-    GraphicsUtil::CreateComputeShader(device, L"BlurVertical.hlsl",
-                                      blurVerticalCS);
-    GraphicsUtil::CreateComputeShader(device, L"BlurHorizontal.hlsl",
-                                      blurHorizontalCS);
-    GraphicsUtil::CreateComputeShader(device, L"BloomCompositeCS.hlsl",
-                                      bloomComposite);
+    CreateComputeShader(device, L"BrightPassCS.hlsl", brightPassCS);
+    CreateComputeShader(device, L"BlurVertical.hlsl", blurVerticalCS);
+    CreateComputeShader(device, L"BlurHorizontal.hlsl", blurHorizontalCS);
+    CreateComputeShader(device, L"BloomCompositeCS.hlsl", bloomComposite);
 }
 
 void graphics::InitPipelineStates(ComPtr<ID3D11Device> &device) {
@@ -473,4 +630,4 @@ void graphics::InitPipelineStates(ComPtr<ID3D11Device> &device) {
     postProcessingPSO.rasterizer_state = postProcessingRS;
 }
 
-} // namespace engine
+} // namespace core

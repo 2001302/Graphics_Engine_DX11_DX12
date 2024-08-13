@@ -1,7 +1,7 @@
 #ifndef _MESH
 #define _MESH
 
-#include "graphics_manager.h"
+#include "graphics_util.h"
 #include "vertex.h"
 #include "texture_3d.h"
 

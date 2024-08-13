@@ -3,7 +3,7 @@
 
 #include "behavior_tree_builder.h"
 #include "black_board.h"
-#include "graphics_manager.h"
+#include "graphics_util.h"
 
 namespace core {
 class OnlyDepthNode : public common::BehaviorActionNode {
@@ -32,38 +32,38 @@ class OnlyDepthNode : public common::BehaviorActionNode {
                 D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
             desc.SampleDesc.Count = 1;
             desc.SampleDesc.Quality = 0;
-            ThrowIfFailed(GraphicsManager::Instance().device->CreateTexture2D(
+            ThrowIfFailed(GraphicsCore::Instance().device->CreateTexture2D(
                 &desc, NULL, depthOnlyBuffer.GetAddressOf()));
             break;
         }
         case EnumStageType::eRender: {
             // Depth Only Pass (no RTS)
-            GraphicsManager::Instance().device_context->OMSetRenderTargets(
+            GraphicsCore::Instance().device_context->OMSetRenderTargets(
                 0, NULL, depthOnlyDSV.Get());
-            GraphicsManager::Instance().device_context->ClearDepthStencilView(
+            GraphicsCore::Instance().device_context->ClearDepthStencilView(
                 depthOnlyDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-            GraphicsManager::Instance().SetPipelineState(
+            GraphicsCore::Instance().SetPipelineState(
                 graphics::depthOnlyPSO);
-            GraphicsManager::Instance().SetGlobalConsts(
+            GraphicsCore::Instance().SetGlobalConsts(
                 manager->global_consts_GPU);
 
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->Render(GraphicsManager::Instance().device_context);
+                renderer->Render(GraphicsCore::Instance().device_context);
             }
 
             if (true) {
                 auto renderer = (MeshRenderer *)manager->skybox->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->Render(GraphicsManager::Instance().device_context);
+                renderer->Render(GraphicsCore::Instance().device_context);
             }
 
             if (true) {
                 auto renderer = (MeshRenderer *)manager->mirror->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->Render(GraphicsManager::Instance().device_context);
+                renderer->Render(GraphicsCore::Instance().device_context);
             }
             break;
         }

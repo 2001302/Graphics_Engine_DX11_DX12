@@ -1,58 +1,11 @@
 #ifndef _GRAPHICSUTIL
 #define _GRAPHICSUTIL
 
-#include "env.h"
-
-#include <d3d11.h>
-#include <d3dcompiler.h>
-#include <directxtk/SimpleMath.h>
-#include <iostream>
-#include <memory>
-#include <string>
-#include <vector>
-#include <windows.h>
-#include <wrl/client.h> // ComPtr
+#include "graphics_core.h"
 
 namespace core {
-using DirectX::SimpleMath::Matrix;
-using DirectX::SimpleMath::Vector2;
-using DirectX::SimpleMath::Vector3;
-using DirectX::SimpleMath::Vector4;
-using Microsoft::WRL::ComPtr;
-
-inline void ThrowIfFailed(HRESULT hr) {
-    if (FAILED(hr)) {
-        throw std::exception();
-    }
-}
-
 class GraphicsUtil {
   public:
-    static void CreateVertexShaderAndInputLayout(
-        ComPtr<ID3D11Device> &device, std::wstring filename,
-        const std::vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
-        ComPtr<ID3D11VertexShader> &m_vertexShader,
-        ComPtr<ID3D11InputLayout> &m_inputLayout,
-        const std::vector<D3D_SHADER_MACRO> shaderMacros = {
-            /* Empty default */});
-
-    static void CreateHullShader(ComPtr<ID3D11Device> &device,
-                                 const std::wstring &filename,
-                                 ComPtr<ID3D11HullShader> &m_hullShader);
-
-    static void CreateDomainShader(ComPtr<ID3D11Device> &device,
-                                   const std::wstring &filename,
-                                   ComPtr<ID3D11DomainShader> &m_domainShader);
-
-    static void
-    CreateGeometryShader(ComPtr<ID3D11Device> &device,
-                         const std::wstring &filename,
-                         ComPtr<ID3D11GeometryShader> &m_geometryShader);
-
-    static void CreatePixelShader(ComPtr<ID3D11Device> &device,
-                                  const std::wstring &filename,
-                                  ComPtr<ID3D11PixelShader> &m_pixelShader);
-
     static void CreateIndexBuffer(ComPtr<ID3D11Device> &device,
                                   const std::vector<uint32_t> &indices,
                                   ComPtr<ID3D11Buffer> &indexBuffer);
@@ -199,9 +152,6 @@ class GraphicsUtil {
 
     static size_t GetPixelSize(DXGI_FORMAT pixelFormat);
 
-    static void CreateComputeShader(ComPtr<ID3D11Device> &device,
-                                    const std::wstring &filename,
-                                    ComPtr<ID3D11ComputeShader> &computeShader);
     static void ComputeShaderBarrier(ComPtr<ID3D11DeviceContext> &context);
 
     static void CreateStructuredBuffer(ComPtr<ID3D11Device> &device,
@@ -226,6 +176,8 @@ class GraphicsUtil {
         memcpy(ms.pData, src, size);
         context->Unmap(buffer.Get(), NULL);
     }
+    static void SetPipelineState(const PipelineState &pso);
+    static void SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU);
 };
-} // namespace engine
+} // namespace core
 #endif

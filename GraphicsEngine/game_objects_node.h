@@ -26,9 +26,8 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 Vector3 center(0.5f, 0.5f, 2.0f);
 
                 auto renderer = std::make_shared<MeshRenderer>(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context,
-                    std::vector{mesh});
+                    GraphicsCore::Instance().device,
+                    GraphicsCore::Instance().device_context, std::vector{mesh});
 
                 renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
                 renderer->material_consts.GetCpu().albedoFactor =
@@ -38,8 +37,8 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 renderer->material_consts.GetCpu().emissionFactor =
                     Vector3(0.0f);
                 renderer->UpdateConstantBuffers(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context);
+                    GraphicsCore::Instance().device,
+                    GraphicsCore::Instance().device_context);
 
                 auto obj = std::make_shared<Model>();
                 obj->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -53,9 +52,8 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 Vector3 center(0.0f, 0.5f, 2.5f);
 
                 auto renderer = std::make_shared<MeshRenderer>(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context,
-                    std::vector{mesh});
+                    GraphicsCore::Instance().device,
+                    GraphicsCore::Instance().device_context, std::vector{mesh});
 
                 renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
                 renderer->material_consts.GetCpu().albedoFactor =
@@ -65,8 +63,8 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 renderer->material_consts.GetCpu().emissionFactor =
                     Vector3(0.0f);
                 renderer->UpdateConstantBuffers(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context);
+                    GraphicsCore::Instance().device,
+                    GraphicsCore::Instance().device_context);
 
                 auto obj = std::make_shared<Model>();
                 obj->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -82,24 +80,23 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 renderer->UpdateConstantBuffers(
-                    GraphicsManager::Instance().device,
-                    GraphicsManager::Instance().device_context);
+                    GraphicsCore::Instance().device,
+                    GraphicsCore::Instance().device_context);
             }
 
             break;
         }
         case EnumStageType::eRender: {
 
-            GraphicsManager::Instance().SetPipelineState(
-                manager->draw_wire ? graphics::defaultWirePSO
-                                   : graphics::defaultSolidPSO);
-            GraphicsManager::Instance().SetGlobalConsts(
-                manager->global_consts_GPU);
+            GraphicsUtil::SetPipelineState(manager->draw_wire
+                                               ? graphics::defaultWirePSO
+                                               : graphics::defaultSolidPSO);
+            GraphicsUtil::SetGlobalConsts(manager->global_consts_GPU);
 
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->Render(GraphicsManager::Instance().device_context);
+                renderer->Render(GraphicsCore::Instance().device_context);
             }
 
             // If there is no need to draw mirror reflections, draw only the
@@ -108,16 +105,16 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 auto renderer =
                     (MeshRenderer *)manager->ground->mirror->GetComponent(
                         EnumComponentType::eRenderer);
-                renderer->Render(GraphicsManager::Instance().device_context);
+                renderer->Render(GraphicsCore::Instance().device_context);
             }
 
-            GraphicsManager::Instance().SetPipelineState(graphics::normalsPSO);
+            GraphicsUtil::SetPipelineState(graphics::normalsPSO);
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 if (renderer->draw_normals)
                     renderer->RenderNormals(
-                        GraphicsManager::Instance().device_context);
+                        GraphicsCore::Instance().device_context);
             }
 
             break;
@@ -129,6 +126,6 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
-} // namespace engine
+} // namespace core
 
 #endif

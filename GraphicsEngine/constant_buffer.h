@@ -1,7 +1,7 @@
 #ifndef _CONSTANTBUFFER
 #define _CONSTANTBUFFER
 
-#include "graphics_manager.h"
+#include "graphics_util.h"
 
 namespace core {
 

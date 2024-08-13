@@ -19,8 +19,8 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
         auto job_context = black_board->job_context;
 
-        auto device = GraphicsManager::Instance().device;
-        auto context = GraphicsManager::Instance().device_context;
+        auto device = GraphicsCore::Instance().device;
+        auto context = GraphicsCore::Instance().device_context;
 
         switch (job_context->stage_type) {
         case EnumStageType::eInitialize: {
@@ -64,7 +64,7 @@ class PostProcessingNode : public common::BehaviorActionNode,
                 // bright pass->blur vertical->blur horizontal->composite
                 bright_pass.Render(context, graphics::brightPassCS,
                                    const_buffer,
-                                   {GraphicsManager::Instance().resolved_SRV},
+                                   {GraphicsCore::Instance().resolved_SRV},
                                    bright_pass_UAV);
 
                 blur_vertical.Render(context, graphics::blurVerticalCS,
@@ -77,17 +77,17 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
                 bloom_composite.Render(
                     context, graphics::bloomComposite, const_buffer,
-                    {GraphicsManager::Instance().resolved_SRV,
+                    {GraphicsCore::Instance().resolved_SRV,
                      blur_horizontal_SRV},
                     bright_pass_UAV);
 
                 context->CopyResource(
-                    GraphicsManager::Instance().resolved_buffer.Get(),
+                    GraphicsCore::Instance().resolved_buffer.Get(),
                     bright_pass_buffer.Get());
             }
 
             // tone mapping
-            GraphicsManager::Instance().SetPipelineState(
+            GraphicsUtil::SetPipelineState(
                 graphics::postProcessingPSO);
             tone_mapping.Render(device, context, const_buffer);
             break;

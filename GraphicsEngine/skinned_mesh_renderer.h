@@ -21,9 +21,9 @@ class SkinnedMeshRenderer : public MeshRenderer {
     void Initialize(ComPtr<ID3D11Device> &device,
                     ComPtr<ID3D11DeviceContext> &context,
                     const vector<MeshData> &meshes);
-    GraphicsPSO &GetPSO(const bool wired) override;
-    GraphicsPSO &GetReflectPSO(const bool wired) override;
-    GraphicsPSO &GetDepthOnlyPSO() override;
+    PipelineState &GetPSO(const bool wired) override;
+    PipelineState &GetReflectPSO(const bool wired) override;
+    PipelineState &GetDepthOnlyPSO() override;
     void InitMeshBuffers(ComPtr<ID3D11Device> &device, const MeshData &meshData,
                          std::shared_ptr<Mesh> &newMesh) override;
 };

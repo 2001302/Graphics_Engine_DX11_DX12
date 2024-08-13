@@ -3,7 +3,7 @@
 
 #include "action_node.h"
 #include "geometry_generator.h"
-#include "graphics_manager.h"
+#include "graphics_util.h"
 #include "message.h"
 #include "message_receiver.h"
 #include "platform.h"
@@ -32,7 +32,7 @@ class Engine : public common::Platform, TreeNode {
 
         auto CheckIfMouseInViewport = [](SettingUi *ui, int mouseX,
                                          int mouseY) -> bool {
-            if (GraphicsManager::Instance().swap_chain) {
+            if (GraphicsCore::Instance().swap_chain) {
                 if ((0 < mouseX && mouseX < ui->GetSize().x) &&
                     (0 < mouseY && mouseY < ui->GetSize().y))
                     return false;

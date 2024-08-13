@@ -38,9 +38,9 @@ class MeshRenderer : public Component {
     void UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
                                ComPtr<ID3D11DeviceContext> &context);
 
-    virtual GraphicsPSO &GetPSO(const bool wired);
-    virtual GraphicsPSO &GetDepthOnlyPSO();
-    virtual GraphicsPSO &GetReflectPSO(const bool wired);
+    virtual PipelineState &GetPSO(const bool wired);
+    virtual PipelineState &GetDepthOnlyPSO();
+    virtual PipelineState &GetReflectPSO(const bool wired);
 
     virtual void Render(ComPtr<ID3D11DeviceContext> &context);
     virtual void RenderNormals(ComPtr<ID3D11DeviceContext> &context);

@@ -13,16 +13,16 @@ void SkinnedMeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
     MeshRenderer::Initialize(device, context, meshes);
 }
 
-GraphicsPSO &SkinnedMeshRenderer::GetPSO(const bool wired) {
+PipelineState &SkinnedMeshRenderer::GetPSO(const bool wired) {
     return wired ? graphics::skinnedWirePSO : graphics::skinnedSolidPSO;
 }
 
-GraphicsPSO &SkinnedMeshRenderer::GetReflectPSO(const bool wired) {
+PipelineState &SkinnedMeshRenderer::GetReflectPSO(const bool wired) {
     return wired ? graphics::reflectSkinnedWirePSO
                  : graphics::reflectSkinnedSolidPSO;
 }
 
-GraphicsPSO &SkinnedMeshRenderer::GetDepthOnlyPSO() {
+PipelineState &SkinnedMeshRenderer::GetDepthOnlyPSO() {
     return graphics::depthOnlySkinnedPSO;
 }
 

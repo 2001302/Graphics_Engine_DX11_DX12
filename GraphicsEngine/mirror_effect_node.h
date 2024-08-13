@@ -21,8 +21,8 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
             auto mesh = GeometryGenerator::MakeSquare(5.0);
 
             auto renderer = std::make_shared<MeshRenderer>(
-                GraphicsManager::Instance().device,
-                GraphicsManager::Instance().device_context, std::vector{mesh});
+                GraphicsCore::Instance().device,
+                GraphicsCore::Instance().device_context, std::vector{mesh});
 
             // mesh.albedoTextureFilename =
             //     "../Assets/Textures/blender_uv_grid_2k.png";
@@ -47,7 +47,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
             // m_basicList.push_back(m_ground); // 거울은 리스트에 등록 X
 
-            GraphicsUtil::CreateConstBuffer(GraphicsManager::Instance().device,
+            GraphicsUtil::CreateConstBuffer(GraphicsCore::Instance().device,
                                             reflect_global_consts_CPU,
                                             reflect_global_consts_GPU);
 
@@ -73,7 +73,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     reflect_global_consts_CPU.viewProj.Invert();
 
                 GraphicsUtil::UpdateBuffer(
-                    GraphicsManager::Instance().device_context,
+                    GraphicsCore::Instance().device_context,
                     reflect_global_consts_CPU, reflect_global_consts_GPU);
             }
 
@@ -82,8 +82,8 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     EnumComponentType::eRenderer);
 
             renderer->UpdateConstantBuffers(
-                GraphicsManager::Instance().device,
-                GraphicsManager::Instance().device_context);
+                GraphicsCore::Instance().device,
+                GraphicsCore::Instance().device_context);
 
             break;
         }
@@ -94,61 +94,53 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
                 // Mirror 2. Mark only the mirror position as 1 in the
                 // StencilBuffer.
-                GraphicsManager::Instance().SetPipelineState(
-                    graphics::stencilMaskPSO);
+                GraphicsUtil::SetPipelineState(graphics::stencilMaskPSO);
 
                 if (true) {
                     auto renderer =
                         (MeshRenderer *)manager->ground->mirror->GetComponent(
                             EnumComponentType::eRenderer);
-                    renderer->Render(
-                        GraphicsManager::Instance().device_context);
+                    renderer->Render(GraphicsCore::Instance().device_context);
                 }
 
                 // Mirror 3. Render the reflected objects at the mirror
                 // position.
-                GraphicsManager::Instance().SetPipelineState(
-                    manager->draw_wire ? graphics::reflectWirePSO
-                                       : graphics::reflectSolidPSO);
-                GraphicsManager::Instance().SetGlobalConsts(
-                    reflect_global_consts_GPU);
+                GraphicsUtil::SetPipelineState(manager->draw_wire
+                                                   ? graphics::reflectWirePSO
+                                                   : graphics::reflectSolidPSO);
+                GraphicsUtil::SetGlobalConsts(reflect_global_consts_GPU);
 
-                GraphicsManager::Instance()
-                    .device_context->ClearDepthStencilView(
-                        GraphicsManager::Instance().m_depthStencilView.Get(),
-                        D3D11_CLEAR_DEPTH, 1.0f, 0);
+                GraphicsCore::Instance().device_context->ClearDepthStencilView(
+                    GraphicsCore::Instance().m_depthStencilView.Get(),
+                    D3D11_CLEAR_DEPTH, 1.0f, 0);
 
                 for (auto &i : manager->objects) {
                     auto renderer = (MeshRenderer *)i.second->GetComponent(
                         EnumComponentType::eRenderer);
-                    renderer->Render(
-                        GraphicsManager::Instance().device_context);
+                    renderer->Render(GraphicsCore::Instance().device_context);
                 }
 
                 if (true) {
-                    GraphicsManager::Instance().SetPipelineState(
+                    GraphicsUtil::SetPipelineState(
                         manager->draw_wire ? graphics::reflectSkyboxWirePSO
                                            : graphics::reflectSkyboxSolidPSO);
                     auto renderer =
                         (MeshRenderer *)manager->skybox->model->GetComponent(
                             EnumComponentType::eRenderer);
-                    renderer->Render(
-                        GraphicsManager::Instance().device_context);
+                    renderer->Render(GraphicsCore::Instance().device_context);
                 }
 
                 if (true) {
                     // Mirror 4. Draw the mirror itself with the 'Blend'
                     // material
-                    GraphicsManager::Instance().SetPipelineState(
+                    GraphicsUtil::SetPipelineState(
                         manager->draw_wire ? graphics::mirrorBlendWirePSO
                                            : graphics::mirrorBlendSolidPSO);
-                    GraphicsManager::Instance().SetGlobalConsts(
-                        manager->global_consts_GPU);
+                    GraphicsUtil::SetGlobalConsts(manager->global_consts_GPU);
                     auto renderer =
                         (MeshRenderer *)manager->ground->mirror->GetComponent(
                             EnumComponentType::eRenderer);
-                    renderer->Render(
-                        GraphicsManager::Instance().device_context);
+                    renderer->Render(GraphicsCore::Instance().device_context);
                 }
 
             } // end of if (m_mirrorAlpha < 1.0f)
@@ -165,6 +157,6 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
     ComPtr<ID3D11Buffer> reflect_global_consts_GPU;
 };
 
-} // namespace engine
+} // namespace core
 
 #endif

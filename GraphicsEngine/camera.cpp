@@ -42,8 +42,8 @@ void Camera::Initialize() {
     MeshData sphere = GeometryGenerator::MakeSphere(0.01f, 10, 10);
 
     auto renderer = std::make_shared<MeshRenderer>(
-        GraphicsManager::Instance().device,
-        GraphicsManager::Instance().device_context, std::vector{sphere});
+        GraphicsCore::Instance().device,
+        GraphicsCore::Instance().device_context, std::vector{sphere});
 
     renderer->UpdateWorldRow(Matrix::CreateTranslation(lookAtVector));
     renderer->material_consts.GetCpu().albedoFactor = Vector3(0.0f);
@@ -66,13 +66,13 @@ void Camera::Update() {
 
     renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
                              Matrix::CreateTranslation(lookAtVector));
-    renderer->UpdateConstantBuffers(GraphicsManager::Instance().device,
-                                    GraphicsManager::Instance().device_context);
+    renderer->UpdateConstantBuffers(GraphicsCore::Instance().device,
+                                    GraphicsCore::Instance().device_context);
 }
 
 void Camera::Draw() {
     auto renderer =
         (MeshRenderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
-    renderer->Render(GraphicsManager::Instance().device_context);
+    renderer->Render(GraphicsCore::Instance().device_context);
 }
 } // namespace engine

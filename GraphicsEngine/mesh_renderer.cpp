@@ -254,13 +254,13 @@ void MeshRenderer::UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
     }
 }
 
-GraphicsPSO &MeshRenderer::GetPSO(const bool wired) {
+PipelineState &MeshRenderer::GetPSO(const bool wired) {
     return wired ? graphics::defaultWirePSO : graphics::defaultSolidPSO;
 }
 
-GraphicsPSO &MeshRenderer::GetDepthOnlyPSO() { return graphics::depthOnlyPSO; }
+PipelineState &MeshRenderer::GetDepthOnlyPSO() { return graphics::depthOnlyPSO; }
 
-GraphicsPSO &MeshRenderer::GetReflectPSO(const bool wired) {
+PipelineState &MeshRenderer::GetReflectPSO(const bool wired) {
     return wired ? graphics::reflectWirePSO : graphics::reflectSolidPSO;
 }
 

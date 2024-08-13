@@ -5,7 +5,7 @@
 #include "black_board.h"
 #include "graphics_manager.h"
 
-namespace engine {
+namespace core {
 class OnlyDepthNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
@@ -44,7 +44,7 @@ class OnlyDepthNode : public common::BehaviorActionNode {
                 depthOnlyDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
             GraphicsManager::Instance().SetPipelineState(
-                Graphics::depthOnlyPSO);
+                graphics::depthOnlyPSO);
             GraphicsManager::Instance().SetGlobalConsts(
                 manager->global_consts_GPU);
 

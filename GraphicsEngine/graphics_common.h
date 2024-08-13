@@ -5,9 +5,8 @@
 #include "graphics_pso.h"
 #include "graphics_util.h"
 
-namespace engine {
-
-namespace Graphics {
+namespace core {
+namespace graphics {
 
 // Samplers
 extern ComPtr<ID3D11SamplerState> linearWrapSS;
@@ -24,7 +23,7 @@ extern ComPtr<ID3D11RasterizerState> wireCCWRS;
 extern ComPtr<ID3D11RasterizerState> postProcessingRS;
 
 // Depth Stencil States
-extern ComPtr<ID3D11DepthStencilState> drawDSS; 
+extern ComPtr<ID3D11DepthStencilState> drawDSS;
 extern ComPtr<ID3D11DepthStencilState> maskDSS;
 extern ComPtr<ID3D11DepthStencilState> drawMaskedDSS;
 
@@ -91,8 +90,8 @@ void InitDepthStencilStates(ComPtr<ID3D11Device> &device);
 void InitPipelineStates(ComPtr<ID3D11Device> &device);
 void InitShaders(ComPtr<ID3D11Device> &device);
 
-} // namespace Graphics
+} // namespace graphics
 
-} // namespace engine
+} // namespace core
 
 #endif

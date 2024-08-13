@@ -4,7 +4,7 @@
 #include "compute_pso.h"
 #include "tone_mapping.h"
 
-namespace engine {
+namespace core {
 
 class ImageFilter : public Component {
   public:

@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace engine {
+namespace core {
 
 using std::map;
 using std::string;

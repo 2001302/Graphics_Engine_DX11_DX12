@@ -5,7 +5,7 @@
 #include "input.h"
 #include "job_context.h"
 
-namespace engine {
+namespace core {
 
 struct BlackBoard : public common::IDataBlock {
     BlackBoard() {

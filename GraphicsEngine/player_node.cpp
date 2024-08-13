@@ -1,6 +1,6 @@
 #include "player_node.h"
 
-namespace engine {
+namespace core {
 PlayerAnimator::PlayerAnimator(ComPtr<ID3D11Device> &device,
                                const AnimationData &aniData,
                                SkinnedMeshRenderer *renderer,

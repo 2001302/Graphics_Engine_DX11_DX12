@@ -1,7 +1,7 @@
 #include "message_receiver.h"
 #include "mesh_renderer.h"
 
-namespace engine {
+namespace core {
 using namespace DirectX::SimpleMath;
 
 bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,

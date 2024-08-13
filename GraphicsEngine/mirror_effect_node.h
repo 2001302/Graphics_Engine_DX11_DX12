@@ -5,7 +5,7 @@
 #include "black_board.h"
 #include "mesh_renderer.h"
 
-namespace engine {
+namespace core {
 
 class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
@@ -95,7 +95,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 // Mirror 2. Mark only the mirror position as 1 in the
                 // StencilBuffer.
                 GraphicsManager::Instance().SetPipelineState(
-                    Graphics::stencilMaskPSO);
+                    graphics::stencilMaskPSO);
 
                 if (true) {
                     auto renderer =
@@ -108,8 +108,8 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 // Mirror 3. Render the reflected objects at the mirror
                 // position.
                 GraphicsManager::Instance().SetPipelineState(
-                    manager->draw_wire ? Graphics::reflectWirePSO
-                                       : Graphics::reflectSolidPSO);
+                    manager->draw_wire ? graphics::reflectWirePSO
+                                       : graphics::reflectSolidPSO);
                 GraphicsManager::Instance().SetGlobalConsts(
                     reflect_global_consts_GPU);
 
@@ -127,8 +127,8 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
                 if (true) {
                     GraphicsManager::Instance().SetPipelineState(
-                        manager->draw_wire ? Graphics::reflectSkyboxWirePSO
-                                           : Graphics::reflectSkyboxSolidPSO);
+                        manager->draw_wire ? graphics::reflectSkyboxWirePSO
+                                           : graphics::reflectSkyboxSolidPSO);
                     auto renderer =
                         (MeshRenderer *)manager->skybox->model->GetComponent(
                             EnumComponentType::eRenderer);
@@ -140,8 +140,8 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     // Mirror 4. Draw the mirror itself with the 'Blend'
                     // material
                     GraphicsManager::Instance().SetPipelineState(
-                        manager->draw_wire ? Graphics::mirrorBlendWirePSO
-                                           : Graphics::mirrorBlendSolidPSO);
+                        manager->draw_wire ? graphics::mirrorBlendWirePSO
+                                           : graphics::mirrorBlendSolidPSO);
                     GraphicsManager::Instance().SetGlobalConsts(
                         manager->global_consts_GPU);
                     auto renderer =

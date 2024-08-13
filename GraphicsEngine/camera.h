@@ -7,7 +7,7 @@
 #include "node.h"
 #include "model.h"
 
-namespace engine {
+namespace core {
 class Camera : public common::INode {
   public:
     Camera();

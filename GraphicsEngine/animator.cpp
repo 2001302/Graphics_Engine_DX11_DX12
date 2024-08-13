@@ -1,6 +1,6 @@
 #include "animator.h"
 
-namespace engine {
+namespace core {
 Animator::Animator(ComPtr<ID3D11Device> &device, const AnimationData &aniData) {
     InitAnimationData(device, aniData);
 }

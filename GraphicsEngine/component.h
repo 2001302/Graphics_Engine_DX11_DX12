@@ -3,7 +3,7 @@
 
 #include "node.h"
 
-namespace engine {
+namespace core {
 enum EnumComponentType {
     eRenderer = 0,
     eAnimator = 1,

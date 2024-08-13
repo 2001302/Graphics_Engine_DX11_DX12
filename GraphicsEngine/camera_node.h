@@ -4,7 +4,7 @@
 #include "behavior_tree_builder.h"
 #include "black_board.h"
 
-namespace engine {
+namespace core {
 
 class CameraNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
@@ -28,8 +28,8 @@ class CameraNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eRender: {
 
             GraphicsManager::Instance().SetPipelineState(
-                manager->draw_wire ? Graphics::defaultWirePSO
-                                   : Graphics::defaultSolidPSO);
+                manager->draw_wire ? graphics::defaultWirePSO
+                                   : graphics::defaultSolidPSO);
             GraphicsManager::Instance().SetGlobalConsts(
                 manager->global_consts_GPU);
 

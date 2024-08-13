@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-namespace engine {
+namespace core {
 using std::vector;
 
 template <typename T_ELEMENT> class StructuredBuffer {

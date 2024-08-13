@@ -3,7 +3,7 @@
 
 #include "model.h"
 
-namespace engine {
+namespace core {
 struct Ground {
     std::shared_ptr<Model> model;
     std::shared_ptr<Model> mirror;

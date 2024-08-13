@@ -3,7 +3,7 @@
 
 #include "model.h"
 
-namespace engine {
+namespace core {
 struct Skybox {
     std::shared_ptr<Model> model;
     ComPtr<ID3D11ShaderResourceView> env_SRV;

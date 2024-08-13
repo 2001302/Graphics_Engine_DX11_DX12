@@ -5,7 +5,7 @@
 #include "black_board.h"
 #include "mesh_renderer.h"
 
-namespace engine {
+namespace core {
 
 class SkyboxNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
@@ -57,8 +57,8 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eRender: {
 
             GraphicsManager::Instance().SetPipelineState(
-                manager->draw_wire ? Graphics::skyboxWirePSO
-                                   : Graphics::skyboxSolidPSO);
+                manager->draw_wire ? graphics::skyboxWirePSO
+                                   : graphics::skyboxSolidPSO);
             auto renderer =
                 (MeshRenderer *)manager->skybox->model->GetComponent(
                     EnumComponentType::eRenderer);

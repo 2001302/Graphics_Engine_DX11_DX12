@@ -1,6 +1,6 @@
 #include "skinned_mesh_renderer.h"
 
-namespace engine {
+namespace core {
 SkinnedMeshRenderer::SkinnedMeshRenderer(ComPtr<ID3D11Device> &device,
                                          ComPtr<ID3D11DeviceContext> &context,
                                          const vector<MeshData> &meshes) {
@@ -14,16 +14,16 @@ void SkinnedMeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
 }
 
 GraphicsPSO &SkinnedMeshRenderer::GetPSO(const bool wired) {
-    return wired ? Graphics::skinnedWirePSO : Graphics::skinnedSolidPSO;
+    return wired ? graphics::skinnedWirePSO : graphics::skinnedSolidPSO;
 }
 
 GraphicsPSO &SkinnedMeshRenderer::GetReflectPSO(const bool wired) {
-    return wired ? Graphics::reflectSkinnedWirePSO
-                 : Graphics::reflectSkinnedSolidPSO;
+    return wired ? graphics::reflectSkinnedWirePSO
+                 : graphics::reflectSkinnedSolidPSO;
 }
 
 GraphicsPSO &SkinnedMeshRenderer::GetDepthOnlyPSO() {
-    return Graphics::depthOnlySkinnedPSO;
+    return graphics::depthOnlySkinnedPSO;
 }
 
 void SkinnedMeshRenderer::InitMeshBuffers(ComPtr<ID3D11Device> &device,

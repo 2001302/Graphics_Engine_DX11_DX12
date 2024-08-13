@@ -1,6 +1,6 @@
 #include "graphics_manager.h"
 
-namespace engine {
+namespace core {
 
 bool GraphicsManager::Initialize() {
     const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
@@ -50,7 +50,7 @@ bool GraphicsManager::Initialize() {
     rastDesc.FrontCounterClockwise = false;
     rastDesc.DepthClipEnable = true;
 
-    Graphics::InitCommonStates(device);
+    graphics::InitCommonStates(device);
 
     return true;
 }

@@ -2,7 +2,7 @@
 
 #include "graphics_util.h"
 
-namespace engine {
+namespace core {
 
 class ComputePSO {
   public:

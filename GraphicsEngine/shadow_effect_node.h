@@ -5,7 +5,7 @@
 #include "black_board.h"
 #include "mesh_renderer.h"
 
-namespace engine {
+namespace core {
 class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
 
     common::EnumBehaviorTreeStatus OnInvoke() override {
@@ -125,7 +125,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
 
             // make shadow map
             GraphicsManager::Instance().SetPipelineState(
-                Graphics::depthOnlyPSO);
+                graphics::depthOnlyPSO);
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 if (manager->global_consts_CPU.lights[i].type & LIGHT_SHADOW) {
                     // no RTS

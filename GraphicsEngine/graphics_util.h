@@ -13,7 +13,7 @@
 #include <windows.h>
 #include <wrl/client.h> // ComPtr
 
-namespace engine {
+namespace core {
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;
 using DirectX::SimpleMath::Vector3;

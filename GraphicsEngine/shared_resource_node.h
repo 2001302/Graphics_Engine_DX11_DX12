@@ -5,7 +5,7 @@
 #include "black_board.h"
 #include "mesh_renderer.h"
 
-namespace engine {
+namespace core {
 
 class SharedResourceNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
@@ -54,14 +54,14 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
             GraphicsManager::Instance().SetMainViewport();
 
             GraphicsManager::Instance().device_context->VSSetSamplers(
-                0, UINT(Graphics::sampleStates.size()),
-                Graphics::sampleStates.data());
+                0, UINT(graphics::sampleStates.size()),
+                graphics::sampleStates.data());
             GraphicsManager::Instance().device_context->PSSetSamplers(
-                0, UINT(Graphics::sampleStates.size()),
-                Graphics::sampleStates.data());
+                0, UINT(graphics::sampleStates.size()),
+                graphics::sampleStates.data());
             GraphicsManager::Instance().device_context->CSSetSamplers(
-                0, UINT(Graphics::sampleStates.size()),
-                Graphics::sampleStates.data());
+                0, UINT(graphics::sampleStates.size()),
+                graphics::sampleStates.data());
 
             // Shared textures: start from register(t10) in 'Common.hlsli'
             std::vector<ID3D11ShaderResourceView *> commonSRVs = {

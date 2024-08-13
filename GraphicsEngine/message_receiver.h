@@ -6,7 +6,7 @@
 #include "job_context.h"
 #include "setting_ui.h"
 
-namespace engine {
+namespace core {
 class MessageReceiver {
   public:
     bool OnModelLoadRequest(JobContext *manager, HWND main_window);

@@ -1,6 +1,6 @@
 #include "mesh_renderer.h"
 
-namespace engine {
+namespace core {
 
 using namespace std;
 using namespace DirectX;
@@ -255,13 +255,13 @@ void MeshRenderer::UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
 }
 
 GraphicsPSO &MeshRenderer::GetPSO(const bool wired) {
-    return wired ? Graphics::defaultWirePSO : Graphics::defaultSolidPSO;
+    return wired ? graphics::defaultWirePSO : graphics::defaultSolidPSO;
 }
 
-GraphicsPSO &MeshRenderer::GetDepthOnlyPSO() { return Graphics::depthOnlyPSO; }
+GraphicsPSO &MeshRenderer::GetDepthOnlyPSO() { return graphics::depthOnlyPSO; }
 
 GraphicsPSO &MeshRenderer::GetReflectPSO(const bool wired) {
-    return wired ? Graphics::reflectWirePSO : Graphics::reflectSolidPSO;
+    return wired ? graphics::reflectWirePSO : graphics::reflectSolidPSO;
 }
 
 void MeshRenderer::Render(ComPtr<ID3D11DeviceContext> &context) {

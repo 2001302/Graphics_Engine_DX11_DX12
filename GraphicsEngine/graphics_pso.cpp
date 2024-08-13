@@ -1,6 +1,6 @@
 #include "graphics_pso.h"
 
-namespace engine {
+namespace core {
 
 void GraphicsPSO::operator=(const GraphicsPSO &pso) {
     vertex_shader = pso.vertex_shader;

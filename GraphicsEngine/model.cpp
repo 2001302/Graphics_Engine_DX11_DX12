@@ -1,6 +1,6 @@
 #include "model.h"
 
-namespace engine {
+namespace core {
 Model::~Model() {
     for (auto component : components) {
         component.second.reset();

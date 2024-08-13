@@ -6,7 +6,7 @@
 #include "image_filter.h"
 #include "tone_mapping.h"
 
-namespace engine {
+namespace core {
 /// <summary>
 /// Bloom + ToneMapping
 /// </summary>
@@ -62,21 +62,21 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
             if (use_bloom) {
                 // bright pass->blur vertical->blur horizontal->composite
-                bright_pass.Render(context, Graphics::brightPassCS,
+                bright_pass.Render(context, graphics::brightPassCS,
                                    const_buffer,
                                    {GraphicsManager::Instance().resolved_SRV},
                                    bright_pass_UAV);
 
-                blur_vertical.Render(context, Graphics::blurVerticalCS,
+                blur_vertical.Render(context, graphics::blurVerticalCS,
                                      const_buffer, {bright_pass_SRV},
                                      blur_vertical_UAV);
 
-                blur_horizontal.Render(context, Graphics::blurHorizontalCS,
+                blur_horizontal.Render(context, graphics::blurHorizontalCS,
                                        const_buffer, {blur_vertical_SRV},
                                        blur_horizontal_UAV);
 
                 bloom_composite.Render(
-                    context, Graphics::bloomComposite, const_buffer,
+                    context, graphics::bloomComposite, const_buffer,
                     {GraphicsManager::Instance().resolved_SRV,
                      blur_horizontal_SRV},
                     bright_pass_UAV);
@@ -88,7 +88,7 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
             // tone mapping
             GraphicsManager::Instance().SetPipelineState(
-                Graphics::postProcessingPSO);
+                graphics::postProcessingPSO);
             tone_mapping.Render(device, context, const_buffer);
             break;
         }

@@ -7,7 +7,7 @@
 #include "mesh_renderer.h"
 #include "skinned_mesh_renderer.h"
 
-namespace engine {
+namespace core {
 
 using namespace common;
 
@@ -156,8 +156,8 @@ class PlayerNodeInvoker : public BehaviorActionNode {
         }
         case EnumStageType::eRender: {
             GraphicsManager::Instance().SetPipelineState(
-                job_context->draw_wire ? Graphics::skinnedWirePSO
-                                       : Graphics::skinnedSolidPSO);
+                job_context->draw_wire ? graphics::skinnedWirePSO
+                                       : graphics::skinnedSolidPSO);
             auto renderer =
                 (SkinnedMeshRenderer *)job_context->player->GetComponent(
                     EnumComponentType::eRenderer);

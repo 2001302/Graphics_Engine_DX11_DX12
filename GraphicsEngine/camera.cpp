@@ -4,7 +4,7 @@
 #include "job_context.h"
 #include "setting_ui.h"
 
-namespace engine {
+namespace core {
 
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector3;

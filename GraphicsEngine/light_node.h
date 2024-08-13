@@ -5,7 +5,7 @@
 #include "black_board.h"
 #include "mesh_renderer.h"
 
-namespace engine {
+namespace core {
 
 class LightNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
@@ -118,8 +118,8 @@ class LightNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eRender: {
 
             GraphicsManager::Instance().SetPipelineState(
-                job_context->draw_wire ? Graphics::defaultWirePSO
-                                       : Graphics::defaultSolidPSO);
+                job_context->draw_wire ? graphics::defaultWirePSO
+                                       : graphics::defaultSolidPSO);
             GraphicsManager::Instance().SetGlobalConsts(
                 job_context->global_consts_GPU);
             for (auto &i : light_spheres) {

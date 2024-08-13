@@ -1,8 +1,8 @@
 #include "graphics_common.h"
 
-namespace engine {
+namespace core {
 
-namespace Graphics {
+namespace graphics {
 
 // Sampler States
 ComPtr<ID3D11SamplerState> linearWrapSS;
@@ -82,7 +82,7 @@ GraphicsPSO postProcessingPSO;
 
 } // namespace Graphics
 
-void Graphics::InitCommonStates(ComPtr<ID3D11Device> &device) {
+void graphics::InitCommonStates(ComPtr<ID3D11Device> &device) {
 
     InitShaders(device);
     InitSamplers(device);
@@ -92,7 +92,7 @@ void Graphics::InitCommonStates(ComPtr<ID3D11Device> &device) {
     InitPipelineStates(device);
 }
 
-void Graphics::InitSamplers(ComPtr<ID3D11Device> &device) {
+void graphics::InitSamplers(ComPtr<ID3D11Device> &device) {
 
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
@@ -135,7 +135,7 @@ void Graphics::InitSamplers(ComPtr<ID3D11Device> &device) {
     sampleStates.push_back(shadowCompareSS.Get());
 }
 
-void Graphics::InitRasterizerStates(ComPtr<ID3D11Device> &device) {
+void graphics::InitRasterizerStates(ComPtr<ID3D11Device> &device) {
 
     // Rasterizer States
     D3D11_RASTERIZER_DESC rastDesc;
@@ -170,7 +170,7 @@ void Graphics::InitRasterizerStates(ComPtr<ID3D11Device> &device) {
         &rastDesc, postProcessingRS.GetAddressOf()));
 }
 
-void Graphics::InitBlendStates(ComPtr<ID3D11Device> &device) {
+void graphics::InitBlendStates(ComPtr<ID3D11Device> &device) {
 
     // "이미 그려져있는 화면"과 어떻게 섞을지를 결정
     // Dest: 이미 그려져 있는 값들을 의미
@@ -198,7 +198,7 @@ void Graphics::InitBlendStates(ComPtr<ID3D11Device> &device) {
         device->CreateBlendState(&mirrorBlendDesc, mirrorBS.GetAddressOf()));
 }
 
-void Graphics::InitDepthStencilStates(ComPtr<ID3D11Device> &device) {
+void graphics::InitDepthStencilStates(ComPtr<ID3D11Device> &device) {
 
     // D3D11_DEPTH_STENCIL_DESC 옵션 정리
     // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_depth_stencil_desc
@@ -266,7 +266,7 @@ void Graphics::InitDepthStencilStates(ComPtr<ID3D11Device> &device) {
         device->CreateDepthStencilState(&dsDesc, drawMaskedDSS.GetAddressOf()));
 }
 
-void Graphics::InitShaders(ComPtr<ID3D11Device> &device) {
+void graphics::InitShaders(ComPtr<ID3D11Device> &device) {
 
     // Shaders, InputLayouts
 
@@ -363,7 +363,7 @@ void Graphics::InitShaders(ComPtr<ID3D11Device> &device) {
                                       bloomComposite);
 }
 
-void Graphics::InitPipelineStates(ComPtr<ID3D11Device> &device) {
+void graphics::InitPipelineStates(ComPtr<ID3D11Device> &device) {
 
     // defaultSolidPSO;
     defaultSolidPSO.vertex_shader = basicVS;

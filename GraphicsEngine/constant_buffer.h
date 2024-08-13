@@ -3,7 +3,7 @@
 
 #include "graphics_manager.h"
 
-namespace engine {
+namespace core {
 
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;

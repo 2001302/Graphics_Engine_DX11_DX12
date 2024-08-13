@@ -4,7 +4,7 @@
 #include "behavior_tree_builder.h"
 #include "graphics_manager.h"
 
-namespace engine {
+namespace core {
 class ResolveBufferNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 

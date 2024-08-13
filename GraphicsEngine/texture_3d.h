@@ -6,7 +6,7 @@
 #include <random>
 #include <vector>
 
-namespace engine {
+namespace core {
 
 using std::vector;
 

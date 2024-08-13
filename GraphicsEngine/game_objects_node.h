@@ -6,7 +6,7 @@
 #include "mesh_renderer.h"
 #include "skinned_mesh_renderer.h"
 
-namespace engine {
+namespace core {
 
 class GameObjectNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
@@ -91,8 +91,8 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eRender: {
 
             GraphicsManager::Instance().SetPipelineState(
-                manager->draw_wire ? Graphics::defaultWirePSO
-                                   : Graphics::defaultSolidPSO);
+                manager->draw_wire ? graphics::defaultWirePSO
+                                   : graphics::defaultSolidPSO);
             GraphicsManager::Instance().SetGlobalConsts(
                 manager->global_consts_GPU);
 
@@ -111,7 +111,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 renderer->Render(GraphicsManager::Instance().device_context);
             }
 
-            GraphicsManager::Instance().SetPipelineState(Graphics::normalsPSO);
+            GraphicsManager::Instance().SetPipelineState(graphics::normalsPSO);
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);

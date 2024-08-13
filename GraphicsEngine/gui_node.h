@@ -4,7 +4,7 @@
 #include "behavior_tree_builder.h"
 #include "black_board.h"
 
-namespace engine {
+namespace core {
 
 class GuiNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {

@@ -3,7 +3,7 @@
 
 #include "graphics_manager.h"
 
-namespace engine {
+namespace core {
 
 struct Vertex {
     Vector3 position;

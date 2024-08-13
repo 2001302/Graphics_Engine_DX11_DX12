@@ -9,7 +9,7 @@
 #include <filesystem>
 #include <iostream>
 
-namespace engine {
+namespace core {
 using Microsoft::WRL::ComPtr;
 
 class MeshRenderer : public Component {

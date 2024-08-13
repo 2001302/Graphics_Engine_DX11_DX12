@@ -11,7 +11,7 @@
 #include "graphics_common.h"
 #include "graphics_util.h"
 
-namespace engine {
+namespace core {
 class GraphicsManager {
   public:
     static GraphicsManager &Instance() {

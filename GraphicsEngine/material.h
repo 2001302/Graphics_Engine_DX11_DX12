@@ -3,7 +3,7 @@
 
 #include "graphics_manager.h"
 
-namespace engine {
+namespace core {
 
 struct Material {
     Vector3 ambient = Vector3(0.1f);  // 12

@@ -11,7 +11,7 @@
 #include "model.h"
 #include "skybox.h"
 
-namespace engine {
+namespace core {
 enum EnumStageType {
     eInitialize = 0,
     eUpdate = 1,
@@ -64,9 +64,9 @@ class JobContext : public common::IInfo {
                                          ground->mirror_alpha,
                                          ground->mirror_alpha, 1.0f};
             if (draw_wire)
-                Graphics::mirrorBlendWirePSO.SetBlendFactor(blendColor);
+                graphics::mirrorBlendWirePSO.SetBlendFactor(blendColor);
             else
-                Graphics::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
+                graphics::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
 
             auto renderer = (MeshRenderer *)ground->mirror->GetComponent(
                 EnumComponentType::eRenderer);

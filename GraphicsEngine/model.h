@@ -6,7 +6,7 @@
 #include "node.h"
 #include <unordered_map>
 
-namespace engine {
+namespace core {
 class Model : public common::INode {
   public:
     Model(){};

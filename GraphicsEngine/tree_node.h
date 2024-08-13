@@ -15,7 +15,7 @@
 #include "shared_resource_node.h"
 
 // clang-format off
-namespace engine {
+namespace core {
 class TreeNode {
   public:
     TreeNode() {

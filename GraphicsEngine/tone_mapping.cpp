@@ -5,17 +5,14 @@
 
 namespace core {
 
-void ToneMapping::Initialize(ComPtr<ID3D11Device> &device,
-                             ComPtr<ID3D11DeviceContext> &context) {
+void ToneMapping::Initialize() {
 
     MeshData meshData = GeometryGenerator::MakeSquare();
 
     mesh = std::make_shared<Mesh>();
-    GraphicsUtil::CreateVertexBuffer(device, meshData.vertices,
-                                     mesh->vertexBuffer);
+    GraphicsUtil::CreateVertexBuffer(meshData.vertices, mesh->vertexBuffer);
     mesh->indexCount = UINT(meshData.indices.size());
-    GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
-                                    mesh->indexBuffer);
+    GraphicsUtil::CreateIndexBuffer(meshData.indices, mesh->indexBuffer);
 }
 
 void ToneMapping::Render(ComPtr<ID3D11Device> &device,
@@ -29,8 +26,7 @@ void ToneMapping::Render(ComPtr<ID3D11Device> &device,
 
     context->IASetVertexBuffers(0, 1, mesh->vertexBuffer.GetAddressOf(),
                                 &stride, &offset);
-    context->IASetIndexBuffer(mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT,
-                              0);
+    context->IASetIndexBuffer(mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
     context->RSSetViewports(1, &GraphicsCore::Instance().viewport);
     context->OMSetRenderTargets(
@@ -42,4 +38,4 @@ void ToneMapping::Render(ComPtr<ID3D11Device> &device,
     context->DrawIndexed(mesh->indexCount, 0, 0);
 }
 
-} // namespace engine
+} // namespace core

@@ -29,12 +29,11 @@ PipelineState &SkinnedMeshRenderer::GetDepthOnlyPSO() {
 void SkinnedMeshRenderer::InitMeshBuffers(ComPtr<ID3D11Device> &device,
                                           const MeshData &meshData,
                                           std::shared_ptr<Mesh> &newMesh) {
-    GraphicsUtil::CreateVertexBuffer(device, meshData.skinnedVertices,
+    GraphicsUtil::CreateVertexBuffer(meshData.skinnedVertices,
                                      newMesh->vertexBuffer);
     newMesh->indexCount = UINT(meshData.indices.size());
     newMesh->vertexCount = UINT(meshData.skinnedVertices.size());
     newMesh->stride = UINT(sizeof(SkinnedVertex));
-    GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
-                                    newMesh->indexBuffer);
+    GraphicsUtil::CreateIndexBuffer(meshData.indices, newMesh->indexBuffer);
 }
-} // namespace engine
+} // namespace core

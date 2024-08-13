@@ -6,13 +6,11 @@
 namespace core {
 class GraphicsUtil {
   public:
-    static void CreateIndexBuffer(ComPtr<ID3D11Device> &device,
-                                  const std::vector<uint32_t> &indices,
+    static void CreateIndexBuffer(const std::vector<uint32_t> &indices,
                                   ComPtr<ID3D11Buffer> &indexBuffer);
 
     template <typename T_VERTEX>
-    static void CreateVertexBuffer(ComPtr<ID3D11Device> &device,
-                                   const std::vector<T_VERTEX> &vertices,
+    static void CreateVertexBuffer(const std::vector<T_VERTEX> &vertices,
                                    ComPtr<ID3D11Buffer> &vertexBuffer) {
 
         // D3D11_USAGE enumeration (d3d11.h)
@@ -31,13 +29,12 @@ class GraphicsUtil {
         vertexBufferData.SysMemPitch = 0;
         vertexBufferData.SysMemSlicePitch = 0;
 
-        ThrowIfFailed(device->CreateBuffer(&bufferDesc, &vertexBufferData,
-                                           vertexBuffer.GetAddressOf()));
+        ThrowIfFailed(GraphicsCore::Instance().device->CreateBuffer(
+            &bufferDesc, &vertexBufferData, vertexBuffer.GetAddressOf()));
     }
 
     template <typename T_CONSTANT>
-    static void CreateConstBuffer(ComPtr<ID3D11Device> &device,
-                                  const T_CONSTANT &constantBufferData,
+    static void CreateConstBuffer(const T_CONSTANT &constantBufferData,
                                   ComPtr<ID3D11Buffer> &constantBuffer) {
 
         static_assert((sizeof(T_CONSTANT) % 16) == 0,
@@ -58,13 +55,12 @@ class GraphicsUtil {
         initData.SysMemPitch = 0;
         initData.SysMemSlicePitch = 0;
 
-        ThrowIfFailed(device->CreateBuffer(&desc, &initData,
-                                           constantBuffer.GetAddressOf()));
+        ThrowIfFailed(GraphicsCore::Instance().device->CreateBuffer(
+            &desc, &initData, constantBuffer.GetAddressOf()));
     }
 
     template <typename T_DATA>
-    static void UpdateBuffer(ComPtr<ID3D11DeviceContext> &context,
-                             const std::vector<T_DATA> &bufferData,
+    static void UpdateBuffer(const std::vector<T_DATA> &bufferData,
                              ComPtr<ID3D11Buffer> &buffer) {
 
         if (!buffer) {
@@ -73,14 +69,14 @@ class GraphicsUtil {
         }
 
         D3D11_MAPPED_SUBRESOURCE ms;
-        context->Map(buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+        GraphicsCore::Instance().device_context->Map(
+            buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
         memcpy(ms.pData, bufferData.data(), sizeof(T_DATA) * bufferData.size());
-        context->Unmap(buffer.Get(), NULL);
+        GraphicsCore::Instance().device_context->Unmap(buffer.Get(), NULL);
     }
 
     template <typename T_DATA>
-    static void UpdateBuffer(ComPtr<ID3D11DeviceContext> &context,
-                             const T_DATA &bufferData,
+    static void UpdateBuffer(const T_DATA &bufferData,
                              ComPtr<ID3D11Buffer> &buffer) {
 
         if (!buffer) {
@@ -89,56 +85,52 @@ class GraphicsUtil {
         }
 
         D3D11_MAPPED_SUBRESOURCE ms;
-        context->Map(buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
+        GraphicsCore::Instance().device_context->Map(
+            buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
         memcpy(ms.pData, &bufferData, sizeof(bufferData));
-        context->Unmap(buffer.Get(), NULL);
+        GraphicsCore::Instance().device_context->Unmap(buffer.Get(), NULL);
     }
-
-    static void
-    CreateTexture(ComPtr<ID3D11Device> &device,
-                  ComPtr<ID3D11DeviceContext> &context,
-                  const std::string filename, const bool usSRGB,
-                  ComPtr<ID3D11Texture2D> &texture,
-                  ComPtr<ID3D11ShaderResourceView> &textureResourceView);
 
     static void CreateTexture(
-        ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
+
+        const std::string filename, const bool usSRGB,
+        ComPtr<ID3D11Texture2D> &texture,
+        ComPtr<ID3D11ShaderResourceView> &textureResourceView);
+
+    static void CreateTexture(
+
         const std::string albedoFilename, const std::string opacityFilename,
         const bool usSRGB, ComPtr<ID3D11Texture2D> &texture,
         ComPtr<ID3D11ShaderResourceView> &textureResourceView);
 
     static void CreateMetallicRoughnessTexture(
-        ComPtr<ID3D11Device> &device, ComPtr<ID3D11DeviceContext> &context,
+
         const std::string metallicFiilename,
         const std::string roughnessFilename, ComPtr<ID3D11Texture2D> &texture,
         ComPtr<ID3D11ShaderResourceView> &srv);
 
-    static void
-    CreateTextureArray(ComPtr<ID3D11Device> &device,
-                       ComPtr<ID3D11DeviceContext> &context,
-                       const std::vector<std::string> filenames,
-                       ComPtr<ID3D11Texture2D> &texture,
-                       ComPtr<ID3D11ShaderResourceView> &textureResourceView);
+    static void CreateTextureArray(
 
-    static void CreateDDSTexture(ComPtr<ID3D11Device> &device,
-                                 const wchar_t *filename, const bool isCubeMap,
+        const std::vector<std::string> filenames,
+        ComPtr<ID3D11Texture2D> &texture,
+        ComPtr<ID3D11ShaderResourceView> &textureResourceView);
+
+    static void CreateDDSTexture(const wchar_t *filename, const bool isCubeMap,
                                  ComPtr<ID3D11ShaderResourceView> &texResView);
 
-    static void WriteToFile(ComPtr<ID3D11Device> &device,
-                            ComPtr<ID3D11DeviceContext> &context,
-                            ComPtr<ID3D11Texture2D> &textureToWrite,
-                            const std::string filename);
+    static void WriteToFile(
 
-    static void CreateUATexture(ComPtr<ID3D11Device> &device, const int width,
-                                const int height, const DXGI_FORMAT pixelFormat,
+        ComPtr<ID3D11Texture2D> &textureToWrite, const std::string filename);
+
+    static void CreateUATexture(const int width, const int height,
+                                const DXGI_FORMAT pixelFormat,
                                 ComPtr<ID3D11Texture2D> &texture,
                                 ComPtr<ID3D11RenderTargetView> &rtv,
                                 ComPtr<ID3D11ShaderResourceView> &srv,
                                 ComPtr<ID3D11UnorderedAccessView> &uav);
 
-    static void CreateTexture3D(ComPtr<ID3D11Device> &device, const int width,
-                                const int height, const int depth,
-                                const DXGI_FORMAT pixelFormat,
+    static void CreateTexture3D(const int width, const int height,
+                                const int depth, const DXGI_FORMAT pixelFormat,
                                 const std::vector<float> &initData,
                                 ComPtr<ID3D11Texture3D> &texture,
                                 ComPtr<ID3D11RenderTargetView> &rtv,
@@ -146,37 +138,30 @@ class GraphicsUtil {
                                 ComPtr<ID3D11UnorderedAccessView> &uav);
 
     static ComPtr<ID3D11Texture3D>
-    CreateStagingTexture3D(ComPtr<ID3D11Device> &device, const int width,
-                           const int height, const int depth,
+    CreateStagingTexture3D(const int width, const int height, const int depth,
                            const DXGI_FORMAT pixelFormat);
 
     static size_t GetPixelSize(DXGI_FORMAT pixelFormat);
 
-    static void ComputeShaderBarrier(ComPtr<ID3D11DeviceContext> &context);
+    static void ComputeShaderBarrier();
 
-    static void CreateStructuredBuffer(ComPtr<ID3D11Device> &device,
-                                       const UINT numElements,
+    static void CreateStructuredBuffer(const UINT numElements,
                                        const UINT sizeElement,
                                        const void *initData,
                                        ComPtr<ID3D11Buffer> &buffer,
                                        ComPtr<ID3D11ShaderResourceView> &srv,
                                        ComPtr<ID3D11UnorderedAccessView> &uav);
 
-    static void CreateStagingBuffer(ComPtr<ID3D11Device> &device,
-                                    const UINT numElements,
+    static void CreateStagingBuffer(const UINT numElements,
                                     const UINT sizeElement,
                                     const void *initData,
                                     ComPtr<ID3D11Buffer> &buffer);
 
-    static void CopyToStagingBuffer(ComPtr<ID3D11DeviceContext> &context,
-                                    ComPtr<ID3D11Buffer> &buffer, UINT size,
-                                    void *src) {
-        D3D11_MAPPED_SUBRESOURCE ms;
-        context->Map(buffer.Get(), NULL, D3D11_MAP_WRITE, NULL, &ms);
-        memcpy(ms.pData, src, size);
-        context->Unmap(buffer.Get(), NULL);
-    }
+    static void CopyToStagingBuffer(ComPtr<ID3D11Buffer> &buffer, UINT size,
+                                    void *src);
+
     static void SetPipelineState(const PipelineState &pso);
+
     static void SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU);
 };
 } // namespace core

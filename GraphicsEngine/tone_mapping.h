@@ -20,8 +20,7 @@ struct ImageFilterConstData {
 
 class ToneMapping : public Component {
   public:
-    void Initialize(ComPtr<ID3D11Device> &device,
-                    ComPtr<ID3D11DeviceContext> &context);
+    void Initialize();
 
     void Render(ComPtr<ID3D11Device> &device,
                 ComPtr<ID3D11DeviceContext> &context,

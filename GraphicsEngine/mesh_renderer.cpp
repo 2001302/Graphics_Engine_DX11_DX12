@@ -6,19 +6,20 @@ using namespace std;
 using namespace DirectX;
 
 MeshRenderer::MeshRenderer(ComPtr<ID3D11Device> &device,
-                   ComPtr<ID3D11DeviceContext> &context,
-                   const std::string &basePath, const std::string &filename) {
+                           ComPtr<ID3D11DeviceContext> &context,
+                           const std::string &basePath,
+                           const std::string &filename) {
     Initialize(device, context, basePath, filename);
 }
 
 MeshRenderer::MeshRenderer(ComPtr<ID3D11Device> &device,
-                   ComPtr<ID3D11DeviceContext> &context,
-                   const std::vector<MeshData> &meshes) {
+                           ComPtr<ID3D11DeviceContext> &context,
+                           const std::vector<MeshData> &meshes) {
     Initialize(device, context, meshes);
 }
 
 void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
-                          ComPtr<ID3D11DeviceContext> &context) {
+                              ComPtr<ID3D11DeviceContext> &context) {
     std::cout << "Renderer::Initialize(ComPtr<ID3D11Device> &device, "
                  "ComPtr<ID3D11DeviceContext> &context) was not implemented."
               << std::endl;
@@ -26,22 +27,20 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
 }
 
 void MeshRenderer::InitMeshBuffers(ComPtr<ID3D11Device> &device,
-                               const MeshData &meshData,
-                               shared_ptr<Mesh> &newMesh) {
+                                   const MeshData &meshData,
+                                   shared_ptr<Mesh> &newMesh) {
 
-    GraphicsUtil::CreateVertexBuffer(device, meshData.vertices,
-                                     newMesh->vertexBuffer);
+    GraphicsUtil::CreateVertexBuffer(meshData.vertices, newMesh->vertexBuffer);
     newMesh->indexCount = UINT(meshData.indices.size());
     newMesh->vertexCount = UINT(meshData.vertices.size());
     newMesh->stride = UINT(sizeof(Vertex));
-    GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
-                                    newMesh->indexBuffer);
+    GraphicsUtil::CreateIndexBuffer(meshData.indices, newMesh->indexBuffer);
 }
 
 void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
-                          ComPtr<ID3D11DeviceContext> &context,
-                          const std::string &basePath,
-                          const std::string &filename) {
+                              ComPtr<ID3D11DeviceContext> &context,
+                              const std::string &basePath,
+                              const std::string &filename) {
     auto meshes = GeometryGenerator::ReadFromFile(basePath, filename);
     Initialize(device, context, meshes);
 }
@@ -80,15 +79,15 @@ void ExtendBoundingBox(const BoundingBox &inBox, BoundingBox &outBox) {
 }
 
 void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
-                          ComPtr<ID3D11DeviceContext> &context,
-                          const vector<MeshData> &meshes) {
+                              ComPtr<ID3D11DeviceContext> &context,
+                              const vector<MeshData> &meshes) {
 
     // 일반적으로는 Mesh들이 m_mesh/materialConsts를 각자 소유 가능
     // 여기서는 한 Renderer 안의 여러 Mesh들이 Consts를 모두 공유
 
     mesh_consts.GetCpu().world = Matrix();
-    mesh_consts.Initialize(device);
-    material_consts.Initialize(device);
+    mesh_consts.Initialize();
+    material_consts.Initialize();
 
     for (const auto &meshData : meshes) {
         auto newMesh = std::make_shared<Mesh>();
@@ -98,14 +97,14 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
         if (!meshData.albedoTextureFilename.empty()) {
             if (filesystem::exists(meshData.albedoTextureFilename)) {
                 if (!meshData.opacityTextureFilename.empty()) {
-                    GraphicsUtil::CreateTexture(
-                        device, context, meshData.albedoTextureFilename,
-                        meshData.opacityTextureFilename, false,
-                        newMesh->albedoTexture, newMesh->albedoSRV);
+                    GraphicsUtil::CreateTexture(meshData.albedoTextureFilename,
+                                                meshData.opacityTextureFilename,
+                                                false, newMesh->albedoTexture,
+                                                newMesh->albedoSRV);
                 } else {
-                    GraphicsUtil::CreateTexture(
-                        device, context, meshData.albedoTextureFilename, true,
-                        newMesh->albedoTexture, newMesh->albedoSRV);
+                    GraphicsUtil::CreateTexture(meshData.albedoTextureFilename,
+                                                true, newMesh->albedoTexture,
+                                                newMesh->albedoSRV);
                 }
 
                 material_consts.GetCpu().useAlbedoMap = true;
@@ -117,9 +116,9 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
 
         if (!meshData.emissiveTextureFilename.empty()) {
             if (filesystem::exists(meshData.emissiveTextureFilename)) {
-                GraphicsUtil::CreateTexture(
-                    device, context, meshData.emissiveTextureFilename, true,
-                    newMesh->emissiveTexture, newMesh->emissiveSRV);
+                GraphicsUtil::CreateTexture(meshData.emissiveTextureFilename,
+                                            true, newMesh->emissiveTexture,
+                                            newMesh->emissiveSRV);
                 material_consts.GetCpu().useEmissiveMap = true;
             } else {
                 cout << meshData.emissiveTextureFilename
@@ -129,9 +128,9 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
 
         if (!meshData.normalTextureFilename.empty()) {
             if (filesystem::exists(meshData.normalTextureFilename)) {
-                GraphicsUtil::CreateTexture(
-                    device, context, meshData.normalTextureFilename, false,
-                    newMesh->normalTexture, newMesh->normalSRV);
+                GraphicsUtil::CreateTexture(meshData.normalTextureFilename,
+                                            false, newMesh->normalTexture,
+                                            newMesh->normalSRV);
                 material_consts.GetCpu().useNormalMap = true;
             } else {
                 cout << meshData.normalTextureFilename
@@ -141,9 +140,9 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
 
         if (!meshData.heightTextureFilename.empty()) {
             if (filesystem::exists(meshData.heightTextureFilename)) {
-                GraphicsUtil::CreateTexture(
-                    device, context, meshData.heightTextureFilename, false,
-                    newMesh->heightTexture, newMesh->heightSRV);
+                GraphicsUtil::CreateTexture(meshData.heightTextureFilename,
+                                            false, newMesh->heightTexture,
+                                            newMesh->heightSRV);
                 mesh_consts.GetCpu().useHeightMap = true;
             } else {
                 cout << meshData.heightTextureFilename
@@ -153,8 +152,7 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
 
         if (!meshData.aoTextureFilename.empty()) {
             if (filesystem::exists(meshData.aoTextureFilename)) {
-                GraphicsUtil::CreateTexture(device, context,
-                                            meshData.aoTextureFilename, false,
+                GraphicsUtil::CreateTexture(meshData.aoTextureFilename, false,
                                             newMesh->aoTexture, newMesh->aoSRV);
                 material_consts.GetCpu().useAOMap = true;
             } else {
@@ -172,7 +170,7 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
                 filesystem::exists(meshData.roughnessTextureFilename)) {
 
                 GraphicsUtil::CreateMetallicRoughnessTexture(
-                    device, context, meshData.metallicTextureFilename,
+                    meshData.metallicTextureFilename,
                     meshData.roughnessTextureFilename,
                     newMesh->metallicRoughnessTexture,
                     newMesh->metallicRoughnessSRV);
@@ -208,12 +206,12 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
             bounding_box.Center,
             Vector3(bounding_box.Extents) + Vector3(1e-3f));
         bounding_box_mesh = std::make_shared<Mesh>();
-        GraphicsUtil::CreateVertexBuffer(device, meshData.vertices,
+        GraphicsUtil::CreateVertexBuffer(meshData.vertices,
                                          bounding_box_mesh->vertexBuffer);
         bounding_box_mesh->indexCount = UINT(meshData.indices.size());
         bounding_box_mesh->vertexCount = UINT(meshData.vertices.size());
         bounding_box_mesh->stride = UINT(sizeof(Vertex));
-        GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
+        GraphicsUtil::CreateIndexBuffer(meshData.indices,
                                         bounding_box_mesh->indexBuffer);
         bounding_box_mesh->meshConstsGPU = mesh_consts.Get();
         bounding_box_mesh->materialConstsGPU = material_consts.Get();
@@ -234,12 +232,12 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
         auto meshData = GeometryGenerator::MakeWireSphere(
             bounding_sphere.Center, bounding_sphere.Radius);
         bounding_sphere_mesh = std::make_shared<Mesh>();
-        GraphicsUtil::CreateVertexBuffer(device, meshData.vertices,
+        GraphicsUtil::CreateVertexBuffer(meshData.vertices,
                                          bounding_sphere_mesh->vertexBuffer);
         bounding_sphere_mesh->indexCount = UINT(meshData.indices.size());
         bounding_sphere_mesh->vertexCount = UINT(meshData.vertices.size());
         bounding_sphere_mesh->stride = UINT(sizeof(Vertex));
-        GraphicsUtil::CreateIndexBuffer(device, meshData.indices,
+        GraphicsUtil::CreateIndexBuffer(meshData.indices,
                                         bounding_sphere_mesh->indexBuffer);
         bounding_sphere_mesh->meshConstsGPU = mesh_consts.Get();
         bounding_sphere_mesh->materialConstsGPU = material_consts.Get();
@@ -247,10 +245,10 @@ void MeshRenderer::Initialize(ComPtr<ID3D11Device> &device,
 }
 
 void MeshRenderer::UpdateConstantBuffers(ComPtr<ID3D11Device> &device,
-                                     ComPtr<ID3D11DeviceContext> &context) {
+                                         ComPtr<ID3D11DeviceContext> &context) {
     if (is_visible) {
-        mesh_consts.Upload(context);
-        material_consts.Upload(context);
+        mesh_consts.Upload();
+        material_consts.Upload();
     }
 }
 
@@ -258,7 +256,9 @@ PipelineState &MeshRenderer::GetPSO(const bool wired) {
     return wired ? graphics::defaultWirePSO : graphics::defaultSolidPSO;
 }
 
-PipelineState &MeshRenderer::GetDepthOnlyPSO() { return graphics::depthOnlyPSO; }
+PipelineState &MeshRenderer::GetDepthOnlyPSO() {
+    return graphics::depthOnlyPSO;
+}
 
 PipelineState &MeshRenderer::GetReflectPSO(const bool wired) {
     return wired ? graphics::reflectWirePSO : graphics::reflectSolidPSO;
@@ -328,7 +328,8 @@ void MeshRenderer::RenderWireBoundingBox(ComPtr<ID3D11DeviceContext> &context) {
     context->DrawIndexed(bounding_box_mesh->indexCount, 0, 0);
 }
 
-void MeshRenderer::RenderWireBoundingSphere(ComPtr<ID3D11DeviceContext> &context) {
+void MeshRenderer::RenderWireBoundingSphere(
+    ComPtr<ID3D11DeviceContext> &context) {
     ID3D11Buffer *constBuffers[2] = {
         bounding_box_mesh->meshConstsGPU.Get(),
         bounding_box_mesh->materialConstsGPU.Get()};
@@ -357,4 +358,4 @@ void MeshRenderer::UpdateWorldRow(const Matrix &worldRow) {
     mesh_consts.GetCpu().worldInv = mesh_consts.GetCpu().world.Invert();
 }
 
-} // namespace engine
+} // namespace core

@@ -75,15 +75,15 @@ struct Light {
     float haloRadius = 0.0f;
     float haloStrength = 0.0f;
 
-    Matrix viewProj; 
-    Matrix invProj;  
+    Matrix viewProj;
+    Matrix invProj;
 };
 
-// register(b1) 
+// register(b1)
 __declspec(align(256)) struct GlobalConstants {
     Matrix view;
     Matrix proj;
-    Matrix invProj; 
+    Matrix invProj;
     Matrix viewProj;
     Matrix invViewProj;
     Matrix invView;
@@ -91,9 +91,9 @@ __declspec(align(256)) struct GlobalConstants {
     Vector3 eyeWorld;
     float strengthIBL = 0.0f;
 
-    int textureToDraw = 0; 
-    float envLodBias = 0.0f; 
-    float lodBias = 2.0f;    
+    int textureToDraw = 0;
+    float envLodBias = 0.0f;
+    float lodBias = 2.0f;
     float dummy2 = 0.0f;
 
     Light lights[MAX_LIGHTS];
@@ -116,13 +116,9 @@ __declspec(align(256)) struct VolumeConsts {
 
 template <typename T_CONSTS> class ConstantBuffer {
   public:
-    void Initialize(ComPtr<ID3D11Device> &device) {
-        GraphicsUtil::CreateConstBuffer(device, m_cpu, m_gpu);
-    }
+    void Initialize() { GraphicsUtil::CreateConstBuffer(m_cpu, m_gpu); }
 
-    void Upload(ComPtr<ID3D11DeviceContext> &context) {
-        GraphicsUtil::UpdateBuffer(context, m_cpu, m_gpu);
-    }
+    void Upload() { GraphicsUtil::UpdateBuffer(m_cpu, m_gpu); }
 
   public:
     T_CONSTS &GetCpu() { return m_cpu; }
@@ -133,5 +129,5 @@ template <typename T_CONSTS> class ConstantBuffer {
     ComPtr<ID3D11Buffer> m_gpu;
 };
 
-} // namespace engine
+} // namespace core
 #endif

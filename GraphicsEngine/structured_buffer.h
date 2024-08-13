@@ -18,11 +18,11 @@ template <typename T_ELEMENT> class StructuredBuffer {
     }
 
     virtual void Initialize(ComPtr<ID3D11Device> &device) {
-        GraphicsUtil::CreateStructuredBuffer(device, UINT(m_cpu.size()),
+        GraphicsUtil::CreateStructuredBuffer(UINT(m_cpu.size()),
                                              sizeof(T_ELEMENT), m_cpu.data(),
                                              m_gpu, m_srv, m_uav);
         // Staging은 주로 디버깅 용도입니다.
-        GraphicsUtil::CreateStagingBuffer(device, UINT(m_cpu.size()),
+        GraphicsUtil::CreateStagingBuffer(UINT(m_cpu.size()),
                                           sizeof(T_ELEMENT), NULL, m_staging);
     }
 
@@ -36,7 +36,7 @@ template <typename T_ELEMENT> class StructuredBuffer {
         assert(arrCpu.size() == m_cpu.size());
 
         GraphicsUtil::CopyToStagingBuffer(
-            context, m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)),
+            m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)),
             arrCpu.data());
         context->CopyResource(m_gpu.Get(), m_staging.Get());
     }

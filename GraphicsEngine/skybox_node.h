@@ -40,17 +40,13 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             auto brdfFilename =
                 L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-            GraphicsUtil::CreateDDSTexture(GraphicsCore::Instance().device,
-                                           envFilename, true,
+            GraphicsUtil::CreateDDSTexture(envFilename, true,
                                            manager->skybox->env_SRV);
-            GraphicsUtil::CreateDDSTexture(GraphicsCore::Instance().device,
-                                           specularFilename, true,
+            GraphicsUtil::CreateDDSTexture(specularFilename, true,
                                            manager->skybox->specular_SRV);
-            GraphicsUtil::CreateDDSTexture(GraphicsCore::Instance().device,
-                                           irradianceFilename, true,
+            GraphicsUtil::CreateDDSTexture(irradianceFilename, true,
                                            manager->skybox->irradiance_SRV);
-            GraphicsUtil::CreateDDSTexture(GraphicsCore::Instance().device,
-                                           brdfFilename, true,
+            GraphicsUtil::CreateDDSTexture(brdfFilename, true,
                                            manager->skybox->brdf_SRV);
             break;
         }

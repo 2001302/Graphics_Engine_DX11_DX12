@@ -47,8 +47,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
             // m_basicList.push_back(m_ground); // 거울은 리스트에 등록 X
 
-            GraphicsUtil::CreateConstBuffer(GraphicsCore::Instance().device,
-                                            reflect_global_consts_CPU,
+            GraphicsUtil::CreateConstBuffer(reflect_global_consts_CPU,
                                             reflect_global_consts_GPU);
 
             break;
@@ -72,9 +71,8 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 reflect_global_consts_CPU.invViewProj =
                     reflect_global_consts_CPU.viewProj.Invert();
 
-                GraphicsUtil::UpdateBuffer(
-                    GraphicsCore::Instance().device_context,
-                    reflect_global_consts_CPU, reflect_global_consts_GPU);
+                GraphicsUtil::UpdateBuffer(reflect_global_consts_CPU,
+                                           reflect_global_consts_GPU);
             }
 
             auto renderer =

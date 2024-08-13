@@ -25,7 +25,7 @@ class ImageFilter : public Component {
             UINT(ceil(common::Env::Instance().screen_height / 16.0f)), 1);
 
         //Let the computer shader finish its task and then release the resources.
-        GraphicsUtil::ComputeShaderBarrier(context);
+        GraphicsUtil::ComputeShaderBarrier();
     }
 };
 } // namespace engine

@@ -30,30 +30,30 @@ class PostProcessingNode : public common::BehaviorActionNode,
             const_data.option1 = 1.0f;  // Exposure
             const_data.option2 = 2.2f;  // Gamma
 
-            GraphicsUtil::CreateConstBuffer(device, const_data, const_buffer);
-            GraphicsUtil::UpdateBuffer(context, const_data, const_buffer);
+            GraphicsUtil::CreateConstBuffer(const_data, const_buffer);
+            GraphicsUtil::UpdateBuffer(const_data, const_buffer);
 
             // bloom
-            GraphicsUtil::CreateUATexture(
-                device, common::Env::Instance().screen_width,
-                common::Env::Instance().screen_height,
-                DXGI_FORMAT_R16G16B16A16_FLOAT, bright_pass_buffer,
-                bright_pass_RTV, bright_pass_SRV, bright_pass_UAV);
+            GraphicsUtil::CreateUATexture(common::Env::Instance().screen_width,
+                                          common::Env::Instance().screen_height,
+                                          DXGI_FORMAT_R16G16B16A16_FLOAT,
+                                          bright_pass_buffer, bright_pass_RTV,
+                                          bright_pass_SRV, bright_pass_UAV);
 
             GraphicsUtil::CreateUATexture(
-                device, common::Env::Instance().screen_width,
+                common::Env::Instance().screen_width,
                 common::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_vertical_buffer,
                 blur_vertical_RTV, blur_vertical_SRV, blur_vertical_UAV);
 
             GraphicsUtil::CreateUATexture(
-                device, common::Env::Instance().screen_width,
+                common::Env::Instance().screen_width,
                 common::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_horizontal_buffer,
                 blur_horizontal_RTV, blur_horizontal_SRV, blur_horizontal_UAV);
 
             // tone mapping
-            tone_mapping.Initialize(device, context);
+            tone_mapping.Initialize();
 
             black_board->gui->PushInfoItem(this);
             break;
@@ -62,10 +62,9 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
             if (use_bloom) {
                 // bright pass->blur vertical->blur horizontal->composite
-                bright_pass.Render(context, graphics::brightPassCS,
-                                   const_buffer,
-                                   {GraphicsCore::Instance().resolved_SRV},
-                                   bright_pass_UAV);
+                bright_pass.Render(
+                    context, graphics::brightPassCS, const_buffer,
+                    {GraphicsCore::Instance().resolved_SRV}, bright_pass_UAV);
 
                 blur_vertical.Render(context, graphics::blurVerticalCS,
                                      const_buffer, {bright_pass_SRV},
@@ -75,11 +74,11 @@ class PostProcessingNode : public common::BehaviorActionNode,
                                        const_buffer, {blur_vertical_SRV},
                                        blur_horizontal_UAV);
 
-                bloom_composite.Render(
-                    context, graphics::bloomComposite, const_buffer,
-                    {GraphicsCore::Instance().resolved_SRV,
-                     blur_horizontal_SRV},
-                    bright_pass_UAV);
+                bloom_composite.Render(context, graphics::bloomComposite,
+                                       const_buffer,
+                                       {GraphicsCore::Instance().resolved_SRV,
+                                        blur_horizontal_SRV},
+                                       bright_pass_UAV);
 
                 context->CopyResource(
                     GraphicsCore::Instance().resolved_buffer.Get(),
@@ -87,8 +86,7 @@ class PostProcessingNode : public common::BehaviorActionNode,
             }
 
             // tone mapping
-            GraphicsUtil::SetPipelineState(
-                graphics::postProcessingPSO);
+            GraphicsUtil::SetPipelineState(graphics::postProcessingPSO);
             tone_mapping.Render(device, context, const_buffer);
             break;
         }
@@ -130,6 +128,6 @@ class PostProcessingNode : public common::BehaviorActionNode,
     ComPtr<ID3D11ShaderResourceView> blur_horizontal_SRV;
     ComPtr<ID3D11UnorderedAccessView> blur_horizontal_UAV;
 };
-} // namespace engine
+} // namespace core
 
 #endif

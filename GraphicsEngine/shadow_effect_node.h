@@ -67,8 +67,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
 
             // shadow global constant buffer
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                GraphicsUtil::CreateConstBuffer(GraphicsCore::Instance().device,
-                                                shadow_global_consts_CPU[i],
+                GraphicsUtil::CreateConstBuffer(shadow_global_consts_CPU[i],
                                                 shadow_global_consts_GPU[i]);
             }
 
@@ -99,10 +98,8 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                     shadow_global_consts_CPU[i].viewProj =
                         (lightViewRow * lightProjRow).Transpose();
 
-                    GraphicsUtil::UpdateBuffer(
-                        GraphicsCore::Instance().device_context,
-                        shadow_global_consts_CPU[i],
-                        shadow_global_consts_GPU[i]);
+                    GraphicsUtil::UpdateBuffer(shadow_global_consts_CPU[i],
+                                               shadow_global_consts_GPU[i]);
 
                     manager->global_consts_CPU.lights[i].viewProj =
                         shadow_global_consts_CPU[i].viewProj;

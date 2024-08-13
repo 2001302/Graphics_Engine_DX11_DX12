@@ -18,8 +18,7 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
 
-            GraphicsUtil::CreateConstBuffer(GraphicsCore::Instance().device,
-                                            manager->global_consts_CPU,
+            GraphicsUtil::CreateConstBuffer(manager->global_consts_CPU,
                                             manager->global_consts_GPU);
 
             break;
@@ -39,18 +38,16 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
             manager->global_consts_CPU.viewProj =
                 (viewRow * projRow).Transpose();
 
-            //used to shadow rendering
+            // used to shadow rendering
             manager->global_consts_CPU.invViewProj =
                 manager->global_consts_CPU.viewProj.Invert();
 
-            GraphicsUtil::UpdateBuffer(
-                GraphicsCore::Instance().device_context,
-                manager->global_consts_CPU, manager->global_consts_GPU);
+            GraphicsUtil::UpdateBuffer(manager->global_consts_CPU,
+                                       manager->global_consts_GPU);
 
             break;
         }
-        case EnumStageType::eRender: 
-        {
+        case EnumStageType::eRender: {
             GraphicsCore::Instance().SetMainViewport();
 
             GraphicsCore::Instance().device_context->VSSetSamplers(
@@ -82,6 +79,6 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
     }
 };
 
-} // namespace engine
+} // namespace core
 
 #endif

@@ -25,8 +25,8 @@ class Texture3D {
         m_height = height;
         m_depth = depth;
 
-        GraphicsUtil::CreateTexture3D(device, width, height, depth, pixelFormat,
-                                    initData, m_texture, m_rtv, m_srv, m_uav);
+        GraphicsUtil::CreateTexture3D(width, height, depth, pixelFormat,
+                                      initData, m_texture, m_rtv, m_srv, m_uav);
     }
 
     void InitNoiseF16(ComPtr<ID3D11Device> &device) {
@@ -67,7 +67,7 @@ class Texture3D {
 
         if (!m_staging) {
             m_staging = GraphicsUtil::CreateStagingTexture3D(
-                device, desc.Width, desc.Height, desc.Depth, desc.Format);
+                desc.Width, desc.Height, desc.Depth, desc.Format);
         }
 
         size_t pixelSize = GraphicsUtil::GetPixelSize(desc.Format);
@@ -109,5 +109,5 @@ class Texture3D {
     ComPtr<ID3D11UnorderedAccessView> m_uav;
 };
 
-} // namespace engine
+} // namespace core
 #endif

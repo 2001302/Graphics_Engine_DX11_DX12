@@ -29,7 +29,7 @@ class Util {
         vertexBufferData.SysMemPitch = 0;
         vertexBufferData.SysMemSlicePitch = 0;
 
-        ThrowIfFailed(GraphicsCore::Instance().device->CreateBuffer(
+        ThrowIfFailed(Core::Instance().device->CreateBuffer(
             &bufferDesc, &vertexBufferData, vertexBuffer.GetAddressOf()));
     }
 
@@ -55,7 +55,7 @@ class Util {
         initData.SysMemPitch = 0;
         initData.SysMemSlicePitch = 0;
 
-        ThrowIfFailed(GraphicsCore::Instance().device->CreateBuffer(
+        ThrowIfFailed(Core::Instance().device->CreateBuffer(
             &desc, &initData, constantBuffer.GetAddressOf()));
     }
 
@@ -69,10 +69,10 @@ class Util {
         }
 
         D3D11_MAPPED_SUBRESOURCE ms;
-        GraphicsCore::Instance().device_context->Map(
+        Core::Instance().device_context->Map(
             buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
         memcpy(ms.pData, bufferData.data(), sizeof(T_DATA) * bufferData.size());
-        GraphicsCore::Instance().device_context->Unmap(buffer.Get(), NULL);
+        Core::Instance().device_context->Unmap(buffer.Get(), NULL);
     }
 
     template <typename T_DATA>
@@ -85,10 +85,10 @@ class Util {
         }
 
         D3D11_MAPPED_SUBRESOURCE ms;
-        GraphicsCore::Instance().device_context->Map(
+        Core::Instance().device_context->Map(
             buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
         memcpy(ms.pData, &bufferData, sizeof(bufferData));
-        GraphicsCore::Instance().device_context->Unmap(buffer.Get(), NULL);
+        Core::Instance().device_context->Unmap(buffer.Get(), NULL);
     }
 
     static void CreateTexture(

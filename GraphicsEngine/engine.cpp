@@ -12,7 +12,7 @@ bool Engine::Start() {
 
     Platform::Start();
 
-    graphics::GraphicsCore::Instance().Initialize();
+    graphics::Core::Instance().Initialize();
     black_board->job_context->stage_type = EnumStageType::eInitialize;
 
     // clang-format off

@@ -48,15 +48,15 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
             break;
         }
         case EnumStageType::eRender: {
-            graphics::GraphicsCore::Instance().SetMainViewport();
+            graphics::Core::Instance().SetMainViewport();
 
-            graphics::GraphicsCore::Instance().device_context->VSSetSamplers(
+            graphics::Core::Instance().device_context->VSSetSamplers(
                 0, UINT(graphics::pso::sampleStates.size()),
                 graphics::pso::sampleStates.data());
-            graphics::GraphicsCore::Instance().device_context->PSSetSamplers(
+            graphics::Core::Instance().device_context->PSSetSamplers(
                 0, UINT(graphics::pso::sampleStates.size()),
                 graphics::pso::sampleStates.data());
-            graphics::GraphicsCore::Instance().device_context->CSSetSamplers(
+            graphics::Core::Instance().device_context->CSSetSamplers(
                 0, UINT(graphics::pso::sampleStates.size()),
                 graphics::pso::sampleStates.data());
 
@@ -66,7 +66,7 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
                 manager->skybox->specular_SRV.Get(),
                 manager->skybox->irradiance_SRV.Get(),
                 manager->skybox->brdf_SRV.Get()};
-            graphics::GraphicsCore::Instance()
+            graphics::Core::Instance()
                 .device_context->PSSetShaderResources(
                     10, UINT(commonSRVs.size()), commonSRVs.data());
 

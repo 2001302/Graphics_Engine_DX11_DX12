@@ -12,10 +12,10 @@
 #include "env.h"
 
 namespace graphics {
-class GraphicsCore {
+class Core {
   public:
-    static GraphicsCore &Instance() {
-        static GraphicsCore instance;
+    static Core &Instance() {
+        static Core instance;
         return instance;
     }
     bool Initialize();
@@ -45,7 +45,7 @@ class GraphicsCore {
     D3D11_VIEWPORT viewport;
 
   private:
-    GraphicsCore()
+    Core()
         : swap_chain(0), device(0), device_context(0),
           viewport(D3D11_VIEWPORT()) {}
     void CreateDepthBuffer();

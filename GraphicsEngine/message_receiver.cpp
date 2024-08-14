@@ -12,16 +12,16 @@ bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
 
     if (common::Env::Instance().screen_width &&
         common::Env::Instance().screen_height) {
-        if (graphics::GraphicsCore::Instance().swap_chain) {
+        if (graphics::Core::Instance().swap_chain) {
 
             gui->Shutdown();
 
-            graphics::GraphicsCore::Instance().back_buffer_RTV.Reset();
-            graphics::GraphicsCore::Instance().swap_chain->ResizeBuffers(
+            graphics::Core::Instance().back_buffer_RTV.Reset();
+            graphics::Core::Instance().swap_chain->ResizeBuffers(
                 0, size_x, size_y, DXGI_FORMAT_UNKNOWN, 0);
 
-            graphics::GraphicsCore::Instance().CreateBuffer();
-            graphics::GraphicsCore::Instance().SetMainViewport();
+            graphics::Core::Instance().CreateBuffer();
+            graphics::Core::Instance().SetMainViewport();
 
             gui->Start();
         }

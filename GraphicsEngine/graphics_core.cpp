@@ -2,7 +2,7 @@
 
 namespace graphics {
 
-bool GraphicsCore::Initialize() {
+bool Core::Initialize() {
     const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
 
     UINT createDeviceFlags = 0;
@@ -55,7 +55,7 @@ bool GraphicsCore::Initialize() {
     return true;
 }
 
-bool GraphicsCore::CreateBuffer() {
+bool Core::CreateBuffer() {
 
     // 레스터화 -> float/depthBuffer(MSAA) -> resolved -> backBuffer
 
@@ -124,7 +124,7 @@ bool GraphicsCore::CreateBuffer() {
     return true;
 }
 
-void GraphicsCore::CreateDepthBuffer() {
+void Core::CreateDepthBuffer() {
 
     D3D11_TEXTURE2D_DESC desc;
     desc.Width = common::Env::Instance().screen_width;
@@ -153,7 +153,7 @@ void GraphicsCore::CreateDepthBuffer() {
         depthStencilBuffer.Get(), 0, m_depthStencilView.GetAddressOf()));
 }
 
-void GraphicsCore::SetMainViewport() {
+void Core::SetMainViewport() {
 
     // Set the viewport
     ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));

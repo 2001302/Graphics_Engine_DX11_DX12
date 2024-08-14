@@ -33,7 +33,7 @@ template <typename T_ELEMENT> class StructuredBuffer {
 
         graphics::Util::CopyToStagingBuffer(
             m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)), arrCpu.data());
-        graphics::GraphicsCore::Instance().device_context->CopyResource(
+        graphics::Core::Instance().device_context->CopyResource(
             m_gpu.Get(), m_staging.Get());
     }
 
@@ -43,7 +43,7 @@ template <typename T_ELEMENT> class StructuredBuffer {
 
         assert(arrCpu.size() == m_cpu.size());
 
-        graphics::GraphicsCore::Instance().device_context->CopyResource(
+        graphics::Core::Instance().device_context->CopyResource(
             m_staging.Get(), m_gpu.Get());
         graphics::Util::CopyFromStagingBuffer(
             m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)), arrCpu.data());

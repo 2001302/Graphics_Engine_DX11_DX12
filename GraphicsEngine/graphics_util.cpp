@@ -34,7 +34,7 @@ void Util::CreateIndexBuffer(
     indexBufferData.SysMemPitch = 0;
     indexBufferData.SysMemSlicePitch = 0;
 
-    GraphicsCore::Instance().device->CreateBuffer(&bufferDesc, &indexBufferData,
+    Core::Instance().device->CreateBuffer(&bufferDesc, &indexBufferData,
                          indexBuffer.GetAddressOf());
 }
 
@@ -165,7 +165,7 @@ CreateStagingTexture(const int width,
     txtDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
 
     ComPtr<ID3D11Texture2D> stagingTexture;
-    if (FAILED(GraphicsCore::Instance().device->CreateTexture2D(
+    if (FAILED(Core::Instance().device->CreateTexture2D(
             &txtDesc, NULL,
                                        stagingTexture.GetAddressOf()))) {
         cout << "Failed()" << endl;
@@ -177,14 +177,14 @@ CreateStagingTexture(const int width,
     }
     
     D3D11_MAPPED_SUBRESOURCE ms;
-    GraphicsCore::Instance().device_context->Map(stagingTexture.Get(), NULL,
+    Core::Instance().device_context->Map(stagingTexture.Get(), NULL,
                                                  D3D11_MAP_WRITE, NULL, &ms);
     uint8_t *pData = (uint8_t *)ms.pData;
     for (UINT h = 0; h < UINT(height); h++) {
         memcpy(&pData[h * ms.RowPitch], &image[h * width * pixelSize],
                width * pixelSize);
     }
-    GraphicsCore::Instance().device_context->Unmap(stagingTexture.Get(), NULL);
+    Core::Instance().device_context->Unmap(stagingTexture.Get(), NULL);
 
     return stagingTexture;
 }
@@ -212,7 +212,7 @@ void CreateTextureHelper(const int width,
     txtDesc.CPUAccessFlags = 0;
 
     // 초기 데이터 없이 텍스춰 생성 (전부 검은색)
-    GraphicsCore::Instance().device->CreateTexture2D(
+    Core::Instance().device->CreateTexture2D(
         &txtDesc, NULL, texture.GetAddressOf());
 
     // 실제로 생성된 MipLevels를 확인해보고 싶을 경우
@@ -220,16 +220,16 @@ void CreateTextureHelper(const int width,
     // cout << txtDesc.MipLevels << endl;
 
     // 스테이징 텍스춰로부터 가장 해상도가 높은 이미지 복사
-    GraphicsCore::Instance().device_context->CopySubresourceRegion(
+    Core::Instance().device_context->CopySubresourceRegion(
         texture.Get(), 0, 0, 0, 0,
                                    stagingTexture.Get(), 0, NULL);
 
     // ResourceView 만들기
-    GraphicsCore::Instance().device->CreateShaderResourceView(
+    Core::Instance().device->CreateShaderResourceView(
         texture.Get(), 0, srv.GetAddressOf());
 
     // 해상도를 낮춰가며 밉맵 생성
-    GraphicsCore::Instance().device_context->GenerateMips(srv.Get());
+    Core::Instance().device_context->GenerateMips(srv.Get());
 
     // HLSL 쉐이더 안에서는 SampleLevel() 사용
 }
@@ -365,7 +365,7 @@ void Util::CreateTextureArray(
     txtDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS; // 밉맵 사용
 
     // 초기 데이터 없이 텍스춰를 만듭니다.
-    GraphicsCore::Instance().device->CreateTexture2D(&txtDesc, NULL,
+    Core::Instance().device->CreateTexture2D(&txtDesc, NULL,
                                                      texture.GetAddressOf());
 
     // 실제로 만들어진 MipLevels를 확인
@@ -385,16 +385,16 @@ void Util::CreateTextureArray(
         UINT subresourceIndex =
             D3D11CalcSubresource(0, UINT(i), txtDesc.MipLevels);
 
-        GraphicsCore::Instance().device_context->CopySubresourceRegion(
+        Core::Instance().device_context->CopySubresourceRegion(
             texture.Get(), subresourceIndex, 0, 0, 0,
                                        stagingTexture.Get(), 0, NULL);
     }
 
-    GraphicsCore::Instance().device->CreateShaderResourceView(
+    Core::Instance().device->CreateShaderResourceView(
         texture.Get(), NULL,
                                      textureResourceView.GetAddressOf());
 
-    GraphicsCore::Instance().device_context->GenerateMips(
+    Core::Instance().device_context->GenerateMips(
         textureResourceView.Get());
 }
 
@@ -410,7 +410,7 @@ void Util::CreateDDSTexture( const wchar_t *filename, bool isCubeMap,
 
     // https://github.com/microsoft/DirectXTK/wiki/DDSTextureLoader
     ThrowIfFailed(CreateDDSTextureFromFileEx(
-        GraphicsCore::Instance().device.Get(), filename, 0, D3D11_USAGE_DEFAULT,
+        Core::Instance().device.Get(), filename, 0, D3D11_USAGE_DEFAULT,
         D3D11_BIND_SHADER_RESOURCE, 0, miscFlags, DDS_LOADER_FLAGS(false),
         (ID3D11Resource **)texture.GetAddressOf(),
         textureResourceView.GetAddressOf(), NULL));
@@ -430,7 +430,7 @@ void Util::WriteToFile(
     desc.Usage = D3D11_USAGE_STAGING; // GPU에서 CPU로 보낼 데이터를 임시 보관
 
     ComPtr<ID3D11Texture2D> stagingTexture;
-    if (FAILED(GraphicsCore::Instance().device->CreateTexture2D(
+    if (FAILED(Core::Instance().device->CreateTexture2D(
             &desc, NULL,
                                        stagingTexture.GetAddressOf()))) {
         cout << "Failed()" << endl;
@@ -447,7 +447,7 @@ void Util::WriteToFile(
     box.bottom = desc.Height;
     box.front = 0;
     box.back = 1;
-    GraphicsCore::Instance().device_context->CopySubresourceRegion(
+    Core::Instance().device_context->CopySubresourceRegion(
         stagingTexture.Get(), 0, 0, 0, 0,
                                    textureToWrite.Get(), 0, &box);
 
@@ -455,7 +455,7 @@ void Util::WriteToFile(
     std::vector<uint8_t> pixels(desc.Width * desc.Height * 4);
 
     D3D11_MAPPED_SUBRESOURCE ms;
-    GraphicsCore::Instance().device_context->Map(stagingTexture.Get(), NULL,
+    Core::Instance().device_context->Map(stagingTexture.Get(), NULL,
                                                  D3D11_MAP_READ, NULL,
                  &ms); // D3D11_MAP_READ 주의
 
@@ -468,7 +468,7 @@ void Util::WriteToFile(
                desc.Width * sizeof(uint8_t) * 4);
     }
 
-    GraphicsCore::Instance().device_context->Unmap(stagingTexture.Get(), NULL);
+    Core::Instance().device_context->Unmap(stagingTexture.Get(), NULL);
 
     stbi_write_png(filename.c_str(), desc.Width, desc.Height, 4, pixels.data(),
                    desc.Width * 4);
@@ -498,15 +498,15 @@ void Util::CreateUATexture(
     txtDesc.MiscFlags = 0;
     txtDesc.CPUAccessFlags = 0;
 
-    ThrowIfFailed(GraphicsCore::Instance().device->CreateTexture2D(
+    ThrowIfFailed(Core::Instance().device->CreateTexture2D(
         &txtDesc, NULL, texture.GetAddressOf()));
-    ThrowIfFailed(GraphicsCore::Instance().device->CreateRenderTargetView(
+    ThrowIfFailed(Core::Instance().device->CreateRenderTargetView(
         texture.Get(), NULL,
                                                  rtv.GetAddressOf()));
-    ThrowIfFailed(GraphicsCore::Instance().device->CreateShaderResourceView(
+    ThrowIfFailed(Core::Instance().device->CreateShaderResourceView(
         texture.Get(), NULL,
                                                    srv.GetAddressOf()));
-    ThrowIfFailed(GraphicsCore::Instance().device->CreateUnorderedAccessView(
+    ThrowIfFailed(Core::Instance().device->CreateUnorderedAccessView(
         texture.Get(), NULL,
                                                     uav.GetAddressOf()));
 }
@@ -517,12 +517,12 @@ void Util::ComputeShaderBarrier() {
     ID3D11ShaderResourceView *nullSRV[6] = {
         0,
     };
-    GraphicsCore::Instance().device_context->CSSetShaderResources(0, 6,
+    Core::Instance().device_context->CSSetShaderResources(0, 6,
                                                                   nullSRV);
     ID3D11UnorderedAccessView *nullUAV[6] = {
         0,
     };
-    GraphicsCore::Instance().device_context->CSSetUnorderedAccessViews(
+    Core::Instance().device_context->CSSetUnorderedAccessViews(
         0, 6, nullUAV, NULL);
 }
 
@@ -541,7 +541,7 @@ ComPtr<ID3D11Texture3D> Util::CreateStagingTexture3D( const int width, const int
     txtDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
 
     ComPtr<ID3D11Texture3D> stagingTexture;
-    if (FAILED(GraphicsCore::Instance().device->CreateTexture3D(
+    if (FAILED(Core::Instance().device->CreateTexture3D(
             &txtDesc, NULL,
                                        stagingTexture.GetAddressOf()))) {
         cout << "CreateStagingTexture3D() failed." << endl;
@@ -600,21 +600,21 @@ void Util::CreateTexture3D(const int width, const int height,
         bufferData.pSysMem = initData.data();
         bufferData.SysMemPitch = UINT(width * pixelSize);
         bufferData.SysMemSlicePitch = UINT(width * height * pixelSize);
-        ThrowIfFailed(GraphicsCore::Instance().device->CreateTexture3D(
+        ThrowIfFailed(Core::Instance().device->CreateTexture3D(
             &txtDesc, &bufferData,
                                               texture.GetAddressOf()));
     } else {
-        ThrowIfFailed(GraphicsCore::Instance().device->CreateTexture3D(
+        ThrowIfFailed(Core::Instance().device->CreateTexture3D(
             &txtDesc, NULL, texture.GetAddressOf()));
     }
 
-    ThrowIfFailed(GraphicsCore::Instance().device->CreateRenderTargetView(
+    ThrowIfFailed(Core::Instance().device->CreateRenderTargetView(
         texture.Get(), NULL,
                                                  rtv.GetAddressOf()));
-    ThrowIfFailed(GraphicsCore::Instance().device->CreateShaderResourceView(
+    ThrowIfFailed(Core::Instance().device->CreateShaderResourceView(
         texture.Get(), NULL,
                                                    srv.GetAddressOf()));
-    ThrowIfFailed(GraphicsCore::Instance().device->CreateUnorderedAccessView(
+    ThrowIfFailed(Core::Instance().device->CreateUnorderedAccessView(
         texture.Get(), NULL,
                                                     uav.GetAddressOf()));
 }
@@ -639,11 +639,11 @@ void Util::CreateStructuredBuffer( const UINT numElements,
         D3D11_SUBRESOURCE_DATA bufferData;
         ZeroMemory(&bufferData, sizeof(bufferData));
         bufferData.pSysMem = initData;
-        ThrowIfFailed(GraphicsCore::Instance().device->CreateBuffer(
+        ThrowIfFailed(Core::Instance().device->CreateBuffer(
             &bufferDesc, &bufferData,
                                            buffer.GetAddressOf()));
     } else {
-        ThrowIfFailed(GraphicsCore::Instance().device->CreateBuffer(
+        ThrowIfFailed(Core::Instance().device->CreateBuffer(
             &bufferDesc, NULL, buffer.GetAddressOf()));
     }
 
@@ -652,7 +652,7 @@ void Util::CreateStructuredBuffer( const UINT numElements,
     uavDesc.Format = DXGI_FORMAT_UNKNOWN;
     uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
     uavDesc.Buffer.NumElements = numElements;
-    GraphicsCore::Instance().device->CreateUnorderedAccessView(
+    Core::Instance().device->CreateUnorderedAccessView(
         buffer.Get(), &uavDesc,
                                       uav.GetAddressOf());
 
@@ -661,7 +661,7 @@ void Util::CreateStructuredBuffer( const UINT numElements,
     srvDesc.Format = DXGI_FORMAT_UNKNOWN;
     srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
     srvDesc.BufferEx.NumElements = numElements;
-    GraphicsCore::Instance().device->CreateShaderResourceView(
+    Core::Instance().device->CreateShaderResourceView(
         buffer.Get(), &srvDesc,
                                      srv.GetAddressOf());
 }
@@ -683,55 +683,55 @@ void Util::CreateStagingBuffer(
         D3D11_SUBRESOURCE_DATA bufferData;
         ZeroMemory(&bufferData, sizeof(bufferData));
         bufferData.pSysMem = initData;
-        ThrowIfFailed(GraphicsCore::Instance().device->CreateBuffer(
+        ThrowIfFailed(Core::Instance().device->CreateBuffer(
             &desc, &bufferData, buffer.GetAddressOf()));
     } else {
-        ThrowIfFailed(GraphicsCore::Instance().device->CreateBuffer(
+        ThrowIfFailed(Core::Instance().device->CreateBuffer(
             &desc, NULL, buffer.GetAddressOf()));
     }
 }
 
 void Util::SetPipelineState(const PipelineState &pso) {
 
-    GraphicsCore::Instance().device_context->VSSetShader(
+    Core::Instance().device_context->VSSetShader(
         pso.vertex_shader.Get(), 0, 0);
-    GraphicsCore::Instance().device_context->PSSetShader(pso.pixel_shader.Get(),
+    Core::Instance().device_context->PSSetShader(pso.pixel_shader.Get(),
                                                          0, 0);
-    GraphicsCore::Instance().device_context->HSSetShader(pso.hull_shader.Get(),
+    Core::Instance().device_context->HSSetShader(pso.hull_shader.Get(),
                                                          0, 0);
-    GraphicsCore::Instance().device_context->DSSetShader(
+    Core::Instance().device_context->DSSetShader(
         pso.domain_shader.Get(), 0, 0);
-    GraphicsCore::Instance().device_context->GSSetShader(
+    Core::Instance().device_context->GSSetShader(
         pso.geometry_shader.Get(), 0, 0);
-    GraphicsCore::Instance().device_context->IASetInputLayout(
+    Core::Instance().device_context->IASetInputLayout(
         pso.input_layout.Get());
-    GraphicsCore::Instance().device_context->RSSetState(
+    Core::Instance().device_context->RSSetState(
         pso.rasterizer_state.Get());
-    GraphicsCore::Instance().device_context->OMSetBlendState(
+    Core::Instance().device_context->OMSetBlendState(
         pso.blend_state.Get(), pso.blend_factor, 0xffffffff);
-    GraphicsCore::Instance().device_context->OMSetDepthStencilState(
+    Core::Instance().device_context->OMSetDepthStencilState(
         pso.depth_stencil_state.Get(), pso.stencil_ref);
-    GraphicsCore::Instance().device_context->IASetPrimitiveTopology(
+    Core::Instance().device_context->IASetPrimitiveTopology(
         pso.primitive_topology);
 }
 
 void Util::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
     // 쉐이더와 일관성 유지 cbuffer GlobalConstants : register(b0)
-    GraphicsCore::Instance().device_context->VSSetConstantBuffers(
+    Core::Instance().device_context->VSSetConstantBuffers(
         0, 1, globalConstsGPU.GetAddressOf());
-    GraphicsCore::Instance().device_context->PSSetConstantBuffers(
+    Core::Instance().device_context->PSSetConstantBuffers(
         0, 1, globalConstsGPU.GetAddressOf());
-    GraphicsCore::Instance().device_context->GSSetConstantBuffers(
+    Core::Instance().device_context->GSSetConstantBuffers(
         0, 1, globalConstsGPU.GetAddressOf());
 }
 
 void Util::CopyToStagingBuffer(ComPtr<ID3D11Buffer> &buffer, UINT size,
                                 void *src) {
     D3D11_MAPPED_SUBRESOURCE ms;
-    GraphicsCore::Instance().device_context->Map(buffer.Get(), NULL,
+    Core::Instance().device_context->Map(buffer.Get(), NULL,
                                                  D3D11_MAP_WRITE, NULL, &ms);
     memcpy(ms.pData, src, size);
-    GraphicsCore::Instance().device_context->Unmap(buffer.Get(), NULL);
+    Core::Instance().device_context->Unmap(buffer.Get(), NULL);
 }
 
 } // namespace core

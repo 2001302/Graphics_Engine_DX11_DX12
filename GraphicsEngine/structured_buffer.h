@@ -17,12 +17,12 @@ template <typename T_ELEMENT> class StructuredBuffer {
     }
 
     virtual void Initialize() {
-        GraphicsUtil::CreateStructuredBuffer(UINT(m_cpu.size()),
-                                             sizeof(T_ELEMENT), m_cpu.data(),
-                                             m_gpu, m_srv, m_uav);
+        graphics::Util::CreateStructuredBuffer(UINT(m_cpu.size()),
+                                               sizeof(T_ELEMENT), m_cpu.data(),
+                                               m_gpu, m_srv, m_uav);
         // Staging은 주로 디버깅 용도입니다.
-        GraphicsUtil::CreateStagingBuffer(UINT(m_cpu.size()), sizeof(T_ELEMENT),
-                                          NULL, m_staging);
+        graphics::Util::CreateStagingBuffer(UINT(m_cpu.size()),
+                                            sizeof(T_ELEMENT), NULL, m_staging);
     }
 
     void Upload() { Upload(m_cpu); }
@@ -31,10 +31,10 @@ template <typename T_ELEMENT> class StructuredBuffer {
 
         assert(arrCpu.size() == m_cpu.size());
 
-        GraphicsUtil::CopyToStagingBuffer(
+        graphics::Util::CopyToStagingBuffer(
             m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)), arrCpu.data());
-        GraphicsCore::Instance().device_context->CopyResource(m_gpu.Get(),
-                                                              m_staging.Get());
+        graphics::GraphicsCore::Instance().device_context->CopyResource(
+            m_gpu.Get(), m_staging.Get());
     }
 
     void Download() { Download(m_cpu); }
@@ -43,9 +43,9 @@ template <typename T_ELEMENT> class StructuredBuffer {
 
         assert(arrCpu.size() == m_cpu.size());
 
-        GraphicsCore::Instance().device_context->CopyResource(m_staging.Get(),
-                                                              m_gpu.Get());
-        GraphicsUtil::CopyFromStagingBuffer(
+        graphics::GraphicsCore::Instance().device_context->CopyResource(
+            m_staging.Get(), m_gpu.Get());
+        graphics::Util::CopyFromStagingBuffer(
             m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)), arrCpu.data());
     }
 
@@ -72,9 +72,9 @@ class AppendBuffer : public StructuredBuffer<T_ELEMENT> {
 
   public:
     void Initialize() {
-        GraphicsUtil::CreateAppendBuffer(UINT(BASE::m_cpu.size()),
-                                         sizeof(T_ELEMENT), BASE::m_cpu.data(),
-                                         BASE::m_gpu, BASE::m_srv, BASE::m_uav);
+        graphics::Util::CreateAppendBuffer(
+            UINT(BASE::m_cpu.size()), sizeof(T_ELEMENT), BASE::m_cpu.data(),
+            BASE::m_gpu, BASE::m_srv, BASE::m_uav);
     }
 
     friend void swap(AppendBuffer<T_ELEMENT> &lhs,

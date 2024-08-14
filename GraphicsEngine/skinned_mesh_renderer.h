@@ -17,9 +17,9 @@ class SkinnedMeshRenderer : public MeshRenderer {
   public:
     SkinnedMeshRenderer(const vector<MeshData> &meshes);
     void Initialize(const vector<MeshData> &meshes);
-    PipelineState &GetPSO(const bool wired) override;
-    PipelineState &GetReflectPSO(const bool wired) override;
-    PipelineState &GetDepthOnlyPSO() override;
+    graphics::PipelineState &GetPSO(const bool wired) override;
+    graphics::PipelineState &GetReflectPSO(const bool wired) override;
+    graphics::PipelineState &GetDepthOnlyPSO() override;
     void InitMeshBuffers(const MeshData &meshData,
                          std::shared_ptr<Mesh> &newMesh) override;
 };

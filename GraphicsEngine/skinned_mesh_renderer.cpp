@@ -9,26 +9,27 @@ void SkinnedMeshRenderer::Initialize(const vector<MeshData> &meshes) {
     MeshRenderer::Initialize(meshes);
 }
 
-PipelineState &SkinnedMeshRenderer::GetPSO(const bool wired) {
-    return wired ? graphics::skinnedWirePSO : graphics::skinnedSolidPSO;
+graphics::PipelineState &SkinnedMeshRenderer::GetPSO(const bool wired) {
+    return wired ? graphics::pso::skinnedWirePSO
+                 : graphics::pso::skinnedSolidPSO;
 }
 
-PipelineState &SkinnedMeshRenderer::GetReflectPSO(const bool wired) {
-    return wired ? graphics::reflectSkinnedWirePSO
-                 : graphics::reflectSkinnedSolidPSO;
+graphics::PipelineState &SkinnedMeshRenderer::GetReflectPSO(const bool wired) {
+    return wired ? graphics::pso::reflectSkinnedWirePSO
+                 : graphics::pso::reflectSkinnedSolidPSO;
 }
 
-PipelineState &SkinnedMeshRenderer::GetDepthOnlyPSO() {
-    return graphics::depthOnlySkinnedPSO;
+graphics::PipelineState &SkinnedMeshRenderer::GetDepthOnlyPSO() {
+    return graphics::pso::depthOnlySkinnedPSO;
 }
 
 void SkinnedMeshRenderer::InitMeshBuffers(const MeshData &meshData,
                                           std::shared_ptr<Mesh> &newMesh) {
-    GraphicsUtil::CreateVertexBuffer(meshData.skinnedVertices,
-                                     newMesh->vertexBuffer);
+    graphics::Util::CreateVertexBuffer(meshData.skinnedVertices,
+                                       newMesh->vertexBuffer);
     newMesh->indexCount = UINT(meshData.indices.size());
     newMesh->vertexCount = UINT(meshData.skinnedVertices.size());
     newMesh->stride = UINT(sizeof(SkinnedVertex));
-    GraphicsUtil::CreateIndexBuffer(meshData.indices, newMesh->indexBuffer);
+    graphics::Util::CreateIndexBuffer(meshData.indices, newMesh->indexBuffer);
 }
 } // namespace core

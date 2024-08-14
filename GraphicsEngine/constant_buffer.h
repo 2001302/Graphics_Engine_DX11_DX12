@@ -116,9 +116,9 @@ __declspec(align(256)) struct VolumeConsts {
 
 template <typename T_CONSTS> class ConstantBuffer {
   public:
-    void Initialize() { GraphicsUtil::CreateConstBuffer(m_cpu, m_gpu); }
+    void Initialize() { graphics::Util::CreateConstBuffer(m_cpu, m_gpu); }
 
-    void Upload() { GraphicsUtil::UpdateBuffer(m_cpu, m_gpu); }
+    void Upload() { graphics::Util::UpdateBuffer(m_cpu, m_gpu); }
 
   public:
     T_CONSTS &GetCpu() { return m_cpu; }

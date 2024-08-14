@@ -26,7 +26,7 @@ class JobContext : public common::IInfo {
     std::shared_ptr<Model> player;
     std::map<int /*id*/, std::shared_ptr<Model>> objects;
 
-    //condition
+    // condition
     GlobalConstants global_consts_CPU;
     ComPtr<ID3D11Buffer> global_consts_GPU;
     float dt;
@@ -64,9 +64,9 @@ class JobContext : public common::IInfo {
                                          ground->mirror_alpha,
                                          ground->mirror_alpha, 1.0f};
             if (draw_wire)
-                graphics::mirrorBlendWirePSO.SetBlendFactor(blendColor);
+                graphics::pso::mirrorBlendWirePSO.SetBlendFactor(blendColor);
             else
-                graphics::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
+                graphics::pso::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
 
             auto renderer = (MeshRenderer *)ground->mirror->GetComponent(
                 EnumComponentType::eRenderer);
@@ -106,5 +106,5 @@ class JobContext : public common::IInfo {
         }
     }
 };
-} // namespace engine
+} // namespace core
 #endif

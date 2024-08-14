@@ -43,8 +43,8 @@ class OnlyDepthNode : public common::BehaviorActionNode {
             GraphicsCore::Instance().device_context->ClearDepthStencilView(
                 depthOnlyDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-            GraphicsUtil::SetPipelineState(graphics::depthOnlyPSO);
-            GraphicsUtil::SetGlobalConsts(manager->global_consts_GPU);
+            Util::SetPipelineState(pso::depthOnlyPSO);
+            Util::SetGlobalConsts(manager->global_consts_GPU);
 
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(

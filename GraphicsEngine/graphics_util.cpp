@@ -14,12 +14,12 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 
-namespace core {
+namespace graphics {
 
 using namespace std;
 using namespace DirectX;
 
-void GraphicsUtil::CreateIndexBuffer(
+void Util::CreateIndexBuffer(
                                      const std::vector<uint32_t> &indices,
                                      ComPtr<ID3D11Buffer> &indexBuffer) {
     D3D11_BUFFER_DESC bufferDesc = {};
@@ -234,7 +234,7 @@ void CreateTextureHelper(const int width,
     // HLSL 쉐이더 안에서는 SampleLevel() 사용
 }
 
-void GraphicsUtil::CreateMetallicRoughnessTexture(
+void Util::CreateMetallicRoughnessTexture(
     const std::string metallicFilename, const std::string roughnessFilename,
     ComPtr<ID3D11Texture2D> &texture, ComPtr<ID3D11ShaderResourceView> &srv) {
 
@@ -282,7 +282,7 @@ void GraphicsUtil::CreateMetallicRoughnessTexture(
     }
 }
 
-void GraphicsUtil::CreateTexture(
+void Util::CreateTexture(
                                  const std::string filename, const bool usSRGB,
                                  ComPtr<ID3D11Texture2D> &tex,
                                  ComPtr<ID3D11ShaderResourceView> &srv) {
@@ -305,7 +305,7 @@ void GraphicsUtil::CreateTexture(
                         srv);
 }
 
-void GraphicsUtil::CreateTexture(
+void Util::CreateTexture(
                                  const std::string albedoFilename,
                                  const std::string opacityFilename,
                                  const bool usSRGB,
@@ -323,7 +323,7 @@ void GraphicsUtil::CreateTexture(
                         texture, srv);
 }
 
-void GraphicsUtil::CreateTextureArray(
+void Util::CreateTextureArray(
     const std::vector<std::string> filenames, ComPtr<ID3D11Texture2D> &texture,
     ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
 
@@ -398,7 +398,7 @@ void GraphicsUtil::CreateTextureArray(
         textureResourceView.Get());
 }
 
-void GraphicsUtil::CreateDDSTexture( const wchar_t *filename, bool isCubeMap,
+void Util::CreateDDSTexture( const wchar_t *filename, bool isCubeMap,
     ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
 
     ComPtr<ID3D11Texture2D> texture;
@@ -416,7 +416,7 @@ void GraphicsUtil::CreateDDSTexture( const wchar_t *filename, bool isCubeMap,
         textureResourceView.GetAddressOf(), NULL));
 }
 
-void GraphicsUtil::WriteToFile(
+void Util::WriteToFile(
                                ComPtr<ID3D11Texture2D> &textureToWrite,
                                const std::string filename) {
 
@@ -476,7 +476,7 @@ void GraphicsUtil::WriteToFile(
     cout << filename << endl;
 }
 
-void GraphicsUtil::CreateUATexture(
+void Util::CreateUATexture(
                                    const int width, const int height,
                                    const DXGI_FORMAT pixelFormat,
                                    ComPtr<ID3D11Texture2D> &texture,
@@ -511,7 +511,7 @@ void GraphicsUtil::CreateUATexture(
                                                     uav.GetAddressOf()));
 }
 
-void GraphicsUtil::ComputeShaderBarrier() {
+void Util::ComputeShaderBarrier() {
 
     // 최대 사용하는 SRV, UAV 갯수가 6개
     ID3D11ShaderResourceView *nullSRV[6] = {
@@ -526,7 +526,7 @@ void GraphicsUtil::ComputeShaderBarrier() {
         0, 6, nullUAV, NULL);
 }
 
-ComPtr<ID3D11Texture3D> GraphicsUtil::CreateStagingTexture3D( const int width, const int height,
+ComPtr<ID3D11Texture3D> Util::CreateStagingTexture3D( const int width, const int height,
     const int depth, const DXGI_FORMAT pixelFormat) {
 
     // 스테이징 텍스춰 만들기
@@ -550,7 +550,7 @@ ComPtr<ID3D11Texture3D> GraphicsUtil::CreateStagingTexture3D( const int width, c
     return stagingTexture;
 }
 
-size_t GraphicsUtil::GetPixelSize(DXGI_FORMAT pixelFormat) {
+size_t Util::GetPixelSize(DXGI_FORMAT pixelFormat) {
 
     switch (pixelFormat) {
     case DXGI_FORMAT_R16G16B16A16_FLOAT:
@@ -574,7 +574,7 @@ size_t GraphicsUtil::GetPixelSize(DXGI_FORMAT pixelFormat) {
     return sizeof(uint8_t) * 4;
 }
 
-void GraphicsUtil::CreateTexture3D(const int width, const int height,
+void Util::CreateTexture3D(const int width, const int height,
     const int depth, const DXGI_FORMAT pixelFormat,
     const vector<float> &initData, ComPtr<ID3D11Texture3D> &texture,
     ComPtr<ID3D11RenderTargetView> &rtv, ComPtr<ID3D11ShaderResourceView> &srv,
@@ -619,7 +619,7 @@ void GraphicsUtil::CreateTexture3D(const int width, const int height,
                                                     uav.GetAddressOf()));
 }
 
-void GraphicsUtil::CreateStructuredBuffer( const UINT numElements,
+void Util::CreateStructuredBuffer( const UINT numElements,
     const UINT sizeElement, const void *initData, ComPtr<ID3D11Buffer> &buffer,
     ComPtr<ID3D11ShaderResourceView> &srv,
     ComPtr<ID3D11UnorderedAccessView> &uav) {
@@ -666,7 +666,7 @@ void GraphicsUtil::CreateStructuredBuffer( const UINT numElements,
                                      srv.GetAddressOf());
 }
 
-void GraphicsUtil::CreateStagingBuffer(
+void Util::CreateStagingBuffer(
                                        const UINT numElements,
                                        const UINT sizeElement,
                                        const void *initData,
@@ -691,7 +691,7 @@ void GraphicsUtil::CreateStagingBuffer(
     }
 }
 
-void GraphicsUtil::SetPipelineState(const PipelineState &pso) {
+void Util::SetPipelineState(const PipelineState &pso) {
 
     GraphicsCore::Instance().device_context->VSSetShader(
         pso.vertex_shader.Get(), 0, 0);
@@ -715,7 +715,7 @@ void GraphicsUtil::SetPipelineState(const PipelineState &pso) {
         pso.primitive_topology);
 }
 
-void GraphicsUtil::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
+void Util::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
     // 쉐이더와 일관성 유지 cbuffer GlobalConstants : register(b0)
     GraphicsCore::Instance().device_context->VSSetConstantBuffers(
         0, 1, globalConstsGPU.GetAddressOf());
@@ -725,7 +725,7 @@ void GraphicsUtil::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
         0, 1, globalConstsGPU.GetAddressOf());
 }
 
-void GraphicsUtil::CopyToStagingBuffer(ComPtr<ID3D11Buffer> &buffer, UINT size,
+void Util::CopyToStagingBuffer(ComPtr<ID3D11Buffer> &buffer, UINT size,
                                 void *src) {
     D3D11_MAPPED_SUBRESOURCE ms;
     GraphicsCore::Instance().device_context->Map(buffer.Get(), NULL,

@@ -11,7 +11,7 @@
 #include "graphics_common.h"
 #include "env.h"
 
-namespace core {
+namespace graphics {
 class GraphicsCore {
   public:
     static GraphicsCore &Instance() {

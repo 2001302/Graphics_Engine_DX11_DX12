@@ -27,10 +27,10 @@ class CameraNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
 
-            GraphicsUtil::SetPipelineState(manager->draw_wire
-                                               ? graphics::defaultWirePSO
-                                               : graphics::defaultSolidPSO);
-            GraphicsUtil::SetGlobalConsts(manager->global_consts_GPU);
+            graphics::Util::SetPipelineState(
+                manager->draw_wire ? graphics::pso::defaultWirePSO
+                                   : graphics::pso::defaultSolidPSO);
+            graphics::Util::SetGlobalConsts(manager->global_consts_GPU);
 
             manager->camera->Draw();
             break;

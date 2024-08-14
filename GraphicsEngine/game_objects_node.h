@@ -25,7 +25,8 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
                 Vector3 center(0.5f, 0.5f, 2.0f);
 
-                auto renderer = std::make_shared<MeshRenderer>( std::vector{mesh});
+                auto renderer =
+                    std::make_shared<MeshRenderer>(std::vector{mesh});
 
                 renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
                 renderer->material_consts.GetCpu().albedoFactor =
@@ -47,7 +48,8 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 MeshData mesh = GeometryGenerator::MakeBox(0.2f);
                 Vector3 center(0.0f, 0.5f, 2.5f);
 
-                auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
+                auto renderer =
+                    std::make_shared<MeshRenderer>(std::vector{mesh});
 
                 renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
                 renderer->material_consts.GetCpu().albedoFactor =
@@ -78,10 +80,10 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
 
-            GraphicsUtil::SetPipelineState(manager->draw_wire
-                                               ? graphics::defaultWirePSO
-                                               : graphics::defaultSolidPSO);
-            GraphicsUtil::SetGlobalConsts(manager->global_consts_GPU);
+            graphics::Util::SetPipelineState(
+                manager->draw_wire ? graphics::pso::defaultWirePSO
+                                   : graphics::pso::defaultSolidPSO);
+            graphics::Util::SetGlobalConsts(manager->global_consts_GPU);
 
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
@@ -98,7 +100,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 renderer->Render();
             }
 
-            GraphicsUtil::SetPipelineState(graphics::normalsPSO);
+            graphics::Util::SetPipelineState(graphics::pso::normalsPSO);
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);

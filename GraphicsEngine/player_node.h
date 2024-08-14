@@ -150,9 +150,9 @@ class PlayerNodeInvoker : public BehaviorActionNode {
             break;
         }
         case EnumStageType::eRender: {
-            GraphicsUtil::SetPipelineState(job_context->draw_wire
-                                               ? graphics::skinnedWirePSO
-                                               : graphics::skinnedSolidPSO);
+            graphics::Util::SetPipelineState(
+                job_context->draw_wire ? graphics::pso::skinnedWirePSO
+                                       : graphics::pso::skinnedSolidPSO);
             auto renderer =
                 (SkinnedMeshRenderer *)job_context->player->GetComponent(
                     EnumComponentType::eRenderer);

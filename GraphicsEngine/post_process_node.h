@@ -27,23 +27,23 @@ class PostProcessingNode : public common::BehaviorActionNode,
             const_data.option1 = 1.0f;  // Exposure
             const_data.option2 = 2.2f;  // Gamma
 
-            GraphicsUtil::CreateConstBuffer(const_data, const_buffer);
-            GraphicsUtil::UpdateBuffer(const_data, const_buffer);
+            graphics::Util::CreateConstBuffer(const_data, const_buffer);
+            graphics::Util::UpdateBuffer(const_data, const_buffer);
 
             // bloom
-            GraphicsUtil::CreateUATexture(common::Env::Instance().screen_width,
-                                          common::Env::Instance().screen_height,
-                                          DXGI_FORMAT_R16G16B16A16_FLOAT,
-                                          bright_pass_buffer, bright_pass_RTV,
-                                          bright_pass_SRV, bright_pass_UAV);
+            graphics::Util::CreateUATexture(
+                common::Env::Instance().screen_width,
+                common::Env::Instance().screen_height,
+                DXGI_FORMAT_R16G16B16A16_FLOAT, bright_pass_buffer,
+                bright_pass_RTV, bright_pass_SRV, bright_pass_UAV);
 
-            GraphicsUtil::CreateUATexture(
+            graphics::Util::CreateUATexture(
                 common::Env::Instance().screen_width,
                 common::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_vertical_buffer,
                 blur_vertical_RTV, blur_vertical_SRV, blur_vertical_UAV);
 
-            GraphicsUtil::CreateUATexture(
+            graphics::Util::CreateUATexture(
                 common::Env::Instance().screen_width,
                 common::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_horizontal_buffer,
@@ -59,30 +59,32 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
             if (use_bloom) {
                 // bright pass->blur vertical->blur horizontal->composite
-                bright_pass.Render(graphics::brightPassCS, const_buffer,
-                    {GraphicsCore::Instance().resolved_SRV}, bright_pass_UAV);
+                bright_pass.Render(
+                    graphics::pso::brightPassCS, const_buffer,
+                    {graphics::GraphicsCore::Instance().resolved_SRV},
+                    bright_pass_UAV);
 
-                blur_vertical.Render( graphics::blurVerticalCS,
+                blur_vertical.Render(graphics::pso::blurVerticalCS,
                                      const_buffer, {bright_pass_SRV},
                                      blur_vertical_UAV);
 
-                blur_horizontal.Render(graphics::blurHorizontalCS,
+                blur_horizontal.Render(graphics::pso::blurHorizontalCS,
                                        const_buffer, {blur_vertical_SRV},
                                        blur_horizontal_UAV);
 
-                bloom_composite.Render(graphics::bloomComposite,
-                                       const_buffer,
-                                       {GraphicsCore::Instance().resolved_SRV,
-                                        blur_horizontal_SRV},
-                                       bright_pass_UAV);
+                bloom_composite.Render(
+                    graphics::pso::bloomComposite, const_buffer,
+                    {graphics::GraphicsCore::Instance().resolved_SRV,
+                     blur_horizontal_SRV},
+                    bright_pass_UAV);
 
-                GraphicsCore::Instance().device_context->CopyResource(
-                    GraphicsCore::Instance().resolved_buffer.Get(),
+                graphics::GraphicsCore::Instance().device_context->CopyResource(
+                    graphics::GraphicsCore::Instance().resolved_buffer.Get(),
                     bright_pass_buffer.Get());
             }
 
             // tone mapping
-            GraphicsUtil::SetPipelineState(graphics::postProcessingPSO);
+            graphics::Util::SetPipelineState(graphics::pso::postProcessingPSO);
             tone_mapping.Render(const_buffer);
             break;
         }

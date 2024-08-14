@@ -52,9 +52,6 @@
     <ClInclude Include="ImGui\NodeEditor\imgui_extra_math.h">
       <Filter>Common\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="graphics_manager.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics_util.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -93,9 +90,6 @@
     </ClInclude>
     <ClInclude Include="component.h">
       <Filter>Core\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="compute_pso.h">
-      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="node.h">
       <Filter>Common\Structure</Filter>
@@ -223,6 +217,9 @@
     <ClInclude Include="engine.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="graphics_core.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
@@ -264,9 +261,6 @@
     </ClCompile>
     <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp">
       <Filter>Common\Gui\ImGui\NodeEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics_manager.cpp">
-      <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="graphics_util.cpp">
       <Filter>Graphics</Filter>
@@ -342,6 +336,9 @@
     </ClCompile>
     <ClCompile Include="engine.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics_core.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

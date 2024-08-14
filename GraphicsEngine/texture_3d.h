@@ -25,7 +25,7 @@ class Texture3D {
         m_height = height;
         m_depth = depth;
 
-        GraphicsUtil::CreateTexture3D(width, height, depth, pixelFormat,
+        graphics::Util::CreateTexture3D(width, height, depth, pixelFormat,
                                       initData, m_texture, m_rtv, m_srv, m_uav);
     }
 
@@ -66,11 +66,11 @@ class Texture3D {
         m_texture->GetDesc(&desc);
 
         if (!m_staging) {
-            m_staging = GraphicsUtil::CreateStagingTexture3D(
+            m_staging = graphics::Util::CreateStagingTexture3D(
                 desc.Width, desc.Height, desc.Depth, desc.Format);
         }
 
-        size_t pixelSize = GraphicsUtil::GetPixelSize(desc.Format);
+        size_t pixelSize = graphics::Util::GetPixelSize(desc.Format);
 
         D3D11_MAPPED_SUBRESOURCE ms;
         context->Map(m_staging.Get(), NULL, D3D11_MAP_WRITE, NULL, &ms);

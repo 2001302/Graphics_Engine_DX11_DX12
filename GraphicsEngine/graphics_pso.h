@@ -11,13 +11,13 @@
 #include <windows.h>
 #include <wrl/client.h> // ComPtr
 
-namespace core {
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;
 using DirectX::SimpleMath::Vector3;
 using DirectX::SimpleMath::Vector4;
 using Microsoft::WRL::ComPtr;
 
+namespace graphics {
 class PipelineState {
   public:
     void operator=(const PipelineState &pso);
@@ -31,7 +31,7 @@ class PipelineState {
     ComPtr<ID3D11GeometryShader> geometry_shader;
     ComPtr<ID3D11ComputeShader> compute_shader;
     ComPtr<ID3D11InputLayout> input_layout;
-
+    
     ComPtr<ID3D11BlendState> blend_state;
     ComPtr<ID3D11DepthStencilState> depth_stencil_state;
     ComPtr<ID3D11RasterizerState> rasterizer_state;

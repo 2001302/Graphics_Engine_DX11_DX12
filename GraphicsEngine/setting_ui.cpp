@@ -28,9 +28,7 @@ void SettingUi::ClearNodeItem() {
     node_items.clear();
 };
 
-void SettingUi::PushInfoItem(IInfo *node) {
-    info_items.push_back(node);
-};
+void SettingUi::PushInfoItem(IInfo *node) { info_items.push_back(node); };
 
 void SettingUi::ClearInfoItem() { info_items.clear(); };
 
@@ -38,8 +36,8 @@ void SettingUi::OnStart() {
 
     ImGui_ImplWin32_Init(Env::Instance().main_window);
     ImGui_ImplDX11_Init(
-        core::GraphicsCore::Instance().device.Get(),
-        core::GraphicsCore::Instance().device_context.Get());
+        graphics::GraphicsCore::Instance().device.Get(),
+        graphics::GraphicsCore::Instance().device_context.Get());
 
     ed::Config config;
     config.SettingsFile = "widgets.json";
@@ -115,8 +113,7 @@ void SettingUi::LeftPanel() {
     if (ImGui::TreeNode("Assets")) {
 
         if (ImGui::Button("Sphere")) {
-            SendMessage(Env::Instance().main_window, WM_SPHERE_LOAD, 0,
-                        0);
+            SendMessage(Env::Instance().main_window, WM_SPHERE_LOAD, 0, 0);
         }
         ImGui::SameLine();
         if (ImGui::Button("Box")) {
@@ -124,13 +121,11 @@ void SettingUi::LeftPanel() {
         }
         ImGui::SameLine();
         if (ImGui::Button("Cylinder")) {
-            SendMessage(Env::Instance().main_window, WM_CYLINDER_LOAD,
-                        0, 0);
+            SendMessage(Env::Instance().main_window, WM_CYLINDER_LOAD, 0, 0);
         }
         ImGui::SameLine();
         if (ImGui::Button("Search")) {
-            SendMessage(Env::Instance().main_window, WM_MODEL_LOAD, 0,
-                        0);
+            SendMessage(Env::Instance().main_window, WM_MODEL_LOAD, 0, 0);
         }
         ImGui::TreePop();
     }
@@ -196,4 +191,4 @@ void SettingUi::Hierarchy() {
 
     ImGui::EndTable();
 }
-} // namespace engine
+} // namespace common

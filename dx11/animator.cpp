@@ -42,7 +42,7 @@ void Animator::UpdateAnimation(int clipId, float elapse_time) {
 }
 
 void Animator::UploadBoneData() {
-    graphics::Core::Instance().device_context->VSSetShaderResources(
+    graphics::GpuCore::Instance().device_context->VSSetShaderResources(
         9, 1, bone_transforms.GetAddressOfSRV());
 }
 

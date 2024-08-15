@@ -263,10 +263,10 @@ void MeshRenderer::Render() {
 
             ID3D11Buffer *constBuffers[2] = {mesh->meshConstsGPU.Get(),
                                              mesh->materialConstsGPU.Get()};
-            graphics::Core::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->VSSetConstantBuffers(1, 2, constBuffers);
 
-            graphics::Core::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->VSSetShaderResources(
                     0, 1, mesh->heightSRV.GetAddressOf());
 
@@ -274,35 +274,35 @@ void MeshRenderer::Render() {
             vector<ID3D11ShaderResourceView *> resViews = {
                 mesh->albedoSRV.Get(), mesh->normalSRV.Get(), mesh->aoSRV.Get(),
                 mesh->metallicRoughnessSRV.Get(), mesh->emissiveSRV.Get()};
-            graphics::Core::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->PSSetShaderResources(0, // register(t0)
                                                       UINT(resViews.size()),
                                                       resViews.data());
-            graphics::Core::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->PSSetConstantBuffers(1, 2, constBuffers);
 
             // Volume Rendering
             if (mesh->densityTex.GetSRV())
-                graphics::Core::Instance()
+                graphics::GpuCore::Instance()
                     .device_context->PSSetShaderResources(
                         5, 1, mesh->densityTex.GetAddressOfSRV());
             if (mesh->lightingTex.GetSRV())
-                graphics::Core::Instance()
+                graphics::GpuCore::Instance()
                     .device_context->PSSetShaderResources(
                         6, 1, mesh->lightingTex.GetAddressOfSRV());
 
-            graphics::Core::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->IASetVertexBuffers(
                     0, 1, mesh->vertexBuffer.GetAddressOf(), &mesh->stride,
                     &mesh->offset);
-            graphics::Core::Instance().device_context->IASetIndexBuffer(
+            graphics::GpuCore::Instance().device_context->IASetIndexBuffer(
                 mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-            graphics::Core::Instance().device_context->DrawIndexed(
+            graphics::GpuCore::Instance().device_context->DrawIndexed(
                 mesh->indexCount, 0, 0);
 
             // Release resources
             ID3D11ShaderResourceView *nulls[3] = {NULL, NULL, NULL};
-            graphics::Core::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->PSSetShaderResources(5, 3, nulls);
         }
     }
@@ -312,12 +312,12 @@ void MeshRenderer::RenderNormals() {
     for (const auto &mesh : meshes) {
         ID3D11Buffer *constBuffers[2] = {mesh->meshConstsGPU.Get(),
                                          mesh->materialConstsGPU.Get()};
-        graphics::Core::Instance().device_context->GSSetConstantBuffers(
+        graphics::GpuCore::Instance().device_context->GSSetConstantBuffers(
             1, 2, constBuffers);
-        graphics::Core::Instance().device_context->IASetVertexBuffers(
+        graphics::GpuCore::Instance().device_context->IASetVertexBuffers(
             0, 1, mesh->vertexBuffer.GetAddressOf(), &mesh->stride,
             &mesh->offset);
-        graphics::Core::Instance().device_context->Draw(
+        graphics::GpuCore::Instance().device_context->Draw(
             mesh->vertexCount, 0);
     }
 }
@@ -326,14 +326,14 @@ void MeshRenderer::RenderWireBoundingBox() {
     ID3D11Buffer *constBuffers[2] = {
         bounding_box_mesh->meshConstsGPU.Get(),
         bounding_box_mesh->materialConstsGPU.Get()};
-    graphics::Core::Instance().device_context->VSSetConstantBuffers(
+    graphics::GpuCore::Instance().device_context->VSSetConstantBuffers(
         1, 2, constBuffers);
-    graphics::Core::Instance().device_context->IASetVertexBuffers(
+    graphics::GpuCore::Instance().device_context->IASetVertexBuffers(
         0, 1, bounding_box_mesh->vertexBuffer.GetAddressOf(),
         &bounding_box_mesh->stride, &bounding_box_mesh->offset);
-    graphics::Core::Instance().device_context->IASetIndexBuffer(
+    graphics::GpuCore::Instance().device_context->IASetIndexBuffer(
         bounding_box_mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-    graphics::Core::Instance().device_context->DrawIndexed(
+    graphics::GpuCore::Instance().device_context->DrawIndexed(
         bounding_box_mesh->indexCount, 0, 0);
 }
 
@@ -341,14 +341,14 @@ void MeshRenderer::RenderWireBoundingSphere() {
     ID3D11Buffer *constBuffers[2] = {
         bounding_box_mesh->meshConstsGPU.Get(),
         bounding_box_mesh->materialConstsGPU.Get()};
-    graphics::Core::Instance().device_context->VSSetConstantBuffers(
+    graphics::GpuCore::Instance().device_context->VSSetConstantBuffers(
         1, 2, constBuffers);
-    graphics::Core::Instance().device_context->IASetVertexBuffers(
+    graphics::GpuCore::Instance().device_context->IASetVertexBuffers(
         0, 1, bounding_sphere_mesh->vertexBuffer.GetAddressOf(),
         &bounding_sphere_mesh->stride, &bounding_sphere_mesh->offset);
-    graphics::Core::Instance().device_context->IASetIndexBuffer(
+    graphics::GpuCore::Instance().device_context->IASetIndexBuffer(
         bounding_sphere_mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-    graphics::Core::Instance().device_context->DrawIndexed(
+    graphics::GpuCore::Instance().device_context->DrawIndexed(
         bounding_sphere_mesh->indexCount, 0, 0);
 }
 

@@ -8,14 +8,14 @@
 #define LIGHT_SPOT 0x04
 #define LIGHT_SHADOW 0x10
 
-#include "graphics_common.h"
 #include "env.h"
+#include "graphics_common.h"
 
 namespace graphics {
-class Core {
+class GpuCore {
   public:
-    static Core &Instance() {
-        static Core instance;
+    static GpuCore &Instance() {
+        static GpuCore instance;
         return instance;
     }
     bool Initialize();
@@ -45,11 +45,11 @@ class Core {
     D3D11_VIEWPORT viewport;
 
   private:
-    Core()
+    GpuCore()
         : swap_chain(0), device(0), device_context(0),
           viewport(D3D11_VIEWPORT()) {}
     void CreateDepthBuffer();
 };
 
-} // namespace engine
+} // namespace graphics
 #endif

@@ -35,7 +35,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             desc.Height = m_shadowHeight;
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 graphics::ThrowIfFailed(
-                    graphics::Core::Instance().device->CreateTexture2D(
+                    graphics::GpuCore::Instance().device->CreateTexture2D(
                         &desc, NULL, m_shadowBuffers[i].GetAddressOf()));
             }
 
@@ -47,7 +47,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             // shadow DSVs
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 graphics::ThrowIfFailed(
-                    graphics::Core::Instance()
+                    graphics::GpuCore::Instance()
                         .device->CreateDepthStencilView(
                             m_shadowBuffers[i].Get(), &dsvDesc,
                             m_shadowDSVs[i].GetAddressOf()));
@@ -62,7 +62,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             // shadow SRVs
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 graphics::ThrowIfFailed(
-                    graphics::Core::Instance()
+                    graphics::GpuCore::Instance()
                         .device->CreateShaderResourceView(
                             m_shadowBuffers[i].Get(), &srvDesc,
                             m_shadowSRVs[i].GetAddressOf()));
@@ -118,7 +118,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
 
             std::vector<ID3D11ShaderResourceView *> nullSRV(MAX_LIGHTS,
                                                             nullptr);
-            graphics::Core::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->PSSetShaderResources(15, UINT(nullSRV.size()),
                                                       nullSRV.data());
 
@@ -127,10 +127,10 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 if (manager->global_consts_CPU.lights[i].type & LIGHT_SHADOW) {
                     // no RTS
-                    graphics::Core::Instance()
+                    graphics::GpuCore::Instance()
                         .device_context->OMSetRenderTargets(
                             0, NULL, m_shadowDSVs[i].Get());
-                    graphics::Core::Instance()
+                    graphics::GpuCore::Instance()
                         .device_context->ClearDepthStencilView(
                             m_shadowDSVs[i].Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
                     graphics::Util::SetGlobalConsts(
@@ -151,20 +151,20 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
         }
 
         // rendering resolution
-        graphics::Core::Instance().SetMainViewport();
+        graphics::GpuCore::Instance().SetMainViewport();
 
         const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
         std::vector<ID3D11RenderTargetView *> rtvs = {
-            graphics::Core::Instance().float_RTV.Get()};
+            graphics::GpuCore::Instance().float_RTV.Get()};
 
         // Mirror 1. Draw it as it originally is, without the mirror.
         for (size_t i = 0; i < rtvs.size(); i++) {
-            graphics::Core::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->ClearRenderTargetView(rtvs[i], clearColor);
         }
-        graphics::Core::Instance().device_context->OMSetRenderTargets(
+        graphics::GpuCore::Instance().device_context->OMSetRenderTargets(
             UINT(rtvs.size()), rtvs.data(),
-            graphics::Core::Instance().m_depthStencilView.Get());
+            graphics::GpuCore::Instance().m_depthStencilView.Get());
 
         // Shadow textures: start from register(15)
         // Note: Unbind the last shadowDSV from the RenderTarget before setting
@@ -173,12 +173,12 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
         for (int i = 0; i < MAX_LIGHTS; i++) {
             shadowSRVs.push_back(m_shadowSRVs[i].Get());
         }
-        graphics::Core::Instance().device_context->PSSetShaderResources(
+        graphics::GpuCore::Instance().device_context->PSSetShaderResources(
             15, UINT(shadowSRVs.size()), shadowSRVs.data());
 
-        graphics::Core::Instance()
+        graphics::GpuCore::Instance()
             .device_context->ClearDepthStencilView(
-                graphics::Core::Instance().m_depthStencilView.Get(),
+                graphics::GpuCore::Instance().m_depthStencilView.Get(),
                 D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
         return common::EnumBehaviorTreeStatus::eSuccess;
@@ -195,7 +195,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
         shadowViewport.MinDepth = 0.0f;
         shadowViewport.MaxDepth = 1.0f;
 
-        graphics::Core::Instance().device_context->RSSetViewports(
+        graphics::GpuCore::Instance().device_context->RSSetViewports(
             1, &shadowViewport);
     }
 

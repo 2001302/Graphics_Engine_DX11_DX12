@@ -61,7 +61,7 @@ class PostProcessingNode : public common::BehaviorActionNode,
                 // bright pass->blur vertical->blur horizontal->composite
                 bright_pass.Render(
                     graphics::pso::brightPassCS, const_buffer,
-                    {graphics::Core::Instance().resolved_SRV},
+                    {graphics::GpuCore::Instance().resolved_SRV},
                     bright_pass_UAV);
 
                 blur_vertical.Render(graphics::pso::blurVerticalCS,
@@ -74,12 +74,12 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
                 bloom_composite.Render(
                     graphics::pso::bloomComposite, const_buffer,
-                    {graphics::Core::Instance().resolved_SRV,
+                    {graphics::GpuCore::Instance().resolved_SRV,
                      blur_horizontal_SRV},
                     bright_pass_UAV);
 
-                graphics::Core::Instance().device_context->CopyResource(
-                    graphics::Core::Instance().resolved_buffer.Get(),
+                graphics::GpuCore::Instance().device_context->CopyResource(
+                    graphics::GpuCore::Instance().resolved_buffer.Get(),
                     bright_pass_buffer.Get());
             }
 

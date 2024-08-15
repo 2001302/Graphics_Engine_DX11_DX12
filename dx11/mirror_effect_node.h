@@ -104,9 +104,9 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                                        : graphics::pso::reflectSolidPSO);
                 graphics::Util::SetGlobalConsts(reflect_global_consts_GPU);
 
-                graphics::Core::Instance()
+                graphics::GpuCore::Instance()
                     .device_context->ClearDepthStencilView(
-                        graphics::Core::Instance()
+                        graphics::GpuCore::Instance()
                             .m_depthStencilView.Get(),
                         D3D11_CLEAR_DEPTH, 1.0f, 0);
 

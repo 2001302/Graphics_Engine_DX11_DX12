@@ -1,44 +1,36 @@
-//#define _CRT_SECURE_NO_WARNINGS
-//#include "graphics_util.h"
+#define _CRT_SECURE_NO_WARNINGS
+#include "graphics_util.h"
+
+#include <DirectXTexEXR.h>
+#include <algorithm>
+#include <directxtk/DDSTextureLoader.h>
+#include <dxgi.h>    // DXGIFactory
+#include <dxgi1_4.h> // DXGIFactory4
+#include <fp16.h>
+#include <iostream>
+
+#define STB_IMAGE_IMPLEMENTATION
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "stb_image.h"
+#include "stb_image_write.h"
+
+namespace dx12 {
+
+using namespace std;
+using namespace DirectX;
+
+//void Util::CreateIndexBuffer(const std::vector<uint32_t> &indices,
+//                             ComPtr<ID3D12Resource> &indexBuffer) {
 //
-//#include <DirectXTexEXR.h>
-//#include <algorithm>
-//#include <directxtk/DDSTextureLoader.h>
-//#include <dxgi.h>    // DXGIFactory
-//#include <dxgi1_4.h> // DXGIFactory4
-//#include <fp16.h>
-//#include <iostream>
+//    const UINT size = sizeof(indices);
 //
-//#define STB_IMAGE_IMPLEMENTATION
-//#define STB_IMAGE_WRITE_IMPLEMENTATION
-//#include "stb_image.h"
-//#include "stb_image_write.h"
-//
-//namespace graphics {
-//
-//using namespace std;
-//using namespace DirectX;
-//
-//void Util::CreateIndexBuffer(
-//                                     const std::vector<uint32_t> &indices,
-//                                     ComPtr<ID3D11Buffer> &indexBuffer) {
-//    D3D11_BUFFER_DESC bufferDesc = {};
-//    bufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-//    bufferDesc.ByteWidth = UINT(sizeof(uint32_t) * indices.size());
-//    bufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-//    bufferDesc.CPUAccessFlags = 0; // 0 if no CPU access is necessary.
-//    bufferDesc.StructureByteStride = sizeof(uint32_t);
-//
-//    D3D11_SUBRESOURCE_DATA indexBufferData = {0};
-//    indexBufferData.pSysMem = indices.data();
-//    indexBufferData.SysMemPitch = 0;
-//    indexBufferData.SysMemSlicePitch = 0;
-//
-//    GpuCore::Instance().device->CreateBuffer(&bufferDesc, &indexBufferData,
-//                         indexBuffer.GetAddressOf());
+//    HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
+//        &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD), D3D12_HEAP_FLAG_NONE,
+//        &CD3DX12_RESOURCE_DESC::Buffer(size), D3D12_RESOURCE_STATE_GENERIC_READ,
+//        nullptr, IID_PPV_ARGS(&indexBuffer));
 //}
 //
-//void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
+// void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
 //                  int &width, int &height, DXGI_FORMAT &pixelFormat) {
 //
 //    const std::wstring wFilename(filename.begin(), filename.end());
@@ -76,7 +68,7 @@
 //    // }
 //}
 //
-//void ReadImage(const std::string filename, std::vector<uint8_t> &image,
+// void ReadImage(const std::string filename, std::vector<uint8_t> &image,
 //               int &width, int &height) {
 //
 //    int channels;
@@ -127,7 +119,7 @@
 //    delete[] img;
 //}
 //
-//void ReadImage(const std::string albedoFilename,
+// void ReadImage(const std::string albedoFilename,
 //               const std::string opacityFilename, std::vector<uint8_t> &image,
 //               int &width, int &height) {
 //
@@ -147,11 +139,12 @@
 //        }
 //}
 //
-//ComPtr<ID3D11Texture2D>
-//CreateStagingTexture(const int width,
+// ComPtr<ID3D11Texture2D>
+// CreateStagingTexture(const int width,
 //                     const int height, const std::vector<uint8_t> &image,
-//                     const DXGI_FORMAT pixelFormat = DXGI_FORMAT_R8G8B8A8_UNORM,
-//                     const int mipLevels = 1, const int arraySize = 1) {
+//                     const DXGI_FORMAT pixelFormat =
+//                     DXGI_FORMAT_R8G8B8A8_UNORM, const int mipLevels = 1,
+//                     const int arraySize = 1) {
 //
 //    D3D11_TEXTURE2D_DESC txtDesc;
 //    ZeroMemory(&txtDesc, sizeof(txtDesc));
@@ -175,7 +168,7 @@
 //    if (pixelFormat == DXGI_FORMAT_R16G16B16A16_FLOAT) {
 //        pixelSize = sizeof(uint16_t) * 4;
 //    }
-//    
+//
 //    D3D11_MAPPED_SUBRESOURCE ms;
 //    GpuCore::Instance().device_context->Map(stagingTexture.Get(), NULL,
 //                                                 D3D11_MAP_WRITE, NULL, &ms);
@@ -189,7 +182,7 @@
 //    return stagingTexture;
 //}
 //
-//void CreateTextureHelper(const int width,
+// void CreateTextureHelper(const int width,
 //                         const int height, const vector<uint8_t> &image,
 //                         const DXGI_FORMAT pixelFormat,
 //                         ComPtr<ID3D11Texture2D> &texture,
@@ -234,17 +227,19 @@
 //    // HLSL 쉐이더 안에서는 SampleLevel() 사용
 //}
 //
-//void Util::CreateMetallicRoughnessTexture(
+// void Util::CreateMetallicRoughnessTexture(
 //    const std::string metallicFilename, const std::string roughnessFilename,
 //    ComPtr<ID3D11Texture2D> &texture, ComPtr<ID3D11ShaderResourceView> &srv) {
 //
 //    // GLTF 방식은 이미 합쳐져 있음
-//    if (!metallicFilename.empty() && (metallicFilename == roughnessFilename)) {
+//    if (!metallicFilename.empty() && (metallicFilename == roughnessFilename))
+//    {
 //        CreateTexture(metallicFilename, false, texture, srv);
 //    } else {
 //        // 별도 파일일 경우 따로 읽어서 합쳐줍니다.
 //
-//        // ReadImage()를 활용하기 위해서 두 이미지들을 각각 4채널로 변환 후 다시
+//        // ReadImage()를 활용하기 위해서 두 이미지들을 각각 4채널로 변환 후
+//        다시
 //        // 3채널로 합치는 방식으로 구현
 //        int mWidth = 0, mHeight = 0;
 //        int rWidth = 0, rHeight = 0;
@@ -282,9 +277,9 @@
 //    }
 //}
 //
-//void Util::CreateTexture(
-//                                 const std::string filename, const bool usSRGB,
-//                                 ComPtr<ID3D11Texture2D> &tex,
+// void Util::CreateTexture(
+//                                 const std::string filename, const bool
+//                                 usSRGB, ComPtr<ID3D11Texture2D> &tex,
 //                                 ComPtr<ID3D11ShaderResourceView> &srv) {
 //
 //    int width = 0, height = 0;
@@ -305,7 +300,7 @@
 //                        srv);
 //}
 //
-//void Util::CreateTexture(
+// void Util::CreateTexture(
 //                                 const std::string albedoFilename,
 //                                 const std::string opacityFilename,
 //                                 const bool usSRGB,
@@ -323,9 +318,9 @@
 //                        texture, srv);
 //}
 //
-//void Util::CreateTextureArray(
-//    const std::vector<std::string> filenames, ComPtr<ID3D11Texture2D> &texture,
-//    ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
+// void Util::CreateTextureArray(
+//    const std::vector<std::string> filenames, ComPtr<ID3D11Texture2D>
+//    &texture, ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
 //
 //    using namespace std;
 //
@@ -398,7 +393,7 @@
 //        textureResourceView.Get());
 //}
 //
-//void Util::CreateDDSTexture( const wchar_t *filename, bool isCubeMap,
+// void Util::CreateDDSTexture( const wchar_t *filename, bool isCubeMap,
 //    ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
 //
 //    ComPtr<ID3D11Texture2D> texture;
@@ -416,7 +411,7 @@
 //        textureResourceView.GetAddressOf(), NULL));
 //}
 //
-//void Util::WriteToFile(
+// void Util::WriteToFile(
 //                               ComPtr<ID3D11Texture2D> &textureToWrite,
 //                               const std::string filename) {
 //
@@ -470,13 +465,14 @@
 //
 //    GpuCore::Instance().device_context->Unmap(stagingTexture.Get(), NULL);
 //
-//    stbi_write_png(filename.c_str(), desc.Width, desc.Height, 4, pixels.data(),
+//    stbi_write_png(filename.c_str(), desc.Width, desc.Height, 4,
+//    pixels.data(),
 //                   desc.Width * 4);
 //
 //    cout << filename << endl;
 //}
 //
-//void Util::CreateUATexture(
+// void Util::CreateUATexture(
 //                                   const int width, const int height,
 //                                   const DXGI_FORMAT pixelFormat,
 //                                   ComPtr<ID3D11Texture2D> &texture,
@@ -493,7 +489,8 @@
 //    txtDesc.Format = pixelFormat; // 주로 FLOAT 사용
 //    txtDesc.SampleDesc.Count = 1;
 //    txtDesc.Usage = D3D11_USAGE_DEFAULT;
-//    txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET |
+//    txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET
+//    |
 //                        D3D11_BIND_UNORDERED_ACCESS;
 //    txtDesc.MiscFlags = 0;
 //    txtDesc.CPUAccessFlags = 0;
@@ -511,7 +508,7 @@
 //                                                    uav.GetAddressOf()));
 //}
 //
-//void Util::ComputeShaderBarrier() {
+// void Util::ComputeShaderBarrier() {
 //
 //    // 최대 사용하는 SRV, UAV 갯수가 6개
 //    ID3D11ShaderResourceView *nullSRV[6] = {
@@ -526,7 +523,8 @@
 //        0, 6, nullUAV, NULL);
 //}
 //
-//ComPtr<ID3D11Texture3D> Util::CreateStagingTexture3D( const int width, const int height,
+// ComPtr<ID3D11Texture3D> Util::CreateStagingTexture3D( const int width, const
+// int height,
 //    const int depth, const DXGI_FORMAT pixelFormat) {
 //
 //    // 스테이징 텍스춰 만들기
@@ -550,7 +548,7 @@
 //    return stagingTexture;
 //}
 //
-//size_t Util::GetPixelSize(DXGI_FORMAT pixelFormat) {
+// size_t Util::GetPixelSize(DXGI_FORMAT pixelFormat) {
 //
 //    switch (pixelFormat) {
 //    case DXGI_FORMAT_R16G16B16A16_FLOAT:
@@ -574,11 +572,11 @@
 //    return sizeof(uint8_t) * 4;
 //}
 //
-//void Util::CreateTexture3D(const int width, const int height,
+// void Util::CreateTexture3D(const int width, const int height,
 //    const int depth, const DXGI_FORMAT pixelFormat,
 //    const vector<float> &initData, ComPtr<ID3D11Texture3D> &texture,
-//    ComPtr<ID3D11RenderTargetView> &rtv, ComPtr<ID3D11ShaderResourceView> &srv,
-//    ComPtr<ID3D11UnorderedAccessView> &uav) {
+//    ComPtr<ID3D11RenderTargetView> &rtv, ComPtr<ID3D11ShaderResourceView>
+//    &srv, ComPtr<ID3D11UnorderedAccessView> &uav) {
 //
 //    D3D11_TEXTURE3D_DESC txtDesc;
 //    ZeroMemory(&txtDesc, sizeof(txtDesc));
@@ -588,7 +586,8 @@
 //    txtDesc.MipLevels = 1;
 //    txtDesc.Format = pixelFormat;
 //    txtDesc.Usage = D3D11_USAGE_DEFAULT;
-//    txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET |
+//    txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET
+//    |
 //                        D3D11_BIND_UNORDERED_ACCESS;
 //    txtDesc.MiscFlags = 0;
 //    txtDesc.CPUAccessFlags = 0;
@@ -619,9 +618,9 @@
 //                                                    uav.GetAddressOf()));
 //}
 //
-//void Util::CreateStructuredBuffer( const UINT numElements,
-//    const UINT sizeElement, const void *initData, ComPtr<ID3D11Buffer> &buffer,
-//    ComPtr<ID3D11ShaderResourceView> &srv,
+// void Util::CreateStructuredBuffer( const UINT numElements,
+//    const UINT sizeElement, const void *initData, ComPtr<ID3D11Buffer>
+//    &buffer, ComPtr<ID3D11ShaderResourceView> &srv,
 //    ComPtr<ID3D11UnorderedAccessView> &uav) {
 //
 //    D3D11_BUFFER_DESC bufferDesc;
@@ -666,7 +665,7 @@
 //                                     srv.GetAddressOf());
 //}
 //
-//void Util::CreateStagingBuffer(
+// void Util::CreateStagingBuffer(
 //                                       const UINT numElements,
 //                                       const UINT sizeElement,
 //                                       const void *initData,
@@ -691,7 +690,7 @@
 //    }
 //}
 //
-//void Util::SetPipelineState(const PipelineState &pso) {
+// void Util::SetPipelineState(const PSO &pso) {
 //
 //    GpuCore::Instance().device_context->VSSetShader(
 //        pso.vertex_shader.Get(), 0, 0);
@@ -715,7 +714,7 @@
 //        pso.primitive_topology);
 //}
 //
-//void Util::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
+// void Util::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
 //    // 쉐이더와 일관성 유지 cbuffer GlobalConstants : register(b0)
 //    GpuCore::Instance().device_context->VSSetConstantBuffers(
 //        0, 1, globalConstsGPU.GetAddressOf());
@@ -725,7 +724,7 @@
 //        0, 1, globalConstsGPU.GetAddressOf());
 //}
 //
-//void Util::CopyToStagingBuffer(ComPtr<ID3D11Buffer> &buffer, UINT size,
+// void Util::CopyToStagingBuffer(ComPtr<ID3D11Buffer> &buffer, UINT size,
 //                                void *src) {
 //    D3D11_MAPPED_SUBRESOURCE ms;
 //    GpuCore::Instance().device_context->Map(buffer.Get(), NULL,
@@ -733,5 +732,5 @@
 //    memcpy(ms.pData, src, size);
 //    GpuCore::Instance().device_context->Unmap(buffer.Get(), NULL);
 //}
-//
-//} // namespace core
+
+} // namespace dx12

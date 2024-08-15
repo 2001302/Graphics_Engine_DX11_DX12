@@ -4,13 +4,15 @@
 #include <d3d12.h>
 #include <d3dcompiler.h>
 #include <directxtk/SimpleMath.h>
+#include <dxgi.h>    // DXGIFactory
+#include <dxgi1_4.h> // DXGIFactory4
 #include <iostream>
+#include <map>
 #include <memory>
 #include <string>
 #include <vector>
 #include <windows.h>
 #include <wrl/client.h> // ComPtr
-#include <map>
 
 #include "d3dx12.h"
 
@@ -122,7 +124,7 @@ class GraphicsPSO : public PSO {
 
     // Perform validation and compute a hash value for fast state block
     // comparisons
-    //void Finalize();
+    // void Finalize();
 
   private:
     D3D12_GRAPHICS_PIPELINE_STATE_DESC m_PSODesc;
@@ -143,11 +145,11 @@ class ComputePSO : public PSO {
         m_PSODesc.CS = Binary;
     }
 
-    //void Finalize();
+    // void Finalize();
 
   private:
     D3D12_COMPUTE_PIPELINE_STATE_DESC m_PSODesc;
 };
 
-} // namespace graphics
+} // namespace dx12
 #endif

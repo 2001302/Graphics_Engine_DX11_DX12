@@ -1,170 +1,108 @@
-//#include "graphics_core.h"
-//
-//namespace graphics {
-//
-//bool GpuCore::Initialize() {
-//    const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
-//
-//    UINT createDeviceFlags = 0;
-//#if defined(DEBUG) || defined(_DEBUG)
-//    createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
-//#endif
-//
-//    const D3D_FEATURE_LEVEL featureLevels[2] = {D3D_FEATURE_LEVEL_11_0,
-//                                                D3D_FEATURE_LEVEL_9_3};
-//    D3D_FEATURE_LEVEL featureLevel;
-//
-//    DXGI_SWAP_CHAIN_DESC sd;
-//    ZeroMemory(&sd, sizeof(sd));
-//    sd.BufferDesc.Width = foundation::Env::Instance().screen_width;
-//    sd.BufferDesc.Height = foundation::Env::Instance().screen_height;
-//    sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-//    sd.BufferCount = 2;
-//    sd.BufferDesc.RefreshRate.Numerator = 60;
-//    sd.BufferDesc.RefreshRate.Denominator = 1;
-//    sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-//    sd.OutputWindow = foundation::Env::Instance().main_window;
-//    sd.Windowed = TRUE;
-//    sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
-//    sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-//    sd.SampleDesc.Count = 1; // _FLIP_은 MSAA 미지원
-//    sd.SampleDesc.Quality = 0;
-//
-//    ThrowIfFailed(D3D11CreateDeviceAndSwapChain(
-//        0, driverType, 0, createDeviceFlags, featureLevels, 1,
-//        D3D11_SDK_VERSION, &sd, swap_chain.GetAddressOf(),
-//        device.GetAddressOf(), &featureLevel, device_context.GetAddressOf()));
-//
-//    if (featureLevel != D3D_FEATURE_LEVEL_11_0) {
-//        std::cout << "D3D Feature Level 11 unsupported." << std::endl;
-//        return false;
-//    }
-//
-//    CreateBuffer();
-//    SetMainViewport();
-//
-//    D3D11_RASTERIZER_DESC rastDesc;
-//    ZeroMemory(&rastDesc, sizeof(D3D11_RASTERIZER_DESC));
-//    rastDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_SOLID;
-//    rastDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
-//    rastDesc.FrontCounterClockwise = false;
-//    rastDesc.DepthClipEnable = true;
-//
-//    pso::InitCommonStates(device);
-//
-//    return true;
-//}
-//
-//bool GpuCore::CreateBuffer() {
-//
-//    // 레스터화 -> float/depthBuffer(MSAA) -> resolved -> backBuffer
-//
-//    // BackBuffer는 화면으로 최종 출력되기 때문에  RTV만 필요하고 SRV는 불필요
-//    ComPtr<ID3D11Texture2D> backBuffer;
-//    ThrowIfFailed(
-//        swap_chain->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf())));
-//    ThrowIfFailed(device->CreateRenderTargetView(
-//        backBuffer.Get(), NULL, back_buffer_RTV.GetAddressOf()));
-//
-//    // FLOAT MSAA RenderTargetView/ShaderResourceView
-//    ThrowIfFailed(device->CheckMultisampleQualityLevels(
-//        DXGI_FORMAT_R16G16B16A16_FLOAT, 4, &num_quality_levels));
-//
-//    {
-//        D3D11_TEXTURE2D_DESC desc;
-//        backBuffer->GetDesc(&desc);
-//        desc.MipLevels = desc.ArraySize = 1;
-//        desc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-//        desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-//        desc.Usage = D3D11_USAGE_DEFAULT; // 스테이징 텍스춰로부터 복사 가능
-//        desc.MiscFlags = 0;
-//        desc.CPUAccessFlags = 0;
-//        if (useMSAA && num_quality_levels) {
-//            desc.SampleDesc.Count = 4;
-//            desc.SampleDesc.Quality = num_quality_levels - 1;
-//        } else {
-//            desc.SampleDesc.Count = 1;
-//            desc.SampleDesc.Quality = 0;
-//        }
-//
-//        ThrowIfFailed(
-//            device->CreateTexture2D(&desc, NULL, float_buffer.GetAddressOf()));
-//        ThrowIfFailed(device->CreateRenderTargetView(float_buffer.Get(), NULL,
-//                                                     float_RTV.GetAddressOf()));
-//    }
-//
-//    {
-//        D3D11_TEXTURE2D_DESC txtDesc;
-//        ZeroMemory(&txtDesc, sizeof(txtDesc));
-//        txtDesc.Width = foundation::Env::Instance().screen_width;
-//        txtDesc.Height = foundation::Env::Instance().screen_height;
-//        txtDesc.MipLevels = 1;
-//        txtDesc.ArraySize = 1;
-//        txtDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-//        txtDesc.SampleDesc.Count = 1;
-//        txtDesc.Usage = D3D11_USAGE_DEFAULT;
-//        txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE |
-//                            D3D11_BIND_RENDER_TARGET |
-//                            D3D11_BIND_UNORDERED_ACCESS;
-//        txtDesc.MiscFlags = 0;
-//        txtDesc.CPUAccessFlags = 0;
-//
-//        ThrowIfFailed(device->CreateTexture2D(&txtDesc, NULL,
-//                                              resolved_buffer.GetAddressOf()));
-//        ThrowIfFailed(device->CreateRenderTargetView(resolved_buffer.Get(),
-//                                                     NULL, resolved_RTV.GetAddressOf()));
-//        ThrowIfFailed(device->CreateShaderResourceView(
-//            resolved_buffer.Get(), NULL, resolved_SRV.GetAddressOf()));
-//        ThrowIfFailed(device->CreateUnorderedAccessView(
-//            resolved_buffer.Get(), NULL, resolved_UAV.GetAddressOf()));
-//    }
-//
-//    CreateDepthBuffer();
-//
-//    return true;
-//}
-//
-//void GpuCore::CreateDepthBuffer() {
-//
-//    D3D11_TEXTURE2D_DESC desc;
-//    desc.Width = foundation::Env::Instance().screen_width;
-//    desc.Height = foundation::Env::Instance().screen_height;
-//    desc.MipLevels = 1;
-//    desc.ArraySize = 1;
-//    desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-//    if (num_quality_levels > 0) {
-//        desc.SampleDesc.Count = 4; // how many multisamples
-//        desc.SampleDesc.Quality = num_quality_levels - 1;
-//    } else {
-//        desc.SampleDesc.Count = 1; // how many multisamples
-//        desc.SampleDesc.Quality = 0;
-//    }
-//    desc.Usage = D3D11_USAGE_DEFAULT;
-//    desc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-//    desc.CPUAccessFlags = 0;
-//    desc.MiscFlags = 0;
-//
-//    ComPtr<ID3D11Texture2D> depthStencilBuffer;
-//
-//    ThrowIfFailed(
-//        device->CreateTexture2D(&desc, 0, depthStencilBuffer.GetAddressOf()));
-//
-//    ThrowIfFailed(device->CreateDepthStencilView(
-//        depthStencilBuffer.Get(), 0, m_depthStencilView.GetAddressOf()));
-//}
-//
-//void GpuCore::SetMainViewport() {
-//
-//    // Set the viewport
-//    ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
-//    viewport.TopLeftX = 0;
-//    viewport.TopLeftY = 0;
-//    viewport.Width = float(foundation::Env::Instance().screen_width);
-//    viewport.Height = float(foundation::Env::Instance().screen_height);
-//    viewport.MinDepth = 0.0f;
-//    viewport.MaxDepth = 1.0f;
-//
-//    device_context->RSSetViewports(1, &viewport);
-//}
-//
-//} // namespace engine
+#include "graphics_core.h"
+
+namespace dx12 {
+
+bool GpuCore::Initialize() {
+    UINT dxgiFactoryFlags = 0;
+
+#if defined(_DEBUG)
+    // Enable the debug layer (requires the Graphics Tools "optional feature").
+    // NOTE: Enabling the debug layer after device creation will invalidate the
+    // active device.
+    {
+        ComPtr<ID3D12Debug> debugController;
+        if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController)))) {
+            debugController->EnableDebugLayer();
+
+            // Enable additional debug layers.
+            dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
+        }
+    }
+#endif
+
+    ComPtr<IDXGIFactory4> factory;
+    ThrowIfFailed(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)));
+
+    bool useWarpDevice = true;
+    if (useWarpDevice) {
+        ComPtr<IDXGIAdapter> warpAdapter;
+        ThrowIfFailed(factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)));
+        ThrowIfFailed(D3D12CreateDevice(
+            warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&device)));
+    } else {
+        ComPtr<IDXGIAdapter1> hardwareAdapter;
+        // GetHardwareAdapter(factory.Get(), &hardwareAdapter);
+        ThrowIfFailed(D3D12CreateDevice(hardwareAdapter.Get(),
+                                        D3D_FEATURE_LEVEL_11_0,
+                                        IID_PPV_ARGS(&device)));
+    }
+
+    // Describe and create the command queue.
+    D3D12_COMMAND_QUEUE_DESC queueDesc = {};
+    queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
+    queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
+
+    ThrowIfFailed(
+        device->CreateCommandQueue(&queueDesc, IID_PPV_ARGS(&command_queue)));
+
+    // Describe and create the swap chain.
+    DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
+    swapChainDesc.BufferCount = 2;
+    swapChainDesc.Width = foundation::Env::Instance().screen_width;
+    swapChainDesc.Height = foundation::Env::Instance().screen_height;
+    swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+    swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
+    swapChainDesc.SampleDesc.Count = 1;
+
+    ComPtr<IDXGISwapChain1> swapChain;
+    ThrowIfFailed(factory->CreateSwapChainForHwnd(
+        command_queue.Get(), // Swap chain needs the queue so that it can force
+                             // a flush on it.
+        foundation::Env::Instance().main_window, &swapChainDesc, nullptr,
+        nullptr, &swapChain));
+
+    // This sample does not support fullscreen transitions.
+    ThrowIfFailed(factory->MakeWindowAssociation(
+        foundation::Env::Instance().main_window, DXGI_MWA_NO_ALT_ENTER));
+
+    ThrowIfFailed(swapChain.As(&swap_chain));
+    frameIndex = swap_chain->GetCurrentBackBufferIndex();
+
+    // Create descriptor heaps.
+    {
+        // Describe and create a render target view (RTV) descriptor heap.
+        D3D12_DESCRIPTOR_HEAP_DESC rtvHeapDesc = {};
+        rtvHeapDesc.NumDescriptors = 2;
+        rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+        rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+        ThrowIfFailed(
+            device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap)));
+
+        rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(
+            D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+    }
+
+    // Create frame resources.
+    {
+        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
+            rtvHeap->GetCPUDescriptorHandleForHeapStart());
+
+        // Create a RTV for each frame.
+        for (UINT n = 0; n < 2; n++) {
+            ThrowIfFailed(
+                swap_chain->GetBuffer(n, IID_PPV_ARGS(&renderTargets[n])));
+            device->CreateRenderTargetView(renderTargets[n].Get(), nullptr,
+                                           rtvHandle);
+            rtvHandle.Offset(1, rtvDescriptorSize);
+        }
+    }
+
+    ThrowIfFailed(device->CreateCommandAllocator(
+        D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator)));
+
+    pso::InitCommonStates(device, rootSignature);
+
+    return true;
+}
+} // namespace dx12

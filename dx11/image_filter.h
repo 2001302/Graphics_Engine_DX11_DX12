@@ -13,23 +13,23 @@ class ImageFilter : public Component {
                 const std::vector<ComPtr<ID3D11ShaderResourceView>> &srv,
                 ComPtr<ID3D11UnorderedAccessView> uav) {
 
-        graphics::GpuCore::Instance().device_context->CSSetShader(
+        dx11::GpuCore::Instance().device_context->CSSetShader(
             shader.Get(), 0, 0);
-        graphics::GpuCore::Instance().device_context->CSSetConstantBuffers(
+        dx11::GpuCore::Instance().device_context->CSSetConstantBuffers(
             0, 1, const_buffer.GetAddressOf());
-        graphics::GpuCore::Instance().device_context->CSSetShaderResources(
+        dx11::GpuCore::Instance().device_context->CSSetShaderResources(
             0, UINT(srv.size()), srv.data()->GetAddressOf());
-        graphics::GpuCore::Instance()
+        dx11::GpuCore::Instance()
             .device_context->CSSetUnorderedAccessViews(0, 1, uav.GetAddressOf(),
                                                        NULL);
 
-        graphics::GpuCore::Instance().device_context->Dispatch(
+        dx11::GpuCore::Instance().device_context->Dispatch(
             UINT(ceil(foundation::Env::Instance().screen_width / 16.0f)),
             UINT(ceil(foundation::Env::Instance().screen_height / 16.0f)), 1);
 
         // Let the computer shader finish its task and then release the
         // resources.
-        graphics::Util::ComputeShaderBarrier();
+        dx11::Util::ComputeShaderBarrier();
     }
 };
 } // namespace core

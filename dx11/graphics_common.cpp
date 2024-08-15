@@ -1,6 +1,6 @@
 #include "graphics_common.h"
 
-namespace graphics {
+namespace dx11 {
 
 namespace pso {
 

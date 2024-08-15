@@ -27,23 +27,23 @@ class PostProcessingNode : public foundation::BehaviorActionNode,
             const_data.option1 = 1.0f;  // Exposure
             const_data.option2 = 2.2f;  // Gamma
 
-            graphics::Util::CreateConstBuffer(const_data, const_buffer);
-            graphics::Util::UpdateBuffer(const_data, const_buffer);
+            dx11::Util::CreateConstBuffer(const_data, const_buffer);
+            dx11::Util::UpdateBuffer(const_data, const_buffer);
 
             // bloom
-            graphics::Util::CreateUATexture(
+            dx11::Util::CreateUATexture(
                 foundation::Env::Instance().screen_width,
                 foundation::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, bright_pass_buffer,
                 bright_pass_RTV, bright_pass_SRV, bright_pass_UAV);
 
-            graphics::Util::CreateUATexture(
+            dx11::Util::CreateUATexture(
                 foundation::Env::Instance().screen_width,
                 foundation::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_vertical_buffer,
                 blur_vertical_RTV, blur_vertical_SRV, blur_vertical_UAV);
 
-            graphics::Util::CreateUATexture(
+            dx11::Util::CreateUATexture(
                 foundation::Env::Instance().screen_width,
                 foundation::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_horizontal_buffer,
@@ -60,31 +60,31 @@ class PostProcessingNode : public foundation::BehaviorActionNode,
             if (use_bloom) {
                 // bright pass->blur vertical->blur horizontal->composite
                 bright_pass.Render(
-                    graphics::pso::brightPassCS, const_buffer,
-                    {graphics::GpuCore::Instance().resolved_SRV},
+                    dx11::pso::brightPassCS, const_buffer,
+                    {dx11::GpuCore::Instance().resolved_SRV},
                     bright_pass_UAV);
 
-                blur_vertical.Render(graphics::pso::blurVerticalCS,
+                blur_vertical.Render(dx11::pso::blurVerticalCS,
                                      const_buffer, {bright_pass_SRV},
                                      blur_vertical_UAV);
 
-                blur_horizontal.Render(graphics::pso::blurHorizontalCS,
+                blur_horizontal.Render(dx11::pso::blurHorizontalCS,
                                        const_buffer, {blur_vertical_SRV},
                                        blur_horizontal_UAV);
 
                 bloom_composite.Render(
-                    graphics::pso::bloomComposite, const_buffer,
-                    {graphics::GpuCore::Instance().resolved_SRV,
+                    dx11::pso::bloomComposite, const_buffer,
+                    {dx11::GpuCore::Instance().resolved_SRV,
                      blur_horizontal_SRV},
                     bright_pass_UAV);
 
-                graphics::GpuCore::Instance().device_context->CopyResource(
-                    graphics::GpuCore::Instance().resolved_buffer.Get(),
+                dx11::GpuCore::Instance().device_context->CopyResource(
+                    dx11::GpuCore::Instance().resolved_buffer.Get(),
                     bright_pass_buffer.Get());
             }
 
             // tone mapping
-            graphics::Util::SetPipelineState(graphics::pso::postProcessingPSO);
+            dx11::Util::SetPipelineState(dx11::pso::postProcessingPSO);
             tone_mapping.Render(const_buffer);
             break;
         }

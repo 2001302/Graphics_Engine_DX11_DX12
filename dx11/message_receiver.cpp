@@ -12,16 +12,16 @@ bool MessageReceiver::OnWindowSizeRequest(foundation::SettingUi *gui, int size_x
 
     if (foundation::Env::Instance().screen_width &&
         foundation::Env::Instance().screen_height) {
-        if (graphics::GpuCore::Instance().swap_chain) {
+        if (dx11::GpuCore::Instance().swap_chain) {
 
             gui->Shutdown();
 
-            graphics::GpuCore::Instance().back_buffer_RTV.Reset();
-            graphics::GpuCore::Instance().swap_chain->ResizeBuffers(
+            dx11::GpuCore::Instance().back_buffer_RTV.Reset();
+            dx11::GpuCore::Instance().swap_chain->ResizeBuffers(
                 0, size_x, size_y, DXGI_FORMAT_UNKNOWN, 0);
 
-            graphics::GpuCore::Instance().CreateBuffer();
-            graphics::GpuCore::Instance().SetMainViewport();
+            dx11::GpuCore::Instance().CreateBuffer();
+            dx11::GpuCore::Instance().SetMainViewport();
 
             gui->Start();
         }

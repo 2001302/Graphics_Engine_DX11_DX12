@@ -32,7 +32,7 @@ class Engine : public foundation::Platform, TreeNode {
 
         auto CheckIfMouseInViewport = [](SettingUi *ui, int mouseX,
                                          int mouseY) -> bool {
-            if (graphics::GpuCore::Instance().swap_chain) {
+            if (dx11::GpuCore::Instance().swap_chain) {
                 if ((0 < mouseX && mouseX < ui->GetSize().x) &&
                     (0 < mouseY && mouseY < ui->GetSize().y))
                     return false;

@@ -17,7 +17,7 @@ using DirectX::SimpleMath::Vector3;
 using DirectX::SimpleMath::Vector4;
 using Microsoft::WRL::ComPtr;
 
-namespace graphics {
+namespace dx11 {
 class PipelineState {
   public:
     void operator=(const PipelineState &pso);

@@ -45,7 +45,7 @@ class MirrorEffectNodeInvoker : public foundation::BehaviorActionNode {
 
             // m_basicList.push_back(m_ground); // 거울은 리스트에 등록 X
 
-            graphics::Util::CreateConstBuffer(reflect_global_consts_CPU,
+            dx11::Util::CreateConstBuffer(reflect_global_consts_CPU,
                                               reflect_global_consts_GPU);
 
             break;
@@ -69,7 +69,7 @@ class MirrorEffectNodeInvoker : public foundation::BehaviorActionNode {
                 reflect_global_consts_CPU.invViewProj =
                     reflect_global_consts_CPU.viewProj.Invert();
 
-                graphics::Util::UpdateBuffer(reflect_global_consts_CPU,
+                dx11::Util::UpdateBuffer(reflect_global_consts_CPU,
                                              reflect_global_consts_GPU);
             }
 
@@ -88,7 +88,7 @@ class MirrorEffectNodeInvoker : public foundation::BehaviorActionNode {
 
                 // Mirror 2. Mark only the mirror position as 1 in the
                 // StencilBuffer.
-                graphics::Util::SetPipelineState(graphics::pso::stencilMaskPSO);
+                dx11::Util::SetPipelineState(dx11::pso::stencilMaskPSO);
 
                 if (true) {
                     auto renderer =
@@ -99,14 +99,14 @@ class MirrorEffectNodeInvoker : public foundation::BehaviorActionNode {
 
                 // Mirror 3. Render the reflected objects at the mirror
                 // position.
-                graphics::Util::SetPipelineState(
-                    manager->draw_wire ? graphics::pso::reflectWirePSO
-                                       : graphics::pso::reflectSolidPSO);
-                graphics::Util::SetGlobalConsts(reflect_global_consts_GPU);
+                dx11::Util::SetPipelineState(
+                    manager->draw_wire ? dx11::pso::reflectWirePSO
+                                       : dx11::pso::reflectSolidPSO);
+                dx11::Util::SetGlobalConsts(reflect_global_consts_GPU);
 
-                graphics::GpuCore::Instance()
+                dx11::GpuCore::Instance()
                     .device_context->ClearDepthStencilView(
-                        graphics::GpuCore::Instance()
+                        dx11::GpuCore::Instance()
                             .m_depthStencilView.Get(),
                         D3D11_CLEAR_DEPTH, 1.0f, 0);
 
@@ -117,10 +117,10 @@ class MirrorEffectNodeInvoker : public foundation::BehaviorActionNode {
                 }
 
                 if (true) {
-                    graphics::Util::SetPipelineState(
+                    dx11::Util::SetPipelineState(
                         manager->draw_wire
-                            ? graphics::pso::reflectSkyboxWirePSO
-                            : graphics::pso::reflectSkyboxSolidPSO);
+                            ? dx11::pso::reflectSkyboxWirePSO
+                            : dx11::pso::reflectSkyboxSolidPSO);
                     auto renderer =
                         (MeshRenderer *)manager->skybox->model->GetComponent(
                             EnumComponentType::eRenderer);
@@ -130,11 +130,11 @@ class MirrorEffectNodeInvoker : public foundation::BehaviorActionNode {
                 if (true) {
                     // Mirror 4. Draw the mirror itself with the 'Blend'
                     // material
-                    graphics::Util::SetPipelineState(
+                    dx11::Util::SetPipelineState(
                         manager->draw_wire
-                            ? graphics::pso::mirrorBlendWirePSO
-                            : graphics::pso::mirrorBlendSolidPSO);
-                    graphics::Util::SetGlobalConsts(manager->global_consts_GPU);
+                            ? dx11::pso::mirrorBlendWirePSO
+                            : dx11::pso::mirrorBlendSolidPSO);
+                    dx11::Util::SetGlobalConsts(manager->global_consts_GPU);
                     auto renderer =
                         (MeshRenderer *)manager->ground->mirror->GetComponent(
                             EnumComponentType::eRenderer);

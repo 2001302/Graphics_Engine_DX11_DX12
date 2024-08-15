@@ -1,6 +1,6 @@
 #include "graphics_pso.h"
 
-namespace graphics {
+namespace dx11 {
 
 void PipelineState::operator=(const PipelineState &pso) {
     vertex_shader = pso.vertex_shader;

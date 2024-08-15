@@ -1,6 +1,6 @@
 #include "graphics_core.h"
 
-namespace graphics {
+namespace dx11 {
 
 bool GpuCore::Initialize() {
     const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;

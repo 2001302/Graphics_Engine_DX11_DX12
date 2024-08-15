@@ -29,9 +29,9 @@ class MeshRenderer : public Component {
 
     void UpdateConstantBuffers();
 
-    virtual graphics::PipelineState &GetPSO(const bool wired);
-    virtual graphics::PipelineState &GetDepthOnlyPSO();
-    virtual graphics::PipelineState &GetReflectPSO(const bool wired);
+    virtual dx11::PipelineState &GetPSO(const bool wired);
+    virtual dx11::PipelineState &GetDepthOnlyPSO();
+    virtual dx11::PipelineState &GetReflectPSO(const bool wired);
 
     virtual void Render();
     virtual void RenderNormals();

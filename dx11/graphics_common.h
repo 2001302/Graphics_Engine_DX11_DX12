@@ -3,7 +3,7 @@
 
 #include "graphics_pso.h"
 
-namespace graphics {
+namespace dx11 {
 inline void ThrowIfFailed(HRESULT hr) {
     if (FAILED(hr)) {
         throw std::exception();

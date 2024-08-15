@@ -80,10 +80,10 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
 
-            graphics::Util::SetPipelineState(
-                manager->draw_wire ? graphics::pso::defaultWirePSO
-                                   : graphics::pso::defaultSolidPSO);
-            graphics::Util::SetGlobalConsts(manager->global_consts_GPU);
+            dx11::Util::SetPipelineState(
+                manager->draw_wire ? dx11::pso::defaultWirePSO
+                                   : dx11::pso::defaultSolidPSO);
+            dx11::Util::SetGlobalConsts(manager->global_consts_GPU);
 
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
@@ -100,7 +100,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 renderer->Render();
             }
 
-            graphics::Util::SetPipelineState(graphics::pso::normalsPSO);
+            dx11::Util::SetPipelineState(dx11::pso::normalsPSO);
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);

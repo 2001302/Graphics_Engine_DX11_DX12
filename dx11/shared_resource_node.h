@@ -18,7 +18,7 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
 
-            graphics::Util::CreateConstBuffer(manager->global_consts_CPU,
+            dx11::Util::CreateConstBuffer(manager->global_consts_CPU,
                                               manager->global_consts_GPU);
 
             break;
@@ -42,23 +42,23 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
             manager->global_consts_CPU.invViewProj =
                 manager->global_consts_CPU.viewProj.Invert();
 
-            graphics::Util::UpdateBuffer(manager->global_consts_CPU,
+            dx11::Util::UpdateBuffer(manager->global_consts_CPU,
                                          manager->global_consts_GPU);
 
             break;
         }
         case EnumStageType::eRender: {
-            graphics::GpuCore::Instance().SetMainViewport();
+            dx11::GpuCore::Instance().SetMainViewport();
 
-            graphics::GpuCore::Instance().device_context->VSSetSamplers(
-                0, UINT(graphics::pso::sampleStates.size()),
-                graphics::pso::sampleStates.data());
-            graphics::GpuCore::Instance().device_context->PSSetSamplers(
-                0, UINT(graphics::pso::sampleStates.size()),
-                graphics::pso::sampleStates.data());
-            graphics::GpuCore::Instance().device_context->CSSetSamplers(
-                0, UINT(graphics::pso::sampleStates.size()),
-                graphics::pso::sampleStates.data());
+            dx11::GpuCore::Instance().device_context->VSSetSamplers(
+                0, UINT(dx11::pso::sampleStates.size()),
+                dx11::pso::sampleStates.data());
+            dx11::GpuCore::Instance().device_context->PSSetSamplers(
+                0, UINT(dx11::pso::sampleStates.size()),
+                dx11::pso::sampleStates.data());
+            dx11::GpuCore::Instance().device_context->CSSetSamplers(
+                0, UINT(dx11::pso::sampleStates.size()),
+                dx11::pso::sampleStates.data());
 
             // Shared textures: start from register(t10) in 'Common.hlsli'
             std::vector<ID3D11ShaderResourceView *> commonSRVs = {
@@ -66,7 +66,7 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
                 manager->skybox->specular_SRV.Get(),
                 manager->skybox->irradiance_SRV.Get(),
                 manager->skybox->brdf_SRV.Get()};
-            graphics::GpuCore::Instance()
+            dx11::GpuCore::Instance()
                 .device_context->PSSetShaderResources(
                     10, UINT(commonSRVs.size()), commonSRVs.data());
 

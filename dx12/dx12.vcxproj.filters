@@ -83,6 +83,12 @@
     <ClCompile Include="graphics\graphics_util.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="foundation\setting_ui.cpp">
+      <Filter>Foundation\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\engine.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -221,6 +227,12 @@
     </ClInclude>
     <ClInclude Include="d3dx12.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\setting_ui.h">
+      <Filter>Foundation\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\engine.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

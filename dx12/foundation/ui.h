@@ -3,6 +3,7 @@
 
 #include "dataBlock.h"
 #include "node.h"
+#include "../graphics/graphics_util.h"
 
 namespace foundation {
 class IGui : public IDataBlock {

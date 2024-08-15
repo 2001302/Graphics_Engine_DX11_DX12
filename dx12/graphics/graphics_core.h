@@ -30,6 +30,7 @@ class GpuCore {
     ComPtr<ID3D12CommandQueue> command_queue;
     ComPtr<ID3D12RootSignature> rootSignature;
     ComPtr<ID3D12DescriptorHeap> rtvHeap;
+    ComPtr<ID3D12DescriptorHeap> srvHeap;
     ComPtr<ID3D12PipelineState> pipelineState;
     ComPtr<ID3D12GraphicsCommandList> commandList;
     UINT rtvDescriptorSize;

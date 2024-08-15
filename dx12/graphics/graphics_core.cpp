@@ -83,6 +83,17 @@ bool GpuCore::Initialize() {
             D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     }
 
+    // Create descriptor heaps.
+    {
+        D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+        srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+        srvHeapDesc.NumDescriptors = 1;
+        srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+        ThrowIfFailed(
+            device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap)));
+    }
+
     // Create frame resources.
     {
         CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
@@ -101,7 +112,13 @@ bool GpuCore::Initialize() {
     ThrowIfFailed(device->CreateCommandAllocator(
         D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator)));
 
-    pso::InitCommonStates(device, rootSignature);
+    ThrowIfFailed(device->CreateCommandList(0, //
+                                            D3D12_COMMAND_LIST_TYPE_DIRECT,
+                                            commandAllocator.Get(), nullptr,
+                                            IID_PPV_ARGS(&commandList)));
+    commandList->Close();
+
+    // pso::InitCommonStates(device, rootSignature);
 
     return true;
 }

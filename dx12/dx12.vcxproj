@@ -129,6 +129,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="foundation\action_node.cpp" />
     <ClCompile Include="foundation\animation_node.cpp" />
     <ClCompile Include="foundation\behavior_tree_builder.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="foundation\platform.cpp" />
     <ClCompile Include="foundation\selector_node.cpp" />
     <ClCompile Include="foundation\sequence_node.cpp" />
+    <ClCompile Include="foundation\setting_ui.cpp" />
     <ClCompile Include="foundation\ui.cpp" />
     <ClCompile Include="graphics\graphics_common.cpp" />
     <ClCompile Include="graphics\graphics_core.cpp" />
@@ -160,6 +162,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="engine\engine.h" />
     <ClInclude Include="foundation\action_node.h" />
     <ClInclude Include="foundation\animation_node.h" />
     <ClInclude Include="foundation\behavior_tree_builder.h" />
@@ -190,6 +193,7 @@
     <ClInclude Include="foundation\platform.h" />
     <ClInclude Include="foundation\selector_node.h" />
     <ClInclude Include="foundation\sequence_node.h" />
+    <ClInclude Include="foundation\setting_ui.h" />
     <ClInclude Include="foundation\ui.h" />
     <ClInclude Include="graphics\graphics_common.h" />
     <ClInclude Include="graphics\graphics_core.h" />

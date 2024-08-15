@@ -37,7 +37,8 @@ bool IGui::Frame() {
     ImGui::PopStyleVar(2);
 
     ImGui::Render();
-    //ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData());
+    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
+                                  dx12::GpuCore::Instance().commandList.Get());
 
     return true;
 }
@@ -60,8 +61,8 @@ void IGui::RecreateFontAtlas() {
     config.OversampleV = 4;
     config.PixelSnapH = false;
 
-    io.Fonts->AddFontFromFileTTF(
-        "Assets/Fonts/Cuprum-Bold.ttf", 20.0f, &config);
+    io.Fonts->AddFontFromFileTTF("Assets/Fonts/Cuprum-Bold.ttf", 20.0f,
+                                 &config);
 
     io.Fonts->Build();
 }

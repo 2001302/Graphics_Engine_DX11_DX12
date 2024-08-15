@@ -7,8 +7,8 @@
 
 namespace core {
 
-class SharedResourceNodeInvoker : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
+class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
+    foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
@@ -76,7 +76,7 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
             break;
         }
 
-        return common::EnumBehaviorTreeStatus::eSuccess;
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 

@@ -18,7 +18,7 @@ enum EnumStageType {
     eRender = 2,
 };
 
-class JobContext : public common::IInfo {
+class JobContext : public foundation::IInfo {
   public:
     std::unique_ptr<Camera> camera;
     std::shared_ptr<Ground> ground;

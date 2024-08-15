@@ -1,7 +1,7 @@
 #ifndef _IDGENERATOR
 #define _IDGENERATOR
 
-namespace common {
+namespace foundation {
 class IdGenerator {
   public:
     IdGenerator(){};

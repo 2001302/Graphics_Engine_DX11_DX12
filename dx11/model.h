@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 namespace core {
-class Model : public common::INode {
+class Model : public foundation::INode {
   public:
     Model(){};
     ~Model();

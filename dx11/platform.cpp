@@ -1,6 +1,6 @@
 #include "platform.h"
 
-namespace common {
+namespace foundation {
 
 /// <summary>
 /// NOTE : Global
@@ -70,13 +70,13 @@ void Platform::Run() {
 
 bool Platform::Stop() {
     // Shutdown the window.
-    if (common::Env::Instance().full_screen) {
+    if (foundation::Env::Instance().full_screen) {
         ChangeDisplaySettings(NULL, 0);
     }
 
     // Remove the window.
-    DestroyWindow(common::Env::Instance().main_window);
-    common::Env::Instance().main_window = NULL;
+    DestroyWindow(foundation::Env::Instance().main_window);
+    foundation::Env::Instance().main_window = NULL;
 
     // Remove the application instance.
     UnregisterClass(application_name, hinstance);
@@ -113,12 +113,12 @@ bool Platform::InitializeWindow() {
         return false;
     }
 
-    RECT wr = {0, 0, common::Env::Instance().screen_width,
-               common::Env::Instance().screen_height};
+    RECT wr = {0, 0, foundation::Env::Instance().screen_width,
+               foundation::Env::Instance().screen_height};
 
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
 
-    common::Env::Instance().main_window =
+    foundation::Env::Instance().main_window =
         CreateWindow(wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW,
                      10,                 
                      10,                 
@@ -126,12 +126,12 @@ bool Platform::InitializeWindow() {
                      wr.bottom - wr.top, 
                      NULL, NULL, wc.hInstance, NULL);
 
-    if (!common::Env::Instance().main_window) {
+    if (!foundation::Env::Instance().main_window) {
         std::cout << "CreateWindow() failed." << std::endl;
         return false;
     }
 
-    ShowWindow(common::Env::Instance().main_window, SW_SHOWDEFAULT);
-    UpdateWindow(common::Env::Instance().main_window);
+    ShowWindow(foundation::Env::Instance().main_window, SW_SHOWDEFAULT);
+    UpdateWindow(foundation::Env::Instance().main_window);
 }
 } // namespace dx11

@@ -3,17 +3,17 @@
 
 #include "action_node.h"
 
-namespace common {
+namespace foundation {
 
 class ParallelNode : public BehaviorActionNode {
   public:
-    ParallelNode(std::map<int, common::INode *> target_objects) {
+    ParallelNode(std::map<int, foundation::INode *> target_objects) {
         this->target_objects = target_objects;
     };
 
   protected:
     EnumBehaviorTreeStatus OnInvoke() override;
-    std::map<int, common::INode *> target_objects;
+    std::map<int, foundation::INode *> target_objects;
 };
 
 } // namespace common

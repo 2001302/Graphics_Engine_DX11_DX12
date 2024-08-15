@@ -8,11 +8,11 @@
 #include "sequence_node.h"
 #include "animation_node.h"
 
-namespace common {
+namespace foundation {
 
 class BehaviorTreeBuilder {
   public:
-    BehaviorTreeBuilder *Build(common::IDataBlock *dataBlock) {
+    BehaviorTreeBuilder *Build(foundation::IDataBlock *dataBlock) {
         tree = std::make_shared<SequenceNode>(dataBlock);
         current = tree.get();
         return this;
@@ -25,7 +25,7 @@ class BehaviorTreeBuilder {
     BehaviorTreeBuilder *Sequence();
     BehaviorTreeBuilder *Selector();
     BehaviorTreeBuilder *Conditional(std::shared_ptr<ConditionalNode> node);
-    BehaviorTreeBuilder *Loop(std::map<int, common::INode *> target_ids);
+    BehaviorTreeBuilder *Loop(std::map<int, foundation::INode *> target_ids);
     BehaviorTreeBuilder *Close();
 
   private:

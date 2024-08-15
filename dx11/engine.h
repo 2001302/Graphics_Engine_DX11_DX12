@@ -12,7 +12,7 @@
 
 namespace core {
 
-class Engine : public common::Platform, TreeNode {
+class Engine : public foundation::Platform, TreeNode {
   public:
     Engine();
 

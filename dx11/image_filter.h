@@ -24,8 +24,8 @@ class ImageFilter : public Component {
                                                        NULL);
 
         graphics::GpuCore::Instance().device_context->Dispatch(
-            UINT(ceil(common::Env::Instance().screen_width / 16.0f)),
-            UINT(ceil(common::Env::Instance().screen_height / 16.0f)), 1);
+            UINT(ceil(foundation::Env::Instance().screen_width / 16.0f)),
+            UINT(ceil(foundation::Env::Instance().screen_height / 16.0f)), 1);
 
         // Let the computer shader finish its task and then release the
         // resources.

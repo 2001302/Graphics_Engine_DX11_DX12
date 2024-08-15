@@ -3,12 +3,12 @@
 
 #include "action_node.h"
 
-namespace common {
+namespace foundation {
 
 class SelectorNode : public BehaviorActionNode {
   public:
     SelectorNode(){};
-    SelectorNode(common::IDataBlock * dataBlock) {
+    SelectorNode(foundation::IDataBlock * dataBlock) {
         data_block = dataBlock;
     };
 

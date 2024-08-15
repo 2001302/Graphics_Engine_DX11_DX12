@@ -1,6 +1,6 @@
 #include "behavior_tree_builder.h"
 
-namespace common {
+namespace foundation {
 
 BehaviorTreeBuilder *
 BehaviorTreeBuilder::Excute(std::shared_ptr<BehaviorActionNode> node) {
@@ -38,7 +38,7 @@ BehaviorTreeBuilder *BehaviorTreeBuilder::Close() {
 }
 
 BehaviorTreeBuilder *
-BehaviorTreeBuilder::Loop(std::map<int, common::INode *> target_objects) {
+BehaviorTreeBuilder::Loop(std::map<int, foundation::INode *> target_objects) {
     auto node = std::make_shared<ParallelNode>(target_objects);
     current->PushNode(node);
     current = node.get();

@@ -16,7 +16,7 @@ bool Engine::Start() {
     black_board->job_context->stage_type = EnumStageType::eInitialize;
 
     // clang-format off
-    auto tree = std::make_shared<common::BehaviorTreeBuilder>();
+    auto tree = std::make_shared<foundation::BehaviorTreeBuilder>();
     tree->Build(black_board.get())
         ->Sequence()
             ->Excute(shadow_effect_node)
@@ -52,7 +52,7 @@ bool Engine::OnUpdate(float dt) {
     black_board->job_context->stage_type = EnumStageType::eUpdate;
 
     // clang-format off
-    auto tree = std::make_shared<common::BehaviorTreeBuilder>();
+    auto tree = std::make_shared<foundation::BehaviorTreeBuilder>();
     tree->Build(black_board.get())
         ->Sequence()
             ->Excute(camera_node)
@@ -74,7 +74,7 @@ bool Engine::OnRender() {
     black_board->job_context->stage_type = EnumStageType::eRender;
 
     // clang-format off
-    auto tree = std::make_shared<common::BehaviorTreeBuilder>();
+    auto tree = std::make_shared<foundation::BehaviorTreeBuilder>();
     tree->Build(black_board.get())
         ->Sequence()
             ->Excute(shared_resource_node)

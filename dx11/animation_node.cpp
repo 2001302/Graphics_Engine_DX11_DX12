@@ -1,6 +1,6 @@
 #include "animation_node.H"
 
-namespace common {
+namespace foundation {
 
 EnumBehaviorTreeStatus AnimationNode::OnReset() {
     is_done = false;

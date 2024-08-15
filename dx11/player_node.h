@@ -9,7 +9,7 @@
 
 namespace core {
 
-using namespace common;
+using namespace foundation;
 
 class PlayerAnimator : public Animator {
   public:

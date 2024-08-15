@@ -6,9 +6,9 @@
 #include "mesh_renderer.h"
 
 namespace core {
-class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
+class ShadowEffectNodeInvoker : public foundation::BehaviorActionNode {
 
-    common::EnumBehaviorTreeStatus OnInvoke() override {
+    foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
@@ -181,7 +181,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                 graphics::GpuCore::Instance().m_depthStencilView.Get(),
                 D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-        return common::EnumBehaviorTreeStatus::eSuccess;
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
     void SetShadowViewport() {
 

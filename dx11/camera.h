@@ -8,7 +8,7 @@
 #include "model.h"
 
 namespace core {
-class Camera : public common::INode {
+class Camera : public foundation::INode {
   public:
     Camera();
     Matrix GetView();

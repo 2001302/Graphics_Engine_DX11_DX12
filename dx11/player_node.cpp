@@ -3,7 +3,7 @@
 namespace core {
 PlayerAnimator::PlayerAnimator(const AnimationData &aniData,
                                SkinnedMeshRenderer *renderer,
-                               common::Input *input)
+                               foundation::Input *input)
     : Animator(aniData) {
 
     block.animator = this;
@@ -39,7 +39,7 @@ void PlayerAnimator::Build() {
     // clang-format on
 };
 
-common::EnumBehaviorTreeStatus PlayerAnimator::ReadInput::OnInvoke() {
+foundation::EnumBehaviorTreeStatus PlayerAnimator::ReadInput::OnInvoke() {
     auto block = dynamic_cast<PlayerAnimator::AnimationBlock *>(data_block);
     assert(block != nullptr);
 
@@ -56,30 +56,30 @@ common::EnumBehaviorTreeStatus PlayerAnimator::ReadInput::OnInvoke() {
         block->animator->Turn(block->renderer, Vector3::UnitY, 1.0f);
     }
 
-    return common::EnumBehaviorTreeStatus::eSuccess;
+    return foundation::EnumBehaviorTreeStatus::eSuccess;
 }
 
-common::EnumBehaviorTreeStatus PlayerAnimator::CheckWalk::OnInvoke() {
+foundation::EnumBehaviorTreeStatus PlayerAnimator::CheckWalk::OnInvoke() {
     auto block = dynamic_cast<PlayerAnimator::AnimationBlock *>(data_block);
     assert(block != nullptr);
 
     if (block->state != PlayerAnimator::EnumAnimationState::eWalk)
-        return common::EnumBehaviorTreeStatus::eFail;
+        return foundation::EnumBehaviorTreeStatus::eFail;
 
-    return common::ConditionalNode::OnInvoke();
+    return foundation::ConditionalNode::OnInvoke();
 }
 
-common::EnumBehaviorTreeStatus PlayerAnimator::IdleToWalk::OnInvoke() {
+foundation::EnumBehaviorTreeStatus PlayerAnimator::IdleToWalk::OnInvoke() {
     auto block = dynamic_cast<PlayerAnimator::AnimationBlock *>(data_block);
     assert(block != nullptr);
 
     if (is_done)
-        return common::EnumBehaviorTreeStatus::eSuccess;
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
 
     if (block->animator->animation_data.IsClipEnd(
             PlayerAnimator::EnumAnimationState::eIdleToWalk, elapsed_time)) {
         is_done = true;
-        return common::EnumBehaviorTreeStatus::eSuccess;
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
     elapsed_time += block->dt;
 
@@ -88,15 +88,15 @@ common::EnumBehaviorTreeStatus PlayerAnimator::IdleToWalk::OnInvoke() {
     block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
                           0.2f);
 
-    return common::EnumBehaviorTreeStatus::eRunning;
+    return foundation::EnumBehaviorTreeStatus::eRunning;
 }
 
-common::EnumBehaviorTreeStatus PlayerAnimator::Walk::OnInvoke() {
+foundation::EnumBehaviorTreeStatus PlayerAnimator::Walk::OnInvoke() {
     auto block = dynamic_cast<PlayerAnimator::AnimationBlock *>(data_block);
     assert(block != nullptr);
 
     if (!block->input->KeyState(VK_UP))
-        return common::EnumBehaviorTreeStatus::eSuccess;
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
     elapsed_time += block->dt;
 
     block->animator->UpdateAnimation(PlayerAnimator::EnumAnimationState::eWalk,
@@ -104,20 +104,20 @@ common::EnumBehaviorTreeStatus PlayerAnimator::Walk::OnInvoke() {
     block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
                           1.0f);
 
-    return common::EnumBehaviorTreeStatus::eRunning;
+    return foundation::EnumBehaviorTreeStatus::eRunning;
 }
 
-common::EnumBehaviorTreeStatus PlayerAnimator::WalkToIdle::OnInvoke() {
+foundation::EnumBehaviorTreeStatus PlayerAnimator::WalkToIdle::OnInvoke() {
     auto block = dynamic_cast<PlayerAnimator::AnimationBlock *>(data_block);
     assert(block != nullptr);
 
     if (is_done)
-        return common::EnumBehaviorTreeStatus::eSuccess;
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
 
     if (block->animator->animation_data.IsClipEnd(
             PlayerAnimator::EnumAnimationState::eWalkToIdle, elapsed_time)) {
         is_done = true;
-        return common::EnumBehaviorTreeStatus::eSuccess;
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
     elapsed_time += block->dt;
 
@@ -126,19 +126,19 @@ common::EnumBehaviorTreeStatus PlayerAnimator::WalkToIdle::OnInvoke() {
     block->animator->Move(block->renderer, block->renderer->world_row.Forward(),
                           0.2f);
 
-    return common::EnumBehaviorTreeStatus::eRunning;
+    return foundation::EnumBehaviorTreeStatus::eRunning;
 }
 
-common::EnumBehaviorTreeStatus PlayerAnimator::StopWalk::OnInvoke() {
+foundation::EnumBehaviorTreeStatus PlayerAnimator::StopWalk::OnInvoke() {
     auto block = dynamic_cast<PlayerAnimator::AnimationBlock *>(data_block);
     assert(block != nullptr);
 
     block->state = PlayerAnimator::EnumAnimationState::eNone;
 
-    return common::EnumBehaviorTreeStatus::eRunning;
+    return foundation::EnumBehaviorTreeStatus::eRunning;
 }
 
-common::EnumBehaviorTreeStatus PlayerAnimator::Idle::OnInvoke() {
+foundation::EnumBehaviorTreeStatus PlayerAnimator::Idle::OnInvoke() {
     auto block = dynamic_cast<PlayerAnimator::AnimationBlock *>(data_block);
     assert(block != nullptr);
 
@@ -148,7 +148,7 @@ common::EnumBehaviorTreeStatus PlayerAnimator::Idle::OnInvoke() {
                                      elapsed_time);
     elapsed_time += block->dt;
 
-    return common::EnumBehaviorTreeStatus::eRunning;
+    return foundation::EnumBehaviorTreeStatus::eRunning;
 }
 
 } // namespace core

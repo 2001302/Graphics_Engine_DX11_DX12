@@ -1,6 +1,6 @@
 #include "action_node.h"
 
-namespace common {
+namespace foundation {
 
 EnumBehaviorTreeStatus BehaviorActionNode::Invoke() {
     if (parent_node)

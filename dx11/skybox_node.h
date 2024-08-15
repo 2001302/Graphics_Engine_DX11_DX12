@@ -7,8 +7,8 @@
 
 namespace core {
 
-class SkyboxNodeInvoker : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
+class SkyboxNodeInvoker : public foundation::BehaviorActionNode {
+    foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
@@ -63,7 +63,7 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             break;
         }
 
-        return common::EnumBehaviorTreeStatus::eSuccess;
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 

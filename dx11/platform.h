@@ -8,7 +8,7 @@
 #include <shellscalingapi.h>
 #pragma comment(lib, "shcore.lib")
 
-namespace common {
+namespace foundation {
 class Platform {
   public:
     Platform();

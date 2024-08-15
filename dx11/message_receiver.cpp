@@ -4,14 +4,14 @@
 namespace core {
 using namespace DirectX::SimpleMath;
 
-bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
+bool MessageReceiver::OnWindowSizeRequest(foundation::SettingUi *gui, int size_x,
                                           int size_y) {
 
-    common::Env::Instance().screen_width = size_x;
-    common::Env::Instance().screen_height = size_y;
+    foundation::Env::Instance().screen_width = size_x;
+    foundation::Env::Instance().screen_height = size_y;
 
-    if (common::Env::Instance().screen_width &&
-        common::Env::Instance().screen_height) {
+    if (foundation::Env::Instance().screen_width &&
+        foundation::Env::Instance().screen_height) {
         if (graphics::GpuCore::Instance().swap_chain) {
 
             gui->Shutdown();
@@ -28,14 +28,14 @@ bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
     }
     return true;
 }
-bool MessageReceiver::OnMouseDownRequest(std::shared_ptr<common::Input> input,
+bool MessageReceiver::OnMouseDownRequest(std::shared_ptr<foundation::Input> input,
                                          int mouseX, int mouseY) {
     input->SetMouse(mouseX, mouseY);
     return true;
 }
 
 bool MessageReceiver::OnMouseRightDragRequest(
-    JobContext *manager, std::shared_ptr<common::Input> input, int mouseX,
+    JobContext *manager, std::shared_ptr<foundation::Input> input, int mouseX,
     int mouseY) {
 
     Vector2 move = Vector2(input->MouseX() - mouseX, input->MouseY() - mouseY);
@@ -56,7 +56,7 @@ bool MessageReceiver::OnMouseRightDragRequest(
 }
 
 bool MessageReceiver::OnMouseWheelRequest(JobContext *manager,
-                                          std::shared_ptr<common::Input> input,
+                                          std::shared_ptr<foundation::Input> input,
                                           int wheel) {
 
     auto look_at = manager->camera->GetLookAt();
@@ -72,7 +72,7 @@ bool MessageReceiver::OnMouseWheelRequest(JobContext *manager,
 }
 
 bool MessageReceiver::OnMouseWheelDragRequest(
-    JobContext *manager, std::shared_ptr<common::Input> input, int mouseX,
+    JobContext *manager, std::shared_ptr<foundation::Input> input, int mouseX,
     int mouseY) {
     auto offsetX = input->MouseX() - mouseX;
     auto offsetY = input->MouseY() - mouseY;

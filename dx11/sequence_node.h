@@ -3,12 +3,12 @@
 
 #include "action_node.h"
 
-namespace common {
+namespace foundation {
 
 class SequenceNode : public BehaviorActionNode {
   public:
     SequenceNode(){};
-    SequenceNode(common::IDataBlock * dataBlock) {
+    SequenceNode(foundation::IDataBlock * dataBlock) {
         data_block = dataBlock;
     };
 

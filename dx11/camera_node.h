@@ -6,8 +6,8 @@
 
 namespace core {
 
-class CameraNodeInvoker : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
+class CameraNodeInvoker : public foundation::BehaviorActionNode {
+    foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
@@ -39,7 +39,7 @@ class CameraNodeInvoker : public common::BehaviorActionNode {
             break;
         }
 
-        return common::EnumBehaviorTreeStatus::eSuccess;
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 

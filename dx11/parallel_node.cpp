@@ -1,6 +1,6 @@
 #include "parallel_node.h"
 
-namespace common {
+namespace foundation {
 
 EnumBehaviorTreeStatus ParallelNode::OnInvoke() {
     for (auto id : target_objects) {

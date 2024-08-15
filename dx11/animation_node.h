@@ -3,7 +3,7 @@
 
 #include "action_node.h"
 
-namespace common {
+namespace foundation {
 
 class AnimationNode : public BehaviorActionNode {
   public:

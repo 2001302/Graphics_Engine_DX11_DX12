@@ -11,7 +11,7 @@
 
 namespace ed = ax::NodeEditor;
 
-namespace common {
+namespace foundation {
 
 class SettingUi : public IGui {
     enum EnumViewType {

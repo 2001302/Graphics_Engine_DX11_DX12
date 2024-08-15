@@ -1,7 +1,7 @@
 #include "entity.h"
 #include "id_generator.h"
 
-using namespace common;
+using namespace foundation;
 
 IEntity::IEntity() { entity_id_ = IdGenerator::GetId(); }
 

@@ -1,6 +1,6 @@
 #include "setting_ui.h"
 
-namespace common {
+namespace foundation {
 void SetWindowLocation(float x, float y, float width, float height) {
 
     ImGui::SetNextWindowPos(ImVec2(x, y), ImGuiCond_Always);

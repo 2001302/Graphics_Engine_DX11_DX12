@@ -1,6 +1,6 @@
 #include "selector_node.H"
 
-namespace common {
+namespace foundation {
 
 EnumBehaviorTreeStatus SelectorNode::OnInvoke() {
     for (auto &child : child_nodes) {

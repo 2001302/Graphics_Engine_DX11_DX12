@@ -1,2 +1,237 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" />
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="foundation\ImGui\NodeEditor\crude_json.cpp">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\ImGui\NodeEditor\imgui_canvas.cpp">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\ImGui\NodeEditor\imgui_node_editor.cpp">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\ImGui\NodeEditor\imgui_node_editor_api.cpp">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\ImGui\imgui.cpp">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\ImGui\imgui_demo.cpp">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\ImGui\imgui_draw.cpp">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\ImGui\imgui_impl_win32.cpp">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\ImGui\imgui_tables.cpp">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\ImGui\imgui_widgets.cpp">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\ImGui\imgui_impl_dx12.cpp">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\ui.cpp">
+      <Filter>Foundation\Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\action_node.cpp">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\animation_node.cpp">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\behavior_tree_builder.cpp">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\conditional_node.cpp">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\parallel_node.cpp">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\selector_node.cpp">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\sequence_node.cpp">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\platform.cpp">
+      <Filter>Foundation\Platform</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\entity.cpp">
+      <Filter>Foundation\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\id_generator.cpp">
+      <Filter>Foundation\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="foundation\node.cpp">
+      <Filter>Foundation\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\graphics_common.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\graphics_core.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\graphics_pso.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\graphics_util.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{dbd5257f-e35e-4c37-8c3a-6cb4f021982b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Foundation">
+      <UniqueIdentifier>{f468dcbf-da05-442f-a2fd-59aa3d9f4fec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{d032a418-4ef4-4335-b85d-1cbbc9c551cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Foundation\Gui">
+      <UniqueIdentifier>{3a910365-870e-4d11-a663-71da58281561}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Foundation\Gui\ImGui">
+      <UniqueIdentifier>{7ad705d7-328e-41a8-b82b-ee7bf5ec8bfd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Foundation\Gui\ImGui\NodeEditor">
+      <UniqueIdentifier>{fb88d078-65c1-425f-a8ff-5419789af61a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Foundation\BehaviorTree">
+      <UniqueIdentifier>{d7e17cfc-7bb8-4892-bdb5-4f6e5091d1b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Foundation\Platform">
+      <UniqueIdentifier>{061d8a20-d30b-451a-b32d-e8eccc37b8db}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Foundation\Structure">
+      <UniqueIdentifier>{152d738b-0f12-40e4-9670-30581632dd15}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="foundation\ImGui\NodeEditor\crude_json.h">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\NodeEditor\imgui_bezier_math.h">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\NodeEditor\imgui_canvas.h">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\NodeEditor\imgui_extra_keys.h">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\NodeEditor\imgui_extra_math.h">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\NodeEditor\imgui_node_editor.h">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\NodeEditor\imgui_node_editor_internal.h">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\imgui.h">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\imgui_impl_win32.h">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\imgui_internal.h">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\imstb_rectpack.h">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\imstb_textedit.h">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\imstb_truetype.h">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ImGui\imgui_impl_dx12.h">
+      <Filter>Foundation\Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\ui.h">
+      <Filter>Foundation\Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\action_node.h">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\animation_node.h">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\behavior_tree_builder.h">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\conditional_node.h">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\parallel_node.h">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\selector_node.h">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\sequence_node.h">
+      <Filter>Foundation\BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\platform.h">
+      <Filter>Foundation\Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\node.h">
+      <Filter>Foundation\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\dataBlock.h">
+      <Filter>Foundation\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\entity.h">
+      <Filter>Foundation\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\env.h">
+      <Filter>Foundation\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\id_generator.h">
+      <Filter>Foundation\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\info.h">
+      <Filter>Foundation\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\input.h">
+      <Filter>Foundation\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\message.h">
+      <Filter>Foundation\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics_common.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics_core.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics_pso.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics_util.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="foundation\ImGui\NodeEditor\imgui_bezier_math.inl">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </None>
+    <None Include="foundation\ImGui\NodeEditor\imgui_extra_math.inl">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </None>
+    <None Include="foundation\ImGui\NodeEditor\imgui_node_editor_internal.inl">
+      <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
+    </None>
+  </ItemGroup>
+</Project>

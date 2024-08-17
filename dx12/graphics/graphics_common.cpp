@@ -350,8 +350,7 @@ void pso::InitPipelineStates(ComPtr<ID3D12Device> &device,
     CreateShader(device, L"BrightPassCS.hlsl", brightPassCS);
     CreateShader(device, L"BlurVertical.hlsl", blurVerticalCS);
     CreateShader(device, L"BlurHorizontal.hlsl", blurHorizontalCS);
-    CreateShader(device, L"BloomCompositeCS.hlsl",
-                                     bloomComposite);
+    CreateShader(device, L"BloomCompositeCS.hlsl", bloomComposite);
 
     {
         // defaultSolidPSO;
@@ -502,7 +501,7 @@ void pso::InitPipelineStates(ComPtr<ID3D12Device> &device,
             &psoDesc, IID_PPV_ARGS(&reflectWirePSO)));
     }
     {
-        //reflectSkinnedSolidPSO
+        // reflectSkinnedSolidPSO
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {skinnedIEs, _countof(skinnedIEs)};
         psoDesc.pRootSignature = rootSignature.Get();
@@ -520,7 +519,7 @@ void pso::InitPipelineStates(ComPtr<ID3D12Device> &device,
             &psoDesc, IID_PPV_ARGS(&reflectSkinnedSolidPSO)));
     }
     {
-        //mirrorBlendSolidPSO
+        // mirrorBlendSolidPSO
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {basicIEs, _countof(basicIEs)};
         psoDesc.pRootSignature = rootSignature.Get();
@@ -693,7 +692,7 @@ void pso::InitPipelineStates(ComPtr<ID3D12Device> &device,
         psoDesc.InputLayout = {samplingIED, _countof(samplingIED)};
         psoDesc.pRootSignature = rootSignature.Get();
         psoDesc.VS = CD3DX12_SHADER_BYTECODE(samplingVS.Get());
-        psoDesc.PS = CD3DX12_SHADER_BYTECODE(depthOnlyPS.Get());// dummy
+        psoDesc.PS = CD3DX12_SHADER_BYTECODE(depthOnlyPS.Get()); // dummy
         psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(postProcessingRS);
         psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
         psoDesc.DepthStencilState.DepthEnable = FALSE;
@@ -708,4 +707,4 @@ void pso::InitPipelineStates(ComPtr<ID3D12Device> &device,
     }
 }
 
-} // namespace graphics
+} // namespace dx12

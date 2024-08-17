@@ -87,7 +87,7 @@ bool GpuCore::Initialize() {
     {
         D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
         srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-        srvHeapDesc.NumDescriptors = 1;
+        srvHeapDesc.NumDescriptors = 2;
         srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
         ThrowIfFailed(
@@ -112,12 +112,20 @@ bool GpuCore::Initialize() {
     ThrowIfFailed(device->CreateCommandAllocator(
         D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator)));
 
-    ThrowIfFailed(device->CreateCommandList(0, //
-                                            D3D12_COMMAND_LIST_TYPE_DIRECT,
+    ThrowIfFailed(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
                                             commandAllocator.Get(), nullptr,
                                             IID_PPV_ARGS(&commandList)));
     commandList->Close();
 
+    ThrowIfFailed(
+        device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)));
+    fenceValue = 1;
+
+    // Create an event handle to use for frame synchronization.
+    fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    if (fenceEvent == nullptr) {
+        ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
+    }
     // pso::InitCommonStates(device, rootSignature);
 
     return true;

@@ -121,6 +121,12 @@
     <Filter Include="Graphics\Shader">
       <UniqueIdentifier>{a029a46a-2389-4ec0-b9dc-91980492c850}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Model">
+      <UniqueIdentifier>{e49dfe72-3ee4-485a-8189-91138a47fab0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\BehaviorTreeNode">
+      <UniqueIdentifier>{693604ef-ac08-43fd-af75-3b70c784e779}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="foundation\ImGui\NodeEditor\crude_json.h">
@@ -236,6 +242,21 @@
     </ClInclude>
     <ClInclude Include="engine\engine.h">
       <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\gpu_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\gui_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\black_board.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\input.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\job_context.h">
+      <Filter>Engine\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

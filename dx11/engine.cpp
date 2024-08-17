@@ -33,12 +33,12 @@ bool Engine::Start() {
     ->Run();
     // clang-format on
 
-    OnFrame();
+    Frame();
 
     return true;
 }
 
-bool Engine::OnFrame() {
+bool Engine::Frame() {
 
     OnUpdate(ImGui::GetIO().DeltaTime);
     OnRender();

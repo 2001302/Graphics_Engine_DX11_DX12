@@ -17,7 +17,7 @@ class Engine : public foundation::Platform, TreeNode {
     Engine();
 
     bool Start() override final;
-    bool OnFrame() override final;
+    bool Frame() override final;
     bool Stop() override final;
 
   private:

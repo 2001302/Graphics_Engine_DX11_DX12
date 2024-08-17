@@ -4,6 +4,7 @@
 #include "../graphics/graphics_util.h"
 #include "../foundation/platform.h"
 #include "../foundation/setting_ui.h"
+#include "black_board.h"
 
 namespace core {
 
@@ -12,15 +13,12 @@ class Engine : public foundation::Platform {
     Engine();
 
     bool Start() override final;
-    bool OnFrame() override final;
+    bool Frame() override final;
     bool Stop() override final;
 
   private:
-    bool OnUpdate(float dt);
-    bool OnRender();
-
     std::shared_ptr<foundation::SettingUi> gui;
-    //std::shared_ptr<BlackBoard> black_board;
+    std::shared_ptr<BlackBoard> black_board;
     //std::unique_ptr<MessageReceiver> message_receiver;
 
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,

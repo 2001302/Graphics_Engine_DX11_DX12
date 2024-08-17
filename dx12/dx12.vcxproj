@@ -162,7 +162,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="d3dx12.h" />
+    <ClInclude Include="engine\black_board.h" />
     <ClInclude Include="engine\engine.h" />
+    <ClInclude Include="engine\gpu_node.h" />
+    <ClInclude Include="engine\gui_node.h" />
+    <ClInclude Include="engine\input.h" />
+    <ClInclude Include="engine\job_context.h" />
     <ClInclude Include="foundation\action_node.h" />
     <ClInclude Include="foundation\animation_node.h" />
     <ClInclude Include="foundation\behavior_tree_builder.h" />

@@ -35,7 +35,7 @@ bool Platform::Start() {
     return true;
 }
 
-bool Platform::OnFrame() { return true; }
+bool Platform::Frame() { return true; }
 
 void Platform::Run() {
     MSG msg;
@@ -58,7 +58,7 @@ void Platform::Run() {
             done = true;
         } else {
             // Otherwise do the frame processing.
-            result = OnFrame();
+            result = Frame();
             if (!result) {
                 done = true;
             }

@@ -148,17 +148,19 @@ bool Engine::OnRender() {
         ImGui_ImplDX12_RenderDrawData(
             ImGui::GetDrawData(), dx12::GpuCore::Instance().commandList.Get());
 
-        dx12::GpuCore::Instance().commandList->Close();
-    }
-
-    {
-        auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+        barrier = CD3DX12_RESOURCE_BARRIER::Transition(
             dx12::GpuCore::Instance()
                 .renderTargets[dx12::GpuCore::Instance().frameIndex]
                 .Get(),
             D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
         dx12::GpuCore::Instance().commandList->ResourceBarrier(1, &barrier);
 
+        // Close the command list after all commands have been added
+        dx12::GpuCore::Instance().commandList->Close();
+    }
+
+    {
+        // Execute the command list
         dx12::GpuCore::Instance().command_queue->ExecuteCommandLists(
             1, CommandListCast(
                    dx12::GpuCore::Instance().commandList.GetAddressOf()));

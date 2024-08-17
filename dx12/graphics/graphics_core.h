@@ -36,6 +36,8 @@ class GpuCore {
     ComPtr<ID3D12DescriptorHeap> srvHeap;
     UINT rtvDescriptorSize;
 
+    ComPtr<ID3D12DescriptorHeap> cbvHeap;
+
     // Synchronization objects.
     UINT frameIndex;
     HANDLE fenceEvent;

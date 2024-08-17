@@ -1,7 +1,7 @@
 #ifndef _TEXTURE3D
 #define _TEXTURE3D
 
-#include "graphics_util.h"
+#include "../graphics/graphics_util.h"
 #include <fp16.h>
 #include <random>
 #include <vector>

@@ -9,11 +9,11 @@ class Util {
     static void CreateIndexBuffer(const std::vector<uint32_t> &indices,
                                   ComPtr<ID3D12Resource> &indexBuffer) {
         const UINT size = sizeof(indices);
-        auto heap_desc = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+        auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
         auto buffer_desc = CD3DX12_RESOURCE_DESC::Buffer(size);
 
         HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
-            &heap_desc, D3D12_HEAP_FLAG_NONE, &buffer_desc,
+            &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_desc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&indexBuffer));
     }
@@ -24,10 +24,11 @@ class Util {
                                    D3D12_VERTEX_BUFFER_VIEW &vertexBufferView) {
 
         const UINT size = sizeof(vertices);
+        auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+        auto buffer_desc = CD3DX12_RESOURCE_DESC::Buffer(size);
 
         HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
-            &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-            D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer(size),
+            &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_desc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&vertexBuffer));
 
@@ -45,50 +46,62 @@ class Util {
                       "Constant Buffer size must be 16-byte aligned");
 
         const UINT size = sizeof(constantBufferData);
+        auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+        auto buffer_desc = CD3DX12_RESOURCE_DESC::Buffer(size);
 
         HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
-            &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-            D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer(size),
+            &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_desc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&constantBuffer));
 
-        D3D12_RANGE readRange = {};
-        ThrowIfFailed(constantBuffer->Map(
-            0, &readRange, reinterpret_cast<void **>(&constantBufferData)));
+        // Describe and create a constant buffer view.
+        D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+        cbvDesc.BufferLocation = constantBuffer->GetGPUVirtualAddress();
+        cbvDesc.SizeInBytes = size;
+        GpuCore::Instance().device->CreateConstantBufferView(
+            &cbvDesc,
+            GpuCore::Instance().cbvHeap->GetCPUDescriptorHandleForHeapStart());
+
+        UINT8 *begin; // beginning point 관리는 어떻게 하는지?
+        CD3DX12_RANGE readRange(0, 0);
+        ThrowIfFailed(constantBuffer->Map(0, &readRange,
+                                          reinterpret_cast<void **>(&begin)));
+        memcpy(begin, &constantBufferData, sizeof(constantBufferData));
     }
 
-    // template <typename T_DATA>
-    // static void UpdateBuffer(const std::vector<T_DATA> &bufferData,
-    //                          ComPtr<ID3D12Resource> &buffer) {
+    template <typename T_DATA>
+    static void UpdateBuffer(const std::vector<T_DATA> &bufferData,
+                             ComPtr<ID3D12Resource> &buffer) {
 
-    //    if (!buffer) {
-    //        std::cout << "UpdateBuffer() buffer was not initialized."
-    //                  << std::endl;
-    //    }
+        if (!buffer) {
+            std::cout << "UpdateBuffer() buffer was not initialized."
+                      << std::endl;
+        }
 
-    //    D3D11_MAPPED_SUBRESOURCE ms;
-    //    GpuCore::Instance().device_context->Map(
-    //        buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
-    //    memcpy(ms.pData, bufferData.data(), sizeof(T_DATA) *
-    //    bufferData.size());
-    //    GpuCore::Instance().device_context->Unmap(buffer.Get(), NULL);
-    //}
+        UINT8 *begin;
+        CD3DX12_RANGE readRange(0, 0);
+        ThrowIfFailed(
+            buffer->Map(0, &readRange, reinterpret_cast<void **>(&begin)));
+        memcpy(begin, &bufferData.data(), sizeof(T_DATA) * bufferData.size());
+        buffer->Unmap(0, nullptr);
+    }
 
-    // template <typename T_DATA>
-    // static void UpdateBuffer(const T_DATA &bufferData,
-    //                          ComPtr<ID3D12Resource> &buffer) {
+    template <typename T_DATA>
+    static void UpdateBuffer(const T_DATA &bufferData,
+                             ComPtr<ID3D12Resource> &buffer) {
 
-    //    if (!buffer) {
-    //        std::cout << "UpdateBuffer() buffer was not initialized."
-    //                  << std::endl;
-    //    }
+        if (!buffer) {
+            std::cout << "UpdateBuffer() buffer was not initialized."
+                      << std::endl;
+        }
 
-    //    D3D11_MAPPED_SUBRESOURCE ms;
-    //    GpuCore::Instance().device_context->Map(
-    //        buffer.Get(), NULL, D3D11_MAP_WRITE_DISCARD, NULL, &ms);
-    //    memcpy(ms.pData, &bufferData, sizeof(bufferData));
-    //    GpuCore::Instance().device_context->Unmap(buffer.Get(), NULL);
-    //}
+        UINT8 *begin;
+        CD3DX12_RANGE readRange(0, 0);
+        ThrowIfFailed(
+            buffer->Map(0, &readRange, reinterpret_cast<void **>(&begin)));
+        memcpy(begin, &bufferData, sizeof(T_DATA));
+        buffer->Unmap(0, nullptr);
+    }
 
     // static void CreateTexture(
 

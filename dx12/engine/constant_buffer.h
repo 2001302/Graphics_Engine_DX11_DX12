@@ -1,7 +1,7 @@
 #ifndef _CONSTANTBUFFER
 #define _CONSTANTBUFFER
 
-#include "graphics_util.h"
+#include "../graphics/graphics_util.h"
 
 namespace core {
 
@@ -116,9 +116,9 @@ __declspec(align(256)) struct VolumeConsts {
 
 template <typename T_CONSTS> class ConstantBuffer {
   public:
-    void Initialize() { dx11::Util::CreateConstBuffer(m_cpu, m_gpu); }
+    void Initialize() { dx12::Util::CreateConstBuffer(m_cpu, m_gpu); }
 
-    void Upload() { dx11::Util::UpdateBuffer(m_cpu, m_gpu); }
+    void Upload() { dx12::Util::UpdateBuffer(m_cpu, m_gpu); }
 
   public:
     T_CONSTS &GetCpu() { return m_cpu; }
@@ -126,7 +126,7 @@ template <typename T_CONSTS> class ConstantBuffer {
     const auto GetAddressOf() { return m_gpu.GetAddressOf(); }
 
     T_CONSTS m_cpu;
-    ComPtr<ID3D11Buffer> m_gpu;
+    ComPtr<ID3D12Resource> m_gpu;
 };
 
 } // namespace core

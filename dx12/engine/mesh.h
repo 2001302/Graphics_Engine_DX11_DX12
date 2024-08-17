@@ -22,7 +22,9 @@ struct MeshData {
 
 struct Mesh {
     ComPtr<ID3D12Resource> vertexBuffer;
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
     ComPtr<ID3D12Resource> indexBuffer;
+    D3D12_INDEX_BUFFER_VIEW indexBufferView;
 
     ComPtr<ID3D12Resource> meshConstsGPU;
     ComPtr<ID3D12Resource> materialConstsGPU;

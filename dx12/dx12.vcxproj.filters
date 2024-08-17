@@ -101,6 +101,9 @@
     <ClCompile Include="engine\camera.cpp">
       <Filter>Engine\Model</Filter>
     </ClCompile>
+    <ClCompile Include="engine\mesh_renderer.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -293,6 +296,12 @@
     </ClInclude>
     <ClInclude Include="engine\component.h">
       <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\mesh_renderer.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\constant_buffer.h">
+      <Filter>Engine\Model</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -129,7 +129,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="engine\camera.cpp" />
     <ClCompile Include="engine\engine.cpp" />
+    <ClCompile Include="engine\geometry_generator.cpp" />
+    <ClCompile Include="engine\message_receiver.cpp" />
+    <ClCompile Include="engine\model_loader.cpp" />
     <ClCompile Include="foundation\action_node.cpp" />
     <ClCompile Include="foundation\animation_node.cpp" />
     <ClCompile Include="foundation\behavior_tree_builder.cpp" />
@@ -163,11 +167,17 @@
   <ItemGroup>
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="engine\black_board.h" />
+    <ClInclude Include="engine\camera.h" />
+    <ClInclude Include="engine\component.h" />
     <ClInclude Include="engine\engine.h" />
+    <ClInclude Include="engine\geometry_generator.h" />
     <ClInclude Include="engine\gpu_node.h" />
     <ClInclude Include="engine\gui_node.h" />
     <ClInclude Include="engine\input.h" />
     <ClInclude Include="engine\job_context.h" />
+    <ClInclude Include="engine\mesh.h" />
+    <ClInclude Include="engine\message_receiver.h" />
+    <ClInclude Include="engine\model_loader.h" />
     <ClInclude Include="foundation\action_node.h" />
     <ClInclude Include="foundation\animation_node.h" />
     <ClInclude Include="foundation\behavior_tree_builder.h" />

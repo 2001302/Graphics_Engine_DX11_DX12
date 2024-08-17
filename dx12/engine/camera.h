@@ -1,10 +1,10 @@
 #ifndef CAMERA
 #define CAMERA
 
-#include "behavior_tree_builder.h"
-#include "env.h"
-#include "graphics_util.h"
-#include "node.h"
+#include "../foundation/behavior_tree_builder.h"
+#include "../foundation/env.h"
+#include "../graphics/graphics_util.h"
+#include "../foundation/node.h"
 #include "model.h"
 
 namespace core {

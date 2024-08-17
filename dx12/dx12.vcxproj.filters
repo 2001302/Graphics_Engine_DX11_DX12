@@ -89,6 +89,18 @@
     <ClCompile Include="engine\engine.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="engine\geometry_generator.cpp">
+      <Filter>Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\message_receiver.cpp">
+      <Filter>Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\model_loader.cpp">
+      <Filter>Engine\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\camera.cpp">
+      <Filter>Engine\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -126,6 +138,12 @@
     </Filter>
     <Filter Include="Engine\BehaviorTreeNode">
       <UniqueIdentifier>{693604ef-ac08-43fd-af75-3b70c784e779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Component">
+      <UniqueIdentifier>{7a076824-9f70-4d32-964b-51b7e3858fb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Util">
+      <UniqueIdentifier>{773513c6-08ce-4dd1-8d1c-08ee20f6b365}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -257,6 +275,24 @@
     </ClInclude>
     <ClInclude Include="engine\job_context.h">
       <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\geometry_generator.h">
+      <Filter>Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\message_receiver.h">
+      <Filter>Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\model_loader.h">
+      <Filter>Engine\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\mesh.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\camera.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\component.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

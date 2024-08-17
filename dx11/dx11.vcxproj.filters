@@ -381,7 +381,7 @@
     <Filter Include="Engine\Model">
       <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Shader">
+    <Filter Include="Graphics\Shader">
       <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -399,72 +399,72 @@
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </None>
     <None Include="Common.hlsli">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </None>
     <None Include="DiskSamples.hlsli">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CombinePS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SamplingVS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SamplingPS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxPS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxVS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BloomDownPS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BloomUpPS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="DepthOnlyVS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="DepthOnlyPS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalPS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalVS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="PostEffectsPS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalGS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BasicVS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BasicPS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="CombineCS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BlurHorizontal.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BrightPassCS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BloomCompositeCS.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BlurVertical.hlsl">
-      <Filter>Engine\Shader</Filter>
+      <Filter>Graphics\Shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

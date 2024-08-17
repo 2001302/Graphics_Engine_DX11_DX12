@@ -1,13 +1,10 @@
 #include "camera.h"
 #include "geometry_generator.h"
-#include "mesh_renderer.h"
+//#include "mesh_renderer.h"
 #include "job_context.h"
-#include "setting_ui.h"
+#include "../foundation/setting_ui.h"
 
 namespace core {
-
-using DirectX::SimpleMath::Matrix;
-using DirectX::SimpleMath::Vector3;
 
 Camera::Camera() {
     view = Matrix();
@@ -41,16 +38,16 @@ void Camera::SetLookAt(Vector3 look) { lookAtVector = look; }
 void Camera::Initialize() {
     MeshData sphere = GeometryGenerator::MakeSphere(0.01f, 10, 10);
 
-    auto renderer = std::make_shared<MeshRenderer>(std::vector{sphere});
+    //auto renderer = std::make_shared<MeshRenderer>(std::vector{sphere});
 
-    renderer->UpdateWorldRow(Matrix::CreateTranslation(lookAtVector));
-    renderer->material_consts.GetCpu().albedoFactor = Vector3(0.0f);
-    renderer->material_consts.GetCpu().emissionFactor =
-        Vector3(1.0f, 0.0f, 0.0f);
-    renderer->cast_shadow = false;
+    //renderer->UpdateWorldRow(Matrix::CreateTranslation(lookAtVector));
+    //renderer->material_consts.GetCpu().albedoFactor = Vector3(0.0f);
+    //renderer->material_consts.GetCpu().emissionFactor =
+    //    Vector3(1.0f, 0.0f, 0.0f);
+    //renderer->cast_shadow = false;
 
-    look_at_target = std::make_shared<Model>();
-    look_at_target->AddComponent(EnumComponentType::eRenderer, renderer);
+    //look_at_target = std::make_shared<Model>();
+    //look_at_target->AddComponent(EnumComponentType::eRenderer, renderer);
 }
 
 void Camera::Update() {
@@ -59,17 +56,17 @@ void Camera::Update() {
     auto up = XMVector3TransformCoord(upVector, rotationMatrix);
     view = XMMatrixLookAtLH(position, lookAtVector, up);
 
-    auto renderer =
-        (MeshRenderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
+    //auto renderer =
+    //    (MeshRenderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
 
-    renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
-                             Matrix::CreateTranslation(lookAtVector));
-    renderer->UpdateConstantBuffers();
+    //renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
+    //                         Matrix::CreateTranslation(lookAtVector));
+    //renderer->UpdateConstantBuffers();
 }
 
 void Camera::Draw() {
-    auto renderer =
-        (MeshRenderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
-    renderer->Render();
+    //auto renderer =
+    //    (MeshRenderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
+    //renderer->Render();
 }
 } // namespace engine

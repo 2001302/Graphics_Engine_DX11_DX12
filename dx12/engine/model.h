@@ -2,8 +2,8 @@
 #define _MODEL
 
 #include "component.h"
-#include "graphics_util.h"
-#include "node.h"
+#include "../graphics/graphics_util.h"
+#include "../foundation/node.h"
 #include <unordered_map>
 
 namespace core {

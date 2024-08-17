@@ -1,7 +1,7 @@
 #ifndef _PIPELINEMANAGER
 #define _PIPELINEMANAGER
 
-//#include "camera.h"
+#include "camera.h"
 //#include "constant_buffer.h"
 //#include "dataBlock.h"
 #include "../graphics/graphics_util.h"
@@ -20,7 +20,7 @@ enum EnumStageType {
 
 class JobContext : public foundation::IInfo {
   public:
-    //std::unique_ptr<Camera> camera;
+    std::unique_ptr<Camera> camera;
     //std::shared_ptr<Ground> ground;
     //std::shared_ptr<Skybox> skybox;
     //std::shared_ptr<Model> player;

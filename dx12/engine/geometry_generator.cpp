@@ -447,10 +447,6 @@ MeshData GeometryGenerator::MakeTetrahedron() {
 MeshData GeometryGenerator::SubdivideToSphere(const float radius,
                                               MeshData meshData) {
 
-    using namespace DirectX;
-    using DirectX::SimpleMath::Matrix;
-    using DirectX::SimpleMath::Vector3;
-
     // 원점이 중심이라고 가정
     for (auto &v : meshData.vertices) {
         v.position = v.normal * radius;

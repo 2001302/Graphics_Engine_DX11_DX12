@@ -16,8 +16,12 @@
 
 #include "d3dx12.h"
 
-namespace dx12 {
+using DirectX::SimpleMath::Matrix;
+using DirectX::SimpleMath::Vector2;
+using DirectX::SimpleMath::Vector3;
 using Microsoft::WRL::ComPtr;
+
+namespace dx12 {
 
 inline void ThrowIfFailed(HRESULT hr) {
     if (FAILED(hr)) {

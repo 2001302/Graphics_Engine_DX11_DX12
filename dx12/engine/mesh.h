@@ -3,10 +3,9 @@
 
 #include "../graphics/graphics_util.h"
 #include "vertex.h"
-#include "texture_3d.h"
+//#include "texture_3d.h"
 
 namespace core {
-
 struct MeshData {
     std::vector<Vertex> vertices;
     std::vector<SkinnedVertex> skinnedVertices;
@@ -42,9 +41,9 @@ struct Mesh {
     ComPtr<ID3D12Resource> aoSRV;
     ComPtr<ID3D12Resource> metallicRoughnessSRV;
 
-    // 3D Textures
-    Texture3D densityTex;
-    Texture3D lightingTex;
+    //// 3D Textures
+    //Texture3D densityTex;
+    //Texture3D lightingTex;
 
     UINT indexCount = 0;
     UINT vertexCount = 0;

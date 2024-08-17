@@ -145,6 +145,7 @@ bool Engine::OnRender() {
             1, dx12::GpuCore::Instance().srvHeap.GetAddressOf());
 
         gui->Frame();
+
         ImGui_ImplDX12_RenderDrawData(
             ImGui::GetDrawData(), dx12::GpuCore::Instance().commandList.Get());
 

@@ -2,6 +2,8 @@
 #include "../foundation/behavior_tree_builder.h"
 #include "gpu_node.h"
 #include "gui_node.h"
+#include "game_objects_node.h"
+#include "shared_resource_node.h"
 
 namespace core {
 
@@ -19,10 +21,12 @@ bool Engine::Start() {
     dx12::GpuCore::Instance().Initialize();
     gui->Start();
     black_board->job_context->stage_type = EnumStageType::eInitialize;
-
+    
      auto tree = std::make_shared<foundation::BehaviorTreeBuilder>();
      tree->Build(black_board.get())
          ->Sequence()
+             ->Excute(std::make_shared<SharedResourceNodeInvoker>())
+             ->Excute(std::make_shared<GameObjectNodeInvoker>())
              ->Excute(std::make_shared<GuiNodeInvoker>())
          ->Close()
     ->Run();
@@ -42,6 +46,8 @@ bool Engine::Frame() {
      auto update_tree = std::make_shared<foundation::BehaviorTreeBuilder>();
      update_tree->Build(black_board.get())
          ->Sequence()
+             ->Excute(std::make_shared<SharedResourceNodeInvoker>())
+             ->Excute(std::make_shared<GameObjectNodeInvoker>())
              //->Excute(camera_node)
          ->Close()
     ->Run();
@@ -52,6 +58,7 @@ bool Engine::Frame() {
     render_tree->Build(black_board.get())
          ->Sequence()
              ->Excute(std::make_shared<StartRenderingNode>())
+             ->Excute(std::make_shared<GameObjectNodeInvoker>())
              ->Excute(std::make_shared<GuiNodeInvoker>())
              ->Excute(std::make_shared<PresentNode>())
          ->Close()

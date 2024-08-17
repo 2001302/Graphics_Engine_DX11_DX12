@@ -2,7 +2,7 @@
 #define _PIPELINEMANAGER
 
 #include "camera.h"
-//#include "constant_buffer.h"
+#include "constant_buffer.h"
 //#include "dataBlock.h"
 #include "../graphics/graphics_util.h"
 //#include "ground.h"
@@ -24,11 +24,11 @@ class JobContext : public foundation::IInfo {
     //std::shared_ptr<Ground> ground;
     //std::shared_ptr<Skybox> skybox;
     //std::shared_ptr<Model> player;
-    //std::map<int /*id*/, std::shared_ptr<Model>> objects;
+    std::map<int /*id*/, std::shared_ptr<Model>> objects;
 
-    //// condition
-    //GlobalConstants global_consts_CPU;
-    //ComPtr<ID3D11Buffer> global_consts_GPU;
+    // condition
+    GlobalConstants global_consts_CPU;
+    ComPtr<ID3D12Resource> global_consts_GPU;
     float dt;
     bool draw_wire = false;
     bool light_rotate = false;

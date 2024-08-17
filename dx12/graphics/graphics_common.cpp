@@ -327,30 +327,30 @@ void pso::InitPipelineStates(ComPtr<ID3D12Device> &device,
          D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
     };
 
-    CreateShader(device, L"BasicVS.hlsl", basicVS);
-    CreateShader(device, L"BasicVS.hlsl", skinnedVS,
+    CreateShader(device, L"graphics/BasicVS.hlsl", basicVS);
+    CreateShader(device, L"graphics/BasicVS.hlsl", skinnedVS,
                  std::vector<D3D_SHADER_MACRO>{{"SKINNED", "1"}, {NULL, NULL}});
-    CreateShader(device, L"NormalVS.hlsl", normalVS);
-    CreateShader(device, L"SamplingVS.hlsl", samplingVS);
-    CreateShader(device, L"SkyboxVS.hlsl", skyboxVS);
-    CreateShader(device, L"DepthOnlyVS.hlsl", depthOnlyVS);
-    CreateShader(device, L"DepthOnlyVS.hlsl", depthOnlySkinnedVS,
+    CreateShader(device, L"graphics/NormalVS.hlsl", normalVS);
+    CreateShader(device, L"graphics/SamplingVS.hlsl", samplingVS);
+    CreateShader(device, L"graphics/SkyboxVS.hlsl", skyboxVS);
+    CreateShader(device, L"graphics/DepthOnlyVS.hlsl", depthOnlyVS);
+    CreateShader(device, L"graphics/DepthOnlyVS.hlsl", depthOnlySkinnedVS,
                  std::vector<D3D_SHADER_MACRO>{{"SKINNED", "1"}, {NULL, NULL}});
 
-    CreateShader(device, L"BasicPS.hlsl", basicPS);
-    CreateShader(device, L"NormalPS.hlsl", normalPS);
-    CreateShader(device, L"SkyboxPS.hlsl", skyboxPS);
-    CreateShader(device, L"CombinePS.hlsl", combinePS);
-    CreateShader(device, L"BloomDownPS.hlsl", bloomDownPS);
-    CreateShader(device, L"BloomUpPS.hlsl", bloomUpPS);
-    CreateShader(device, L"DepthOnlyPS.hlsl", depthOnlyPS);
-    CreateShader(device, L"PostEffectsPS.hlsl", postEffectsPS);
+    CreateShader(device, L"graphics/BasicPS.hlsl", basicPS);
+    CreateShader(device, L"graphics/NormalPS.hlsl", normalPS);
+    CreateShader(device, L"graphics/SkyboxPS.hlsl", skyboxPS);
+    CreateShader(device, L"graphics/CombinePS.hlsl", combinePS);
+    CreateShader(device, L"graphics/BloomDownPS.hlsl", bloomDownPS);
+    CreateShader(device, L"graphics/BloomUpPS.hlsl", bloomUpPS);
+    CreateShader(device, L"graphics/DepthOnlyPS.hlsl", depthOnlyPS);
+    CreateShader(device, L"graphics/PostEffectsPS.hlsl", postEffectsPS);
 
-    CreateShader(device, L"NormalGS.hlsl", normalGS);
-    CreateShader(device, L"BrightPassCS.hlsl", brightPassCS);
-    CreateShader(device, L"BlurVertical.hlsl", blurVerticalCS);
-    CreateShader(device, L"BlurHorizontal.hlsl", blurHorizontalCS);
-    CreateShader(device, L"BloomCompositeCS.hlsl", bloomComposite);
+    CreateShader(device, L"graphics/NormalGS.hlsl", normalGS);
+    CreateShader(device, L"graphics/BrightPassCS.hlsl", brightPassCS);
+    CreateShader(device, L"graphics/BlurVertical.hlsl", blurVerticalCS);
+    CreateShader(device, L"graphics/BlurHorizontal.hlsl", blurHorizontalCS);
+    CreateShader(device, L"graphics/BloomCompositeCS.hlsl", bloomComposite);
 
     {
         // defaultSolidPSO;

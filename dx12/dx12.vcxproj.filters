@@ -104,6 +104,9 @@
     <ClCompile Include="engine\mesh_renderer.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
+    <ClCompile Include="engine\model.cpp">
+      <Filter>Engine\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Engine">
@@ -303,6 +306,15 @@
     <ClInclude Include="engine\constant_buffer.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
+    <ClInclude Include="engine\game_objects_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\shared_resource_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\model.h">
+      <Filter>Engine\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="foundation\ImGui\NodeEditor\imgui_bezier_math.inl">
@@ -317,7 +329,7 @@
     <None Include="graphics\DiskSamples.hlsli">
       <Filter>Graphics\Shader</Filter>
     </None>
-    <None Include="graphics\common.hlsli">
+    <None Include="graphics\Common.hlsli">
       <Filter>Graphics\Shader</Filter>
     </None>
   </ItemGroup>

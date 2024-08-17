@@ -37,6 +37,38 @@ class Util {
         vertexBufferView.StrideInBytes = sizeof(T_VERTEX);
         vertexBufferView.SizeInBytes = size;
     }
+    template <typename T_CONSTANT>
+    static void
+    CreateConstBuffer(const std::vector<T_CONSTANT> &constantBufferData,
+                      ComPtr<ID3D12Resource> &constantBuffer) {
+
+        static_assert((sizeof(T_CONSTANT) % 16) == 0,
+                      "Constant Buffer size must be 16-byte aligned");
+
+        const UINT size = sizeof(constantBufferData);
+        auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+        auto buffer_desc = CD3DX12_RESOURCE_DESC::Buffer(size);
+
+        HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
+            &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_desc,
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+            IID_PPV_ARGS(&constantBuffer));
+
+        // Describe and create a constant buffer view.
+        D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
+        cbvDesc.BufferLocation = constantBuffer->GetGPUVirtualAddress();
+        cbvDesc.SizeInBytes = size;
+        GpuCore::Instance().device->CreateConstantBufferView(
+            &cbvDesc,
+            GpuCore::Instance().cbvHeap->GetCPUDescriptorHandleForHeapStart());
+
+        UINT8 *begin; // beginning point 관리는 어떻게 하는지?
+        CD3DX12_RANGE readRange(0, 0);
+        ThrowIfFailed(constantBuffer->Map(0, &readRange,
+                                          reinterpret_cast<void **>(&begin)));
+        memcpy(begin, &constantBufferData.data(),
+               sizeof(constantBufferData) * constantBufferData.size());
+    }
 
     template <typename T_CONSTANT>
     static void CreateConstBuffer(const T_CONSTANT &constantBufferData,

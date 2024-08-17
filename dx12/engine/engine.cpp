@@ -12,6 +12,7 @@ Engine::Engine() {
 };
 
 bool Engine::Start() {
+    // clang-format off
 
     Platform::Start();
 
@@ -19,17 +20,16 @@ bool Engine::Start() {
     gui->Start();
     black_board->job_context->stage_type = EnumStageType::eInitialize;
 
-    // clang-format off
      auto tree = std::make_shared<foundation::BehaviorTreeBuilder>();
      tree->Build(black_board.get())
          ->Sequence()
              ->Excute(std::make_shared<GuiNodeInvoker>())
          ->Close()
     ->Run();
-    // clang-format on
 
     Frame();
 
+    // clang-format on
     return true;
 }
 

@@ -17,29 +17,6 @@ class ResolveBufferNode : public foundation::BehaviorActionNode {
     }
 };
 
-void WaitForPreviousFrame() {
-    // WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE.
-    // This is code implemented as such for simplicity. The
-    // D3D12HelloFrameBuffering sample illustrates how to use fences for
-    // efficient resource usage and to maximize GPU utilization.
-
-    // Signal and increment the fence value.
-    const UINT64 fence = dx12::GpuCore::Instance().fenceValue;
-    dx12::GpuCore::Instance().command_queue->Signal(
-        dx12::GpuCore::Instance().fence.Get(), fence);
-    dx12::GpuCore::Instance().fenceValue++;
-
-    // Wait until the previous frame is finished.
-    if (dx12::GpuCore::Instance().fence->GetCompletedValue() < fence) {
-        dx12::GpuCore::Instance().fence->SetEventOnCompletion(
-            fence, dx12::GpuCore::Instance().fenceEvent);
-        WaitForSingleObject(dx12::GpuCore::Instance().fenceEvent, INFINITE);
-    }
-
-    dx12::GpuCore::Instance().frameIndex =
-        dx12::GpuCore::Instance().swap_chain->GetCurrentBackBufferIndex();
-}
-
 class StartRenderingNode : public foundation::BehaviorActionNode {
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
@@ -75,6 +52,30 @@ class StartRenderingNode : public foundation::BehaviorActionNode {
 };
 
 class PresentNode : public foundation::BehaviorActionNode {
+
+    void WaitForPreviousFrame() {
+        // WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST
+        // PRACTICE. This is code implemented as such for simplicity. The
+        // D3D12HelloFrameBuffering sample illustrates how to use fences for
+        // efficient resource usage and to maximize GPU utilization.
+
+        // Signal and increment the fence value.
+        const UINT64 fence = dx12::GpuCore::Instance().fenceValue;
+        dx12::GpuCore::Instance().command_queue->Signal(
+            dx12::GpuCore::Instance().fence.Get(), fence);
+        dx12::GpuCore::Instance().fenceValue++;
+
+        // Wait until the previous frame is finished.
+        if (dx12::GpuCore::Instance().fence->GetCompletedValue() < fence) {
+            dx12::GpuCore::Instance().fence->SetEventOnCompletion(
+                fence, dx12::GpuCore::Instance().fenceEvent);
+            WaitForSingleObject(dx12::GpuCore::Instance().fenceEvent, INFINITE);
+        }
+
+        dx12::GpuCore::Instance().frameIndex =
+            dx12::GpuCore::Instance().swap_chain->GetCurrentBackBufferIndex();
+    }
+
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
         // preset the render target as the back buffer

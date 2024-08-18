@@ -315,6 +315,9 @@
     <ClInclude Include="engine\model.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
+    <ClInclude Include="engine\camera_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="foundation\ImGui\NodeEditor\imgui_bezier_math.inl">

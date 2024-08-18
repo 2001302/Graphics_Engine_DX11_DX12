@@ -1,9 +1,5 @@
 #include "engine.h"
 #include "../foundation/behavior_tree_builder.h"
-#include "game_objects_node.h"
-#include "gpu_node.h"
-#include "gui_node.h"
-#include "shared_resource_node.h"
 
 namespace core {
 
@@ -14,6 +10,14 @@ Engine::Engine() {
     start_tree = std::make_shared<foundation::BehaviorTreeBuilder>();
     update_tree = std::make_shared<foundation::BehaviorTreeBuilder>();
     render_tree = std::make_shared<foundation::BehaviorTreeBuilder>();
+
+    
+    camera_node = std::make_shared<CameraNodeInvoker>();
+    shared_resource_node = std::make_shared<SharedResourceNodeInvoker>();
+    game_object_node = std::make_shared<GameObjectNodeInvoker>();
+    gui_node = std::make_shared<GuiNodeInvoker>();
+    start_rendering_node = std::make_shared<StartRenderingNode>();
+    present_node = std::make_shared<PresentNode>();
 };
 
 bool Engine::Start() {
@@ -27,26 +31,28 @@ bool Engine::Start() {
     //initialize
     start_tree->Build(black_board.get())
     ->Sequence()
-        //->Excute(std::make_shared<SharedResourceNodeInvoker>())
-        ->Excute(std::make_shared<GameObjectNodeInvoker>())
-        ->Excute(std::make_shared<GuiNodeInvoker>())
+        ->Excute(camera_node)
+        ->Excute(shared_resource_node)
+        ->Excute(game_object_node)
+        ->Excute(gui_node)
     ->Close()
     ->Run();
     
     //update
     update_tree->Build(black_board.get())
     ->Sequence()
-        ->Excute(std::make_shared<SharedResourceNodeInvoker>())
-        ->Excute(std::make_shared<GameObjectNodeInvoker>())
+        ->Excute(camera_node)
+        ->Excute(shared_resource_node)
+        ->Excute(game_object_node)
     ->Close();
      
     //render
     render_tree->Build(black_board.get())
     ->Sequence()
-        ->Excute(std::make_shared<StartRenderingNode>())
-        ->Excute(std::make_shared<GameObjectNodeInvoker>())
-        ->Excute(std::make_shared<GuiNodeInvoker>())
-        ->Excute(std::make_shared<PresentNode>())
+        ->Excute(start_rendering_node)
+        ->Excute(game_object_node)
+        ->Excute(gui_node)
+        ->Excute(present_node)
     ->Close();
 
     Frame();

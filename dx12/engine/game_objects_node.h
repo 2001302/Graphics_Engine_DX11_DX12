@@ -104,6 +104,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             //                IID_PPV_ARGS(&defaultSolidPSO->pipeline_state)));
             //}
             {
+                defaultSolidPSO = std::make_shared<dx12::GraphicsPSO>();
                 // layout
                 D3D12_INPUT_ELEMENT_DESC basicIEs[] = {
                     {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
@@ -143,7 +144,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
 
                 // rootSignature
                 CD3DX12_ROOT_PARAMETER1 rootParameters[7] = {};
-                // CBV
+                // Common.hlsli : s0~s6,t10~t16,b0~b2
                 rootParameters[0].InitAsDescriptorTable(
                     1, &samplerRange, D3D12_SHADER_VISIBILITY_ALL);
                 rootParameters[1].InitAsDescriptorTable(
@@ -177,15 +178,15 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 HRESULT hr = D3D12SerializeVersionedRootSignature(
                     &rootSignatureDesc, &signature, &error);
 
-                ComPtr<ID3D12RootSignature> rootSignature;
                 hr = dx12::GpuCore::Instance().device->CreateRootSignature(
                     0, signature->GetBufferPointer(),
-                    signature->GetBufferSize(), IID_PPV_ARGS(&rootSignature));
+                    signature->GetBufferSize(),
+                    IID_PPV_ARGS(&defaultSolidPSO->root_signature));
 
                 // defaultSolidPSO;
                 D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
                 psoDesc.InputLayout = {basicIEs, _countof(basicIEs)};
-                psoDesc.pRootSignature = rootSignature.Get();
+                psoDesc.pRootSignature = defaultSolidPSO->root_signature;
                 psoDesc.VS = CD3DX12_SHADER_BYTECODE(basicVS.Get());
                 psoDesc.PS = CD3DX12_SHADER_BYTECODE(basicPS.Get());
                 psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(solidRS);
@@ -199,7 +200,6 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
                 psoDesc.SampleDesc.Count = 1;
 
-                defaultSolidPSO = std::make_shared<dx12::GraphicsPSO>();
                 dx12::ThrowIfFailed(
                     dx12::GpuCore::Instance()
                         .device->CreateGraphicsPipelineState(
@@ -245,65 +245,122 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
 
-                std::vector<ComPtr<ID3D12Resource>> constantBuffers = {
-                    manager->global_consts_GPU, renderer->mesh_consts.Get(),
-                    renderer->material_consts.Get()};
+                // std::vector<ComPtr<ID3D12Resource>> constantBuffers = {
+                //     manager->global_consts_GPU, renderer->mesh_consts.Get(),
+                //     renderer->material_consts.Get()};
 
-                // 디스크립터 힙 생성 및 설정
-                D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-                heapDesc.NumDescriptors = constantBuffers.size();
-                heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-                heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+                //// 디스크립터 힙 생성 및 설정
+                // D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+                // heapDesc.NumDescriptors = constantBuffers.size();
+                // heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+                // heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-                dx12::ThrowIfFailed(
-                    dx12::GpuCore::Instance().device->CreateDescriptorHeap(
-                        &heapDesc,
-                        IID_PPV_ARGS(&dx12::GpuCore::Instance().cbvHeap)));
+                // dx12::ThrowIfFailed(
+                //     dx12::GpuCore::Instance().device->CreateDescriptorHeap(
+                //         &heapDesc,
+                //         IID_PPV_ARGS(&dx12::GpuCore::Instance().cbvHeap)));
 
-                // 상수 버퍼 뷰(CBV) 생성
-                D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc[3];
-                CD3DX12_CPU_DESCRIPTOR_HANDLE cbvHandle(
-                    dx12::GpuCore::Instance()
-                        .cbvHeap->GetCPUDescriptorHandleForHeapStart());
+                //// 상수 버퍼 뷰(CBV) 생성
+                // D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc[3];
+                // CD3DX12_CPU_DESCRIPTOR_HANDLE cbvHandle(
+                //     dx12::GpuCore::Instance()
+                //         .cbvHeap->GetCPUDescriptorHandleForHeapStart());
 
-                for (int i = 0; i < constantBuffers.size(); ++i) {
-                    cbvDesc[i].BufferLocation =
-                        constantBuffers[i]->GetGPUVirtualAddress();
-                    cbvDesc[i].SizeInBytes = 256;
+                // for (int i = 0; i < constantBuffers.size(); ++i) {
+                //     cbvDesc[i].BufferLocation =
+                //         constantBuffers[i]->GetGPUVirtualAddress();
+                //     cbvDesc[i].SizeInBytes = 256;
 
-                    dx12::GpuCore::Instance().device->CreateConstantBufferView(
-                        &cbvDesc[i], cbvHandle);
-                    cbvHandle.Offset(
-                        dx12::GpuCore::Instance()
-                            .device->GetDescriptorHandleIncrementSize(
-                                D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
-                }
-                // 상수 버퍼 바인딩
-                ID3D12DescriptorHeap *descriptorHeaps[] = {
-                    dx12::GpuCore::Instance().cbvHeap.Get()};
-                dx12::GpuCore::Instance().commandList->SetDescriptorHeaps(
-                    _countof(descriptorHeaps), descriptorHeaps);
+                //    dx12::GpuCore::Instance().device->CreateConstantBufferView(
+                //        &cbvDesc[i], cbvHandle);
+                //    cbvHandle.Offset(
+                //        dx12::GpuCore::Instance()
+                //            .device->GetDescriptorHandleIncrementSize(
+                //                D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+                //}
+                //// 상수 버퍼 바인딩
+                // ID3D12DescriptorHeap *descriptorHeaps[] = {
+                //     dx12::GpuCore::Instance().cbvHeap.Get()};
+                // dx12::GpuCore::Instance().commandList->SetDescriptorHeaps(
+                //     _countof(descriptorHeaps), descriptorHeaps);
 
-                // dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
-                //     dx12::GpuCore::Instance().rootSignature.Get());
+                ////
+                /// dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
+                ////     dx12::GpuCore::Instance().rootSignature.Get());
 
-                for (int i = 0; i < constantBuffers.size(); ++i) {
-                    CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(
-                        dx12::GpuCore::Instance()
-                            .cbvHeap->GetGPUDescriptorHandleForHeapStart());
-                    gpuHandle.Offset(
-                        i, dx12::GpuCore::Instance()
-                               .device->GetDescriptorHandleIncrementSize(
-                                   D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
-                    dx12::GpuCore::Instance()
-                        .commandList->SetGraphicsRootDescriptorTable(i,
-                                                                     gpuHandle);
-                }
+                // for (int i = 0; i < constantBuffers.size(); ++i) {
+                //     CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(
+                //         dx12::GpuCore::Instance()
+                //             .cbvHeap->GetGPUDescriptorHandleForHeapStart());
+                //     gpuHandle.Offset(
+                //         i, dx12::GpuCore::Instance()
+                //                .device->GetDescriptorHandleIncrementSize(
+                //                    D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+                //     dx12::GpuCore::Instance()
+                //         .commandList->SetGraphicsRootDescriptorTable(i,
+                //                                                      gpuHandle);
+                // }
+                //
+                //// Create descriptor heap for CBVs
+                // std::vector<ComPtr<ID3D12Resource>> constantBuffers = {
+                //     manager->global_consts_GPU, renderer->mesh_consts.Get(),
+                //     renderer->material_consts.Get()};
 
-                /*
-		        cmdList->SetPipelineState(m_PipelineState.Get());
-		        cmdList->SetGraphicsRootSignature(m_RootSignature.Get());
-                */
+                // D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+                // heapDesc.NumDescriptors = constantBuffers.size();
+                // heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+                // heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+                // ComPtr<ID3D12DescriptorHeap> cbvHeap;
+                // dx12::ThrowIfFailed(
+                //     dx12::GpuCore::Instance().device->CreateDescriptorHeap(
+                //         &heapDesc, IID_PPV_ARGS(&cbvHeap)));
+
+                //// Create CBV
+                // D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc[3];
+                // CD3DX12_CPU_DESCRIPTOR_HANDLE cbvHandle(
+                //     cbvHeap->GetCPUDescriptorHandleForHeapStart());
+
+                // for (int i = 0; i < constantBuffers.size(); ++i) {
+                //     cbvDesc[i].BufferLocation =
+                //         constantBuffers[i]->GetGPUVirtualAddress();
+                //     cbvDesc[i].SizeInBytes =
+                //         (constantBuffers[i]->GetDesc().Width + 255) &
+                //         ~255; // 256-byte alignment
+
+                //    dx12::GpuCore::Instance().device->CreateConstantBufferView(
+                //        &cbvDesc[i], cbvHandle);
+                //    cbvHandle.Offset(
+                //        dx12::GpuCore::Instance()
+                //            .device->GetDescriptorHandleIncrementSize(
+                //                D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV));
+                //}
+                //// Bind descriptor heap
+                // ID3D12DescriptorHeap *descriptorHeaps[] = {cbvHeap.Get()};
+                // dx12::GpuCore::Instance().commandList->SetDescriptorHeaps(
+                //     _countof(descriptorHeaps), descriptorHeaps);
+                // CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(
+                //     cbvHeap->GetGPUDescriptorHandleForHeapStart());
+                // dx12::GpuCore::Instance().commandList->SetGraphicsRootDescriptorTable(1,
+                // gpuHandle);
+
+                dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
+                    defaultSolidPSO->root_signature);
+
+                dx12::GpuCore::Instance().commandList->SetPipelineState(
+                    defaultSolidPSO->pipeline_state);
+
+                dx12::GpuCore::Instance()
+                    .commandList->SetGraphicsRootConstantBufferView(
+                        2, manager->global_consts_GPU->GetGPUVirtualAddress());
+                dx12::GpuCore::Instance()
+                    .commandList->SetGraphicsRootConstantBufferView(
+                        3, renderer->mesh_consts.Get()->GetGPUVirtualAddress());
+                dx12::GpuCore::Instance()
+                    .commandList->SetGraphicsRootConstantBufferView(
+                        4, renderer->material_consts.Get()
+                               ->GetGPUVirtualAddress());
+
                 renderer->Render();
             }
 

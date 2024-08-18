@@ -245,14 +245,14 @@ void MeshRenderer::UpdateConstantBuffers() {
     }
 }
 
-void MeshRenderer::Render() {
+void MeshRenderer::Render(dx12::GraphicsPSO pso) {
     if (is_visible) {
         for (const auto &mesh : meshes) {
 
             // VS : t0
             // PS : t0 ~ t4
             // Constant Buffer : b0 ~ b2
-            
+
             // dx12::GpuCore::Instance().device_context->VSSetShaderResources(
             //     0, 1, mesh->heightSRV.GetAddressOf());
             //// 물체 렌더링할 때 여러가지 텍스춰 사용 (t0 부터시작)
@@ -273,8 +273,10 @@ void MeshRenderer::Render() {
                 dx12::GpuCore::Instance().frameIndex,
                 dx12::GpuCore::Instance().rtvDescriptorSize);
 
-            // cmdList->SetPipelineState(m_PipelineState.Get());
-            // cmdList->SetGraphicsRootSignature(m_RootSignature.Get());
+            //dx12::GpuCore::Instance().commandList->SetPipelineState(
+            //    pso.pipeline_state);
+            //dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
+            //    pso.root_signature);
             dx12::GpuCore::Instance().commandList->IASetPrimitiveTopology(
                 D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
             dx12::GpuCore::Instance().commandList->IASetVertexBuffers(

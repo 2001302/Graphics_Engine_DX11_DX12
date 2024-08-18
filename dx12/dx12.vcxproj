@@ -172,6 +172,7 @@
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="engine\black_board.h" />
     <ClInclude Include="engine\camera.h" />
+    <ClInclude Include="engine\camera_node.h" />
     <ClInclude Include="engine\component.h" />
     <ClInclude Include="engine\constant_buffer.h" />
     <ClInclude Include="engine\engine.h" />

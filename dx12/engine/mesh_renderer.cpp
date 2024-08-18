@@ -29,7 +29,8 @@ void MeshRenderer::InitMeshBuffers(const MeshData &meshData,
     newMesh->indexCount = UINT(meshData.indices.size());
     newMesh->vertexCount = UINT(meshData.vertices.size());
     newMesh->stride = UINT(sizeof(Vertex));
-    dx12::Util::CreateIndexBuffer(meshData.indices, newMesh->indexBuffer);
+    dx12::Util::CreateIndexBuffer(meshData.indices, newMesh->indexBuffer,
+                                  newMesh->indexBufferView);
 }
 
 void MeshRenderer::Initialize(const std::string &basePath,
@@ -187,55 +188,57 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
         this->meshes.push_back(newMesh);
     }
 
-    // Initialize Bounding Box
-    {
-        bounding_box = GetBoundingBox(meshes[0].vertices);
-        for (size_t i = 1; i < meshes.size(); i++) {
-            auto bb = GetBoundingBox(meshes[0].vertices);
-            ExtendBoundingBox(bb, bounding_box);
-        }
-        auto meshData = GeometryGenerator::MakeWireBox(
-            bounding_box.Center,
-            Vector3(bounding_box.Extents) + Vector3(1e-3f));
-        bounding_box_mesh = std::make_shared<Mesh>();
-        dx12::Util::CreateVertexBuffer(meshData.vertices,
-                                       bounding_box_mesh->vertexBuffer,
-                                       bounding_box_mesh->vertexBufferView);
-        bounding_box_mesh->indexCount = UINT(meshData.indices.size());
-        bounding_box_mesh->vertexCount = UINT(meshData.vertices.size());
-        bounding_box_mesh->stride = UINT(sizeof(Vertex));
-        dx12::Util::CreateIndexBuffer(meshData.indices,
-                                      bounding_box_mesh->indexBuffer);
-        bounding_box_mesh->meshConstsGPU = mesh_consts.Get();
-        bounding_box_mesh->materialConstsGPU = material_consts.Get();
-    }
+    //// Initialize Bounding Box
+    //{
+    //    bounding_box = GetBoundingBox(meshes[0].vertices);
+    //    for (size_t i = 1; i < meshes.size(); i++) {
+    //        auto bb = GetBoundingBox(meshes[0].vertices);
+    //        ExtendBoundingBox(bb, bounding_box);
+    //    }
+    //    auto meshData = GeometryGenerator::MakeWireBox(
+    //        bounding_box.Center,
+    //        Vector3(bounding_box.Extents) + Vector3(1e-3f));
+    //    bounding_box_mesh = std::make_shared<Mesh>();
+    //    dx12::Util::CreateVertexBuffer(meshData.vertices,
+    //                                   bounding_box_mesh->vertexBuffer,
+    //                                   bounding_box_mesh->vertexBufferView);
+    //    bounding_box_mesh->indexCount = UINT(meshData.indices.size());
+    //    bounding_box_mesh->vertexCount = UINT(meshData.vertices.size());
+    //    bounding_box_mesh->stride = UINT(sizeof(Vertex));
+    //    dx12::Util::CreateIndexBuffer(meshData.indices,
+    //                                  bounding_box_mesh->indexBuffer,
+    //                                  bounding_box_mesh->indexBufferView);
+    //    bounding_box_mesh->meshConstsGPU = mesh_consts.Get();
+    //    bounding_box_mesh->materialConstsGPU = material_consts.Get();
+    //}
 
-    // Initialize Bounding Sphere
-    {
-        float maxRadius = 0.0f;
-        for (auto &mesh : meshes) {
-            for (auto &v : mesh.vertices) {
-                maxRadius = (std::max)(
-                    (Vector3(bounding_box.Center) - v.position).Length(),
-                    maxRadius);
-            }
-        }
-        maxRadius += 1e-2f; // 살짝 크게 설정
-        bounding_sphere = BoundingSphere(bounding_box.Center, maxRadius);
-        auto meshData = GeometryGenerator::MakeWireSphere(
-            bounding_sphere.Center, bounding_sphere.Radius);
-        bounding_sphere_mesh = std::make_shared<Mesh>();
-        dx12::Util::CreateVertexBuffer(meshData.vertices,
-                                       bounding_sphere_mesh->vertexBuffer,
-                                       bounding_sphere_mesh->vertexBufferView);
-        bounding_sphere_mesh->indexCount = UINT(meshData.indices.size());
-        bounding_sphere_mesh->vertexCount = UINT(meshData.vertices.size());
-        bounding_sphere_mesh->stride = UINT(sizeof(Vertex));
-        dx12::Util::CreateIndexBuffer(meshData.indices,
-                                      bounding_sphere_mesh->indexBuffer);
-        bounding_sphere_mesh->meshConstsGPU = mesh_consts.Get();
-        bounding_sphere_mesh->materialConstsGPU = material_consts.Get();
-    }
+    //// Initialize Bounding Sphere
+    //{
+    //    float maxRadius = 0.0f;
+    //    for (auto &mesh : meshes) {
+    //        for (auto &v : mesh.vertices) {
+    //            maxRadius = (std::max)(
+    //                (Vector3(bounding_box.Center) - v.position).Length(),
+    //                maxRadius);
+    //        }
+    //    }
+    //    maxRadius += 1e-2f; // 살짝 크게 설정
+    //    bounding_sphere = BoundingSphere(bounding_box.Center, maxRadius);
+    //    auto meshData = GeometryGenerator::MakeWireSphere(
+    //        bounding_sphere.Center, bounding_sphere.Radius);
+    //    bounding_sphere_mesh = std::make_shared<Mesh>();
+    //    dx12::Util::CreateVertexBuffer(meshData.vertices,
+    //                                   bounding_sphere_mesh->vertexBuffer,
+    //                                   bounding_sphere_mesh->vertexBufferView);
+    //    bounding_sphere_mesh->indexCount = UINT(meshData.indices.size());
+    //    bounding_sphere_mesh->vertexCount = UINT(meshData.vertices.size());
+    //    bounding_sphere_mesh->stride = UINT(sizeof(Vertex));
+    //    dx12::Util::CreateIndexBuffer(meshData.indices,
+    //                                  bounding_sphere_mesh->indexBuffer,
+    //                                  bounding_sphere_mesh->indexBufferView);
+    //    bounding_sphere_mesh->meshConstsGPU = mesh_consts.Get();
+    //    bounding_sphere_mesh->materialConstsGPU = material_consts.Get();
+    //}
 }
 
 void MeshRenderer::UpdateConstantBuffers() {
@@ -245,7 +248,7 @@ void MeshRenderer::UpdateConstantBuffers() {
     }
 }
 
-void MeshRenderer::Render(dx12::GraphicsPSO pso) {
+void MeshRenderer::Render(dx12::GraphicsPSO* pso) {
     if (is_visible) {
         for (const auto &mesh : meshes) {
 

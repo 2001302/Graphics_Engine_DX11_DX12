@@ -34,7 +34,7 @@ class MeshRenderer : public Component {
     //virtual ComPtr<ID3D12PipelineState> GetReflectPSO(const bool wired);
 
     virtual void Render(){};
-    virtual void Render(dx12::GraphicsPSO pso);
+    virtual void Render(dx12::GraphicsPSO* pso);
     virtual void RenderNormals();
     virtual void RenderWireBoundingBox();
     virtual void RenderWireBoundingSphere();

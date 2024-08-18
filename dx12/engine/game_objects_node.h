@@ -179,7 +179,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                         4, renderer->material_consts.Get()
                                ->GetGPUVirtualAddress());
 
-                renderer->Render();
+                renderer->Render(defaultSolidPSO.get());
             }
 
             break;

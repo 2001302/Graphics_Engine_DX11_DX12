@@ -44,32 +44,32 @@ class LightNodeInvoker : public foundation::BehaviorActionNode {
                 job_context->global_consts_CPU.lights[2].type = LIGHT_OFF;
             }
 
-            // 조명 위치 표시
-            {
-                for (int i = 0; i < MAX_LIGHTS; i++) {
-                    MeshData sphere =
-                        GeometryGenerator::MakeSphere(1.0f, 20, 20);
+            //// 조명 위치 표시
+            //{
+            //    for (int i = 0; i < MAX_LIGHTS; i++) {
+            //        MeshData sphere =
+            //            GeometryGenerator::MakeSphere(1.0f, 20, 20);
 
-                    auto renderer =
-                        std::make_shared<MeshRenderer>(std::vector{sphere});
+            //        auto renderer =
+            //            std::make_shared<MeshRenderer>(std::vector{sphere});
 
-                    renderer->UpdateWorldRow(Matrix::CreateTranslation(
-                        job_context->global_consts_CPU.lights[i].position));
-                    renderer->material_consts.GetCpu().albedoFactor =
-                        Vector3(0.0f);
-                    renderer->material_consts.GetCpu().emissionFactor =
-                        Vector3(1.0f, 1.0f, 0.0f);
-                    renderer->cast_shadow =
-                        false; // 조명 표시 물체들은 그림자 X
+            //        renderer->UpdateWorldRow(Matrix::CreateTranslation(
+            //            job_context->global_consts_CPU.lights[i].position));
+            //        renderer->material_consts.GetCpu().albedoFactor =
+            //            Vector3(0.0f);
+            //        renderer->material_consts.GetCpu().emissionFactor =
+            //            Vector3(1.0f, 1.0f, 0.0f);
+            //        renderer->cast_shadow =
+            //            false; // 조명 표시 물체들은 그림자 X
 
-                    if (job_context->global_consts_CPU.lights[i].type == 0)
-                        renderer->is_visible = false;
+            //        if (job_context->global_consts_CPU.lights[i].type == 0)
+            //            renderer->is_visible = false;
 
-                    //light_spheres[i] = std::make_shared<Model>();
-                    //light_spheres[i]->AddComponent(EnumComponentType::eRenderer,
-                    //                               renderer);
-                }
-            }
+            //        light_spheres[i] = std::make_shared<Model>();
+            //        light_spheres[i]->AddComponent(EnumComponentType::eRenderer,
+            //                                       renderer);
+            //    }
+            //}
 
             break;
         }

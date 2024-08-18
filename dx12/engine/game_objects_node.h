@@ -64,7 +64,8 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             //        0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             //        D3D12_SHADER_VISIBILITY_ALL);
 
-            //    auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
+            //    auto rootSignatureDesc =
+            //    CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
             //        ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,
             //        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
@@ -132,22 +133,44 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 solidRS.DepthClipEnable = true;
                 solidRS.MultisampleEnable = true;
 
+                // s0 ~ s6
+                CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
+                samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 6, 0);
+
+                // t10 ~ t16
+                CD3DX12_DESCRIPTOR_RANGE1 textureRange;
+                textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
+
                 // rootSignature
-                CD3DX12_ROOT_PARAMETER1 rootParameters[3];
+                CD3DX12_ROOT_PARAMETER1 rootParameters[7] = {};
                 // CBV
-                rootParameters[0].InitAsConstantBufferView(
+                rootParameters[0].InitAsDescriptorTable(
+                    1, &samplerRange, D3D12_SHADER_VISIBILITY_ALL);
+                rootParameters[1].InitAsDescriptorTable(
+                    1, &textureRange, D3D12_SHADER_VISIBILITY_ALL);
+                rootParameters[2].InitAsConstantBufferView(
                     0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
                     D3D12_SHADER_VISIBILITY_ALL);
-                rootParameters[1].InitAsConstantBufferView(
+                rootParameters[3].InitAsConstantBufferView(
                     1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
                     D3D12_SHADER_VISIBILITY_ALL);
-                rootParameters[2].InitAsConstants(
+                rootParameters[4].InitAsConstantBufferView(
                     2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
                     D3D12_SHADER_VISIBILITY_ALL);
+                // VS : t0
+                CD3DX12_DESCRIPTOR_RANGE1 textureRangeVS;
+                textureRangeVS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+                rootParameters[5].InitAsDescriptorTable(
+                    1, &textureRangeVS, D3D12_SHADER_VISIBILITY_VERTEX);
+                // PS : t0 ~ t4
+                CD3DX12_DESCRIPTOR_RANGE1 textureRangePS;
+                textureRangePS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
+                rootParameters[6].InitAsDescriptorTable(
+                    1, &textureRangePS, D3D12_SHADER_VISIBILITY_PIXEL);
 
-                auto rootSignatureDesc =
-                CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
-                    ARRAYSIZE(rootParameters), rootParameters);
+                auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
+                    ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,
+                    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
                 ComPtr<ID3DBlob> signature;
                 ComPtr<ID3DBlob> error;
@@ -175,6 +198,8 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 psoDesc.NumRenderTargets = 1;
                 psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
                 psoDesc.SampleDesc.Count = 1;
+
+                defaultSolidPSO = std::make_shared<dx12::GraphicsPSO>();
                 dx12::ThrowIfFailed(
                     dx12::GpuCore::Instance()
                         .device->CreateGraphicsPipelineState(
@@ -275,6 +300,10 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                                                                      gpuHandle);
                 }
 
+                /*
+		        cmdList->SetPipelineState(m_PipelineState.Get());
+		        cmdList->SetGraphicsRootSignature(m_RootSignature.Get());
+                */
                 renderer->Render();
             }
 

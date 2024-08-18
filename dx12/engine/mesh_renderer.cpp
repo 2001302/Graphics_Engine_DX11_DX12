@@ -245,30 +245,16 @@ void MeshRenderer::UpdateConstantBuffers() {
     }
 }
 
-//ComPtr<ID3D12PipelineState> MeshRenderer::GetPSO(const bool wired) {
-//    return wired ? dx12::pso::defaultWirePSO : dx12::pso::defaultSolidPSO;
-//}
-//
-//ComPtr<ID3D12PipelineState> MeshRenderer::GetDepthOnlyPSO() {
-//    return dx12::pso::depthOnlyPSO;
-//}
-//
-//ComPtr<ID3D12PipelineState> MeshRenderer::GetReflectPSO(const bool wired) {
-//    return wired ? dx12::pso::reflectWirePSO : dx12::pso::reflectSolidPSO;
-//}
-
 void MeshRenderer::Render() {
     if (is_visible) {
         for (const auto &mesh : meshes) {
 
-            // ID3D11Buffer *constBuffers[2] = {mesh->meshConstsGPU.Get(),
-            //                                  mesh->materialConstsGPU.Get()};
-            // dx12::GpuCore::Instance().device_context->VSSetConstantBuffers(
-            //     1, 2, constBuffers);
-
+            // VS : t0
+            // PS : t0 ~ t4
+            // Constant Buffer : b0 ~ b2
+            
             // dx12::GpuCore::Instance().device_context->VSSetShaderResources(
             //     0, 1, mesh->heightSRV.GetAddressOf());
-
             //// 물체 렌더링할 때 여러가지 텍스춰 사용 (t0 부터시작)
             // vector<ID3D11ShaderResourceView *> resViews = {
             //     mesh->albedoSRV.Get(), mesh->normalSRV.Get(),
@@ -280,47 +266,29 @@ void MeshRenderer::Render() {
             // dx12::GpuCore::Instance().device_context->PSSetConstantBuffers(
             //     1, 2, constBuffers);
 
-            //// Volume Rendering
-            // if (mesh->densityTex.GetSRV())
-            //     dx12::GpuCore::Instance().device_context->PSSetShaderResources(
-            //         5, 1, mesh->densityTex.GetAddressOfSRV());
-            // if (mesh->lightingTex.GetSRV())
-            //     dx12::GpuCore::Instance().device_context->PSSetShaderResources(
-            //         6, 1, mesh->lightingTex.GetAddressOfSRV());
+            // Fill Command List Pipeline-related Data
+            CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
+                dx12::GpuCore::Instance()
+                    .rtvHeap->GetCPUDescriptorHandleForHeapStart(),
+                dx12::GpuCore::Instance().frameIndex,
+                dx12::GpuCore::Instance().rtvDescriptorSize);
 
-            // dx12::GpuCore::Instance().device_context->IASetVertexBuffers(
-            //     0, 1, mesh->vertexBuffer.GetAddressOf(), &mesh->stride,
-            //     &mesh->offset);
-            // dx12::GpuCore::Instance().device_context->IASetIndexBuffer(
-            //     mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-            // dx12::GpuCore::Instance().device_context->DrawIndexed(
-            //     mesh->indexCount, 0, 0);
-
-            //// Release resources
-            // ID3D11ShaderResourceView *nulls[3] = {NULL, NULL, NULL};
-            // dx12::GpuCore::Instance().device_context->PSSetShaderResources(
-            //     5, 3, nulls);
-
-            dx12::GpuCore::Instance().commandAllocator->Reset();
-
-            //dx12::GpuCore::Instance().commandList->Reset(
-            //    dx12::GpuCore::Instance().commandAllocator.Get(),
-            //    dx12::pso::defaultSolidPSO.Get());
-
-            // Set necessary state.
-            //dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
-            //    dx12::GpuCore::Instance().rootSignature.Get());
-            //dx12::GpuCore::Instance().commandList->RSSetViewports(
-            //    1, &dx12::GpuCore::Instance().viewport);
-            // dx12::GpuCore::Instance().commandList->RSSetScissorRects(
-            //     1, &dx12::GpuCore::Instance().scissorRect);
-
+            // cmdList->SetPipelineState(m_PipelineState.Get());
+            // cmdList->SetGraphicsRootSignature(m_RootSignature.Get());
             dx12::GpuCore::Instance().commandList->IASetPrimitiveTopology(
-                D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
             dx12::GpuCore::Instance().commandList->IASetVertexBuffers(
                 0, 1, &mesh->vertexBufferView);
-            dx12::GpuCore::Instance().commandList->DrawInstanced(
-                mesh->vertexCount, mesh->indexCount, 0, 0);
+            dx12::GpuCore::Instance().commandList->IASetIndexBuffer(
+                &mesh->indexBufferView);
+            dx12::GpuCore::Instance().commandList->RSSetViewports(
+                1, &dx12::GpuCore::Instance().viewport);
+            // dx12::GpuCore::Instance().commandList->RSSetScissorRects(
+            //     1, &m_ScissorRect);
+            dx12::GpuCore::Instance().commandList->OMSetRenderTargets(
+                1, &rtvHandle, false, nullptr);
+            dx12::GpuCore::Instance().commandList->DrawIndexedInstanced(
+                mesh->indexCount, 1, 0, 0, 0);
         }
     }
 }

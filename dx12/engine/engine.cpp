@@ -13,6 +13,7 @@ Engine::Engine() {
 
     
     camera_node = std::make_shared<CameraNodeInvoker>();
+    light_node = std::make_shared<LightNodeInvoker>();
     shared_resource_node = std::make_shared<SharedResourceNodeInvoker>();
     game_object_node = std::make_shared<GameObjectNodeInvoker>();
     gui_node = std::make_shared<GuiNodeInvoker>();
@@ -32,6 +33,7 @@ bool Engine::Start() {
     start_tree->Build(black_board.get())
     ->Sequence()
         ->Excute(camera_node)
+        ->Excute(light_node)
         ->Excute(shared_resource_node)
         ->Excute(game_object_node)
         ->Excute(gui_node)
@@ -42,6 +44,7 @@ bool Engine::Start() {
     update_tree->Build(black_board.get())
     ->Sequence()
         ->Excute(camera_node)
+        ->Excute(light_node)
         ->Excute(shared_resource_node)
         ->Excute(game_object_node)
     ->Close();

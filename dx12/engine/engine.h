@@ -11,6 +11,7 @@
 #include "gui_node.h"
 #include "shared_resource_node.h"
 #include "camera_node.h"
+#include "light_node.h"
 
 namespace core {
 
@@ -37,6 +38,7 @@ class Engine : public foundation::Platform {
     std::shared_ptr<GuiNodeInvoker> gui_node;
     std::shared_ptr<StartRenderingNode> start_rendering_node;
     std::shared_ptr<PresentNode> present_node;
+    std::shared_ptr<LightNodeInvoker> light_node;
 
 
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,

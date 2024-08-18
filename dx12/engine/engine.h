@@ -21,6 +21,10 @@ class Engine : public foundation::Platform {
     std::shared_ptr<BlackBoard> black_board;
     //std::unique_ptr<MessageReceiver> message_receiver;
 
+    std::shared_ptr<foundation::BehaviorTreeBuilder> start_tree;
+    std::shared_ptr<foundation::BehaviorTreeBuilder> update_tree;
+    std::shared_ptr<foundation::BehaviorTreeBuilder> render_tree;
+
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,
                                     LPARAM lparam) {
 

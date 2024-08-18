@@ -29,9 +29,9 @@ class MeshRenderer : public Component {
 
     void UpdateConstantBuffers();
 
-    virtual ID3D12PipelineState *GetPSO(const bool wired);
-    virtual ID3D12PipelineState *GetDepthOnlyPSO();
-    virtual ID3D12PipelineState *GetReflectPSO(const bool wired);
+    //virtual ComPtr<ID3D12PipelineState> GetPSO(const bool wired);
+    //virtual ComPtr<ID3D12PipelineState> GetDepthOnlyPSO();
+    //virtual ComPtr<ID3D12PipelineState> GetReflectPSO(const bool wired);
 
     virtual void Render();
     virtual void RenderNormals();

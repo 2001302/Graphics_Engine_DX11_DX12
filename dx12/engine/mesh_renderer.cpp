@@ -245,17 +245,17 @@ void MeshRenderer::UpdateConstantBuffers() {
     }
 }
 
-ID3D12PipelineState *MeshRenderer::GetPSO(const bool wired) {
-    return wired ? dx12::pso::defaultWirePSO : dx12::pso::defaultSolidPSO;
-}
-
-ID3D12PipelineState *MeshRenderer::GetDepthOnlyPSO() {
-    return dx12::pso::depthOnlyPSO;
-}
-
-ID3D12PipelineState *MeshRenderer::GetReflectPSO(const bool wired) {
-    return wired ? dx12::pso::reflectWirePSO : dx12::pso::reflectSolidPSO;
-}
+//ComPtr<ID3D12PipelineState> MeshRenderer::GetPSO(const bool wired) {
+//    return wired ? dx12::pso::defaultWirePSO : dx12::pso::defaultSolidPSO;
+//}
+//
+//ComPtr<ID3D12PipelineState> MeshRenderer::GetDepthOnlyPSO() {
+//    return dx12::pso::depthOnlyPSO;
+//}
+//
+//ComPtr<ID3D12PipelineState> MeshRenderer::GetReflectPSO(const bool wired) {
+//    return wired ? dx12::pso::reflectWirePSO : dx12::pso::reflectSolidPSO;
+//}
 
 void MeshRenderer::Render() {
     if (is_visible) {
@@ -303,15 +303,15 @@ void MeshRenderer::Render() {
 
             dx12::GpuCore::Instance().commandAllocator->Reset();
 
-            dx12::GpuCore::Instance().commandList->Reset(
-                dx12::GpuCore::Instance().commandAllocator.Get(),
-                dx12::pso::defaultSolidPSO);
+            //dx12::GpuCore::Instance().commandList->Reset(
+            //    dx12::GpuCore::Instance().commandAllocator.Get(),
+            //    dx12::pso::defaultSolidPSO.Get());
 
             // Set necessary state.
-            dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
-                dx12::GpuCore::Instance().rootSignature.Get());
-            dx12::GpuCore::Instance().commandList->RSSetViewports(
-                1, &dx12::GpuCore::Instance().viewport);
+            //dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
+            //    dx12::GpuCore::Instance().rootSignature.Get());
+            //dx12::GpuCore::Instance().commandList->RSSetViewports(
+            //    1, &dx12::GpuCore::Instance().viewport);
             // dx12::GpuCore::Instance().commandList->RSSetScissorRects(
             //     1, &dx12::GpuCore::Instance().scissorRect);
 

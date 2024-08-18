@@ -2,6 +2,7 @@
 #define _GRAPHICSUTIL
 
 #include "graphics_core.h"
+#include "graphics_pso.h"
 
 namespace dx12 {
 class Util {

@@ -127,23 +127,30 @@ bool GpuCore::Initialize() {
         ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
     }
 
-    // Create a root signature.
-    CD3DX12_ROOT_PARAMETER1 rootParameters[1];
-    rootParameters[0].InitAsConstantBufferView(0);
+    //// Create a root signature.
+    //CD3DX12_ROOT_PARAMETER1 rootParameters[3];
+    //rootParameters[0].InitAsConstantBufferView(0);
+    //rootParameters[1].InitAsConstantBufferView(1);
+    //rootParameters[2].InitAsConstantBufferView(2);
 
-    CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
-    rootSignatureDesc.Init_1_1(
-        _countof(rootParameters), rootParameters, 0, nullptr,
-        D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+    //CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
+    //samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 1); 
 
-    ComPtr<ID3DBlob> signature;
-    ComPtr<ID3DBlob> error;
-    ThrowIfFailed(D3D12SerializeVersionedRootSignature(&rootSignatureDesc,
-                                                       &signature, &error));
-    ThrowIfFailed(device->CreateRootSignature(0, signature->GetBufferPointer(),
-                                              signature->GetBufferSize(),
-                                              IID_PPV_ARGS(&rootSignature)));
-    pso::InitCommonStates(device, rootSignature);
+    //CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+    //rootSignatureDesc.Init_1_1(
+    //    _countof(rootParameters), rootParameters, 0, nullptr,
+    //    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+
+
+    //ComPtr<ID3DBlob> signature;
+    //ComPtr<ID3DBlob> error;
+    //ThrowIfFailed(D3D12SerializeVersionedRootSignature(&rootSignatureDesc,
+    //                                                   &signature, &error));
+    //ThrowIfFailed(device->CreateRootSignature(0, signature->GetBufferPointer(),
+    //                                          signature->GetBufferSize(),
+    //                                          IID_PPV_ARGS(&rootSignature)));
+    //pso::InitCommonStates(device, rootSignature);
 
     return true;
 }

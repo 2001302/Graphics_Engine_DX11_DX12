@@ -8,10 +8,34 @@
 #define LIGHT_SPOT 0x04
 #define LIGHT_SHADOW 0x10
 
+#include <d3d12.h>
+#include <d3dcompiler.h>
+#include <directxtk/SimpleMath.h>
+#include <dxgi.h>    // DXGIFactory
+#include <dxgi1_4.h> // DXGIFactory4
+#include <iostream>
+#include <map>
+#include <memory>
+#include <string>
+#include <vector>
+#include <windows.h>
+#include <wrl/client.h> // ComPtr
+
 #include "../foundation/env.h"
-#include "graphics_common.h"
+#include "d3dx12.h"
+
+using DirectX::SimpleMath::Matrix;
+using DirectX::SimpleMath::Vector2;
+using DirectX::SimpleMath::Vector3;
+using Microsoft::WRL::ComPtr;
 
 namespace dx12 {
+inline void ThrowIfFailed(HRESULT hr) {
+    if (FAILED(hr)) {
+        throw std::exception();
+    }
+}
+
 class GpuCore {
   public:
     static GpuCore &Instance() {
@@ -29,14 +53,13 @@ class GpuCore {
     ComPtr<ID3D12CommandAllocator> commandAllocator;
     ComPtr<ID3D12CommandQueue> command_queue;
     ComPtr<ID3D12GraphicsCommandList> commandList;
-    ComPtr<ID3D12RootSignature> rootSignature;
 
     ComPtr<ID3D12Resource> renderTargets[2];
     ComPtr<ID3D12DescriptorHeap> rtvHeap;
     ComPtr<ID3D12DescriptorHeap> srvHeap;
     UINT rtvDescriptorSize;
 
-    ComPtr<ID3D12DescriptorHeap> cbvHeap;
+    ComPtr<ID3D12DescriptorHeap> cbvHeap; //단위는 어떻게 되는지 확인 필요 (global,node,object)
 
     // Synchronization objects.
     UINT frameIndex;

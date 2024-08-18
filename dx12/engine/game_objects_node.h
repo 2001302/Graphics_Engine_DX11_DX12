@@ -98,8 +98,8 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 dx12::GpuCore::Instance().commandList->SetDescriptorHeaps(
                     _countof(descriptorHeaps), descriptorHeaps);
 
-                dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
-                    dx12::GpuCore::Instance().rootSignature.Get());
+                //dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
+                //    dx12::GpuCore::Instance().rootSignature.Get());
 
                 for (int i = 0; i < constantBuffers.size(); ++i) {
                     CD3DX12_GPU_DESCRIPTOR_HANDLE gpuHandle(

@@ -27,7 +27,7 @@ bool Engine::Start() {
     //initialize
     start_tree->Build(black_board.get())
     ->Sequence()
-        ->Excute(std::make_shared<SharedResourceNodeInvoker>())
+        //->Excute(std::make_shared<SharedResourceNodeInvoker>())
         ->Excute(std::make_shared<GameObjectNodeInvoker>())
         ->Excute(std::make_shared<GuiNodeInvoker>())
     ->Close()

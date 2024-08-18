@@ -212,6 +212,15 @@ class Util {
     // static void SetPipelineState(const PSO &pso);
 
     // static void SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU);
+    static void
+    CreateVertexShader(ComPtr<ID3D12Device> &device, std::wstring filename,
+                       ComPtr<ID3DBlob> &m_vertexShader,
+                       const std::vector<D3D_SHADER_MACRO> shaderMacros = {
+                           /* Empty default */});
+
+    static void CreatePixelShader(ComPtr<ID3D12Device> &device,
+                                  std::wstring filename,
+                                  ComPtr<ID3DBlob> &shader);
 };
 } // namespace dx12
 #endif

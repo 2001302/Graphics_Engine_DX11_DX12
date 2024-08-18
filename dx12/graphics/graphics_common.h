@@ -51,7 +51,7 @@
 //extern ComPtr<ID3DBlob> blurHorizontalCS;
 //extern ComPtr<ID3DBlob> bloomComposite;
 //
-//// Graphics Pipeline States
+//// Graphics Pipeline States	
 //extern ComPtr<ID3D12PipelineState> defaultSolidPSO;
 //extern ComPtr<ID3D12PipelineState> skinnedSolidPSO;
 //extern ComPtr<ID3D12PipelineState> defaultWirePSO;

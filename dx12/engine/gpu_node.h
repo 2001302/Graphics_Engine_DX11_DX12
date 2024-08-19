@@ -25,6 +25,24 @@ class StartRenderingNode : public foundation::BehaviorActionNode {
         dx12::GpuCore::Instance().commandList->Reset(
             dx12::GpuCore::Instance().commandAllocator.Get(), nullptr);
 
+        memset(&dx12::GpuCore::Instance().viewport, 0, sizeof(D3D12_VIEWPORT));
+        dx12::GpuCore::Instance().viewport.TopLeftX = 0.0f;
+        dx12::GpuCore::Instance().viewport.TopLeftY = 0.0f;
+        dx12::GpuCore::Instance().viewport.Width =
+            (float)foundation::Env::Instance().screen_width;
+        dx12::GpuCore::Instance().viewport.Height =
+            (float)foundation::Env::Instance().screen_height;
+        dx12::GpuCore::Instance().viewport.MinDepth = 0.0f;
+        dx12::GpuCore::Instance().viewport.MaxDepth = 1.0f;
+
+        CD3DX12_RECT scissorRect(
+            0, 0, static_cast<LONG>(foundation::Env::Instance().screen_width),
+            static_cast<LONG>(foundation::Env::Instance().screen_height));
+        dx12::GpuCore::Instance().commandList->RSSetViewports(
+            1, &dx12::GpuCore::Instance().viewport);
+        dx12::GpuCore::Instance().commandList->RSSetScissorRects(1,
+                                                                 &scissorRect);
+
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
             dx12::GpuCore::Instance()
                 .renderTargets[dx12::GpuCore::Instance().frameIndex]

@@ -20,7 +20,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
 
-            {//pso
+            { // pso
                 defaultSolidPSO = std::make_shared<dx12::GraphicsPSO>();
                 // layout
                 D3D12_INPUT_ELEMENT_DESC basicIEs[] = {
@@ -124,19 +124,18 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                             IID_PPV_ARGS(&defaultSolidPSO->pipeline_state)));
             }
 
-            // additional object 1
-            MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
-            Vector3 center(0.5f, 0.5f, 2.0f);
+            // additional object 2
+            MeshData mesh = GeometryGenerator::MakeBox(0.2f);
+            Vector3 center(0.0f, 0.5f, 2.5f);
 
             auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
 
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
             renderer->material_consts.GetCpu().albedoFactor =
-                Vector3(0.1f, 0.1f, 1.0f);
-            renderer->material_consts.GetCpu().roughnessFactor = 0.2f;
-            renderer->material_consts.GetCpu().metallicFactor = 0.6f;
+                Vector3(1.0f, 0.2f, 0.2f);
+            renderer->material_consts.GetCpu().roughnessFactor = 0.5f;
+            renderer->material_consts.GetCpu().metallicFactor = 0.9f;
             renderer->material_consts.GetCpu().emissionFactor = Vector3(0.0f);
-
             renderer->UpdateConstantBuffers();
 
             auto obj = std::make_shared<Model>();

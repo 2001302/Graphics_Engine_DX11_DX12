@@ -64,19 +64,19 @@ class Util {
     static void CreateVertexBuffer(const std::vector<T_VERTEX> &vertices,
                                    ComPtr<ID3D12Resource> &vertexBuffer,
                                    D3D12_VERTEX_BUFFER_VIEW &vertexBufferView) {
-        //const UINT size = vertices.size() * sizeof(T_VERTEX);
-        //auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-        //auto buffer_desc = CD3DX12_RESOURCE_DESC::Buffer(size);
+        // const UINT size = vertices.size() * sizeof(T_VERTEX);
+        // auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+        // auto buffer_desc = CD3DX12_RESOURCE_DESC::Buffer(size);
 
-        //HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
-        //    &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_desc,
-        //    D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-        //    IID_PPV_ARGS(&vertexBuffer));
+        // HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
+        //     &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_desc,
+        //     D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+        //     IID_PPV_ARGS(&vertexBuffer));
 
         //// Initialize the vertex buffer view.
-        //vertexBufferView.BufferLocation = vertexBuffer->GetGPUVirtualAddress();
-        //vertexBufferView.StrideInBytes = sizeof(T_VERTEX);
-        //vertexBufferView.SizeInBytes = size;
+        // vertexBufferView.BufferLocation =
+        // vertexBuffer->GetGPUVirtualAddress(); vertexBufferView.StrideInBytes
+        // = sizeof(T_VERTEX); vertexBufferView.SizeInBytes = size;
 
         D3D12_HEAP_PROPERTIES heapProps = {};
         heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
@@ -121,28 +121,31 @@ class Util {
         static_assert((sizeof(T_CONSTANT) % 16) == 0,
                       "Constant Buffer size must be 16-byte aligned");
 
-        const UINT size = sizeof(constantBufferData);
-        auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-        auto buffer_desc = CD3DX12_RESOURCE_DESC::Buffer(size);
+        D3D12_HEAP_PROPERTIES heapProps = {};
+        heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
-        HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
-            &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_desc,
-            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-            IID_PPV_ARGS(&constantBuffer));
+        D3D12_RESOURCE_DESC resourceDesc = {};
+        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+        resourceDesc.Width = sizeof(T_CONSTANT);
+        resourceDesc.Height = 1;
+        resourceDesc.DepthOrArraySize = 1;
+        resourceDesc.MipLevels = 1;
+        resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+        resourceDesc.SampleDesc.Count = 1;
+        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-        // Describe and create a constant buffer view.
-        D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-        cbvDesc.BufferLocation = constantBuffer->GetGPUVirtualAddress();
-        cbvDesc.SizeInBytes = size;
-        GpuCore::Instance().device->CreateConstantBufferView(
-            &cbvDesc,
-            GpuCore::Instance().cbvHeap->GetCPUDescriptorHandleForHeapStart());
+        dx12::ThrowIfFailed(
+            dx12::GpuCore::Instance().device->CreateCommittedResource(
+                &heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc,
+                D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+                IID_PPV_ARGS(&constantBuffer)));
 
-        UINT8 *begin; // beginning point 관리는 어떻게 하는지?
-        CD3DX12_RANGE readRange(0, 0);
-        ThrowIfFailed(constantBuffer->Map(0, &readRange,
-                                          reinterpret_cast<void **>(&begin)));
+        UINT8 *begin = 0;
+        D3D12_RANGE readRange = {};
+        dx12::ThrowIfFailed(constantBuffer->Map(
+            0, &readRange, reinterpret_cast<void **>(&begin)));
         memcpy(begin, &constantBufferData, sizeof(constantBufferData));
+        constantBuffer->Unmap(0, nullptr);
     }
 
     template <typename T_DATA>
@@ -154,7 +157,7 @@ class Util {
                       << std::endl;
         }
 
-        UINT8 *begin;
+        UINT8 *begin = 0;
         CD3DX12_RANGE readRange(0, 0);
         ThrowIfFailed(
             buffer->Map(0, &readRange, reinterpret_cast<void **>(&begin)));
@@ -171,7 +174,7 @@ class Util {
                       << std::endl;
         }
 
-        UINT8 *begin;
+        UINT8 *begin = 0;
         CD3DX12_RANGE readRange(0, 0);
         ThrowIfFailed(
             buffer->Map(0, &readRange, reinterpret_cast<void **>(&begin)));

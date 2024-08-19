@@ -248,7 +248,7 @@ void MeshRenderer::UpdateConstantBuffers() {
     }
 }
 
-void MeshRenderer::Render(dx12::GraphicsPSO* pso) {
+void MeshRenderer::Render(dx12::GraphicsPSO *pso) {
     if (is_visible) {
         for (const auto &mesh : meshes) {
 
@@ -276,22 +276,18 @@ void MeshRenderer::Render(dx12::GraphicsPSO* pso) {
                 dx12::GpuCore::Instance().frameIndex,
                 dx12::GpuCore::Instance().rtvDescriptorSize);
 
-            //dx12::GpuCore::Instance().commandList->SetPipelineState(
-            //    pso.pipeline_state);
-            //dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
-            //    pso.root_signature);
+            // dx12::GpuCore::Instance().commandList->SetPipelineState(
+            //     pso.pipeline_state);
+            // dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
+            //     pso.root_signature);
             dx12::GpuCore::Instance().commandList->IASetPrimitiveTopology(
                 D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
             dx12::GpuCore::Instance().commandList->IASetVertexBuffers(
                 0, 1, &mesh->vertexBufferView);
             dx12::GpuCore::Instance().commandList->IASetIndexBuffer(
                 &mesh->indexBufferView);
-            dx12::GpuCore::Instance().commandList->RSSetViewports(
-                1, &dx12::GpuCore::Instance().viewport);
-            // dx12::GpuCore::Instance().commandList->RSSetScissorRects(
-            //     1, &m_ScissorRect);
-            dx12::GpuCore::Instance().commandList->OMSetRenderTargets(
-                1, &rtvHandle, false, nullptr);
+            //dx12::GpuCore::Instance().commandList->OMSetRenderTargets(
+            //    1, &rtvHandle, false, nullptr);
             dx12::GpuCore::Instance().commandList->DrawIndexedInstanced(
                 mesh->indexCount, 1, 0, 0, 0);
         }

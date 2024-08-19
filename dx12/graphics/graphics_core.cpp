@@ -83,17 +83,6 @@ bool GpuCore::Initialize() {
             D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     }
 
-    // Create descriptor heaps.
-    {
-        D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-        srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-        srvHeapDesc.NumDescriptors = 2;
-        srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-        ThrowIfFailed(
-            device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap)));
-    }
-
     // Create frame resources.
     {
         CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
@@ -107,6 +96,17 @@ bool GpuCore::Initialize() {
                                            rtvHandle);
             rtvHandle.Offset(1, rtvDescriptorSize);
         }
+    }
+
+    // Create descriptor heaps.
+    {
+        D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
+        srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+        srvHeapDesc.NumDescriptors = 2;
+        srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+        ThrowIfFailed(
+            device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap)));
     }
 
     ThrowIfFailed(device->CreateCommandAllocator(

@@ -56,9 +56,9 @@ class GpuCore {
 
     ComPtr<ID3D12Resource> renderTargets[2];
     ComPtr<ID3D12DescriptorHeap> rtvHeap;
-    ComPtr<ID3D12DescriptorHeap> srvHeap;
     UINT rtvDescriptorSize;
 
+    ComPtr<ID3D12DescriptorHeap> srvHeap;
     ComPtr<ID3D12DescriptorHeap> cbvHeap; //단위는 어떻게 되는지 확인 필요 (global,node,object)
 
     // Synchronization objects.

@@ -29,6 +29,8 @@ class JobContext : public foundation::IInfo {
     // condition
     GlobalConstants global_consts_CPU;
     ComPtr<ID3D12Resource> global_consts_GPU;
+    ComPtr<ID3D12DescriptorHeap> samplerHeap;
+
     float dt;
     bool draw_wire = false;
     bool light_rotate = false;

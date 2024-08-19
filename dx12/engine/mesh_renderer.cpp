@@ -248,7 +248,7 @@ void MeshRenderer::UpdateConstantBuffers() {
     }
 }
 
-void MeshRenderer::Render(dx12::GraphicsPSO *pso) {
+void MeshRenderer::Render() {
     if (is_visible) {
         for (const auto &mesh : meshes) {
 

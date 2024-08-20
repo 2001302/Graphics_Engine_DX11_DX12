@@ -5,6 +5,7 @@
 #include "../foundation/platform.h"
 #include "../foundation/setting_ui.h"
 #include "black_board.h"
+#include "message_receiver.h"
 
 #include "game_objects_node.h"
 #include "gpu_node.h"
@@ -26,7 +27,7 @@ class Engine : public foundation::Platform {
   private:
     std::shared_ptr<foundation::SettingUi> gui;
     std::shared_ptr<BlackBoard> black_board;
-    //std::unique_ptr<MessageReceiver> message_receiver;
+    std::unique_ptr<MessageReceiver> message_receiver;
 
     std::shared_ptr<foundation::BehaviorTreeBuilder> start_tree;
     std::shared_ptr<foundation::BehaviorTreeBuilder> update_tree;
@@ -61,80 +62,80 @@ class Engine : public foundation::Platform {
             return true;
 
         switch (umsg) {
-        //case WM_SIZE: {
-        //    return message_receiver->OnWindowSizeRequest(black_board->gui.get(),
-        //                                                 int(LOWORD(lparam)),
-        //                                                 int(HIWORD(lparam)));
-        //    break;
-        //}
-        //case WM_MOUSEMOVE: {
-        //    if (wparam & MK_RBUTTON) {
-        //        if (CheckIfMouseInViewport(black_board->gui.get(),
-        //                                   LOWORD(lparam), HIWORD(lparam))) {
-        //            return message_receiver->OnMouseRightDragRequest(
-        //                black_board->job_context.get(), black_board->input,
-        //                LOWORD(lparam), HIWORD(lparam));
-        //        }
-        //    }
-        //    if (wparam & MK_MBUTTON) {
-        //        if (CheckIfMouseInViewport(black_board->gui.get(),
-        //                                   LOWORD(lparam), HIWORD(lparam))) {
-        //            return message_receiver->OnMouseWheelDragRequest(
-        //                black_board->job_context.get(), black_board->input,
-        //                LOWORD(lparam), HIWORD(lparam));
-        //        }
-        //    }
-        //    break;
-        //}
-        //case WM_MOUSEWHEEL: {
-        //    if (CheckIfMouseInViewport(black_board->gui.get(), LOWORD(lparam),
-        //                               HIWORD(lparam))) {
-        //        return message_receiver->OnMouseWheelRequest(
-        //            black_board->job_context.get(), black_board->input,
-        //            GET_WHEEL_DELTA_WPARAM(wparam));
-        //    }
-        //    break;
-        //}
-        //case WM_RBUTTONDOWN:
-        //case WM_LBUTTONDOWN:
-        //case WM_MBUTTONDOWN: {
-        //    return message_receiver->OnMouseDownRequest(
-        //        black_board->input, LOWORD(lparam), HIWORD(lparam));
-        //    break;
-        //}
-        //case WM_MODEL_LOAD: {
-        //    return message_receiver->OnModelLoadRequest(
-        //        black_board->job_context.get(), main_window);
-        //    break;
-        //}
-        //case WM_SPHERE_LOAD: {
-        //    return message_receiver->OnSphereLoadRequest(
-        //        black_board->job_context.get());
-        //    break;
-        //}
-        //case WM_BOX_LOAD: {
-        //    return message_receiver->OnBoxLoadRequest(
-        //        black_board->job_context.get());
-        //    break;
-        //}
-        //case WM_CYLINDER_LOAD: {
-        //    return message_receiver->OnCylinderLoadRequest(
-        //        black_board->job_context.get());
-        //    break;
-        //}
-        //case WM_KEYDOWN:
-        //    black_board->input->KeyPressed(wparam,true);
-        //    if (wparam == VK_ESCAPE) {
-        //        Stop();
-        //        DestroyWindow(main_window);
-        //    }
-        //    break;
-        //case WM_KEYUP:
-        //    black_board->input->KeyPressed(wparam, false);
-        //    break;
-        //case WM_DESTROY:
-        //    ::PostQuitMessage(0);
-        //    return 0;
+        case WM_SIZE: {
+            return message_receiver->OnWindowSizeRequest(black_board->gui.get(),
+                                                         int(LOWORD(lparam)),
+                                                         int(HIWORD(lparam)));
+            break;
+        }
+        case WM_MOUSEMOVE: {
+            if (wparam & MK_RBUTTON) {
+                if (CheckIfMouseInViewport(black_board->gui.get(),
+                                           LOWORD(lparam), HIWORD(lparam))) {
+                    return message_receiver->OnMouseRightDragRequest(
+                        black_board->job_context.get(), black_board->input,
+                        LOWORD(lparam), HIWORD(lparam));
+                }
+            }
+            if (wparam & MK_MBUTTON) {
+                if (CheckIfMouseInViewport(black_board->gui.get(),
+                                           LOWORD(lparam), HIWORD(lparam))) {
+                    return message_receiver->OnMouseWheelDragRequest(
+                        black_board->job_context.get(), black_board->input,
+                        LOWORD(lparam), HIWORD(lparam));
+                }
+            }
+            break;
+        }
+        case WM_MOUSEWHEEL: {
+            if (CheckIfMouseInViewport(black_board->gui.get(), LOWORD(lparam),
+                                       HIWORD(lparam))) {
+                return message_receiver->OnMouseWheelRequest(
+                    black_board->job_context.get(), black_board->input,
+                    GET_WHEEL_DELTA_WPARAM(wparam));
+            }
+            break;
+        }
+        case WM_RBUTTONDOWN:
+        case WM_LBUTTONDOWN:
+        case WM_MBUTTONDOWN: {
+            return message_receiver->OnMouseDownRequest(
+                black_board->input, LOWORD(lparam), HIWORD(lparam));
+            break;
+        }
+        case WM_MODEL_LOAD: {
+            return message_receiver->OnModelLoadRequest(
+                black_board->job_context.get(), main_window);
+            break;
+        }
+        case WM_SPHERE_LOAD: {
+            return message_receiver->OnSphereLoadRequest(
+                black_board->job_context.get());
+            break;
+        }
+        case WM_BOX_LOAD: {
+            return message_receiver->OnBoxLoadRequest(
+                black_board->job_context.get());
+            break;
+        }
+        case WM_CYLINDER_LOAD: {
+            return message_receiver->OnCylinderLoadRequest(
+                black_board->job_context.get());
+            break;
+        }
+        case WM_KEYDOWN:
+            black_board->input->KeyPressed(wparam,true);
+            if (wparam == VK_ESCAPE) {
+                Stop();
+                DestroyWindow(main_window);
+            }
+            break;
+        case WM_KEYUP:
+            black_board->input->KeyPressed(wparam, false);
+            break;
+        case WM_DESTROY:
+            ::PostQuitMessage(0);
+            return 0;
         default: {
             return DefWindowProc(main_window, umsg, wparam, lparam);
         }

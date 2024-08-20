@@ -5,7 +5,7 @@ namespace core {
 
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
-    // message_receiver = std::make_unique<MessageReceiver>();
+    message_receiver = std::make_unique<MessageReceiver>();
     gui = std::make_shared<foundation::SettingUi>();
     start_tree = std::make_shared<foundation::BehaviorTreeBuilder>();
     update_tree = std::make_shared<foundation::BehaviorTreeBuilder>();

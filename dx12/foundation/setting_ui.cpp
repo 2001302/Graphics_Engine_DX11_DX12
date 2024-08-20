@@ -34,14 +34,6 @@ void SettingUi::ClearInfoItem() { info_items.clear(); };
 
 void SettingUi::OnStart() {
 
-    ImGui_ImplWin32_Init(Env::Instance().main_window);
-    ImGui_ImplDX12_Init(
-        dx12::GpuCore::Instance().device.Get(), 3, DXGI_FORMAT_R8G8B8A8_UNORM,
-        dx12::GpuCore::Instance().srvHeap.Get(),
-        dx12::GpuCore::Instance().srvHeap->GetCPUDescriptorHandleForHeapStart(),
-        dx12::GpuCore::Instance()
-            .srvHeap->GetGPUDescriptorHandleForHeapStart());
-
     ed::Config config;
     config.SettingsFile = "widgets.json";
     context_ = ed::CreateEditor(&config);

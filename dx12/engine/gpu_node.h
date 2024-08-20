@@ -62,9 +62,6 @@ class StartRenderingNode : public foundation::BehaviorActionNode {
         dx12::GpuCore::Instance().commandList->OMSetRenderTargets(
             1, &rtvHandle, false, nullptr);
 
-        dx12::GpuCore::Instance().commandList->SetDescriptorHeaps(
-            1, dx12::GpuCore::Instance().srvHeap.GetAddressOf());
-
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
 };

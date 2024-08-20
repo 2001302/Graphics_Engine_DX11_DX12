@@ -1,18 +1,18 @@
 #ifndef _APPLICATION
 #define _APPLICATION
 
-#include "../graphics/graphics_util.h"
 #include "../foundation/platform.h"
 #include "../foundation/setting_ui.h"
+#include "../graphics/graphics_util.h"
 #include "black_board.h"
 #include "message_receiver.h"
 
+#include "camera_node.h"
 #include "game_objects_node.h"
 #include "gpu_node.h"
 #include "gui_node.h"
-#include "shared_resource_node.h"
-#include "camera_node.h"
 #include "light_node.h"
+#include "shared_resource_node.h"
 
 namespace core {
 
@@ -40,7 +40,6 @@ class Engine : public foundation::Platform {
     std::shared_ptr<StartRenderingNode> start_rendering_node;
     std::shared_ptr<PresentNode> present_node;
     std::shared_ptr<LightNodeInvoker> light_node;
-
 
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,
                                     LPARAM lparam) {
@@ -124,7 +123,7 @@ class Engine : public foundation::Platform {
             break;
         }
         case WM_KEYDOWN:
-            black_board->input->KeyPressed(wparam,true);
+            black_board->input->KeyPressed(wparam, true);
             if (wparam == VK_ESCAPE) {
                 Stop();
                 DestroyWindow(main_window);
@@ -142,5 +141,5 @@ class Engine : public foundation::Platform {
         }
     }
 };
-} // namespace engine
+} // namespace core
 #endif

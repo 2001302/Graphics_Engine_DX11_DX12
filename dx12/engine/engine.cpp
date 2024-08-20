@@ -54,7 +54,7 @@ bool Engine::Start() {
     ->Sequence()
         ->Excute(start_rendering_node)
         ->Excute(game_object_node)
-        //->Excute(gui_node)
+        ->Excute(gui_node)
         ->Excute(present_node)
     ->Close();
 

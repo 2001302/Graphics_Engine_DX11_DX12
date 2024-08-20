@@ -98,17 +98,6 @@ bool GpuCore::Initialize() {
         }
     }
 
-    // Create descriptor heaps.
-    {
-        D3D12_DESCRIPTOR_HEAP_DESC srvHeapDesc = {};
-        srvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-        srvHeapDesc.NumDescriptors = 2;
-        srvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-        ThrowIfFailed(
-            device->CreateDescriptorHeap(&srvHeapDesc, IID_PPV_ARGS(&srvHeap)));
-    }
-
     ThrowIfFailed(device->CreateCommandAllocator(
         D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator)));
 
@@ -126,20 +115,6 @@ bool GpuCore::Initialize() {
     if (fenceEvent == nullptr) {
         ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
     }
-
-    //cbvHeap : constant buffer view heap
-    D3D12_DESCRIPTOR_HEAP_DESC cbvHeapDesc = {};
-    cbvHeapDesc.NumDescriptors = 1; // Number of descriptors in the heap
-    cbvHeapDesc.Type =
-        D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV; // Type of the descriptor heap
-    cbvHeapDesc.Flags =
-        D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    dx12::ThrowIfFailed(dx12::GpuCore::Instance().device->CreateDescriptorHeap(
-        &cbvHeapDesc, IID_PPV_ARGS(&cbvHeap)));
-
-    UINT cbvDescriptorSize =
-        dx12::GpuCore::Instance().device->GetDescriptorHandleIncrementSize(
-            D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
     return true;
 }

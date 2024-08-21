@@ -1,4 +1,4 @@
-﻿#ifndef _GRAPHICSMANAGER
+#ifndef _GRAPHICSMANAGER
 #define _GRAPHICSMANAGER
 
 #define MAX_LIGHTS 3
@@ -16,6 +16,7 @@
 #include <iostream>
 #include <map>
 #include <memory>
+#include <stdint.h>
 #include <string>
 #include <vector>
 #include <windows.h>

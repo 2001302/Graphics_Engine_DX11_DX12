@@ -1,4 +1,4 @@
-﻿#define _CRT_SECURE_NO_WARNINGS
+#define _CRT_SECURE_NO_WARNINGS
 #include "graphics_util.h"
 
 #include <DirectXTexEXR.h>
@@ -19,311 +19,203 @@ namespace dx12 {
 using namespace std;
 using namespace DirectX;
 
-// void Util::CreateIndexBuffer(const std::vector<uint32_t> &indices,
-//                              ComPtr<ID3D12Resource> &indexBuffer) {
-//
-//     const UINT size = sizeof(indices);
-//
-//     HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
-//         &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-//         D3D12_HEAP_FLAG_NONE, &CD3DX12_RESOURCE_DESC::Buffer(size),
-//         D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-//         IID_PPV_ARGS(&indexBuffer));
-// }
-//
-//  void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
-//                   int &width, int &height, DXGI_FORMAT &pixelFormat) {
-//
-//     const std::wstring wFilename(filename.begin(), filename.end());
-//
-//     TexMetadata metadata;
-//     ThrowIfFailed(GetMetadataFromEXRFile(wFilename.c_str(), metadata));
-//
-//     ScratchImage scratchImage;
-//     ThrowIfFailed(LoadFromEXRFile(wFilename.c_str(), NULL, scratchImage));
-//
-//     width = static_cast<int>(metadata.width);
-//     height = static_cast<int>(metadata.height);
-//     pixelFormat = metadata.format;
-//
-//     cout << filename << " " << metadata.width << " " << metadata.height
-//          << metadata.format << endl;
-//
-//     image.resize(scratchImage.GetPixelsSize());
-//     memcpy(image.data(), scratchImage.GetPixels(), image.size());
-//
-//     vector<float> f32(image.size() / 2);
-//     uint16_t *f16 = (uint16_t *)image.data();
-//     for (int i = 0; i < image.size() / 2; i++) {
-//         f32[i] = fp16_ieee_to_fp32_value(f16[i]);
-//     }
-//
-//     const float minValue = *std::min_element(f32.begin(), f32.end());
-//     const float maxValue = *std::max_element(f32.begin(), f32.end());
-//
-//     cout << minValue << " " << maxValue << endl;
-//
-//     // f16 = (uint16_t *)image.data();
-//     // for (int i = 0; i < image.size() / 2; i++) {
-//     //     f16[i] = fp16_ieee_from_fp32_value(f32[i] * 2.0f);
-//     // }
-// }
-//
-//  void ReadImage(const std::string filename, std::vector<uint8_t> &image,
-//                int &width, int &height) {
-//
-//     int channels;
-//
-//     unsigned char *img =
-//         stbi_load(filename.c_str(), &width, &height, &channels, 0);
-//
-//     // assert(channels == 4);
-//
-//     cout << filename << " " << width << " " << height << " " << channels
-//          << endl;
-//
-//     // to 4 chanel
-//     image.resize(width * height * 4);
-//
-//     if (channels == 1) {
-//         for (size_t i = 0; i < width * height; i++) {
-//             uint8_t g = img[i * channels + 0];
-//             for (size_t c = 0; c < 4; c++) {
-//                 image[4 * i + c] = g;
-//             }
-//         }
-//     } else if (channels == 2) {
-//         for (size_t i = 0; i < width * height; i++) {
-//             for (size_t c = 0; c < 2; c++) {
-//                 image[4 * i + c] = img[i * channels + c];
-//             }
-//             image[4 * i + 2] = 255;
-//             image[4 * i + 3] = 255;
-//         }
-//     } else if (channels == 3) {
-//         for (size_t i = 0; i < width * height; i++) {
-//             for (size_t c = 0; c < 3; c++) {
-//                 image[4 * i + c] = img[i * channels + c];
-//             }
-//             image[4 * i + 3] = 255;
-//         }
-//     } else if (channels == 4) {
-//         for (size_t i = 0; i < width * height; i++) {
-//             for (size_t c = 0; c < 4; c++) {
-//                 image[4 * i + c] = img[i * channels + c];
-//             }
-//         }
-//     } else {
-//         std::cout << "Cannot read " << channels << " channels" << endl;
-//     }
-//
-//     delete[] img;
-// }
-//
-//  void ReadImage(const std::string albedoFilename,
-//                const std::string opacityFilename, std::vector<uint8_t>
-//                &image, int &width, int &height) {
-//
-//     ReadImage(albedoFilename, image, width, height);
-//
-//     std::vector<uint8_t> opacityImage;
-//     int opaWidth, opaHeight;
-//
-//     ReadImage(opacityFilename, opacityImage, opaWidth, opaHeight);
-//
-//     assert(width == opaWidth && height == opaHeight);
-//
-//     for (int j = 0; j < height; j++)
-//         for (int i = 0; i < width; i++) {
-//             image[3 + 4 * i + 4 * width * j] =
-//                 opacityImage[4 * i + 4 * width * j]; // Copy alpha channel
-//         }
-// }
-//
-//  ComPtr<ID3D11Texture2D>
-//  CreateStagingTexture(const int width,
-//                      const int height, const std::vector<uint8_t> &image,
-//                      const DXGI_FORMAT pixelFormat =
-//                      DXGI_FORMAT_R8G8B8A8_UNORM, const int mipLevels = 1,
-//                      const int arraySize = 1) {
-//
-//     D3D11_TEXTURE2D_DESC txtDesc;
-//     ZeroMemory(&txtDesc, sizeof(txtDesc));
-//     txtDesc.Width = width;
-//     txtDesc.Height = height;
-//     txtDesc.MipLevels = mipLevels;
-//     txtDesc.ArraySize = arraySize;
-//     txtDesc.Format = pixelFormat;
-//     txtDesc.SampleDesc.Count = 1;
-//     txtDesc.Usage = D3D11_USAGE_STAGING;
-//     txtDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
-//
-//     ComPtr<ID3D11Texture2D> stagingTexture;
-//     if (FAILED(GpuCore::Instance().device->CreateTexture2D(
-//             &txtDesc, NULL,
-//                                        stagingTexture.GetAddressOf()))) {
-//         cout << "Failed()" << endl;
-//     }
-//
-//     size_t pixelSize = sizeof(uint8_t) * 4;
-//     if (pixelFormat == DXGI_FORMAT_R16G16B16A16_FLOAT) {
-//         pixelSize = sizeof(uint16_t) * 4;
-//     }
-//
-//     D3D11_MAPPED_SUBRESOURCE ms;
-//     GpuCore::Instance().device_context->Map(stagingTexture.Get(), NULL,
-//                                                  D3D11_MAP_WRITE, NULL, &ms);
-//     uint8_t *pData = (uint8_t *)ms.pData;
-//     for (UINT h = 0; h < UINT(height); h++) {
-//         memcpy(&pData[h * ms.RowPitch], &image[h * width * pixelSize],
-//                width * pixelSize);
-//     }
-//     GpuCore::Instance().device_context->Unmap(stagingTexture.Get(), NULL);
-//
-//     return stagingTexture;
-// }
-//
-//  void CreateTextureHelper(const int width,
-//                          const int height, const vector<uint8_t> &image,
-//                          const DXGI_FORMAT pixelFormat,
-//                          ComPtr<ID3D11Texture2D> &texture,
-//                          ComPtr<ID3D11ShaderResourceView> &srv) {
-//
-//     ComPtr<ID3D11Texture2D> stagingTexture = CreateStagingTexture(width,
-//                              height, image, pixelFormat);
-//
-//     D3D11_TEXTURE2D_DESC txtDesc;
-//     ZeroMemory(&txtDesc, sizeof(txtDesc));
-//     txtDesc.Width = width;
-//     txtDesc.Height = height;
-//     txtDesc.MipLevels = 0;
-//     txtDesc.ArraySize = 1;
-//     txtDesc.Format = pixelFormat;
-//     txtDesc.SampleDesc.Count = 1;
-//     txtDesc.Usage = D3D11_USAGE_DEFAULT; // ?ㅽ뀒?댁쭠 ?띿뒪異곕줈遺??蹂듭궗 媛??
-//     txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE |
-//     D3D11_BIND_RENDER_TARGET; txtDesc.MiscFlags =
-//     D3D11_RESOURCE_MISC_GENERATE_MIPS; // 諛됰㏊ ?ъ슜 txtDesc.CPUAccessFlags =
-//     0;
-//
-//     // 珥덇린 ?곗씠???놁씠 ?띿뒪異??앹꽦 (?꾨? 寃???
-//     GpuCore::Instance().device->CreateTexture2D(
-//         &txtDesc, NULL, texture.GetAddressOf());
-//
-//     // ?ㅼ젣濡??앹꽦??MipLevels瑜??뺤씤?대낫怨??띠쓣 寃쎌슦
-//     // texture->GetDesc(&txtDesc);
-//     // cout << txtDesc.MipLevels << endl;
-//
-//     // ?ㅽ뀒?댁쭠 ?띿뒪異곕줈遺??媛???댁긽?꾧? ?믪? ?대?吏 蹂듭궗
-//     GpuCore::Instance().device_context->CopySubresourceRegion(
-//         texture.Get(), 0, 0, 0, 0,
-//                                    stagingTexture.Get(), 0, NULL);
-//
-//     // ResourceView 留뚮뱾湲?
-//     GpuCore::Instance().device->CreateShaderResourceView(
-//         texture.Get(), 0, srv.GetAddressOf());
-//
-//     // ?댁긽?꾨? ??떠媛硫?諛됰㏊ ?앹꽦
-//     GpuCore::Instance().device_context->GenerateMips(srv.Get());
-//
-//     // HLSL ?먯씠???덉뿉?쒕뒗 SampleLevel() ?ъ슜
-// }
-//
-//  void Util::CreateMetallicRoughnessTexture(
-//     const std::string metallicFilename, const std::string roughnessFilename,
-//     ComPtr<ID3D11Texture2D> &texture, ComPtr<ID3D11ShaderResourceView> &srv)
-//     {
-//
-//     // GLTF 諛⑹떇? ?대? ?⑹퀜???덉쓬
-//     if (!metallicFilename.empty() && (metallicFilename == roughnessFilename))
-//     {
-//         CreateTexture(metallicFilename, false, texture, srv);
-//     } else {
-//         // 蹂꾨룄 ?뚯씪??寃쎌슦 ?곕줈 ?쎌뼱???⑹퀜以띾땲??
-//
-//         // ReadImage()瑜??쒖슜?섍린 ?꾪빐?????대?吏?ㅼ쓣 媛곴컖 4梨꾨꼸濡?蹂????
-//         ?ㅼ떆
-//         // 3梨꾨꼸濡??⑹튂??諛⑹떇?쇰줈 援ы쁽
-//         int mWidth = 0, mHeight = 0;
-//         int rWidth = 0, rHeight = 0;
-//         std::vector<uint8_t> mImage;
-//         std::vector<uint8_t> rImage;
-//
-//         // (嫄곗쓽 ?녾쿋吏留? ??以??섎굹留??덉쓣 寃쎌슦??怨좊젮?섍린 ?꾪빐 媛곴컖 ?뚯씪紐?
-//         // ?뺤씤
-//         if (!metallicFilename.empty()) {
-//             ReadImage(metallicFilename, mImage, mWidth, mHeight);
-//         }
-//
-//         if (!roughnessFilename.empty()) {
-//             ReadImage(roughnessFilename, rImage, rWidth, rHeight);
-//         }
-//
-//         // ???대?吏???댁긽?꾧? 媛숇떎怨?媛??
-//         if (!metallicFilename.empty() && !roughnessFilename.empty()) {
-//             assert(mWidth == rWidth);
-//             assert(mHeight == rHeight);
-//         }
-//
-//         vector<uint8_t> combinedImage(size_t(mWidth * mHeight) * 4);
-//         fill(combinedImage.begin(), combinedImage.end(), 0);
-//
-//         for (size_t i = 0; i < size_t(mWidth * mHeight); i++) {
-//             if (rImage.size())
-//                 combinedImage[4 * i + 1] = rImage[4 * i]; // Green =
-//                 Roughness
-//             if (mImage.size())
-//                 combinedImage[4 * i + 2] = mImage[4 * i]; // Blue = Metalness
-//         }
-//
-//         CreateTextureHelper( mWidth, mHeight, combinedImage,
-//                             DXGI_FORMAT_R8G8B8A8_UNORM, texture, srv);
-//     }
-// }
-//
-//  void Util::CreateTexture(
-//                                  const std::string filename, const bool
-//                                  usSRGB, ComPtr<ID3D11Texture2D> &tex,
-//                                  ComPtr<ID3D11ShaderResourceView> &srv) {
-//
-//     int width = 0, height = 0;
-//     std::vector<uint8_t> image;
-//     DXGI_FORMAT pixelFormat =
-//         usSRGB ? DXGI_FORMAT_R8G8B8A8_UNORM_SRGB :
-//         DXGI_FORMAT_R8G8B8A8_UNORM;
-//
-//     string ext(filename.end() - 3, filename.end());
-//     std::transform(ext.begin(), ext.end(), ext.begin(), std::tolower);
-//
-//     if (ext == "exr") {
-//         ReadEXRImage(filename, image, width, height, pixelFormat);
-//     } else {
-//         ReadImage(filename, image, width, height);
-//     }
-//
-//     CreateTextureHelper( width, height, image, pixelFormat, tex,
-//                         srv);
-// }
-//
-//  void Util::CreateTexture(
-//                                  const std::string albedoFilename,
-//                                  const std::string opacityFilename,
-//                                  const bool usSRGB,
-//                                  ComPtr<ID3D11Texture2D> &texture,
-//                                  ComPtr<ID3D11ShaderResourceView> &srv) {
-//
-//     int width = 0, height = 0;
-//     std::vector<uint8_t> image;
-//     DXGI_FORMAT pixelFormat =
-//         usSRGB ? DXGI_FORMAT_R8G8B8A8_UNORM_SRGB :
-//         DXGI_FORMAT_R8G8B8A8_UNORM;
-//
-//     ReadImage(albedoFilename, opacityFilename, image, width, height);
-//
-//     CreateTextureHelper(width, height, image, pixelFormat,
-//                         texture, srv);
-// }
-//
+void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
+                  int &width, int &height, DXGI_FORMAT &pixelFormat) {
+
+    const std::wstring wFilename(filename.begin(), filename.end());
+
+    TexMetadata metadata;
+    ThrowIfFailed(GetMetadataFromEXRFile(wFilename.c_str(), metadata));
+
+    ScratchImage scratchImage;
+    ThrowIfFailed(LoadFromEXRFile(wFilename.c_str(), NULL, scratchImage));
+
+    width = static_cast<int>(metadata.width);
+    height = static_cast<int>(metadata.height);
+    pixelFormat = metadata.format;
+
+    cout << filename << " " << metadata.width << " " << metadata.height
+         << metadata.format << endl;
+
+    image.resize(scratchImage.GetPixelsSize());
+    memcpy(image.data(), scratchImage.GetPixels(), image.size());
+
+    vector<float> f32(image.size() / 2);
+    uint16_t *f16 = (uint16_t *)image.data();
+    for (int i = 0; i < image.size() / 2; i++) {
+        f32[i] = fp16_ieee_to_fp32_value(f16[i]);
+    }
+
+    const float minValue = *std::min_element(f32.begin(), f32.end());
+    const float maxValue = *std::max_element(f32.begin(), f32.end());
+
+    cout << minValue << " " << maxValue << endl;
+
+    // f16 = (uint16_t *)image.data();
+    // for (int i = 0; i < image.size() / 2; i++) {
+    //     f16[i] = fp16_ieee_from_fp32_value(f32[i] * 2.0f);
+    // }
+}
+
+void ReadImage(const std::string filename, std::vector<uint8_t> &image,
+               int &width, int &height) {
+
+    int channels;
+
+    unsigned char *img =
+        stbi_load(filename.c_str(), &width, &height, &channels, 0);
+
+    // assert(channels == 4);
+
+    cout << filename << " " << width << " " << height << " " << channels
+         << endl;
+
+    // to 4 chanel
+    image.resize(width * height * 4);
+
+    if (channels == 1) {
+        for (size_t i = 0; i < width * height; i++) {
+            uint8_t g = img[i * channels + 0];
+            for (size_t c = 0; c < 4; c++) {
+                image[4 * i + c] = g;
+            }
+        }
+    } else if (channels == 2) {
+        for (size_t i = 0; i < width * height; i++) {
+            for (size_t c = 0; c < 2; c++) {
+                image[4 * i + c] = img[i * channels + c];
+            }
+            image[4 * i + 2] = 255;
+            image[4 * i + 3] = 255;
+        }
+    } else if (channels == 3) {
+        for (size_t i = 0; i < width * height; i++) {
+            for (size_t c = 0; c < 3; c++) {
+                image[4 * i + c] = img[i * channels + c];
+            }
+            image[4 * i + 3] = 255;
+        }
+    } else if (channels == 4) {
+        for (size_t i = 0; i < width * height; i++) {
+            for (size_t c = 0; c < 4; c++) {
+                image[4 * i + c] = img[i * channels + c];
+            }
+        }
+    } else {
+        std::cout << "Cannot read " << channels << " channels" << endl;
+    }
+
+    delete[] img;
+}
+
+void ReadImage(const std::string albedoFilename,
+               const std::string opacityFilename, std::vector<uint8_t> &image,
+               int &width, int &height) {
+
+    ReadImage(albedoFilename, image, width, height);
+
+    std::vector<uint8_t> opacityImage;
+    int opaWidth, opaHeight;
+
+    ReadImage(opacityFilename, opacityImage, opaWidth, opaHeight);
+
+    assert(width == opaWidth && height == opaHeight);
+
+    for (int j = 0; j < height; j++)
+        for (int i = 0; i < width; i++) {
+            image[3 + 4 * i + 4 * width * j] =
+                opacityImage[4 * i + 4 * width * j]; // Copy alpha channel
+        }
+}
+
+void CreateTextureHelper(const int width, const int height,
+                         const vector<uint8_t> &image,
+                         const DXGI_FORMAT pixelFormat,
+                         ComPtr<ID3D12Resource> &texture,
+                         ComPtr<ID3D12GraphicsCommandList> &commandList) {
+    // 1.resource creation
+    D3D12_RESOURCE_DESC txtDesc;
+    ZeroMemory(&txtDesc, sizeof(txtDesc));
+    txtDesc.Width = width;
+    txtDesc.Height = height;
+    txtDesc.MipLevels = 0;
+    txtDesc.DepthOrArraySize = 1;
+    txtDesc.Format = pixelFormat;
+    txtDesc.SampleDesc.Count = 1;
+    txtDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    txtDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+    CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
+    HRESULT hr = dx12::GpuCore::Instance().device->CreateCommittedResource(
+        &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
+        D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+        IID_PPV_ARGS(texture.GetAddressOf()));
+
+    // 2.upload heap
+    const uint64_t uploadBufferSize =
+        GetRequiredIntermediateSize(texture.Get(), 0, 1);
+
+    ComPtr<ID3D12Resource> textureUploadHeap;
+    auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+    auto buffer_size = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
+    ThrowIfFailed(dx12::GpuCore::Instance().device->CreateCommittedResource(
+        &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_size,
+        D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+        IID_PPV_ARGS(&textureUploadHeap)));
+
+    // copy data to upload heap
+    D3D12_SUBRESOURCE_DATA textureDataDesc = {};
+    textureDataDesc.pData = image.data();
+    textureDataDesc.RowPitch = width * 4;
+    textureDataDesc.SlicePitch = textureDataDesc.RowPitch * height;
+
+    UpdateSubresources(commandList.Get(), texture.Get(),
+                       textureUploadHeap.Get(), 0, 0, 1, &textureDataDesc);
+
+    // change state
+    auto transition = CD3DX12_RESOURCE_BARRIER::Transition(
+                          texture.Get(), D3D12_RESOURCE_STATE_COPY_DEST,
+                          D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+    commandList->ResourceBarrier(1, &transition);
+}
+
+void Util::CreateTexture(const std::string filename, const bool usSRGB,
+                         ComPtr<ID3D12Resource> &tex,
+                         ComPtr<ID3D12GraphicsCommandList> &commandList) {
+
+    int width = 0, height = 0;
+    std::vector<uint8_t> image;
+    DXGI_FORMAT pixelFormat =
+        usSRGB ? DXGI_FORMAT_R8G8B8A8_UNORM_SRGB : DXGI_FORMAT_R8G8B8A8_UNORM;
+
+    string ext(filename.end() - 3, filename.end());
+    std::transform(ext.begin(), ext.end(), ext.begin(), std::tolower);
+
+    if (ext == "exr") {
+        ReadEXRImage(filename, image, width, height, pixelFormat);
+    } else {
+        ReadImage(filename, image, width, height);
+    }
+
+    CreateTextureHelper(width, height, image, pixelFormat, tex, commandList);
+}
+
+void Util::CreateTexture(const std::string albedoFilename,
+                         const std::string opacityFilename, const bool usSRGB,
+                         ComPtr<ID3D12Resource> &texture,
+                         ComPtr<ID3D12GraphicsCommandList> &commandList) {
+
+    int width = 0, height = 0;
+    std::vector<uint8_t> image;
+    DXGI_FORMAT pixelFormat =
+        usSRGB ? DXGI_FORMAT_R8G8B8A8_UNORM_SRGB : DXGI_FORMAT_R8G8B8A8_UNORM;
+
+    ReadImage(albedoFilename, opacityFilename, image, width, height);
+
+    CreateTextureHelper(width, height, image, pixelFormat, texture,
+                        commandList);
+}
+
 //  void Util::CreateTextureArray(
 //     const std::vector<std::string> filenames, ComPtr<ID3D11Texture2D>
 //     &texture, ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
@@ -333,7 +225,8 @@ using namespace DirectX;
 //     if (filenames.empty())
 //         return;
 //
-//     // 紐⑤뱺 ?대?吏??width? height媛 媛숇떎怨?媛?뺥빀?덈떎.
+//     // 紐⑤뱺 ?대?吏??width? height媛
+//     媛숇떎怨?媛?뺥빀?덈떎.
 //
 //     // ?뚯씪濡쒕????대?吏 ?щ윭 媛쒕? ?쎌뼱?ㅼ엯?덈떎.
 //     int width = 0, height = 0;
@@ -351,20 +244,18 @@ using namespace DirectX;
 //
 //     UINT size = UINT(filenames.size());
 //
-//     // Texture2DArray瑜?留뚮벊?덈떎. ?대븣 ?곗씠?곕? CPU濡쒕???蹂듭궗?섏? ?딆뒿?덈떎.
-//     D3D11_TEXTURE2D_DESC txtDesc;
-//     ZeroMemory(&txtDesc, sizeof(txtDesc));
-//     txtDesc.Width = UINT(width);
-//     txtDesc.Height = UINT(height);
-//     txtDesc.MipLevels = 0; // 諛됰㏊ ?덈꺼 理쒕?
+//     // Texture2DArray瑜?留뚮벊?덈떎. ?대븣 ?곗씠?곕? CPU濡쒕???蹂듭궗?섏?
+//     ?딆뒿?덈떎. D3D11_TEXTURE2D_DESC txtDesc; ZeroMemory(&txtDesc,
+//     sizeof(txtDesc)); txtDesc.Width = UINT(width); txtDesc.Height =
+//     UINT(height); txtDesc.MipLevels = 0; // 諛됰㏊ ?덈꺼 理쒕?
 //     txtDesc.ArraySize = size;
 //     txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 //     txtDesc.SampleDesc.Count = 1;
 //     txtDesc.SampleDesc.Quality = 0;
-//     txtDesc.Usage = D3D11_USAGE_DEFAULT; // ?ㅽ뀒?댁쭠 ?띿뒪異곕줈遺??蹂듭궗 媛??
-//     txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE |
-//     D3D11_BIND_RENDER_TARGET; txtDesc.MiscFlags =
-//     D3D11_RESOURCE_MISC_GENERATE_MIPS; // 諛됰㏊ ?ъ슜
+//     txtDesc.Usage = D3D11_USAGE_DEFAULT; // ?ㅽ뀒?댁쭠
+//     ?띿뒪異곕줈遺??蹂듭궗 媛?? txtDesc.BindFlags =
+//     D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
+//     txtDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS; // 諛됰㏊ ?ъ슜
 //
 //     // 珥덇린 ?곗씠???놁씠 ?띿뒪異곕? 留뚮벊?덈떎.
 //     GpuCore::Instance().device->CreateTexture2D(&txtDesc, NULL,
@@ -399,7 +290,136 @@ using namespace DirectX;
 //     GpuCore::Instance().device_context->GenerateMips(
 //         textureResourceView.Get());
 // }
+
+ComPtr<ID3D12Resource>
+CreateStagingTexture(const int width, const int height,
+                     const std::vector<uint8_t> &image,
+                     const DXGI_FORMAT pixelFormat = DXGI_FORMAT_R8G8B8A8_UNORM,
+                     const int mipLevels = 1, const int arraySize = 1) {
+
+    ComPtr<ID3D12Resource> stagingTexture;
+
+    // 리소스 설명자 생성
+    D3D12_RESOURCE_DESC txtDesc;
+    ZeroMemory(&txtDesc, sizeof(txtDesc));
+    txtDesc.Width = width;
+    txtDesc.Height = height;
+    txtDesc.MipLevels = mipLevels;
+    txtDesc.Format = pixelFormat;
+    txtDesc.SampleDesc.Count = 1;
+    txtDesc.SampleDesc.Quality = 0;
+    txtDesc.DepthOrArraySize = arraySize;
+    txtDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+    txtDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+    // 리소스 할당
+    CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_READBACK);
+    ThrowIfFailed(dx12::GpuCore::Instance().device->CreateCommittedResource(
+        &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
+        D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+        IID_PPV_ARGS(stagingTexture.GetAddressOf())));
+
+    // 텍스처 매핑
+    D3D12_RANGE readRange = {0, 0};
+    uint8_t *mappedData = nullptr;
+    ThrowIfFailed(stagingTexture->Map(0, &readRange,
+                                      reinterpret_cast<void **>(&mappedData)));
+
+    // 데이터 복사
+    const uint8_t *srcData = image.data();
+    for (UINT row = 0; row < height; ++row) {
+        memcpy(mappedData + row * width * 4, srcData + row * width * 4,
+               width * 4);
+    }
+
+    // 매핑 해제
+    D3D12_RANGE writeRange = {0, width * height * 4}; // 쓰기 범위 설정
+    stagingTexture->Unmap(0, &writeRange);
+
+    return stagingTexture;
+}
 //
+// ComPtr<ID3D11Texture3D>
+// Util::CreateStagingTexture3D(const int width, const int height, const int
+// depth,
+//                             const DXGI_FORMAT pixelFormat) {
+//
+//    // ?ㅽ뀒?댁쭠 ?띿뒪異?留뚮뱾湲?
+//    D3D11_TEXTURE3D_DESC txtDesc;
+//    ZeroMemory(&txtDesc, sizeof(txtDesc));
+//    txtDesc.Width = width;
+//    txtDesc.Height = height;
+//    txtDesc.Depth = depth;
+//    txtDesc.MipLevels = 1;
+//    txtDesc.Format = pixelFormat;
+//    txtDesc.Usage = D3D11_USAGE_STAGING;
+//    txtDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
+//
+//    ComPtr<ID3D11Texture3D> stagingTexture;
+//    if (FAILED(GpuCore::Instance().device->CreateTexture3D(
+//            &txtDesc, NULL, stagingTexture.GetAddressOf()))) {
+//        cout << "CreateStagingTexture3D() failed." << endl;
+//    }
+//
+//    return stagingTexture;
+//}
+
+//  void Util::CreateMetallicRoughnessTexture(
+//     const std::string metallicFilename, const std::string roughnessFilename,
+//     ComPtr<ID3D11Texture2D> &texture, ComPtr<ID3D11ShaderResourceView> &srv)
+//     {
+//
+//     // GLTF 諛⑹떇? ?대? ?⑹퀜???덉쓬
+//     if (!metallicFilename.empty() && (metallicFilename ==
+//     roughnessFilename))
+//     {
+//         CreateTexture(metallicFilename, false, texture, srv);
+//     } else {
+//         // 蹂꾨룄 ?뚯씪??寃쎌슦 ?곕줈 ?쎌뼱???⑹퀜以띾땲??
+//
+//         // ReadImage()瑜??쒖슜?섍린 ?꾪빐?????대?吏?ㅼ쓣
+//         媛곴컖 4梨꾨꼸濡?蹂???? ?ㅼ떆
+//         // 3梨꾨꼸濡??⑹튂??諛⑹떇?쇰줈 援ы쁽
+//         int mWidth = 0, mHeight = 0;
+//         int rWidth = 0, rHeight = 0;
+//         std::vector<uint8_t> mImage;
+//         std::vector<uint8_t> rImage;
+//
+//         // (嫄곗쓽 ?녾쿋吏留? ??以??섎굹留??덉쓣
+//         寃쎌슦??怨좊젮?섍린 ?꾪빐 媛곴컖 ?뚯씪紐?
+//         // ?뺤씤
+//         if (!metallicFilename.empty()) {
+//             ReadImage(metallicFilename, mImage, mWidth, mHeight);
+//         }
+//
+//         if (!roughnessFilename.empty()) {
+//             ReadImage(roughnessFilename, rImage, rWidth, rHeight);
+//         }
+//
+//         // ???대?吏???댁긽?꾧? 媛숇떎怨?媛??
+//         if (!metallicFilename.empty() && !roughnessFilename.empty()) {
+//             assert(mWidth == rWidth);
+//             assert(mHeight == rHeight);
+//         }
+//
+//         vector<uint8_t> combinedImage(size_t(mWidth * mHeight) * 4);
+//         fill(combinedImage.begin(), combinedImage.end(), 0);
+//
+//         for (size_t i = 0; i < size_t(mWidth * mHeight); i++) {
+//             if (rImage.size())
+//                 combinedImage[4 * i + 1] = rImage[4 * i]; // Green =
+//                 Roughness
+//             if (mImage.size())
+//                 combinedImage[4 * i + 2] = mImage[4 * i]; // Blue =
+//                 Metalness
+//         }
+//
+//         CreateTextureHelper( mWidth, mHeight, combinedImage,
+//                             DXGI_FORMAT_R8G8B8A8_UNORM, texture, srv);
+//     }
+// }
+//
+
 //  void Util::CreateDDSTexture( const wchar_t *filename, bool isCubeMap,
 //     ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
 //
@@ -428,9 +448,9 @@ using namespace DirectX;
 //     desc.SampleDesc.Quality = 0;
 //     desc.BindFlags = 0;
 //     desc.MiscFlags = 0;
-//     desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ; // CPU?먯꽌 ?쎄린 媛??
-//     desc.Usage = D3D11_USAGE_STAGING; // GPU?먯꽌 CPU濡?蹂대궪 ?곗씠?곕? ?꾩떆
-//     蹂닿?
+//     desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ; // CPU?먯꽌 ?쎄린
+//     媛?? desc.Usage = D3D11_USAGE_STAGING; // GPU?먯꽌 CPU濡?蹂대궪
+//     ?곗씠?곕? ?꾩떆 蹂닿?
 //
 //     ComPtr<ID3D11Texture2D> stagingTexture;
 //     if (FAILED(GpuCore::Instance().device->CreateTexture2D(
@@ -463,7 +483,8 @@ using namespace DirectX;
 //                  &ms); // D3D11_MAP_READ 二쇱쓽
 //
 //     // ?띿뒪異곌? ?묒쓣 寃쎌슦?먮뒗
-//     // ms.RowPitch媛 width * sizeof(uint8_t) * 4蹂대떎 ???섎룄 ?덉뼱??
+//     // ms.RowPitch媛 width * sizeof(uint8_t) * 4蹂대떎 ???섎룄
+//     ?덉뼱??
 //     // for臾몄쑝濡?媛濡쒖쨪 ?섎굹??蹂듭궗
 //     uint8_t *pData = (uint8_t *)ms.pData;
 //     for (unsigned int h = 0; h < desc.Height; h++) {
@@ -514,46 +535,6 @@ using namespace DirectX;
 //     ThrowIfFailed(GpuCore::Instance().device->CreateUnorderedAccessView(
 //         texture.Get(), NULL,
 //                                                     uav.GetAddressOf()));
-// }
-//
-//  void Util::ComputeShaderBarrier() {
-//
-//     // 理쒕? ?ъ슜?섎뒗 SRV, UAV 媛?닔媛 6媛?
-//     ID3D11ShaderResourceView *nullSRV[6] = {
-//         0,
-//     };
-//     GpuCore::Instance().device_context->CSSetShaderResources(0, 6,
-//                                                                   nullSRV);
-//     ID3D11UnorderedAccessView *nullUAV[6] = {
-//         0,
-//     };
-//     GpuCore::Instance().device_context->CSSetUnorderedAccessViews(
-//         0, 6, nullUAV, NULL);
-// }
-//
-//  ComPtr<ID3D11Texture3D> Util::CreateStagingTexture3D( const int width, const
-//  int height,
-//     const int depth, const DXGI_FORMAT pixelFormat) {
-//
-//     // ?ㅽ뀒?댁쭠 ?띿뒪異?留뚮뱾湲?
-//     D3D11_TEXTURE3D_DESC txtDesc;
-//     ZeroMemory(&txtDesc, sizeof(txtDesc));
-//     txtDesc.Width = width;
-//     txtDesc.Height = height;
-//     txtDesc.Depth = depth;
-//     txtDesc.MipLevels = 1;
-//     txtDesc.Format = pixelFormat;
-//     txtDesc.Usage = D3D11_USAGE_STAGING;
-//     txtDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE | D3D11_CPU_ACCESS_READ;
-//
-//     ComPtr<ID3D11Texture3D> stagingTexture;
-//     if (FAILED(GpuCore::Instance().device->CreateTexture3D(
-//             &txtDesc, NULL,
-//                                        stagingTexture.GetAddressOf()))) {
-//         cout << "CreateStagingTexture3D() failed." << endl;
-//     }
-//
-//     return stagingTexture;
 // }
 //
 //  size_t Util::GetPixelSize(DXGI_FORMAT pixelFormat) {
@@ -696,40 +677,6 @@ using namespace DirectX;
 //         ThrowIfFailed(GpuCore::Instance().device->CreateBuffer(
 //             &desc, NULL, buffer.GetAddressOf()));
 //     }
-// }
-//
-//  void Util::SetPipelineState(const PSO &pso) {
-//
-//     GpuCore::Instance().device_context->VSSetShader(
-//         pso.vertex_shader.Get(), 0, 0);
-//     GpuCore::Instance().device_context->PSSetShader(pso.pixel_shader.Get(),
-//                                                          0, 0);
-//     GpuCore::Instance().device_context->HSSetShader(pso.hull_shader.Get(),
-//                                                          0, 0);
-//     GpuCore::Instance().device_context->DSSetShader(
-//         pso.domain_shader.Get(), 0, 0);
-//     GpuCore::Instance().device_context->GSSetShader(
-//         pso.geometry_shader.Get(), 0, 0);
-//     GpuCore::Instance().device_context->IASetInputLayout(
-//         pso.input_layout.Get());
-//     GpuCore::Instance().device_context->RSSetState(
-//         pso.rasterizer_state.Get());
-//     GpuCore::Instance().device_context->OMSetBlendState(
-//         pso.blend_state.Get(), pso.blend_factor, 0xffffffff);
-//     GpuCore::Instance().device_context->OMSetDepthStencilState(
-//         pso.depth_stencil_state.Get(), pso.stencil_ref);
-//     GpuCore::Instance().device_context->IASetPrimitiveTopology(
-//         pso.primitive_topology);
-// }
-//
-//  void Util::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
-//     // ?먯씠?붿? ?쇨????좎? cbuffer GlobalConstants : register(b0)
-//     GpuCore::Instance().device_context->VSSetConstantBuffers(
-//         0, 1, globalConstsGPU.GetAddressOf());
-//     GpuCore::Instance().device_context->PSSetConstantBuffers(
-//         0, 1, globalConstsGPU.GetAddressOf());
-//     GpuCore::Instance().device_context->GSSetConstantBuffers(
-//         0, 1, globalConstsGPU.GetAddressOf());
 // }
 //
 //  void Util::CopyToStagingBuffer(ComPtr<ID3D11Buffer> &buffer, UINT size,

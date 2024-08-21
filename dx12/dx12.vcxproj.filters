@@ -258,9 +258,6 @@
     <ClInclude Include="graphics\graphics_util.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="foundation\setting_ui.h">
       <Filter>Foundation\Gui</Filter>
     </ClInclude>
@@ -320,6 +317,9 @@
     </ClInclude>
     <ClInclude Include="engine\light_node.h">
       <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\d3dx12.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

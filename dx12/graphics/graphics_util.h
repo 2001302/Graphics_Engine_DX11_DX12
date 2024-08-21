@@ -1,4 +1,4 @@
-﻿#ifndef _GRAPHICSUTIL
+#ifndef _GRAPHICSUTIL
 #define _GRAPHICSUTIL
 
 #include "graphics_core.h"
@@ -10,20 +10,6 @@ class Util {
     static void CreateIndexBuffer(const std::vector<uint32_t> &indices,
                                   ComPtr<ID3D12Resource> &indexBuffer,
                                   D3D12_INDEX_BUFFER_VIEW &indexBufferView) {
-        // const UINT size = indices.size() * sizeof(uint32_t);
-        // auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-        // auto buffer_desc = CD3DX12_RESOURCE_DESC::Buffer(size);
-
-        // HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
-        //     &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_desc,
-        //     D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-        //     IID_PPV_ARGS(&indexBuffer));
-
-        //// Initialize the vertex index view.
-        // indexBufferView.BufferLocation = indexBuffer->GetGPUVirtualAddress();
-        // indexBufferView.SizeInBytes = size;
-        // indexBufferView.Format = DXGI_FORMAT_R32_UINT;
-
         D3D12_HEAP_PROPERTIES heapProps = {};
         heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
@@ -43,17 +29,14 @@ class Util {
                 D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
                 IID_PPV_ARGS(&indexBuffer)));
 
-        // 인덱스 데이터를 버퍼에 복사
         uint8_t *pIndexDataBegin;
-        D3D12_RANGE readRange =
-            {}; // We do not intend to read from this resource on the CPU.
+        D3D12_RANGE readRange = {};
         dx12::ThrowIfFailed(indexBuffer->Map(
             0, &readRange, reinterpret_cast<void **>(&pIndexDataBegin)));
         memcpy(pIndexDataBegin, indices.data(),
                indices.size() * sizeof(uint32_t));
         indexBuffer->Unmap(0, nullptr);
 
-        // 인덱스 버퍼 뷰 설정
         indexBufferView.BufferLocation = indexBuffer->GetGPUVirtualAddress();
         indexBufferView.SizeInBytes =
             static_cast<UINT>(indices.size() * sizeof(uint32_t));
@@ -64,20 +47,6 @@ class Util {
     static void CreateVertexBuffer(const std::vector<T_VERTEX> &vertices,
                                    ComPtr<ID3D12Resource> &vertexBuffer,
                                    D3D12_VERTEX_BUFFER_VIEW &vertexBufferView) {
-        // const UINT size = vertices.size() * sizeof(T_VERTEX);
-        // auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
-        // auto buffer_desc = CD3DX12_RESOURCE_DESC::Buffer(size);
-
-        // HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
-        //     &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_desc,
-        //     D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-        //     IID_PPV_ARGS(&vertexBuffer));
-
-        //// Initialize the vertex buffer view.
-        // vertexBufferView.BufferLocation =
-        // vertexBuffer->GetGPUVirtualAddress(); vertexBufferView.StrideInBytes
-        // = sizeof(T_VERTEX); vertexBufferView.SizeInBytes = size;
-
         D3D12_HEAP_PROPERTIES heapProps = {};
         heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
 
@@ -97,17 +66,14 @@ class Util {
                 D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
                 IID_PPV_ARGS(&vertexBuffer)));
 
-        // Vertex 데이터를 버퍼에 복사
         uint8_t *pVertexDataBegin;
-        D3D12_RANGE readRange =
-            {}; // We do not intend to read from this resource on the CPU.
+        D3D12_RANGE readRange = {};
         dx12::ThrowIfFailed(vertexBuffer->Map(
             0, &readRange, reinterpret_cast<void **>(&pVertexDataBegin)));
         memcpy(pVertexDataBegin, vertices.data(),
                vertices.size() * sizeof(T_VERTEX));
         vertexBuffer->Unmap(0, nullptr);
 
-        // Vertex 버퍼 뷰 설정
         vertexBufferView.BufferLocation = vertexBuffer->GetGPUVirtualAddress();
         vertexBufferView.SizeInBytes =
             static_cast<UINT>(vertices.size() * sizeof(T_VERTEX));
@@ -182,17 +148,15 @@ class Util {
         buffer->Unmap(0, nullptr);
     }
 
-    // static void CreateTexture(
+    static void CreateTexture(const std::string filename, const bool usSRGB,
+                              ComPtr<ID3D12Resource> &texture,
+                              ComPtr<ID3D12GraphicsCommandList> &commandList);
 
-    //    const std::string filename, const bool usSRGB,
-    //    ComPtr<ID3D11Texture2D> &texture,
-    //    ComPtr<ID3D11ShaderResourceView> &textureResourceView);
-
-    // static void CreateTexture(
-
-    //    const std::string albedoFilename, const std::string opacityFilename,
-    //    const bool usSRGB, ComPtr<ID3D11Texture2D> &texture,
-    //    ComPtr<ID3D11ShaderResourceView> &textureResourceView);
+    static void CreateTexture(const std::string albedoFilename,
+                              const std::string opacityFilename,
+                              const bool usSRGB,
+                              ComPtr<ID3D12Resource> &texture,
+                              ComPtr<ID3D12GraphicsCommandList> &commandList);
 
     // static void CreateMetallicRoughnessTexture(
 
@@ -232,8 +196,7 @@ class Util {
 
     // static ComPtr<ID3D11Texture3D>
     // CreateStagingTexture3D(const int width, const int height, const int
-    // depth,
-    //                        const DXGI_FORMAT pixelFormat);
+    // depth,const DXGI_FORMAT pixelFormat);
 
     // static size_t GetPixelSize(DXGI_FORMAT pixelFormat);
 

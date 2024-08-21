@@ -1,4 +1,4 @@
-﻿#include "mesh_renderer.h"
+#include "mesh_renderer.h"
 
 namespace core {
 
@@ -74,9 +74,6 @@ void ExtendBoundingBox(const BoundingBox &inBox, BoundingBox &outBox) {
 
 void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
-    // ?쇰컲?곸쑝濡쒕뒗 Mesh?ㅼ씠 m_mesh/materialConsts瑜?媛곸옄 ?뚯쑀 媛??
-    // ?ш린?쒕뒗 ??Renderer ?덉쓽 ?щ윭 Mesh?ㅼ씠 Consts瑜?紐⑤몢 怨듭쑀
-
     mesh_consts.GetCpu().world = Matrix();
     mesh_consts.Initialize();
     material_consts.Initialize();
@@ -87,74 +84,75 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
         InitMeshBuffers(meshData, newMesh);
 
         if (!meshData.albedoTextureFilename.empty()) {
-            // if (filesystem::exists(meshData.albedoTextureFilename)) {
-            //     if (!meshData.opacityTextureFilename.empty()) {
-            //         dx12::Util::CreateTexture(
-            //             meshData.albedoTextureFilename,
-            //             meshData.opacityTextureFilename, false,
-            //             newMesh->albedoTexture, newMesh->albedoSRV);
-            //     } else {
-            //         dx12::Util::CreateTexture(
-            //             meshData.albedoTextureFilename, true,
-            //             newMesh->albedoTexture, newMesh->albedoSRV);
-            //     }
+            if (filesystem::exists(meshData.albedoTextureFilename)) {
+                if (!meshData.opacityTextureFilename.empty()) {
+                    dx12::Util::CreateTexture(
+                        meshData.albedoTextureFilename,
+                        meshData.opacityTextureFilename, false,
+                        newMesh->albedoTexture,
+                        dx12::GpuCore::Instance().commandList);
+                } else {
+                    dx12::Util::CreateTexture(
+                        meshData.albedoTextureFilename, true,
+                        newMesh->albedoTexture,
+                        dx12::GpuCore::Instance().commandList);
+                }
 
-            //    material_consts.GetCpu().useAlbedoMap = true;
-            //} else {
-            //    cout << meshData.albedoTextureFilename
-            //         << " does not exists. Skip texture reading." << endl;
-            //}
+                material_consts.GetCpu().useAlbedoMap = true;
+            } else {
+                cout << meshData.albedoTextureFilename
+                     << " does not exists. Skip texture reading." << endl;
+            }
         }
 
         if (!meshData.emissiveTextureFilename.empty()) {
-            // if (filesystem::exists(meshData.emissiveTextureFilename)) {
-            //     dx12::Util::CreateTexture(meshData.emissiveTextureFilename,
-            //                                   true, newMesh->emissiveTexture,
-            //                                   newMesh->emissiveSRV);
-            //     material_consts.GetCpu().useEmissiveMap = true;
-            // } else {
-            //     cout << meshData.emissiveTextureFilename
-            //          << " does not exists. Skip texture reading." << endl;
-            // }
+             if (filesystem::exists(meshData.emissiveTextureFilename)) {
+                 dx12::Util::CreateTexture(meshData.emissiveTextureFilename,
+                                               true, newMesh->emissiveTexture,
+                     dx12::GpuCore::Instance().commandList);
+                 material_consts.GetCpu().useEmissiveMap = true;
+             } else {
+                 cout << meshData.emissiveTextureFilename
+                      << " does not exists. Skip texture reading." << endl;
+             }
         }
 
         if (!meshData.normalTextureFilename.empty()) {
-            // if (filesystem::exists(meshData.normalTextureFilename)) {
-            //     dx12::Util::CreateTexture(meshData.normalTextureFilename,
-            //                                   false, newMesh->normalTexture,
-            //                                   newMesh->normalSRV);
-            //     material_consts.GetCpu().useNormalMap = true;
-            // } else {
-            //     cout << meshData.normalTextureFilename
-            //          << " does not exists. Skip texture reading." << endl;
-            // }
+             if (filesystem::exists(meshData.normalTextureFilename)) {
+                 dx12::Util::CreateTexture(meshData.normalTextureFilename,
+                                               false, newMesh->normalTexture,
+                     dx12::GpuCore::Instance().commandList);
+                 material_consts.GetCpu().useNormalMap = true;
+             } else {
+                 cout << meshData.normalTextureFilename
+                      << " does not exists. Skip texture reading." << endl;
+             }
         }
 
         if (!meshData.heightTextureFilename.empty()) {
-            // if (filesystem::exists(meshData.heightTextureFilename)) {
-            //     dx12::Util::CreateTexture(meshData.heightTextureFilename,
-            //                                   false, newMesh->heightTexture,
-            //                                   newMesh->heightSRV);
-            //     mesh_consts.GetCpu().useHeightMap = true;
-            // } else {
-            //     cout << meshData.heightTextureFilename
-            //          << " does not exists. Skip texture reading." << endl;
-            // }
+             if (filesystem::exists(meshData.heightTextureFilename)) {
+                 dx12::Util::CreateTexture(meshData.heightTextureFilename,
+                                               false, newMesh->heightTexture,
+                     dx12::GpuCore::Instance().commandList);
+                 mesh_consts.GetCpu().useHeightMap = true;
+             } else {
+                 cout << meshData.heightTextureFilename
+                      << " does not exists. Skip texture reading." << endl;
+             }
         }
 
         if (!meshData.aoTextureFilename.empty()) {
-            // if (filesystem::exists(meshData.aoTextureFilename)) {
-            //     dx12::Util::CreateTexture(meshData.aoTextureFilename, false,
-            //                                   newMesh->aoTexture,
-            //                                   newMesh->aoSRV);
-            //     material_consts.GetCpu().useAOMap = true;
-            // } else {
-            //     cout << meshData.aoTextureFilename
-            //          << " does not exists. Skip texture reading." << endl;
-            // }
+             if (filesystem::exists(meshData.aoTextureFilename)) {
+                 dx12::Util::CreateTexture(meshData.aoTextureFilename, false,
+                                               newMesh->aoTexture,
+                     dx12::GpuCore::Instance().commandList);
+                 material_consts.GetCpu().useAOMap = true;
+             } else {
+                 cout << meshData.aoTextureFilename
+                      << " does not exists. Skip texture reading." << endl;
+             }
         }
 
-        // GLTF 諛⑹떇?쇰줈 Metallic怨?Roughness瑜????띿뒪異곗뿉 ?ｌ쓬
         // Green : Roughness, Blue : Metallic(Metalness)
         if (!meshData.metallicTextureFilename.empty() ||
             !meshData.roughnessTextureFilename.empty()) {
@@ -258,7 +256,8 @@ void MeshRenderer::Render() {
 
             // dx12::GpuCore::Instance().device_context->VSSetShaderResources(
             //     0, 1, mesh->heightSRV.GetAddressOf());
-            //// 臾쇱껜 ?뚮뜑留곹븷 ???щ윭媛吏 ?띿뒪異??ъ슜 (t0 遺?곗떆??
+            //// 臾쇱껜 ?뚮뜑留곹븷 ???щ윭媛吏 ?띿뒪異??ъ슜 (t0
+            ///遺?곗떆??
             // vector<ID3D11ShaderResourceView *> resViews = {
             //     mesh->albedoSRV.Get(), mesh->normalSRV.Get(),
             //     mesh->aoSRV.Get(), mesh->metallicRoughnessSRV.Get(),
@@ -286,8 +285,8 @@ void MeshRenderer::Render() {
                 0, 1, &mesh->vertexBufferView);
             dx12::GpuCore::Instance().commandList->IASetIndexBuffer(
                 &mesh->indexBufferView);
-            //dx12::GpuCore::Instance().commandList->OMSetRenderTargets(
-            //    1, &rtvHandle, false, nullptr);
+            // dx12::GpuCore::Instance().commandList->OMSetRenderTargets(
+            //     1, &rtvHandle, false, nullptr);
             dx12::GpuCore::Instance().commandList->DrawIndexedInstanced(
                 mesh->indexCount, 1, 0, 0, 0);
         }
@@ -343,9 +342,6 @@ void MeshRenderer::UpdateWorldRow(const Matrix &worldRow) {
     world_row_IT.Translation(Vector3(0.0f));
     world_row_IT = world_row_IT.Invert().Transpose();
 
-    // 諛붿슫?⑹뒪?쇱뼱 ?꾩튂 ?낅뜲?댄듃
-    // ?ㅼ??쇨퉴吏 怨좊젮?섍퀬 ?띕떎硫?x, y, z ?ㅼ???以?媛????媛믪쑝濡??ㅼ???
-    // 援?sphere)?쇱꽌 ?뚯쟾? 怨좊젮???꾩슂 ?놁쓬
     bounding_sphere.Center = this->world_row.Translation();
 
     mesh_consts.GetCpu().world = worldRow.Transpose();

@@ -1,4 +1,4 @@
-#define _CRT_SECURE_NO_WARNINGS
+﻿#define _CRT_SECURE_NO_WARNINGS
 #include "graphics_util.h"
 
 #include <DirectXTexEXR.h>
@@ -200,33 +200,33 @@ using namespace DirectX;
 //     txtDesc.ArraySize = 1;
 //     txtDesc.Format = pixelFormat;
 //     txtDesc.SampleDesc.Count = 1;
-//     txtDesc.Usage = D3D11_USAGE_DEFAULT; // 스테이징 텍스춰로부터 복사 가능
+//     txtDesc.Usage = D3D11_USAGE_DEFAULT; // ?ㅽ뀒?댁쭠 ?띿뒪異곕줈遺??蹂듭궗 媛??
 //     txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE |
 //     D3D11_BIND_RENDER_TARGET; txtDesc.MiscFlags =
-//     D3D11_RESOURCE_MISC_GENERATE_MIPS; // 밉맵 사용 txtDesc.CPUAccessFlags =
+//     D3D11_RESOURCE_MISC_GENERATE_MIPS; // 諛됰㏊ ?ъ슜 txtDesc.CPUAccessFlags =
 //     0;
 //
-//     // 초기 데이터 없이 텍스춰 생성 (전부 검은색)
+//     // 珥덇린 ?곗씠???놁씠 ?띿뒪異??앹꽦 (?꾨? 寃???
 //     GpuCore::Instance().device->CreateTexture2D(
 //         &txtDesc, NULL, texture.GetAddressOf());
 //
-//     // 실제로 생성된 MipLevels를 확인해보고 싶을 경우
+//     // ?ㅼ젣濡??앹꽦??MipLevels瑜??뺤씤?대낫怨??띠쓣 寃쎌슦
 //     // texture->GetDesc(&txtDesc);
 //     // cout << txtDesc.MipLevels << endl;
 //
-//     // 스테이징 텍스춰로부터 가장 해상도가 높은 이미지 복사
+//     // ?ㅽ뀒?댁쭠 ?띿뒪異곕줈遺??媛???댁긽?꾧? ?믪? ?대?吏 蹂듭궗
 //     GpuCore::Instance().device_context->CopySubresourceRegion(
 //         texture.Get(), 0, 0, 0, 0,
 //                                    stagingTexture.Get(), 0, NULL);
 //
-//     // ResourceView 만들기
+//     // ResourceView 留뚮뱾湲?
 //     GpuCore::Instance().device->CreateShaderResourceView(
 //         texture.Get(), 0, srv.GetAddressOf());
 //
-//     // 해상도를 낮춰가며 밉맵 생성
+//     // ?댁긽?꾨? ??떠媛硫?諛됰㏊ ?앹꽦
 //     GpuCore::Instance().device_context->GenerateMips(srv.Get());
 //
-//     // HLSL 쉐이더 안에서는 SampleLevel() 사용
+//     // HLSL ?먯씠???덉뿉?쒕뒗 SampleLevel() ?ъ슜
 // }
 //
 //  void Util::CreateMetallicRoughnessTexture(
@@ -234,23 +234,23 @@ using namespace DirectX;
 //     ComPtr<ID3D11Texture2D> &texture, ComPtr<ID3D11ShaderResourceView> &srv)
 //     {
 //
-//     // GLTF 방식은 이미 합쳐져 있음
+//     // GLTF 諛⑹떇? ?대? ?⑹퀜???덉쓬
 //     if (!metallicFilename.empty() && (metallicFilename == roughnessFilename))
 //     {
 //         CreateTexture(metallicFilename, false, texture, srv);
 //     } else {
-//         // 별도 파일일 경우 따로 읽어서 합쳐줍니다.
+//         // 蹂꾨룄 ?뚯씪??寃쎌슦 ?곕줈 ?쎌뼱???⑹퀜以띾땲??
 //
-//         // ReadImage()를 활용하기 위해서 두 이미지들을 각각 4채널로 변환 후
-//         다시
-//         // 3채널로 합치는 방식으로 구현
+//         // ReadImage()瑜??쒖슜?섍린 ?꾪빐?????대?吏?ㅼ쓣 媛곴컖 4梨꾨꼸濡?蹂????
+//         ?ㅼ떆
+//         // 3梨꾨꼸濡??⑹튂??諛⑹떇?쇰줈 援ы쁽
 //         int mWidth = 0, mHeight = 0;
 //         int rWidth = 0, rHeight = 0;
 //         std::vector<uint8_t> mImage;
 //         std::vector<uint8_t> rImage;
 //
-//         // (거의 없겠지만) 둘 중 하나만 있을 경우도 고려하기 위해 각각 파일명
-//         // 확인
+//         // (嫄곗쓽 ?녾쿋吏留? ??以??섎굹留??덉쓣 寃쎌슦??怨좊젮?섍린 ?꾪빐 媛곴컖 ?뚯씪紐?
+//         // ?뺤씤
 //         if (!metallicFilename.empty()) {
 //             ReadImage(metallicFilename, mImage, mWidth, mHeight);
 //         }
@@ -259,7 +259,7 @@ using namespace DirectX;
 //             ReadImage(roughnessFilename, rImage, rWidth, rHeight);
 //         }
 //
-//         // 두 이미지의 해상도가 같다고 가정
+//         // ???대?吏???댁긽?꾧? 媛숇떎怨?媛??
 //         if (!metallicFilename.empty() && !roughnessFilename.empty()) {
 //             assert(mWidth == rWidth);
 //             assert(mHeight == rHeight);
@@ -333,9 +333,9 @@ using namespace DirectX;
 //     if (filenames.empty())
 //         return;
 //
-//     // 모든 이미지의 width와 height가 같다고 가정합니다.
+//     // 紐⑤뱺 ?대?吏??width? height媛 媛숇떎怨?媛?뺥빀?덈떎.
 //
-//     // 파일로부터 이미지 여러 개를 읽어들입니다.
+//     // ?뚯씪濡쒕????대?吏 ?щ윭 媛쒕? ?쎌뼱?ㅼ엯?덈떎.
 //     int width = 0, height = 0;
 //     vector<vector<uint8_t>> imageArray;
 //     for (const auto &f : filenames) {
@@ -351,39 +351,39 @@ using namespace DirectX;
 //
 //     UINT size = UINT(filenames.size());
 //
-//     // Texture2DArray를 만듭니다. 이때 데이터를 CPU로부터 복사하지 않습니다.
+//     // Texture2DArray瑜?留뚮벊?덈떎. ?대븣 ?곗씠?곕? CPU濡쒕???蹂듭궗?섏? ?딆뒿?덈떎.
 //     D3D11_TEXTURE2D_DESC txtDesc;
 //     ZeroMemory(&txtDesc, sizeof(txtDesc));
 //     txtDesc.Width = UINT(width);
 //     txtDesc.Height = UINT(height);
-//     txtDesc.MipLevels = 0; // 밉맵 레벨 최대
+//     txtDesc.MipLevels = 0; // 諛됰㏊ ?덈꺼 理쒕?
 //     txtDesc.ArraySize = size;
 //     txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 //     txtDesc.SampleDesc.Count = 1;
 //     txtDesc.SampleDesc.Quality = 0;
-//     txtDesc.Usage = D3D11_USAGE_DEFAULT; // 스테이징 텍스춰로부터 복사 가능
+//     txtDesc.Usage = D3D11_USAGE_DEFAULT; // ?ㅽ뀒?댁쭠 ?띿뒪異곕줈遺??蹂듭궗 媛??
 //     txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE |
 //     D3D11_BIND_RENDER_TARGET; txtDesc.MiscFlags =
-//     D3D11_RESOURCE_MISC_GENERATE_MIPS; // 밉맵 사용
+//     D3D11_RESOURCE_MISC_GENERATE_MIPS; // 諛됰㏊ ?ъ슜
 //
-//     // 초기 데이터 없이 텍스춰를 만듭니다.
+//     // 珥덇린 ?곗씠???놁씠 ?띿뒪異곕? 留뚮벊?덈떎.
 //     GpuCore::Instance().device->CreateTexture2D(&txtDesc, NULL,
 //                                                      texture.GetAddressOf());
 //
-//     // 실제로 만들어진 MipLevels를 확인
+//     // ?ㅼ젣濡?留뚮뱾?댁쭊 MipLevels瑜??뺤씤
 //     texture->GetDesc(&txtDesc);
 //     // cout << txtDesc.MipLevels << endl;
 //
-//     // StagingTexture를 만들어서 하나씩 복사합니다.
+//     // StagingTexture瑜?留뚮뱾?댁꽌 ?섎굹??蹂듭궗?⑸땲??
 //     for (size_t i = 0; i < imageArray.size(); i++) {
 //
 //         auto &image = imageArray[i];
 //
-//         // StagingTexture는 Texture2DArray가 아니라 Texture2D 입니다.
+//         // StagingTexture??Texture2DArray媛 ?꾨땲??Texture2D ?낅땲??
 //         ComPtr<ID3D11Texture2D> stagingTexture = CreateStagingTexture(
 //              width, height, image, txtDesc.Format, 1, 1);
 //
-//         // 스테이징 텍스춰를 텍스춰 배열의 해당 위치에 복사합니다.
+//         // ?ㅽ뀒?댁쭠 ?띿뒪異곕? ?띿뒪異?諛곗뿴???대떦 ?꾩튂??蹂듭궗?⑸땲??
 //         UINT subresourceIndex =
 //             D3D11CalcSubresource(0, UINT(i), txtDesc.MipLevels);
 //
@@ -428,9 +428,9 @@ using namespace DirectX;
 //     desc.SampleDesc.Quality = 0;
 //     desc.BindFlags = 0;
 //     desc.MiscFlags = 0;
-//     desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ; // CPU에서 읽기 가능
-//     desc.Usage = D3D11_USAGE_STAGING; // GPU에서 CPU로 보낼 데이터를 임시
-//     보관
+//     desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ; // CPU?먯꽌 ?쎄린 媛??
+//     desc.Usage = D3D11_USAGE_STAGING; // GPU?먯꽌 CPU濡?蹂대궪 ?곗씠?곕? ?꾩떆
+//     蹂닿?
 //
 //     ComPtr<ID3D11Texture2D> stagingTexture;
 //     if (FAILED(GpuCore::Instance().device->CreateTexture2D(
@@ -439,10 +439,10 @@ using namespace DirectX;
 //         cout << "Failed()" << endl;
 //     }
 //
-//     // 참고: 전체 복사할 때
+//     // 李멸퀬: ?꾩껜 蹂듭궗????
 //     // context->CopyResource(stagingTexture.Get(), pTemp.Get());
 //
-//     // 일부만 복사할 때 사용
+//     // ?쇰?留?蹂듭궗?????ъ슜
 //     D3D11_BOX box;
 //     box.left = 0;
 //     box.right = desc.Width;
@@ -454,17 +454,17 @@ using namespace DirectX;
 //         stagingTexture.Get(), 0, 0, 0, 0,
 //                                    textureToWrite.Get(), 0, &box);
 //
-//     // R8G8B8A8 이라고 가정
+//     // R8G8B8A8 ?대씪怨?媛??
 //     std::vector<uint8_t> pixels(desc.Width * desc.Height * 4);
 //
 //     D3D11_MAPPED_SUBRESOURCE ms;
 //     GpuCore::Instance().device_context->Map(stagingTexture.Get(), NULL,
 //                                                  D3D11_MAP_READ, NULL,
-//                  &ms); // D3D11_MAP_READ 주의
+//                  &ms); // D3D11_MAP_READ 二쇱쓽
 //
-//     // 텍스춰가 작을 경우에는
-//     // ms.RowPitch가 width * sizeof(uint8_t) * 4보다 클 수도 있어서
-//     // for문으로 가로줄 하나씩 복사
+//     // ?띿뒪異곌? ?묒쓣 寃쎌슦?먮뒗
+//     // ms.RowPitch媛 width * sizeof(uint8_t) * 4蹂대떎 ???섎룄 ?덉뼱??
+//     // for臾몄쑝濡?媛濡쒖쨪 ?섎굹??蹂듭궗
 //     uint8_t *pData = (uint8_t *)ms.pData;
 //     for (unsigned int h = 0; h < desc.Height; h++) {
 //         memcpy(&pixels[h * desc.Width * 4], &pData[h * ms.RowPitch],
@@ -494,7 +494,7 @@ using namespace DirectX;
 //     txtDesc.Height = height;
 //     txtDesc.MipLevels = 1;
 //     txtDesc.ArraySize = 1;
-//     txtDesc.Format = pixelFormat; // 주로 FLOAT 사용
+//     txtDesc.Format = pixelFormat; // 二쇰줈 FLOAT ?ъ슜
 //     txtDesc.SampleDesc.Count = 1;
 //     txtDesc.Usage = D3D11_USAGE_DEFAULT;
 //     txtDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET
@@ -518,7 +518,7 @@ using namespace DirectX;
 //
 //  void Util::ComputeShaderBarrier() {
 //
-//     // 최대 사용하는 SRV, UAV 갯수가 6개
+//     // 理쒕? ?ъ슜?섎뒗 SRV, UAV 媛?닔媛 6媛?
 //     ID3D11ShaderResourceView *nullSRV[6] = {
 //         0,
 //     };
@@ -535,7 +535,7 @@ using namespace DirectX;
 //  int height,
 //     const int depth, const DXGI_FORMAT pixelFormat) {
 //
-//     // 스테이징 텍스춰 만들기
+//     // ?ㅽ뀒?댁쭠 ?띿뒪異?留뚮뱾湲?
 //     D3D11_TEXTURE3D_DESC txtDesc;
 //     ZeroMemory(&txtDesc, sizeof(txtDesc));
 //     txtDesc.Width = width;
@@ -640,7 +640,7 @@ using namespace DirectX;
 //     bufferDesc.StructureByteStride = sizeElement;
 //     bufferDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
 //
-//     // 참고: Structured는 D3D11_BIND_VERTEX_BUFFER로 사용 불가
+//     // 李멸퀬: Structured??D3D11_BIND_VERTEX_BUFFER濡??ъ슜 遺덇?
 //
 //     if (initData) {
 //         D3D11_SUBRESOURCE_DATA bufferData;
@@ -723,7 +723,7 @@ using namespace DirectX;
 // }
 //
 //  void Util::SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU) {
-//     // 쉐이더와 일관성 유지 cbuffer GlobalConstants : register(b0)
+//     // ?먯씠?붿? ?쇨????좎? cbuffer GlobalConstants : register(b0)
 //     GpuCore::Instance().device_context->VSSetConstantBuffers(
 //         0, 1, globalConstsGPU.GetAddressOf());
 //     GpuCore::Instance().device_context->PSSetConstantBuffers(

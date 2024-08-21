@@ -1,4 +1,4 @@
-#include "graphics_core.h"
+﻿#include "graphics_core.h"
 
 namespace dx12 {
 

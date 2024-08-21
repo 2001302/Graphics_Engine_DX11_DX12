@@ -1,4 +1,4 @@
-#include "model_loader.h"
+﻿#include "model_loader.h"
 #include "mesh.h"
 
 #include <DirectXMesh.h>
@@ -12,10 +12,10 @@ using namespace DirectX::SimpleMath;
 
 void UpdateNormals(vector<MeshData> &meshes) {
 
-    // 노멀 벡터가 없는 경우를 대비하여 다시 계산
-    // 한 위치에는 한 버텍스만 있어야 연결 관계를 찾을 수 있음
+    // ?몃? 踰≫꽣媛 ?녿뒗 寃쎌슦瑜??鍮꾪븯???ㅼ떆 怨꾩궛
+    // ???꾩튂?먮뒗 ??踰꾪뀓?ㅻ쭔 ?덉뼱???곌껐 愿怨꾨? 李얠쓣 ???덉쓬
 
-    // DirectXMesh의 ComputeNormals()과 비슷합니다.
+    // DirectXMesh??ComputeNormals()怨?鍮꾩듂?⑸땲??
     // https://github.com/microsoft/DirectXMesh/wiki/ComputeNormals
 
     for (auto &m : meshes) {
@@ -94,10 +94,10 @@ void ModelLoader::ReadAnimation(const aiScene *pScene) {
 }
 
 /*
- * 여러개의 뼈들이 있고 트리 구조임
- * 그 중에서 Vertex에 영향을 주는 것들은 일부임
- * Vertex에 영향을 주는 뼈들과 부모들까지 포함해서
- * 트래버스 순서로 저장
+ * ?щ윭媛쒖쓽 堉덈뱾???덇퀬 ?몃━ 援ъ“??
+ * 洹?以묒뿉??Vertex???곹뼢??二쇰뒗 寃껊뱾? ?쇰???
+ * Vertex???곹뼢??二쇰뒗 堉덈뱾怨?遺紐⑤뱾源뚯? ?ы븿?댁꽌
+ * ?몃옒踰꾩뒪 ?쒖꽌濡????
  */
 void ModelLoader::Load(std::string basePath, std::string filename,
                        bool revertNormals) {
@@ -107,33 +107,33 @@ void ModelLoader::Load(std::string basePath, std::string filename,
         m_revertNormals = revertNormals;
     }
 
-    m_basePath = basePath; // 텍스춰 읽어들일 때 필요
+    m_basePath = basePath; // ?띿뒪異??쎌뼱?ㅼ씪 ???꾩슂
 
     Assimp::Importer importer;
 
     const aiScene *pScene = importer.ReadFile(
         m_basePath + filename,
         aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
-    // ReadFile()에서 경우에 따라서 여러가지 옵션들 설정 가능
+    // ReadFile()?먯꽌 寃쎌슦???곕씪???щ윭媛吏 ?듭뀡???ㅼ젙 媛??
     // aiProcess_JoinIdenticalVertices | aiProcess_PopulateArmatureData |
     // aiProcess_SplitByBoneCount |
     // aiProcess_Debone); // aiProcess_LimitBoneWeights
 
     if (pScene) {
 
-        // 1. 모든 메쉬에 대해서 버텍스에 영향을 주는 뼈들의 목록을 만든다.
+        // 1. 紐⑤뱺 硫붿돩????댁꽌 踰꾪뀓?ㅼ뿉 ?곹뼢??二쇰뒗 堉덈뱾??紐⑸줉??留뚮뱺??
         FindDeformingBones(pScene);
 
-        // 2. 트리 구조를 따라 업데이트 순서대로 뼈들의 인덱스를 결정한다
+        // 2. ?몃━ 援ъ“瑜??곕씪 ?낅뜲?댄듃 ?쒖꽌?濡?堉덈뱾???몃뜳?ㅻ? 寃곗젙?쒕떎
         int counter = 0;
         UpdateBoneIDs(pScene->mRootNode, &counter);
 
-        // 3. 업데이트 순서대로 뼈 이름 저장 (boneIdToName)
+        // 3. ?낅뜲?댄듃 ?쒖꽌?濡?堉??대쫫 ???(boneIdToName)
         m_aniData.boneIdToName.resize(m_aniData.boneNameToId.size());
         for (auto &i : m_aniData.boneNameToId)
             m_aniData.boneIdToName[i.second] = i.first;
 
-        // 디버깅용
+        // ?붾쾭源낆슜
         // cout << "Num boneNameToId : " << m_aniData.boneNameToId.size() <<
         // endl; for (auto &i : m_aniData.boneNameToId) {
         //    cout << "NameId pair : " << i.first << " " << i.second << endl;
@@ -145,13 +145,13 @@ void ModelLoader::Load(std::string basePath, std::string filename,
         //}
         // exit(-1);
 
-        // 각 뼈의 부모 인덱스를 저장할 준비
+        // 媛?堉덉쓽 遺紐??몃뜳?ㅻ? ??ν븷 以鍮?
         m_aniData.boneParents.resize(m_aniData.boneNameToId.size(), -1);
 
         Matrix tr; // Initial transformation
         ProcessNode(pScene->mRootNode, pScene, tr);
 
-        // 디버깅용
+        // ?붾쾭源낆슜
         // cout << "Num boneIdToName : " << m_aniData.boneIdToName.size() <<
         // endl; for (size_t i = 0; i < m_aniData.boneIdToName.size(); i++) {
         //    cout << "BoneId: " << i << " " << m_aniData.boneIdToName[i]
@@ -162,11 +162,11 @@ void ModelLoader::Load(std::string basePath, std::string filename,
         //         << endl;
         //}
 
-        // 애니메이션 정보 읽기
+        // ?좊땲硫붿씠???뺣낫 ?쎄린
         if (pScene->HasAnimations())
             ReadAnimation(pScene);
 
-        // UpdateNormals(this->meshes); // Vertex Normal을 직접 계산 (참고용)
+        // UpdateNormals(this->meshes); // Vertex Normal??吏곸젒 怨꾩궛 (李멸퀬??
 
         UpdateTangents();
     } else {
@@ -236,7 +236,7 @@ void ModelLoader::UpdateTangents() {
     }
 }
 
-// 버텍스의 변형에 직접적으로 참여하는 뼈들의 목록을 만듭니다.
+// 踰꾪뀓?ㅼ쓽 蹂?뺤뿉 吏곸젒?곸쑝濡?李몄뿬?섎뒗 堉덈뱾??紐⑸줉??留뚮벊?덈떎.
 
 void ModelLoader::FindDeformingBones(const aiScene *scene) {
     for (uint32_t i = 0; i < scene->mNumMeshes; i++) {
@@ -245,20 +245,20 @@ void ModelLoader::FindDeformingBones(const aiScene *scene) {
             for (uint32_t i = 0; i < mesh->mNumBones; i++) {
                 const aiBone *bone = mesh->mBones[i];
 
-                // bone과 대응되는 node의 이름은 동일
-                // 뒤에서 node 이름으로 부모를 찾을 수 있음
+                // bone怨???묐릺??node???대쫫? ?숈씪
+                // ?ㅼ뿉??node ?대쫫?쇰줈 遺紐⑤? 李얠쓣 ???덉쓬
                 m_aniData.boneNameToId[bone->mName.C_Str()] = -1;
 
-                // 주의: 뼈의 순서가 업데이트 순서는 아님
+                // 二쇱쓽: 堉덉쓽 ?쒖꽌媛 ?낅뜲?댄듃 ?쒖꽌???꾨떂
 
-                // 기타: bone->mWeights == 0일 경우에도 포함시켰음
-                // 기타: bone->mNode = 0이라서 사용 불가
+                // 湲고?: bone->mWeights == 0??寃쎌슦?먮룄 ?ы븿?쒖섟??
+                // 湲고?: bone->mNode = 0?대씪???ъ슜 遺덇?
             }
         }
     }
 }
 
-// 디자인을 위한 노드들을 건너뛰고 부모 노드 찾기
+// ?붿옄?몄쓣 ?꾪븳 ?몃뱶?ㅼ쓣 嫄대꼫?곌퀬 遺紐??몃뱶 李얘린
 const aiNode *ModelLoader::FindParent(const aiNode *node) {
     if (!node)
         return nullptr;
@@ -273,7 +273,7 @@ void ModelLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
     // If a node represents a bone in the hierarchy then the node name must
     // match the bone name.
 
-    // 사용되는 부모 뼈를 찾아서 부모의 인덱스 저장
+    // ?ъ슜?섎뒗 遺紐?堉덈? 李얠븘??遺紐⑥쓽 ?몃뜳?????
     if (node->mParent && m_aniData.boneNameToId.count(node->mName.C_Str()) &&
         FindParent(node->mParent)) {
         const auto boneId = m_aniData.boneNameToId[node->mName.C_Str()];
@@ -310,19 +310,19 @@ string ModelLoader::ReadTextureFilename(const aiScene *scene,
             m_basePath +
             string(filesystem::path(filepath.C_Str()).filename().string());
 
-        // 1. 실제로 파일이 존재하는지 확인
+        // 1. ?ㅼ젣濡??뚯씪??議댁옱?섎뒗吏 ?뺤씤
         if (!filesystem::exists(fullPath)) {
-            // 2. 파일이 없을 경우 혹시 fbx 자체에 Embedded인지 확인
+            // 2. ?뚯씪???놁쓣 寃쎌슦 ?뱀떆 fbx ?먯껜??Embedded?몄? ?뺤씤
             const aiTexture *texture =
                 scene->GetEmbeddedTexture(filepath.C_Str());
             if (texture) {
-                // 3. Embedded texture가 존재하고 png일 경우 저장
+                // 3. Embedded texture媛 議댁옱?섍퀬 png??寃쎌슦 ???
                 if (string(texture->achFormatHint).find("png") !=
                     string::npos) {
                     std::ofstream fs(fullPath.c_str(), ios::binary | ios::out);
                     fs.write((char *)texture->pcData, texture->mWidth);
                     fs.close();
-                    // 참고: compressed format일 경우 texture->mHeight가 0
+                    // 李멸퀬: compressed format??寃쎌슦 texture->mHeight媛 0
                 }
             } else {
                 cout << fullPath << " doesn't exists. Return empty filename."
@@ -395,7 +395,7 @@ MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
         for (uint32_t i = 0; i < mesh->mNumBones; i++) {
             const aiBone *bone = mesh->mBones[i];
 
-            // 디버깅
+            // ?붾쾭源?
             // cout << "BoneMap " << count++ << " : " << bone->mName.C_Str()
             //     << " NumBoneWeights = " << bone->mNumWeights << endl;
 
@@ -404,7 +404,7 @@ MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
             m_aniData.offsetMatrices[boneId] =
                 Matrix((float *)&bone->mOffsetMatrix).Transpose();
 
-            // 이 뼈가 영향을 주는 Vertex의 개수
+            // ??堉덇? ?곹뼢??二쇰뒗 Vertex??媛쒖닔
             for (uint32_t j = 0; j < bone->mNumWeights; j++) {
                 aiVertexWeight weight = bone->mWeights[j];
                 assert(weight.mVertexId < boneIndices.size());
@@ -413,9 +413,9 @@ MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
             }
         }
 
-        // 예전에는 Vertex 하나에 영향을 주는 Bone은 최대 4개
-        // 요즘은 더 많을 수도 있는데 모델링 소프트웨어에서 조정하거나
-        // 읽어들이면서 weight가 너무 작은 것들은 뺄 수도 있음
+        // ?덉쟾?먮뒗 Vertex ?섎굹???곹뼢??二쇰뒗 Bone? 理쒕? 4媛?
+        // ?붿쬁? ??留롮쓣 ?섎룄 ?덈뒗??紐⑤뜽留??뚰봽?몄썾?댁뿉??議곗젙?섍굅??
+        // ?쎌뼱?ㅼ씠硫댁꽌 weight媛 ?덈Т ?묒? 寃껊뱾? 類??섎룄 ?덉쓬
 
         int maxBones = 0;
         for (int i = 0; i < boneWeights.size(); i++) {
@@ -437,7 +437,7 @@ MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
             }
         }
 
-        // 디버깅용 출력 (boneWeights)
+        // ?붾쾭源낆슜 異쒕젰 (boneWeights)
         // for (int i = 0; i < boneWeights.size(); i++) {
         //    cout << boneWeights[i].size() << " : ";
         //    for (int j = 0; j < boneWeights[i].size(); j++) {
@@ -486,7 +486,7 @@ MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
             cout << "Opacity " << newMesh.opacityTextureFilename << endl;
         }
 
-        // 디버깅용
+        // ?붾쾭源낆슜
         // for (size_t i = 0; i < 22; i++) {
         //    cout << i << " " << ReadTextureFilename(material,
         //    aiTextureType(i))

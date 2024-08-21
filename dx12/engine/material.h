@@ -1,4 +1,4 @@
-#ifndef _MATERIAL
+﻿#ifndef _MATERIAL
 #define _MATERIAL
 
 #include "graphics_util.h"

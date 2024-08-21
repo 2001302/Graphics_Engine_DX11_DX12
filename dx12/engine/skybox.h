@@ -1,4 +1,4 @@
-#ifndef _SKYBOX
+﻿#ifndef _SKYBOX
 #define _SKYBOX
 
 #include "model.h"

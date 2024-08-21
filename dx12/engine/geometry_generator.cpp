@@ -1,4 +1,4 @@
-#include "geometry_generator.h"
+﻿#include "geometry_generator.h"
 
 namespace core {
 
@@ -11,9 +11,9 @@ MeshData GeometryGenerator::MakeSquare(const float scale,
     vector<Vector3> positions;
     vector<Vector3> colors;
     vector<Vector3> normals;
-    vector<Vector2> texcoords; // 텍스춰 좌표
+    vector<Vector2> texcoords; // ?띿뒪異?醫뚰몴
 
-    // 앞면
+    // ?욌㈃
     positions.push_back(Vector3(-1.0f, 1.0f, 0.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, 0.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, 0.0f) * scale);
@@ -48,7 +48,7 @@ MeshData GeometryGenerator::MakeSquare(const float scale,
         meshData.vertices.push_back(v);
     }
     meshData.indices = {
-        0, 1, 2, 0, 2, 3, // 앞면
+        0, 1, 2, 0, 2, 3, // ?욌㈃
     };
 
     return meshData;
@@ -99,9 +99,9 @@ MeshData GeometryGenerator::MakeBox(const float scale) {
     vector<Vector3> positions;
     vector<Vector3> colors;
     vector<Vector3> normals;
-    vector<Vector2> texcoords; // 텍스춰 좌표
+    vector<Vector2> texcoords; // ?띿뒪異?醫뚰몴
 
-    // 윗면
+    // ?쀫㈃
     positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, 1.0f) * scale);
@@ -119,7 +119,7 @@ MeshData GeometryGenerator::MakeBox(const float scale) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // 아랫면
+    // ?꾨옯硫?
     positions.push_back(Vector3(-1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
@@ -137,7 +137,7 @@ MeshData GeometryGenerator::MakeBox(const float scale) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // 앞면
+    // ?욌㈃
     positions.push_back(Vector3(-1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, -1.0f) * scale);
@@ -155,7 +155,7 @@ MeshData GeometryGenerator::MakeBox(const float scale) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // 뒷면
+    // ?룸㈃
     positions.push_back(Vector3(-1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, 1.0f) * scale);
@@ -173,7 +173,7 @@ MeshData GeometryGenerator::MakeBox(const float scale) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // 왼쪽
+    // ?쇱そ
     positions.push_back(Vector3(-1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, 1.0f) * scale);
     positions.push_back(Vector3(-1.0f, 1.0f, -1.0f) * scale);
@@ -191,7 +191,7 @@ MeshData GeometryGenerator::MakeBox(const float scale) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    // 오른쪽
+    // ?ㅻⅨ履?
     positions.push_back(Vector3(1.0f, -1.0f, 1.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, -1.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, -1.0f) * scale);
@@ -219,12 +219,12 @@ MeshData GeometryGenerator::MakeBox(const float scale) {
     }
 
     meshData.indices = {
-        0,  1,  2,  0,  2,  3,  // 윗면
-        4,  5,  6,  4,  6,  7,  // 아랫면
-        8,  9,  10, 8,  10, 11, // 앞면
-        12, 13, 14, 12, 14, 15, // 뒷면
-        16, 17, 18, 16, 18, 19, // 왼쪽
-        20, 21, 22, 20, 22, 23  // 오른쪽
+        0,  1,  2,  0,  2,  3,  // ?쀫㈃
+        4,  5,  6,  4,  6,  7,  // ?꾨옯硫?
+        8,  9,  10, 8,  10, 11, // ?욌㈃
+        12, 13, 14, 12, 14, 15, // ?룸㈃
+        16, 17, 18, 16, 18, 19, // ?쇱そ
+        20, 21, 22, 20, 22, 23  // ?ㅻⅨ履?
     };
 
     return meshData;
@@ -234,7 +234,7 @@ MeshData GeometryGenerator::MakeCylinder(const float bottomRadius,
                                          const float topRadius, float height,
                                          int numSlices) {
 
-    // Texture 좌표계때문에 (numSlices + 1) x 2 개의 버텍스 사용
+    // Texture 醫뚰몴怨꾨븣臾몄뿉 (numSlices + 1) x 2 媛쒖쓽 踰꾪뀓???ъ슜
 
     const float dTheta = -XM_2PI / float(numSlices);
 
@@ -242,7 +242,7 @@ MeshData GeometryGenerator::MakeCylinder(const float bottomRadius,
 
     vector<Vertex> &vertices = meshData.vertices;
 
-    // 옆면의 바닥 버텍스들 (인덱스 0 이상 numSlices 미만)
+    // ?녿㈃??諛붾떏 踰꾪뀓?ㅻ뱾 (?몃뜳??0 ?댁긽 numSlices 誘몃쭔)
     for (int i = 0; i <= numSlices; i++) {
         Vertex v;
         v.position =
@@ -258,7 +258,7 @@ MeshData GeometryGenerator::MakeCylinder(const float bottomRadius,
         vertices.push_back(v);
     }
 
-    // 옆면의 맨 위 버텍스들 (인덱스 numSlices 이상 2 * numSlices 미만)
+    // ?녿㈃??留???踰꾪뀓?ㅻ뱾 (?몃뜳??numSlices ?댁긽 2 * numSlices 誘몃쭔)
     for (int i = 0; i <= numSlices; i++) {
         Vertex v;
         v.position =
@@ -290,10 +290,10 @@ MeshData GeometryGenerator::MakeSphere(const float radius, const int numSlices,
                                        const int numStacks,
                                        const Vector2 texScale) {
 
-    // 참고: OpenGL Sphere
+    // 李멸퀬: OpenGL Sphere
     // http://www.songho.ca/opengl/gl_sphere.html
-    // Texture 좌표계때문에 (numSlices + 1) 개의 버텍스 사용 (마지막에 닫아주는
-    // 버텍스가 중복) Stack은 y 위쪽 방향으로 쌓아가는 방식
+    // Texture 醫뚰몴怨꾨븣臾몄뿉 (numSlices + 1) 媛쒖쓽 踰꾪뀓???ъ슜 (留덉?留됱뿉 ?レ븘二쇰뒗
+    // 踰꾪뀓?ㅺ? 以묐났) Stack? y ?꾩そ 諛⑺뼢?쇰줈 ?볦븘媛??諛⑹떇
 
     const float dTheta = -XM_2PI / float(numSlices);
     const float dPhi = -XM_PI / float(numStacks);
@@ -304,24 +304,24 @@ MeshData GeometryGenerator::MakeSphere(const float radius, const int numSlices,
 
     for (int j = 0; j <= numStacks; j++) {
 
-        // 스택에 쌓일 수록 시작점을 x-y 평면에서 회전 시켜서 위로 올리는 구조
+        // ?ㅽ깮???볦씪 ?섎줉 ?쒖옉?먯쓣 x-y ?됰㈃?먯꽌 ?뚯쟾 ?쒖폒???꾨줈 ?щ━??援ъ“
         Vector3 stackStartPoint = Vector3::Transform(
             Vector3(0.0f, -radius, 0.0f), Matrix::CreateRotationZ(dPhi * j));
 
         for (int i = 0; i <= numSlices; i++) {
             Vertex v;
 
-            // 시작점을 x-z 평면에서 회전시키면서 원을 만드는 구조
+            // ?쒖옉?먯쓣 x-z ?됰㈃?먯꽌 ?뚯쟾?쒗궎硫댁꽌 ?먯쓣 留뚮뱶??援ъ“
             v.position = Vector3::Transform(
                 stackStartPoint, Matrix::CreateRotationY(dTheta * float(i)));
 
-            v.normal = v.position; // 원점이 구의 중심
+            v.normal = v.position; // ?먯젏??援ъ쓽 以묒떖
             v.normal.Normalize();
             v.texcoord =
                 Vector2(float(i) / numSlices, 1.0f - float(j) / numStacks) *
                 texScale;
 
-            // texcoord가 위로 갈수록 증가
+            // texcoord媛 ?꾨줈 媛덉닔濡?利앷?
             Vector3 biTangent = Vector3(0.0f, 1.0f, 0.0f);
 
             Vector3 normalOrth = v.normal - biTangent.Dot(v.normal) * v.normal;
@@ -370,8 +370,8 @@ MeshData GeometryGenerator::MakeSphere(const float radius, const int numSlices,
 
 MeshData GeometryGenerator::MakeIcosahedron() {
 
-    // Luna DX12 교재 참고
-    // 등20면체
+    // Luna DX12 援먯옱 李멸퀬
+    // ??0硫댁껜
     // https://mathworld.wolfram.com/Isohedron.html
 
     const float X = 0.525731f;
@@ -434,7 +434,7 @@ MeshData GeometryGenerator::MakeTetrahedron() {
 
         Vertex v;
         v.position = points[i];
-        v.normal = v.position; // 중심이 원점
+        v.normal = v.position; // 以묒떖???먯젏
         v.normal.Normalize();
 
         meshData.vertices.push_back(v);
@@ -447,18 +447,18 @@ MeshData GeometryGenerator::MakeTetrahedron() {
 MeshData GeometryGenerator::SubdivideToSphere(const float radius,
                                               MeshData meshData) {
 
-    // 원점이 중심이라고 가정
+    // ?먯젏??以묒떖?대씪怨?媛??
     for (auto &v : meshData.vertices) {
         v.position = v.normal * radius;
     }
 
-    // 구의 표면으로 옮기고 노멀과 texture 좌표 계산
+    // 援ъ쓽 ?쒕㈃?쇰줈 ??린怨??몃?怨?texture 醫뚰몴 怨꾩궛
     auto ProjectVertex = [&](Vertex &v) {
         v.normal = v.position;
         v.normal.Normalize();
         v.position = v.normal * radius;
 
-        // 주의: 텍스춰가 이음매에서 깨집니다.
+        // 二쇱쓽: ?띿뒪異곌? ?댁쓬留ㅼ뿉??源⑥쭛?덈떎.
         // atan vs atan2
         // https://stackoverflow.com/questions/283406/what-is-the-difference-between-atan-and-atan2-in-c
         // const float theta = atan2f(v.position.z, v.position.x);
@@ -476,7 +476,7 @@ MeshData GeometryGenerator::SubdivideToSphere(const float radius,
         v2.normal = faceNormal;
     };
 
-    // 버텍스가 중복되는 구조로 구현
+    // 踰꾪뀓?ㅺ? 以묐났?섎뒗 援ъ“濡?援ы쁽
     MeshData newMesh;
     uint32_t count = 0;
     for (size_t i = 0; i < meshData.indices.size(); i += 3) {
@@ -575,17 +575,17 @@ vector<MeshData> GeometryGenerator::ReadFromFile(std::string basePath,
 MeshData GeometryGenerator::MakeWireBox(const Vector3 center,
                                         const Vector3 extents) {
 
-    // 상자를 와이어 프레임으로 그리는 용도
+    // ?곸옄瑜???댁뼱 ?꾨젅?꾩쑝濡?洹몃━???⑸룄
 
     vector<Vector3> positions;
 
-    // 앞면
+    // ?욌㈃
     positions.push_back(center + Vector3(-1.0f, -1.0f, -1.0f) * extents);
     positions.push_back(center + Vector3(-1.0f, 1.0f, -1.0f) * extents);
     positions.push_back(center + Vector3(1.0f, 1.0f, -1.0f) * extents);
     positions.push_back(center + Vector3(1.0f, -1.0f, -1.0f) * extents);
 
-    // 뒷면
+    // ?룸㈃
     positions.push_back(center + Vector3(-1.0f, -1.0f, 1.0f) * extents);
     positions.push_back(center + Vector3(-1.0f, 1.0f, 1.0f) * extents);
     positions.push_back(center + Vector3(1.0f, 1.0f, 1.0f) * extents);
@@ -597,15 +597,15 @@ MeshData GeometryGenerator::MakeWireBox(const Vector3 center,
         v.position = positions[i];
         v.normal = positions[i] - center;
         v.normal.Normalize();
-        v.texcoord = Vector2(0.0f); // 미사용
+        v.texcoord = Vector2(0.0f); // 誘몄궗??
         meshData.vertices.push_back(v);
     }
 
     // Line list
     meshData.indices = {
-        0, 1, 1, 2, 2, 3, 3, 0, // 앞면
-        4, 5, 5, 6, 6, 7, 7, 4, // 뒷면
-        0, 4, 1, 5, 2, 6, 3, 7  // 옆면
+        0, 1, 1, 2, 2, 3, 3, 0, // ?욌㈃
+        4, 5, 5, 6, 6, 7, 7, 4, // ?룸㈃
+        0, 4, 1, 5, 2, 6, 3, 7  // ?녿㈃
     };
 
     return meshData;
@@ -708,7 +708,7 @@ void GeometryGenerator::Normalize(const Vector3 center,
                                   vector<MeshData> &meshes,
                                   AnimationData &aniData) {
 
-    // 모델의 중심을 원점으로 옮기고 크기를 [-1,1]^3으로 스케일
+    // 紐⑤뜽??以묒떖???먯젏?쇰줈 ??린怨??ш린瑜?[-1,1]^3?쇰줈 ?ㅼ???
 
     using namespace DirectX;
 
@@ -740,7 +740,7 @@ void GeometryGenerator::Normalize(const Vector3 center,
         }
     }
 
-    // 애니메이션 데이터 보정에 사용
+    // ?좊땲硫붿씠???곗씠??蹂댁젙???ъ슜
     aniData.defaultTransform =
         Matrix::CreateTranslation(translation) * Matrix::CreateScale(scale);
 }

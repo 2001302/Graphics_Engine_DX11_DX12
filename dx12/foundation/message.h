@@ -1,4 +1,4 @@
-#ifndef _MESSAGE
+﻿#ifndef _MESSAGE
 #define _MESSAGE
 
 #define WM_MODEL_LOAD (WM_APP + 1)

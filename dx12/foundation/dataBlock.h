@@ -1,4 +1,4 @@
-#ifndef _IDATABLOCK
+﻿#ifndef _IDATABLOCK
 #define _IDATABLOCK
 
 namespace foundation {

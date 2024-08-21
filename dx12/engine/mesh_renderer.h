@@ -1,4 +1,4 @@
-#ifndef _RENDERER
+﻿#ifndef _RENDERER
 #define _RENDERER
 
 #include "component.h"

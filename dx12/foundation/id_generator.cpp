@@ -1,4 +1,4 @@
-#include "id_generator.h"
+﻿#include "id_generator.h"
 
 using namespace foundation;
 

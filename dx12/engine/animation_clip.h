@@ -1,4 +1,4 @@
-#ifndef _ANIMATIONCLIP
+﻿#ifndef _ANIMATIONCLIP
 #define _ANIMATIONCLIP
 
 #include <directxtk/SimpleMath.h>
@@ -40,9 +40,9 @@ struct AnimationClip {
 
 struct AnimationData {
 
-    map<string, int32_t> boneNameToId;  // 뼈 이름과 인덱스 정수
-    vector<string> boneIdToName;        // boneNameToId의 Id 순서대로 뼈 이름 저장
-    vector<int32_t> boneParents;        // 부모 뼈의 인덱스
+    map<string, int32_t> boneNameToId;  // 堉??대쫫怨??몃뜳???뺤닔
+    vector<string> boneIdToName;        // boneNameToId??Id ?쒖꽌?濡?堉??대쫫 ???
+    vector<int32_t> boneParents;        // 遺紐?堉덉쓽 ?몃뜳??
     vector<Matrix> offsetMatrices;
     vector<Matrix> boneTransforms;
     vector<AnimationClip> clips;
@@ -70,17 +70,17 @@ struct AnimationData {
         for (int boneId = 0; boneId < boneTransforms.size(); boneId++) {
             auto &keys = clip.keys[boneId];
 
-            // 주의: 모든 채널(뼈)이 frame 개수가 동일하진 않음
+            // 二쇱쓽: 紐⑤뱺 梨꾨꼸(堉???frame 媛쒖닔媛 ?숈씪?섏쭊 ?딆쓬
 
             const int parentIdx = boneParents[boneId];
             const Matrix parentMatrix = parentIdx >= 0
                                             ? boneTransforms[parentIdx]
                                             : accumulatedRootTransform;
 
-            // keys.size()가 0일 경우에는 Identity 변환
+            // keys.size()媛 0??寃쎌슦?먮뒗 Identity 蹂??
             auto key = keys.size() > 0
                            ? keys[frame % keys.size()]
-                           : AnimationClip::Key(); // key가 reference 아님
+                           : AnimationClip::Key(); // key媛 reference ?꾨떂
 
             // Root
             if (parentIdx < 0) {

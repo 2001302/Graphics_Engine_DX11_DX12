@@ -1,4 +1,4 @@
-#ifndef _RENDERER_DRAW_NODE
+﻿#ifndef _RENDERER_DRAW_NODE
 #define _RENDERER_DRAW_NODE
 
 #include "../foundation/behavior_tree_builder.h"

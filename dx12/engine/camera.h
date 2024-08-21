@@ -1,4 +1,4 @@
-#ifndef CAMERA
+﻿#ifndef CAMERA
 #define CAMERA
 
 #include "../foundation/behavior_tree_builder.h"

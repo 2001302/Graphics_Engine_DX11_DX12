@@ -1,4 +1,4 @@
-#ifndef PARALLEL_NODE
+﻿#ifndef PARALLEL_NODE
 #define PARALLEL_NODE
 
 #include "action_node.h"

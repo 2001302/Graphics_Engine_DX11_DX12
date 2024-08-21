@@ -1,4 +1,4 @@
-#ifndef _PIPELINEMANAGER
+﻿#ifndef _PIPELINEMANAGER
 #define _PIPELINEMANAGER
 
 #include "camera.h"

@@ -1,4 +1,4 @@
-#ifndef SEQUENCE_NODE
+﻿#ifndef SEQUENCE_NODE
 #define SEQUENCE_NODE
 
 #include "action_node.h"

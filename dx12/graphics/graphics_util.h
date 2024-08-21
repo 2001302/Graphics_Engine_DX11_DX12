@@ -1,4 +1,4 @@
-#ifndef _GRAPHICSUTIL
+ï»¿#ifndef _GRAPHICSUTIL
 #define _GRAPHICSUTIL
 
 #include "graphics_core.h"
@@ -43,7 +43,7 @@ class Util {
                 D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
                 IID_PPV_ARGS(&indexBuffer)));
 
-        // ÀÎµ¦½º µ¥ÀÌÅÍ¸¦ ¹öÆÛ¿¡ º¹»ç
+        // ì¸ë±ìŠ¤ ë°ì´í„°ë¥¼ ë²„í¼ì— ë³µì‚¬
         uint8_t *pIndexDataBegin;
         D3D12_RANGE readRange =
             {}; // We do not intend to read from this resource on the CPU.
@@ -53,7 +53,7 @@ class Util {
                indices.size() * sizeof(uint32_t));
         indexBuffer->Unmap(0, nullptr);
 
-        // ÀÎµ¦½º ¹öÆÛ ºä ¼³Á¤
+        // ì¸ë±ìŠ¤ ë²„í¼ ë·° ì„¤ì •
         indexBufferView.BufferLocation = indexBuffer->GetGPUVirtualAddress();
         indexBufferView.SizeInBytes =
             static_cast<UINT>(indices.size() * sizeof(uint32_t));
@@ -97,7 +97,7 @@ class Util {
                 D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
                 IID_PPV_ARGS(&vertexBuffer)));
 
-        // Vertex µ¥ÀÌÅÍ¸¦ ¹öÆÛ¿¡ º¹»ç
+        // Vertex ë°ì´í„°ë¥¼ ë²„í¼ì— ë³µì‚¬
         uint8_t *pVertexDataBegin;
         D3D12_RANGE readRange =
             {}; // We do not intend to read from this resource on the CPU.
@@ -107,7 +107,7 @@ class Util {
                vertices.size() * sizeof(T_VERTEX));
         vertexBuffer->Unmap(0, nullptr);
 
-        // Vertex ¹öÆÛ ºä ¼³Á¤
+        // Vertex ë²„í¼ ë·° ì„¤ì •
         vertexBufferView.BufferLocation = vertexBuffer->GetGPUVirtualAddress();
         vertexBufferView.SizeInBytes =
             static_cast<UINT>(vertices.size() * sizeof(T_VERTEX));

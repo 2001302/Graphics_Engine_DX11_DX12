@@ -1,4 +1,4 @@
-//#include "graphics_common.h"
+﻿//#include "graphics_common.h"
 //
 //namespace dx12 {
 //
@@ -19,9 +19,9 @@
 //D3D12_RASTERIZER_DESC postProcessingRS;
 //
 //// Depth Stencil States
-//D3D12_DEPTH_STENCIL_DESC drawDSS;       // 일반적으로 그리기
-//D3D12_DEPTH_STENCIL_DESC maskDSS;       // 스텐실버퍼에 표시
-//D3D12_DEPTH_STENCIL_DESC drawMaskedDSS; // 스텐실 표시된 곳만
+//D3D12_DEPTH_STENCIL_DESC drawDSS;       // ?쇰컲?곸쑝濡?洹몃━湲?
+//D3D12_DEPTH_STENCIL_DESC maskDSS;       // ?ㅽ뀗?ㅻ쾭?쇱뿉 ?쒖떆
+//D3D12_DEPTH_STENCIL_DESC drawMaskedDSS; // ?ㅽ뀗???쒖떆??怨노쭔
 //
 //// Blend States
 //D3D12_BLEND_DESC mirrorBS;
@@ -149,22 +149,22 @@
 //    sampDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
 //    sampDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
 //    sampDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-//    sampDesc.BorderColor[0] = 1.0f; // 큰 Z값
+//    sampDesc.BorderColor[0] = 1.0f; // ??Z媛?
 //    sampDesc.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
 //    shadowPointSS = sampDesc;
 //
-//    // shadowCompareSS, 쉐이더 안에서는 SamplerComparisonState
-//    // Filter = "_COMPARISON_" 주의
+//    // shadowCompareSS, ?먯씠???덉뿉?쒕뒗 SamplerComparisonState
+//    // Filter = "_COMPARISON_" 二쇱쓽
 //    // https://www.gamedev.net/forums/topic/670575-uploading-samplercomparisonstate-in-hlsl/
 //    sampDesc.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
 //    sampDesc.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
 //    sampDesc.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
-//    sampDesc.BorderColor[0] = 100.0f; // 큰 Z값
+//    sampDesc.BorderColor[0] = 100.0f; // ??Z媛?
 //    sampDesc.Filter = D3D12_FILTER_COMPARISON_MIN_MAG_LINEAR_MIP_POINT;
 //    sampDesc.ComparisonFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL;
 //    shadowCompareSS = sampDesc;
 //
-//    // 샘플러 순서가 "Common.hlsli"에서와 일관성 있어야 함
+//    // ?섑뵆???쒖꽌媛 "Common.hlsli"?먯꽌? ?쇨????덉뼱????
 //    sampleStates.push_back(linearWrapSS);
 //    sampleStates.push_back(linearClampSS);
 //    sampleStates.push_back(shadowPointSS);
@@ -183,7 +183,7 @@
 //    rastDesc.MultisampleEnable = true;
 //    solidRS = rastDesc;
 //
-//    // 거울에 반사되면 삼각형의 Winding이 바뀌기 때문에 CCW로 그려야함
+//    // 嫄곗슱??諛섏궗?섎㈃ ?쇨컖?뺤쓽 Winding??諛붾뚭린 ?뚮Ц??CCW濡?洹몃젮?쇳븿
 //    rastDesc.FrontCounterClockwise = true;
 //    solidCCWRS = rastDesc;
 //
@@ -203,15 +203,15 @@
 //
 //void pso::InitBlendStates(ComPtr<ID3D12Device> &device) {
 //
-//    // "이미 그려져있는 화면"과 어떻게 섞을지를 결정
-//    // Dest: 이미 그려져 있는 값들을 의미
-//    // Src: 픽셀 쉐이더가 계산한 값들을 의미 (여기서는 마지막 거울)
+//    // "?대? 洹몃젮?몄엳???붾㈃"怨??대뼸寃??욎쓣吏瑜?寃곗젙
+//    // Dest: ?대? 洹몃젮???덈뒗 媛믩뱾???섎?
+//    // Src: ?쎌? ?먯씠?붽? 怨꾩궛??媛믩뱾???섎? (?ш린?쒕뒗 留덉?留?嫄곗슱)
 //
 //    D3D12_BLEND_DESC mirrorBlendDesc;
 //    ZeroMemory(&mirrorBlendDesc, sizeof(mirrorBlendDesc));
 //    mirrorBlendDesc.AlphaToCoverageEnable = true; // MSAA
 //    mirrorBlendDesc.IndependentBlendEnable = false;
-//    // 개별 RenderTarget에 대해서 설정 (최대 8개)
+//    // 媛쒕퀎 RenderTarget????댁꽌 ?ㅼ젙 (理쒕? 8媛?
 //    mirrorBlendDesc.RenderTarget[0].BlendEnable = true;
 //    mirrorBlendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_BLEND_FACTOR;
 //    mirrorBlendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_INV_BLEND_FACTOR;
@@ -221,7 +221,7 @@
 //    mirrorBlendDesc.RenderTarget[0].DestBlendAlpha = D3D12_BLEND_ONE;
 //    mirrorBlendDesc.RenderTarget[0].BlendOpAlpha = D3D12_BLEND_OP_ADD;
 //
-//    // 필요하면 RGBA 각각에 대해서도 조절 가능
+//    // ?꾩슂?섎㈃ RGBA 媛곴컖????댁꽌??議곗젅 媛??
 //    mirrorBlendDesc.RenderTarget[0].RenderTargetWriteMask =
 //        D3D12_COLOR_WRITE_ENABLE_ALL;
 //
@@ -230,59 +230,59 @@
 //
 //void pso::InitDepthStencilStates(ComPtr<ID3D12Device> &device) {
 //
-//    // D3D11_DEPTH_STENCIL_DESC 옵션 정리
+//    // D3D11_DEPTH_STENCIL_DESC ?듭뀡 ?뺣━
 //    // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_depth_stencil_desc
-//    // StencilRead/WriteMask: 예) uint8 중 어떤 비트를 사용할지
+//    // StencilRead/WriteMask: ?? uint8 以??대뼡 鍮꾪듃瑜??ъ슜?좎?
 //
-//    // D3D11_DEPTH_STENCILOP_DESC 옵션 정리
+//    // D3D11_DEPTH_STENCILOP_DESC ?듭뀡 ?뺣━
 //    // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_depth_stencilop_desc
-//    // StencilPassOp : 둘 다 pass일 때 할 일
-//    // StencilDepthFailOp : Stencil pass, Depth fail 일 때 할 일
-//    // StencilFailOp : 둘 다 fail 일 때 할 일
+//    // StencilPassOp : ????pass????????
+//    // StencilDepthFailOp : Stencil pass, Depth fail ????????
+//    // StencilFailOp : ????fail ????????
 //
-//    // m_drawDSS: 기본 DSS
+//    // m_drawDSS: 湲곕낯 DSS
 //    D3D12_DEPTH_STENCIL_DESC dsDesc;
 //    ZeroMemory(&dsDesc, sizeof(dsDesc));
 //    dsDesc.DepthEnable = true;
 //    dsDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 //    dsDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-//    dsDesc.StencilEnable = false; // Stencil 불필요
+//    dsDesc.StencilEnable = false; // Stencil 遺덊븘??
 //    dsDesc.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
 //    dsDesc.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
-//    // 앞면에 대해서 어떻게 작동할지 설정
+//    // ?욌㈃????댁꽌 ?대뼸寃??묐룞?좎? ?ㅼ젙
 //    dsDesc.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
 //    dsDesc.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
 //    dsDesc.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
 //    dsDesc.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-//    // 뒷면에 대해 어떻게 작동할지 설정 (뒷면도 그릴 경우)
+//    // ?룸㈃??????대뼸寃??묐룞?좎? ?ㅼ젙 (?룸㈃??洹몃┫ 寃쎌슦)
 //    dsDesc.BackFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
 //    dsDesc.BackFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
 //    dsDesc.BackFace.StencilPassOp = D3D12_STENCIL_OP_REPLACE;
 //    dsDesc.BackFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
 //    drawDSS = dsDesc;
 //
-//    // Stencil에 1로 표기해주는 DSS
-//    dsDesc.DepthEnable = true; // 이미 그려진 물체 유지
+//    // Stencil??1濡??쒓린?댁＜??DSS
+//    dsDesc.DepthEnable = true; // ?대? 洹몃젮吏?臾쇱껜 ?좎?
 //    dsDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ZERO;
 //    dsDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-//    dsDesc.StencilEnable = true;    // Stencil 필수
-//    dsDesc.StencilReadMask = 0xFF;  // 모든 비트 다 사용
-//    dsDesc.StencilWriteMask = 0xFF; // 모든 비트 다 사용
-//    // 앞면에 대해서 어떻게 작동할지 설정
+//    dsDesc.StencilEnable = true;    // Stencil ?꾩닔
+//    dsDesc.StencilReadMask = 0xFF;  // 紐⑤뱺 鍮꾪듃 ???ъ슜
+//    dsDesc.StencilWriteMask = 0xFF; // 紐⑤뱺 鍮꾪듃 ???ъ슜
+//    // ?욌㈃????댁꽌 ?대뼸寃??묐룞?좎? ?ㅼ젙
 //    dsDesc.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
 //    dsDesc.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
 //    dsDesc.FrontFace.StencilPassOp = D3D12_STENCIL_OP_REPLACE;
 //    dsDesc.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
 //    maskDSS = dsDesc;
 //
-//    // Stencil에 1로 표기된 경우에"만" 그리는 DSS
-//    // DepthBuffer는 초기화된 상태로 가정
-//    // D3D11_COMPARISON_EQUAL 이미 1로 표기된 경우에만 그리기
-//    // OMSetDepthStencilState(..., 1); <- 여기의 1
-//    dsDesc.DepthEnable = true;   // 거울 속을 다시 그릴때 필요
-//    dsDesc.StencilEnable = true; // Stencil 사용
+//    // Stencil??1濡??쒓린??寃쎌슦??留? 洹몃━??DSS
+//    // DepthBuffer??珥덇린?붾맂 ?곹깭濡?媛??
+//    // D3D11_COMPARISON_EQUAL ?대? 1濡??쒓린??寃쎌슦?먮쭔 洹몃━湲?
+//    // OMSetDepthStencilState(..., 1); <- ?ш린??1
+//    dsDesc.DepthEnable = true;   // 嫄곗슱 ?띿쓣 ?ㅼ떆 洹몃┫???꾩슂
+//    dsDesc.StencilEnable = true; // Stencil ?ъ슜
 //    dsDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-//    dsDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // <- 주의
+//    dsDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS_EQUAL; // <- 二쇱쓽
 //    dsDesc.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
 //    dsDesc.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
 //    dsDesc.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
@@ -462,7 +462,7 @@
 //    //        &psoDesc, IID_PPV_ARGS(&depthOnlyPSO)));
 //    //}
 //    //{
-//    //    // reflectSolidPSO: 반사되면 Winding 반대
+//    //    // reflectSolidPSO: 諛섏궗?섎㈃ Winding 諛섎?
 //    //    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 //    //    psoDesc.InputLayout = {basicIEs, _countof(basicIEs)};
 //    //    psoDesc.pRootSignature = rootSignature.Get();
@@ -498,7 +498,7 @@
 //    //        &psoDesc, IID_PPV_ARGS(&reflectSkinnedSolidPSO)));
 //    //}
 //    //{
-//    //    // reflectWirePSO: 반사되면 Winding 반대
+//    //    // reflectWirePSO: 諛섏궗?섎㈃ Winding 諛섎?
 //    //    D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
 //    //    psoDesc.InputLayout = {skinnedIEs, _countof(skinnedIEs)};
 //    //    psoDesc.pRootSignature = rootSignature.Get();

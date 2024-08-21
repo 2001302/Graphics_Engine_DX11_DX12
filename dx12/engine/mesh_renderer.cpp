@@ -1,4 +1,4 @@
-#include "mesh_renderer.h"
+﻿#include "mesh_renderer.h"
 
 namespace core {
 
@@ -74,8 +74,8 @@ void ExtendBoundingBox(const BoundingBox &inBox, BoundingBox &outBox) {
 
 void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
-    // 일반적으로는 Mesh들이 m_mesh/materialConsts를 각자 소유 가능
-    // 여기서는 한 Renderer 안의 여러 Mesh들이 Consts를 모두 공유
+    // ?쇰컲?곸쑝濡쒕뒗 Mesh?ㅼ씠 m_mesh/materialConsts瑜?媛곸옄 ?뚯쑀 媛??
+    // ?ш린?쒕뒗 ??Renderer ?덉쓽 ?щ윭 Mesh?ㅼ씠 Consts瑜?紐⑤몢 怨듭쑀
 
     mesh_consts.GetCpu().world = Matrix();
     mesh_consts.Initialize();
@@ -154,7 +154,7 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
             // }
         }
 
-        // GLTF 방식으로 Metallic과 Roughness를 한 텍스춰에 넣음
+        // GLTF 諛⑹떇?쇰줈 Metallic怨?Roughness瑜????띿뒪異곗뿉 ?ｌ쓬
         // Green : Roughness, Blue : Metallic(Metalness)
         if (!meshData.metallicTextureFilename.empty() ||
             !meshData.roughnessTextureFilename.empty()) {
@@ -222,7 +222,7 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
     //                maxRadius);
     //        }
     //    }
-    //    maxRadius += 1e-2f; // 살짝 크게 설정
+    //    maxRadius += 1e-2f; // ?댁쭩 ?ш쾶 ?ㅼ젙
     //    bounding_sphere = BoundingSphere(bounding_box.Center, maxRadius);
     //    auto meshData = GeometryGenerator::MakeWireSphere(
     //        bounding_sphere.Center, bounding_sphere.Radius);
@@ -258,7 +258,7 @@ void MeshRenderer::Render() {
 
             // dx12::GpuCore::Instance().device_context->VSSetShaderResources(
             //     0, 1, mesh->heightSRV.GetAddressOf());
-            //// 물체 렌더링할 때 여러가지 텍스춰 사용 (t0 부터시작)
+            //// 臾쇱껜 ?뚮뜑留곹븷 ???щ윭媛吏 ?띿뒪異??ъ슜 (t0 遺?곗떆??
             // vector<ID3D11ShaderResourceView *> resViews = {
             //     mesh->albedoSRV.Get(), mesh->normalSRV.Get(),
             //     mesh->aoSRV.Get(), mesh->metallicRoughnessSRV.Get(),
@@ -343,9 +343,9 @@ void MeshRenderer::UpdateWorldRow(const Matrix &worldRow) {
     world_row_IT.Translation(Vector3(0.0f));
     world_row_IT = world_row_IT.Invert().Transpose();
 
-    // 바운딩스피어 위치 업데이트
-    // 스케일까지 고려하고 싶다면 x, y, z 스케일 중 가장 큰 값으로 스케일
-    // 구(sphere)라서 회전은 고려할 필요 없음
+    // 諛붿슫?⑹뒪?쇱뼱 ?꾩튂 ?낅뜲?댄듃
+    // ?ㅼ??쇨퉴吏 怨좊젮?섍퀬 ?띕떎硫?x, y, z ?ㅼ???以?媛????媛믪쑝濡??ㅼ???
+    // 援?sphere)?쇱꽌 ?뚯쟾? 怨좊젮???꾩슂 ?놁쓬
     bounding_sphere.Center = this->world_row.Translation();
 
     mesh_consts.GetCpu().world = worldRow.Transpose();

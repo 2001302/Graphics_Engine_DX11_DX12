@@ -1,4 +1,4 @@
-#ifndef _GPU_NODE
+﻿#ifndef _GPU_NODE
 #define _GPU_NODE
 
 #include "../foundation/behavior_tree_builder.h"

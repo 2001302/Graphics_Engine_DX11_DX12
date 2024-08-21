@@ -1,4 +1,4 @@
-#include "setting_ui.h"
+﻿#include "setting_ui.h"
 
 namespace foundation {
 void SetWindowLocation(float x, float y, float width, float height) {

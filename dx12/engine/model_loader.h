@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "animation_clip.h"
 #include "mesh.h"
@@ -36,7 +36,7 @@ class ModelLoader {
 
     void UpdateTangents();
 
-    // 버텍스의 변형에 직접적으로 참여하는 뼈들의 목록을 만듭니다.
+    // 踰꾪뀓?ㅼ쓽 蹂?뺤뿉 吏곸젒?곸쑝濡?李몄뿬?섎뒗 堉덈뱾??紐⑸줉??留뚮벊?덈떎.
     void FindDeformingBones(const aiScene *scene);
     void UpdateBoneIDs(aiNode *node, int *counter) {
         static int id = 0;

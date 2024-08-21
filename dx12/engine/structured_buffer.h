@@ -1,4 +1,4 @@
-#ifndef _STRUCTUREDBUFFER
+﻿#ifndef _STRUCTUREDBUFFER
 #define _STRUCTUREDBUFFER
 
 #include "graphics_util.h"
@@ -20,7 +20,7 @@ template <typename T_ELEMENT> class StructuredBuffer {
         dx11::Util::CreateStructuredBuffer(UINT(m_cpu.size()),
                                                sizeof(T_ELEMENT), m_cpu.data(),
                                                m_gpu, m_srv, m_uav);
-        // Staging은 주로 디버깅 용도입니다.
+        // Staging? 二쇰줈 ?붾쾭源??⑸룄?낅땲??
         dx11::Util::CreateStagingBuffer(UINT(m_cpu.size()),
                                             sizeof(T_ELEMENT), NULL, m_staging);
     }
@@ -64,7 +64,7 @@ template <typename T_ELEMENT> class StructuredBuffer {
     ComPtr<ID3D11UnorderedAccessView> m_uav;
 };
 
-// StructuredBuffer 대신 AppendBuffer 사용할 수도 있음
+// StructuredBuffer ???AppendBuffer ?ъ슜???섎룄 ?덉쓬
 template <typename T_ELEMENT>
 class AppendBuffer : public StructuredBuffer<T_ELEMENT> {
 

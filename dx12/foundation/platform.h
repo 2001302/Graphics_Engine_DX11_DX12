@@ -1,4 +1,4 @@
-#ifndef _PLATFORM
+﻿#ifndef _PLATFORM
 #define _PLATFORM
 
 #define WIN32_LEAN_AND_MEAN

@@ -1,4 +1,4 @@
-#ifndef _APPLICATION
+﻿#ifndef _APPLICATION
 #define _APPLICATION
 
 #include "../foundation/platform.h"

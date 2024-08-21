@@ -1,4 +1,4 @@
-#ifndef BEHAVIORTREEBUILDER
+﻿#ifndef BEHAVIORTREEBUILDER
 #define BEHAVIORTREEBUILDER
 
 #include "action_node.h"

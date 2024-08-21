@@ -1,4 +1,4 @@
-#ifndef _INFO
+﻿#ifndef _INFO
 #define _INFO
 
 #include "entity.h"

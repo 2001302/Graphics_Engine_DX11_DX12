@@ -1,4 +1,4 @@
-#ifndef _MESH
+﻿#ifndef _MESH
 #define _MESH
 
 #include "../graphics/graphics_util.h"

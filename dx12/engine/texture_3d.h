@@ -1,4 +1,4 @@
-#ifndef _TEXTURE3D
+﻿#ifndef _TEXTURE3D
 #define _TEXTURE3D
 
 #include "../graphics/graphics_util.h"

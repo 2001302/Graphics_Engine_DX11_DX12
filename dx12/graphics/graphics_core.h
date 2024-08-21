@@ -1,4 +1,4 @@
-#ifndef _GRAPHICSMANAGER
+﻿#ifndef _GRAPHICSMANAGER
 #define _GRAPHICSMANAGER
 
 #define MAX_LIGHTS 3

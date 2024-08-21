@@ -1,4 +1,4 @@
-#ifndef _BehaviorTree
+﻿#ifndef _BehaviorTree
 #define _BehaviorTree
 
 #include "dataBlock.h"

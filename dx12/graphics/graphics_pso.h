@@ -1,11 +1,11 @@
-#ifndef _GRAPHICSPSO
+ï»¿#ifndef _GRAPHICSPSO
 #define _GRAPHICSPSO
 
 #include "d3dx12.h"
 #include "graphics_core.h"
 
 /// <summary>
-/// shader ¿¡¼­ ÇÊ¿ä·Î ÇÏ´Â »óÅÂ¸¦ ÀúÀåÇÏ´Â ±¸Á¶Ã¼
+/// shader ì—ì„œ í•„ìš”ë¡œ í•˜ëŠ” ìƒíƒœë¥¼ ì €ì¥í•˜ëŠ” êµ¬ì¡°ì²´
 /// </summary>
 namespace dx12 {
 class PSO {

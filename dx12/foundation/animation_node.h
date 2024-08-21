@@ -1,4 +1,4 @@
-#ifndef ANMATION_NODE
+﻿#ifndef ANMATION_NODE
 #define ANMATION_NODE
 
 #include "action_node.h"

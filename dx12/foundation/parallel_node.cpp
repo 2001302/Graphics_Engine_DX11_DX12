@@ -1,4 +1,4 @@
-#include "parallel_node.h"
+﻿#include "parallel_node.h"
 
 namespace foundation {
 

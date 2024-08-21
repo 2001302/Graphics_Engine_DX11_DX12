@@ -1,4 +1,4 @@
-#ifndef _CONSTANTBUFFER
+﻿#ifndef _CONSTANTBUFFER
 #define _CONSTANTBUFFER
 
 #include "../graphics/graphics_util.h"
@@ -26,7 +26,7 @@ __declspec(align(256)) struct MaterialConstants {
     float metallicFactor = 1.0f;
     Vector3 emissionFactor = Vector3(0.0f);
 
-    // 여러 옵션들에 uint 플래그 하나만 사용할 수도 있습니다.
+    // ?щ윭 ?듭뀡?ㅼ뿉 uint ?뚮옒洹??섎굹留??ъ슜???섎룄 ?덉뒿?덈떎.
     int useAlbedoMap = 0;
     int useNormalMap = 0;
     int useAOMap = 0;
@@ -36,7 +36,7 @@ __declspec(align(256)) struct MaterialConstants {
     int useEmissiveMap = 0;
     float dummy = 0.0f;
 
-    // 참고 flags 구현
+    // 李멸퀬 flags 援ы쁽
     /* union {
         uint32_t flags;
         struct {

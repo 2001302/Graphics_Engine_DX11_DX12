@@ -1,4 +1,4 @@
-#ifndef _MODEL
+﻿#ifndef _MODEL
 #define _MODEL
 
 #include "component.h"

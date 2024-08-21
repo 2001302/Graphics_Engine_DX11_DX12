@@ -1,4 +1,4 @@
-#ifndef _BLACKBOARD
+﻿#ifndef _BLACKBOARD
 #define _BLACKBOARD
 
 #include "input.h"

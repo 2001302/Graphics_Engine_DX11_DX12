@@ -1,4 +1,4 @@
-#ifndef _CAMERANODE
+﻿#ifndef _CAMERANODE
 #define _CAMERANODE
 
 #include "../foundation/behavior_tree_builder.h"

@@ -1,4 +1,4 @@
-#include "conditional_node.h"
+﻿#include "conditional_node.h"
 
 namespace foundation {
 

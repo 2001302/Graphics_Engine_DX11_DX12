@@ -1,4 +1,4 @@
-#ifndef _CONDITIONALNODE
+﻿#ifndef _CONDITIONALNODE
 #define _CONDITIONALNODE
 
 #include "action_node.h"

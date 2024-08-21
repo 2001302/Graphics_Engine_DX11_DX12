@@ -1,4 +1,4 @@
-#ifndef _SHARED_RESOURCE_NODE
+﻿#ifndef _SHARED_RESOURCE_NODE
 #define _SHARED_RESOURCE_NODE
 
 #include "../foundation/behavior_tree_builder.h"

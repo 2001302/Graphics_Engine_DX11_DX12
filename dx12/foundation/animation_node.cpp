@@ -1,4 +1,4 @@
-#include "animation_node.H"
+﻿#include "animation_node.H"
 
 namespace foundation {
 

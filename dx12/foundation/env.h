@@ -1,4 +1,4 @@
-#ifndef _ENV
+﻿#ifndef _ENV
 #define _ENV
 
 #include <cmath>

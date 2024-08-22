@@ -1,4 +1,4 @@
-﻿#ifndef _GPU_NODE
+#ifndef _GPU_NODE
 #define _GPU_NODE
 
 #include "../foundation/behavior_tree_builder.h"
@@ -21,9 +21,9 @@ class StartRenderingNode : public foundation::BehaviorActionNode {
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
         // reset the command list and allocator
-        dx12::GpuCore::Instance().commandAllocator->Reset();
+        dx12::GpuCore::Instance().command_allocator->Reset();
         dx12::GpuCore::Instance().commandList->Reset(
-            dx12::GpuCore::Instance().commandAllocator.Get(), nullptr);
+            dx12::GpuCore::Instance().command_allocator.Get(), nullptr);
 
         memset(&dx12::GpuCore::Instance().viewport, 0, sizeof(D3D12_VIEWPORT));
         dx12::GpuCore::Instance().viewport.TopLeftX = 0.0f;
@@ -45,7 +45,7 @@ class StartRenderingNode : public foundation::BehaviorActionNode {
 
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
             dx12::GpuCore::Instance()
-                .renderTargets[dx12::GpuCore::Instance().frameIndex]
+                .render_targets[dx12::GpuCore::Instance().frame_index]
                 .Get(),
             D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
 
@@ -53,9 +53,9 @@ class StartRenderingNode : public foundation::BehaviorActionNode {
 
         CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
             dx12::GpuCore::Instance()
-                .rtvHeap->GetCPUDescriptorHandleForHeapStart(),
-            dx12::GpuCore::Instance().frameIndex,
-            dx12::GpuCore::Instance().rtvDescriptorSize);
+                .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
+            dx12::GpuCore::Instance().frame_index,
+            dx12::GpuCore::Instance().rtv_descriptor_size);
         const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
         dx12::GpuCore::Instance().commandList->ClearRenderTargetView(
             rtvHandle, clearColor, 0, nullptr);
@@ -75,19 +75,19 @@ class PresentNode : public foundation::BehaviorActionNode {
         // efficient resource usage and to maximize GPU utilization.
 
         // Signal and increment the fence value.
-        const UINT64 fence = dx12::GpuCore::Instance().fenceValue;
+        const UINT64 fence = dx12::GpuCore::Instance().fence_value;
         dx12::GpuCore::Instance().command_queue->Signal(
             dx12::GpuCore::Instance().fence.Get(), fence);
-        dx12::GpuCore::Instance().fenceValue++;
+        dx12::GpuCore::Instance().fence_value++;
 
         // Wait until the previous frame is finished.
         if (dx12::GpuCore::Instance().fence->GetCompletedValue() < fence) {
             dx12::GpuCore::Instance().fence->SetEventOnCompletion(
-                fence, dx12::GpuCore::Instance().fenceEvent);
-            WaitForSingleObject(dx12::GpuCore::Instance().fenceEvent, INFINITE);
+                fence, dx12::GpuCore::Instance().fence_event);
+            WaitForSingleObject(dx12::GpuCore::Instance().fence_event, INFINITE);
         }
 
-        dx12::GpuCore::Instance().frameIndex =
+        dx12::GpuCore::Instance().frame_index =
             dx12::GpuCore::Instance().swap_chain->GetCurrentBackBufferIndex();
     }
 
@@ -96,7 +96,7 @@ class PresentNode : public foundation::BehaviorActionNode {
         // preset the render target as the back buffer
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
             dx12::GpuCore::Instance()
-                .renderTargets[dx12::GpuCore::Instance().frameIndex]
+                .render_targets[dx12::GpuCore::Instance().frame_index]
                 .Get(),
             D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
         dx12::GpuCore::Instance().commandList->ResourceBarrier(1, &barrier);

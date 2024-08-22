@@ -103,7 +103,7 @@ bool GpuCore::Initialize() {
         foundation::Env::Instance().main_window, DXGI_MWA_NO_ALT_ENTER));
 
     ThrowIfFailed(swapChain.As(&swap_chain));
-    frameIndex = swap_chain->GetCurrentBackBufferIndex();
+    frame_index = swap_chain->GetCurrentBackBufferIndex();
 
     // Create descriptor heaps.
     {
@@ -113,42 +113,42 @@ bool GpuCore::Initialize() {
         rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
         rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
         ThrowIfFailed(
-            device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtvHeap)));
+            device->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&rtv_heap)));
 
-        rtvDescriptorSize = device->GetDescriptorHandleIncrementSize(
+        rtv_descriptor_size = device->GetDescriptorHandleIncrementSize(
             D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     }
 
     // Create frame resources.
     {
         CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
-            rtvHeap->GetCPUDescriptorHandleForHeapStart());
+            rtv_heap->GetCPUDescriptorHandleForHeapStart());
 
         // Create a RTV for each frame.
         for (UINT n = 0; n < 2; n++) {
             ThrowIfFailed(
-                swap_chain->GetBuffer(n, IID_PPV_ARGS(&renderTargets[n])));
-            device->CreateRenderTargetView(renderTargets[n].Get(), nullptr,
+                swap_chain->GetBuffer(n, IID_PPV_ARGS(&render_targets[n])));
+            device->CreateRenderTargetView(render_targets[n].Get(), nullptr,
                                            rtvHandle);
-            rtvHandle.Offset(1, rtvDescriptorSize);
+            rtvHandle.Offset(1, rtv_descriptor_size);
         }
     }
 
     ThrowIfFailed(device->CreateCommandAllocator(
-        D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&commandAllocator)));
+        D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&command_allocator)));
 
     ThrowIfFailed(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
-                                            commandAllocator.Get(), nullptr,
+                                            command_allocator.Get(), nullptr,
                                             IID_PPV_ARGS(&commandList)));
     commandList->Close();
 
     ThrowIfFailed(
         device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)));
-    fenceValue = 1;
+    fence_value = 1;
 
     // Create an event handle to use for frame synchronization.
-    fenceEvent = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-    if (fenceEvent == nullptr) {
+    fence_event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    if (fence_event == nullptr) {
         ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
     }
 

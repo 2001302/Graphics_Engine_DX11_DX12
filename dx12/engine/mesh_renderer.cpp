@@ -270,9 +270,9 @@ void MeshRenderer::Render() {
             // Fill Command List Pipeline-related Data
             CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
                 dx12::GpuCore::Instance()
-                    .rtvHeap->GetCPUDescriptorHandleForHeapStart(),
-                dx12::GpuCore::Instance().frameIndex,
-                dx12::GpuCore::Instance().rtvDescriptorSize);
+                    .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
+                dx12::GpuCore::Instance().frame_index,
+                dx12::GpuCore::Instance().rtv_descriptor_size);
 
             // dx12::GpuCore::Instance().commandList->SetPipelineState(
             //     pso.pipeline_state);

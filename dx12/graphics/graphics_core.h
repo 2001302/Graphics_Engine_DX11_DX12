@@ -50,20 +50,21 @@ class GpuCore {
 
     ComPtr<IDXGISwapChain3> swap_chain;
     ComPtr<ID3D12Device> device;
-    ComPtr<ID3D12PipelineState> pipelineState;
-    ComPtr<ID3D12CommandAllocator> commandAllocator;
+
+    ComPtr<ID3D12CommandAllocator> command_allocator;
     ComPtr<ID3D12CommandQueue> command_queue;
+
     ComPtr<ID3D12GraphicsCommandList> commandList;
 
-    ComPtr<ID3D12Resource> renderTargets[2];
-    ComPtr<ID3D12DescriptorHeap> rtvHeap;
-    UINT rtvDescriptorSize;
+    ComPtr<ID3D12Resource> render_targets[2];
+    ComPtr<ID3D12DescriptorHeap> rtv_heap;
+    UINT rtv_descriptor_size;
 
     // Synchronization objects.
-    UINT frameIndex;
-    HANDLE fenceEvent;
+    UINT frame_index;
+    HANDLE fence_event;
     ComPtr<ID3D12Fence> fence;
-    UINT64 fenceValue;
+    UINT64 fence_value;
 
     D3D12_VIEWPORT viewport;
 

@@ -1,4 +1,4 @@
-﻿#include "behavior_tree_builder.h"
+#include "behavior_tree_builder.h"
 
 namespace foundation {
 
@@ -37,12 +37,4 @@ BehaviorTreeBuilder *BehaviorTreeBuilder::Close() {
     return this;
 }
 
-BehaviorTreeBuilder *
-BehaviorTreeBuilder::Loop(std::map<int, foundation::INode *> target_objects) {
-    auto node = std::make_shared<ParallelNode>(target_objects);
-    current->PushNode(node);
-    current = node.get();
-
-    return this;
-}
 } // namespace common

@@ -50,9 +50,6 @@
     <ClCompile Include="foundation\conditional_node.cpp">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="foundation\parallel_node.cpp">
-      <Filter>Foundation\BehaviorTree</Filter>
-    </ClCompile>
     <ClCompile Include="foundation\selector_node.cpp">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClCompile>
@@ -208,9 +205,6 @@
       <Filter>Foundation\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="foundation\conditional_node.h">
-      <Filter>Foundation\BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="foundation\parallel_node.h">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClInclude>
     <ClInclude Include="foundation\selector_node.h">

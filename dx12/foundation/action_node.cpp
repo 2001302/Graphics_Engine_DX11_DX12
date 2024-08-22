@@ -1,10 +1,8 @@
-﻿#include "action_node.h"
+#include "action_node.h"
 
 namespace foundation {
 
 EnumBehaviorTreeStatus BehaviorActionNode::Invoke() {
-    if (parent_node)
-        this->target_object = parent_node->target_object;
     return OnInvoke();
 }
 

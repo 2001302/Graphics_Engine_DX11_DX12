@@ -1,4 +1,4 @@
-﻿#ifndef _BehaviorTree
+#ifndef _BehaviorTree
 #define _BehaviorTree
 
 #include "dataBlock.h"
@@ -22,7 +22,7 @@ class IDisposable {
 
 class BehaviorActionNode {
   public:
-    BehaviorActionNode() : parent_node(0), target_object(0), data_block(0){};
+    BehaviorActionNode() : parent_node(0), data_block(0){};
     EnumBehaviorTreeStatus Invoke();
     EnumBehaviorTreeStatus Reset();
     BehaviorActionNode *GetParent();
@@ -35,7 +35,6 @@ class BehaviorActionNode {
     BehaviorActionNode * parent_node;
     std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
     foundation::IDataBlock * data_block;
-    foundation::INode *target_object;
 };
 } // namespace common
 #endif

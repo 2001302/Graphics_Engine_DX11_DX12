@@ -156,7 +156,6 @@
     <ClCompile Include="foundation\ImGui\NodeEditor\imgui_node_editor.cpp" />
     <ClCompile Include="foundation\ImGui\NodeEditor\imgui_node_editor_api.cpp" />
     <ClCompile Include="foundation\node.cpp" />
-    <ClCompile Include="foundation\parallel_node.cpp" />
     <ClCompile Include="foundation\platform.cpp" />
     <ClCompile Include="foundation\selector_node.cpp" />
     <ClCompile Include="foundation\sequence_node.cpp" />
@@ -214,7 +213,6 @@
     <ClInclude Include="foundation\input.h" />
     <ClInclude Include="foundation\message.h" />
     <ClInclude Include="foundation\node.h" />
-    <ClInclude Include="foundation\parallel_node.h" />
     <ClInclude Include="foundation\platform.h" />
     <ClInclude Include="foundation\selector_node.h" />
     <ClInclude Include="foundation\sequence_node.h" />

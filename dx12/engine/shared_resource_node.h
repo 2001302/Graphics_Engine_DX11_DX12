@@ -1,4 +1,4 @@
-﻿#ifndef _SHARED_RESOURCE_NODE
+#ifndef _SHARED_RESOURCE_NODE
 #define _SHARED_RESOURCE_NODE
 
 #include "../foundation/behavior_tree_builder.h"
@@ -113,10 +113,10 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
 
             dx12::ThrowIfFailed(
                 dx12::GpuCore::Instance().device->CreateDescriptorHeap(
-                    &samplerHeapDesc, IID_PPV_ARGS(&manager->samplerHeap)));
+                    &samplerHeapDesc, IID_PPV_ARGS(&manager->sampler_heap)));
 
             CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
-                manager->samplerHeap->GetCPUDescriptorHandleForHeapStart());
+                manager->sampler_heap->GetCPUDescriptorHandleForHeapStart());
             UINT incrementSize = dx12::GpuCore::Instance()
                                      .device->GetDescriptorHandleIncrementSize(
                                          D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);

@@ -1,4 +1,4 @@
-﻿#ifndef _PIPELINEMANAGER
+#ifndef _PIPELINEMANAGER
 #define _PIPELINEMANAGER
 
 #include "camera.h"
@@ -29,7 +29,7 @@ class JobContext : public foundation::IInfo {
     // condition
     GlobalConstants global_consts_CPU;
     ComPtr<ID3D12Resource> global_consts_GPU;
-    ComPtr<ID3D12DescriptorHeap> samplerHeap;
+    ComPtr<ID3D12DescriptorHeap> sampler_heap;
 
     float dt;
     bool draw_wire = false;

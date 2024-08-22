@@ -157,8 +157,8 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
 
-            ID3D12DescriptorHeap *descriptorHeaps[] = {
-                manager->samplerHeap.Get()};
+            ID3D12DescriptorHeap *samplers_heap[] = {
+                manager->sampler_heap.Get()};
 
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
@@ -171,11 +171,11 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                     defaultSolidPSO->pipeline_state);
 
                 dx12::GpuCore::Instance().commandList->SetDescriptorHeaps(
-                    _countof(descriptorHeaps), descriptorHeaps);
+                    _countof(samplers_heap), samplers_heap);
 
                 dx12::GpuCore::Instance()
                     .commandList->SetGraphicsRootDescriptorTable(
-                        0, manager->samplerHeap
+                        0, manager->sampler_heap
                                ->GetGPUDescriptorHandleForHeapStart());
                 dx12::GpuCore::Instance()
                     .commandList->SetGraphicsRootConstantBufferView(

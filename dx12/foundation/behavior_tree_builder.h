@@ -1,9 +1,8 @@
-﻿#ifndef BEHAVIORTREEBUILDER
+#ifndef BEHAVIORTREEBUILDER
 #define BEHAVIORTREEBUILDER
 
 #include "action_node.h"
 #include "conditional_node.h"
-#include "parallel_node.h"
 #include "selector_node.h"
 #include "sequence_node.h"
 #include "animation_node.h"
@@ -25,7 +24,6 @@ class BehaviorTreeBuilder {
     BehaviorTreeBuilder *Sequence();
     BehaviorTreeBuilder *Selector();
     BehaviorTreeBuilder *Conditional(std::shared_ptr<ConditionalNode> node);
-    BehaviorTreeBuilder *Loop(std::map<int, foundation::INode *> target_ids);
     BehaviorTreeBuilder *Close();
 
   private:

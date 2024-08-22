@@ -1,4 +1,4 @@
-﻿#ifndef _APPLICATION
+#ifndef _APPLICATION
 #define _APPLICATION
 
 #include "../foundation/platform.h"
@@ -32,14 +32,6 @@ class Engine : public foundation::Platform {
     std::shared_ptr<foundation::BehaviorTreeBuilder> start_tree;
     std::shared_ptr<foundation::BehaviorTreeBuilder> update_tree;
     std::shared_ptr<foundation::BehaviorTreeBuilder> render_tree;
-
-    std::shared_ptr<CameraNodeInvoker> camera_node;
-    std::shared_ptr<SharedResourceNodeInvoker> shared_resource_node;
-    std::shared_ptr<GameObjectNodeInvoker> game_object_node;
-    std::shared_ptr<GuiNodeInvoker> gui_node;
-    std::shared_ptr<StartRenderingNode> start_rendering_node;
-    std::shared_ptr<PresentNode> present_node;
-    std::shared_ptr<LightNodeInvoker> light_node;
 
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,
                                     LPARAM lparam) {

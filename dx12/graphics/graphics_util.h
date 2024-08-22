@@ -158,25 +158,16 @@ class Util {
                               ComPtr<ID3D12Resource> &texture,
                               ComPtr<ID3D12GraphicsCommandList> &commandList);
 
-    // static void CreateMetallicRoughnessTexture(
+    static void CreateMetallicRoughnessTexture(
+        const std::string metallicFiilename,
+        const std::string roughnessFilename, ComPtr<ID3D12Resource> &texture,
+        ComPtr<ID3D12GraphicsCommandList> &commandList);
 
-    //    const std::string metallicFiilename,
-    //    const std::string roughnessFilename, ComPtr<ID3D11Texture2D> &texture,
-    //    ComPtr<ID3D11ShaderResourceView> &srv);
-
-    // static void CreateTextureArray(
-
-    //    const std::vector<std::string> filenames,
-    //    ComPtr<ID3D11Texture2D> &texture,
-    //    ComPtr<ID3D11ShaderResourceView> &textureResourceView);
-
-    // static void CreateDDSTexture(const wchar_t *filename, const bool
-    // isCubeMap,
-    //                              ComPtr<ID3D11ShaderResourceView>
-    //                              &texResView);
+    //static void
+    //CreateDDSTexture(const wchar_t *filename, const bool isCubeMap,
+    //                 ComPtr<ID3D12GraphicsCommandList> &commandList);
 
     // static void WriteToFile(
-
     //    ComPtr<ID3D11Texture2D> &textureToWrite, const std::string filename);
 
     // static void CreateUATexture(const int width, const int height,
@@ -200,8 +191,6 @@ class Util {
 
     // static size_t GetPixelSize(DXGI_FORMAT pixelFormat);
 
-    // static void ComputeShaderBarrier();
-
     // static void CreateStructuredBuffer(const UINT numElements,
     //                                    const UINT sizeElement,
     //                                    const void *initData,
@@ -218,9 +207,6 @@ class Util {
     // static void CopyToStagingBuffer(ComPtr<ID3D11Buffer> &buffer, UINT size,
     //                                 void *src);
 
-    // static void SetPipelineState(const PSO &pso);
-
-    // static void SetGlobalConsts(ComPtr<ID3D11Buffer> &globalConstsGPU);
     static void
     CreateVertexShader(ComPtr<ID3D12Device> &device, std::wstring filename,
                        ComPtr<ID3DBlob> &m_vertexShader,

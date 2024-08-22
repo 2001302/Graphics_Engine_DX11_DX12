@@ -174,8 +174,8 @@ void CreateTextureHelper(const int width, const int height,
 
     // change state
     auto transition = CD3DX12_RESOURCE_BARRIER::Transition(
-                          texture.Get(), D3D12_RESOURCE_STATE_COPY_DEST,
-                          D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+        texture.Get(), D3D12_RESOURCE_STATE_COPY_DEST,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
     commandList->ResourceBarrier(1, &transition);
 }
 
@@ -216,80 +216,64 @@ void Util::CreateTexture(const std::string albedoFilename,
                         commandList);
 }
 
-//  void Util::CreateTextureArray(
-//     const std::vector<std::string> filenames, ComPtr<ID3D11Texture2D>
-//     &texture, ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
-//
-//     using namespace std;
-//
-//     if (filenames.empty())
-//         return;
-//
-//     // 紐⑤뱺 ?대?吏??width? height媛
-//     媛숇떎怨?媛?뺥빀?덈떎.
-//
-//     // ?뚯씪濡쒕????대?吏 ?щ윭 媛쒕? ?쎌뼱?ㅼ엯?덈떎.
-//     int width = 0, height = 0;
-//     vector<vector<uint8_t>> imageArray;
-//     for (const auto &f : filenames) {
-//
-//         cout << f << endl;
-//
-//         std::vector<uint8_t> image;
-//
-//         ReadImage(f, image, width, height);
-//
-//         imageArray.push_back(image);
-//     }
-//
-//     UINT size = UINT(filenames.size());
-//
-//     // Texture2DArray瑜?留뚮벊?덈떎. ?대븣 ?곗씠?곕? CPU濡쒕???蹂듭궗?섏?
-//     ?딆뒿?덈떎. D3D11_TEXTURE2D_DESC txtDesc; ZeroMemory(&txtDesc,
-//     sizeof(txtDesc)); txtDesc.Width = UINT(width); txtDesc.Height =
-//     UINT(height); txtDesc.MipLevels = 0; // 諛됰㏊ ?덈꺼 理쒕?
-//     txtDesc.ArraySize = size;
-//     txtDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-//     txtDesc.SampleDesc.Count = 1;
-//     txtDesc.SampleDesc.Quality = 0;
-//     txtDesc.Usage = D3D11_USAGE_DEFAULT; // ?ㅽ뀒?댁쭠
-//     ?띿뒪異곕줈遺??蹂듭궗 媛?? txtDesc.BindFlags =
-//     D3D11_BIND_SHADER_RESOURCE | D3D11_BIND_RENDER_TARGET;
-//     txtDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS; // 諛됰㏊ ?ъ슜
-//
-//     // 珥덇린 ?곗씠???놁씠 ?띿뒪異곕? 留뚮벊?덈떎.
-//     GpuCore::Instance().device->CreateTexture2D(&txtDesc, NULL,
-//                                                      texture.GetAddressOf());
-//
-//     // ?ㅼ젣濡?留뚮뱾?댁쭊 MipLevels瑜??뺤씤
-//     texture->GetDesc(&txtDesc);
-//     // cout << txtDesc.MipLevels << endl;
-//
-//     // StagingTexture瑜?留뚮뱾?댁꽌 ?섎굹??蹂듭궗?⑸땲??
-//     for (size_t i = 0; i < imageArray.size(); i++) {
-//
-//         auto &image = imageArray[i];
-//
-//         // StagingTexture??Texture2DArray媛 ?꾨땲??Texture2D ?낅땲??
-//         ComPtr<ID3D11Texture2D> stagingTexture = CreateStagingTexture(
-//              width, height, image, txtDesc.Format, 1, 1);
-//
-//         // ?ㅽ뀒?댁쭠 ?띿뒪異곕? ?띿뒪異?諛곗뿴???대떦 ?꾩튂??蹂듭궗?⑸땲??
-//         UINT subresourceIndex =
-//             D3D11CalcSubresource(0, UINT(i), txtDesc.MipLevels);
-//
-//         GpuCore::Instance().device_context->CopySubresourceRegion(
-//             texture.Get(), subresourceIndex, 0, 0, 0,
-//                                        stagingTexture.Get(), 0, NULL);
-//     }
-//
-//     GpuCore::Instance().device->CreateShaderResourceView(
-//         texture.Get(), NULL,
-//                                      textureResourceView.GetAddressOf());
-//
-//     GpuCore::Instance().device_context->GenerateMips(
-//         textureResourceView.Get());
-// }
+void Util::CreateMetallicRoughnessTexture(
+    const std::string metallicFilename, const std::string roughnessFilename,
+    ComPtr<ID3D12Resource> &texture,
+    ComPtr<ID3D12GraphicsCommandList> &commandList) {
+
+    if (!metallicFilename.empty() && (metallicFilename == roughnessFilename)) {
+        Util::CreateTexture(metallicFilename, false, texture, commandList);
+    } else {
+        int mWidth = 0, mHeight = 0;
+        int rWidth = 0, rHeight = 0;
+        std::vector<uint8_t> mImage;
+        std::vector<uint8_t> rImage;
+
+        if (!metallicFilename.empty()) {
+            ReadImage(metallicFilename, mImage, mWidth, mHeight);
+        }
+
+        if (!roughnessFilename.empty()) {
+            ReadImage(roughnessFilename, rImage, rWidth, rHeight);
+        }
+
+        if (!metallicFilename.empty() && !roughnessFilename.empty()) {
+            assert(mWidth == rWidth);
+            assert(mHeight == rHeight);
+        }
+
+        vector<uint8_t> combinedImage(size_t(mWidth * mHeight) * 4);
+        fill(combinedImage.begin(), combinedImage.end(), 0);
+
+        for (size_t i = 0; i < size_t(mWidth * mHeight); i++) {
+            if (rImage.size())
+                combinedImage[4 * i + 1] = rImage[4 * i]; // Green = Roughness
+            if (mImage.size())
+                combinedImage[4 * i + 2] = mImage[4 * i]; // Blue = Metalness
+        }
+
+        CreateTextureHelper(mWidth, mHeight, combinedImage,
+                            DXGI_FORMAT_R8G8B8A8_UNORM, texture, commandList);
+    }
+}
+
+// void Util::CreateDDSTexture(const wchar_t *filename, bool isCubeMap,
+//    ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
+
+//    ComPtr<ID3D12Resource> texture;
+
+//    UINT miscFlags = 0;
+//    if (isCubeMap) {
+//        miscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
+//    }
+
+//    // https://github.com/microsoft/DirectXTK/wiki/DDSTextureLoader
+//    ThrowIfFailed(CreateDDSTextureFromFileEx(
+//        GpuCore::Instance().device.Get(), filename, 0, D3D11_USAGE_DEFAULT,
+//        D3D11_BIND_SHADER_RESOURCE, 0, miscFlags, DDS_LOADER_FLAGS(false),
+//        (ID3D11Resource **)texture.GetAddressOf(),
+//        textureResourceView.GetAddressOf(), NULL));
+//}
 
 ComPtr<ID3D12Resource>
 CreateStagingTexture(const int width, const int height,
@@ -338,13 +322,12 @@ CreateStagingTexture(const int width, const int height,
 
     return stagingTexture;
 }
-//
+
 // ComPtr<ID3D11Texture3D>
 // Util::CreateStagingTexture3D(const int width, const int height, const int
 // depth,
 //                             const DXGI_FORMAT pixelFormat) {
 //
-//    // ?ㅽ뀒?댁쭠 ?띿뒪異?留뚮뱾湲?
 //    D3D11_TEXTURE3D_DESC txtDesc;
 //    ZeroMemory(&txtDesc, sizeof(txtDesc));
 //    txtDesc.Width = width;
@@ -364,80 +347,6 @@ CreateStagingTexture(const int width, const int height,
 //    return stagingTexture;
 //}
 
-//  void Util::CreateMetallicRoughnessTexture(
-//     const std::string metallicFilename, const std::string roughnessFilename,
-//     ComPtr<ID3D11Texture2D> &texture, ComPtr<ID3D11ShaderResourceView> &srv)
-//     {
-//
-//     // GLTF 諛⑹떇? ?대? ?⑹퀜???덉쓬
-//     if (!metallicFilename.empty() && (metallicFilename ==
-//     roughnessFilename))
-//     {
-//         CreateTexture(metallicFilename, false, texture, srv);
-//     } else {
-//         // 蹂꾨룄 ?뚯씪??寃쎌슦 ?곕줈 ?쎌뼱???⑹퀜以띾땲??
-//
-//         // ReadImage()瑜??쒖슜?섍린 ?꾪빐?????대?吏?ㅼ쓣
-//         媛곴컖 4梨꾨꼸濡?蹂???? ?ㅼ떆
-//         // 3梨꾨꼸濡??⑹튂??諛⑹떇?쇰줈 援ы쁽
-//         int mWidth = 0, mHeight = 0;
-//         int rWidth = 0, rHeight = 0;
-//         std::vector<uint8_t> mImage;
-//         std::vector<uint8_t> rImage;
-//
-//         // (嫄곗쓽 ?녾쿋吏留? ??以??섎굹留??덉쓣
-//         寃쎌슦??怨좊젮?섍린 ?꾪빐 媛곴컖 ?뚯씪紐?
-//         // ?뺤씤
-//         if (!metallicFilename.empty()) {
-//             ReadImage(metallicFilename, mImage, mWidth, mHeight);
-//         }
-//
-//         if (!roughnessFilename.empty()) {
-//             ReadImage(roughnessFilename, rImage, rWidth, rHeight);
-//         }
-//
-//         // ???대?吏???댁긽?꾧? 媛숇떎怨?媛??
-//         if (!metallicFilename.empty() && !roughnessFilename.empty()) {
-//             assert(mWidth == rWidth);
-//             assert(mHeight == rHeight);
-//         }
-//
-//         vector<uint8_t> combinedImage(size_t(mWidth * mHeight) * 4);
-//         fill(combinedImage.begin(), combinedImage.end(), 0);
-//
-//         for (size_t i = 0; i < size_t(mWidth * mHeight); i++) {
-//             if (rImage.size())
-//                 combinedImage[4 * i + 1] = rImage[4 * i]; // Green =
-//                 Roughness
-//             if (mImage.size())
-//                 combinedImage[4 * i + 2] = mImage[4 * i]; // Blue =
-//                 Metalness
-//         }
-//
-//         CreateTextureHelper( mWidth, mHeight, combinedImage,
-//                             DXGI_FORMAT_R8G8B8A8_UNORM, texture, srv);
-//     }
-// }
-//
-
-//  void Util::CreateDDSTexture( const wchar_t *filename, bool isCubeMap,
-//     ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
-//
-//     ComPtr<ID3D11Texture2D> texture;
-//
-//     UINT miscFlags = 0;
-//     if (isCubeMap) {
-//         miscFlags |= D3D11_RESOURCE_MISC_TEXTURECUBE;
-//     }
-//
-//     // https://github.com/microsoft/DirectXTK/wiki/DDSTextureLoader
-//     ThrowIfFailed(CreateDDSTextureFromFileEx(
-//         GpuCore::Instance().device.Get(), filename, 0, D3D11_USAGE_DEFAULT,
-//         D3D11_BIND_SHADER_RESOURCE, 0, miscFlags, DDS_LOADER_FLAGS(false),
-//         (ID3D11Resource **)texture.GetAddressOf(),
-//         textureResourceView.GetAddressOf(), NULL));
-// }
-//
 //  void Util::WriteToFile(
 //                                ComPtr<ID3D11Texture2D> &textureToWrite,
 //                                const std::string filename) {
@@ -448,9 +357,8 @@ CreateStagingTexture(const int width, const int height,
 //     desc.SampleDesc.Quality = 0;
 //     desc.BindFlags = 0;
 //     desc.MiscFlags = 0;
-//     desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ; // CPU?먯꽌 ?쎄린
-//     媛?? desc.Usage = D3D11_USAGE_STAGING; // GPU?먯꽌 CPU濡?蹂대궪
-//     ?곗씠?곕? ?꾩떆 蹂닿?
+//     desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
+//     媛?? desc.Usage = D3D11_USAGE_STAGING; 
 //
 //     ComPtr<ID3D11Texture2D> stagingTexture;
 //     if (FAILED(GpuCore::Instance().device->CreateTexture2D(
@@ -459,10 +367,8 @@ CreateStagingTexture(const int width, const int height,
 //         cout << "Failed()" << endl;
 //     }
 //
-//     // 李멸퀬: ?꾩껜 蹂듭궗????
 //     // context->CopyResource(stagingTexture.Get(), pTemp.Get());
 //
-//     // ?쇰?留?蹂듭궗?????ъ슜
 //     D3D11_BOX box;
 //     box.left = 0;
 //     box.right = desc.Width;
@@ -474,7 +380,6 @@ CreateStagingTexture(const int width, const int height,
 //         stagingTexture.Get(), 0, 0, 0, 0,
 //                                    textureToWrite.Get(), 0, &box);
 //
-//     // R8G8B8A8 ?대씪怨?媛??
 //     std::vector<uint8_t> pixels(desc.Width * desc.Height * 4);
 //
 //     D3D11_MAPPED_SUBRESOURCE ms;
@@ -482,7 +387,6 @@ CreateStagingTexture(const int width, const int height,
 //                                                  D3D11_MAP_READ, NULL,
 //                  &ms); // D3D11_MAP_READ 二쇱쓽
 //
-//     // ?띿뒪異곌? ?묒쓣 寃쎌슦?먮뒗
 //     // ms.RowPitch媛 width * sizeof(uint8_t) * 4蹂대떎 ???섎룄
 //     ?덉뼱??
 //     // for臾몄쑝濡?媛濡쒖쨪 ?섎굹??蹂듭궗

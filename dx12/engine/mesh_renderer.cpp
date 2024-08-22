@@ -256,8 +256,7 @@ void MeshRenderer::Render() {
 
             // dx12::GpuCore::Instance().device_context->VSSetShaderResources(
             //     0, 1, mesh->heightSRV.GetAddressOf());
-            //// 臾쇱껜 ?뚮뜑留곹븷 ???щ윭媛吏 ?띿뒪異??ъ슜 (t0
-            ///遺?곗떆??
+
             // vector<ID3D11ShaderResourceView *> resViews = {
             //     mesh->albedoSRV.Get(), mesh->normalSRV.Get(),
             //     mesh->aoSRV.Get(), mesh->metallicRoughnessSRV.Get(),

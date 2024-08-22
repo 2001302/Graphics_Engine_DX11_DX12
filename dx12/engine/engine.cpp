@@ -1,7 +1,15 @@
-﻿#include "engine.h"
+#include "engine.h"
 #include "../foundation/behavior_tree_builder.h"
 
 namespace core {
+
+auto camera_node = std::make_shared<CameraNodeInvoker>();
+auto shared_resource_node = std::make_shared<SharedResourceNodeInvoker>();
+auto game_object_node = std::make_shared<GameObjectNodeInvoker>();
+auto gui_node = std::make_shared<GuiNodeInvoker>();
+auto start_rendering_node = std::make_shared<StartRenderingNode>();
+auto present_node = std::make_shared<PresentNode>();
+auto light_node = std::make_shared<LightNodeInvoker>();
 
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
@@ -10,15 +18,6 @@ Engine::Engine() {
     start_tree = std::make_shared<foundation::BehaviorTreeBuilder>();
     update_tree = std::make_shared<foundation::BehaviorTreeBuilder>();
     render_tree = std::make_shared<foundation::BehaviorTreeBuilder>();
-
-    
-    camera_node = std::make_shared<CameraNodeInvoker>();
-    light_node = std::make_shared<LightNodeInvoker>();
-    shared_resource_node = std::make_shared<SharedResourceNodeInvoker>();
-    game_object_node = std::make_shared<GameObjectNodeInvoker>();
-    gui_node = std::make_shared<GuiNodeInvoker>();
-    start_rendering_node = std::make_shared<StartRenderingNode>();
-    present_node = std::make_shared<PresentNode>();
 };
 
 bool Engine::Start() {
@@ -66,12 +65,12 @@ bool Engine::Start() {
 
 bool Engine::Frame() {
 
-    //update
+    // update
     black_board->job_context->dt = ImGui::GetIO().DeltaTime;
     black_board->job_context->stage_type = EnumStageType::eUpdate;
     update_tree->Run();
 
-    //render
+    // render
     black_board->job_context->stage_type = EnumStageType::eRender;
     render_tree->Run();
 

@@ -134,14 +134,6 @@ bool GpuCore::Initialize() {
         }
     }
 
-    ThrowIfFailed(device->CreateCommandAllocator(
-        D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&command_allocator)));
-
-    ThrowIfFailed(device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
-                                            command_allocator.Get(), nullptr,
-                                            IID_PPV_ARGS(&commandList)));
-    commandList->Close();
-
     ThrowIfFailed(
         device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)));
     fence_value = 1;

@@ -68,9 +68,6 @@
     <ClCompile Include="foundation\node.cpp">
       <Filter>Foundation\Structure</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\graphics_common.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\graphics_core.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -240,9 +237,6 @@
     <ClInclude Include="foundation\message.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\graphics_common.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\graphics_core.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -313,6 +307,9 @@
       <Filter>Engine\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="graphics\d3dx12.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\command_pool.h">
       <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>

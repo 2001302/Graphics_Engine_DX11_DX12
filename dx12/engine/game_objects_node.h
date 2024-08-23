@@ -16,6 +16,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
 
         auto manager = black_board->job_context;
         auto gui = black_board->gui;
+        auto command_pool = black_board->command_pool;
 
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
@@ -164,31 +165,44 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
 
-                dx12::GpuCore::Instance().commandList->SetGraphicsRootSignature(
+                CD3DX12_RECT scissorRect(
+                    0, 0,
+                    static_cast<LONG>(foundation::Env::Instance().screen_width),
+                    static_cast<LONG>(
+                        foundation::Env::Instance().screen_height));
+                CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
+                    dx12::GpuCore::Instance()
+                        .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
+                    dx12::GpuCore::Instance().frame_index,
+                    dx12::GpuCore::Instance().rtv_descriptor_size);
+                const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+                command_pool->Get(0)->ClearRenderTargetView(
+                    rtvHandle, clearColor, 0, nullptr);
+
+                command_pool->Get(0)->RSSetViewports(
+                    1, &dx12::GpuCore::Instance().viewport);
+                command_pool->Get(0)->RSSetScissorRects(1, &scissorRect);
+
+                command_pool->Get(0)->OMSetRenderTargets(1, &rtvHandle, false,
+                                                         nullptr);
+
+                command_pool->Get(0)->SetGraphicsRootSignature(
                     defaultSolidPSO->root_signature);
-
-                dx12::GpuCore::Instance().commandList->SetPipelineState(
+                command_pool->Get(0)->SetPipelineState(
                     defaultSolidPSO->pipeline_state);
-
-                dx12::GpuCore::Instance().commandList->SetDescriptorHeaps(
+                command_pool->Get(0)->SetDescriptorHeaps(
                     _countof(samplers_heap), samplers_heap);
+                command_pool->Get(0)->SetGraphicsRootDescriptorTable(
+                    0, manager->sampler_heap
+                           ->GetGPUDescriptorHandleForHeapStart());
+                command_pool->Get(0)->SetGraphicsRootConstantBufferView(
+                    2, manager->global_consts_GPU->GetGPUVirtualAddress());
+                command_pool->Get(0)->SetGraphicsRootConstantBufferView(
+                    3, renderer->mesh_consts.Get()->GetGPUVirtualAddress());
+                command_pool->Get(0)->SetGraphicsRootConstantBufferView(
+                    4, renderer->material_consts.Get()->GetGPUVirtualAddress());
 
-                dx12::GpuCore::Instance()
-                    .commandList->SetGraphicsRootDescriptorTable(
-                        0, manager->sampler_heap
-                               ->GetGPUDescriptorHandleForHeapStart());
-                dx12::GpuCore::Instance()
-                    .commandList->SetGraphicsRootConstantBufferView(
-                        2, manager->global_consts_GPU->GetGPUVirtualAddress());
-                dx12::GpuCore::Instance()
-                    .commandList->SetGraphicsRootConstantBufferView(
-                        3, renderer->mesh_consts.Get()->GetGPUVirtualAddress());
-                dx12::GpuCore::Instance()
-                    .commandList->SetGraphicsRootConstantBufferView(
-                        4, renderer->material_consts.Get()
-                               ->GetGPUVirtualAddress());
-
-                renderer->Render();
+                renderer->Render(command_pool->Get(0));
             }
 
             break;

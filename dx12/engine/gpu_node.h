@@ -5,62 +5,64 @@
 #include "../graphics/graphics_util.h"
 
 namespace core {
-class ResolveBufferNode : public foundation::BehaviorActionNode {
+// class ResolveBufferNode : public foundation::BehaviorActionNode {
+//     foundation::EnumBehaviorTreeStatus OnInvoke() override {
+//
+//          dx12::GpuCore::Instance().commandList->ResolveSubresource(
+//              dx12::GpuCore::Instance().resolved_buffer.Get(), 0,
+//              dx12::GpuCore::Instance().float_buffer.Get(), 0,
+//              DXGI_FORMAT_R16G16B16A16_FLOAT);
+//
+//         return foundation::EnumBehaviorTreeStatus::eSuccess;
+//     }
+// };
+
+class CommandManageNode : public foundation::BehaviorActionNode {
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
-        // dx12::GpuCore::Instance().commandList->ResolveSubresource(
-        //     dx12::GpuCore::Instance().resolved_buffer.Get(), 0,
-        //     dx12::GpuCore::Instance().float_buffer.Get(), 0,
-        //     DXGI_FORMAT_R16G16B16A16_FLOAT);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
+        auto manager = black_board->job_context;
 
-class StartRenderingNode : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+        switch (manager->stage_type) {
+        case EnumStageType::eInitialize: {
+            black_board->command_pool->Initialize();
 
-        // reset the command list and allocator
-        dx12::GpuCore::Instance().command_allocator->Reset();
-        dx12::GpuCore::Instance().commandList->Reset(
-            dx12::GpuCore::Instance().command_allocator.Get(), nullptr);
+            memset(&dx12::GpuCore::Instance().viewport, 0,
+                   sizeof(D3D12_VIEWPORT));
+            auto viewport = dx12::GpuCore::Instance().viewport;
+            dx12::GpuCore::Instance().viewport.TopLeftX = 0.0f;
+            dx12::GpuCore::Instance().viewport.TopLeftY = 0.0f;
+            dx12::GpuCore::Instance().viewport.Width =
+                (float)foundation::Env::Instance().screen_width;
+            dx12::GpuCore::Instance().viewport.Height =
+                (float)foundation::Env::Instance().screen_height;
+            dx12::GpuCore::Instance().viewport.MinDepth = 0.0f;
+            dx12::GpuCore::Instance().viewport.MaxDepth = 1.0f;
 
-        memset(&dx12::GpuCore::Instance().viewport, 0, sizeof(D3D12_VIEWPORT));
-        dx12::GpuCore::Instance().viewport.TopLeftX = 0.0f;
-        dx12::GpuCore::Instance().viewport.TopLeftY = 0.0f;
-        dx12::GpuCore::Instance().viewport.Width =
-            (float)foundation::Env::Instance().screen_width;
-        dx12::GpuCore::Instance().viewport.Height =
-            (float)foundation::Env::Instance().screen_height;
-        dx12::GpuCore::Instance().viewport.MinDepth = 0.0f;
-        dx12::GpuCore::Instance().viewport.MaxDepth = 1.0f;
+            break;
+        }
+        case EnumStageType::eUpdate: {
 
-        CD3DX12_RECT scissorRect(
-            0, 0, static_cast<LONG>(foundation::Env::Instance().screen_width),
-            static_cast<LONG>(foundation::Env::Instance().screen_height));
-        dx12::GpuCore::Instance().commandList->RSSetViewports(
-            1, &dx12::GpuCore::Instance().viewport);
-        dx12::GpuCore::Instance().commandList->RSSetScissorRects(1,
-                                                                 &scissorRect);
+            break;
+        }
+        case EnumStageType::eRender: {
+            black_board->command_pool->Open();
 
-        auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            dx12::GpuCore::Instance()
-                .render_targets[dx12::GpuCore::Instance().frame_index]
-                .Get(),
-            D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-
-        dx12::GpuCore::Instance().commandList->ResourceBarrier(1, &barrier);
-
-        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
-            dx12::GpuCore::Instance()
-                .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
-            dx12::GpuCore::Instance().frame_index,
-            dx12::GpuCore::Instance().rtv_descriptor_size);
-        const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-        dx12::GpuCore::Instance().commandList->ClearRenderTargetView(
-            rtvHandle, clearColor, 0, nullptr);
-        dx12::GpuCore::Instance().commandList->OMSetRenderTargets(
-            1, &rtvHandle, false, nullptr);
+            CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
+                dx12::GpuCore::Instance()
+                    .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
+                dx12::GpuCore::Instance().frame_index,
+                dx12::GpuCore::Instance().rtv_descriptor_size);
+            const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+            black_board->command_pool->Get(0)->ClearRenderTargetView(
+                rtvHandle, clearColor, 0, nullptr);
+            break;
+        }
+        default:
+            break;
+        }
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
@@ -69,11 +71,6 @@ class StartRenderingNode : public foundation::BehaviorActionNode {
 class PresentNode : public foundation::BehaviorActionNode {
 
     void WaitForPreviousFrame() {
-        // WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST
-        // PRACTICE. This is code implemented as such for simplicity. The
-        // D3D12HelloFrameBuffering sample illustrates how to use fences for
-        // efficient resource usage and to maximize GPU utilization.
-
         // Signal and increment the fence value.
         const UINT64 fence = dx12::GpuCore::Instance().fence_value;
         dx12::GpuCore::Instance().command_queue->Signal(
@@ -84,7 +81,8 @@ class PresentNode : public foundation::BehaviorActionNode {
         if (dx12::GpuCore::Instance().fence->GetCompletedValue() < fence) {
             dx12::GpuCore::Instance().fence->SetEventOnCompletion(
                 fence, dx12::GpuCore::Instance().fence_event);
-            WaitForSingleObject(dx12::GpuCore::Instance().fence_event, INFINITE);
+            WaitForSingleObject(dx12::GpuCore::Instance().fence_event,
+                                INFINITE);
         }
 
         dx12::GpuCore::Instance().frame_index =
@@ -93,20 +91,10 @@ class PresentNode : public foundation::BehaviorActionNode {
 
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
-        // preset the render target as the back buffer
-        auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            dx12::GpuCore::Instance()
-                .render_targets[dx12::GpuCore::Instance().frame_index]
-                .Get(),
-            D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-        dx12::GpuCore::Instance().commandList->ResourceBarrier(1, &barrier);
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
 
-        // close the command list after all commands have been added
-        dx12::GpuCore::Instance().commandList->Close();
-        // execute the command list
-        dx12::GpuCore::Instance().command_queue->ExecuteCommandLists(
-            1, CommandListCast(
-                   dx12::GpuCore::Instance().commandList.GetAddressOf()));
+        black_board->command_pool->Close();
         dx12::GpuCore::Instance().swap_chain->Present(1, 0);
         WaitForPreviousFrame();
 

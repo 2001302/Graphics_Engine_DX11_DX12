@@ -1,4 +1,4 @@
-﻿#ifndef _GUINODE
+#ifndef _GUINODE
 #define _GUINODE
 
 #include "../foundation/behavior_tree_builder.h"
@@ -14,6 +14,7 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
 
         auto manager = black_board->job_context.get();
         auto gui = black_board->gui;
+        auto command_pool = black_board->command_pool;
 
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
@@ -43,6 +44,18 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
             gui->Frame();
             gui->ClearNodeItem();
 
+            CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
+                dx12::GpuCore::Instance()
+                    .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
+                dx12::GpuCore::Instance().frame_index,
+                dx12::GpuCore::Instance().rtv_descriptor_size);
+            command_pool->Get(1)->RSSetViewports(
+                1, &dx12::GpuCore::Instance().viewport);
+            command_pool->Get(1)->OMSetRenderTargets(1, &rtvHandle, false,
+                                                     nullptr);
+
+            ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
+                                          command_pool->Get(1));
             break;
         }
         default:

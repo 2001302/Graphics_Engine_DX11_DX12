@@ -161,7 +161,6 @@
     <ClCompile Include="foundation\sequence_node.cpp" />
     <ClCompile Include="foundation\setting_ui.cpp" />
     <ClCompile Include="foundation\ui.cpp" />
-    <ClCompile Include="graphics\graphics_common.cpp" />
     <ClCompile Include="graphics\graphics_core.cpp" />
     <ClCompile Include="graphics\graphics_pso.cpp" />
     <ClCompile Include="graphics\graphics_util.cpp" />
@@ -219,10 +218,10 @@
     <ClInclude Include="foundation\setting_ui.h" />
     <ClInclude Include="foundation\ui.h" />
     <ClInclude Include="graphics\d3dx12.h" />
-    <ClInclude Include="graphics\graphics_common.h" />
     <ClInclude Include="graphics\graphics_core.h" />
     <ClInclude Include="graphics\graphics_pso.h" />
     <ClInclude Include="graphics\graphics_util.h" />
+    <ClInclude Include="graphics\command_pool.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="foundation\ImGui\NodeEditor\imgui_bezier_math.inl" />

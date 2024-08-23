@@ -25,7 +25,6 @@ class Engine : public foundation::Platform {
     bool Stop() override final;
 
   private:
-    std::shared_ptr<foundation::SettingUi> gui;
     std::shared_ptr<BlackBoard> black_board;
     std::unique_ptr<MessageReceiver> message_receiver;
 

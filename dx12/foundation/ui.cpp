@@ -1,4 +1,4 @@
-﻿#include "ui.h"
+#include "ui.h"
 
 using namespace foundation;
 
@@ -38,8 +38,6 @@ bool IGui::Frame() {
     ImGui::PopStyleVar(2);
 
     ImGui::Render();
-    ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
-                                  dx12::GpuCore::Instance().commandList.Get());
 
     return true;
 }

@@ -50,11 +50,7 @@ class GpuCore {
 
     ComPtr<IDXGISwapChain3> swap_chain;
     ComPtr<ID3D12Device> device;
-
-    ComPtr<ID3D12CommandAllocator> command_allocator;
     ComPtr<ID3D12CommandQueue> command_queue;
-
-    ComPtr<ID3D12GraphicsCommandList> commandList;
 
     ComPtr<ID3D12Resource> render_targets[2];
     ComPtr<ID3D12DescriptorHeap> rtv_heap;
@@ -69,9 +65,7 @@ class GpuCore {
     D3D12_VIEWPORT viewport;
 
   private:
-    GpuCore()
-        : swap_chain(0), device(0), command_queue(0),
-          viewport(D3D12_VIEWPORT()) {}
+    GpuCore() : swap_chain(0), device(0), viewport(D3D12_VIEWPORT()) {}
 };
 
 } // namespace dx12

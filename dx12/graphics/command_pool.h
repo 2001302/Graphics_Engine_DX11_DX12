@@ -33,6 +33,22 @@ class CommandPool {
             ThrowIfFailed(
                 command_lists[i]->Reset(command_allocator[i].Get(), nullptr));
         }
+
+        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
+            dx12::GpuCore::Instance()
+                .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
+            dx12::GpuCore::Instance().frame_index,
+            dx12::GpuCore::Instance().rtv_descriptor_size);
+        const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+        command_lists[0]->ClearRenderTargetView(rtvHandle, clearColor, 0,
+                                               nullptr);
+
+        CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
+            dx12::GpuCore::Instance()
+                .dsvHeap->GetCPUDescriptorHandleForHeapStart());
+        command_lists[0]->ClearDepthStencilView(
+            dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
     };
     void Close() {
         for (int i = 0; i < 2; i++) {

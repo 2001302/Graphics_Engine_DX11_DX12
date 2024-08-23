@@ -52,6 +52,26 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 solidRS.DepthClipEnable = true;
                 solidRS.MultisampleEnable = true;
 
+                // depth
+                D3D12_DEPTH_STENCIL_DESC dsDesc;
+                ZeroMemory(&dsDesc, sizeof(dsDesc));
+                dsDesc.DepthEnable = true;
+                dsDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
+                dsDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
+                dsDesc.StencilEnable = false; // Stencil 불필요
+                dsDesc.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
+                dsDesc.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
+                // 앞면에 대해서 어떻게 작동할지 설정
+                dsDesc.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
+                dsDesc.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
+                dsDesc.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
+                dsDesc.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+                // 뒷면에 대해 어떻게 작동할지 설정 (뒷면도 그릴 경우)
+                dsDesc.BackFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
+                dsDesc.BackFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
+                dsDesc.BackFace.StencilPassOp = D3D12_STENCIL_OP_REPLACE;
+                dsDesc.BackFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
+
                 // s0 ~ s6
                 CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
                 samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 6, 0);
@@ -109,8 +129,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 psoDesc.PS = CD3DX12_SHADER_BYTECODE(basicPS.Get());
                 psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(solidRS);
                 psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-                psoDesc.DepthStencilState.DepthEnable = FALSE;
-                psoDesc.DepthStencilState.StencilEnable = FALSE;
+                psoDesc.DepthStencilState = dsDesc;
                 psoDesc.SampleMask = UINT_MAX;
                 psoDesc.PrimitiveTopologyType =
                     D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -125,18 +144,14 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                             IID_PPV_ARGS(&defaultSolidPSO->pipeline_state)));
             }
 
-            // additional object 2
-            MeshData mesh = GeometryGenerator::MakeBox(0.2f);
+            // sample object
             Vector3 center(0.0f, 0.5f, 2.5f);
-
-            auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
+            std::string base_path = "Assets/Characters/zelda/";
+            std::string file_name = "zeldaPosed001.fbx";
+            auto renderer =
+                std::make_shared<MeshRenderer>(base_path, file_name);
 
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
-            renderer->material_consts.GetCpu().albedoFactor =
-                Vector3(1.0f, 0.2f, 0.2f);
-            renderer->material_consts.GetCpu().roughnessFactor = 0.5f;
-            renderer->material_consts.GetCpu().metallicFactor = 0.9f;
-            renderer->material_consts.GetCpu().emissionFactor = Vector3(0.0f);
             renderer->UpdateConstantBuffers();
 
             auto obj = std::make_shared<Model>();
@@ -160,6 +175,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
 
             ID3D12DescriptorHeap *samplers_heap[] = {
                 manager->sampler_heap.Get()};
+            auto command_list = command_pool->Get(0);
 
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
@@ -175,34 +191,43 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                         .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
                     dx12::GpuCore::Instance().frame_index,
                     dx12::GpuCore::Instance().rtv_descriptor_size);
-                const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-                command_pool->Get(0)->ClearRenderTargetView(
-                    rtvHandle, clearColor, 0, nullptr);
+                CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
+                    dx12::GpuCore::Instance()
+                        .dsvHeap->GetCPUDescriptorHandleForHeapStart());
 
-                command_pool->Get(0)->RSSetViewports(
-                    1, &dx12::GpuCore::Instance().viewport);
-                command_pool->Get(0)->RSSetScissorRects(1, &scissorRect);
+                for (auto mesh : renderer->meshes) {
 
-                command_pool->Get(0)->OMSetRenderTargets(1, &rtvHandle, false,
-                                                         nullptr);
+                    command_list->RSSetViewports(
+                        1, &dx12::GpuCore::Instance().viewport);
+                    command_list->RSSetScissorRects(1, &scissorRect);
+                    command_list->OMSetRenderTargets(1, &rtvHandle, false,
+                                                     &dsvHandle);
+                    command_list->SetGraphicsRootSignature(
+                        defaultSolidPSO->root_signature);
+                    command_list->SetPipelineState(
+                        defaultSolidPSO->pipeline_state);
+                    command_list->SetDescriptorHeaps(_countof(samplers_heap),
+                                                     samplers_heap);
+                    command_list->SetGraphicsRootDescriptorTable(
+                        0, manager->sampler_heap
+                               ->GetGPUDescriptorHandleForHeapStart());
+                    command_list->SetGraphicsRootConstantBufferView(
+                        2, manager->global_consts_GPU->GetGPUVirtualAddress());
+                    command_list->SetGraphicsRootConstantBufferView(
+                        3, renderer->mesh_consts.Get()->GetGPUVirtualAddress());
+                    command_list->SetGraphicsRootConstantBufferView(
+                        4, renderer->material_consts.Get()
+                               ->GetGPUVirtualAddress());
 
-                command_pool->Get(0)->SetGraphicsRootSignature(
-                    defaultSolidPSO->root_signature);
-                command_pool->Get(0)->SetPipelineState(
-                    defaultSolidPSO->pipeline_state);
-                command_pool->Get(0)->SetDescriptorHeaps(
-                    _countof(samplers_heap), samplers_heap);
-                command_pool->Get(0)->SetGraphicsRootDescriptorTable(
-                    0, manager->sampler_heap
-                           ->GetGPUDescriptorHandleForHeapStart());
-                command_pool->Get(0)->SetGraphicsRootConstantBufferView(
-                    2, manager->global_consts_GPU->GetGPUVirtualAddress());
-                command_pool->Get(0)->SetGraphicsRootConstantBufferView(
-                    3, renderer->mesh_consts.Get()->GetGPUVirtualAddress());
-                command_pool->Get(0)->SetGraphicsRootConstantBufferView(
-                    4, renderer->material_consts.Get()->GetGPUVirtualAddress());
-
-                renderer->Render(command_pool->Get(0));
+                    command_list->IASetPrimitiveTopology(
+                        D3D12_PRIMITIVE_TOPOLOGY::
+                            D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                    command_list->IASetVertexBuffers(0, 1,
+                                                     &mesh->vertexBufferView);
+                    command_list->IASetIndexBuffer(&mesh->indexBufferView);
+                    command_list->DrawIndexedInstanced(mesh->indexCount, 1, 0,
+                                                       0, 0);
+                }
             }
 
             break;

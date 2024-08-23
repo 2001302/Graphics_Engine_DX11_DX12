@@ -44,6 +44,7 @@ class GpuCore {
         return instance;
     }
     bool Initialize();
+    void CreateBuffer();
 
     bool useMSAA = true;
     UINT num_quality_levels = 0;
@@ -55,6 +56,8 @@ class GpuCore {
     ComPtr<ID3D12Resource> render_targets[2];
     ComPtr<ID3D12DescriptorHeap> rtv_heap;
     UINT rtv_descriptor_size;
+    ComPtr<ID3D12DescriptorHeap> dsvHeap;
+    ComPtr<ID3D12Resource> depthStencilBuffer;
 
     // Synchronization objects.
     UINT frame_index;

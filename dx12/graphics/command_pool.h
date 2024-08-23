@@ -1,6 +1,8 @@
 #ifndef _COMMAND_POOL
 #define _COMMAND_POOL
 
+#define NUM_COMAAND_LIST 2
+
 #include "graphics_core.h"
 
 namespace dx12 {
@@ -8,7 +10,7 @@ class CommandPool {
   public:
     CommandPool(){};
     void Initialize() {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < NUM_COMAAND_LIST; i++) {
             ThrowIfFailed(GpuCore::Instance().device->CreateCommandAllocator(
                 D3D12_COMMAND_LIST_TYPE_DIRECT,
                 IID_PPV_ARGS(&command_allocator[i])));
@@ -19,7 +21,7 @@ class CommandPool {
         }
     }
     void Open() {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < NUM_COMAAND_LIST; i++) {
             command_allocator[i]->Reset();
             auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
                 dx12::GpuCore::Instance()
@@ -33,25 +35,9 @@ class CommandPool {
             ThrowIfFailed(
                 command_lists[i]->Reset(command_allocator[i].Get(), nullptr));
         }
-
-        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
-            dx12::GpuCore::Instance()
-                .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
-            dx12::GpuCore::Instance().frame_index,
-            dx12::GpuCore::Instance().rtv_descriptor_size);
-        const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-        command_lists[0]->ClearRenderTargetView(rtvHandle, clearColor, 0,
-                                               nullptr);
-
-        CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
-            dx12::GpuCore::Instance()
-                .dsvHeap->GetCPUDescriptorHandleForHeapStart());
-        command_lists[0]->ClearDepthStencilView(
-            dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
-
     };
     void Close() {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < NUM_COMAAND_LIST; i++) {
             auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
                 dx12::GpuCore::Instance()
                     .render_targets[dx12::GpuCore::Instance().frame_index]
@@ -63,15 +49,15 @@ class CommandPool {
         }
 
         dx12::GpuCore::Instance().command_queue->ExecuteCommandLists(
-            2, CommandListCast(command_lists[0].GetAddressOf()));
+            NUM_COMAAND_LIST, CommandListCast(command_lists[0].GetAddressOf()));
     }
     ID3D12GraphicsCommandList *Get(int index) {
         return command_lists[index].Get();
     }
 
   private:
-    ComPtr<ID3D12CommandAllocator> command_allocator[2];
-    ComPtr<ID3D12GraphicsCommandList> command_lists[2];
+    ComPtr<ID3D12CommandAllocator> command_allocator[NUM_COMAAND_LIST];
+    ComPtr<ID3D12GraphicsCommandList> command_lists[NUM_COMAAND_LIST];
 };
 } // namespace dx12
 #endif

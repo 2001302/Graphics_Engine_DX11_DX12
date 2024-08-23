@@ -5,64 +5,65 @@
 #include "../graphics/graphics_util.h"
 
 namespace core {
-// class ResolveBufferNode : public foundation::BehaviorActionNode {
-//     foundation::EnumBehaviorTreeStatus OnInvoke() override {
-//
-//          dx12::GpuCore::Instance().commandList->ResolveSubresource(
-//              dx12::GpuCore::Instance().resolved_buffer.Get(), 0,
-//              dx12::GpuCore::Instance().float_buffer.Get(), 0,
-//              DXGI_FORMAT_R16G16B16A16_FLOAT);
-//
-//         return foundation::EnumBehaviorTreeStatus::eSuccess;
-//     }
-// };
-
-class CommandManageNode : public foundation::BehaviorActionNode {
+class GpuInitializeNode : public foundation::BehaviorActionNode {
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto manager = black_board->job_context;
+        dx12::GpuCore::Instance().Initialize();
+        black_board->command_pool->Initialize();
 
-        switch (manager->stage_type) {
-        case EnumStageType::eInitialize: {
-            black_board->command_pool->Initialize();
+        memset(&dx12::GpuCore::Instance().viewport, 0,
+                sizeof(D3D12_VIEWPORT));
+        auto viewport = dx12::GpuCore::Instance().viewport;
+        dx12::GpuCore::Instance().viewport.TopLeftX = 0.0f;
+        dx12::GpuCore::Instance().viewport.TopLeftY = 0.0f;
+        dx12::GpuCore::Instance().viewport.Width =
+            (float)foundation::Env::Instance().screen_width;
+        dx12::GpuCore::Instance().viewport.Height =
+            (float)foundation::Env::Instance().screen_height;
+        dx12::GpuCore::Instance().viewport.MinDepth = 0.0f;
+        dx12::GpuCore::Instance().viewport.MaxDepth = 1.0f;
 
-            memset(&dx12::GpuCore::Instance().viewport, 0,
-                   sizeof(D3D12_VIEWPORT));
-            auto viewport = dx12::GpuCore::Instance().viewport;
-            dx12::GpuCore::Instance().viewport.TopLeftX = 0.0f;
-            dx12::GpuCore::Instance().viewport.TopLeftY = 0.0f;
-            dx12::GpuCore::Instance().viewport.Width =
-                (float)foundation::Env::Instance().screen_width;
-            dx12::GpuCore::Instance().viewport.Height =
-                (float)foundation::Env::Instance().screen_height;
-            dx12::GpuCore::Instance().viewport.MinDepth = 0.0f;
-            dx12::GpuCore::Instance().viewport.MaxDepth = 1.0f;
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
 
-            break;
-        }
-        case EnumStageType::eUpdate: {
+class BeginRenderNode : public foundation::BehaviorActionNode {
+    foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
-            break;
-        }
-        case EnumStageType::eRender: {
-            black_board->command_pool->Open();
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
 
-            CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
-                dx12::GpuCore::Instance()
-                    .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
-                dx12::GpuCore::Instance().frame_index,
-                dx12::GpuCore::Instance().rtv_descriptor_size);
-            const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-            black_board->command_pool->Get(0)->ClearRenderTargetView(
-                rtvHandle, clearColor, 0, nullptr);
-            break;
-        }
-        default:
-            break;
-        }
+        black_board->command_pool->Open();
+
+        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
+            dx12::GpuCore::Instance()
+                .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
+            dx12::GpuCore::Instance().frame_index,
+            dx12::GpuCore::Instance().rtv_descriptor_size);
+        const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+        black_board->command_pool->Get(0)->ClearRenderTargetView(
+            rtvHandle, clearColor, 0, nullptr);
+
+        CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
+            dx12::GpuCore::Instance()
+                .dsvHeap->GetCPUDescriptorHandleForHeapStart());
+        black_board->command_pool->Get(0)->ClearDepthStencilView(
+            dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
+class EndRenderNode : public foundation::BehaviorActionNode {
+    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        black_board->command_pool->Close();
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
@@ -91,16 +92,23 @@ class PresentNode : public foundation::BehaviorActionNode {
 
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto black_board = dynamic_cast<BlackBoard *>(data_block);
-        assert(black_board != nullptr);
-
-        black_board->command_pool->Close();
         dx12::GpuCore::Instance().swap_chain->Present(1, 0);
         WaitForPreviousFrame();
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
 };
+// class ResolveBufferNode : public foundation::BehaviorActionNode {
+//     foundation::EnumBehaviorTreeStatus OnInvoke() override {
+//
+//          dx12::GpuCore::Instance().commandList->ResolveSubresource(
+//              dx12::GpuCore::Instance().resolved_buffer.Get(), 0,
+//              dx12::GpuCore::Instance().float_buffer.Get(), 0,
+//              DXGI_FORMAT_R16G16B16A16_FLOAT);
+//
+//         return foundation::EnumBehaviorTreeStatus::eSuccess;
+//     }
+// };
 
 } // namespace core
 

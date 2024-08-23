@@ -3,12 +3,14 @@
 
 namespace core {
 
+auto gpu_initialize = std::make_shared<GpuInitializeNode>();
+auto begin_render = std::make_shared<BeginRenderNode>();
+auto end_render = std::make_shared<EndRenderNode>();
 auto camera_node = std::make_shared<CameraNodeInvoker>();
 auto shared_resource_node = std::make_shared<SharedResourceNodeInvoker>();
 auto game_object_node = std::make_shared<GameObjectNodeInvoker>();
 auto gui_node = std::make_shared<GuiNodeInvoker>();
-auto command_manage_node = std::make_shared<CommandManageNode>();
-auto present_node = std::make_shared<PresentNode>();
+auto present = std::make_shared<PresentNode>();
 auto light_node = std::make_shared<LightNodeInvoker>();
 
 Engine::Engine() {
@@ -22,15 +24,13 @@ Engine::Engine() {
 bool Engine::Start() {
     // clang-format off
     Platform::Start();
-
-    dx12::GpuCore::Instance().Initialize();
     
     black_board->job_context->stage_type = EnumStageType::eInitialize;
     
     //initialize
     start_tree->Build(black_board.get())
     ->Sequence()
-        ->Excute(command_manage_node)
+        ->Excute(gpu_initialize)
         ->Excute(camera_node)
         ->Excute(light_node)
         ->Excute(shared_resource_node)
@@ -51,10 +51,11 @@ bool Engine::Start() {
     //render
     render_tree->Build(black_board.get())
     ->Sequence()
-        ->Excute(command_manage_node)
+        ->Excute(begin_render)
         ->Excute(game_object_node)
         ->Excute(gui_node)
-        ->Excute(present_node)
+        ->Excute(end_render)
+        ->Excute(present)
     ->Close();
 
     Frame();

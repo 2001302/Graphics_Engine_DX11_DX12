@@ -63,6 +63,7 @@ class GpuCore {
     ComPtr<ID3D12Resource> resourcce_DSV;
 
     D3D12_VIEWPORT viewport;
+    CD3DX12_RECT scissorRect;
 
     UINT frame_index;
     HANDLE fence_event;

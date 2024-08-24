@@ -181,12 +181,6 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
 
-                CD3DX12_RECT scissorRect(
-                    0, 0,
-                    static_cast<LONG>(foundation::Env::Instance().screen_width),
-                    static_cast<LONG>(
-                        foundation::Env::Instance().screen_height));
-
                 CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle =
                     dx12::GpuCore::Instance().GetHandleRTV();
 
@@ -197,7 +191,8 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
 
                     command_list->RSSetViewports(
                         1, &dx12::GpuCore::Instance().viewport);
-                    command_list->RSSetScissorRects(1, &scissorRect);
+                    command_list->RSSetScissorRects(
+                        1, &dx12::GpuCore::Instance().scissorRect);
                     command_list->OMSetRenderTargets(1, &rtvHandle, false,
                                                      &dsvHandle);
                     command_list->SetGraphicsRootSignature(

@@ -14,17 +14,6 @@ class GpuInitializeNode : public foundation::BehaviorActionNode {
         dx12::GpuCore::Instance().InitializeGPU();
         black_board->conditions->command_pool->InitializeAll();
 
-        memset(&dx12::GpuCore::Instance().viewport, 0, sizeof(D3D12_VIEWPORT));
-        auto viewport = dx12::GpuCore::Instance().viewport;
-        dx12::GpuCore::Instance().viewport.TopLeftX = 0.0f;
-        dx12::GpuCore::Instance().viewport.TopLeftY = 0.0f;
-        dx12::GpuCore::Instance().viewport.Width =
-            (float)foundation::Env::Instance().screen_width;
-        dx12::GpuCore::Instance().viewport.Height =
-            (float)foundation::Env::Instance().screen_height;
-        dx12::GpuCore::Instance().viewport.MinDepth = 0.0f;
-        dx12::GpuCore::Instance().viewport.MaxDepth = 1.0f;
-
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
 };

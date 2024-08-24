@@ -134,6 +134,22 @@ bool GpuCore::InitializeGPU() {
         }
     }
 
+    {
+        scissorRect = CD3DX12_RECT(
+            0, 0, static_cast<LONG>(foundation::Env::Instance().screen_width),
+            static_cast<LONG>(foundation::Env::Instance().screen_height));
+    }
+
+    {
+        memset(&viewport, 0, sizeof(D3D12_VIEWPORT));
+        viewport.TopLeftX = 0.0f;
+        viewport.TopLeftY = 0.0f;
+        viewport.Width = (float)foundation::Env::Instance().screen_width;
+        viewport.Height = (float)foundation::Env::Instance().screen_height;
+        viewport.MinDepth = 0.0f;
+        viewport.MaxDepth = 1.0f;
+    }
+
     CreateBuffer();
 
     ThrowIfFailed(

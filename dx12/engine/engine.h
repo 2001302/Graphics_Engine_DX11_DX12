@@ -53,35 +53,40 @@ class Engine : public foundation::Platform {
 
         switch (umsg) {
         case WM_SIZE: {
-            return message_receiver->OnWindowSizeRequest(black_board->gui.get(),
-                                                         int(LOWORD(lparam)),
-                                                         int(HIWORD(lparam)));
+            return message_receiver->OnWindowSizeRequest(
+                black_board->render_condition->gui.get(), int(LOWORD(lparam)),
+                int(HIWORD(lparam)));
             break;
         }
         case WM_MOUSEMOVE: {
             if (wparam & MK_RBUTTON) {
-                if (CheckIfMouseInViewport(black_board->gui.get(),
-                                           LOWORD(lparam), HIWORD(lparam))) {
+                if (CheckIfMouseInViewport(
+                        black_board->render_condition->gui.get(),
+                        LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseRightDragRequest(
-                        black_board->job_context.get(), black_board->input,
-                        LOWORD(lparam), HIWORD(lparam));
+                        black_board->render_targets.get(),
+                        black_board->render_condition->input, LOWORD(lparam),
+                        HIWORD(lparam));
                 }
             }
             if (wparam & MK_MBUTTON) {
-                if (CheckIfMouseInViewport(black_board->gui.get(),
-                                           LOWORD(lparam), HIWORD(lparam))) {
+                if (CheckIfMouseInViewport(
+                        black_board->render_condition->gui.get(),
+                        LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseWheelDragRequest(
-                        black_board->job_context.get(), black_board->input,
-                        LOWORD(lparam), HIWORD(lparam));
+                        black_board->render_targets.get(),
+                        black_board->render_condition->input, LOWORD(lparam),
+                        HIWORD(lparam));
                 }
             }
             break;
         }
         case WM_MOUSEWHEEL: {
-            if (CheckIfMouseInViewport(black_board->gui.get(), LOWORD(lparam),
-                                       HIWORD(lparam))) {
+            if (CheckIfMouseInViewport(black_board->render_condition->gui.get(),
+                                       LOWORD(lparam), HIWORD(lparam))) {
                 return message_receiver->OnMouseWheelRequest(
-                    black_board->job_context.get(), black_board->input,
+                    black_board->render_targets.get(),
+                    black_board->render_condition->input,
                     GET_WHEEL_DELTA_WPARAM(wparam));
             }
             break;
@@ -90,38 +95,39 @@ class Engine : public foundation::Platform {
         case WM_LBUTTONDOWN:
         case WM_MBUTTONDOWN: {
             return message_receiver->OnMouseDownRequest(
-                black_board->input, LOWORD(lparam), HIWORD(lparam));
+                black_board->render_condition->input, LOWORD(lparam),
+                HIWORD(lparam));
             break;
         }
         case WM_MODEL_LOAD: {
             return message_receiver->OnModelLoadRequest(
-                black_board->job_context.get(), main_window);
+                black_board->render_targets.get(), main_window);
             break;
         }
         case WM_SPHERE_LOAD: {
             return message_receiver->OnSphereLoadRequest(
-                black_board->job_context.get());
+                black_board->render_targets.get());
             break;
         }
         case WM_BOX_LOAD: {
             return message_receiver->OnBoxLoadRequest(
-                black_board->job_context.get());
+                black_board->render_targets.get());
             break;
         }
         case WM_CYLINDER_LOAD: {
             return message_receiver->OnCylinderLoadRequest(
-                black_board->job_context.get());
+                black_board->render_targets.get());
             break;
         }
         case WM_KEYDOWN:
-            black_board->input->KeyPressed(wparam, true);
+            black_board->render_condition->input->KeyPressed(wparam, true);
             if (wparam == VK_ESCAPE) {
                 Stop();
                 DestroyWindow(main_window);
             }
             break;
         case WM_KEYUP:
-            black_board->input->KeyPressed(wparam, false);
+            black_board->render_condition->input->KeyPressed(wparam, false);
             break;
         case WM_DESTROY:
             ::PostQuitMessage(0);

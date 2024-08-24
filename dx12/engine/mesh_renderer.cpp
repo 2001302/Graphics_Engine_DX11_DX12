@@ -169,19 +169,18 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
         if (!meshData.metallicTextureFilename.empty() ||
             !meshData.roughnessTextureFilename.empty()) {
 
-            // if (filesystem::exists(meshData.metallicTextureFilename) &&
-            //     filesystem::exists(meshData.roughnessTextureFilename)) {
+             if (filesystem::exists(meshData.metallicTextureFilename) &&
+                 filesystem::exists(meshData.roughnessTextureFilename)) {
 
-            //    dx12::Util::CreateMetallicRoughnessTexture(
-            //        meshData.metallicTextureFilename,
-            //        meshData.roughnessTextureFilename,
-            //        this->meshes[i]->metallicRoughnessTexture,
-            //        this->meshes[i]->metallicRoughnessSRV);
-            //} else {
-            //    cout << meshData.metallicTextureFilename << " or "
-            //         << meshData.roughnessTextureFilename
-            //         << " does not exists. Skip texture reading." << endl;
-            //}
+                dx12::Util::CreateMetallicRoughnessTexture(
+                    meshData.metallicTextureFilename,
+                    meshData.roughnessTextureFilename,
+                    this->meshes[i]->metallicRoughnessTexture, texture_handle);
+            } else {
+                cout << meshData.metallicTextureFilename << " or "
+                     << meshData.roughnessTextureFilename
+                     << " does not exists. Skip texture reading." << endl;
+            }
         }
 
         if (!meshData.metallicTextureFilename.empty()) {

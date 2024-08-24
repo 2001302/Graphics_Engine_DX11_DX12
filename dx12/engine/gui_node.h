@@ -12,14 +12,16 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto manager = black_board->job_context.get();
-        auto gui = black_board->gui;
-        auto command_pool = black_board->command_pool;
+        auto target = black_board->render_targets.get();
+        auto condition = black_board->render_condition.get();
 
-        switch (manager->stage_type) {
+        auto gui = condition->gui;
+        auto command_pool = condition->command_pool;
+
+        switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
             gui->Start();
-            gui->PushInfoItem(manager);
+            gui->PushInfoItem(target);
 
             D3D12_DESCRIPTOR_HEAP_DESC desc = {};
             desc.NumDescriptors = 1;

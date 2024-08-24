@@ -161,7 +161,6 @@ class Util {
     static void CreateMetallicRoughnessTexture(
         const std::string metallicFiilename,
         const std::string roughnessFilename, ComPtr<ID3D12Resource> &texture,
-        ComPtr<ID3D12GraphicsCommandList> &commandList,
         CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle);
 
     //static void

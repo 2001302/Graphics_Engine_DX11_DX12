@@ -14,11 +14,10 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto manager = black_board->job_context;
-        auto gui = black_board->gui;
-        auto command_pool = black_board->command_pool;
+        auto condition = black_board->render_condition.get();
+        auto targets = black_board->render_targets.get();
 
-        switch (manager->stage_type) {
+        switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
             { // pso
@@ -158,13 +157,13 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             auto obj = std::make_shared<Model>();
             obj->AddComponent(EnumComponentType::eRenderer, renderer);
 
-            manager->objects.insert({obj->GetEntityId(), obj});
+            targets->objects.insert({obj->GetEntityId(), obj});
 
             break;
         }
         case EnumStageType::eUpdate: {
 
-            for (auto &i : manager->objects) {
+            for (auto &i : targets->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 renderer->UpdateConstantBuffers();
@@ -175,10 +174,10 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
         case EnumStageType::eRender: {
 
             ID3D12DescriptorHeap *samplers_heap[] = {
-                manager->sampler_heap.Get()};
-            auto command_list = command_pool->Get(0);
+                condition->sampler_heap.Get()};
+            auto command_list = condition->command_pool->Get(0);
 
-            for (auto &i : manager->objects) {
+            for (auto &i : targets->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
 
@@ -215,10 +214,11 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                         1, mesh->texture_heap.GetAddressOf());
 
                     command_list->SetGraphicsRootDescriptorTable(
-                        0, manager->sampler_heap
+                        0, condition->sampler_heap
                                ->GetGPUDescriptorHandleForHeapStart());
                     command_list->SetGraphicsRootConstantBufferView(
-                        2, manager->global_consts_GPU->GetGPUVirtualAddress());
+                        2,
+                        condition->global_consts_GPU->GetGPUVirtualAddress());
                     command_list->SetGraphicsRootConstantBufferView(
                         3, renderer->mesh_consts.Get()->GetGPUVirtualAddress());
                     command_list->SetGraphicsRootConstantBufferView(

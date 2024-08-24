@@ -128,6 +128,7 @@ void ReadImage(const std::string albedoFilename,
         }
 }
 
+//todo : neet to optimize
 void CreateTextureHelper(const int width, const int height,
                          const vector<uint8_t> &image,
                          const DXGI_FORMAT pixelFormat,
@@ -267,7 +268,6 @@ void Util::CreateTexture(const std::string albedoFilename,
 void Util::CreateMetallicRoughnessTexture(
     const std::string metallicFilename, const std::string roughnessFilename,
     ComPtr<ID3D12Resource> &texture,
-    ComPtr<ID3D12GraphicsCommandList> &commandList,
     CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle) {
 
     if (!metallicFilename.empty() && (metallicFilename == roughnessFilename)) {

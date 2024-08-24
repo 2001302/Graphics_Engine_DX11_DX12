@@ -1,4 +1,4 @@
-﻿#ifndef _CAMERANODE
+#ifndef _CAMERANODE
 #define _CAMERANODE
 
 #include "../foundation/behavior_tree_builder.h"
@@ -12,17 +12,18 @@ class CameraNodeInvoker : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto manager = black_board->job_context.get();
+        auto condition = black_board->render_condition.get();
+        auto targets = black_board->render_targets.get();
 
-        switch (manager->stage_type) {
+        switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
-            manager->camera = std::make_unique<Camera>();
-            manager->camera->Initialize();
-            manager->camera->Update();
+            targets->camera = std::make_unique<Camera>();
+            targets->camera->Initialize();
+            targets->camera->Update();
             break;
         }
         case EnumStageType::eUpdate: {
-            manager->camera->Update();
+            targets->camera->Update();
             break;
         }
         case EnumStageType::eRender: {

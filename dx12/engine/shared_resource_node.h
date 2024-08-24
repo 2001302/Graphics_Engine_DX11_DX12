@@ -13,13 +13,14 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto manager = black_board->job_context.get();
+        auto target = black_board->render_targets.get();
+        auto condition = black_board->render_condition.get();
 
-        switch (manager->stage_type) {
+        switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
-            dx12::Util::CreateConstBuffer(manager->global_consts_CPU,
-                                          manager->global_consts_GPU);
+            dx12::Util::CreateConstBuffer(condition->global_consts_CPU,
+                                          condition->global_consts_GPU);
 
             // sampler
             D3D12_SAMPLER_DESC linearWrapSS;
@@ -65,7 +66,7 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
             shadowCompareSS.MaxLOD = D3D12_FLOAT32_MAX;
             shadowCompareSS.BorderColor[0] = 100.0f;
 
-            //dummy 
+            // dummy
             D3D12_SAMPLER_DESC pointWrapSS;
             ZeroMemory(&pointWrapSS, sizeof(pointWrapSS));
             pointWrapSS.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
@@ -113,10 +114,10 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
 
             dx12::ThrowIfFailed(
                 dx12::GpuCore::Instance().device->CreateDescriptorHeap(
-                    &samplerHeapDesc, IID_PPV_ARGS(&manager->sampler_heap)));
+                    &samplerHeapDesc, IID_PPV_ARGS(&condition->sampler_heap)));
 
             CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
-                manager->sampler_heap->GetCPUDescriptorHandleForHeapStart());
+                condition->sampler_heap->GetCPUDescriptorHandleForHeapStart());
             UINT incrementSize = dx12::GpuCore::Instance()
                                      .device->GetDescriptorHandleIncrementSize(
                                          D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
@@ -131,25 +132,25 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
         }
         case EnumStageType::eUpdate: {
 
-            const Vector3 eyeWorld = manager->camera->GetPosition();
+            const Vector3 eyeWorld = target->camera->GetPosition();
             // const Matrix reflectRow =
-            //     Matrix::CreateReflection(manager->ground->mirror_plane);
-            const Matrix viewRow = manager->camera->GetView();
-            const Matrix projRow = manager->camera->GetProjection();
+            //     Matrix::CreateReflection(condition->ground->mirror_plane);
+            const Matrix viewRow = target->camera->GetView();
+            const Matrix projRow = target->camera->GetProjection();
 
-            manager->global_consts_CPU.eyeWorld = eyeWorld;
-            manager->global_consts_CPU.view = viewRow.Transpose();
-            manager->global_consts_CPU.proj = projRow.Transpose();
-            manager->global_consts_CPU.invProj = projRow.Invert().Transpose();
-            manager->global_consts_CPU.viewProj =
+            condition->global_consts_CPU.eyeWorld = eyeWorld;
+            condition->global_consts_CPU.view = viewRow.Transpose();
+            condition->global_consts_CPU.proj = projRow.Transpose();
+            condition->global_consts_CPU.invProj = projRow.Invert().Transpose();
+            condition->global_consts_CPU.viewProj =
                 (viewRow * projRow).Transpose();
 
             // used to shadow rendering
-            manager->global_consts_CPU.invViewProj =
-                manager->global_consts_CPU.viewProj.Invert();
+            condition->global_consts_CPU.invViewProj =
+                condition->global_consts_CPU.viewProj.Invert();
 
-            dx12::Util::UpdateBuffer(manager->global_consts_CPU,
-                                     manager->global_consts_GPU);
+            dx12::Util::UpdateBuffer(condition->global_consts_CPU,
+                                     condition->global_consts_GPU);
 
             break;
         }
@@ -169,10 +170,10 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
 
             //// Shared textures: start from register(t10) in 'Common.hlsli'
             // std::vector<ID3D11ShaderResourceView *> commonSRVs = {
-            //     manager->skybox->env_SRV.Get(),
-            //     manager->skybox->specular_SRV.Get(),
-            //     manager->skybox->irradiance_SRV.Get(),
-            //     manager->skybox->brdf_SRV.Get()};
+            //     condition->skybox->env_SRV.Get(),
+            //     condition->skybox->specular_SRV.Get(),
+            //     condition->skybox->irradiance_SRV.Get(),
+            //     condition->skybox->brdf_SRV.Get()};
             // dx11::GpuCore::Instance()
             //     .device_context->PSSetShaderResources(
             //         10, UINT(commonSRVs.size()), commonSRVs.data());

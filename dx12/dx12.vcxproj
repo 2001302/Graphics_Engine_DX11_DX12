@@ -178,7 +178,7 @@
     <ClInclude Include="engine\gpu_node.h" />
     <ClInclude Include="engine\gui_node.h" />
     <ClInclude Include="engine\input.h" />
-    <ClInclude Include="engine\job_context.h" />
+    <ClInclude Include="engine\render_info.h" />
     <ClInclude Include="engine\light_node.h" />
     <ClInclude Include="engine\mesh.h" />
     <ClInclude Include="engine\mesh_renderer.h" />

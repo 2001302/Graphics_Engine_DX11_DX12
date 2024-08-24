@@ -1,5 +1,5 @@
-#ifndef _PIPELINEMANAGER
-#define _PIPELINEMANAGER
+#ifndef _RENDERINFO
+#define _RENDERINFO
 
 #include "../foundation/setting_ui.h"
 #include "../foundation/info.h"

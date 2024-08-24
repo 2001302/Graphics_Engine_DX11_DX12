@@ -264,7 +264,7 @@
     <ClInclude Include="engine\input.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
-    <ClInclude Include="engine\job_context.h">
+    <ClInclude Include="engine\render_info.h">
       <Filter>Engine\Model</Filter>
     </ClInclude>
     <ClInclude Include="engine\geometry_generator.h">

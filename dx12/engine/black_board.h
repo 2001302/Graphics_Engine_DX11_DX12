@@ -1,7 +1,7 @@
 #ifndef _BLACKBOARD
 #define _BLACKBOARD
 
-#include "job_context.h"
+#include "render_info.h"
 
 namespace core {
 

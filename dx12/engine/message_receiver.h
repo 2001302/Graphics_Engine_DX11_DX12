@@ -1,9 +1,9 @@
-﻿#ifndef _MESSAGERECEIVER
+#ifndef _MESSAGERECEIVER
 #define _MESSAGERECEIVER
 
 #include "geometry_generator.h"
 #include "input.h"
-#include "job_context.h"
+#include "render_info.h"
 #include "../foundation/setting_ui.h"
 
 namespace core {

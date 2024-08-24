@@ -13,8 +13,8 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto target = black_board->render_targets.get();
-        auto condition = black_board->render_condition.get();
+        auto target = black_board->targets.get();
+        auto condition = black_board->conditions.get();
 
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {

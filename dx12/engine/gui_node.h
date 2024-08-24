@@ -12,8 +12,8 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto target = black_board->render_targets.get();
-        auto condition = black_board->render_condition.get();
+        auto target = black_board->targets.get();
+        auto condition = black_board->conditions.get();
 
         auto gui = condition->gui;
         auto command_pool = condition->command_pool;
@@ -46,11 +46,8 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
             gui->Frame();
             gui->ClearNodeItem();
 
-            CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
-                dx12::GpuCore::Instance()
-                    .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
-                dx12::GpuCore::Instance().frame_index,
-                dx12::GpuCore::Instance().rtv_descriptor_size);
+            CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle =
+                dx12::GpuCore::Instance().GetHandleRTV();
             command_pool->Get(1)->RSSetViewports(
                 1, &dx12::GpuCore::Instance().viewport);
             command_pool->Get(1)->OMSetRenderTargets(1, &rtvHandle, false,

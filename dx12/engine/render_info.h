@@ -43,9 +43,9 @@ class RenderCondition : public foundation::IInfo {
     bool light_rotate;
     EnumStageType stage_type;
 };
-class RenderTarget : public foundation::IInfo {
+class RenderTargetObject : public foundation::IInfo {
   public:
-    RenderTarget() {}
+    RenderTargetObject() {}
     std::unique_ptr<Camera> camera;
     // std::shared_ptr<Ground> ground;
     // std::shared_ptr<Skybox> skybox;

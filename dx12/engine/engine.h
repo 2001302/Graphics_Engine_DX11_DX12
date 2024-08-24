@@ -54,39 +54,39 @@ class Engine : public foundation::Platform {
         switch (umsg) {
         case WM_SIZE: {
             return message_receiver->OnWindowSizeRequest(
-                black_board->render_condition->gui.get(), int(LOWORD(lparam)),
+                black_board->conditions->gui.get(), int(LOWORD(lparam)),
                 int(HIWORD(lparam)));
             break;
         }
         case WM_MOUSEMOVE: {
             if (wparam & MK_RBUTTON) {
                 if (CheckIfMouseInViewport(
-                        black_board->render_condition->gui.get(),
+                        black_board->conditions->gui.get(),
                         LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseRightDragRequest(
-                        black_board->render_targets.get(),
-                        black_board->render_condition->input, LOWORD(lparam),
+                        black_board->targets.get(),
+                        black_board->conditions->input, LOWORD(lparam),
                         HIWORD(lparam));
                 }
             }
             if (wparam & MK_MBUTTON) {
                 if (CheckIfMouseInViewport(
-                        black_board->render_condition->gui.get(),
+                        black_board->conditions->gui.get(),
                         LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseWheelDragRequest(
-                        black_board->render_targets.get(),
-                        black_board->render_condition->input, LOWORD(lparam),
+                        black_board->targets.get(),
+                        black_board->conditions->input, LOWORD(lparam),
                         HIWORD(lparam));
                 }
             }
             break;
         }
         case WM_MOUSEWHEEL: {
-            if (CheckIfMouseInViewport(black_board->render_condition->gui.get(),
+            if (CheckIfMouseInViewport(black_board->conditions->gui.get(),
                                        LOWORD(lparam), HIWORD(lparam))) {
                 return message_receiver->OnMouseWheelRequest(
-                    black_board->render_targets.get(),
-                    black_board->render_condition->input,
+                    black_board->targets.get(),
+                    black_board->conditions->input,
                     GET_WHEEL_DELTA_WPARAM(wparam));
             }
             break;
@@ -95,39 +95,39 @@ class Engine : public foundation::Platform {
         case WM_LBUTTONDOWN:
         case WM_MBUTTONDOWN: {
             return message_receiver->OnMouseDownRequest(
-                black_board->render_condition->input, LOWORD(lparam),
+                black_board->conditions->input, LOWORD(lparam),
                 HIWORD(lparam));
             break;
         }
         case WM_MODEL_LOAD: {
             return message_receiver->OnModelLoadRequest(
-                black_board->render_targets.get(), main_window);
+                black_board->targets.get(), main_window);
             break;
         }
         case WM_SPHERE_LOAD: {
             return message_receiver->OnSphereLoadRequest(
-                black_board->render_targets.get());
+                black_board->targets.get());
             break;
         }
         case WM_BOX_LOAD: {
             return message_receiver->OnBoxLoadRequest(
-                black_board->render_targets.get());
+                black_board->targets.get());
             break;
         }
         case WM_CYLINDER_LOAD: {
             return message_receiver->OnCylinderLoadRequest(
-                black_board->render_targets.get());
+                black_board->targets.get());
             break;
         }
         case WM_KEYDOWN:
-            black_board->render_condition->input->KeyPressed(wparam, true);
+            black_board->conditions->input->KeyPressed(wparam, true);
             if (wparam == VK_ESCAPE) {
                 Stop();
                 DestroyWindow(main_window);
             }
             break;
         case WM_KEYUP:
-            black_board->render_condition->input->KeyPressed(wparam, false);
+            black_board->conditions->input->KeyPressed(wparam, false);
             break;
         case WM_DESTROY:
             ::PostQuitMessage(0);

@@ -11,8 +11,8 @@ class GpuInitializeNode : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        dx12::GpuCore::Instance().Initialize();
-        black_board->render_condition->command_pool->InitializeAll();
+        dx12::GpuCore::Instance().InitializeGPU();
+        black_board->conditions->command_pool->InitializeAll();
 
         memset(&dx12::GpuCore::Instance().viewport, 0, sizeof(D3D12_VIEWPORT));
         auto viewport = dx12::GpuCore::Instance().viewport;
@@ -35,21 +35,19 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        black_board->render_condition->command_pool->Open();
+        black_board->conditions->command_pool->Open();
 
-        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
-            dx12::GpuCore::Instance()
-                .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
-            dx12::GpuCore::Instance().frame_index,
-            dx12::GpuCore::Instance().rtv_descriptor_size);
+        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle =
+            dx12::GpuCore::Instance().GetHandleRTV();
+
         const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-        black_board->render_condition->command_pool->Get(0)
+        black_board->conditions->command_pool->Get(0)
             ->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 
         CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
             dx12::GpuCore::Instance()
-                .dsvHeap->GetCPUDescriptorHandleForHeapStart());
-        black_board->render_condition->command_pool->Get(0)
+                .heap_DSV->GetCPUDescriptorHandleForHeapStart());
+        black_board->conditions->command_pool->Get(0)
             ->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0,
                                     0, nullptr);
 
@@ -63,7 +61,7 @@ class EndRenderNode : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        black_board->render_condition->command_pool->Close();
+        black_board->conditions->command_pool->Close();
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }

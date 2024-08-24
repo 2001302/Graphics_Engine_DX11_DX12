@@ -34,7 +34,7 @@ static std::wstring GetLatestWinPixGpuCapturerPath_Cpp17() {
 
 namespace dx12 {
 
-bool GpuCore::Initialize() {
+bool GpuCore::InitializeGPU() {
     if (GetModuleHandle(L"WinPixGpuCapturer.dll") == 0) {
         LoadLibrary(GetLatestWinPixGpuCapturerPath_Cpp17().c_str());
     }
@@ -113,24 +113,24 @@ bool GpuCore::Initialize() {
         rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
         rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
         ThrowIfFailed(device->CreateDescriptorHeap(&rtvHeapDesc,
-                                                   IID_PPV_ARGS(&rtv_heap)));
+                                                   IID_PPV_ARGS(&heap_RTV)));
 
-        rtv_descriptor_size = device->GetDescriptorHandleIncrementSize(
+        desc_size_RTV = device->GetDescriptorHandleIncrementSize(
             D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     }
 
     // Create frame resources.
     {
         CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
-            rtv_heap->GetCPUDescriptorHandleForHeapStart());
+            heap_RTV->GetCPUDescriptorHandleForHeapStart());
 
         // Create a RTV for each frame.
         for (UINT n = 0; n < 2; n++) {
             ThrowIfFailed(
-                swap_chain->GetBuffer(n, IID_PPV_ARGS(&render_targets[n])));
-            device->CreateRenderTargetView(render_targets[n].Get(), nullptr,
+                swap_chain->GetBuffer(n, IID_PPV_ARGS(&resource_RTV[n])));
+            device->CreateRenderTargetView(resource_RTV[n].Get(), nullptr,
                                            rtvHandle);
-            rtvHandle.Offset(1, rtv_descriptor_size);
+            rtvHandle.Offset(1, desc_size_RTV);
         }
     }
 
@@ -150,79 +150,47 @@ bool GpuCore::Initialize() {
 }
 void GpuCore::CreateBuffer() {
 
-    // D3D12_RESOURCE_DESC desc;
-    // desc.Width = foundation::Env::Instance().screen_width;
-    // desc.Height = foundation::Env::Instance().screen_height;
-    // desc.MipLevels = 1;
-    // desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    ////if (num_quality_levels > 0) {
-    ////    desc.SampleDesc.Count = 4; // how many multisamples
-    ////    desc.SampleDesc.Quality = num_quality_levels - 1;
-    ////}
-    // desc.SampleDesc.Count = 1; // how many multisamples
-    // desc.SampleDesc.Quality = 0;
-    // desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    // desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    // desc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
-    // desc.DepthOrArraySize = 1;
-    // desc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+    D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
+    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
+    depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
 
-    // D3D12_CLEAR_VALUE clearValue = {};
-    // clearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-    // clearValue.DepthStencil.Depth = 1.0f;
-    // clearValue.DepthStencil.Stencil = 0;
+    D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
+    depthOptimizedClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthOptimizedClearValue.DepthStencil.Depth = 1.0f;
+    depthOptimizedClearValue.DepthStencil.Stencil = 0;
 
-    // CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
-    // ThrowIfFailed(device->CreateCommittedResource(
-    //     &heapProperties, D3D12_HEAP_FLAG_NONE, &desc,
-    //     D3D12_RESOURCE_STATE_DEPTH_WRITE, &clearValue,
-    //     IID_PPV_ARGS(&depthStencilBuffer)));
+    auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
+    auto tex2d = CD3DX12_RESOURCE_DESC::Tex2D(
+        DXGI_FORMAT_D24_UNORM_S8_UINT, foundation::Env::Instance().screen_width,
+        foundation::Env::Instance().screen_height, 1, 0, 1, 0,
+        D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 
-    // D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-    // dsvHeapDesc.NumDescriptors = 1;
-    // dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-    // dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-    // ThrowIfFailed(
-    //     device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap)));
+    ThrowIfFailed(device->CreateCommittedResource(
+        &heap_property, D3D12_HEAP_FLAG_NONE, &tex2d,
+        D3D12_RESOURCE_STATE_DEPTH_WRITE, &depthOptimizedClearValue,
+        IID_PPV_ARGS(&resourcce_DSV)));
 
-    // device->CreateDepthStencilView(
-    //     depthStencilBuffer.Get(), nullptr,
-    //     dsvHeap->GetCPUDescriptorHandleForHeapStart());
+    D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
+    dsvHeapDesc.NumDescriptors = 1;
+    dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
+    dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+    ThrowIfFailed(
+        device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&heap_DSV)));
 
-    // Create the depth stencil view.
-    {
-        D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
-        depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-        depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
-        depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
-
-        D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
-        depthOptimizedClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-        depthOptimizedClearValue.DepthStencil.Depth = 1.0f;
-        depthOptimizedClearValue.DepthStencil.Stencil = 0;
-
-        auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-        auto tex2d = CD3DX12_RESOURCE_DESC::Tex2D(
-            DXGI_FORMAT_D24_UNORM_S8_UINT,
-            foundation::Env::Instance().screen_width,
-            foundation::Env::Instance().screen_height, 1, 0, 1, 0,
-            D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
-
-        ThrowIfFailed(device->CreateCommittedResource(
-            &heap_property, D3D12_HEAP_FLAG_NONE, &tex2d,
-            D3D12_RESOURCE_STATE_DEPTH_WRITE, &depthOptimizedClearValue,
-            IID_PPV_ARGS(&depthStencilBuffer)));
-
-        D3D12_DESCRIPTOR_HEAP_DESC dsvHeapDesc = {};
-        dsvHeapDesc.NumDescriptors = 1;
-        dsvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_DSV;
-        dsvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-        ThrowIfFailed(
-            device->CreateDescriptorHeap(&dsvHeapDesc, IID_PPV_ARGS(&dsvHeap)));
-
-        device->CreateDepthStencilView(
-            depthStencilBuffer.Get(), &depthStencilDesc,
-            dsvHeap->GetCPUDescriptorHandleForHeapStart());
-    }
+    device->CreateDepthStencilView(
+        resourcce_DSV.Get(), &depthStencilDesc,
+        heap_DSV->GetCPUDescriptorHandleForHeapStart());
 }
+CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleRTV() {
+    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
+        heap_RTV->GetCPUDescriptorHandleForHeapStart(), frame_index,
+        desc_size_RTV);
+    return rtvHandle;
+};
+CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleDSV() {
+    CD3DX12_CPU_DESCRIPTOR_HANDLE
+    dsvHandle(heap_DSV->GetCPUDescriptorHandleForHeapStart());
+    return dsvHandle;
+};
 } // namespace dx12

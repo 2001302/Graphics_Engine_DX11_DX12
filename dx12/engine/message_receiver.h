@@ -9,18 +9,18 @@
 namespace core {
 class MessageReceiver {
   public:
-    bool OnModelLoadRequest(RenderTarget *manager, HWND main_window);
-    bool OnSphereLoadRequest(RenderTarget *manager);
-    bool OnBoxLoadRequest(RenderTarget *manager);
-    bool OnCylinderLoadRequest(RenderTarget *manager);
+    bool OnModelLoadRequest(RenderTargetObject *manager, HWND main_window);
+    bool OnSphereLoadRequest(RenderTargetObject *manager);
+    bool OnBoxLoadRequest(RenderTargetObject *manager);
+    bool OnCylinderLoadRequest(RenderTargetObject *manager);
     bool OnMouseDownRequest(std::shared_ptr<foundation::Input> input, int mouseX,
                             int mouseY);
-    bool OnMouseRightDragRequest(RenderTarget *manager,
+    bool OnMouseRightDragRequest(RenderTargetObject *manager,
                                  std::shared_ptr<foundation::Input> input,
                                  int mouseX, int mouseY);
-    bool OnMouseWheelRequest(RenderTarget *manager,
+    bool OnMouseWheelRequest(RenderTargetObject *manager,
                              std::shared_ptr<foundation::Input> input, int wheel);
-    bool OnMouseWheelDragRequest(RenderTarget *manager,
+    bool OnMouseWheelDragRequest(RenderTargetObject *manager,
                                  std::shared_ptr<foundation::Input> input,
                                  int mouseX, int mouseY);
     bool OnWindowSizeRequest(foundation::SettingUi *gui, int size_x, int size_y);

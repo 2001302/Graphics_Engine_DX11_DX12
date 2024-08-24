@@ -25,7 +25,7 @@ bool Engine::Start() {
     // clang-format off
     Platform::Start();
     
-    black_board->render_condition->stage_type = EnumStageType::eInitialize;
+    black_board->conditions->stage_type = EnumStageType::eInitialize;
     
     //initialize
     start_tree->Build(black_board.get())
@@ -67,12 +67,12 @@ bool Engine::Start() {
 bool Engine::Frame() {
 
     // update
-    black_board->render_condition->dt = ImGui::GetIO().DeltaTime;
-    black_board->render_condition->stage_type = EnumStageType::eUpdate;
+    black_board->conditions->dt = ImGui::GetIO().DeltaTime;
+    black_board->conditions->stage_type = EnumStageType::eUpdate;
     update_tree->Run();
 
     // render
-    black_board->render_condition->stage_type = EnumStageType::eRender;
+    black_board->conditions->stage_type = EnumStageType::eRender;
     render_tree->Run();
 
     return true;
@@ -82,18 +82,18 @@ bool Engine::Stop() {
     Platform::Stop();
 
     if (black_board) {
-        if (black_board->render_targets) {
-            for (auto &model : black_board->render_targets->objects) {
+        if (black_board->targets) {
+            for (auto &model : black_board->targets->objects) {
                 model.second.reset();
             }
-            black_board->render_targets->camera.reset();
+            black_board->targets->camera.reset();
         }
-        if (black_board->render_condition->gui) {
-            black_board->render_condition->gui->Shutdown();
-            black_board->render_condition->gui.reset();
+        if (black_board->conditions->gui) {
+            black_board->conditions->gui->Shutdown();
+            black_board->conditions->gui.reset();
         }
-        if (black_board->render_condition->input) {
-            black_board->render_condition->input.reset();
+        if (black_board->conditions->input) {
+            black_board->conditions->input.reset();
         }
     }
 

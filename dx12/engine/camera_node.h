@@ -12,8 +12,8 @@ class CameraNodeInvoker : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto condition = black_board->render_condition.get();
-        auto targets = black_board->render_targets.get();
+        auto condition = black_board->conditions.get();
+        auto targets = black_board->targets.get();
 
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {

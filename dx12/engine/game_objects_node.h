@@ -14,8 +14,8 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto condition = black_board->render_condition.get();
-        auto targets = black_board->render_targets.get();
+        auto condition = black_board->conditions.get();
+        auto targets = black_board->targets.get();
 
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
@@ -187,15 +187,11 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                     static_cast<LONG>(
                         foundation::Env::Instance().screen_height));
 
-                CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
-                    dx12::GpuCore::Instance()
-                        .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
-                    dx12::GpuCore::Instance().frame_index,
-                    dx12::GpuCore::Instance().rtv_descriptor_size);
+                CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle =
+                    dx12::GpuCore::Instance().GetHandleRTV();
 
-                CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
-                    dx12::GpuCore::Instance()
-                        .dsvHeap->GetCPUDescriptorHandleForHeapStart());
+                CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle =
+                    dx12::GpuCore::Instance().GetHandleDSV();
 
                 for (auto mesh : renderer->meshes) {
 

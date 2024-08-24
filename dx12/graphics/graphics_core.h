@@ -43,8 +43,10 @@ class GpuCore {
         static GpuCore instance;
         return instance;
     }
-    bool Initialize();
+    bool InitializeGPU();
     void CreateBuffer();
+    CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleRTV();
+    CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleDSV();
 
     bool useMSAA = true;
     UINT num_quality_levels = 0;
@@ -53,19 +55,19 @@ class GpuCore {
     ComPtr<ID3D12Device> device;
     ComPtr<ID3D12CommandQueue> command_queue;
 
-    ComPtr<ID3D12Resource> render_targets[2];
-    ComPtr<ID3D12DescriptorHeap> rtv_heap;
-    UINT rtv_descriptor_size;
-    ComPtr<ID3D12DescriptorHeap> dsvHeap;
-    ComPtr<ID3D12Resource> depthStencilBuffer;
+    ComPtr<ID3D12DescriptorHeap> heap_RTV;
+    ComPtr<ID3D12Resource> resource_RTV[2];
+    UINT desc_size_RTV;
 
-    // Synchronization objects.
+    ComPtr<ID3D12DescriptorHeap> heap_DSV;
+    ComPtr<ID3D12Resource> resourcce_DSV;
+
+    D3D12_VIEWPORT viewport;
+
     UINT frame_index;
     HANDLE fence_event;
     ComPtr<ID3D12Fence> fence;
     UINT64 fence_value;
-
-    D3D12_VIEWPORT viewport;
 
   private:
     GpuCore() : swap_chain(0), device(0), viewport(D3D12_VIEWPORT()) {}

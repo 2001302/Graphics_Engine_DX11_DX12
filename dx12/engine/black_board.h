@@ -7,11 +7,11 @@ namespace core {
 
 struct BlackBoard : public foundation::IDataBlock {
     BlackBoard() {
-        render_targets = std::make_shared<RenderTarget>();
-        render_condition = std::make_shared<RenderCondition>();
+        targets = std::make_shared<RenderTargetObject>();
+        conditions = std::make_shared<RenderCondition>();
     }
-    std::shared_ptr<RenderTarget> render_targets;
-    std::shared_ptr<RenderCondition> render_condition;
+    std::shared_ptr<RenderTargetObject> targets;
+    std::shared_ptr<RenderCondition> conditions;
 };
 
 } // namespace core

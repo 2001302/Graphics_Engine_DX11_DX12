@@ -25,7 +25,7 @@ class CommandPool {
             command_allocator[i]->Reset();
             auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
                 dx12::GpuCore::Instance()
-                    .render_targets[dx12::GpuCore::Instance().frame_index]
+                    .resource_RTV[dx12::GpuCore::Instance().frame_index]
                     .Get(),
                 D3D12_RESOURCE_STATE_PRESENT,
                 D3D12_RESOURCE_STATE_RENDER_TARGET);
@@ -40,7 +40,7 @@ class CommandPool {
         for (int i = 0; i < NUM_COMAAND_LIST; i++) {
             auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
                 dx12::GpuCore::Instance()
-                    .render_targets[dx12::GpuCore::Instance().frame_index]
+                    .resource_RTV[dx12::GpuCore::Instance().frame_index]
                     .Get(),
                 D3D12_RESOURCE_STATE_RENDER_TARGET,
                 D3D12_RESOURCE_STATE_PRESENT);

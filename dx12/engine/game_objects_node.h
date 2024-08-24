@@ -2,9 +2,9 @@
 #define _RENDERER_DRAW_NODE
 
 #include "../foundation/behavior_tree_builder.h"
+#include "../graphics/command_pool.h"
 #include "black_board.h"
 #include "mesh_renderer.h"
-// #include "skinned_mesh_renderer.h"
 
 namespace core {
 
@@ -145,11 +145,14 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             }
 
             // sample object
-            Vector3 center(0.0f, 0.5f, 2.5f);
+            Vector3 center(0.0f, 0.0f, 0.0f);
             std::string base_path = "Assets/Characters/zelda/";
             std::string file_name = "zeldaPosed001.fbx";
-            auto renderer =
-                std::make_shared<MeshRenderer>(base_path, file_name);
+
+            command_pool->OpenResource(2);
+            auto renderer = std::make_shared<MeshRenderer>(
+                base_path, file_name, command_pool->Get(2));
+            command_pool->CloseResource(2);
 
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
             renderer->UpdateConstantBuffers();
@@ -186,11 +189,13 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                     static_cast<LONG>(foundation::Env::Instance().screen_width),
                     static_cast<LONG>(
                         foundation::Env::Instance().screen_height));
+
                 CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
                     dx12::GpuCore::Instance()
                         .rtv_heap->GetCPUDescriptorHandleForHeapStart(),
                     dx12::GpuCore::Instance().frame_index,
                     dx12::GpuCore::Instance().rtv_descriptor_size);
+
                 CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
                     dx12::GpuCore::Instance()
                         .dsvHeap->GetCPUDescriptorHandleForHeapStart());

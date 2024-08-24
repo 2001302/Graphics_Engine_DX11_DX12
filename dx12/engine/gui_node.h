@@ -55,7 +55,7 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
                                                      nullptr);
 
             ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
-                                          command_pool->Get(1));
+                                          command_pool->Get(1).Get());
             break;
         }
         default:

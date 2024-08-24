@@ -12,10 +12,9 @@ class GpuInitializeNode : public foundation::BehaviorActionNode {
         assert(black_board != nullptr);
 
         dx12::GpuCore::Instance().Initialize();
-        black_board->command_pool->Initialize();
+        black_board->command_pool->InitializeAll();
 
-        memset(&dx12::GpuCore::Instance().viewport, 0,
-                sizeof(D3D12_VIEWPORT));
+        memset(&dx12::GpuCore::Instance().viewport, 0, sizeof(D3D12_VIEWPORT));
         auto viewport = dx12::GpuCore::Instance().viewport;
         dx12::GpuCore::Instance().viewport.TopLeftX = 0.0f;
         dx12::GpuCore::Instance().viewport.TopLeftY = 0.0f;
@@ -36,7 +35,7 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        black_board->command_pool->Open();
+        black_board->command_pool->Open(0, 1);
 
         CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
             dx12::GpuCore::Instance()
@@ -63,7 +62,7 @@ class EndRenderNode : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        black_board->command_pool->Close();
+        black_board->command_pool->Close(0, 1);
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
@@ -98,6 +97,7 @@ class PresentNode : public foundation::BehaviorActionNode {
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
 };
+
 // class ResolveBufferNode : public foundation::BehaviorActionNode {
 //     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 //

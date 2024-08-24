@@ -169,8 +169,8 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
         if (!meshData.metallicTextureFilename.empty() ||
             !meshData.roughnessTextureFilename.empty()) {
 
-             if (filesystem::exists(meshData.metallicTextureFilename) &&
-                 filesystem::exists(meshData.roughnessTextureFilename)) {
+            if (filesystem::exists(meshData.metallicTextureFilename) &&
+                filesystem::exists(meshData.roughnessTextureFilename)) {
 
                 dx12::Util::CreateMetallicRoughnessTexture(
                     meshData.metallicTextureFilename,
@@ -203,9 +203,45 @@ void MeshRenderer::UpdateConstantBuffers() {
     }
 }
 
-void MeshRenderer::Render(ID3D12GraphicsCommandList *command_list) {
+void MeshRenderer::Render(RenderCondition *render_condition,
+                          dx12::GraphicsPSO *PSO) {
+
     if (is_visible) {
+
+        ID3D12DescriptorHeap *samplers_heap[] = {
+            render_condition->sampler_heap.Get()};
+        auto command_list = render_condition->command_pool->Get(0);
+
+        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle =
+            dx12::GpuCore::Instance().GetHandleRTV();
+        CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle =
+            dx12::GpuCore::Instance().GetHandleDSV();
+
         for (const auto &mesh : meshes) {
+            command_list->RSSetViewports(1,
+                                         &dx12::GpuCore::Instance().viewport);
+            command_list->RSSetScissorRects(
+                1, &dx12::GpuCore::Instance().scissorRect);
+            command_list->OMSetRenderTargets(1, &rtvHandle, false, &dsvHandle);
+            command_list->SetGraphicsRootSignature(PSO->root_signature);
+            command_list->SetPipelineState(PSO->pipeline_state);
+            command_list->SetDescriptorHeaps(_countof(samplers_heap),
+                                             samplers_heap);
+            command_list->SetDescriptorHeaps(1,
+                                             mesh->texture_heap.GetAddressOf());
+
+            command_list->SetGraphicsRootDescriptorTable(
+                0, render_condition->sampler_heap
+                       ->GetGPUDescriptorHandleForHeapStart());
+            command_list->SetGraphicsRootConstantBufferView(
+                2, render_condition->global_consts_GPU->GetGPUVirtualAddress());
+            command_list->SetGraphicsRootConstantBufferView(
+                3, mesh_consts.Get()->GetGPUVirtualAddress());
+            command_list->SetGraphicsRootConstantBufferView(
+                4, material_consts.Get()->GetGPUVirtualAddress());
+            command_list->SetGraphicsRootDescriptorTable(
+                6, mesh->texture_heap->GetGPUDescriptorHandleForHeapStart());
+
             command_list->IASetPrimitiveTopology(
                 D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
             command_list->IASetVertexBuffers(0, 1, &mesh->vertexBufferView);

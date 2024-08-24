@@ -8,9 +8,7 @@
 #include "input.h"
 #include "camera.h"
 #include "constant_buffer.h"
-// #include "dataBlock.h"
 // #include "ground.h"
-// #include "mesh_renderer.h"
 // #include "model.h"
 // #include "skybox.h"
 

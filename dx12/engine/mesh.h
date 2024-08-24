@@ -3,7 +3,6 @@
 
 #include "../graphics/graphics_util.h"
 #include "vertex.h"
-//#include "texture_3d.h"
 
 namespace core {
 struct MeshData {
@@ -22,8 +21,8 @@ struct MeshData {
 
 struct Mesh {
     ComPtr<ID3D12Resource> vertexBuffer;
-    D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
     ComPtr<ID3D12Resource> indexBuffer;
+    D3D12_VERTEX_BUFFER_VIEW vertexBufferView;
     D3D12_INDEX_BUFFER_VIEW indexBufferView;
 
     ComPtr<ID3D12Resource> meshConstsGPU;
@@ -35,19 +34,7 @@ struct Mesh {
     ComPtr<ID3D12Resource> heightTexture;
     ComPtr<ID3D12Resource> aoTexture;
     ComPtr<ID3D12Resource> metallicRoughnessTexture;
-
-    ComPtr<ID3D12Resource> albedoSRV;
-    ComPtr<ID3D12Resource> emissiveSRV;
-    ComPtr<ID3D12Resource> normalSRV;
-    ComPtr<ID3D12Resource> heightSRV;
-    ComPtr<ID3D12Resource> aoSRV;
-    ComPtr<ID3D12Resource> metallicRoughnessSRV;
-
     ComPtr<ID3D12DescriptorHeap> texture_heap;
-
-    //// 3D Textures
-    //Texture3D densityTex;
-    //Texture3D lightingTex;
 
     UINT indexCount = 0;
     UINT vertexCount = 0;

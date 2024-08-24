@@ -63,11 +63,14 @@ bool MessageReceiver::OnMouseWheelRequest(RenderTargetObject *manager,
     auto position = manager->camera->GetPosition();
 
     auto direction = look_at - position;
-    direction.Normalize();
+    if (direction.Length() >= 1.0f || wheel < 0) {
+        direction.Normalize();
 
-    auto move = wheel * direction / 1000.0f;
-    auto new_position = position + move;
-    manager->camera->SetPosition(new_position);
+        auto move = wheel * direction / 1000.0f;
+        auto new_position = position + move;
+
+        manager->camera->SetPosition(new_position);
+    }
     return true;
 }
 

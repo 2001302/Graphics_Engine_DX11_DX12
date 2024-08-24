@@ -6,6 +6,7 @@
 #include "constant_buffer.h"
 #include "geometry_generator.h"
 #include "mesh.h"
+#include "render_info.h"
 #include <filesystem>
 #include <iostream>
 
@@ -24,11 +25,11 @@ class MeshRenderer : public Component {
     virtual void InitMeshBuffers(const MeshData &meshData,
                                  std::shared_ptr<Mesh> &newMesh);
 
-
     void UpdateConstantBuffers();
     void UpdateWorldRow(const Matrix &worldRow);
 
-    virtual void Render(ID3D12GraphicsCommandList *command_list);
+    virtual void Render(RenderCondition *render_condition,
+                        dx12::GraphicsPSO *PSO);
     virtual void RenderNormals();
     virtual void RenderWireBoundingBox();
     virtual void RenderWireBoundingSphere();

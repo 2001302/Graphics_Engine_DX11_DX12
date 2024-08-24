@@ -172,62 +172,11 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             break;
         }
         case EnumStageType::eRender: {
-
-            ID3D12DescriptorHeap *samplers_heap[] = {
-                condition->sampler_heap.Get()};
-            auto command_list = condition->command_pool->Get(0);
-
             for (auto &i : targets->objects) {
+
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
-
-                CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle =
-                    dx12::GpuCore::Instance().GetHandleRTV();
-
-                CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle =
-                    dx12::GpuCore::Instance().GetHandleDSV();
-
-                for (auto mesh : renderer->meshes) {
-
-                    command_list->RSSetViewports(
-                        1, &dx12::GpuCore::Instance().viewport);
-                    command_list->RSSetScissorRects(
-                        1, &dx12::GpuCore::Instance().scissorRect);
-                    command_list->OMSetRenderTargets(1, &rtvHandle, false,
-                                                     &dsvHandle);
-                    command_list->SetGraphicsRootSignature(
-                        defaultSolidPSO->root_signature);
-                    command_list->SetPipelineState(
-                        defaultSolidPSO->pipeline_state);
-                    command_list->SetDescriptorHeaps(_countof(samplers_heap),
-                                                     samplers_heap);
-                    command_list->SetDescriptorHeaps(
-                        1, mesh->texture_heap.GetAddressOf());
-
-                    command_list->SetGraphicsRootDescriptorTable(
-                        0, condition->sampler_heap
-                               ->GetGPUDescriptorHandleForHeapStart());
-                    command_list->SetGraphicsRootConstantBufferView(
-                        2,
-                        condition->global_consts_GPU->GetGPUVirtualAddress());
-                    command_list->SetGraphicsRootConstantBufferView(
-                        3, renderer->mesh_consts.Get()->GetGPUVirtualAddress());
-                    command_list->SetGraphicsRootConstantBufferView(
-                        4, renderer->material_consts.Get()
-                               ->GetGPUVirtualAddress());
-                    command_list->SetGraphicsRootDescriptorTable(
-                        6, mesh->texture_heap
-                               ->GetGPUDescriptorHandleForHeapStart());
-
-                    command_list->IASetPrimitiveTopology(
-                        D3D12_PRIMITIVE_TOPOLOGY::
-                            D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-                    command_list->IASetVertexBuffers(0, 1,
-                                                     &mesh->vertexBufferView);
-                    command_list->IASetIndexBuffer(&mesh->indexBufferView);
-                    command_list->DrawIndexedInstanced(mesh->indexCount, 1, 0,
-                                                       0, 0);
-                }
+                renderer->Render(condition, defaultSolidPSO.get());
             }
 
             break;

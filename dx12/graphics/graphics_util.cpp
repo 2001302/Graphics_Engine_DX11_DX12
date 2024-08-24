@@ -132,7 +132,18 @@ void CreateTextureHelper(const int width, const int height,
                          const vector<uint8_t> &image,
                          const DXGI_FORMAT pixelFormat,
                          ComPtr<ID3D12Resource> &texture,
-                         ComPtr<ID3D12GraphicsCommandList> &commandList) {
+                         CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle) {
+    // create command list
+    ComPtr<ID3D12CommandAllocator> command_allocator;
+    ComPtr<ID3D12GraphicsCommandList> command_list;
+
+    ThrowIfFailed(GpuCore::Instance().device->CreateCommandAllocator(
+        D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&command_allocator)));
+    ThrowIfFailed(GpuCore::Instance().device->CreateCommandList(
+        0, D3D12_COMMAND_LIST_TYPE_DIRECT, command_allocator.Get(), nullptr,
+        IID_PPV_ARGS(&command_list)));
+    command_list->Close();
+
     // 1.resource creation
     D3D12_RESOURCE_DESC txtDesc;
     ZeroMemory(&txtDesc, sizeof(txtDesc));
@@ -169,19 +180,56 @@ void CreateTextureHelper(const int width, const int height,
     textureDataDesc.RowPitch = width * 4;
     textureDataDesc.SlicePitch = textureDataDesc.RowPitch * height;
 
-    UpdateSubresources(commandList.Get(), texture.Get(),
+    command_allocator->Reset();
+    ThrowIfFailed(command_list->Reset(command_allocator.Get(), nullptr));
+
+    UpdateSubresources(command_list.Get(), texture.Get(),
                        textureUploadHeap.Get(), 0, 0, 1, &textureDataDesc);
 
     // change state
     auto transition = CD3DX12_RESOURCE_BARRIER::Transition(
         texture.Get(), D3D12_RESOURCE_STATE_COPY_DEST,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-    commandList->ResourceBarrier(1, &transition);
+    command_list->ResourceBarrier(1, &transition);
+
+    // execute command list
+    command_list->Close();
+    dx12::GpuCore::Instance().command_queue->ExecuteCommandLists(
+        1, CommandListCast(command_list.GetAddressOf()));
+
+    ComPtr<ID3D12Fence> fence;
+    UINT64 fenceValue = 0;
+    ThrowIfFailed(dx12::GpuCore::Instance().device->CreateFence(
+        fenceValue, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence)));
+    fenceValue++;
+    ThrowIfFailed(dx12::GpuCore::Instance().command_queue->Signal(fence.Get(),
+                                                                  fenceValue));
+
+    if (fence->GetCompletedValue() < fenceValue) {
+        HANDLE eventHandle =
+            CreateEventEx(nullptr, FALSE, FALSE, EVENT_ALL_ACCESS);
+        ThrowIfFailed(fence->SetEventOnCompletion(fenceValue, eventHandle));
+        WaitForSingleObject(eventHandle, INFINITE);
+        CloseHandle(eventHandle);
+    }
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    srvDesc.Format = texture->GetDesc().Format;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MipLevels = 1;
+
+    UINT descriptorSize =
+        dx12::GpuCore::Instance().device->GetDescriptorHandleIncrementSize(
+        D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+    dx12::GpuCore::Instance().device->CreateShaderResourceView(
+        texture.Get(), &srvDesc, texture_handle);
+    texture_handle.Offset(descriptorSize);
 }
 
 void Util::CreateTexture(const std::string filename, const bool usSRGB,
                          ComPtr<ID3D12Resource> &tex,
-                         ComPtr<ID3D12GraphicsCommandList> &commandList) {
+                         CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle) {
 
     int width = 0, height = 0;
     std::vector<uint8_t> image;
@@ -197,13 +245,13 @@ void Util::CreateTexture(const std::string filename, const bool usSRGB,
         ReadImage(filename, image, width, height);
     }
 
-    CreateTextureHelper(width, height, image, pixelFormat, tex, commandList);
+    CreateTextureHelper(width, height, image, pixelFormat, tex,texture_handle);
 }
 
 void Util::CreateTexture(const std::string albedoFilename,
                          const std::string opacityFilename, const bool usSRGB,
                          ComPtr<ID3D12Resource> &texture,
-                         ComPtr<ID3D12GraphicsCommandList> &commandList) {
+                         CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle) {
 
     int width = 0, height = 0;
     std::vector<uint8_t> image;
@@ -213,16 +261,17 @@ void Util::CreateTexture(const std::string albedoFilename,
     ReadImage(albedoFilename, opacityFilename, image, width, height);
 
     CreateTextureHelper(width, height, image, pixelFormat, texture,
-                        commandList);
+                        texture_handle);
 }
 
 void Util::CreateMetallicRoughnessTexture(
     const std::string metallicFilename, const std::string roughnessFilename,
     ComPtr<ID3D12Resource> &texture,
-    ComPtr<ID3D12GraphicsCommandList> &commandList) {
+    ComPtr<ID3D12GraphicsCommandList> &commandList,
+    CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle) {
 
     if (!metallicFilename.empty() && (metallicFilename == roughnessFilename)) {
-        Util::CreateTexture(metallicFilename, false, texture, commandList);
+        Util::CreateTexture(metallicFilename, false, texture, texture_handle);
     } else {
         int mWidth = 0, mHeight = 0;
         int rWidth = 0, rHeight = 0;
@@ -253,7 +302,8 @@ void Util::CreateMetallicRoughnessTexture(
         }
 
         CreateTextureHelper(mWidth, mHeight, combinedImage,
-                            DXGI_FORMAT_R8G8B8A8_UNORM, texture, commandList);
+                            DXGI_FORMAT_R8G8B8A8_UNORM, texture,
+                            texture_handle);
     }
 }
 
@@ -358,7 +408,7 @@ CreateStagingTexture(const int width, const int height,
 //     desc.BindFlags = 0;
 //     desc.MiscFlags = 0;
 //     desc.CPUAccessFlags = D3D11_CPU_ACCESS_READ;
-//     媛?? desc.Usage = D3D11_USAGE_STAGING; 
+//     媛?? desc.Usage = D3D11_USAGE_STAGING;
 //
 //     ComPtr<ID3D11Texture2D> stagingTexture;
 //     if (FAILED(GpuCore::Instance().device->CreateTexture2D(

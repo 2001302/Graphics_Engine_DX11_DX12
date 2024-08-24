@@ -1,4 +1,4 @@
-﻿#ifndef _MESH
+#ifndef _MESH
 #define _MESH
 
 #include "../graphics/graphics_util.h"
@@ -42,6 +42,8 @@ struct Mesh {
     ComPtr<ID3D12Resource> heightSRV;
     ComPtr<ID3D12Resource> aoSRV;
     ComPtr<ID3D12Resource> metallicRoughnessSRV;
+
+    ComPtr<ID3D12DescriptorHeap> texture_heap;
 
     //// 3D Textures
     //Texture3D densityTex;

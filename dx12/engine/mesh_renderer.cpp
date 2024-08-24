@@ -6,9 +6,8 @@ using namespace std;
 using namespace DirectX;
 
 MeshRenderer::MeshRenderer(const std::string &basePath,
-                           const std::string &filename,
-                           ComPtr<ID3D12GraphicsCommandList> command_list) {
-    Initialize(basePath, filename, command_list);
+                           const std::string &filename) {
+    Initialize(basePath, filename);
 }
 
 MeshRenderer::MeshRenderer(const std::vector<MeshData> &meshes) {
@@ -35,10 +34,9 @@ void MeshRenderer::InitMeshBuffers(const MeshData &meshData,
 }
 
 void MeshRenderer::Initialize(const std::string &basePath,
-                              const std::string &filename,
-                              ComPtr<ID3D12GraphicsCommandList> command_list) {
+                              const std::string &filename) {
     auto meshes = GeometryGenerator::ReadFromFile(basePath, filename);
-    Initialize(meshes, command_list);
+    Initialize(meshes);
 }
 
 BoundingBox GetBoundingBox(const vector<Vertex> &vertices) {
@@ -80,42 +78,38 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
     mesh_consts.Initialize();
     material_consts.Initialize();
 
-    for (const auto &meshData : meshes) {
-        auto newMesh = std::make_shared<Mesh>();
+    this->meshes.resize(meshes.size());
+    for (int i = 0; i < meshes.size(); i++) {
 
-        InitMeshBuffers(meshData, newMesh);
-        newMesh->meshConstsGPU = mesh_consts.Get();
-        newMesh->materialConstsGPU = material_consts.Get();
+        MeshData meshData = meshes[i];
+        this->meshes[i] = std::make_shared<Mesh>();
 
-        this->meshes.push_back(newMesh);
-    }
-}
+        D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+        heapDesc.NumDescriptors = 5;
+        heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+        heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-void MeshRenderer::Initialize(const vector<MeshData> &meshes,
-                              ComPtr<ID3D12GraphicsCommandList> command_list) {
+        dx12::ThrowIfFailed(
+            dx12::GpuCore::Instance().device->CreateDescriptorHeap(
+                &heapDesc, IID_PPV_ARGS(&this->meshes[i]->texture_heap)));
+        CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle(
+            this->meshes[i]
+                ->texture_heap->GetCPUDescriptorHandleForHeapStart());
 
-    mesh_consts.GetCpu().world = Matrix();
-    mesh_consts.Initialize();
-    material_consts.Initialize();
-
-    for (const auto &meshData : meshes) {
-        auto newMesh = std::make_shared<Mesh>();
-
-        InitMeshBuffers(meshData, newMesh);
+        InitMeshBuffers(meshData, this->meshes[i]);
 
         if (!meshData.albedoTextureFilename.empty()) {
             if (filesystem::exists(meshData.albedoTextureFilename)) {
                 if (!meshData.opacityTextureFilename.empty()) {
-                    dx12::Util::CreateTexture(meshData.albedoTextureFilename,
-                                              meshData.opacityTextureFilename,
-                                              false, newMesh->albedoTexture,
-                                              command_list);
+                    dx12::Util::CreateTexture(
+                        meshData.albedoTextureFilename,
+                        meshData.opacityTextureFilename, false,
+                        this->meshes[i]->albedoTexture, texture_handle);
                 } else {
-                    dx12::Util::CreateTexture(meshData.albedoTextureFilename,
-                                              true, newMesh->albedoTexture,
-                                              command_list);
+                    dx12::Util::CreateTexture(
+                        meshData.albedoTextureFilename, true,
+                        this->meshes[i]->albedoTexture, texture_handle);
                 }
-
                 material_consts.GetCpu().useAlbedoMap = true;
             } else {
                 cout << meshData.albedoTextureFilename
@@ -125,9 +119,9 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes,
 
         if (!meshData.emissiveTextureFilename.empty()) {
             if (filesystem::exists(meshData.emissiveTextureFilename)) {
-                dx12::Util::CreateTexture(meshData.emissiveTextureFilename,
-                                          true, newMesh->emissiveTexture,
-                                          command_list);
+                dx12::Util::CreateTexture(
+                    meshData.emissiveTextureFilename, true,
+                    this->meshes[i]->emissiveTexture, texture_handle);
                 material_consts.GetCpu().useEmissiveMap = true;
             } else {
                 cout << meshData.emissiveTextureFilename
@@ -138,7 +132,8 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes,
         if (!meshData.normalTextureFilename.empty()) {
             if (filesystem::exists(meshData.normalTextureFilename)) {
                 dx12::Util::CreateTexture(meshData.normalTextureFilename, false,
-                                          newMesh->normalTexture, command_list);
+                                          this->meshes[i]->normalTexture,
+                                          texture_handle);
                 material_consts.GetCpu().useNormalMap = true;
             } else {
                 cout << meshData.normalTextureFilename
@@ -149,7 +144,8 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes,
         if (!meshData.heightTextureFilename.empty()) {
             if (filesystem::exists(meshData.heightTextureFilename)) {
                 dx12::Util::CreateTexture(meshData.heightTextureFilename, false,
-                                          newMesh->heightTexture, command_list);
+                                          this->meshes[i]->heightTexture,
+                                          texture_handle);
                 mesh_consts.GetCpu().useHeightMap = true;
             } else {
                 cout << meshData.heightTextureFilename
@@ -160,7 +156,8 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes,
         if (!meshData.aoTextureFilename.empty()) {
             if (filesystem::exists(meshData.aoTextureFilename)) {
                 dx12::Util::CreateTexture(meshData.aoTextureFilename, false,
-                                          newMesh->aoTexture, command_list);
+                                          this->meshes[i]->aoTexture,
+                                          texture_handle);
                 material_consts.GetCpu().useAOMap = true;
             } else {
                 cout << meshData.aoTextureFilename
@@ -178,8 +175,8 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes,
             //    dx12::Util::CreateMetallicRoughnessTexture(
             //        meshData.metallicTextureFilename,
             //        meshData.roughnessTextureFilename,
-            //        newMesh->metallicRoughnessTexture,
-            //        newMesh->metallicRoughnessSRV);
+            //        this->meshes[i]->metallicRoughnessTexture,
+            //        this->meshes[i]->metallicRoughnessSRV);
             //} else {
             //    cout << meshData.metallicTextureFilename << " or "
             //         << meshData.roughnessTextureFilename
@@ -195,10 +192,8 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes,
             material_consts.GetCpu().useRoughnessMap = true;
         }
 
-        newMesh->meshConstsGPU = mesh_consts.Get();
-        newMesh->materialConstsGPU = material_consts.Get();
-
-        this->meshes.push_back(newMesh);
+        this->meshes[i]->meshConstsGPU = mesh_consts.Get();
+        this->meshes[i]->materialConstsGPU = material_consts.Get();
     }
 }
 

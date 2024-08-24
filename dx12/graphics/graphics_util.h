@@ -150,18 +150,19 @@ class Util {
 
     static void CreateTexture(const std::string filename, const bool usSRGB,
                               ComPtr<ID3D12Resource> &texture,
-                              ComPtr<ID3D12GraphicsCommandList> &commandList);
+                              CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle);
 
     static void CreateTexture(const std::string albedoFilename,
                               const std::string opacityFilename,
                               const bool usSRGB,
                               ComPtr<ID3D12Resource> &texture,
-                              ComPtr<ID3D12GraphicsCommandList> &commandList);
+                              CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle);
 
     static void CreateMetallicRoughnessTexture(
         const std::string metallicFiilename,
         const std::string roughnessFilename, ComPtr<ID3D12Resource> &texture,
-        ComPtr<ID3D12GraphicsCommandList> &commandList);
+        ComPtr<ID3D12GraphicsCommandList> &commandList,
+        CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle);
 
     //static void
     //CreateDDSTexture(const wchar_t *filename, const bool isCubeMap,

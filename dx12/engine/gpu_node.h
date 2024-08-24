@@ -35,7 +35,7 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        black_board->command_pool->Open(0, 1);
+        black_board->command_pool->Open();
 
         CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
             dx12::GpuCore::Instance()
@@ -62,7 +62,7 @@ class EndRenderNode : public foundation::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        black_board->command_pool->Close(0, 1);
+        black_board->command_pool->Close();
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }

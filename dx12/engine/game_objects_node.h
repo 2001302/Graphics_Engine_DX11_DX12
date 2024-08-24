@@ -149,10 +149,8 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             std::string base_path = "Assets/Characters/zelda/";
             std::string file_name = "zeldaPosed001.fbx";
 
-            command_pool->OpenResource(2);
-            auto renderer = std::make_shared<MeshRenderer>(
-                base_path, file_name, command_pool->Get(2));
-            command_pool->CloseResource(2);
+            auto renderer =
+                std::make_shared<MeshRenderer>(base_path, file_name);
 
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
             renderer->UpdateConstantBuffers();
@@ -213,6 +211,9 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                         defaultSolidPSO->pipeline_state);
                     command_list->SetDescriptorHeaps(_countof(samplers_heap),
                                                      samplers_heap);
+                    command_list->SetDescriptorHeaps(
+                        1, mesh->texture_heap.GetAddressOf());
+
                     command_list->SetGraphicsRootDescriptorTable(
                         0, manager->sampler_heap
                                ->GetGPUDescriptorHandleForHeapStart());
@@ -223,6 +224,9 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                     command_list->SetGraphicsRootConstantBufferView(
                         4, renderer->material_consts.Get()
                                ->GetGPUVirtualAddress());
+                    command_list->SetGraphicsRootDescriptorTable(
+                        6, mesh->texture_heap
+                               ->GetGPUDescriptorHandleForHeapStart());
 
                     command_list->IASetPrimitiveTopology(
                         D3D12_PRIMITIVE_TOPOLOGY::

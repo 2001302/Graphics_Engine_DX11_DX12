@@ -15,16 +15,12 @@ using Microsoft::WRL::ComPtr;
 class MeshRenderer : public Component {
   public:
     MeshRenderer() {}
-    MeshRenderer(const std::string &basePath, const std::string &filename,
-                 ComPtr<ID3D12GraphicsCommandList> command_list);
+    MeshRenderer(const std::string &basePath, const std::string &filename);
     MeshRenderer(const std::vector<MeshData> &meshes);
 
     virtual void Initialize();
-    void Initialize(const std::string &basePath, const std::string &filename,
-                    ComPtr<ID3D12GraphicsCommandList> command_list);
+    void Initialize(const std::string &basePath, const std::string &filename);
     void Initialize(const std::vector<MeshData> &meshes);
-    void Initialize(const std::vector<MeshData> &meshes,
-                    ComPtr<ID3D12GraphicsCommandList> command_list);
     virtual void InitMeshBuffers(const MeshData &meshData,
                                  std::shared_ptr<Mesh> &newMesh);
 

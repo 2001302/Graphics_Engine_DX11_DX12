@@ -1,7 +1,7 @@
 #ifndef _COMMAND_POOL
 #define _COMMAND_POOL
 
-#define NUM_COMAAND_LIST 3
+#define NUM_COMAAND_LIST 2
 
 #include "graphics_core.h"
 
@@ -20,8 +20,8 @@ class CommandPool {
             command_lists[i]->Close();
         }
     }
-    void Open(int begin, int end) {
-        for (int i = begin; i < end; i++) {
+    void Open() {
+        for (int i = 0; i < NUM_COMAAND_LIST; i++) {
             command_allocator[i]->Reset();
             auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
                 dx12::GpuCore::Instance()
@@ -36,8 +36,8 @@ class CommandPool {
                 command_lists[i]->Reset(command_allocator[i].Get(), nullptr));
         }
     };
-    void Close(int begin, int end) {
-        for (int i = begin; i < end; i++) {
+    void Close() {
+        for (int i = 0; i < NUM_COMAAND_LIST; i++) {
             auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
                 dx12::GpuCore::Instance()
                     .render_targets[dx12::GpuCore::Instance().frame_index]
@@ -54,22 +54,6 @@ class CommandPool {
 
     ComPtr<ID3D12GraphicsCommandList> Get(int index) {
         return command_lists[index];
-    }
-
-    void OpenResource(int index) 
-    { 
-        command_allocator[index]->Reset();
-        command_lists[index]->Reset(command_allocator[index].Get(), nullptr);
-    }
-    void CloseResource(int index) 
-    { 
-        command_lists[index]->Close();
-        dx12::GpuCore::Instance().command_queue->ExecuteCommandLists(
-			1, CommandListCast(command_lists[index].GetAddressOf()));
-
-        dx12::GpuCore::Instance().command_queue->Signal(
-			dx12::GpuCore::Instance().fence.Get(),
-			dx12::GpuCore::Instance().fence_value);
     }
 
   private:

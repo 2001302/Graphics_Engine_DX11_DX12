@@ -337,22 +337,10 @@
     <FxCompile Include="graphics\SkyboxVS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\PostEffectsPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
-    </FxCompile>
     <FxCompile Include="graphics\SamplingPS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="graphics\SamplingVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="graphics\NormalVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="graphics\NormalGS.hlsl">
-      <Filter>Graphics\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="graphics\NormalPS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="graphics\DepthOnlyVS.hlsl">
@@ -364,22 +352,13 @@
     <FxCompile Include="graphics\CombinePS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\CombineCS.hlsl">
-      <Filter>Graphics\Shader</Filter>
-    </FxCompile>
     <FxCompile Include="graphics\BrightPassCS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\BlurVertical.hlsl">
+    <FxCompile Include="graphics\BlurVerticalCS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\BlurHorizontal.hlsl">
-      <Filter>Graphics\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="graphics\BloomDownPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="graphics\BloomUpPS.hlsl">
+    <FxCompile Include="graphics\BlurHorizontalCS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="graphics\BloomCompositeCS.hlsl">

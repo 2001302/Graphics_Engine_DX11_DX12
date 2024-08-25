@@ -245,10 +245,7 @@ float3 LightRadiance(Light light, float3 representativePoint, float3 posWorld, f
         shadowFactor = PCSS(lightTexcoord, lightScreen.z - 0.001, shadowMap, light.invProj, light.radius * radiusScale);
     }
 
-    //todo : shadow mapping
-    //float3 radiance = light.radiance * spotFator * att * shadowFactor;
-    float3 radiance = light.radiance * spotFator * att;
-    
+    float3 radiance = light.radiance * spotFator * att * shadowFactor;
 
     return radiance;
 }
@@ -277,7 +274,7 @@ PixelShaderOutput main(PixelShaderInput input)
 
     // 임시로 unroll 사용
     [unroll] // warning X3550: sampler array index must be a literal expression, forcing loop to unroll
-    for (int i = 0; i < 1; ++i)
+    for (int i = 0; i < MAX_LIGHTS; ++i)
     {
         if (lights[i].type)
         {
@@ -293,9 +290,9 @@ PixelShaderOutput main(PixelShaderInput input)
             lightVec /= lightDist;
             float3 halfway = normalize(pixelToEye + lightVec);
         
+            float NdotI = max(0.0, dot(normalWorld, lightVec));
             float NdotH = max(0.0, dot(normalWorld, halfway));
             float NdotO = max(0.0, dot(normalWorld, pixelToEye));
-            float NdotI = max(0.0, dot(normalWorld, lightVec));
         
             const float3 Fdielectric = 0.04; // 비금속(Dielectric) 재질의 F0
             float3 F0 = lerp(Fdielectric, albedo.rgb, metallic);
@@ -320,18 +317,15 @@ PixelShaderOutput main(PixelShaderInput input)
             if (i == 2)
                 radiance = LightRadiance(lights[i], input.posWorld, normalWorld, shadowMap2);*/
             
-            //// 오류 임시 수정 (radiance가 (0,0,0)일 경우  directLighting += ... 인데도 0 벡터가 되어버림
+            // 오류 임시 수정 (radiance가 (0,0,0)일 경우  directLighting += ... 인데도 0 벡터가 되어버림
             if (abs(dot(float3(1, 1, 1), radiance)) > 1e-5)
-                directLighting += (diffuseBRDF + specularBRDF) * NdotI *radiance;
+                directLighting += (diffuseBRDF + specularBRDF) * radiance * NdotI;
         }
     }
     
     PixelShaderOutput output;
     output.pixelColor = float4(ambientLighting + directLighting + emission, 1.0);
     output.pixelColor = clamp(output.pixelColor, 0.0, 1000.0);
-
-    //todo : tone mapping
-    output.pixelColor.xyz = output.pixelColor.xyz * 10.0;
-
+    
     return output;
 }

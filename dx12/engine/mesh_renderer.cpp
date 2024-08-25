@@ -276,7 +276,7 @@ void MeshRenderer::Render(RenderCondition *render_condition,
         auto command_list = render_condition->command_pool->Get(0);
 
         CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle =
-            dx12::GpuCore::Instance().GetHandleRTV();
+            dx12::GpuCore::Instance().GetHandleFloatRTV();
         CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle =
             dx12::GpuCore::Instance().GetHandleDSV();
 

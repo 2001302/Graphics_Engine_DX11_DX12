@@ -49,7 +49,6 @@ class GpuCore {
     CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleDSV();
 
     bool useMSAA = true;
-    UINT num_quality_levels = 0;
 
     ComPtr<IDXGISwapChain3> swap_chain;
     ComPtr<ID3D12Device> device;
@@ -57,7 +56,6 @@ class GpuCore {
 
     ComPtr<ID3D12DescriptorHeap> heap_RTV;
     ComPtr<ID3D12Resource> resource_RTV[2];
-    UINT desc_size_RTV;
 
     ComPtr<ID3D12DescriptorHeap> heap_DSV;
     ComPtr<ID3D12Resource> resourcce_DSV;
@@ -71,7 +69,9 @@ class GpuCore {
     UINT64 fence_value;
 
   private:
-    GpuCore() : swap_chain(0), device(0), viewport(D3D12_VIEWPORT()) {}
+    GpuCore()
+        : swap_chain(0), device(0), viewport(D3D12_VIEWPORT()), frame_index(0),
+          fence_value(0), fence_event(0) {}
 };
 
 } // namespace dx12

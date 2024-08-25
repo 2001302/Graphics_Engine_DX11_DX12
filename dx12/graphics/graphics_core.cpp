@@ -115,12 +115,10 @@ bool GpuCore::InitializeGPU() {
         ThrowIfFailed(device->CreateDescriptorHeap(&rtvHeapDesc,
                                                    IID_PPV_ARGS(&heap_RTV)));
 
-        desc_size_RTV = device->GetDescriptorHandleIncrementSize(
+        UINT desc_size_RTV = device->GetDescriptorHandleIncrementSize(
             D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-    }
 
-    // Create frame resources.
-    {
+        // Create frame resources.
         CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
             heap_RTV->GetCPUDescriptorHandleForHeapStart());
 
@@ -165,20 +163,67 @@ bool GpuCore::InitializeGPU() {
     return true;
 }
 void GpuCore::CreateBuffer() {
+    if (useMSAA) {
+        DXGI_SAMPLE_DESC sampleDesc = {};
+        sampleDesc.Count = 4;  
+        sampleDesc.Quality = 0; 
+        
+        D3D12_FEATURE_DATA_MULTISAMPLE_QUALITY_LEVELS msQualityLevels;
+        msQualityLevels.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        msQualityLevels.SampleCount = sampleDesc.Count;
+        msQualityLevels.Flags = D3D12_MULTISAMPLE_QUALITY_LEVELS_FLAG_NONE;
+        msQualityLevels.NumQualityLevels = 0;
+
+        ThrowIfFailed(device->CheckFeatureSupport(
+            D3D12_FEATURE_MULTISAMPLE_QUALITY_LEVELS, &msQualityLevels,
+            sizeof(msQualityLevels)));
+
+        if (msQualityLevels.NumQualityLevels > 0) {
+            sampleDesc.Quality = msQualityLevels.NumQualityLevels - 1;
+        } else {
+            sampleDesc.Count = 1;
+            sampleDesc.Quality = 0;
+        }
+
+        D3D12_RESOURCE_DESC msaaRenderTargetDesc = {};
+        msaaRenderTargetDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+        msaaRenderTargetDesc.Alignment = 0;
+        msaaRenderTargetDesc.Width = foundation::Env::Instance().screen_width;
+        msaaRenderTargetDesc.Height = foundation::Env::Instance().screen_height;
+        msaaRenderTargetDesc.DepthOrArraySize = 1;
+        msaaRenderTargetDesc.MipLevels = 1;
+        msaaRenderTargetDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        msaaRenderTargetDesc.SampleDesc = sampleDesc;
+        msaaRenderTargetDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+        msaaRenderTargetDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
+
+        const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+        D3D12_CLEAR_VALUE clearValue = {};
+        clearValue.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        memcpy(clearValue.Color, clearColor, sizeof(clearColor));
+
+        ComPtr<ID3D12Resource> msaaRenderTarget;
+        ThrowIfFailed(device->CreateCommittedResource(
+            &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+            D3D12_HEAP_FLAG_NONE, &msaaRenderTargetDesc,
+            D3D12_RESOURCE_STATE_RENDER_TARGET, &clearValue,
+            IID_PPV_ARGS(&msaaRenderTarget)));
+    }
+
 
     D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
-    depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
+    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
     depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
-
+    
     D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
-    depthOptimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
+    depthOptimizedClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
     depthOptimizedClearValue.DepthStencil.Depth = 1.0f;
     depthOptimizedClearValue.DepthStencil.Stencil = 0;
 
     auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
     auto tex2d = CD3DX12_RESOURCE_DESC::Tex2D(
-        DXGI_FORMAT_D32_FLOAT, foundation::Env::Instance().screen_width,
+        DXGI_FORMAT_D24_UNORM_S8_UINT, foundation::Env::Instance().screen_width,
         foundation::Env::Instance().screen_height, 1, 0, 1, 0,
         D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 
@@ -197,8 +242,12 @@ void GpuCore::CreateBuffer() {
     device->CreateDepthStencilView(
         resourcce_DSV.Get(), &depthStencilDesc,
         heap_DSV->GetCPUDescriptorHandleForHeapStart());
+
+
 }
 CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleRTV() {
+    UINT desc_size_RTV = device->GetDescriptorHandleIncrementSize(
+        D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
         heap_RTV->GetCPUDescriptorHandleForHeapStart(), frame_index,
         desc_size_RTV);

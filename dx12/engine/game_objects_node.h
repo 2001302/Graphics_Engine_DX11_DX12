@@ -129,7 +129,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(solidRS);
                 psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
                 psoDesc.DepthStencilState = dsDesc;
-                psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+                psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
                 psoDesc.SampleMask = UINT_MAX;
                 psoDesc.PrimitiveTopologyType =
                     D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;

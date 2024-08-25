@@ -30,15 +30,14 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
             dx12::GpuCore::Instance().GetHandleRTV();
 
         const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-        black_board->conditions->command_pool->Get(0)
-            ->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+        black_board->conditions->command_pool->Get(0)->ClearRenderTargetView(
+            rtvHandle, clearColor, 0, nullptr);
 
         CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
             dx12::GpuCore::Instance()
                 .heap_DSV->GetCPUDescriptorHandleForHeapStart());
-        black_board->conditions->command_pool->Get(0)
-            ->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0,
-                                    0, nullptr);
+        black_board->conditions->command_pool->Get(0)->ClearDepthStencilView(
+            dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }

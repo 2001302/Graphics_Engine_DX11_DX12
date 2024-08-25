@@ -23,6 +23,9 @@ class CommandPool {
     void Open() {
         for (int i = 0; i < NUM_COMAAND_LIST; i++) {
             command_allocator[i]->Reset();
+            ThrowIfFailed(
+                command_lists[i]->Reset(command_allocator[i].Get(), nullptr));
+
             auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
                 dx12::GpuCore::Instance()
                     .resource_RTV[dx12::GpuCore::Instance().frame_index]
@@ -31,9 +34,6 @@ class CommandPool {
                 D3D12_RESOURCE_STATE_RENDER_TARGET);
 
             command_lists[i]->ResourceBarrier(1, &barrier);
-
-            ThrowIfFailed(
-                command_lists[i]->Reset(command_allocator[i].Get(), nullptr));
         }
     };
     void Close() {

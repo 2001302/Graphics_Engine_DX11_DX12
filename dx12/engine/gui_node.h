@@ -53,6 +53,9 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
                 1, &dx12::GpuCore::Instance().viewport);
             command_pool->Get(1)->OMSetRenderTargets(1, &rtvHandle, false,
                                                      nullptr);
+            ID3D12DescriptorHeap *descriptorHeaps[] = {cbvHeap.Get()};
+            command_pool->Get(1)->SetDescriptorHeaps(_countof(descriptorHeaps),
+                                            descriptorHeaps);
 
             ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
                                           command_pool->Get(1).Get());

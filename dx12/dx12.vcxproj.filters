@@ -312,6 +312,9 @@
     <ClInclude Include="graphics\command_pool.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="engine\tone_mapping_node.h">
+      <Filter>Engine\BehaviorTreeNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="foundation\ImGui\NodeEditor\imgui_bezier_math.inl">
@@ -337,19 +340,10 @@
     <FxCompile Include="graphics\SkyboxVS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\SamplingPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="graphics\SamplingVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
-    </FxCompile>
     <FxCompile Include="graphics\DepthOnlyVS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="graphics\DepthOnlyPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="graphics\CombinePS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="graphics\BrightPassCS.hlsl">
@@ -368,6 +362,9 @@
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="graphics\BasicPS.hlsl">
+      <Filter>Graphics\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\ToneMappingCS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
   </ItemGroup>

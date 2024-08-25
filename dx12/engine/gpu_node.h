@@ -85,17 +85,27 @@ class PresentNode : public foundation::BehaviorActionNode {
     }
 };
 
-// class ResolveBufferNode : public foundation::BehaviorActionNode {
-//     foundation::EnumBehaviorTreeStatus OnInvoke() override {
-//
-//          dx12::GpuCore::Instance().commandList->ResolveSubresource(
-//              dx12::GpuCore::Instance().resolved_buffer.Get(), 0,
-//              dx12::GpuCore::Instance().float_buffer.Get(), 0,
-//              DXGI_FORMAT_R16G16B16A16_FLOAT);
-//
-//         return foundation::EnumBehaviorTreeStatus::eSuccess;
-//     }
-// };
+class ResolveBuffer : public foundation::BehaviorActionNode {
+    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+        auto command_list = black_board->conditions->command_pool->Get(0);
+
+        auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            dx12::GpuCore::Instance().resource_MS.Get(),
+            D3D12_RESOURCE_STATE_RENDER_TARGET,
+            D3D12_RESOURCE_STATE_RESOLVE_SOURCE);
+        command_list->ResourceBarrier(1, &barrier);
+
+        command_list->ResolveSubresource(
+            dx12::GpuCore::Instance().resource_resolved.Get(), 0,
+            dx12::GpuCore::Instance().resource_MS.Get(), 0,
+            DXGI_FORMAT_R16G16B16A16_FLOAT);
+
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
 
 } // namespace core
 

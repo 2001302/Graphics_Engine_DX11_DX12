@@ -1,5 +1,13 @@
 #include "engine.h"
-#include "../foundation/behavior_tree_builder.h"
+
+#include "camera_node.h"
+#include "game_objects_node.h"
+#include "gpu_node.h"
+#include "gui_node.h"
+#include "light_node.h"
+#include "shared_resource_node.h"
+#include "tone_mapping_node.h"
+
 
 namespace core {
 
@@ -12,6 +20,8 @@ auto game_object_node = std::make_shared<GameObjectNodeInvoker>();
 auto gui_node = std::make_shared<GuiNodeInvoker>();
 auto present = std::make_shared<PresentNode>();
 auto light_node = std::make_shared<LightNodeInvoker>();
+auto resolve_buffer = std::make_shared<ResolveBuffer>();
+auto tone_mapping = std::make_shared<ToneMappingNodeInvoker>();
 
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
@@ -35,6 +45,7 @@ bool Engine::Start() {
         ->Excute(light_node)
         ->Excute(shared_resource_node)
         ->Excute(game_object_node)
+        ->Excute(tone_mapping)
         ->Excute(gui_node)
     ->Close()
     ->Run();
@@ -53,6 +64,8 @@ bool Engine::Start() {
     ->Sequence()
         ->Excute(begin_render)
         ->Excute(game_object_node)
+        ->Excute(resolve_buffer)
+        ->Excute(tone_mapping)
         ->Excute(gui_node)
         ->Excute(end_render)
         ->Excute(present)

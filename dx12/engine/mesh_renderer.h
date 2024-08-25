@@ -44,13 +44,6 @@ class MeshRenderer : public Component {
 
     ConstantBuffer<MeshConstants> mesh_consts;
     ConstantBuffer<MaterialConstants> material_consts;
-
-    DirectX::BoundingBox bounding_box;
-    DirectX::BoundingSphere bounding_sphere;
-
-  private:
-    std::shared_ptr<Mesh> bounding_box_mesh;
-    std::shared_ptr<Mesh> bounding_sphere_mesh;
 };
 
 } // namespace core

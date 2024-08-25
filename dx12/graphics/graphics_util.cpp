@@ -666,4 +666,18 @@ void Util::CreatePixelShader(ComPtr<ID3D12Device> &device,
         "ps_5_0", compileFlags, 0, &shader, &errorBlob);
     CheckResult(hr, errorBlob.Get());
 }
+
+void Util::CreateComputeShader(ComPtr<ID3D12Device> &device,
+                             std::wstring filename, ComPtr<ID3DBlob> &shader) {
+    UINT compileFlags = 0;
+#if defined(DEBUG) || defined(_DEBUG)
+    compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+    ComPtr<ID3DBlob> errorBlob;
+    HRESULT hr = D3DCompileFromFile(
+        filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
+        "cs_5_0", compileFlags, 0, &shader, &errorBlob);
+    CheckResult(hr, errorBlob.Get());
+}
 } // namespace dx12

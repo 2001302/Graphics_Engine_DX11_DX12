@@ -46,6 +46,7 @@ class GpuCore {
     bool InitializeGPU();
     void CreateBuffer();
     CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleFloatRTV();
+    CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleResolvedRTV();
     CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleRTV();
     CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleDSV();
 
@@ -55,12 +56,17 @@ class GpuCore {
     ComPtr<ID3D12Device> device;
     ComPtr<ID3D12CommandQueue> command_queue;
 
-    ComPtr<ID3D12DescriptorHeap> float_heap_RTV;
-    //ComPtr<ID3D12DescriptorHeap> float_heap_SRV;
-    ComPtr<ID3D12Resource> float_resource_RTV;
+    ComPtr<ID3D12DescriptorHeap> heap_MS;
+    ComPtr<ID3D12Resource> resource_MS;
 
-    ComPtr<ID3D12DescriptorHeap> heap_RTV;
-    ComPtr<ID3D12Resource> resource_RTV[2];
+    ComPtr<ID3D12DescriptorHeap> heap_resolved;
+    ComPtr<ID3D12Resource> resource_resolved;
+
+    ComPtr<ID3D12DescriptorHeap> heap_staging;
+    ComPtr<ID3D12Resource> resource_staging;
+
+    ComPtr<ID3D12DescriptorHeap> heap_FLIP;
+    ComPtr<ID3D12Resource> resource_FLIP[2];
 
     ComPtr<ID3D12DescriptorHeap> heap_DSV;
     ComPtr<ID3D12Resource> resourcce_DSV;

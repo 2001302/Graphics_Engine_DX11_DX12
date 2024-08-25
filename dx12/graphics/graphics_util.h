@@ -214,6 +214,10 @@ class Util {
     static void CreatePixelShader(ComPtr<ID3D12Device> &device,
                                   std::wstring filename,
                                   ComPtr<ID3DBlob> &shader);
+
+    static void CreateComputeShader(ComPtr<ID3D12Device> &device,
+                                  std::wstring filename,
+                                  ComPtr<ID3DBlob> &shader);
 };
 } // namespace dx12
 #endif

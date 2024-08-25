@@ -3,16 +3,10 @@
 
 #include "../foundation/platform.h"
 #include "../foundation/setting_ui.h"
+#include "../foundation/behavior_tree_builder.h"
 #include "../graphics/graphics_util.h"
 #include "black_board.h"
 #include "message_receiver.h"
-
-#include "camera_node.h"
-#include "game_objects_node.h"
-#include "gpu_node.h"
-#include "gui_node.h"
-#include "light_node.h"
-#include "shared_resource_node.h"
 
 namespace core {
 

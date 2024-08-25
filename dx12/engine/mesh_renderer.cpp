@@ -39,39 +39,6 @@ void MeshRenderer::Initialize(const std::string &basePath,
     Initialize(meshes);
 }
 
-BoundingBox GetBoundingBox(const vector<Vertex> &vertices) {
-
-    if (vertices.size() == 0)
-        return BoundingBox();
-
-    Vector3 minCorner = vertices[0].position;
-    Vector3 maxCorner = vertices[0].position;
-
-    for (size_t i = 1; i < vertices.size(); i++) {
-        minCorner = Vector3::Min(minCorner, vertices[i].position);
-        maxCorner = Vector3::Max(maxCorner, vertices[i].position);
-    }
-
-    Vector3 center = (minCorner + maxCorner) * 0.5f;
-    Vector3 extents = maxCorner - center;
-
-    return BoundingBox(center, extents);
-}
-
-void ExtendBoundingBox(const BoundingBox &inBox, BoundingBox &outBox) {
-
-    Vector3 minCorner = Vector3(inBox.Center) - Vector3(inBox.Extents);
-    Vector3 maxCorner = Vector3(inBox.Center) - Vector3(inBox.Extents);
-
-    minCorner = Vector3::Min(minCorner,
-                             Vector3(outBox.Center) - Vector3(outBox.Extents));
-    maxCorner = Vector3::Max(maxCorner,
-                             Vector3(outBox.Center) + Vector3(outBox.Extents));
-
-    outBox.Center = (minCorner + maxCorner) * 0.5f;
-    outBox.Extents = maxCorner - outBox.Center;
-}
-
 void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
     mesh_consts.GetCpu().world = Matrix();
@@ -270,7 +237,6 @@ void MeshRenderer::UpdateConstantBuffers() {
 
 void MeshRenderer::Render(RenderCondition *render_condition,
                           dx12::GraphicsPSO *PSO) {
-
     if (is_visible) {
 
         auto command_list = render_condition->command_pool->Get(0);
@@ -326,8 +292,6 @@ void MeshRenderer::UpdateWorldRow(const Matrix &worldRow) {
     this->world_row_IT = worldRow;
     world_row_IT.Translation(Vector3(0.0f));
     world_row_IT = world_row_IT.Invert().Transpose();
-
-    bounding_sphere.Center = this->world_row.Translation();
 
     mesh_consts.GetCpu().world = worldRow.Transpose();
     mesh_consts.GetCpu().worldIT = world_row_IT.Transpose();

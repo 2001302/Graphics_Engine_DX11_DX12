@@ -30,9 +30,6 @@ class MeshRenderer : public Component {
 
     virtual void Render(RenderCondition *render_condition,
                         dx12::GraphicsPSO *PSO);
-    virtual void RenderNormals();
-    virtual void RenderWireBoundingBox();
-    virtual void RenderWireBoundingSphere();
 
   public:
     Matrix world_row = Matrix();    // Model(Object) To World

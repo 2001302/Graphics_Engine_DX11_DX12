@@ -735,7 +735,7 @@ void GeometryGenerator::Normalize(const Vector3 center,
             v.position = (v.position + translation) * scale;
         }
 
-        for (auto &v : mesh.skinnedVertices) {
+        for (auto &v : mesh.skinned_vertices) {
             v.position = (v.position + translation) * scale;
         }
     }

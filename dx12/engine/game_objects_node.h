@@ -51,7 +51,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 solidRS.DepthClipEnable = true;
                 solidRS.MultisampleEnable = true;
 
-                // depth
+                // depth stencil
                 D3D12_DEPTH_STENCIL_DESC dsDesc;
                 ZeroMemory(&dsDesc, sizeof(dsDesc));
                 dsDesc.DepthEnable = true;
@@ -129,6 +129,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(solidRS);
                 psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
                 psoDesc.DepthStencilState = dsDesc;
+                psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
                 psoDesc.SampleMask = UINT_MAX;
                 psoDesc.PrimitiveTopologyType =
                     D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -162,7 +163,6 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             break;
         }
         case EnumStageType::eUpdate: {
-
             for (auto &i : targets->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
@@ -173,7 +173,6 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
             for (auto &i : targets->objects) {
-
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
                 renderer->Render(condition, defaultSolidPSO.get());

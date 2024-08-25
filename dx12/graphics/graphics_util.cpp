@@ -128,12 +128,11 @@ void ReadImage(const std::string albedoFilename,
         }
 }
 
-//todo : neet to optimize
+// todo : neet to optimize
 void CreateTextureHelper(const int width, const int height,
                          const vector<uint8_t> &image,
                          const DXGI_FORMAT pixelFormat,
-                         ComPtr<ID3D12Resource> &texture,
-                         CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle) {
+                         ComPtr<ID3D12Resource> &texture) {
     // create command list
     ComPtr<ID3D12CommandAllocator> command_allocator;
     ComPtr<ID3D12GraphicsCommandList> command_list;
@@ -213,24 +212,10 @@ void CreateTextureHelper(const int width, const int height,
         WaitForSingleObject(eventHandle, INFINITE);
         CloseHandle(eventHandle);
     }
-
-    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-    srvDesc.Format = texture->GetDesc().Format;
-    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-    srvDesc.Texture2D.MipLevels = 1;
-
-    UINT descriptorSize =
-        dx12::GpuCore::Instance().device->GetDescriptorHandleIncrementSize(
-        D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-    dx12::GpuCore::Instance().device->CreateShaderResourceView(
-        texture.Get(), &srvDesc, texture_handle);
-    texture_handle.Offset(descriptorSize);
 }
 
 void Util::CreateTexture(const std::string filename, const bool usSRGB,
-                         ComPtr<ID3D12Resource> &tex,
-                         CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle) {
+                         ComPtr<ID3D12Resource> &tex) {
 
     int width = 0, height = 0;
     std::vector<uint8_t> image;
@@ -246,13 +231,12 @@ void Util::CreateTexture(const std::string filename, const bool usSRGB,
         ReadImage(filename, image, width, height);
     }
 
-    CreateTextureHelper(width, height, image, pixelFormat, tex,texture_handle);
+    CreateTextureHelper(width, height, image, pixelFormat, tex);
 }
 
 void Util::CreateTexture(const std::string albedoFilename,
                          const std::string opacityFilename, const bool usSRGB,
-                         ComPtr<ID3D12Resource> &texture,
-                         CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle) {
+                         ComPtr<ID3D12Resource> &texture) {
 
     int width = 0, height = 0;
     std::vector<uint8_t> image;
@@ -261,17 +245,15 @@ void Util::CreateTexture(const std::string albedoFilename,
 
     ReadImage(albedoFilename, opacityFilename, image, width, height);
 
-    CreateTextureHelper(width, height, image, pixelFormat, texture,
-                        texture_handle);
+    CreateTextureHelper(width, height, image, pixelFormat, texture);
 }
 
-void Util::CreateMetallicRoughnessTexture(
-    const std::string metallicFilename, const std::string roughnessFilename,
-    ComPtr<ID3D12Resource> &texture,
-    CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle) {
+void Util::CreateMetallicRoughnessTexture(const std::string metallicFilename,
+                                          const std::string roughnessFilename,
+                                          ComPtr<ID3D12Resource> &texture) {
 
     if (!metallicFilename.empty() && (metallicFilename == roughnessFilename)) {
-        Util::CreateTexture(metallicFilename, false, texture, texture_handle);
+        Util::CreateTexture(metallicFilename, false, texture);
     } else {
         int mWidth = 0, mHeight = 0;
         int rWidth = 0, rHeight = 0;
@@ -302,8 +284,7 @@ void Util::CreateMetallicRoughnessTexture(
         }
 
         CreateTextureHelper(mWidth, mHeight, combinedImage,
-                            DXGI_FORMAT_R8G8B8A8_UNORM, texture,
-                            texture_handle);
+                            DXGI_FORMAT_R8G8B8A8_UNORM, texture);
     }
 }
 

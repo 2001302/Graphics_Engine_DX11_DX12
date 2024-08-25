@@ -228,9 +228,9 @@ void ModelLoader::UpdateTangents() {
             m.vertices[i].tangent = tangents[i];
         }
 
-        if (m.skinnedVertices.size() > 0) {
-            for (size_t i = 0; i < m.skinnedVertices.size(); i++) {
-                m.skinnedVertices[i].tangentModel = tangents[i];
+        if (m.skinned_vertices.size() > 0) {
+            for (size_t i = 0; i < m.skinned_vertices.size(); i++) {
+                m.skinned_vertices[i].tangentModel = tangents[i];
             }
         }
     }
@@ -344,7 +344,7 @@ MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
     MeshData newMesh;
     auto &vertices = newMesh.vertices;
     auto &indices = newMesh.indices;
-    auto &skinnedVertices = newMesh.skinnedVertices;
+    auto &skinnedVertices = newMesh.skinned_vertices;
 
     // Walk through each of the mesh's vertices
     for (UINT i = 0; i < mesh->mNumVertices; i++) {

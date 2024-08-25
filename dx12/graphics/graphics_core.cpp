@@ -167,18 +167,18 @@ bool GpuCore::InitializeGPU() {
 void GpuCore::CreateBuffer() {
 
     D3D12_DEPTH_STENCIL_VIEW_DESC depthStencilDesc = {};
-    depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthStencilDesc.Format = DXGI_FORMAT_D32_FLOAT;
     depthStencilDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
     depthStencilDesc.Flags = D3D12_DSV_FLAG_NONE;
 
     D3D12_CLEAR_VALUE depthOptimizedClearValue = {};
-    depthOptimizedClearValue.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+    depthOptimizedClearValue.Format = DXGI_FORMAT_D32_FLOAT;
     depthOptimizedClearValue.DepthStencil.Depth = 1.0f;
     depthOptimizedClearValue.DepthStencil.Stencil = 0;
 
     auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
     auto tex2d = CD3DX12_RESOURCE_DESC::Tex2D(
-        DXGI_FORMAT_D24_UNORM_S8_UINT, foundation::Env::Instance().screen_width,
+        DXGI_FORMAT_D32_FLOAT, foundation::Env::Instance().screen_width,
         foundation::Env::Instance().screen_height, 1, 0, 1, 0,
         D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
 

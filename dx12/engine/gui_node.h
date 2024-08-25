@@ -48,6 +48,7 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
 
             CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle =
                 dx12::GpuCore::Instance().GetHandleRTV();
+            command_pool->Get(1)->SetName(L"ImGui");
             command_pool->Get(1)->RSSetViewports(
                 1, &dx12::GpuCore::Instance().viewport);
             command_pool->Get(1)->OMSetRenderTargets(1, &rtvHandle, false,

@@ -93,14 +93,14 @@ class ResolveBuffer : public foundation::BehaviorActionNode {
         auto command_list = black_board->conditions->command_pool->Get(0);
 
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            dx12::GpuCore::Instance().resource_MS.Get(),
+            dx12::GpuCore::Instance().resource_HDR.Get(),
             D3D12_RESOURCE_STATE_RENDER_TARGET,
             D3D12_RESOURCE_STATE_RESOLVE_SOURCE);
         command_list->ResourceBarrier(1, &barrier);
 
         command_list->ResolveSubresource(
             dx12::GpuCore::Instance().resource_resolved.Get(), 0,
-            dx12::GpuCore::Instance().resource_MS.Get(), 0,
+            dx12::GpuCore::Instance().resource_HDR.Get(), 0,
             DXGI_FORMAT_R16G16B16A16_FLOAT);
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;

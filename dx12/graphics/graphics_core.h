@@ -56,14 +56,14 @@ class GpuCore {
     ComPtr<ID3D12Device> device;
     ComPtr<ID3D12CommandQueue> command_queue;
 
-    ComPtr<ID3D12DescriptorHeap> heap_MS;
-    ComPtr<ID3D12Resource> resource_MS;
+    ComPtr<ID3D12DescriptorHeap> heap_HDR;
+    ComPtr<ID3D12Resource> resource_HDR;
 
     ComPtr<ID3D12DescriptorHeap> heap_resolved;
     ComPtr<ID3D12Resource> resource_resolved;
 
-    ComPtr<ID3D12DescriptorHeap> heap_staging;
-    ComPtr<ID3D12Resource> resource_staging;
+    ComPtr<ID3D12DescriptorHeap> heap_LDR;
+    ComPtr<ID3D12Resource> resource_LDR;
 
     ComPtr<ID3D12DescriptorHeap> heap_FLIP;
     ComPtr<ID3D12Resource> resource_FLIP[2];

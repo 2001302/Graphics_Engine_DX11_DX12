@@ -1,5 +1,5 @@
 Texture2D g_texture0 : register(t0);
-Texture2D g_texture1 : register(t1);
+//Texture2D g_texture1 : register(t1);
 SamplerState g_sampler : register(s0);
 
 cbuffer ImageFilterConstData : register(b1) {
@@ -63,9 +63,10 @@ float3 lumaBasedReinhardToneMapping(float3 color) {
 
 float4 main(SamplingPixelShaderInput input) : SV_TARGET {
     float3 color0 = g_texture0.Sample(g_sampler, input.texcoord).rgb;
-    float3 color1 = g_texture1.Sample(g_sampler, input.texcoord).rgb;
+    //float3 color1 = g_texture1.Sample(g_sampler, input.texcoord).rgb;
 
-    float3 combined = (1.0 - strength) * color0 + strength * color1;
+    float3 combined = (1.0 - strength) * color0;
+    //+strength *color1;
 
     // Tone Mapping
     combined = LinearToneMapping(combined);

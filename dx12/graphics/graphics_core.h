@@ -62,8 +62,8 @@ class GpuCore {
     ComPtr<ID3D12DescriptorHeap> heap_resolved;
     ComPtr<ID3D12Resource> resource_resolved;
 
-    ComPtr<ID3D12DescriptorHeap> heap_LDR;
-    ComPtr<ID3D12Resource> resource_LDR;
+    //ComPtr<ID3D12DescriptorHeap> heap_LDR;
+    //ComPtr<ID3D12Resource> resource_LDR;
 
     ComPtr<ID3D12DescriptorHeap> heap_FLIP;
     ComPtr<ID3D12Resource> resource_FLIP[2];

@@ -30,21 +30,25 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
                     dx12::GpuCore::Instance().device,
                     L"graphics/ToneMappingCS.hlsl", tone_mappingCS);
 
-                //
-                // CD3DX12_DESCRIPTOR_RANGE1 srvRange;
-                // srvRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-                //
-                // CD3DX12_DESCRIPTOR_RANGE1 uavRange;
-                // uavRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0);
+                
+                 CD3DX12_DESCRIPTOR_RANGE1 srvRange;
+                 srvRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+                
+                 CD3DX12_DESCRIPTOR_RANGE1 uavRange;
+                 uavRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, 1, 0);
 
                 // rootSignature
                 CD3DX12_ROOT_PARAMETER1 rootParameters[3] = {};
                 // 1:constant buffer
                 rootParameters[0].InitAsConstants(1, 0, 0);
                 // 2:resolved buffer
-                rootParameters[1].InitAsShaderResourceView(0, 0); // t0
+                rootParameters[1].InitAsDescriptorTable(
+                    1, &srvRange, D3D12_SHADER_VISIBILITY_ALL);
+                //rootParameters[1].InitAsShaderResourceView(0, 0); // t0
                 // 3:LDR buffer
-                rootParameters[2].InitAsUnorderedAccessView(0, 0); // u0
+                rootParameters[2].InitAsDescriptorTable(
+                    1, &uavRange, D3D12_SHADER_VISIBILITY_ALL);
+                //rootParameters[2].InitAsUnorderedAccessView(0, 0); // u0
 
                 auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
                     ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,

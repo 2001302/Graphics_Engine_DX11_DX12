@@ -367,5 +367,11 @@
     <FxCompile Include="graphics\ToneMappingCS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
+    <FxCompile Include="graphics\CombinePS.hlsl">
+      <Filter>Graphics\Shader</Filter>
+    </FxCompile>
+    <FxCompile Include="graphics\CombineVS.hlsl">
+      <Filter>Graphics\Shader</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

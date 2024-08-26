@@ -164,6 +164,7 @@ bool GpuCore::InitializeGPU() {
 }
 void GpuCore::CreateBuffer() {
     if (useMSAA) {
+        //for HDR
         DXGI_SAMPLE_DESC sampleDesc = {};
         sampleDesc.Count = 4;
         sampleDesc.Quality = 0;
@@ -263,7 +264,7 @@ void GpuCore::CreateBuffer() {
             heap_DSV->GetCPUDescriptorHandleForHeapStart());
     }
     {
-        // resolved buffer
+        // resolved buffer (for LDR)
         D3D12_RESOURCE_DESC resource_desc_RTV = {};
         resource_desc_RTV.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
         resource_desc_RTV.Alignment = 0;
@@ -281,14 +282,14 @@ void GpuCore::CreateBuffer() {
         ThrowIfFailed(device->CreateCommittedResource(
             &heap_property, D3D12_HEAP_FLAG_NONE, &resource_desc_RTV,
             D3D12_RESOURCE_STATE_COMMON, nullptr,
-            IID_PPV_ARGS(&resource_resolved)));
+            IID_PPV_ARGS(&resource_LDR)));
 
         D3D12_DESCRIPTOR_HEAP_DESC heap_desc_RTV = {};
         heap_desc_RTV.NumDescriptors = 1;
         heap_desc_RTV.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
         heap_desc_RTV.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
         ThrowIfFailed(device->CreateDescriptorHeap(
-            &heap_desc_RTV, IID_PPV_ARGS(&heap_resolved)));
+            &heap_desc_RTV, IID_PPV_ARGS(&heap_LDR)));
         
         D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
         srvDesc.Shader4ComponentMapping =
@@ -299,57 +300,22 @@ void GpuCore::CreateBuffer() {
         srvDesc.Texture2D.MipLevels = 1;
         srvDesc.Texture2D.PlaneSlice = 0;
         srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-        device->CreateShaderResourceView(resource_resolved.Get(), &srvDesc,
-                                         heap_resolved->GetCPUDescriptorHandleForHeapStart());
+        device->CreateShaderResourceView(resource_LDR.Get(), &srvDesc,
+                                         heap_LDR->GetCPUDescriptorHandleForHeapStart());
     }
 
-    //{
-    //    // LDR buffer
-    //    D3D12_RESOURCE_DESC resource_desc_RTV = {};
-    //    resource_desc_RTV.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-    //    resource_desc_RTV.Alignment = 0;
-    //    resource_desc_RTV.Width = foundation::Env::Instance().screen_width;
-    //    resource_desc_RTV.Height = foundation::Env::Instance().screen_height;
-    //    resource_desc_RTV.DepthOrArraySize = 1;
-    //    resource_desc_RTV.MipLevels = 1;
-    //    resource_desc_RTV.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    //    resource_desc_RTV.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
-    //    resource_desc_RTV.Flags = D3D12_RESOURCE_FLAG_ALLOW_UNORDERED_ACCESS;
-    //    resource_desc_RTV.SampleDesc.Count = 1;
-    //    resource_desc_RTV.SampleDesc.Quality = 0;
-
-    //    auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-    //    ThrowIfFailed(device->CreateCommittedResource(
-    //        &heap_property, D3D12_HEAP_FLAG_NONE, &resource_desc_RTV,
-    //        D3D12_RESOURCE_STATE_UNORDERED_ACCESS, nullptr,
-    //        IID_PPV_ARGS(&resource_LDR)));
-
-    //    D3D12_DESCRIPTOR_HEAP_DESC heap_desc_RTV = {};
-    //    heap_desc_RTV.NumDescriptors = 1;
-    //    heap_desc_RTV.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
-    //    heap_desc_RTV.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-    //    ThrowIfFailed(device->CreateDescriptorHeap(
-    //        &heap_desc_RTV, IID_PPV_ARGS(&heap_LDR)));
-
-    //    D3D12_UNORDERED_ACCESS_VIEW_DESC uavDesc = {};
-    //    uavDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    //    uavDesc.ViewDimension = D3D12_UAV_DIMENSION_TEXTURE2D;
-    //    device->CreateUnorderedAccessView(
-    //        resource_LDR.Get(), nullptr, &uavDesc,
-    //        heap_LDR->GetCPUDescriptorHandleForHeapStart());
-    //}
 }
-CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleFloatRTV() {
+CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleHDR() {
     CD3DX12_CPU_DESCRIPTOR_HANDLE
     rtvHandle(heap_HDR->GetCPUDescriptorHandleForHeapStart());
     return rtvHandle;
 };
-CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleResolvedRTV() {
+CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleLDR() {
     CD3DX12_CPU_DESCRIPTOR_HANDLE
-    rtvHandle(heap_resolved->GetCPUDescriptorHandleForHeapStart());
+    rtvHandle(heap_LDR->GetCPUDescriptorHandleForHeapStart());
     return rtvHandle;
 };
-CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleRTV() {
+CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleFLIP() {
     UINT desc_size_RTV = device->GetDescriptorHandleIncrementSize(
         D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(

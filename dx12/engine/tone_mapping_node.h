@@ -166,18 +166,18 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
         case EnumStageType::eRender: {
             // Transition the input resource to a shader resource state
             auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-                dx12::GpuCore::Instance().resource_resolved.Get(),
+                dx12::GpuCore::Instance().resource_LDR.Get(),
                 D3D12_RESOURCE_STATE_RESOLVE_DEST,
                 D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
             command_list->ResourceBarrier(1, &barrier);
 
             auto handle_resolved =
                 dx12::GpuCore::Instance()
-                    .heap_resolved->GetGPUDescriptorHandleForHeapStart();
-            auto handle_back_buffer = dx12::GpuCore::Instance().GetHandleRTV();
+                    .heap_LDR->GetGPUDescriptorHandleForHeapStart();
+            auto handle_back_buffer = dx12::GpuCore::Instance().GetHandleFLIP();
 
             ID3D12DescriptorHeap *descriptorHeaps[] = {
-                dx12::GpuCore::Instance().heap_resolved.Get(),
+                dx12::GpuCore::Instance().heap_LDR.Get(),
                 sampler_heap.Get()};
 
             // Set the compute root signature and pipeline state
@@ -209,7 +209,7 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
             command_list->DrawIndexedInstanced(mesh->index_count, 1, 0, 0, 0);
             // Transition the resources back to their original states
             barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-                dx12::GpuCore::Instance().resource_resolved.Get(),
+                dx12::GpuCore::Instance().resource_LDR.Get(),
                 D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
                 D3D12_RESOURCE_STATE_COMMON);
             command_list->ResourceBarrier(1, &barrier);

@@ -26,12 +26,16 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
 
         black_board->conditions->command_pool->Open();
 
-        CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle =
-            dx12::GpuCore::Instance().GetHandleRTV();
+        CD3DX12_CPU_DESCRIPTOR_HANDLE handle_back_buffer =
+            dx12::GpuCore::Instance().GetHandleFLIP();
+        CD3DX12_CPU_DESCRIPTOR_HANDLE handle_HDR =
+            dx12::GpuCore::Instance().GetHandleHDR();
 
         const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
         black_board->conditions->command_pool->Get(0)->ClearRenderTargetView(
-            rtvHandle, clearColor, 0, nullptr);
+            handle_back_buffer, clearColor, 0, nullptr);
+        black_board->conditions->command_pool->Get(0)->ClearRenderTargetView(
+            handle_HDR, clearColor, 0, nullptr);
 
         CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
             dx12::GpuCore::Instance()
@@ -99,7 +103,7 @@ class ResolveBuffer : public foundation::BehaviorActionNode {
         command_list->ResourceBarrier(1, &barrier);
 
         command_list->ResolveSubresource(
-            dx12::GpuCore::Instance().resource_resolved.Get(), 0,
+            dx12::GpuCore::Instance().resource_LDR.Get(), 0,
             dx12::GpuCore::Instance().resource_HDR.Get(), 0,
             DXGI_FORMAT_R16G16B16A16_FLOAT);
 

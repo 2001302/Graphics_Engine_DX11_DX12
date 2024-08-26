@@ -45,9 +45,9 @@ class GpuCore {
     }
     bool InitializeGPU();
     void CreateBuffer();
-    CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleFloatRTV();
-    CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleResolvedRTV();
-    CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleRTV();
+    CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleHDR();
+    CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleLDR();
+    CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleFLIP();
     CD3DX12_CPU_DESCRIPTOR_HANDLE GetHandleDSV();
 
     bool useMSAA = true;
@@ -59,11 +59,8 @@ class GpuCore {
     ComPtr<ID3D12DescriptorHeap> heap_HDR;
     ComPtr<ID3D12Resource> resource_HDR;
 
-    ComPtr<ID3D12DescriptorHeap> heap_resolved;
-    ComPtr<ID3D12Resource> resource_resolved;
-
-    //ComPtr<ID3D12DescriptorHeap> heap_LDR;
-    //ComPtr<ID3D12Resource> resource_LDR;
+    ComPtr<ID3D12DescriptorHeap> heap_LDR;
+    ComPtr<ID3D12Resource> resource_LDR;
 
     ComPtr<ID3D12DescriptorHeap> heap_FLIP;
     ComPtr<ID3D12Resource> resource_FLIP[2];

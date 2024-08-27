@@ -139,11 +139,19 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
             break;
         }
         case EnumStageType::eRender: {
-            // Transition the input resource to a shader resource state
             auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+                dx12::GpuCore::Instance()
+                    .resource_FLIP[dx12::GpuCore::Instance().frame_index]
+                    .Get(),
+                D3D12_RESOURCE_STATE_COMMON,
+                D3D12_RESOURCE_STATE_RENDER_TARGET);
+            command_list->ResourceBarrier(1, &barrier);
+
+            barrier = CD3DX12_RESOURCE_BARRIER::Transition(
                 dx12::GpuCore::Instance().resource_LDR.Get(),
-                D3D12_RESOURCE_STATE_RESOLVE_DEST,
-                D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+                D3D12_RESOURCE_STATE_COMMON,
+                D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
+                    D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
             command_list->ResourceBarrier(1, &barrier);
 
             auto handle_resolved =
@@ -181,18 +189,21 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
             command_list->IASetVertexBuffers(0, 1, &mesh->vertex_buffer_view);
             command_list->IASetIndexBuffer(&mesh->index_buffer_view);
             command_list->DrawIndexedInstanced(mesh->index_count, 1, 0, 0, 0);
-            // Transition the resources back to their original states
+
             barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-                dx12::GpuCore::Instance().resource_LDR.Get(),
-                D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+                dx12::GpuCore::Instance()
+                    .resource_FLIP[dx12::GpuCore::Instance().frame_index]
+                    .Get(),
+                D3D12_RESOURCE_STATE_RENDER_TARGET,
                 D3D12_RESOURCE_STATE_COMMON);
             command_list->ResourceBarrier(1, &barrier);
 
-            // barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            //     dx12::GpuCore::Instance().resource_LDR.Get(),
-            //     D3D12_RESOURCE_STATE_UNORDERED_ACCESS,
-            //     D3D12_RESOURCE_STATE_UNORDERED_ACCESS);
-            // command_list->ResourceBarrier(1, &barrier);
+            barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+                dx12::GpuCore::Instance().resource_LDR.Get(),
+                D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
+                    D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
+                D3D12_RESOURCE_STATE_COMMON);
+            command_list->ResourceBarrier(1, &barrier);
 
             break;
         }

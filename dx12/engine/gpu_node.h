@@ -23,25 +23,53 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
+        auto command_list = black_board->conditions->command_pool->Get(0);
 
         black_board->conditions->command_pool->Open();
 
+        // back buffer
+        auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            dx12::GpuCore::Instance()
+                .resource_FLIP[dx12::GpuCore::Instance().frame_index]
+                .Get(),
+            D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET);
+        command_list->ResourceBarrier(1, &barrier);
+
         CD3DX12_CPU_DESCRIPTOR_HANDLE handle_back_buffer =
             dx12::GpuCore::Instance().GetHandleFLIP();
+        const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+        command_list->OMSetRenderTargets(1, &handle_back_buffer, true, nullptr);
+        command_list->ClearRenderTargetView(handle_back_buffer, clearColor, 0,
+                                            nullptr);
+
+        barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            dx12::GpuCore::Instance()
+                .resource_FLIP[dx12::GpuCore::Instance().frame_index]
+                .Get(),
+            D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COMMON);
+        command_list->ResourceBarrier(1, &barrier);
+
+        // HDR
+        barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            dx12::GpuCore::Instance().resource_HDR.Get(),
+            D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET);
+        command_list->ResourceBarrier(1, &barrier);
+
         CD3DX12_CPU_DESCRIPTOR_HANDLE handle_HDR =
             dx12::GpuCore::Instance().GetHandleHDR();
+        command_list->OMSetRenderTargets(1, &handle_HDR, true, nullptr);
+        command_list->ClearRenderTargetView(handle_HDR, clearColor, 0, nullptr);
 
-        const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-        black_board->conditions->command_pool->Get(0)->ClearRenderTargetView(
-            handle_back_buffer, clearColor, 0, nullptr);
-        black_board->conditions->command_pool->Get(0)->ClearRenderTargetView(
-            handle_HDR, clearColor, 0, nullptr);
+        barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            dx12::GpuCore::Instance().resource_HDR.Get(),
+            D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COMMON);
+        command_list->ResourceBarrier(1, &barrier);
 
         CD3DX12_CPU_DESCRIPTOR_HANDLE dsvHandle(
             dx12::GpuCore::Instance()
                 .heap_DSV->GetCPUDescriptorHandleForHeapStart());
-        black_board->conditions->command_pool->Get(0)->ClearDepthStencilView(
-            dsvHandle, D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0, nullptr);
+        command_list->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH,
+                                            1.0f, 0, 0, nullptr);
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
@@ -98,14 +126,29 @@ class ResolveBuffer : public foundation::BehaviorActionNode {
 
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
             dx12::GpuCore::Instance().resource_HDR.Get(),
-            D3D12_RESOURCE_STATE_RENDER_TARGET,
-            D3D12_RESOURCE_STATE_RESOLVE_SOURCE);
+            D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RESOLVE_SOURCE);
         command_list->ResourceBarrier(1, &barrier);
 
+        barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            dx12::GpuCore::Instance().resource_LDR.Get(),
+            D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RESOLVE_DEST);
+        command_list->ResourceBarrier(1, &barrier);
+
+        // resolve
         command_list->ResolveSubresource(
             dx12::GpuCore::Instance().resource_LDR.Get(), 0,
             dx12::GpuCore::Instance().resource_HDR.Get(), 0,
             DXGI_FORMAT_R16G16B16A16_FLOAT);
+
+        barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            dx12::GpuCore::Instance().resource_HDR.Get(),
+            D3D12_RESOURCE_STATE_RESOLVE_SOURCE, D3D12_RESOURCE_STATE_COMMON);
+        command_list->ResourceBarrier(1, &barrier);
+
+        barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+            dx12::GpuCore::Instance().resource_LDR.Get(),
+            D3D12_RESOURCE_STATE_RESOLVE_DEST, D3D12_RESOURCE_STATE_COMMON);
+        command_list->ResourceBarrier(1, &barrier);
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }

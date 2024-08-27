@@ -248,6 +248,12 @@ void MeshRenderer::Render(RenderCondition *render_condition,
 
         for (const auto &mesh : meshes) {
 
+            auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+                dx12::GpuCore::Instance().resource_HDR.Get(),
+                D3D12_RESOURCE_STATE_COMMON,
+                D3D12_RESOURCE_STATE_RENDER_TARGET);
+            command_list->ResourceBarrier(1, &barrier);
+
             ID3D12DescriptorHeap *descriptor_heap[] = {
                 render_condition->sampler_heap.Get(), mesh->heap_PS.Get()
                 /*,mesh->heap_PS.Get()*/};
@@ -266,15 +272,15 @@ void MeshRenderer::Render(RenderCondition *render_condition,
             command_list->SetGraphicsRootDescriptorTable(
                 0, render_condition->sampler_heap
                        ->GetGPUDescriptorHandleForHeapStart());
-            //global texture
+            // global texture
             command_list->SetGraphicsRootConstantBufferView(
                 2, render_condition->global_consts_GPU->GetGPUVirtualAddress());
             command_list->SetGraphicsRootConstantBufferView(
                 3, mesh_consts.Get()->GetGPUVirtualAddress());
             command_list->SetGraphicsRootConstantBufferView(
                 4, material_consts.Get()->GetGPUVirtualAddress());
-            //command_list->SetGraphicsRootDescriptorTable(
-            //    5, mesh->heap_VS->GetGPUDescriptorHandleForHeapStart());
+            // command_list->SetGraphicsRootDescriptorTable(
+            //     5, mesh->heap_VS->GetGPUDescriptorHandleForHeapStart());
             command_list->SetGraphicsRootDescriptorTable(
                 6, mesh->heap_PS->GetGPUDescriptorHandleForHeapStart());
 
@@ -283,6 +289,12 @@ void MeshRenderer::Render(RenderCondition *render_condition,
             command_list->IASetVertexBuffers(0, 1, &mesh->vertex_buffer_view);
             command_list->IASetIndexBuffer(&mesh->index_buffer_view);
             command_list->DrawIndexedInstanced(mesh->index_count, 1, 0, 0, 0);
+
+            barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+                dx12::GpuCore::Instance().resource_HDR.Get(),
+                D3D12_RESOURCE_STATE_RENDER_TARGET,
+                D3D12_RESOURCE_STATE_COMMON);
+            command_list->ResourceBarrier(1, &barrier);
         }
     }
 }

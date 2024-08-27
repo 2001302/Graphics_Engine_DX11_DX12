@@ -46,19 +46,34 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
             gui->Frame();
             gui->ClearNodeItem();
 
+            auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+                dx12::GpuCore::Instance()
+                    .resource_FLIP[dx12::GpuCore::Instance().frame_index]
+                    .Get(),
+                D3D12_RESOURCE_STATE_COMMON,
+                D3D12_RESOURCE_STATE_RENDER_TARGET);
+            command_pool->Get(0)->ResourceBarrier(1, &barrier);
+
             CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle =
                 dx12::GpuCore::Instance().GetHandleFLIP();
-            command_pool->Get(0)->SetName(L"ImGui");
             command_pool->Get(0)->RSSetViewports(
                 1, &dx12::GpuCore::Instance().viewport);
             command_pool->Get(0)->OMSetRenderTargets(1, &rtvHandle, false,
                                                      nullptr);
             ID3D12DescriptorHeap *descriptorHeaps[] = {cbvHeap.Get()};
             command_pool->Get(0)->SetDescriptorHeaps(_countof(descriptorHeaps),
-                                            descriptorHeaps);
+                                                     descriptorHeaps);
 
             ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
                                           command_pool->Get(0).Get());
+
+            barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+                dx12::GpuCore::Instance()
+                    .resource_FLIP[dx12::GpuCore::Instance().frame_index]
+                    .Get(),
+                D3D12_RESOURCE_STATE_RENDER_TARGET,
+                D3D12_RESOURCE_STATE_COMMON);
+            command_pool->Get(0)->ResourceBarrier(1, &barrier);
             break;
         }
         default:

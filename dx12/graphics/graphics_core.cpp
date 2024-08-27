@@ -281,7 +281,7 @@ void GpuCore::CreateBuffer() {
         auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
         ThrowIfFailed(device->CreateCommittedResource(
             &heap_property, D3D12_HEAP_FLAG_NONE, &resource_desc_RTV,
-            D3D12_RESOURCE_STATE_COMMON, nullptr,
+            D3D12_RESOURCE_STATE_RENDER_TARGET, nullptr,
             IID_PPV_ARGS(&resource_LDR)));
 
         D3D12_DESCRIPTOR_HEAP_DESC heap_desc_RTV = {};

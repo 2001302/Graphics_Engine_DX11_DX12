@@ -48,17 +48,17 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
 
             CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle =
                 dx12::GpuCore::Instance().GetHandleFLIP();
-            command_pool->Get(1)->SetName(L"ImGui");
-            command_pool->Get(1)->RSSetViewports(
+            command_pool->Get(0)->SetName(L"ImGui");
+            command_pool->Get(0)->RSSetViewports(
                 1, &dx12::GpuCore::Instance().viewport);
-            command_pool->Get(1)->OMSetRenderTargets(1, &rtvHandle, false,
+            command_pool->Get(0)->OMSetRenderTargets(1, &rtvHandle, false,
                                                      nullptr);
             ID3D12DescriptorHeap *descriptorHeaps[] = {cbvHeap.Get()};
-            command_pool->Get(1)->SetDescriptorHeaps(_countof(descriptorHeaps),
+            command_pool->Get(0)->SetDescriptorHeaps(_countof(descriptorHeaps),
                                             descriptorHeaps);
 
             ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
-                                          command_pool->Get(1).Get());
+                                          command_pool->Get(0).Get());
             break;
         }
         default:

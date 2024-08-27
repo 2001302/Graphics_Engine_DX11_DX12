@@ -69,14 +69,6 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
                     signature->GetBufferSize(),
                     IID_PPV_ARGS(&toneMappingPSO->root_signature));
 
-                // layout
-                D3D12_INPUT_ELEMENT_DESC combineIE[] = {
-                    {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
-                     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-                    {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24,
-                     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-                };
-
                 // shader
                 ComPtr<ID3DBlob> tone_mappingVS;
                 dx12::Util::CreateVertexShader(dx12::GpuCore::Instance().device,
@@ -86,22 +78,15 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
                 dx12::Util::CreatePixelShader(dx12::GpuCore::Instance().device,
                                               L"graphics/CombinePS.hlsl",
                                               tone_mappingPS);
-                // rasterizer
-                D3D12_RASTERIZER_DESC basicRS;
-                ZeroMemory(&basicRS, sizeof(D3D12_RASTERIZER_DESC));
-                basicRS.FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID;
-                basicRS.CullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_NONE;
-                basicRS.FrontCounterClockwise = false;
-                basicRS.DepthClipEnable = false;
-                basicRS.MultisampleEnable = false;
-
                 // pipeline state
                 D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-                psoDesc.InputLayout = {combineIE, _countof(combineIE)};
+                psoDesc.InputLayout = {dx12::layout::combineIEs,
+                                       _countof(dx12::layout::combineIEs)};
                 psoDesc.pRootSignature = toneMappingPSO->root_signature;
                 psoDesc.VS = CD3DX12_SHADER_BYTECODE(tone_mappingVS.Get());
                 psoDesc.PS = CD3DX12_SHADER_BYTECODE(tone_mappingPS.Get());
-                psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(basicRS);
+                psoDesc.RasterizerState =
+                    CD3DX12_RASTERIZER_DESC(dx12::rasterizer::postRS);
                 psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
                 psoDesc.DepthStencilState.StencilEnable = false;
                 psoDesc.SampleMask = UINT_MAX;
@@ -117,16 +102,6 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
                         .device->CreateGraphicsPipelineState(
                             &psoDesc,
                             IID_PPV_ARGS(&toneMappingPSO->pipeline_state)));
-
-                D3D12_SAMPLER_DESC linearClampSS;
-                ZeroMemory(&linearClampSS, sizeof(linearClampSS));
-                linearClampSS.Filter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-                linearClampSS.AddressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-                linearClampSS.AddressV = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-                linearClampSS.AddressW = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-                linearClampSS.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
-                linearClampSS.MinLOD = 0;
-                linearClampSS.MaxLOD = D3D12_FLOAT32_MAX;
 
                 D3D12_DESCRIPTOR_HEAP_DESC samplerHeapDesc = {};
                 samplerHeapDesc.NumDescriptors = 1;
@@ -145,8 +120,8 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
                         .device->GetDescriptorHandleIncrementSize(
                             D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
 
-                dx12::GpuCore::Instance().device->CreateSampler(&linearClampSS,
-                                                                handle);
+                dx12::GpuCore::Instance().device->CreateSampler(
+                    &dx12::sampler::linearClampSS, handle);
 
                 const_data.dx = 1.0f / foundation::Env::Instance().screen_width;
                 const_data.dy =
@@ -177,8 +152,7 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
             auto handle_back_buffer = dx12::GpuCore::Instance().GetHandleFLIP();
 
             ID3D12DescriptorHeap *descriptorHeaps[] = {
-                dx12::GpuCore::Instance().heap_LDR.Get(),
-                sampler_heap.Get()};
+                dx12::GpuCore::Instance().heap_LDR.Get(), sampler_heap.Get()};
 
             // Set the compute root signature and pipeline state
             command_list->RSSetViewports(1,

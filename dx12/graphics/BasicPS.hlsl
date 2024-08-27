@@ -1,17 +1,13 @@
-#include "Common.hlsli" // 쉐이더에서도 include 사용 가능
+#include "Common.hlsli" 
 #include "DiskSamples.hlsli"
 
-// 참고자료
-// https://github.com/Nadrin/PBR/blob/master/data/shaders/hlsl/pbr.hlsl
-
-// 메쉬 재질 텍스춰들 t0 부터 시작
 Texture2D albedoTex : register(t0);
 Texture2D normalTex : register(t1);
 Texture2D aoTex : register(t2);
 Texture2D metallicRoughnessTex : register(t3);
 Texture2D emissiveTex : register(t4);
 
-static const float3 Fdielectric = 0.04; // 비금속(Dielectric) 재질의 F0
+static const float3 Fdielectric = 0.04; // Dielectric
 
 float3 SchlickFresnel(float3 F0, float NdotH)
 {
@@ -28,10 +24,10 @@ float3 GetNormal(PixelShaderInput input)
 {
     float3 normalWorld = normalize(input.normalWorld);
     
-    if (useNormalMap) // NormalWorld를 교체
+    if (useNormalMap)
     {
         float3 normal = normalTex.SampleLevel(linearWrapSampler, input.texcoord, lodBias).rgb;
-        normal = 2.0 * normal - 1.0; // 범위 조절 [-1.0, 1.0]
+        normal = 2.0 * normal - 1.0; // [-1.0, 1.0]
 
         // OpenGL 용 노멀맵일 경우에는 y 방향을 뒤집어줍니다.
         normal.y = invertNormalMapY ? -normal.y : normal.y;

@@ -1,12 +1,9 @@
-﻿#ifndef _GRAPHICSPSO
+#ifndef _GRAPHICSPSO
 #define _GRAPHICSPSO
 
 #include "d3dx12.h"
 #include "graphics_core.h"
 
-/// <summary>
-/// shader 에서 필요로 하는 상태를 저장하는 구조체
-/// </summary>
 namespace dx12 {
 class PSO {
   public:
@@ -25,6 +22,30 @@ class ComputePSO : public PSO {
   public:
     D3D12_COMPUTE_PIPELINE_STATE_DESC description;
 };
+
+namespace sampler {
+extern D3D12_SAMPLER_DESC linearWrapSS;
+extern D3D12_SAMPLER_DESC linearClampSS;
+extern D3D12_SAMPLER_DESC shadowPointSS;
+extern D3D12_SAMPLER_DESC shadowCompareSS;
+extern D3D12_SAMPLER_DESC pointWrapSS;
+extern D3D12_SAMPLER_DESC linearMirrorSS;
+extern D3D12_SAMPLER_DESC pointClampSS;
+} // namespace sampler
+
+namespace layout {
+extern D3D12_INPUT_ELEMENT_DESC combineIEs[2];
+extern D3D12_INPUT_ELEMENT_DESC basicIEs[4];
+} // namespace layout
+
+namespace rasterizer {
+extern D3D12_RASTERIZER_DESC solidRS;
+extern D3D12_RASTERIZER_DESC postRS;
+} // namespace rasterizer
+
+namespace depth {
+extern D3D12_DEPTH_STENCIL_DESC basicDS;
+} // namespace depthstencil
 
 } // namespace dx12
 #endif

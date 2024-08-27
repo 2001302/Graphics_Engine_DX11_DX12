@@ -22,17 +22,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
 
             { // pso
                 defaultSolidPSO = std::make_shared<dx12::GraphicsPSO>();
-                // layout
-                D3D12_INPUT_ELEMENT_DESC basicIEs[] = {
-                    {"POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,
-                     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-                    {"NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12,
-                     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-                    {"TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 24,
-                     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-                    {"TANGENT", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32,
-                     D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0},
-                };
+
                 // shader
                 ComPtr<ID3DBlob> basicVS;
                 ComPtr<ID3DBlob> basicPS;
@@ -42,34 +32,6 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 dx12::Util::CreatePixelShader(dx12::GpuCore::Instance().device,
                                               L"graphics/BasicPS.hlsl",
                                               basicPS);
-                // rasterizer
-                D3D12_RASTERIZER_DESC solidRS;
-                ZeroMemory(&solidRS, sizeof(D3D12_RASTERIZER_DESC));
-                solidRS.FillMode = D3D12_FILL_MODE::D3D12_FILL_MODE_SOLID;
-                solidRS.CullMode = D3D12_CULL_MODE::D3D12_CULL_MODE_BACK;
-                solidRS.FrontCounterClockwise = false;
-                solidRS.DepthClipEnable = true;
-                solidRS.MultisampleEnable = true;
-
-                // depth stencil
-                D3D12_DEPTH_STENCIL_DESC dsDesc;
-                ZeroMemory(&dsDesc, sizeof(dsDesc));
-                dsDesc.DepthEnable = true;
-                dsDesc.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-                dsDesc.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-                dsDesc.StencilEnable = false; // Stencil 불필요
-                dsDesc.StencilReadMask = D3D12_DEFAULT_STENCIL_READ_MASK;
-                dsDesc.StencilWriteMask = D3D12_DEFAULT_STENCIL_WRITE_MASK;
-                // 앞면에 대해서 어떻게 작동할지 설정
-                dsDesc.FrontFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
-                dsDesc.FrontFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
-                dsDesc.FrontFace.StencilPassOp = D3D12_STENCIL_OP_KEEP;
-                dsDesc.FrontFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
-                // 뒷면에 대해 어떻게 작동할지 설정 (뒷면도 그릴 경우)
-                dsDesc.BackFace.StencilFailOp = D3D12_STENCIL_OP_KEEP;
-                dsDesc.BackFace.StencilDepthFailOp = D3D12_STENCIL_OP_KEEP;
-                dsDesc.BackFace.StencilPassOp = D3D12_STENCIL_OP_REPLACE;
-                dsDesc.BackFace.StencilFunc = D3D12_COMPARISON_FUNC_ALWAYS;
 
                 // s0 ~ s6
                 CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
@@ -122,13 +84,15 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
 
                 // defaultSolidPSO;
                 D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-                psoDesc.InputLayout = {basicIEs, _countof(basicIEs)};
+                psoDesc.InputLayout = {dx12::layout::basicIEs,
+                                       _countof(dx12::layout::basicIEs)};
                 psoDesc.pRootSignature = defaultSolidPSO->root_signature;
                 psoDesc.VS = CD3DX12_SHADER_BYTECODE(basicVS.Get());
                 psoDesc.PS = CD3DX12_SHADER_BYTECODE(basicPS.Get());
-                psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(solidRS);
+                psoDesc.RasterizerState =
+                    CD3DX12_RASTERIZER_DESC(dx12::rasterizer::solidRS);
                 psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-                psoDesc.DepthStencilState = dsDesc;
+                psoDesc.DepthStencilState = dx12::depth::basicDS;
                 psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
                 psoDesc.SampleMask = UINT_MAX;
                 psoDesc.PrimitiveTopologyType =

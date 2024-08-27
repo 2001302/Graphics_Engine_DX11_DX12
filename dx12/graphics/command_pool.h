@@ -1,7 +1,7 @@
 #ifndef _COMMAND_POOL
 #define _COMMAND_POOL
 
-#define NUM_COMAAND_LIST 2
+#define NUM_COMAAND_LIST 1
 
 #include "graphics_core.h"
 

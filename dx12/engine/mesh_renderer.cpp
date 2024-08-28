@@ -23,18 +23,6 @@ void MeshRenderer::Initialize() {
     exit(-1);
 }
 
-void MeshRenderer::InitMeshBuffers(const MeshData &meshData,
-                                   shared_ptr<Mesh> &newMesh) {
-
-    dx12::Util::CreateVertexBuffer(meshData.vertices, newMesh->vertex_buffer,
-                                   newMesh->vertex_buffer_view);
-    newMesh->index_count = UINT(meshData.indices.size());
-    newMesh->vertex_count = UINT(meshData.vertices.size());
-    newMesh->stride = UINT(sizeof(Vertex));
-    dx12::Util::CreateIndexBuffer(meshData.indices, newMesh->index_buffer,
-                                  newMesh->index_buffer_view);
-}
-
 void MeshRenderer::Initialize(const std::string &basePath,
                               const std::string &filename,
                               dx12::CommandPool *command_pool) {
@@ -55,198 +43,175 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes,
         MeshData meshData = meshes[i];
         this->meshes[i] = std::make_shared<Mesh>();
 
-        InitMeshBuffers(meshData, this->meshes[i]);
+        InitMeshBuffers(meshData, this->meshes[i], command_pool);
+    }
+}
 
-        UINT descriptorSize =
-            dx12::GpuCore::Instance().device->GetDescriptorHandleIncrementSize(
-                D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+void MeshRenderer::InitMeshBuffers(const MeshData &meshData,
+                                   shared_ptr<Mesh> &newMesh,
+                                   dx12::CommandPool *command_pool) {
 
-        D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-        srvDesc.Shader4ComponentMapping =
-            D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-        // srvDesc.Format = this->meshes[i]->albedo_texture->GetDesc().Format;
-        srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-        srvDesc.Texture2D.MipLevels = 1;
+    dx12::Util::CreateVertexBuffer(meshData.vertices, newMesh->vertex_buffer,
+                                   newMesh->vertex_buffer_view);
+    newMesh->index_count = UINT(meshData.indices.size());
+    newMesh->vertex_count = UINT(meshData.vertices.size());
+    newMesh->stride = UINT(sizeof(Vertex));
+    dx12::Util::CreateIndexBuffer(meshData.indices, newMesh->index_buffer,
+                                  newMesh->index_buffer_view);
 
-        // heapPS
-        CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle_PS(
-            this->meshes[i]->heap_PS->GetCPUDescriptorHandleForHeapStart());
-
-        if (!meshData.albedoTextureFilename.empty()) {
-            if (filesystem::exists(meshData.albedoTextureFilename)) {
-                if (!meshData.opacityTextureFilename.empty()) {
-                    this->meshes[i]->albedo_texture = std::make_shared<Texture>(
-                        meshData.albedoTextureFilename,
-                        meshData.opacityTextureFilename, false,
-                        command_pool->Get(0));
-                } else {
-
-                    this->meshes[i]->albedo_texture = std::make_shared<Texture>(
-                        meshData.albedoTextureFilename, false,
-                        command_pool->Get(0));
-                }
-                material_consts.GetCpu().useAlbedoMap = true;
-            } else {
-                cout << meshData.albedoTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
-            }
-            srvDesc.Format =
-                this->meshes[i]->albedo_texture->texture->GetDesc().Format;
-
-            dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->albedo_texture->texture.Get(), &srvDesc,
-                texture_handle_PS);
-            texture_handle_PS.Offset(descriptorSize);
-        } else {
-            dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                nullptr, &srvDesc, texture_handle_PS);
-            texture_handle_PS.Offset(descriptorSize);
-        }
-
-        if (!meshData.normalTextureFilename.empty()) {
-            if (filesystem::exists(meshData.normalTextureFilename)) {
-
-                this->meshes[i]->normal_texture =
-                    std::make_shared<Texture>(meshData.normalTextureFilename,
+    if (!meshData.albedoTextureFilename.empty()) {
+        if (filesystem::exists(meshData.albedoTextureFilename)) {
+            if (!meshData.opacityTextureFilename.empty()) {
+                newMesh->albedo_texture =
+                    std::make_shared<Texture>(meshData.albedoTextureFilename,
+                                              meshData.opacityTextureFilename,
                                               false, command_pool->Get(0));
-                material_consts.GetCpu().useNormalMap = true;
             } else {
-                cout << meshData.normalTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
-            }
-            srvDesc.Format =
-                this->meshes[i]->normal_texture->texture->GetDesc().Format;
 
-            dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->normal_texture->texture.Get(), &srvDesc,
-                texture_handle_PS);
-            texture_handle_PS.Offset(descriptorSize);
-        } else {
-            dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                nullptr, &srvDesc, texture_handle_PS);
-            texture_handle_PS.Offset(descriptorSize);
-        }
-
-        if (!meshData.aoTextureFilename.empty()) {
-            if (filesystem::exists(meshData.aoTextureFilename)) {
-
-                this->meshes[i]->ao_texture = std::make_shared<Texture>(
-                    meshData.aoTextureFilename, false, command_pool->Get(0));
-
-                material_consts.GetCpu().useAOMap = true;
-            } else {
-                cout << meshData.aoTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
-            }
-            srvDesc.Format =
-                this->meshes[i]->ao_texture->texture->GetDesc().Format;
-
-            dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->ao_texture->texture.Get(), &srvDesc,
-                texture_handle_PS);
-            texture_handle_PS.Offset(descriptorSize);
-        } else {
-            dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                nullptr, &srvDesc, texture_handle_PS);
-            texture_handle_PS.Offset(descriptorSize);
-        }
-
-        // Green : Roughness, Blue : Metallic(Metalness)
-        if (!meshData.metallicTextureFilename.empty() ||
-            !meshData.roughnessTextureFilename.empty()) {
-
-            if (filesystem::exists(meshData.metallicTextureFilename) &&
-                filesystem::exists(meshData.roughnessTextureFilename)) {
-
-                // dx12::Util::CreateMetallicRoughnessTexture(
-                //     meshData.metallicTextureFilename,
-                //     meshData.roughnessTextureFilename,
-                //     this->meshes[i]->metallic_roughness_texture,
-                //     command_pool->Get(0), this->meshes[i]->upload_texture);
-            } else {
-                cout << meshData.metallicTextureFilename << " or "
-                     << meshData.roughnessTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
-            }
-            srvDesc.Format =
-                this->meshes[i]
-                    ->metallic_roughness_texture->texture->GetDesc()
-                    .Format;
-
-            dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->metallic_roughness_texture->texture.Get(),
-                &srvDesc, texture_handle_PS);
-            texture_handle_PS.Offset(descriptorSize);
-        } else {
-            dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                nullptr, &srvDesc, texture_handle_PS);
-            texture_handle_PS.Offset(descriptorSize);
-        }
-
-        if (!meshData.emissiveTextureFilename.empty()) {
-            if (filesystem::exists(meshData.emissiveTextureFilename)) {
-
-                this->meshes[i]->emissive_texture =
-                    std::make_shared<Texture>(meshData.emissiveTextureFilename,
+                newMesh->albedo_texture =
+                    std::make_shared<Texture>(meshData.albedoTextureFilename,
                                               false, command_pool->Get(0));
-
-                material_consts.GetCpu().useEmissiveMap = true;
-            } else {
-                cout << meshData.emissiveTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
             }
-            srvDesc.Format =
-                this->meshes[i]->emissive_texture->texture->GetDesc().Format;
+            material_consts.GetCpu().useAlbedoMap = true;
+        } else {
+            cout << meshData.albedoTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
+        }
+    }
+
+    if (!meshData.normalTextureFilename.empty()) {
+        if (filesystem::exists(meshData.normalTextureFilename)) {
+
+            newMesh->normal_texture = std::make_shared<Texture>(
+                meshData.normalTextureFilename, false, command_pool->Get(0));
+            material_consts.GetCpu().useNormalMap = true;
+        } else {
+            cout << meshData.normalTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
+        }
+    }
+
+    if (!meshData.aoTextureFilename.empty()) {
+        if (filesystem::exists(meshData.aoTextureFilename)) {
+
+            newMesh->ao_texture = std::make_shared<Texture>(
+                meshData.aoTextureFilename, false, command_pool->Get(0));
+
+            material_consts.GetCpu().useAOMap = true;
+        } else {
+            cout << meshData.aoTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
+        }
+    }
+
+    // Green : Roughness, Blue : Metallic(Metalness)
+    if (!meshData.metallicTextureFilename.empty() ||
+        !meshData.roughnessTextureFilename.empty()) {
+
+        if (filesystem::exists(meshData.metallicTextureFilename) &&
+            filesystem::exists(meshData.roughnessTextureFilename)) {
+
+            // dx12::Util::CreateMetallicRoughnessTexture(
+            //     meshData.metallicTextureFilename,
+            //     meshData.roughnessTextureFilename,
+            //     newMesh->metallic_roughness_texture,
+            //     command_pool->Get(0), newMesh->upload_texture);
+        } else {
+            cout << meshData.metallicTextureFilename << " or "
+                 << meshData.roughnessTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
+        }
+    }
+
+    if (!meshData.emissiveTextureFilename.empty()) {
+        if (filesystem::exists(meshData.emissiveTextureFilename)) {
+
+            newMesh->emissive_texture = std::make_shared<Texture>(
+                meshData.emissiveTextureFilename, false, command_pool->Get(0));
+
+            material_consts.GetCpu().useEmissiveMap = true;
+        } else {
+            cout << meshData.emissiveTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
+        }
+    }
+
+    if (!meshData.metallicTextureFilename.empty()) {
+        material_consts.GetCpu().useMetallicMap = true;
+    }
+
+    if (!meshData.roughnessTextureFilename.empty()) {
+        material_consts.GetCpu().useRoughnessMap = true;
+    }
+
+    if (!meshData.heightTextureFilename.empty()) {
+        if (filesystem::exists(meshData.heightTextureFilename)) {
+
+            newMesh->height_texture = std::make_shared<Texture>(
+                meshData.heightTextureFilename, false, command_pool->Get(0));
+
+            mesh_consts.GetCpu().useHeightMap = true;
+        } else {
+            cout << meshData.heightTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
+        }
+    }
+
+    newMesh->mesh_consts_GPU = mesh_consts.Get();
+    newMesh->material_consts_GPU = material_consts.Get();
+
+    UINT descriptorSize =
+        dx12::GpuCore::Instance().device->GetDescriptorHandleIncrementSize(
+            D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+    D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+    // srvDesc.Format = newMesh->albedo_texture->GetDesc().Format;
+    srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MipLevels = 1;
+
+    // heapPS
+    CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle_PS(
+        newMesh->heap_PS->GetCPUDescriptorHandleForHeapStart());
+
+    std::vector<Texture *> textures_ps = std::vector<Texture *>{
+        newMesh->albedo_texture.get(), newMesh->normal_texture.get(),
+        newMesh->ao_texture.get(), newMesh->metallic_roughness_texture.get(),
+        newMesh->emissive_texture.get()};
+
+    for (auto resource_ps : textures_ps) {
+        if (resource_ps) {
+            srvDesc.Format = resource_ps->texture->GetDesc().Format;
 
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->emissive_texture->texture.Get(), &srvDesc,
-                texture_handle_PS);
+                resource_ps->texture.Get(), &srvDesc, texture_handle_PS);
             texture_handle_PS.Offset(descriptorSize);
         } else {
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
                 nullptr, &srvDesc, texture_handle_PS);
             texture_handle_PS.Offset(descriptorSize);
         }
+    }
 
-        if (!meshData.metallicTextureFilename.empty()) {
-            material_consts.GetCpu().useMetallicMap = true;
-        }
+    // heapVS
+    CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle_VS(
+        newMesh->heap_VS->GetCPUDescriptorHandleForHeapStart());
 
-        if (!meshData.roughnessTextureFilename.empty()) {
-            material_consts.GetCpu().useRoughnessMap = true;
-        }
+    std::vector<Texture *> textures_vs =
+        std::vector<Texture *>{newMesh->height_texture.get()};
 
-        // heapVS
-        CD3DX12_CPU_DESCRIPTOR_HANDLE texture_handle_VS(
-            this->meshes[i]->heap_VS->GetCPUDescriptorHandleForHeapStart());
-
-        if (!meshData.heightTextureFilename.empty()) {
-            if (filesystem::exists(meshData.heightTextureFilename)) {
-
-                this->meshes[i]->height_texture =
-                    std::make_shared<Texture>(meshData.heightTextureFilename,
-                                              false, command_pool->Get(0));
-
-                mesh_consts.GetCpu().useHeightMap = true;
-            } else {
-                cout << meshData.heightTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
-            }
-            srvDesc.Format =
-                this->meshes[i]->height_texture->texture->GetDesc().Format;
+    for (auto resource_vs : textures_vs) {
+        if (resource_vs) {
+            srvDesc.Format = resource_vs->texture->GetDesc().Format;
 
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->height_texture->texture.Get(), &srvDesc,
-                texture_handle_VS);
+                resource_vs->texture.Get(), &srvDesc, texture_handle_VS);
             texture_handle_VS.Offset(descriptorSize);
         } else {
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
                 nullptr, &srvDesc, texture_handle_VS);
             texture_handle_VS.Offset(descriptorSize);
         }
-
-        this->meshes[i]->mesh_consts_GPU = mesh_consts.Get();
-        this->meshes[i]->material_consts_GPU = material_consts.Get();
     }
 }
 

@@ -16,7 +16,7 @@ struct Image {
 struct Texture {
     std::shared_ptr<Image> image;
     ComPtr<ID3D12Resource> texture;
-    Texture(){};
+    Texture() : image(0), texture(0){};
     Texture(const std::string filename, const bool usSRGB,
             ComPtr<ID3D12GraphicsCommandList> command_list);
     Texture(const std::string albedoFilename, const std::string opacityFilename,

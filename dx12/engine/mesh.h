@@ -66,9 +66,9 @@ struct Mesh {
     std::shared_ptr<Texture> normal_texture;
     std::shared_ptr<Texture> ao_texture;
     std::shared_ptr<Texture> metallic_roughness_texture;
-    ComPtr<ID3D12DescriptorHeap> heap_PS; // t0 ~ t4
-
     std::shared_ptr<Texture> height_texture;
+
+    ComPtr<ID3D12DescriptorHeap> heap_PS; // t0 ~ t4
     ComPtr<ID3D12DescriptorHeap> heap_VS; // t0
 };
 

@@ -28,7 +28,8 @@ class MeshRenderer : public Component {
                     dx12::CommandPool *command_pool);
 
     virtual void InitMeshBuffers(const MeshData &meshData,
-                                 std::shared_ptr<Mesh> &newMesh);
+                                 std::shared_ptr<Mesh> &newMesh,
+                                 dx12::CommandPool *command_pool);
 
     void UpdateConstantBuffers();
     void UpdateWorldRow(const Matrix &worldRow);

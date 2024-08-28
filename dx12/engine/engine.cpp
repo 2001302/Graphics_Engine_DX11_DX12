@@ -8,7 +8,6 @@
 #include "shared_resource_node.h"
 #include "tone_mapping_node.h"
 
-
 namespace core {
 
 auto gpu_initialize = std::make_shared<GpuInitializeNode>();
@@ -22,6 +21,8 @@ auto present = std::make_shared<PresentNode>();
 auto light_node = std::make_shared<LightNodeInvoker>();
 auto resolve_buffer = std::make_shared<ResolveBuffer>();
 auto tone_mapping = std::make_shared<ToneMappingNodeInvoker>();
+auto begin_init = std::make_shared<BeginInitNode>();
+auto end_init = std::make_shared<EndInitNode>();
 
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
@@ -36,20 +37,35 @@ bool Engine::Start() {
     Platform::Start();
     
     black_board->conditions->stage_type = EnumStageType::eInitialize;
-    
+
     //initialize
     start_tree->Build(black_board.get())
     ->Sequence()
         ->Excute(gpu_initialize)
+        ->Excute(begin_init)
         ->Excute(camera_node)
         ->Excute(light_node)
         ->Excute(shared_resource_node)
         ->Excute(game_object_node)
         ->Excute(tone_mapping)
         ->Excute(gui_node)
+        ->Excute(end_init)
     ->Close()
     ->Run();
     
+    const UINT64 fence = dx12::GpuCore::Instance().fence_value;
+    dx12::GpuCore::Instance().command_queue->Signal(
+        dx12::GpuCore::Instance().fence.Get(), fence);
+    dx12::GpuCore::Instance().fence_value++;
+
+    // Wait until the previous frame is finished.
+    if (dx12::GpuCore::Instance().fence->GetCompletedValue() < fence) {
+        dx12::GpuCore::Instance().fence->SetEventOnCompletion(
+            fence, dx12::GpuCore::Instance().fence_event);
+        WaitForSingleObject(dx12::GpuCore::Instance().fence_event,
+                            INFINITE);
+    }
+
     //update
     update_tree->Build(black_board.get())
     ->Sequence()

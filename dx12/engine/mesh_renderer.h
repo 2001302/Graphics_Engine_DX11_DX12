@@ -16,12 +16,17 @@ using Microsoft::WRL::ComPtr;
 class MeshRenderer : public Component {
   public:
     MeshRenderer() {}
-    MeshRenderer(const std::string &basePath, const std::string &filename);
-    MeshRenderer(const std::vector<MeshData> &meshes);
+    MeshRenderer(const std::string &basePath, const std::string &filename,
+                 dx12::CommandPool *command_pool);
+    MeshRenderer(const std::vector<MeshData> &meshes,
+                 dx12::CommandPool *command_pool);
 
     virtual void Initialize();
-    void Initialize(const std::string &basePath, const std::string &filename);
-    void Initialize(const std::vector<MeshData> &meshes);
+    void Initialize(const std::string &basePath, const std::string &filename,
+                    dx12::CommandPool *command_pool);
+    void Initialize(const std::vector<MeshData> &meshes,
+                    dx12::CommandPool *command_pool);
+
     virtual void InitMeshBuffers(const MeshData &meshData,
                                  std::shared_ptr<Mesh> &newMesh);
 

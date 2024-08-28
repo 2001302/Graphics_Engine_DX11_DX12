@@ -138,6 +138,7 @@
     <ClCompile Include="engine\message_receiver.cpp" />
     <ClCompile Include="engine\model.cpp" />
     <ClCompile Include="engine\model_loader.cpp" />
+    <ClCompile Include="engine\texture.cpp" />
     <ClCompile Include="foundation\action_node.cpp" />
     <ClCompile Include="foundation\animation_node.cpp" />
     <ClCompile Include="foundation\behavior_tree_builder.cpp" />
@@ -186,6 +187,7 @@
     <ClInclude Include="engine\model.h" />
     <ClInclude Include="engine\model_loader.h" />
     <ClInclude Include="engine\shared_resource_node.h" />
+    <ClInclude Include="engine\texture.h" />
     <ClInclude Include="engine\tone_mapping_node.h" />
     <ClInclude Include="foundation\action_node.h" />
     <ClInclude Include="foundation\animation_node.h" />

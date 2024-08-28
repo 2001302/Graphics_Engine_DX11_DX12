@@ -114,8 +114,8 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             std::string base_path = "Assets/Characters/zelda/";
             std::string file_name = "zeldaPosed001.fbx";
 
-            auto renderer =
-                std::make_shared<MeshRenderer>(base_path, file_name);
+            auto renderer = std::make_shared<MeshRenderer>(
+                base_path, file_name, condition->command_pool.get());
 
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
             renderer->UpdateConstantBuffers();
@@ -131,6 +131,9 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             for (auto &i : targets->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
+                renderer->material_consts.GetCpu().albedoFactor = Vector3(1.0f);
+                renderer->material_consts.GetCpu().roughnessFactor = 0.8f;
+                renderer->material_consts.GetCpu().metallicFactor = 0.0f;
                 renderer->UpdateConstantBuffers();
             }
 

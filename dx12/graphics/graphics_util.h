@@ -148,18 +148,10 @@ class Util {
         buffer->Unmap(0, nullptr);
     }
 
-    static void CreateTexture(const std::string filename, const bool usSRGB,
-                              ComPtr<ID3D12Resource> &texture);
-
-    static void CreateTexture(const std::string albedoFilename,
-                              const std::string opacityFilename,
-                              const bool usSRGB,
-                              ComPtr<ID3D12Resource> &texture);
-
-    static void
-    CreateMetallicRoughnessTexture(const std::string metallicFiilename,
-                                   const std::string roughnessFilename,
-                                   ComPtr<ID3D12Resource> &texture);
+    //static void CreateMetallicRoughnessTexture(
+    //    const std::string metallicFiilename,
+    //    const std::string roughnessFilename, ComPtr<ID3D12Resource> &texture,
+    //    ComPtr<ID3D12GraphicsCommandList> command_list);
 
     // static void
     // CreateDDSTexture(const wchar_t *filename, const bool isCubeMap,
@@ -216,8 +208,8 @@ class Util {
                                   ComPtr<ID3DBlob> &shader);
 
     static void CreateComputeShader(ComPtr<ID3D12Device> &device,
-                                  std::wstring filename,
-                                  ComPtr<ID3DBlob> &shader);
+                                    std::wstring filename,
+                                    ComPtr<ID3DBlob> &shader);
 };
 } // namespace dx12
 #endif

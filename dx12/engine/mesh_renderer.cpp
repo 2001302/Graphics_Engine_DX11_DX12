@@ -6,12 +6,14 @@ using namespace std;
 using namespace DirectX;
 
 MeshRenderer::MeshRenderer(const std::string &basePath,
-                           const std::string &filename) {
-    Initialize(basePath, filename);
+                           const std::string &filename,
+                           dx12::CommandPool *command_pool) {
+    Initialize(basePath, filename, command_pool);
 }
 
-MeshRenderer::MeshRenderer(const std::vector<MeshData> &meshes) {
-    Initialize(meshes);
+MeshRenderer::MeshRenderer(const std::vector<MeshData> &meshes,
+                           dx12::CommandPool *command_pool) {
+    Initialize(meshes, command_pool);
 }
 
 void MeshRenderer::Initialize() {
@@ -34,12 +36,14 @@ void MeshRenderer::InitMeshBuffers(const MeshData &meshData,
 }
 
 void MeshRenderer::Initialize(const std::string &basePath,
-                              const std::string &filename) {
+                              const std::string &filename,
+                              dx12::CommandPool *command_pool) {
     auto meshes = GeometryGenerator::ReadFromFile(basePath, filename);
-    Initialize(meshes);
+    Initialize(meshes, command_pool);
 }
 
-void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
+void MeshRenderer::Initialize(const vector<MeshData> &meshes,
+                              dx12::CommandPool *command_pool) {
 
     mesh_consts.GetCpu().world = Matrix();
     mesh_consts.Initialize();
@@ -71,24 +75,26 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
         if (!meshData.albedoTextureFilename.empty()) {
             if (filesystem::exists(meshData.albedoTextureFilename)) {
                 if (!meshData.opacityTextureFilename.empty()) {
-                    dx12::Util::CreateTexture(meshData.albedoTextureFilename,
-                                              meshData.opacityTextureFilename,
-                                              false,
-                                              this->meshes[i]->albedo_texture);
+                    this->meshes[i]->albedo_texture = std::make_shared<Texture>(
+                        meshData.albedoTextureFilename,
+                        meshData.opacityTextureFilename, false,
+                        command_pool->Get(0));
                 } else {
-                    dx12::Util::CreateTexture(meshData.albedoTextureFilename,
-                                              true,
-                                              this->meshes[i]->albedo_texture);
+
+                    this->meshes[i]->albedo_texture = std::make_shared<Texture>(
+                        meshData.albedoTextureFilename, false,
+                        command_pool->Get(0));
                 }
                 material_consts.GetCpu().useAlbedoMap = true;
             } else {
                 cout << meshData.albedoTextureFilename
                      << " does not exists. Skip texture reading." << endl;
             }
-            srvDesc.Format = this->meshes[i]->albedo_texture->GetDesc().Format;
+            srvDesc.Format =
+                this->meshes[i]->albedo_texture->texture->GetDesc().Format;
 
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->albedo_texture.Get(), &srvDesc,
+                this->meshes[i]->albedo_texture->texture.Get(), &srvDesc,
                 texture_handle_PS);
             texture_handle_PS.Offset(descriptorSize);
         } else {
@@ -99,17 +105,20 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
         if (!meshData.normalTextureFilename.empty()) {
             if (filesystem::exists(meshData.normalTextureFilename)) {
-                dx12::Util::CreateTexture(meshData.normalTextureFilename, false,
-                                          this->meshes[i]->normal_texture);
+
+                this->meshes[i]->normal_texture =
+                    std::make_shared<Texture>(meshData.normalTextureFilename,
+                                              false, command_pool->Get(0));
                 material_consts.GetCpu().useNormalMap = true;
             } else {
                 cout << meshData.normalTextureFilename
                      << " does not exists. Skip texture reading." << endl;
             }
-            srvDesc.Format = this->meshes[i]->normal_texture->GetDesc().Format;
+            srvDesc.Format =
+                this->meshes[i]->normal_texture->texture->GetDesc().Format;
 
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->normal_texture.Get(), &srvDesc,
+                this->meshes[i]->normal_texture->texture.Get(), &srvDesc,
                 texture_handle_PS);
             texture_handle_PS.Offset(descriptorSize);
         } else {
@@ -120,17 +129,21 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
         if (!meshData.aoTextureFilename.empty()) {
             if (filesystem::exists(meshData.aoTextureFilename)) {
-                dx12::Util::CreateTexture(meshData.aoTextureFilename, false,
-                                          this->meshes[i]->ao_texture);
+
+                this->meshes[i]->ao_texture = std::make_shared<Texture>(
+                    meshData.aoTextureFilename, false, command_pool->Get(0));
+
                 material_consts.GetCpu().useAOMap = true;
             } else {
                 cout << meshData.aoTextureFilename
                      << " does not exists. Skip texture reading." << endl;
             }
-            srvDesc.Format = this->meshes[i]->ao_texture->GetDesc().Format;
+            srvDesc.Format =
+                this->meshes[i]->ao_texture->texture->GetDesc().Format;
 
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->ao_texture.Get(), &srvDesc, texture_handle_PS);
+                this->meshes[i]->ao_texture->texture.Get(), &srvDesc,
+                texture_handle_PS);
             texture_handle_PS.Offset(descriptorSize);
         } else {
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
@@ -145,21 +158,24 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
             if (filesystem::exists(meshData.metallicTextureFilename) &&
                 filesystem::exists(meshData.roughnessTextureFilename)) {
 
-                dx12::Util::CreateMetallicRoughnessTexture(
-                    meshData.metallicTextureFilename,
-                    meshData.roughnessTextureFilename,
-                    this->meshes[i]->metallic_roughness_texture);
+                // dx12::Util::CreateMetallicRoughnessTexture(
+                //     meshData.metallicTextureFilename,
+                //     meshData.roughnessTextureFilename,
+                //     this->meshes[i]->metallic_roughness_texture,
+                //     command_pool->Get(0), this->meshes[i]->upload_texture);
             } else {
                 cout << meshData.metallicTextureFilename << " or "
                      << meshData.roughnessTextureFilename
                      << " does not exists. Skip texture reading." << endl;
             }
             srvDesc.Format =
-                this->meshes[i]->metallic_roughness_texture->GetDesc().Format;
+                this->meshes[i]
+                    ->metallic_roughness_texture->texture->GetDesc()
+                    .Format;
 
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->metallic_roughness_texture.Get(), &srvDesc,
-                texture_handle_PS);
+                this->meshes[i]->metallic_roughness_texture->texture.Get(),
+                &srvDesc, texture_handle_PS);
             texture_handle_PS.Offset(descriptorSize);
         } else {
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
@@ -169,19 +185,21 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
         if (!meshData.emissiveTextureFilename.empty()) {
             if (filesystem::exists(meshData.emissiveTextureFilename)) {
-                dx12::Util::CreateTexture(meshData.emissiveTextureFilename,
-                                          true,
-                                          this->meshes[i]->emissive_texture);
+
+                this->meshes[i]->emissive_texture =
+                    std::make_shared<Texture>(meshData.emissiveTextureFilename,
+                                              false, command_pool->Get(0));
+
                 material_consts.GetCpu().useEmissiveMap = true;
             } else {
                 cout << meshData.emissiveTextureFilename
                      << " does not exists. Skip texture reading." << endl;
             }
             srvDesc.Format =
-                this->meshes[i]->emissive_texture->GetDesc().Format;
+                this->meshes[i]->emissive_texture->texture->GetDesc().Format;
 
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->emissive_texture.Get(), &srvDesc,
+                this->meshes[i]->emissive_texture->texture.Get(), &srvDesc,
                 texture_handle_PS);
             texture_handle_PS.Offset(descriptorSize);
         } else {
@@ -204,17 +222,21 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
         if (!meshData.heightTextureFilename.empty()) {
             if (filesystem::exists(meshData.heightTextureFilename)) {
-                dx12::Util::CreateTexture(meshData.heightTextureFilename, false,
-                                          this->meshes[i]->height_texture);
+
+                this->meshes[i]->height_texture =
+                    std::make_shared<Texture>(meshData.heightTextureFilename,
+                                              false, command_pool->Get(0));
+
                 mesh_consts.GetCpu().useHeightMap = true;
             } else {
                 cout << meshData.heightTextureFilename
                      << " does not exists. Skip texture reading." << endl;
             }
-            srvDesc.Format = this->meshes[i]->height_texture->GetDesc().Format;
+            srvDesc.Format =
+                this->meshes[i]->height_texture->texture->GetDesc().Format;
 
             dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                this->meshes[i]->height_texture.Get(), &srvDesc,
+                this->meshes[i]->height_texture->texture.Get(), &srvDesc,
                 texture_handle_VS);
             texture_handle_VS.Offset(descriptorSize);
         } else {

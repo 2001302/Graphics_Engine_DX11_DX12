@@ -18,6 +18,28 @@ class GpuInitializeNode : public foundation::BehaviorActionNode {
     }
 };
 
+class BeginInitNode : public foundation::BehaviorActionNode {
+    foundation::EnumBehaviorTreeStatus OnInvoke() override 
+    {
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        black_board->conditions->command_pool->Open();
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
+class EndInitNode : public foundation::BehaviorActionNode {
+    foundation::EnumBehaviorTreeStatus OnInvoke() override 
+    {
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        black_board->conditions->command_pool->Close();
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
 class BeginRenderNode : public foundation::BehaviorActionNode {
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 

@@ -8,24 +8,31 @@ namespace dx12 {
 class SkyboxPSO : public GraphicsPSO {
   public:
     void Initialize() override {
+        // rootSignature
+        // s0 ~ s6
         CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
         samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0);
 
-        CD3DX12_DESCRIPTOR_RANGE1 srvRange;
-        srvRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+        // t10 ~ t16
+        CD3DX12_DESCRIPTOR_RANGE1 textureRange;
+        textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
 
         // rootSignature
-        CD3DX12_ROOT_PARAMETER1 rootParameters[3] = {};
-        // constant buffer
-        rootParameters[0].InitAsConstantBufferView(
+        CD3DX12_ROOT_PARAMETER1 rootParameters[5] = {};
+        // Common.hlsli : s0~s6,t10~t16,b0~b2
+        rootParameters[0].InitAsDescriptorTable(1, &samplerRange,
+                                                D3D12_SHADER_VISIBILITY_ALL);
+        rootParameters[1].InitAsDescriptorTable(1, &textureRange,
+                                                D3D12_SHADER_VISIBILITY_ALL);
+        rootParameters[2].InitAsConstantBufferView(
+            0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
+            D3D12_SHADER_VISIBILITY_ALL);
+        rootParameters[3].InitAsConstantBufferView(
             1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        // sampler
-        rootParameters[1].InitAsDescriptorTable(1, &samplerRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        // srv
-        rootParameters[2].InitAsDescriptorTable(1, &srvRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
+        rootParameters[4].InitAsConstantBufferView(
+            2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
+            D3D12_SHADER_VISIBILITY_ALL);
 
         auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
             ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,
@@ -41,30 +48,29 @@ class SkyboxPSO : public GraphicsPSO {
             IID_PPV_ARGS(&root_signature));
 
         // shader
-        ComPtr<ID3DBlob> tone_mappingVS;
+        ComPtr<ID3DBlob> skyboxVS;
+        ComPtr<ID3DBlob> skyboxPS;
         dx12::Util::CreateVertexShader(dx12::GpuCore::Instance().device,
-                                       L"graphics/ToneMappingVS.hlsl",
-                                       tone_mappingVS);
-        ComPtr<ID3DBlob> tone_mappingPS;
+                                       L"graphics/SkyboxVS.hlsl",
+                                       skyboxVS);
         dx12::Util::CreatePixelShader(dx12::GpuCore::Instance().device,
-                                      L"graphics/ToneMappingPS.hlsl",
-                                      tone_mappingPS);
+                                      L"graphics/SkyboxPS.hlsl",
+                                      skyboxPS);
         // pipeline state
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-        psoDesc.InputLayout = {dx12::layout::combineIEs,
-                               _countof(dx12::layout::combineIEs)};
+        psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
         psoDesc.pRootSignature = root_signature;
-        psoDesc.VS = CD3DX12_SHADER_BYTECODE(tone_mappingVS.Get());
-        psoDesc.PS = CD3DX12_SHADER_BYTECODE(tone_mappingPS.Get());
+        psoDesc.VS = CD3DX12_SHADER_BYTECODE(skyboxVS.Get());
+        psoDesc.PS = CD3DX12_SHADER_BYTECODE(skyboxPS.Get());
         psoDesc.RasterizerState =
-            CD3DX12_RASTERIZER_DESC(dx12::rasterizer::postRS);
+            CD3DX12_RASTERIZER_DESC(dx12::rasterizer::solidRS);
         psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
         psoDesc.DepthStencilState.StencilEnable = false;
         psoDesc.SampleMask = UINT_MAX;
         psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         psoDesc.NumRenderTargets = 1;
-        psoDesc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
-        psoDesc.SampleDesc.Count = 1;
+        psoDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        psoDesc.SampleDesc.Count = 4;
         psoDesc.SampleDesc.Quality = 0;
 
         dx12::ThrowIfFailed(
@@ -72,52 +78,44 @@ class SkyboxPSO : public GraphicsPSO {
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
     void Render(ComPtr<ID3D12GraphicsCommandList> command_list,
-                ComPtr<ID3D12DescriptorHeap> sampler,
-                ComPtr<ID3D12Resource> const_buffer,
+                CD3DX12_CPU_DESCRIPTOR_HANDLE render_target_view,
+                ComPtr<ID3D12DescriptorHeap> skybox,
+                ComPtr<ID3D12DescriptorHeap> samplers,
+                ComPtr<ID3D12Resource> global_consts,
+                ComPtr<ID3D12Resource> mesh_consts,
+                ComPtr<ID3D12Resource> material_consts,
                 D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view,
                 D3D12_INDEX_BUFFER_VIEW index_buffer_view, UINT index_count) {
 
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            dx12::GpuCore::Instance()
-                .resource_FLIP[dx12::GpuCore::Instance().frame_index]
-                .Get(),
+            dx12::GpuCore::Instance().resource_HDR.Get(),
             D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET);
         command_list->ResourceBarrier(1, &barrier);
 
-        barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            dx12::GpuCore::Instance().resource_LDR.Get(),
-            D3D12_RESOURCE_STATE_COMMON,
-            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
-                D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
-        command_list->ResourceBarrier(1, &barrier);
+        ID3D12DescriptorHeap *descriptor_heap[] = {samplers.Get(),
+                                                   skybox.Get()};
 
-        auto handle_resolved =
-            dx12::GpuCore::Instance()
-                .heap_LDR->GetGPUDescriptorHandleForHeapStart();
-        auto handle_back_buffer = dx12::GpuCore::Instance().GetHandleFLIP();
-
-        ID3D12DescriptorHeap *descriptorHeaps[] = {
-            dx12::GpuCore::Instance().heap_LDR.Get(), sampler.Get()};
-
-        // Set the compute root signature and pipeline state
         command_list->RSSetViewports(1, &dx12::GpuCore::Instance().viewport);
         command_list->RSSetScissorRects(1,
                                         &dx12::GpuCore::Instance().scissorRect);
-        command_list->OMSetRenderTargets(1, &handle_back_buffer, false,
+        command_list->OMSetRenderTargets(1, &render_target_view, false,
                                          nullptr);
         command_list->SetGraphicsRootSignature(root_signature);
         command_list->SetPipelineState(pipeline_state);
+        command_list->SetDescriptorHeaps(_countof(descriptor_heap),
+                                         descriptor_heap);
 
-        command_list->SetDescriptorHeaps(_countof(descriptorHeaps),
-                                         descriptorHeaps);
-        // 1:constant buffer
-        command_list->SetGraphicsRootConstantBufferView(
-            0, const_buffer->GetGPUVirtualAddress());
-        // 2:sampler
         command_list->SetGraphicsRootDescriptorTable(
-            1, sampler->GetGPUDescriptorHandleForHeapStart());
-        // 3:srv
-        command_list->SetGraphicsRootDescriptorTable(2, handle_resolved);
+            0, samplers->GetGPUDescriptorHandleForHeapStart());
+        command_list->SetGraphicsRootDescriptorTable(
+            1, skybox->GetGPUDescriptorHandleForHeapStart());
+        // global texture
+        command_list->SetGraphicsRootConstantBufferView(
+            2, global_consts->GetGPUVirtualAddress());
+        command_list->SetGraphicsRootConstantBufferView(
+            3, mesh_consts.Get()->GetGPUVirtualAddress());
+        command_list->SetGraphicsRootConstantBufferView(
+            4, material_consts.Get()->GetGPUVirtualAddress());
 
         command_list->IASetPrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -126,17 +124,8 @@ class SkyboxPSO : public GraphicsPSO {
         command_list->DrawIndexedInstanced(index_count, 1, 0, 0, 0);
 
         barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            dx12::GpuCore::Instance()
-                .resource_FLIP[dx12::GpuCore::Instance().frame_index]
-                .Get(),
+            dx12::GpuCore::Instance().resource_HDR.Get(),
             D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COMMON);
-        command_list->ResourceBarrier(1, &barrier);
-
-        barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            dx12::GpuCore::Instance().resource_LDR.Get(),
-            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
-                D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
-            D3D12_RESOURCE_STATE_COMMON);
         command_list->ResourceBarrier(1, &barrier);
     };
 };

@@ -22,6 +22,9 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
+            skyboxPSO = std::make_shared<dx12::SkyboxPSO>();
+            skyboxPSO->Initialize();
+
             auto mesh_data = GeometryGenerator::MakeBox(40.0f);
             std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
 
@@ -43,16 +46,59 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
             specular_SRV = Texture::InitAsDDSTexture(irradiance_name, true);
             brdf_SRV = Texture::InitAsDDSTexture(brdf_name, true);
 
-            skyboxPSO = std::make_shared<dx12::SkyboxPSO>();
-            skyboxPSO->Initialize();
+            auto resources = std::vector<ID3D12Resource *>{env_SRV.Get(),
+                                                           irradiance_SRV.Get(),
+                                                           specular_SRV.Get(),
+                                                           brdf_SRV.Get(),
+                                                           nullptr,
+                                                           nullptr,
+                                                           nullptr};
+
+            D3D12_DESCRIPTOR_HEAP_DESC desc = {
+                D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 7,
+                D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE};
+
+            dx12::ThrowIfFailed(
+                dx12::GpuCore::Instance().device->CreateDescriptorHeap(
+                    &desc, IID_PPV_ARGS(&condition->skybox_heap)));
+            CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
+                condition->skybox_heap->GetCPUDescriptorHandleForHeapStart());
+
+            D3D12_SHADER_RESOURCE_VIEW_DESC desc_SRV = {
+                DXGI_FORMAT_UNKNOWN, D3D12_SRV_DIMENSION_TEXTURE2D,
+                D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING};
+
+            UINT descriptor_size =
+                dx12::GpuCore::Instance()
+                    .device->GetDescriptorHandleIncrementSize(
+                        D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
+
+            for (auto resource : resources) {
+                if (resource != nullptr) {
+                    desc_SRV.Format = resource->GetDesc().Format;
+                    desc_SRV.Texture2D.MipLevels =
+                        resource->GetDesc().MipLevels;
+                }
+
+                dx12::GpuCore::Instance().device->CreateShaderResourceView(
+                    resource, &desc_SRV, handle);
+                handle.Offset(descriptor_size);
+            }
 
             break;
         }
         case EnumStageType::eRender: {
-            // skyboxPSO->Render(command_list, sampler_heap, const_buffer,
-            //                        mesh->vertex_buffer_view,
-            //                        mesh->index_buffer_view,
-            //                        mesh->index_count);
+
+            auto renderer = (MeshRenderer *)skybox->GetComponent(
+                EnumComponentType::eRenderer);
+            auto mesh = renderer->meshes.front();
+
+            skyboxPSO->Render(
+                command_list, dx12::GpuCore::Instance().GetHandleHDR(),
+                condition->skybox_heap, condition->sampler_heap,
+                condition->global_consts.Get(), renderer->mesh_consts.Get(),
+                renderer->material_consts.Get(), mesh->vertex_buffer_view,
+                mesh->index_buffer_view, mesh->index_count);
             break;
         }
         default:

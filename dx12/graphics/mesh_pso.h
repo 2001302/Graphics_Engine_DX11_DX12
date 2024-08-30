@@ -94,9 +94,11 @@ class SolidMeshPSO : public GraphicsPSO {
                 ComPtr<ID3D12Resource> material_consts,
                 D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view,
                 D3D12_INDEX_BUFFER_VIEW index_buffer_view, UINT index_count) {
+
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
             dx12::GpuCore::Instance().resource_HDR.Get(),
             D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET);
+
         command_list->ResourceBarrier(1, &barrier);
 
         ID3D12DescriptorHeap *descriptor_heap[] = {samplers.Get(),

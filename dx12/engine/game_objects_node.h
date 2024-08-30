@@ -21,8 +21,8 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
         case EnumStageType::eInitialize: {
 
             // pso
-                mesh_solid_PSO = std::make_shared<dx12::SolidMeshPSO>();
-                mesh_solid_PSO->Initialize();
+            mesh_solid_PSO = std::make_shared<dx12::SolidMeshPSO>();
+            mesh_solid_PSO->Initialize();
 
             // sample object
             Vector3 center(0.0f, 0.0f, 0.0f);
@@ -33,6 +33,9 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             renderer->Initialize(base_path, file_name,
                                  condition->command_pool->Get(0));
 
+            renderer->material_consts.GetCpu().albedoFactor = Vector3(1.0f);
+            renderer->material_consts.GetCpu().roughnessFactor = 0.8f;
+            renderer->material_consts.GetCpu().metallicFactor = 0.0f;
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
             renderer->UpdateConstantBuffers();
 
@@ -47,9 +50,6 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             for (auto &i : targets->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->material_consts.GetCpu().albedoFactor = Vector3(1.0f);
-                renderer->material_consts.GetCpu().roughnessFactor = 0.8f;
-                renderer->material_consts.GetCpu().metallicFactor = 0.0f;
                 renderer->UpdateConstantBuffers();
             }
 

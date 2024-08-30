@@ -327,6 +327,9 @@
     <ClInclude Include="graphics\mesh_pso.h">
       <Filter>Graphics\PSO</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\tone_mapping_pso.h">
+      <Filter>Graphics\PSO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="foundation\ImGui\NodeEditor\imgui_bezier_math.inl">
@@ -379,10 +382,10 @@
     <FxCompile Include="graphics\ToneMappingCS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\CombinePS.hlsl">
+    <FxCompile Include="graphics\ToneMappingPS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="graphics\CombineVS.hlsl">
+    <FxCompile Include="graphics\ToneMappingVS.hlsl">
       <Filter>Graphics\Shader</Filter>
     </FxCompile>
   </ItemGroup>

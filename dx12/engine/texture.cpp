@@ -159,7 +159,7 @@ void CreateTextureHelper(Image* image,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&image->upload)));
 
-    // copy data to upload heap
+    // 3.copy data to upload heap
     D3D12_SUBRESOURCE_DATA textureData = {};
     textureData.pData = image->buffer.data();
     textureData.RowPitch = image->width * 4;
@@ -174,7 +174,7 @@ void CreateTextureHelper(Image* image,
     command_list->ResourceBarrier(1, &barrier);
 }
 
-Texture::Texture(const std::string filename, const bool usSRGB,
+void Texture::InitAsTexture(const std::string filename, const bool usSRGB,
                  ComPtr<ID3D12GraphicsCommandList> command_list) {
 
     image = std::make_shared<Image>();
@@ -192,9 +192,11 @@ Texture::Texture(const std::string filename, const bool usSRGB,
     }
 
     CreateTextureHelper(image.get(), texture, command_list);
+
+    is_initialized = true;
 };
 
-Texture::Texture(const std::string albedoFilename,
+void Texture::InitAsTexture(const std::string albedoFilename,
                  const std::string opacityFilename, const bool usSRGB,
                  ComPtr<ID3D12GraphicsCommandList> command_list) {
 
@@ -206,5 +208,48 @@ Texture::Texture(const std::string albedoFilename,
               image->height);
 
     CreateTextureHelper(image.get(), texture, command_list);
+    is_initialized = true;
 };
+
+ void Texture::InitAsMetallicRoughnessTexture(
+    const std::string metallicFilename, const std::string roughnessFilename,
+    ComPtr<ID3D12GraphicsCommandList> command_list) {
+
+    if (!metallicFilename.empty() && (metallicFilename == roughnessFilename))
+    {
+         InitAsTexture(metallicFilename, false, command_list);
+    } else {
+        int mWidth = 0, mHeight = 0;
+        int rWidth = 0, rHeight = 0;
+        std::vector<uint8_t> mImage;
+        std::vector<uint8_t> rImage;
+
+        if (!metallicFilename.empty()) {
+            ReadImage(metallicFilename, mImage, mWidth, mHeight);
+        }
+
+        if (!roughnessFilename.empty()) {
+            ReadImage(roughnessFilename, rImage, rWidth, rHeight);
+        }
+
+        if (!metallicFilename.empty() && !roughnessFilename.empty()) {
+            assert(mWidth == rWidth);
+            assert(mHeight == rHeight);
+        }
+
+        vector<uint8_t> combinedImage(size_t(mWidth * mHeight) * 4);
+        fill(combinedImage.begin(), combinedImage.end(), 0);
+
+        for (size_t i = 0; i < size_t(mWidth * mHeight); i++) {
+            if (rImage.size())
+                combinedImage[4 * i + 1] = rImage[4 * i]; // Green = Roughness
+            if (mImage.size())
+                combinedImage[4 * i + 2] = mImage[4 * i]; // Blue = Metalness
+        }
+
+        CreateTextureHelper(image.get(), texture, command_list);
+    }
+    is_initialized = true;
+ }
+
 } // namespace core

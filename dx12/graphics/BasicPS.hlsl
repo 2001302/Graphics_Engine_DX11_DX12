@@ -314,8 +314,11 @@ PixelShaderOutput main(PixelShaderInput input)
                 radiance = LightRadiance(lights[i], input.posWorld, normalWorld, shadowMap2);*/
             
             // 오류 임시 수정 (radiance가 (0,0,0)일 경우  directLighting += ... 인데도 0 벡터가 되어버림
+
+            directLighting += (diffuseBRDF + specularBRDF) * NdotI;
+
             if (abs(dot(float3(1, 1, 1), radiance)) > 1e-5)
-                directLighting += (diffuseBRDF + specularBRDF) * radiance * NdotI;
+                directLighting = directLighting * radiance;
         }
     }
     

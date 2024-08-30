@@ -11,49 +11,6 @@ namespace dx12 {
 using namespace std;
 using namespace DirectX;
 
-//
-//void Util::CreateMetallicRoughnessTexture(
-//    const std::string metallicFilename, const std::string roughnessFilename,
-//    ComPtr<ID3D12Resource> &texture,
-//    ComPtr<ID3D12GraphicsCommandList> command_list) {
-//
-//    if (!metallicFilename.empty() && (metallicFilename == roughnessFilename)) {
-//        Util::CreateTexture(metallicFilename, false, texture, command_list,
-//                            textureUploadHeap);
-//    } else {
-//        int mWidth = 0, mHeight = 0;
-//        int rWidth = 0, rHeight = 0;
-//        std::vector<uint8_t> mImage;
-//        std::vector<uint8_t> rImage;
-//
-//        if (!metallicFilename.empty()) {
-//            ReadImage(metallicFilename, mImage, mWidth, mHeight);
-//        }
-//
-//        if (!roughnessFilename.empty()) {
-//            ReadImage(roughnessFilename, rImage, rWidth, rHeight);
-//        }
-//
-//        if (!metallicFilename.empty() && !roughnessFilename.empty()) {
-//            assert(mWidth == rWidth);
-//            assert(mHeight == rHeight);
-//        }
-//
-//        vector<uint8_t> combinedImage(size_t(mWidth * mHeight) * 4);
-//        fill(combinedImage.begin(), combinedImage.end(), 0);
-//
-//        for (size_t i = 0; i < size_t(mWidth * mHeight); i++) {
-//            if (rImage.size())
-//                combinedImage[4 * i + 1] = rImage[4 * i]; // Green = Roughness
-//            if (mImage.size())
-//                combinedImage[4 * i + 2] = mImage[4 * i]; // Blue = Metalness
-//        }
-//
-//        CreateTextureHelper(mWidth, mHeight, combinedImage,
-//                            DXGI_FORMAT_R8G8B8A8_UNORM, texture, command_list,
-//                            textureUploadHeap);
-//    }
-//}
 
 // void Util::CreateDDSTexture(const wchar_t *filename, bool isCubeMap,
 //    ComPtr<ID3D11ShaderResourceView> &textureResourceView) {

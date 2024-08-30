@@ -27,7 +27,7 @@ class MeshRenderer : public Component {
     void Initialize(const std::vector<MeshData> &meshes,
                     dx12::CommandPool *command_pool);
 
-    virtual void InitMeshBuffers(const MeshData &meshData,
+    virtual void SetConstant(const MeshData &meshData,
                                  std::shared_ptr<Mesh> &newMesh,
                                  dx12::CommandPool *command_pool);
 

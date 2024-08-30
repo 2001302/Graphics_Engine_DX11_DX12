@@ -23,16 +23,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             { // pso
                 defaultSolidPSO = std::make_shared<dx12::GraphicsPSO>();
 
-                // shader
-                ComPtr<ID3DBlob> basicVS;
-                ComPtr<ID3DBlob> basicPS;
-                dx12::Util::CreateVertexShader(dx12::GpuCore::Instance().device,
-                                               L"graphics/BasicVS.hlsl",
-                                               basicVS);
-                dx12::Util::CreatePixelShader(dx12::GpuCore::Instance().device,
-                                              L"graphics/BasicPS.hlsl",
-                                              basicPS);
-
+                // rootSignature
                 // s0 ~ s6
                 CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
                 samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 6, 0);
@@ -41,7 +32,6 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                 CD3DX12_DESCRIPTOR_RANGE1 textureRange;
                 textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
 
-                // rootSignature
                 CD3DX12_ROOT_PARAMETER1 rootParameters[7] = {};
                 // Common.hlsli : s0~s6,t10~t16,b0~b2
                 rootParameters[0].InitAsDescriptorTable(
@@ -82,6 +72,15 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
                     signature->GetBufferSize(),
                     IID_PPV_ARGS(&defaultSolidPSO->root_signature));
 
+                // shader
+                ComPtr<ID3DBlob> basicVS;
+                ComPtr<ID3DBlob> basicPS;
+                dx12::Util::CreateVertexShader(dx12::GpuCore::Instance().device,
+                                               L"graphics/BasicVS.hlsl",
+                                               basicVS);
+                dx12::Util::CreatePixelShader(dx12::GpuCore::Instance().device,
+                                              L"graphics/BasicPS.hlsl",
+                                              basicPS);
                 // defaultSolidPSO;
                 D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
                 psoDesc.InputLayout = {dx12::layout::basicIEs,
@@ -111,8 +110,8 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
 
             // sample object
             Vector3 center(0.0f, 0.0f, 0.0f);
-            std::string base_path = "Assets/Characters/zelda/";
-            std::string file_name = "zeldaPosed001.fbx";
+            std::string base_path = "Assets/Characters/Mixamo/";
+            std::string file_name = "character.fbx";
 
             auto renderer = std::make_shared<MeshRenderer>(
                 base_path, file_name, condition->command_pool.get());

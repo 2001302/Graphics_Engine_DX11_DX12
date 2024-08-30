@@ -14,13 +14,20 @@ struct Image {
 };
 
 struct Texture {
+    Texture() : image(0), texture(0), is_initialized(false){};
+    void InitAsTexture(const std::string filename, const bool usSRGB,
+                       ComPtr<ID3D12GraphicsCommandList> command_list);
+    void InitAsTexture(const std::string albedoFilename,
+                       const std::string opacityFilename, const bool usSRGB,
+                       ComPtr<ID3D12GraphicsCommandList> command_list);
+
+    void InitAsMetallicRoughnessTexture(
+        const std::string metallicFilename, const std::string roughnessFilename,
+        ComPtr<ID3D12GraphicsCommandList> command_list);
+
     std::shared_ptr<Image> image;
     ComPtr<ID3D12Resource> texture;
-    Texture() : image(0), texture(0){};
-    Texture(const std::string filename, const bool usSRGB,
-            ComPtr<ID3D12GraphicsCommandList> command_list);
-    Texture(const std::string albedoFilename, const std::string opacityFilename,
-            const bool usSRGB, ComPtr<ID3D12GraphicsCommandList> command_list);
+    bool is_initialized;
 };
 } // namespace core
 

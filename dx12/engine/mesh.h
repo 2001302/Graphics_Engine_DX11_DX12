@@ -10,6 +10,16 @@ using namespace std;
 using namespace DirectX;
 
 namespace core {
+enum EnumTextureType {
+    ALBEDO = 0,
+    NORMAL = 1,
+    AMBIENT_OCCLUSION = 2,
+    METALLIC_ROUGHNESS = 3,
+    EMISSIVE = 4,
+    HEIGHT = 5,
+    END = 6
+};
+
 struct MeshData {
     std::vector<Vertex> vertices;
     std::vector<SkinnedVertex> skinned_vertices;
@@ -27,7 +37,9 @@ struct MeshData {
 struct Mesh {
     Mesh()
         : vertex_buffer(0), index_buffer(0), mesh_consts_GPU(0),
-          material_consts_GPU(0), heap_PS(0), heap_VS(0) {}
+          material_consts_GPU(0), heap_PS(0), heap_VS(0),
+          vertex_buffer_view(D3D12_VERTEX_BUFFER_VIEW()),
+          index_buffer_view(D3D12_INDEX_BUFFER_VIEW()) {}
 
     ComPtr<ID3D12Resource> vertex_buffer;
     ComPtr<ID3D12Resource> index_buffer;
@@ -41,13 +53,7 @@ struct Mesh {
     ComPtr<ID3D12Resource> mesh_consts_GPU;
     ComPtr<ID3D12Resource> material_consts_GPU;
 
-    std::shared_ptr<Texture> albedo_texture;
-    std::shared_ptr<Texture> emissive_texture;
-    std::shared_ptr<Texture> normal_texture;
-    std::shared_ptr<Texture> ao_texture;
-    std::shared_ptr<Texture> metallic_roughness_texture;
-    std::shared_ptr<Texture> height_texture;
-
+    std::shared_ptr<Texture> textures[EnumTextureType::END];
     ComPtr<ID3D12DescriptorHeap> heap_PS; // t0 ~ t4
     ComPtr<ID3D12DescriptorHeap> heap_VS; // t0
 
@@ -62,51 +68,54 @@ struct Mesh {
         dx12::Util::CreateIndexBuffer(mesh_data.indices, index_buffer,
                                       index_buffer_view);
 
-        albedo_texture = std::make_shared<Texture>();
-        if (albedo_texture->InitAsTexture(mesh_data.albedoTextureFilename,
-                                          mesh_data.opacityTextureFilename,
-                                          false, command_list)) {
-        } else if (albedo_texture->InitAsTexture(
+        textures[EnumTextureType::ALBEDO] = std::make_shared<Texture>();
+        if (textures[EnumTextureType::ALBEDO]->InitAsTexture(
+                mesh_data.albedoTextureFilename,
+                mesh_data.opacityTextureFilename, false, command_list)) {
+        } else if (textures[EnumTextureType::ALBEDO]->InitAsTexture(
                        mesh_data.albedoTextureFilename, false, command_list)) {
         } else {
             cout << mesh_data.albedoTextureFilename
                  << " does not exists. Skip texture reading." << endl;
         }
 
-        normal_texture = std::make_shared<Texture>();
-        if (!normal_texture->InitAsTexture(mesh_data.normalTextureFilename,
-                                           false, command_list)) {
+        textures[EnumTextureType::NORMAL] = std::make_shared<Texture>();
+        if (!textures[EnumTextureType::NORMAL]->InitAsTexture(
+                mesh_data.normalTextureFilename, false, command_list)) {
             cout << mesh_data.normalTextureFilename
                  << " does not exists. Skip texture reading." << endl;
         }
 
-        ao_texture = std::make_shared<Texture>();
-        if (!ao_texture->InitAsTexture(mesh_data.aoTextureFilename, false,
-                                       command_list)) {
+        textures[EnumTextureType::AMBIENT_OCCLUSION] =
+            std::make_shared<Texture>();
+        if (!textures[EnumTextureType::AMBIENT_OCCLUSION]->InitAsTexture(
+                mesh_data.aoTextureFilename, false, command_list)) {
             cout << mesh_data.aoTextureFilename
                  << " does not exists. Skip texture reading." << endl;
         }
 
         // Green : Roughness, Blue : Metallic(Metalness)
-        metallic_roughness_texture = std::make_shared<Texture>();
-        if (!metallic_roughness_texture->InitAsMetallicRoughnessTexture(
-                mesh_data.metallicTextureFilename,
-                mesh_data.roughnessTextureFilename, command_list)) {
+        textures[EnumTextureType::METALLIC_ROUGHNESS] =
+            std::make_shared<Texture>();
+        if (!textures[EnumTextureType::METALLIC_ROUGHNESS]
+                 ->InitAsMetallicRoughnessTexture(
+                     mesh_data.metallicTextureFilename,
+                     mesh_data.roughnessTextureFilename, command_list)) {
             cout << mesh_data.metallicTextureFilename << " or "
                  << mesh_data.roughnessTextureFilename
                  << " does not exists. Skip texture reading." << endl;
         }
 
-        emissive_texture = std::make_shared<Texture>();
-        if (!emissive_texture->InitAsTexture(mesh_data.emissiveTextureFilename,
-                                             false, command_list)) {
+        textures[EnumTextureType::EMISSIVE] = std::make_shared<Texture>();
+        if (!textures[EnumTextureType::EMISSIVE]->InitAsTexture(
+                mesh_data.emissiveTextureFilename, false, command_list)) {
             cout << mesh_data.emissiveTextureFilename
                  << " does not exists. Skip texture reading." << endl;
         }
 
-        height_texture = std::make_shared<Texture>();
-        if (!height_texture->InitAsTexture(mesh_data.heightTextureFilename,
-                                           false, command_list)) {
+        textures[EnumTextureType::HEIGHT] = std::make_shared<Texture>();
+        if (!textures[EnumTextureType::HEIGHT]->InitAsTexture(
+                mesh_data.heightTextureFilename, false, command_list)) {
             cout << mesh_data.heightTextureFilename
                  << " does not exists. Skip texture reading." << endl;
         }
@@ -138,7 +147,7 @@ struct Mesh {
         D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
         srvDesc.Shader4ComponentMapping =
             D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-        // srvDesc.Format = albedo_texture->GetDesc().Format;
+        // srvDesc.Format = textures[EnumTextureType::ALBEDO]->GetDesc().Format;
         srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
         srvDesc.Texture2D.MipLevels = 1;
 
@@ -147,8 +156,11 @@ struct Mesh {
             heap_PS->GetCPUDescriptorHandleForHeapStart());
 
         std::vector<Texture *> textures_ps = std::vector<Texture *>{
-            albedo_texture.get(), normal_texture.get(), ao_texture.get(),
-            metallic_roughness_texture.get(), emissive_texture.get()};
+            textures[EnumTextureType::ALBEDO].get(),
+            textures[EnumTextureType::NORMAL].get(),
+            textures[EnumTextureType::AMBIENT_OCCLUSION].get(),
+            textures[EnumTextureType::METALLIC_ROUGHNESS].get(),
+            textures[EnumTextureType::EMISSIVE].get()};
 
         for (auto resource_ps : textures_ps) {
             if (resource_ps->is_initialized) {
@@ -169,7 +181,7 @@ struct Mesh {
             heap_VS->GetCPUDescriptorHandleForHeapStart());
 
         std::vector<Texture *> textures_vs =
-            std::vector<Texture *>{height_texture.get()};
+            std::vector<Texture *>{textures[EnumTextureType::HEIGHT].get()};
 
         for (auto resource_vs : textures_vs) {
             if (resource_vs->is_initialized) {

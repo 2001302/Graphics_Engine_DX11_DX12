@@ -21,40 +21,19 @@ __declspec(align(256)) struct MeshConstants {
 
 __declspec(align(256)) struct MaterialConstants {
 
-    Vector3 albedoFactor = Vector3(1.0f);
-    float roughnessFactor = 1.0f;
-    float metallicFactor = 1.0f;
-    Vector3 emissionFactor = Vector3(0.0f);
+    Vector3 albedo_factor = Vector3(1.0f);
+    float roughness_factor = 1.0f;
+    float metallic_factor = 1.0f;
+    Vector3 emission_factor = Vector3(0.0f);
 
-    int useAlbedoMap = 0;
-    int useNormalMap = 0;
-    int useAOMap = 0;
-    int invertNormalMapY = 0;
-    int useMetallicMap = 0;
-    int useRoughnessMap = 0;
-    int useEmissiveMap = 0;
+    int use_albedo_map = 0;
+    int use_normal_map = 0;
+    int use_ambient_occlusion_map = 0;
+    int invert_normal_map_Y = 0;
+    int use_metallic_map = 0;
+    int use_roughness_map = 0;
+    int use_emissive_map = 0;
     float dummy = 0.0f;
-
-    /* union {
-        uint32_t flags;
-        struct {
-            // UV0 or UV1 for each texture
-            uint32_t baseColorUV : 1;
-            uint32_t metallicRoughnessUV : 1;
-            uint32_t occlusionUV : 1;
-            uint32_t emissiveUV : 1;
-            uint32_t normalUV : 1;
-
-            // Three special modes
-            uint32_t twoSided : 1;
-            uint32_t alphaTest : 1;
-            uint32_t alphaBlend : 1;
-
-            uint32_t _pad : 8;
-
-            uint32_t alphaRef : 16; // half float
-        };
-    };*/
 };
 
 struct Light {

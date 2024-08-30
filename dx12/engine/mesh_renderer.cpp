@@ -26,20 +26,28 @@ void MeshRenderer::Initialize(const vector<MeshData> &mesh_data,
         meshes[i] = std::make_shared<Mesh>();
         meshes[i]->Initialize(meshData, command_list);
 
-        material_consts.GetCpu().useAlbedoMap =
-            meshes[i]->albedo_texture->is_initialized;
-        material_consts.GetCpu().useNormalMap =
-            meshes[i]->normal_texture->is_initialized;
-        material_consts.GetCpu().useEmissiveMap =
-            meshes[i]->emissive_texture->is_initialized;
-        material_consts.GetCpu().useMetallicMap =
-            meshes[i]->metallic_roughness_texture->is_initialized;
-        material_consts.GetCpu().useRoughnessMap =
-            meshes[i]->metallic_roughness_texture->is_initialized;
+        material_consts.GetCpu().use_albedo_map =
+            meshes[i]->textures[EnumTextureType::ALBEDO]->is_initialized;
+        material_consts.GetCpu().use_normal_map =
+            meshes[i]->textures[EnumTextureType::NORMAL]->is_initialized;
+        material_consts.GetCpu().use_emissive_map =
+            meshes[i]->textures[EnumTextureType::EMISSIVE]->is_initialized;
+        material_consts.GetCpu().use_ambient_occlusion_map =
+            meshes[i]
+                ->textures[EnumTextureType::AMBIENT_OCCLUSION]
+                ->is_initialized;
+        material_consts.GetCpu().use_metallic_map =
+            meshes[i]
+                ->textures[EnumTextureType::METALLIC_ROUGHNESS]
+                ->is_initialized;
+        material_consts.GetCpu().use_roughness_map =
+            meshes[i]
+                ->textures[EnumTextureType::METALLIC_ROUGHNESS]
+                ->is_initialized;
         mesh_consts.GetCpu().useHeightMap =
-            meshes[i]->height_texture->is_initialized;
+            meshes[i]->textures[EnumTextureType::HEIGHT]->is_initialized;
         mesh_consts.GetCpu().world = Matrix();
-        
+
         material_consts.Initialize();
         mesh_consts.Initialize();
     }

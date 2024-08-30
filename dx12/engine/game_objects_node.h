@@ -33,9 +33,9 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             renderer->Initialize(base_path, file_name,
                                  condition->command_pool->Get(0));
 
-            renderer->material_consts.GetCpu().albedoFactor = Vector3(1.0f);
-            renderer->material_consts.GetCpu().roughnessFactor = 0.8f;
-            renderer->material_consts.GetCpu().metallicFactor = 0.0f;
+            renderer->material_consts.GetCpu().albedo_factor = Vector3(1.0f);
+            renderer->material_consts.GetCpu().roughness_factor = 0.8f;
+            renderer->material_consts.GetCpu().metallic_factor = 0.0f;
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
             renderer->UpdateConstantBuffers();
 

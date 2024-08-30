@@ -12,7 +12,6 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 
-using namespace std;
 using namespace DirectX;
 
 namespace core {
@@ -31,13 +30,13 @@ void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
     height = static_cast<int>(metadata.height);
     pixelFormat = metadata.format;
 
-    cout << filename << " " << metadata.width << " " << metadata.height
-         << metadata.format << endl;
+    std::cout << filename << " " << metadata.width << " " << metadata.height
+              << metadata.format << std::endl;
 
     image.resize(scratchImage.GetPixelsSize());
     memcpy(image.data(), scratchImage.GetPixels(), image.size());
 
-    vector<float> f32(image.size() / 2);
+    std::vector<float> f32(image.size() / 2);
     uint16_t *f16 = (uint16_t *)image.data();
     for (int i = 0; i < image.size() / 2; i++) {
         f32[i] = fp16_ieee_to_fp32_value(f16[i]);
@@ -46,7 +45,7 @@ void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
     const float minValue = *std::min_element(f32.begin(), f32.end());
     const float maxValue = *std::max_element(f32.begin(), f32.end());
 
-    cout << minValue << " " << maxValue << endl;
+    std::cout << minValue << " " << maxValue << std::endl;
 
     // f16 = (uint16_t *)image.data();
     // for (int i = 0; i < image.size() / 2; i++) {
@@ -64,8 +63,8 @@ void ReadImage(const std::string filename, std::vector<uint8_t> &image,
 
     // assert(channels == 4);
 
-    cout << filename << " " << width << " " << height << " " << channels
-         << endl;
+    std::cout << filename << " " << width << " " << height << " " << channels
+              << std::endl;
 
     // to 4 chanel
     image.resize(width * height * 4);
@@ -99,7 +98,7 @@ void ReadImage(const std::string filename, std::vector<uint8_t> &image,
             }
         }
     } else {
-        std::cout << "Cannot read " << channels << " channels" << endl;
+        std::cout << "Cannot read " << channels << " channels" << std::endl;
     }
 
     delete[] img;
@@ -126,8 +125,7 @@ void ReadImage(const std::string albedoFilename,
 }
 
 // todo : neet to optimize
-void CreateTextureHelper(Image* image,
-                         ComPtr<ID3D12Resource> &texture,
+void CreateTextureHelper(Image *image, ComPtr<ID3D12Resource> &texture,
                          ComPtr<ID3D12GraphicsCommandList> command_list) {
     // 1.resource creation
     D3D12_RESOURCE_DESC txtDesc;
@@ -174,15 +172,19 @@ void CreateTextureHelper(Image* image,
     command_list->ResourceBarrier(1, &barrier);
 }
 
-void Texture::InitAsTexture(const std::string filename, const bool usSRGB,
-                 ComPtr<ID3D12GraphicsCommandList> command_list) {
+bool Texture::InitAsTexture(const std::string filename, const bool usSRGB,
+                            ComPtr<ID3D12GraphicsCommandList> command_list) {
+
+    if (!std::filesystem::exists(filename))
+        return false;
 
     image = std::make_shared<Image>();
     image->format =
         usSRGB ? DXGI_FORMAT_R8G8B8A8_UNORM_SRGB : DXGI_FORMAT_R8G8B8A8_UNORM;
 
-    string ext(filename.end() - 3, filename.end());
-    std::transform(ext.begin(), ext.end(), ext.begin(), std::tolower);
+    std::string ext(filename.end() - 3, filename.end());
+    std::transform(ext.begin(), ext.end(), ext.begin(),
+                   (int (*)(int))std::toupper);
 
     if (ext == "exr") {
         ReadEXRImage(filename, image->buffer, image->width, image->height,
@@ -194,11 +196,17 @@ void Texture::InitAsTexture(const std::string filename, const bool usSRGB,
     CreateTextureHelper(image.get(), texture, command_list);
 
     is_initialized = true;
+    return is_initialized;
 };
 
-void Texture::InitAsTexture(const std::string albedoFilename,
-                 const std::string opacityFilename, const bool usSRGB,
-                 ComPtr<ID3D12GraphicsCommandList> command_list) {
+bool Texture::InitAsTexture(const std::string albedoFilename,
+                            const std::string opacityFilename,
+                            const bool usSRGB,
+                            ComPtr<ID3D12GraphicsCommandList> command_list) {
+
+    if (!(std::filesystem::exists(albedoFilename) &&
+          std::filesystem::exists(opacityFilename)))
+        return false;
 
     image = std::make_shared<Image>();
     image->format =
@@ -209,15 +217,19 @@ void Texture::InitAsTexture(const std::string albedoFilename,
 
     CreateTextureHelper(image.get(), texture, command_list);
     is_initialized = true;
+    return is_initialized;
 };
 
- void Texture::InitAsMetallicRoughnessTexture(
+bool Texture::InitAsMetallicRoughnessTexture(
     const std::string metallicFilename, const std::string roughnessFilename,
     ComPtr<ID3D12GraphicsCommandList> command_list) {
 
-    if (!metallicFilename.empty() && (metallicFilename == roughnessFilename))
-    {
-         InitAsTexture(metallicFilename, false, command_list);
+    if (!std::filesystem::exists(metallicFilename) &&
+        !std::filesystem::exists(roughnessFilename))
+        return false;
+
+    if (!metallicFilename.empty() && (metallicFilename == roughnessFilename)) {
+        InitAsTexture(metallicFilename, false, command_list);
     } else {
         int mWidth = 0, mHeight = 0;
         int rWidth = 0, rHeight = 0;
@@ -237,8 +249,8 @@ void Texture::InitAsTexture(const std::string albedoFilename,
             assert(mHeight == rHeight);
         }
 
-        vector<uint8_t> combinedImage(size_t(mWidth * mHeight) * 4);
-        fill(combinedImage.begin(), combinedImage.end(), 0);
+        std::vector<uint8_t> combinedImage(size_t(mWidth * mHeight) * 4);
+        std::fill(combinedImage.begin(), combinedImage.end(), 0);
 
         for (size_t i = 0; i < size_t(mWidth * mHeight); i++) {
             if (rImage.size())
@@ -250,6 +262,7 @@ void Texture::InitAsTexture(const std::string albedoFilename,
         CreateTextureHelper(image.get(), texture, command_list);
     }
     is_initialized = true;
- }
+    return is_initialized;
+}
 
 } // namespace core

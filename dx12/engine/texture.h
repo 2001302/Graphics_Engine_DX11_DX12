@@ -3,6 +3,8 @@
 
 #include "../graphics/graphics_util.h"
 #include "vertex.h"
+#include <iostream>
+#include <filesystem>
 
 namespace core {
 struct Image {
@@ -15,13 +17,12 @@ struct Image {
 
 struct Texture {
     Texture() : image(0), texture(0), is_initialized(false){};
-    void InitAsTexture(const std::string filename, const bool usSRGB,
+    bool InitAsTexture(const std::string filename, const bool usSRGB,
                        ComPtr<ID3D12GraphicsCommandList> command_list);
-    void InitAsTexture(const std::string albedoFilename,
+    bool InitAsTexture(const std::string albedoFilename,
                        const std::string opacityFilename, const bool usSRGB,
                        ComPtr<ID3D12GraphicsCommandList> command_list);
-
-    void InitAsMetallicRoughnessTexture(
+    bool InitAsMetallicRoughnessTexture(
         const std::string metallicFilename, const std::string roughnessFilename,
         ComPtr<ID3D12GraphicsCommandList> command_list);
 

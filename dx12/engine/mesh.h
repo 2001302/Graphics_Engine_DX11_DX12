@@ -1,12 +1,10 @@
 #ifndef _MESH
 #define _MESH
 
-#include "../graphics/graphics_util.h"
 #include "../graphics/command_pool.h"
+#include "../graphics/graphics_util.h"
 #include "texture.h"
 #include "vertex.h"
-#include <filesystem>
-#include <iostream>
 
 using namespace std;
 using namespace DirectX;
@@ -29,8 +27,7 @@ struct MeshData {
 struct Mesh {
     Mesh()
         : vertex_buffer(0), index_buffer(0), mesh_consts_GPU(0),
-          material_consts_GPU(0), heap_PS(0), heap_VS(0) {
-    }
+          material_consts_GPU(0), heap_PS(0), heap_VS(0) {}
 
     ComPtr<ID3D12Resource> vertex_buffer;
     ComPtr<ID3D12Resource> index_buffer;
@@ -54,7 +51,8 @@ struct Mesh {
     ComPtr<ID3D12DescriptorHeap> heap_PS; // t0 ~ t4
     ComPtr<ID3D12DescriptorHeap> heap_VS; // t0
 
-    void Initialize(const MeshData &mesh_data, dx12::CommandPool *command_pool) {
+    void Initialize(const MeshData &mesh_data,
+                    ComPtr<ID3D12GraphicsCommandList> command_list) {
 
         dx12::Util::CreateVertexBuffer(mesh_data.vertices, vertex_buffer,
                                        vertex_buffer_view);
@@ -64,101 +62,53 @@ struct Mesh {
         dx12::Util::CreateIndexBuffer(mesh_data.indices, index_buffer,
                                       index_buffer_view);
 
-        if (!mesh_data.albedoTextureFilename.empty()) {
-            if (filesystem::exists(mesh_data.albedoTextureFilename)) {
-                if (!mesh_data.opacityTextureFilename.empty()) {
-                    albedo_texture = std::make_shared<Texture>();
-                    albedo_texture->InitAsTexture(
-                        mesh_data.albedoTextureFilename,
-                        mesh_data.opacityTextureFilename, false,
-                        command_pool->Get(0));
-                } else {
-
-                    albedo_texture = std::make_shared<Texture>();
-                    albedo_texture->InitAsTexture(
-                        mesh_data.albedoTextureFilename, false,
-                        command_pool->Get(0));
-                }
-            } else {
-                cout << mesh_data.albedoTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
-            }
+        albedo_texture = std::make_shared<Texture>();
+        if (albedo_texture->InitAsTexture(mesh_data.albedoTextureFilename,
+                                          mesh_data.opacityTextureFilename,
+                                          false, command_list)) {
+        } else if (albedo_texture->InitAsTexture(
+                       mesh_data.albedoTextureFilename, false, command_list)) {
+        } else {
+            cout << mesh_data.albedoTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
         }
 
-        if (!mesh_data.normalTextureFilename.empty()) {
-            if (filesystem::exists(mesh_data.normalTextureFilename)) {
-
-                normal_texture = std::make_shared<Texture>();
-                normal_texture->InitAsTexture(mesh_data.normalTextureFilename,
-                                              false, command_pool->Get(0));
-            } else {
-                cout << mesh_data.normalTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
-            }
+        normal_texture = std::make_shared<Texture>();
+        if (!normal_texture->InitAsTexture(mesh_data.normalTextureFilename,
+                                           false, command_list)) {
+            cout << mesh_data.normalTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
         }
 
-        if (!mesh_data.aoTextureFilename.empty()) {
-            if (filesystem::exists(mesh_data.aoTextureFilename)) {
-
-                ao_texture = std::make_shared<Texture>();
-                ao_texture->InitAsTexture(mesh_data.aoTextureFilename, false,
-                                          command_pool->Get(0));
-
-            } else {
-                cout << mesh_data.aoTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
-            }
+        ao_texture = std::make_shared<Texture>();
+        if (!ao_texture->InitAsTexture(mesh_data.aoTextureFilename, false,
+                                       command_list)) {
+            cout << mesh_data.aoTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
         }
 
         // Green : Roughness, Blue : Metallic(Metalness)
-        if (!mesh_data.metallicTextureFilename.empty() ||
-            !mesh_data.roughnessTextureFilename.empty()) {
-
-            if (filesystem::exists(mesh_data.metallicTextureFilename) &&
-                filesystem::exists(mesh_data.roughnessTextureFilename)) {
-
-                ao_texture = std::make_shared<Texture>();
-                ao_texture->InitAsMetallicRoughnessTexture(
-                    mesh_data.metallicTextureFilename,
-                    mesh_data.roughnessTextureFilename, command_pool->Get(0));
-            } else {
-                cout << mesh_data.metallicTextureFilename << " or "
-                     << mesh_data.roughnessTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
-            }
+        metallic_roughness_texture = std::make_shared<Texture>();
+        if (!metallic_roughness_texture->InitAsMetallicRoughnessTexture(
+                mesh_data.metallicTextureFilename,
+                mesh_data.roughnessTextureFilename, command_list)) {
+            cout << mesh_data.metallicTextureFilename << " or "
+                 << mesh_data.roughnessTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
         }
 
-        if (!mesh_data.emissiveTextureFilename.empty()) {
-            if (filesystem::exists(mesh_data.emissiveTextureFilename)) {
-
-                emissive_texture = std::make_shared<Texture>();
-                emissive_texture->InitAsTexture(
-                    mesh_data.emissiveTextureFilename, false,
-                    command_pool->Get(0));
-
-            } else {
-                cout << mesh_data.emissiveTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
-            }
+        emissive_texture = std::make_shared<Texture>();
+        if (!emissive_texture->InitAsTexture(mesh_data.emissiveTextureFilename,
+                                             false, command_list)) {
+            cout << mesh_data.emissiveTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
         }
 
-        if (!mesh_data.metallicTextureFilename.empty()) {
-        }
-
-        if (!mesh_data.roughnessTextureFilename.empty()) {
-        }
-
-        if (!mesh_data.heightTextureFilename.empty()) {
-            if (filesystem::exists(mesh_data.heightTextureFilename)) {
-
-                height_texture = std::make_shared<Texture>();
-                height_texture->InitAsTexture(mesh_data.heightTextureFilename,
-                                              false, command_pool->Get(0));
-
-            } else {
-                cout << mesh_data.heightTextureFilename
-                     << " does not exists. Skip texture reading." << endl;
-            }
+        height_texture = std::make_shared<Texture>();
+        if (!height_texture->InitAsTexture(mesh_data.heightTextureFilename,
+                                           false, command_list)) {
+            cout << mesh_data.heightTextureFilename
+                 << " does not exists. Skip texture reading." << endl;
         }
 
         // heap_PS
@@ -201,7 +151,7 @@ struct Mesh {
             metallic_roughness_texture.get(), emissive_texture.get()};
 
         for (auto resource_ps : textures_ps) {
-            if (resource_ps) {
+            if (resource_ps->is_initialized) {
                 srvDesc.Format = resource_ps->texture->GetDesc().Format;
 
                 dx12::GpuCore::Instance().device->CreateShaderResourceView(
@@ -222,7 +172,7 @@ struct Mesh {
             std::vector<Texture *>{height_texture.get()};
 
         for (auto resource_vs : textures_vs) {
-            if (resource_vs) {
+            if (resource_vs->is_initialized) {
                 srvDesc.Format = resource_vs->texture->GetDesc().Format;
 
                 dx12::GpuCore::Instance().device->CreateShaderResourceView(

@@ -114,7 +114,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             std::string file_name = "character.fbx";
 
             auto renderer = std::make_shared<MeshRenderer>(
-                base_path, file_name, condition->command_pool.get());
+                base_path, file_name, condition->command_pool->Get(0));
 
             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
             renderer->UpdateConstantBuffers();

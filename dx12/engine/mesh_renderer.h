@@ -17,19 +17,15 @@ class MeshRenderer : public Component {
   public:
     MeshRenderer() {}
     MeshRenderer(const std::string &basePath, const std::string &filename,
-                 dx12::CommandPool *command_pool);
+                 ComPtr<ID3D12GraphicsCommandList> command_list);
     MeshRenderer(const std::vector<MeshData> &meshes,
-                 dx12::CommandPool *command_pool);
+                 ComPtr<ID3D12GraphicsCommandList> command_list);
 
     virtual void Initialize();
     void Initialize(const std::string &basePath, const std::string &filename,
-                    dx12::CommandPool *command_pool);
+                    ComPtr<ID3D12GraphicsCommandList> command_list);
     void Initialize(const std::vector<MeshData> &meshes,
-                    dx12::CommandPool *command_pool);
-
-    virtual void SetConstant(const MeshData &meshData,
-                                 std::shared_ptr<Mesh> &newMesh,
-                                 dx12::CommandPool *command_pool);
+                    ComPtr<ID3D12GraphicsCommandList> command_list);
 
     void UpdateConstantBuffers();
     void UpdateWorldRow(const Matrix &worldRow);

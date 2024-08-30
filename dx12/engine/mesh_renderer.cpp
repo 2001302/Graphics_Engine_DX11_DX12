@@ -4,13 +4,13 @@ namespace core {
 
 MeshRenderer::MeshRenderer(const std::string &basePath,
                            const std::string &filename,
-                           dx12::CommandPool *command_pool) {
-    Initialize(basePath, filename, command_pool);
+                           ComPtr<ID3D12GraphicsCommandList> command_list) {
+    Initialize(basePath, filename, command_list);
 }
 
 MeshRenderer::MeshRenderer(const std::vector<MeshData> &meshes,
-                           dx12::CommandPool *command_pool) {
-    Initialize(meshes, command_pool);
+                           ComPtr<ID3D12GraphicsCommandList> command_list) {
+    Initialize(meshes, command_list);
 }
 
 void MeshRenderer::Initialize() {
@@ -22,56 +22,43 @@ void MeshRenderer::Initialize() {
 
 void MeshRenderer::Initialize(const std::string &basePath,
                               const std::string &filename,
-                              dx12::CommandPool *command_pool) {
+                              ComPtr<ID3D12GraphicsCommandList> command_list) {
     auto meshes = GeometryGenerator::ReadFromFile(basePath, filename);
-    Initialize(meshes, command_pool);
+    Initialize(meshes, command_list);
 }
 
 void MeshRenderer::Initialize(const vector<MeshData> &meshes,
-                              dx12::CommandPool *command_pool) {
-
-    mesh_consts.GetCpu().world = Matrix();
-    mesh_consts.Initialize();
-    material_consts.Initialize();
+                              ComPtr<ID3D12GraphicsCommandList> command_list) {
 
     this->meshes.resize(meshes.size());
     for (int i = 0; i < meshes.size(); i++) {
 
         MeshData meshData = meshes[i];
         this->meshes[i] = std::make_shared<Mesh>();
-        this->meshes[i]->Initialize(meshData, command_pool);
+        this->meshes[i]->Initialize(meshData, command_list);
 
-        SetConstant(meshData, this->meshes[i], command_pool);
-    }
-}
+        material_consts.GetCpu().useAlbedoMap =
+            this->meshes[i]->albedo_texture->is_initialized;
+        
+        material_consts.GetCpu().useNormalMap =
+            this->meshes[i]->normal_texture->is_initialized;
 
-void MeshRenderer::SetConstant(const MeshData &meshData,
-                                   shared_ptr<Mesh> &mesh,
-                                   dx12::CommandPool *command_pool) {
-    // constant buffer
-    if (!meshData.albedoTextureFilename.empty()) {
-        material_consts.GetCpu().useAlbedoMap = true;
+        material_consts.GetCpu().useEmissiveMap =
+            this->meshes[i]->emissive_texture->is_initialized;
+
+        material_consts.GetCpu().useMetallicMap =
+            this->meshes[i]->metallic_roughness_texture->is_initialized;
+
+        material_consts.GetCpu().useRoughnessMap =
+            this->meshes[i]->metallic_roughness_texture->is_initialized;
+
+        mesh_consts.GetCpu().useHeightMap =
+            this->meshes[i]->height_texture->is_initialized;
+
+        mesh_consts.GetCpu().world = Matrix();
+        mesh_consts.Initialize();
+        material_consts.Initialize();
     }
-    if (!meshData.normalTextureFilename.empty()) {
-        material_consts.GetCpu().useNormalMap = true;
-    }
-    if (!meshData.aoTextureFilename.empty()) {
-        material_consts.GetCpu().useAOMap = true;
-    }
-    if (!meshData.emissiveTextureFilename.empty()) {
-        material_consts.GetCpu().useEmissiveMap = true;
-    }
-    if (!meshData.metallicTextureFilename.empty()) {
-        material_consts.GetCpu().useMetallicMap = true;
-    }
-    if (!meshData.roughnessTextureFilename.empty()) {
-        material_consts.GetCpu().useRoughnessMap = true;
-    }
-    if (!meshData.heightTextureFilename.empty()) {
-        mesh_consts.GetCpu().useHeightMap = true;
-    }
-    mesh->mesh_consts_GPU = mesh_consts.Get();
-    mesh->material_consts_GPU = material_consts.Get();
 }
 
 void MeshRenderer::UpdateConstantBuffers() {

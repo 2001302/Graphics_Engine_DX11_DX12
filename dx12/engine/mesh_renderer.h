@@ -22,7 +22,8 @@ class MeshRenderer : public Component {
     void Initialize(const std::string &basePath, const std::string &filename,
                     ComPtr<ID3D12GraphicsCommandList> command_list);
     void Initialize(const std::vector<MeshData> &meshes,
-                    ComPtr<ID3D12GraphicsCommandList> command_list);
+                    ComPtr<ID3D12GraphicsCommandList> command_list,
+                    bool use_texture = true);
 
     void UpdateConstantBuffers();
     void UpdateWorldRow(const Matrix &worldRow);

@@ -7,6 +7,7 @@
 #include "light_node.h"
 #include "shared_resource_node.h"
 #include "tone_mapping_node.h"
+#include "skybox_node.h"
 
 namespace core {
 
@@ -23,6 +24,7 @@ auto resolve_buffer = std::make_shared<ResolveBuffer>();
 auto tone_mapping = std::make_shared<ToneMappingNodeInvoker>();
 auto begin_init = std::make_shared<BeginInitNode>();
 auto end_init = std::make_shared<EndInitNode>();
+auto skybox_node = std::make_shared<SkyBoxNodeInvoker>();
 
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
@@ -49,6 +51,7 @@ bool Engine::Start() {
         ->Excute(game_object_node)
         ->Excute(tone_mapping)
         ->Excute(gui_node)
+        ->Excute(skybox_node)
         ->Excute(end_init)
     ->Close()
     ->Run();
@@ -80,6 +83,7 @@ bool Engine::Start() {
     ->Sequence()
         ->Excute(begin_render)
         ->Excute(game_object_node)
+        ->Excute(skybox_node)
         ->Excute(resolve_buffer)
         ->Excute(tone_mapping)
         ->Excute(gui_node)

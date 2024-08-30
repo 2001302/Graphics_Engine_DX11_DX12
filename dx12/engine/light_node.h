@@ -19,24 +19,24 @@ class LightNodeInvoker : public foundation::BehaviorActionNode {
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
             {
-                condition->global_consts_CPU.lights[0].radiance = Vector3(5.0f);
-                condition->global_consts_CPU.lights[0].position =
+                condition->global_consts.GetCpu().lights[0].radiance = Vector3(5.0f);
+                condition->global_consts.GetCpu().lights[0].position =
                     Vector3(0.0f, 1.5f, 1.1f);
-                condition->global_consts_CPU.lights[0].direction =
+                condition->global_consts.GetCpu().lights[0].direction =
                     Vector3(0.0f, -1.0f, 0.0f);
-                condition->global_consts_CPU.lights[0].spotPower = 3.0f;
-                condition->global_consts_CPU.lights[0].radius = 0.02f;
-                condition->global_consts_CPU.lights[0].type =
+                condition->global_consts.GetCpu().lights[0].spotPower = 3.0f;
+                condition->global_consts.GetCpu().lights[0].radius = 0.02f;
+                condition->global_consts.GetCpu().lights[0].type =
                     LIGHT_SPOT | LIGHT_SHADOW; // Point with shadow
 
-                condition->global_consts_CPU.lights[1].radiance = Vector3(5.0f);
-                condition->global_consts_CPU.lights[1].spotPower = 3.0f;
-                condition->global_consts_CPU.lights[1].fallOffEnd = 20.0f;
-                condition->global_consts_CPU.lights[1].radius = 0.02f;
-                condition->global_consts_CPU.lights[1].type =
+                condition->global_consts.GetCpu().lights[1].radiance = Vector3(5.0f);
+                condition->global_consts.GetCpu().lights[1].spotPower = 3.0f;
+                condition->global_consts.GetCpu().lights[1].fallOffEnd = 20.0f;
+                condition->global_consts.GetCpu().lights[1].radius = 0.02f;
+                condition->global_consts.GetCpu().lights[1].type =
                     LIGHT_SPOT | LIGHT_SHADOW; // Point with shadow
 
-                condition->global_consts_CPU.lights[2].type = LIGHT_OFF;
+                condition->global_consts.GetCpu().lights[2].type = LIGHT_OFF;
             }
 
             //{
@@ -48,7 +48,7 @@ class LightNodeInvoker : public foundation::BehaviorActionNode {
             //            std::make_shared<MeshRenderer>(std::vector{sphere});
 
             //        renderer->UpdateWorldRow(Matrix::CreateTranslation(
-            //            condition->global_consts_CPU.lights[i].position));
+            //            condition->global_consts.GetCpu().lights[i].position));
             //        renderer->material_consts.GetCpu().albedoFactor =
             //            Vector3(0.0f);
             //        renderer->material_consts.GetCpu().emissionFactor =
@@ -56,7 +56,7 @@ class LightNodeInvoker : public foundation::BehaviorActionNode {
             //        renderer->cast_shadow =
             //            false; 
 
-            //        if (condition->global_consts_CPU.lights[i].type == 0)
+            //        if (condition->global_consts.GetCpu().lights[i].type == 0)
             //            renderer->is_visible = false;
 
             //        light_spheres[i] = std::make_shared<Model>();
@@ -76,12 +76,12 @@ class LightNodeInvoker : public foundation::BehaviorActionNode {
                 lightDev = Vector3::Transform(
                     lightDev, Matrix::CreateRotationY(dt * 3.141592f * 0.5f));
             }
-            condition->global_consts_CPU.lights[1].position =
+            condition->global_consts.GetCpu().lights[1].position =
                 Vector3(0.0f, 1.1f, 2.0f) + lightDev;
             Vector3 focusPosition = Vector3(0.0f, -0.5f, 1.7f);
-            condition->global_consts_CPU.lights[1].direction =
-                focusPosition - condition->global_consts_CPU.lights[1].position;
-            condition->global_consts_CPU.lights[1].direction.Normalize();
+            condition->global_consts.GetCpu().lights[1].direction =
+                focusPosition - condition->global_consts.GetCpu().lights[1].position;
+            condition->global_consts.GetCpu().lights[1].direction.Normalize();
 
             // for (int i = 0; i < MAX_LIGHTS; i++) {
             //     auto renderer = (MeshRenderer
@@ -91,9 +91,9 @@ class LightNodeInvoker : public foundation::BehaviorActionNode {
             //    renderer->UpdateWorldRow(
             //        Matrix::CreateScale((std::max)(
             //            0.01f,
-            //            condition->global_consts_CPU.lights[i].radius)) *
+            //            condition->global_consts.GetCpu().lights[i].radius)) *
             //        Matrix::CreateTranslation(
-            //            condition->global_consts_CPU.lights[i].position));
+            //            condition->global_consts.GetCpu().lights[i].position));
             //}
 
             // for (auto &i : light_spheres) {

@@ -22,7 +22,7 @@ enum EnumStageType {
 class RenderCondition : public foundation::IInfo {
   public:
     RenderCondition()
-        : global_consts_GPU(0), sampler_heap(0), dt(0.0f), draw_wire(false),
+        : sampler_heap(0), dt(0.0f), draw_wire(false),
           light_rotate(false), stage_type(EnumStageType::eInitialize) {
         input = std::make_unique<foundation::Input>();
         gui = std::make_shared<foundation::SettingUi>();
@@ -32,14 +32,9 @@ class RenderCondition : public foundation::IInfo {
     std::shared_ptr<foundation::SettingUi> gui;
     std::shared_ptr<dx12::CommandPool> command_pool;
 
-    GlobalConstants global_consts_CPU;
-    ComPtr<ID3D12Resource> global_consts_GPU;
+    ConstantBuffer<GlobalConstants> global_consts;
     ComPtr<ID3D12DescriptorHeap> sampler_heap;
-
-    ComPtr<ID3D12Resource> env_SRV;
-    ComPtr<ID3D12Resource> irradiance_SRV;
-    ComPtr<ID3D12Resource> specular_SRV;
-    ComPtr<ID3D12Resource> brdf_SRV;
+    ComPtr<ID3D12DescriptorHeap> skybox_heap;
 
     float dt;
     bool draw_wire;

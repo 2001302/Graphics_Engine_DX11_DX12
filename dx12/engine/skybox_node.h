@@ -25,9 +25,8 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
             auto mesh_data = GeometryGenerator::MakeBox(40.0f);
             std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
 
-            auto renderer =
-                std::make_shared<MeshRenderer>(std::vector{mesh_data});
-            renderer->Initialize(std::vector{mesh_data}, command_list);
+            auto renderer = std::make_shared<MeshRenderer>();
+            renderer->Initialize(std::vector{mesh_data}, command_list, false);
 
             skybox = std::make_shared<Model>();
             skybox->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -39,12 +38,10 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
                 L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
             auto brdf_name = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-            Texture::InitAsDDSTexture(*env_name, true, condition->env_SRV);
-            Texture::InitAsDDSTexture(*specular_name, true,
-                                      condition->irradiance_SRV);
-            Texture::InitAsDDSTexture(*irradiance_name, true,
-                                      condition->specular_SRV);
-            Texture::InitAsDDSTexture(*brdf_name, true, condition->brdf_SRV);
+            env_SRV = Texture::InitAsDDSTexture(env_name, true);
+            irradiance_SRV = Texture::InitAsDDSTexture(specular_name, true);
+            specular_SRV = Texture::InitAsDDSTexture(irradiance_name, true);
+            brdf_SRV = Texture::InitAsDDSTexture(brdf_name, true);
 
             skyboxPSO = std::make_shared<dx12::SkyboxPSO>();
             skyboxPSO->Initialize();
@@ -67,6 +64,10 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
 
     std::shared_ptr<dx12::SkyboxPSO> skyboxPSO;
     std::shared_ptr<Model> skybox;
+    ComPtr<ID3D12Resource> env_SRV;
+    ComPtr<ID3D12Resource> irradiance_SRV;
+    ComPtr<ID3D12Resource> specular_SRV;
+    ComPtr<ID3D12Resource> brdf_SRV;
 };
 } // namespace core
 

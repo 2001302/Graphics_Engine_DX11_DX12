@@ -4,7 +4,6 @@
 #include <DirectXTexEXR.h>
 #include <algorithm>
 #include <directxtk12/DDSTextureLoader.h>
-#include <directxtk12/ResourceUploadBatch.h>
 #include <dxgi.h>    // DXGIFactory
 #include <dxgi1_4.h> // DXGIFactory4
 #include <fp16.h>
@@ -13,19 +12,18 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 
-using namespace DirectX;
-
 namespace core {
 void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
                   int &width, int &height, DXGI_FORMAT &pixelFormat) {
 
     const std::wstring wFilename(filename.begin(), filename.end());
 
-    TexMetadata metadata;
+    DirectX::TexMetadata metadata;
     dx12::ThrowIfFailed(GetMetadataFromEXRFile(wFilename.c_str(), metadata));
 
-    ScratchImage scratchImage;
-    dx12::ThrowIfFailed(LoadFromEXRFile(wFilename.c_str(), NULL, scratchImage));
+    DirectX::ScratchImage scratchImage;
+    dx12::ThrowIfFailed(
+        DirectX::LoadFromEXRFile(wFilename.c_str(), NULL, scratchImage));
 
     width = static_cast<int>(metadata.width);
     height = static_cast<int>(metadata.height);
@@ -266,19 +264,16 @@ bool Texture::InitAsMetallicRoughnessTexture(
     return is_initialized;
 }
 
-bool Texture::InitAsDDSTexture(const wchar_t file_name, bool isCubeMap,
-                               ComPtr<ID3D12Resource> texture) {
-    ResourceUploadBatch upload(dx12::GpuCore::Instance().device.Get());
-
+ID3D12Resource *Texture::InitAsDDSTexture(const wchar_t *file_name,
+                                          bool isCubeMap) {
+    ID3D12Resource *texture;
+    DirectX::ResourceUploadBatch upload(dx12::GpuCore::Instance().device.Get());
     upload.Begin();
-
-    CreateDDSTextureFromFile(dx12::GpuCore::Instance().device.Get(), upload,
-                             &file_name, texture.ReleaseAndGetAddressOf(),
-                             isCubeMap);
-
+    DirectX::CreateDDSTextureFromFile(dx12::GpuCore::Instance().device.Get(),
+                                      upload, file_name, &texture, false,
+                                      isCubeMap);
     auto finished = upload.End(dx12::GpuCore::Instance().command_queue.Get());
     finished.wait();
-
-    return true;
+    return texture;
 }
 } // namespace core

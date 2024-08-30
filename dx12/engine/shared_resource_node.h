@@ -19,8 +19,7 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
-            dx12::Util::CreateConstBuffer(condition->global_consts_CPU,
-                                          condition->global_consts_GPU);
+            condition->global_consts.Initialize();
 
             // s0~s6
             std::vector<D3D12_SAMPLER_DESC> sampleStates;
@@ -63,19 +62,19 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
             const Matrix viewRow = target->camera->GetView();
             const Matrix projRow = target->camera->GetProjection();
 
-            condition->global_consts_CPU.eyeWorld = eyeWorld;
-            condition->global_consts_CPU.view = viewRow.Transpose();
-            condition->global_consts_CPU.proj = projRow.Transpose();
-            condition->global_consts_CPU.invProj = projRow.Invert().Transpose();
-            condition->global_consts_CPU.viewProj =
+            condition->global_consts.GetCpu().eyeWorld = eyeWorld;
+            condition->global_consts.GetCpu().view = viewRow.Transpose();
+            condition->global_consts.GetCpu().proj = projRow.Transpose();
+            condition->global_consts.GetCpu().invProj =
+                projRow.Invert().Transpose();
+            condition->global_consts.GetCpu().viewProj =
                 (viewRow * projRow).Transpose();
 
             // used to shadow rendering
-            condition->global_consts_CPU.invViewProj =
-                condition->global_consts_CPU.viewProj.Invert();
+            condition->global_consts.GetCpu().invViewProj =
+                condition->global_consts.GetCpu().viewProj.Invert();
 
-            dx12::Util::UpdateBuffer(condition->global_consts_CPU,
-                                     condition->global_consts_GPU);
+            condition->global_consts.Upload();
 
             break;
         }

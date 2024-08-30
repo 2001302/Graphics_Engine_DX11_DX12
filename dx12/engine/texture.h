@@ -3,6 +3,7 @@
 
 #include "../graphics/graphics_util.h"
 #include "vertex.h"
+#include <directxtk12/ResourceUploadBatch.h>
 #include <filesystem>
 #include <iostream>
 
@@ -25,8 +26,8 @@ struct Texture {
     bool InitAsMetallicRoughnessTexture(
         const std::string metallicFilename, const std::string roughnessFilename,
         ComPtr<ID3D12GraphicsCommandList> command_list);
-    static bool InitAsDDSTexture(const wchar_t file_name, bool isCubeMap,
-                                 ComPtr<ID3D12Resource> texture);
+    static ID3D12Resource *InitAsDDSTexture(const wchar_t *file_name,
+                                            bool isCubeMap);
 
     std::shared_ptr<Image> image;
     ComPtr<ID3D12Resource> texture;

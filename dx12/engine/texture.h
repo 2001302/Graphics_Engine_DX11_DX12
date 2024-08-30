@@ -3,8 +3,8 @@
 
 #include "../graphics/graphics_util.h"
 #include "vertex.h"
-#include <iostream>
 #include <filesystem>
+#include <iostream>
 
 namespace core {
 struct Image {
@@ -25,6 +25,8 @@ struct Texture {
     bool InitAsMetallicRoughnessTexture(
         const std::string metallicFilename, const std::string roughnessFilename,
         ComPtr<ID3D12GraphicsCommandList> command_list);
+    static bool InitAsDDSTexture(const wchar_t file_name, bool isCubeMap,
+                                 ComPtr<ID3D12Resource> texture);
 
     std::shared_ptr<Image> image;
     ComPtr<ID3D12Resource> texture;

@@ -148,55 +148,6 @@ class Util {
         buffer->Unmap(0, nullptr);
     }
 
-    //static void CreateMetallicRoughnessTexture(
-    //    const std::string metallicFiilename,
-    //    const std::string roughnessFilename, ComPtr<ID3D12Resource> &texture,
-    //    ComPtr<ID3D12GraphicsCommandList> command_list);
-
-    // static void
-    // CreateDDSTexture(const wchar_t *filename, const bool isCubeMap,
-    //                  ComPtr<ID3D12GraphicsCommandList> &commandList);
-
-    // static void WriteToFile(
-    //    ComPtr<ID3D11Texture2D> &textureToWrite, const std::string filename);
-
-    // static void CreateUATexture(const int width, const int height,
-    //                             const DXGI_FORMAT pixelFormat,
-    //                             ComPtr<ID3D11Texture2D> &texture,
-    //                             ComPtr<ID3D11RenderTargetView> &rtv,
-    //                             ComPtr<ID3D11ShaderResourceView> &srv,
-    //                             ComPtr<ID3D11UnorderedAccessView> &uav);
-
-    // static void CreateTexture3D(const int width, const int height,
-    //                             const int depth, const DXGI_FORMAT
-    //                             pixelFormat, const std::vector<float>
-    //                             &initData, ComPtr<ID3D11Texture3D> &texture,
-    //                             ComPtr<ID3D11RenderTargetView> &rtv,
-    //                             ComPtr<ID3D11ShaderResourceView> &srv,
-    //                             ComPtr<ID3D11UnorderedAccessView> &uav);
-
-    // static ComPtr<ID3D11Texture3D>
-    // CreateStagingTexture3D(const int width, const int height, const int
-    // depth,const DXGI_FORMAT pixelFormat);
-
-    // static size_t GetPixelSize(DXGI_FORMAT pixelFormat);
-
-    // static void CreateStructuredBuffer(const UINT numElements,
-    //                                    const UINT sizeElement,
-    //                                    const void *initData,
-    //                                    ComPtr<ID3D11Buffer> &buffer,
-    //                                    ComPtr<ID3D11ShaderResourceView> &srv,
-    //                                    ComPtr<ID3D11UnorderedAccessView>
-    //                                    &uav);
-
-    // static void CreateStagingBuffer(const UINT numElements,
-    //                                 const UINT sizeElement,
-    //                                 const void *initData,
-    //                                 ComPtr<ID3D11Buffer> &buffer);
-
-    // static void CopyToStagingBuffer(ComPtr<ID3D11Buffer> &buffer, UINT size,
-    //                                 void *src);
-
     static void
     CreateVertexShader(ComPtr<ID3D12Device> &device, std::wstring filename,
                        ComPtr<ID3DBlob> &m_vertexShader,

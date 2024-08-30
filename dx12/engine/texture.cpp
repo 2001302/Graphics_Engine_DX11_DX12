@@ -3,7 +3,8 @@
 #include "texture.h"
 #include <DirectXTexEXR.h>
 #include <algorithm>
-#include <directxtk/DDSTextureLoader.h>
+#include <directxtk12/DDSTextureLoader.h>
+#include <directxtk12/ResourceUploadBatch.h>
 #include <dxgi.h>    // DXGIFactory
 #include <dxgi1_4.h> // DXGIFactory4
 #include <fp16.h>
@@ -265,4 +266,19 @@ bool Texture::InitAsMetallicRoughnessTexture(
     return is_initialized;
 }
 
+bool Texture::InitAsDDSTexture(const wchar_t file_name, bool isCubeMap,
+                               ComPtr<ID3D12Resource> texture) {
+    ResourceUploadBatch upload(dx12::GpuCore::Instance().device.Get());
+
+    upload.Begin();
+
+    CreateDDSTextureFromFile(dx12::GpuCore::Instance().device.Get(), upload,
+                             &file_name, texture.ReleaseAndGetAddressOf(),
+                             isCubeMap);
+
+    auto finished = upload.End(dx12::GpuCore::Instance().command_queue.Get());
+    finished.wait();
+
+    return true;
+}
 } // namespace core

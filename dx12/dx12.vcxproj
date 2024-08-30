@@ -187,6 +187,7 @@
     <ClInclude Include="engine\model.h" />
     <ClInclude Include="engine\model_loader.h" />
     <ClInclude Include="engine\shared_resource_node.h" />
+    <ClInclude Include="engine\skybox_node.h" />
     <ClInclude Include="engine\texture.h" />
     <ClInclude Include="engine\tone_mapping_node.h" />
     <ClInclude Include="foundation\action_node.h" />
@@ -226,6 +227,7 @@
     <ClInclude Include="graphics\graphics_util.h" />
     <ClInclude Include="graphics\command_pool.h" />
     <ClInclude Include="graphics\mesh_pso.h" />
+    <ClInclude Include="graphics\skybox_pso.h" />
     <ClInclude Include="graphics\tone_mapping_pso.h" />
   </ItemGroup>
   <ItemGroup>

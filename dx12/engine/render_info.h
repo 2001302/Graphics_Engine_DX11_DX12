@@ -36,6 +36,11 @@ class RenderCondition : public foundation::IInfo {
     ComPtr<ID3D12Resource> global_consts_GPU;
     ComPtr<ID3D12DescriptorHeap> sampler_heap;
 
+    ComPtr<ID3D12Resource> env_SRV;
+    ComPtr<ID3D12Resource> irradiance_SRV;
+    ComPtr<ID3D12Resource> specular_SRV;
+    ComPtr<ID3D12Resource> brdf_SRV;
+
     float dt;
     bool draw_wire;
     bool light_rotate;
@@ -46,7 +51,6 @@ class RenderTargetObject : public foundation::IInfo {
     RenderTargetObject() {}
     std::unique_ptr<Camera> camera;
     // std::shared_ptr<Ground> ground;
-    // std::shared_ptr<Skybox> skybox;
     // std::shared_ptr<Model> player;
     std::map<int /*id*/, std::shared_ptr<Model>> objects;
 

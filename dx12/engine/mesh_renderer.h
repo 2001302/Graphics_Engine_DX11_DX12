@@ -2,6 +2,7 @@
 #define _RENDERER
 
 #include "../foundation/node.h"
+#include "../graphics/mesh_pso.h"
 #include "component.h"
 #include "constant_buffer.h"
 #include "geometry_generator.h"
@@ -16,10 +17,6 @@ using Microsoft::WRL::ComPtr;
 class MeshRenderer : public Component {
   public:
     MeshRenderer() {}
-    MeshRenderer(const std::string &basePath, const std::string &filename,
-                 ComPtr<ID3D12GraphicsCommandList> command_list);
-    MeshRenderer(const std::vector<MeshData> &meshes,
-                 ComPtr<ID3D12GraphicsCommandList> command_list);
 
     virtual void Initialize();
     void Initialize(const std::string &basePath, const std::string &filename,
@@ -31,16 +28,13 @@ class MeshRenderer : public Component {
     void UpdateWorldRow(const Matrix &worldRow);
 
     virtual void Render(RenderCondition *render_condition,
-                        dx12::GraphicsPSO *PSO);
+                        dx12::SolidMeshPSO *PSO);
 
   public:
     Matrix world_row = Matrix();    // Model(Object) To World
     Matrix world_row_IT = Matrix(); // InverseTranspose
 
-    bool draw_normals = false;
     bool is_visible = true;
-    bool cast_shadow = true;
-    bool is_pickable = false;
 
     std::vector<std::shared_ptr<Mesh>> meshes;
 

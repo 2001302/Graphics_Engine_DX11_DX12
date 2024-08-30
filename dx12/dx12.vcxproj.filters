@@ -71,9 +71,6 @@
     <ClCompile Include="graphics\graphics_core.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\graphics_pso.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\graphics_util.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -103,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="engine\texture.cpp">
       <Filter>Engine\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\graphics_pso.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +147,9 @@
     </Filter>
     <Filter Include="Engine\Util">
       <UniqueIdentifier>{773513c6-08ce-4dd1-8d1c-08ee20f6b365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\PSO">
+      <UniqueIdentifier>{acfa4192-465e-4e10-aaf4-6afa55bd798b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -243,9 +246,6 @@
     <ClInclude Include="graphics\graphics_core.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\graphics_pso.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\graphics_util.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -320,6 +320,12 @@
     </ClInclude>
     <ClInclude Include="engine\texture.h">
       <Filter>Engine\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics_pso.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\mesh_pso.h">
+      <Filter>Graphics\PSO</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

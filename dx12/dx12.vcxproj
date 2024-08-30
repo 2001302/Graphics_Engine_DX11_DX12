@@ -225,6 +225,7 @@
     <ClInclude Include="graphics\graphics_pso.h" />
     <ClInclude Include="graphics\graphics_util.h" />
     <ClInclude Include="graphics\command_pool.h" />
+    <ClInclude Include="graphics\mesh_pso.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="foundation\ImGui\NodeEditor\imgui_bezier_math.inl" />

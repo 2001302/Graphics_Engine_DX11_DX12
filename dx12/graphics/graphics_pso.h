@@ -8,6 +8,7 @@ namespace dx12 {
 class PSO {
   public:
     PSO() : root_signature(nullptr), pipeline_state(nullptr) {}
+    virtual void Initialize(){};
 
     ID3D12RootSignature *root_signature;
     ID3D12PipelineState *pipeline_state;

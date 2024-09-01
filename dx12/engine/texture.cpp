@@ -264,8 +264,8 @@ bool Texture::InitAsMetallicRoughnessTexture(
     return is_initialized;
 }
 
-ID3D12Resource *Texture::InitAsDDSTexture(const wchar_t *file_name,
-                                          bool isCubeMap) {
+ID3D12Resource *Texture::InitAsDDSTexture(const wchar_t *file_name, bool isCubeMap,
+                          ComPtr<ID3D12GraphicsCommandList> command_list) {
     ID3D12Resource *texture;
     DirectX::ResourceUploadBatch upload(dx12::GpuCore::Instance().device.Get());
     upload.Begin();
@@ -274,6 +274,13 @@ ID3D12Resource *Texture::InitAsDDSTexture(const wchar_t *file_name,
                                       isCubeMap);
     auto finished = upload.End(dx12::GpuCore::Instance().command_queue.Get());
     finished.wait();
+
+    auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+        texture, D3D12_RESOURCE_STATE_COPY_DEST,
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
+            D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+    command_list->ResourceBarrier(1, &barrier);
+
     return texture;
 }
 } // namespace core

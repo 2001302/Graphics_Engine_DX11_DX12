@@ -26,8 +26,8 @@ struct Texture {
     bool InitAsMetallicRoughnessTexture(
         const std::string metallicFilename, const std::string roughnessFilename,
         ComPtr<ID3D12GraphicsCommandList> command_list);
-    static ID3D12Resource *InitAsDDSTexture(const wchar_t *file_name,
-                                            bool isCubeMap);
+    static ID3D12Resource *InitAsDDSTexture(const wchar_t *file_name, bool isCubeMap,
+                     ComPtr<ID3D12GraphicsCommandList> command_list);
 
     std::shared_ptr<Image> image;
     ComPtr<ID3D12Resource> texture;

@@ -79,6 +79,7 @@ class SkyboxPSO : public GraphicsPSO {
     };
     void Render(ComPtr<ID3D12GraphicsCommandList> command_list,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE render_target_view,
+                CD3DX12_CPU_DESCRIPTOR_HANDLE depth_stencil_view,
                 ComPtr<ID3D12DescriptorHeap> skybox,
                 ComPtr<ID3D12DescriptorHeap> samplers,
                 ComPtr<ID3D12Resource> global_consts,
@@ -99,7 +100,7 @@ class SkyboxPSO : public GraphicsPSO {
         command_list->RSSetScissorRects(1,
                                         &dx12::GpuCore::Instance().scissorRect);
         command_list->OMSetRenderTargets(1, &render_target_view, false,
-                                         nullptr);
+                                         &depth_stencil_view);
         command_list->SetGraphicsRootSignature(root_signature);
         command_list->SetPipelineState(pipeline_state);
         command_list->SetDescriptorHeaps(_countof(descriptor_heap),

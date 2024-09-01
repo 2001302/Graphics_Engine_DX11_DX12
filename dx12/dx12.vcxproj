@@ -226,6 +226,7 @@
     <ClInclude Include="graphics\graphics_pso.h" />
     <ClInclude Include="graphics\graphics_util.h" />
     <ClInclude Include="graphics\command_pool.h" />
+    <ClInclude Include="graphics\descriptor_heap_stack.h" />
     <ClInclude Include="graphics\mesh_pso.h" />
     <ClInclude Include="graphics\skybox_pso.h" />
     <ClInclude Include="graphics\tone_mapping_pso.h" />

@@ -54,9 +54,9 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
 
             dx12::ThrowIfFailed(
                 dx12::GpuCore::Instance().device->CreateDescriptorHeap(
-                    &desc, IID_PPV_ARGS(&condition->skybox_heap)));
+                    &desc, IID_PPV_ARGS(&condition->cbv_srv_uav_heap)));
             CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
-                condition->skybox_heap->GetCPUDescriptorHandleForHeapStart());
+                condition->cbv_srv_uav_heap->GetCPUDescriptorHandleForHeapStart());
 
             UINT descriptor_size =
                 dx12::GpuCore::Instance()
@@ -138,7 +138,7 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
             skyboxPSO->Render(
                 command_list, dx12::GpuCore::Instance().GetHandleHDR(),
                 dx12::GpuCore::Instance().GetHandleDSV(),
-                condition->skybox_heap, condition->sampler_heap,
+                condition->cbv_srv_uav_heap, condition->sampler_heap,
                 condition->global_consts.Get(), renderer->mesh_consts.Get(),
                 renderer->material_consts.Get(), mesh->vertex_buffer_view,
                 mesh->index_buffer_view, mesh->index_count);

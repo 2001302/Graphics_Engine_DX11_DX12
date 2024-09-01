@@ -71,7 +71,7 @@ void MeshRenderer::Render(RenderCondition *render_condition,
         for (const auto &mesh : meshes) {
             PSO->Render(command_list, dx12::GpuCore::Instance().GetHandleHDR(),
                         dx12::GpuCore::Instance().GetHandleDSV(), mesh->heap_PS,
-                        mesh->heap_VS, render_condition->skybox_heap,
+                        mesh->heap_VS, render_condition->cbv_srv_uav_heap,
                         render_condition->sampler_heap,
                         render_condition->global_consts.Get(),
                         mesh_consts.Get(), material_consts.Get(),

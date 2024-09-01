@@ -33,8 +33,9 @@ class RenderCondition : public foundation::IInfo {
     std::shared_ptr<dx12::CommandPool> command_pool;
 
     ConstantBuffer<GlobalConstants> global_consts;
+
     ComPtr<ID3D12DescriptorHeap> sampler_heap;
-    ComPtr<ID3D12DescriptorHeap> skybox_heap;
+    ComPtr<ID3D12DescriptorHeap> cbv_srv_uav_heap;
 
     float dt;
     bool draw_wire;

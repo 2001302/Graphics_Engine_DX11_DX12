@@ -11,7 +11,7 @@ class SolidMeshPSO : public GraphicsPSO {
         // rootSignature
         // s0 ~ s6
         CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
-        samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 6, 0);
+        samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
 
         // t10 ~ t16
         CD3DX12_DESCRIPTOR_RANGE1 textureRange;
@@ -115,7 +115,7 @@ class SolidMeshPSO : public GraphicsPSO {
         command_list->SetPipelineState(pipeline_state);
         command_list->SetDescriptorHeaps(_countof(descriptor_heaps),
                                          descriptor_heaps);
-
+        
         command_list->SetGraphicsRootDescriptorTable(
             0, samplers->GetGPUDescriptorHandleForHeapStart());
         // global texture

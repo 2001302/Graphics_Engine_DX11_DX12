@@ -277,8 +277,7 @@ ID3D12Resource *Texture::InitAsDDSTexture(const wchar_t *file_name, bool isCubeM
 
     auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
         texture, D3D12_RESOURCE_STATE_COPY_DEST,
-        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
-            D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
+        D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
     command_list->ResourceBarrier(1, &barrier);
 
     return texture;

@@ -336,6 +336,9 @@
     <ClInclude Include="graphics\skybox_pso.h">
       <Filter>Graphics\PSO</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\descriptor_heap_stack.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="foundation\ImGui\NodeEditor\imgui_bezier_math.inl">

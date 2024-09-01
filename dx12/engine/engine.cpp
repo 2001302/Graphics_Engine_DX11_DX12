@@ -75,7 +75,7 @@ bool Engine::Start() {
         ->Excute(camera_node)
         ->Excute(light_node)
         ->Excute(shared_resource_node)
-        ->Excute(game_object_node)
+        //->Excute(game_object_node)
     ->Close();
      
     //render
@@ -83,7 +83,7 @@ bool Engine::Start() {
     ->Sequence()
         ->Excute(begin_render)
         ->Excute(skybox_node)
-        ->Excute(game_object_node)
+        //->Excute(game_object_node)
         ->Excute(resolve_buffer)
         ->Excute(tone_mapping)
         ->Excute(gui_node)

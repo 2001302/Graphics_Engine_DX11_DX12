@@ -19,8 +19,7 @@ class GpuInitializeNode : public foundation::BehaviorActionNode {
 };
 
 class BeginInitNode : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override 
-    {
+    foundation::EnumBehaviorTreeStatus OnInvoke() override {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
@@ -30,8 +29,7 @@ class BeginInitNode : public foundation::BehaviorActionNode {
 };
 
 class EndInitNode : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override 
-    {
+    foundation::EnumBehaviorTreeStatus OnInvoke() override {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
@@ -92,6 +90,13 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
                 .heap_DSV->GetCPUDescriptorHandleForHeapStart());
         command_list->ClearDepthStencilView(dsvHandle, D3D12_CLEAR_FLAG_DEPTH,
                                             1.0f, 0, 0, nullptr);
+
+        ID3D12DescriptorHeap *descriptorHeaps[] = {
+            black_board->conditions->global_sampler_heap.Get(),
+            &black_board->conditions->global_heap->GetDescriptorHeap()};
+
+        black_board->conditions->command_pool->Get(0)->SetDescriptorHeaps(
+            _countof(descriptorHeaps), descriptorHeaps);
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }

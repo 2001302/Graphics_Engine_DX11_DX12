@@ -69,14 +69,14 @@ void MeshRenderer::Render(RenderCondition *render_condition,
 
         auto command_list = render_condition->command_pool->Get(0);
         for (const auto &mesh : meshes) {
-            PSO->Render(command_list, dx12::GpuCore::Instance().GetHandleHDR(),
-                        dx12::GpuCore::Instance().GetHandleDSV(), mesh->heap_PS,
-                        mesh->heap_VS, render_condition->cbv_srv_uav_heap,
-                        render_condition->sampler_heap,
-                        render_condition->global_consts.Get(),
-                        mesh_consts.Get(), material_consts.Get(),
-                        mesh->vertex_buffer_view, mesh->index_buffer_view,
-                        mesh->index_count);
+            //PSO->Render(command_list, dx12::GpuCore::Instance().GetHandleHDR(),
+            //            dx12::GpuCore::Instance().GetHandleDSV(), mesh->heap_PS,
+            //            mesh->heap_VS, render_condition->cbv_srv_uav_heap,
+            //            render_condition->sampler_heap,
+            //            render_condition->global_consts.Get(),
+            //            mesh_consts.Get(), material_consts.Get(),
+            //            mesh->vertex_buffer_view, mesh->index_buffer_view,
+            //            mesh->index_count);
         }
     }
 }

@@ -34,98 +34,45 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
             skybox = std::make_shared<Model>();
             skybox->AddComponent(EnumComponentType::eRenderer, renderer);
 
-            auto env_name = L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
-            auto specular_name =
-                L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
-            auto irradiance_name =
-                L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
-            auto brdf_name = L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
-
-            env_SRV = Texture::InitAsDDSTexture(env_name, true, command_list);
-            irradiance_SRV =
-                Texture::InitAsDDSTexture(specular_name, true, command_list);
-            specular_SRV =
-                Texture::InitAsDDSTexture(irradiance_name, true, command_list);
-            brdf_SRV = Texture::InitAsDDSTexture(brdf_name, true, command_list);
-
-            D3D12_DESCRIPTOR_HEAP_DESC desc = {
-                D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 7,
-                D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE};
-
-            dx12::ThrowIfFailed(
-                dx12::GpuCore::Instance().device->CreateDescriptorHeap(
-                    &desc, IID_PPV_ARGS(&condition->cbv_srv_uav_heap)));
-            CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
-                condition->cbv_srv_uav_heap->GetCPUDescriptorHandleForHeapStart());
-
-            UINT descriptor_size =
-                dx12::GpuCore::Instance()
-                    .device->GetDescriptorHandleIncrementSize(
-                        D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
-
-            // t10~t12
             {
-                auto resources = std::vector<ID3D12Resource *>{
-                    env_SRV.Get(), irradiance_SRV.Get(), specular_SRV.Get()};
+                auto env_name =
+                    L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
+                auto specular_name =
+                    L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
+                auto irradiance_name =
+                    L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
+                auto brdf_name =
+                    L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-                D3D12_SHADER_RESOURCE_VIEW_DESC desc_SRV = {
-                    DXGI_FORMAT_UNKNOWN, D3D12_SRV_DIMENSION_TEXTURECUBE,
-                    D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING};
-
-                for (auto resource : resources) {
-                    if (resource != nullptr) {
-                        desc_SRV.Format = resource->GetDesc().Format;
-                        desc_SRV.TextureCube.MipLevels =
-                            resource->GetDesc().MipLevels;
-                        desc_SRV.TextureCube.MostDetailedMip = 0;
-                        desc_SRV.TextureCube.ResourceMinLODClamp = 0;
-                    }
-
-                    dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                        resource, &desc_SRV, handle);
-                    handle.Offset(descriptor_size);
-                }
-            }
-            // t13
-            {
-                auto resources = std::vector<ID3D12Resource *>{brdf_SRV.Get()};
-
-                D3D12_SHADER_RESOURCE_VIEW_DESC desc_SRV = {
-                    DXGI_FORMAT_UNKNOWN, D3D12_SRV_DIMENSION_TEXTURE2D,
-                    D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING};
-
-                for (auto resource : resources) {
-                    if (resource != nullptr) {
-                        desc_SRV.Format = resource->GetDesc().Format;
-                        desc_SRV.Texture2D.MipLevels =
-                            resource->GetDesc().MipLevels;
-                    }
-
-                    dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                        resource, &desc_SRV, handle);
-                    handle.Offset(descriptor_size);
-                }
-            }
-            // t14~t16
-            {
-                D3D12_SHADER_RESOURCE_VIEW_DESC desc_SRV = {
-                    DXGI_FORMAT_UNKNOWN, D3D12_SRV_DIMENSION_TEXTURE2D,
-                    D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING};
+                env_SRV =
+                    Texture::InitAsDDSTexture(env_name, true, command_list);
+                irradiance_SRV = Texture::InitAsDDSTexture(specular_name, true,
+                                                           command_list);
+                specular_SRV = Texture::InitAsDDSTexture(irradiance_name, true,
+                                                         command_list);
+                brdf_SRV =
+                    Texture::InitAsDDSTexture(brdf_name, true, command_list);
 
                 for (int i = 0; i < MAX_LIGHTS; i++) {
                     MakeTexture(1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM,
                                 shadow_SRV[i]);
-                    if (shadow_SRV[i] != nullptr) {
-                        desc_SRV.Format = shadow_SRV[i]->GetDesc().Format;
-                        desc_SRV.Texture2D.MipLevels =
-                            shadow_SRV[i]->GetDesc().MipLevels;
-                    }
-
-                    dx12::GpuCore::Instance().device->CreateShaderResourceView(
-                        shadow_SRV[i].Get(), &desc_SRV, handle);
-                    handle.Offset(descriptor_size);
                 }
             }
+
+            auto start =
+                condition->global_heap->AllocateTextureCube(env_SRV.Get());
+            condition->global_heap->AllocateTextureCube(
+                irradiance_SRV.Get());
+            condition->global_heap->AllocateTextureCube(specular_SRV.Get());
+            condition->global_heap->AllocateTexture2D(brdf_SRV.Get());
+
+            for (int i = 0; i < MAX_LIGHTS; i++) {
+                condition->global_heap->AllocateTexture2D(
+                    shadow_SRV[i].Get());
+            }
+
+            condition->shared_texture =
+                std::make_shared<dx12::DescriptorHeapInfo>(start, 7);
 
             break;
         }
@@ -138,7 +85,8 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
             skyboxPSO->Render(
                 command_list, dx12::GpuCore::Instance().GetHandleHDR(),
                 dx12::GpuCore::Instance().GetHandleDSV(),
-                condition->cbv_srv_uav_heap, condition->sampler_heap,
+                condition->global_heap.get(),
+                condition->shared_texture.get(), condition->global_sampler_heap,
                 condition->global_consts.Get(), renderer->mesh_consts.Get(),
                 renderer->material_consts.Get(), mesh->vertex_buffer_view,
                 mesh->index_buffer_view, mesh->index_count);

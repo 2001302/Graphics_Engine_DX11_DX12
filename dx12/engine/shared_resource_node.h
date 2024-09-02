@@ -21,7 +21,7 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
 
             condition->global_consts.Initialize();
 
-            // s0~s6
+            // sampler : s0~s6
             std::vector<D3D12_SAMPLER_DESC> sampleStates;
             sampleStates.push_back(dx12::sampler::linearWrapSS);
             sampleStates.push_back(dx12::sampler::linearClampSS);
@@ -38,10 +38,12 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
 
             dx12::ThrowIfFailed(
                 dx12::GpuCore::Instance().device->CreateDescriptorHeap(
-                    &samplerHeapDesc, IID_PPV_ARGS(&condition->sampler_heap)));
+                    &samplerHeapDesc,
+                    IID_PPV_ARGS(&condition->global_sampler_heap)));
 
             CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
-                condition->sampler_heap->GetCPUDescriptorHandleForHeapStart());
+                condition->global_sampler_heap
+                    ->GetCPUDescriptorHandleForHeapStart());
             UINT incrementSize = dx12::GpuCore::Instance()
                                      .device->GetDescriptorHandleIncrementSize(
                                          D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
@@ -51,6 +53,11 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
                     &sampleStates[i], handle);
                 handle.Offset(incrementSize);
             }
+
+            // descriptor heap
+            condition->global_heap =
+                std::make_shared<dx12::DescriptorHeapStack>(
+                    1024, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 0);
 
             break;
         }

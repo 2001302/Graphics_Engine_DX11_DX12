@@ -5,6 +5,7 @@
 #include "../foundation/info.h"
 #include "../graphics/command_pool.h"
 #include "../graphics/graphics_util.h"
+#include "../graphics/descriptor_heap_stack.h"
 #include "input.h"
 #include "camera.h"
 #include "constant_buffer.h"
@@ -22,7 +23,7 @@ enum EnumStageType {
 class RenderCondition : public foundation::IInfo {
   public:
     RenderCondition()
-        : sampler_heap(0), dt(0.0f), draw_wire(false),
+        : global_sampler_heap(0), dt(0.0f), draw_wire(false),
           light_rotate(false), stage_type(EnumStageType::eInitialize) {
         input = std::make_unique<foundation::Input>();
         gui = std::make_shared<foundation::SettingUi>();
@@ -33,9 +34,10 @@ class RenderCondition : public foundation::IInfo {
     std::shared_ptr<dx12::CommandPool> command_pool;
 
     ConstantBuffer<GlobalConstants> global_consts;
+    std::shared_ptr<dx12::DescriptorHeapStack> global_heap;
+    ComPtr<ID3D12DescriptorHeap> global_sampler_heap;
 
-    ComPtr<ID3D12DescriptorHeap> sampler_heap;
-    ComPtr<ID3D12DescriptorHeap> cbv_srv_uav_heap;
+    std::shared_ptr<dx12::DescriptorHeapInfo> shared_texture; //t10~t16
 
     float dt;
     bool draw_wire;

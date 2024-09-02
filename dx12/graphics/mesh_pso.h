@@ -102,10 +102,6 @@ class SolidMeshPSO : public GraphicsPSO {
 
         command_list->ResourceBarrier(1, &barrier);
 
-        ID3D12DescriptorHeap *descriptor_heaps[] = {
-            samplers.Get(), 
-            textures_PS.Get()};
-
         command_list->RSSetViewports(1, &dx12::GpuCore::Instance().viewport);
         command_list->RSSetScissorRects(1,
                                         &dx12::GpuCore::Instance().scissorRect);
@@ -113,9 +109,7 @@ class SolidMeshPSO : public GraphicsPSO {
                                          &depth_stencil_view);
         command_list->SetGraphicsRootSignature(root_signature);
         command_list->SetPipelineState(pipeline_state);
-        command_list->SetDescriptorHeaps(_countof(descriptor_heaps),
-                                         descriptor_heaps);
-        
+
         command_list->SetGraphicsRootDescriptorTable(
             0, samplers->GetGPUDescriptorHandleForHeapStart());
         // global texture

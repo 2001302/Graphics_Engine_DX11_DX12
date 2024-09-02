@@ -80,7 +80,8 @@ class SkyboxPSO : public GraphicsPSO {
     void Render(ComPtr<ID3D12GraphicsCommandList> command_list,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE render_target_view,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE depth_stencil_view,
-                ComPtr<ID3D12DescriptorHeap> skybox,
+                DescriptorHeapStack* descriptor_heap,
+                DescriptorHeapInfo *shared_texture,
                 ComPtr<ID3D12DescriptorHeap> samplers,
                 ComPtr<ID3D12Resource> global_consts,
                 ComPtr<ID3D12Resource> mesh_consts,
@@ -93,9 +94,6 @@ class SkyboxPSO : public GraphicsPSO {
             D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET);
         command_list->ResourceBarrier(1, &barrier);
 
-        ID3D12DescriptorHeap *descriptor_heap[] = {samplers.Get(),
-                                                   skybox.Get()};
-
         command_list->RSSetViewports(1, &dx12::GpuCore::Instance().viewport);
         command_list->RSSetScissorRects(1,
                                         &dx12::GpuCore::Instance().scissorRect);
@@ -103,13 +101,11 @@ class SkyboxPSO : public GraphicsPSO {
                                          &depth_stencil_view);
         command_list->SetGraphicsRootSignature(root_signature);
         command_list->SetPipelineState(pipeline_state);
-        command_list->SetDescriptorHeaps(_countof(descriptor_heap),
-                                         descriptor_heap);
 
         command_list->SetGraphicsRootDescriptorTable(
             0, samplers->GetGPUDescriptorHandleForHeapStart());
         command_list->SetGraphicsRootDescriptorTable(
-            1, skybox->GetGPUDescriptorHandleForHeapStart());
+            1, descriptor_heap->GetGpuHandle(shared_texture->GetIndex()));
         // global texture
         command_list->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());

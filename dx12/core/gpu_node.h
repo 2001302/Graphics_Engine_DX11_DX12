@@ -92,7 +92,7 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
                                             1.0f, 0, 0, nullptr);
 
         ID3D12DescriptorHeap *descriptorHeaps[] = {
-            black_board->conditions->sampler_heap.Get(),
+            &black_board->conditions->gpu_heap->GetSamplerHeap(),
             &black_board->conditions->gpu_heap->GetDescriptorHeap()};
 
         black_board->conditions->command_pool->Get(0)->SetDescriptorHeaps(

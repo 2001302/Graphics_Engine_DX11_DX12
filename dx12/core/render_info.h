@@ -1,9 +1,7 @@
 #ifndef _RENDERINFO
 #define _RENDERINFO
 
-#include "foundation/setting_ui.h"
 #include "foundation/info.h"
-#include "foundation/input.h"
 #include "graphics/command_pool.h"
 #include "graphics/graphics_util.h"
 #include "graphics/gpu_heap.h"
@@ -12,8 +10,6 @@
 #include "graphics/texture_2d.h"
 #include "camera.h"
 #include "constant_buffer.h"
-// #include "ground.h"
-// #include "model.h"
 
 namespace core {
 enum EnumStageType {
@@ -25,27 +21,20 @@ enum EnumStageType {
 class RenderCondition : public foundation::IInfo {
   public:
     RenderCondition()
-        : sampler_heap(0), dt(0.0f), draw_wire(false),
+        : dt(0.0f), draw_wire(false),
           light_rotate(false), stage_type(EnumStageType::eInitialize) {
-        input = std::make_unique<foundation::Input>();
-        gui = std::make_shared<foundation::SettingUi>();
         command_pool = std::make_shared<dx12::CommandPool>();
     }
-    std::shared_ptr<foundation::Input> input;
-    std::shared_ptr<foundation::SettingUi> gui;
+
     std::shared_ptr<dx12::CommandPool> command_pool;
-
-    ConstantBuffer<GlobalConstants> global_consts;
-
     std::shared_ptr<dx12::GpuHeap> gpu_heap;
-    ComPtr<ID3D12DescriptorHeap> sampler_heap;
-
     std::shared_ptr<dx12::GpuBufferList> shared_texture; // t10~t16
 
     float dt;
     bool draw_wire;
     bool light_rotate;
     EnumStageType stage_type;
+    ConstantBuffer<GlobalConstants> global_consts;
 };
 class RenderTargetObject : public foundation::IInfo {
   public:

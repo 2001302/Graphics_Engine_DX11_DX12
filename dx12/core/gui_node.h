@@ -15,7 +15,7 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
         auto target = black_board->targets.get();
         auto condition = black_board->conditions.get();
 
-        auto gui = condition->gui;
+        auto gui = black_board->gui;
         auto command_pool = condition->command_pool;
 
         switch (condition->stage_type) {

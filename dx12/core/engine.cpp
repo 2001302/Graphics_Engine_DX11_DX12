@@ -6,8 +6,8 @@
 #include "gui_node.h"
 #include "light_node.h"
 #include "shared_resource_node.h"
-#include "tone_mapping_node.h"
 #include "skybox_node.h"
+#include "tone_mapping_node.h"
 
 namespace core {
 
@@ -121,12 +121,12 @@ bool Engine::Stop() {
             }
             black_board->targets->camera.reset();
         }
-        if (black_board->conditions->gui) {
-            black_board->conditions->gui->Shutdown();
-            black_board->conditions->gui.reset();
+        if (black_board->gui) {
+            black_board->gui->Shutdown();
+            black_board->gui.reset();
         }
-        if (black_board->conditions->input) {
-            black_board->conditions->input.reset();
+        if (black_board->input) {
+            black_board->input.reset();
         }
     }
 

@@ -54,8 +54,7 @@ class SkyboxPSO : public GraphicsPSO {
                                        L"core/graphics/SkyboxVS.hlsl",
                                        skyboxVS);
         dx12::Util::CreatePixelShader(dx12::GpuCore::Instance().device,
-                                      L"core/graphics/SkyboxPS.hlsl",
-                                      skyboxPS);
+                                      L"core/graphics/SkyboxPS.hlsl", skyboxPS);
         // pipeline state
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
@@ -80,8 +79,7 @@ class SkyboxPSO : public GraphicsPSO {
     void Render(ComPtr<ID3D12GraphicsCommandList> command_list,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE render_target_view,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE depth_stencil_view,
-                GpuHeap* descriptor_heap, GpuBufferList *shared_texture,
-                ComPtr<ID3D12DescriptorHeap> samplers,
+                GpuBufferList *shared_texture, GpuHeap *gpu_heap,
                 ComPtr<ID3D12Resource> global_consts,
                 ComPtr<ID3D12Resource> mesh_consts,
                 ComPtr<ID3D12Resource> material_consts,
@@ -101,10 +99,9 @@ class SkyboxPSO : public GraphicsPSO {
         command_list->SetGraphicsRootSignature(root_signature);
         command_list->SetPipelineState(pipeline_state);
 
+        command_list->SetGraphicsRootDescriptorTable(0, gpu_heap->GetSamplerGpuHandle());
         command_list->SetGraphicsRootDescriptorTable(
-            0, samplers->GetGPUDescriptorHandleForHeapStart());
-        command_list->SetGraphicsRootDescriptorTable(
-            1, descriptor_heap->GetGpuHandle(shared_texture->Index()));
+            1, shared_texture->GetGpuHandle());
         // global texture
         command_list->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());

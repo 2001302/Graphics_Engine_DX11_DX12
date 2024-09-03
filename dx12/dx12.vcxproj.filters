@@ -116,6 +116,9 @@
     <ClCompile Include="core\engine.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="core\graphics\gpu_heap.cpp">
+      <Filter>Graphics\Buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Foundation">

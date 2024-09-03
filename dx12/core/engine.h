@@ -1,11 +1,11 @@
 #ifndef _APPLICATION
 #define _APPLICATION
 
+#include "black_board.h"
+#include "foundation/behavior_tree_builder.h"
 #include "foundation/platform.h"
 #include "foundation/setting_ui.h"
-#include "foundation/behavior_tree_builder.h"
 #include "graphics/graphics_util.h"
-#include "black_board.h"
 #include "message_receiver.h"
 
 namespace core {
@@ -47,40 +47,35 @@ class Engine : public foundation::Platform {
 
         switch (umsg) {
         case WM_SIZE: {
-            return message_receiver->OnWindowSizeRequest(
-                black_board->conditions->gui.get(), int(LOWORD(lparam)),
-                int(HIWORD(lparam)));
+            return message_receiver->OnWindowSizeRequest(black_board->gui.get(),
+                                                         int(LOWORD(lparam)),
+                                                         int(HIWORD(lparam)));
             break;
         }
         case WM_MOUSEMOVE: {
             if (wparam & MK_RBUTTON) {
-                if (CheckIfMouseInViewport(
-                        black_board->conditions->gui.get(),
-                        LOWORD(lparam), HIWORD(lparam))) {
+                if (CheckIfMouseInViewport(black_board->gui.get(),
+                                           LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseRightDragRequest(
-                        black_board->targets.get(),
-                        black_board->conditions->input, LOWORD(lparam),
-                        HIWORD(lparam));
+                        black_board->targets.get(), black_board->input,
+                        LOWORD(lparam), HIWORD(lparam));
                 }
             }
             if (wparam & MK_MBUTTON) {
-                if (CheckIfMouseInViewport(
-                        black_board->conditions->gui.get(),
-                        LOWORD(lparam), HIWORD(lparam))) {
+                if (CheckIfMouseInViewport(black_board->gui.get(),
+                                           LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseWheelDragRequest(
-                        black_board->targets.get(),
-                        black_board->conditions->input, LOWORD(lparam),
-                        HIWORD(lparam));
+                        black_board->targets.get(), black_board->input,
+                        LOWORD(lparam), HIWORD(lparam));
                 }
             }
             break;
         }
         case WM_MOUSEWHEEL: {
-            if (CheckIfMouseInViewport(black_board->conditions->gui.get(),
-                                       LOWORD(lparam), HIWORD(lparam))) {
+            if (CheckIfMouseInViewport(black_board->gui.get(), LOWORD(lparam),
+                                       HIWORD(lparam))) {
                 return message_receiver->OnMouseWheelRequest(
-                    black_board->targets.get(),
-                    black_board->conditions->input,
+                    black_board->targets.get(), black_board->input,
                     GET_WHEEL_DELTA_WPARAM(wparam));
             }
             break;
@@ -89,8 +84,7 @@ class Engine : public foundation::Platform {
         case WM_LBUTTONDOWN:
         case WM_MBUTTONDOWN: {
             return message_receiver->OnMouseDownRequest(
-                black_board->conditions->input, LOWORD(lparam),
-                HIWORD(lparam));
+                black_board->input, LOWORD(lparam), HIWORD(lparam));
             break;
         }
         case WM_MODEL_LOAD: {
@@ -114,14 +108,14 @@ class Engine : public foundation::Platform {
             break;
         }
         case WM_KEYDOWN:
-            black_board->conditions->input->KeyPressed(wparam, true);
+            black_board->input->KeyPressed(wparam, true);
             if (wparam == VK_ESCAPE) {
                 Stop();
                 DestroyWindow(main_window);
             }
             break;
         case WM_KEYUP:
-            black_board->conditions->input->KeyPressed(wparam, false);
+            black_board->input->KeyPressed(wparam, false);
             break;
         case WM_DESTROY:
             ::PostQuitMessage(0);

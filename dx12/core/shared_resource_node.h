@@ -15,49 +15,39 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
 
         auto target = black_board->targets.get();
         auto condition = black_board->conditions.get();
+        auto command_list = condition->command_pool->Get(0);
 
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
+            // global constants
             condition->global_consts.Initialize();
 
-            // sampler : s0~s6
-            std::vector<D3D12_SAMPLER_DESC> sampleStates;
-            sampleStates.push_back(dx12::sampler::linearWrapSS);
-            sampleStates.push_back(dx12::sampler::linearClampSS);
-            sampleStates.push_back(dx12::sampler::shadowPointSS);
-            sampleStates.push_back(dx12::sampler::shadowCompareSS);
-            sampleStates.push_back(dx12::sampler::pointWrapSS);
-            sampleStates.push_back(dx12::sampler::linearMirrorSS);
-            sampleStates.push_back(dx12::sampler::pointClampSS);
-
-            D3D12_DESCRIPTOR_HEAP_DESC samplerHeapDesc = {};
-            samplerHeapDesc.NumDescriptors = (UINT)sampleStates.size();
-            samplerHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
-            samplerHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-
-            dx12::ThrowIfFailed(
-                dx12::GpuCore::Instance().device->CreateDescriptorHeap(
-                    &samplerHeapDesc,
-                    IID_PPV_ARGS(&condition->sampler_heap)));
-
-            CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
-                condition->sampler_heap
-                    ->GetCPUDescriptorHandleForHeapStart());
-            UINT incrementSize = dx12::GpuCore::Instance()
-                                     .device->GetDescriptorHandleIncrementSize(
-                                         D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
-
-            for (int i = 0; i < sampleStates.size(); ++i) {
-                dx12::GpuCore::Instance().device->CreateSampler(
-                    &sampleStates[i], handle);
-                handle.Offset(incrementSize);
-            }
-
             // descriptor heap
-            condition->gpu_heap =
-                std::make_shared<dx12::GpuHeap>(
-                    1024, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 0);
+            condition->gpu_heap = std::make_shared<dx12::GpuHeap>(
+                1024, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 0);
+
+            condition->shared_texture = std::make_shared<dx12::GpuBufferList>(
+                condition->gpu_heap.get());
+            condition->shared_texture->Add(std::make_shared<dx12::TextureCube>(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds",
+                command_list, true));
+            condition->shared_texture->Add(std::make_shared<dx12::TextureCube>(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds",
+                command_list, true));
+            condition->shared_texture->Add(std::make_shared<dx12::TextureCube>(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds",
+                command_list, true));
+            condition->shared_texture->Add(std::make_shared<dx12::TextureCube>(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds", command_list,
+                true, true));
+
+            for (int i = 0; i < MAX_LIGHTS; i++) {
+                condition->shared_texture->Add(
+                    std::make_shared<dx12::Texture2D>(
+                        1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM));
+            }
+            condition->shared_texture->Allocate();
 
             break;
         }

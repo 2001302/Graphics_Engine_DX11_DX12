@@ -1,8 +1,8 @@
 #ifndef _RENDERER_DRAW_NODE
 #define _RENDERER_DRAW_NODE
 
-#include "../foundation/behavior_tree_builder.h"
-#include "../graphics/command_pool.h"
+#include "foundation/behavior_tree_builder.h"
+#include "graphics/command_pool.h"
 #include "black_board.h"
 #include "mesh_renderer.h"
 

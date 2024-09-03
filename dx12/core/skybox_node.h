@@ -1,9 +1,9 @@
 #ifndef _SKYBOX_NODE
 #define _SKYBOX_NODE
 
-#include "../foundation/behavior_tree_builder.h"
-#include "../graphics/command_pool.h"
-#include "../graphics/skybox_pso.h"
+#include "foundation/behavior_tree_builder.h"
+#include "graphics/command_pool.h"
+#include "graphics/skybox_pso.h"
 #include "black_board.h"
 #include "mesh_renderer.h"
 

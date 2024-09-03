@@ -1,8 +1,8 @@
 #ifndef _MESH
 #define _MESH
 
-#include "../graphics/command_pool.h"
-#include "../graphics/graphics_util.h"
+#include "graphics/command_pool.h"
+#include "graphics/graphics_util.h"
 #include "texture.h"
 #include "vertex.h"
 

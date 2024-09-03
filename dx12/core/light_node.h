@@ -1,7 +1,7 @@
 #ifndef _LIGHTNODE
 #define _LIGHTNODE
 
-#include "../foundation/behavior_tree_builder.h"
+#include "foundation/behavior_tree_builder.h"
 #include "black_board.h"
 #include "mesh_renderer.h"
 

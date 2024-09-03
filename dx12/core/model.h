@@ -1,9 +1,9 @@
-﻿#ifndef _MODEL
+#ifndef _MODEL
 #define _MODEL
 
 #include "component.h"
-#include "../graphics/graphics_util.h"
-#include "../foundation/node.h"
+#include "graphics/graphics_util.h"
+#include "foundation/node.h"
 #include <unordered_map>
 
 namespace core {

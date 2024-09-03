@@ -1,23 +1,24 @@
-#ifndef _MESH_PSO
-#define _MESH_PSO
+#ifndef _SKYBOX_PSO
+#define _SKYBOX_PSO
 
 #include "graphics_pso.h"
 #include "graphics_util.h"
 
 namespace dx12 {
-class SolidMeshPSO : public GraphicsPSO {
+class SkyboxPSO : public GraphicsPSO {
   public:
     void Initialize() override {
         // rootSignature
         // s0 ~ s6
         CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
-        samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
+        samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0);
 
         // t10 ~ t16
         CD3DX12_DESCRIPTOR_RANGE1 textureRange;
         textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
 
-        CD3DX12_ROOT_PARAMETER1 rootParameters[7] = {};
+        // rootSignature
+        CD3DX12_ROOT_PARAMETER1 rootParameters[5] = {};
         // Common.hlsli : s0~s6,t10~t16,b0~b2
         rootParameters[0].InitAsDescriptorTable(1, &samplerRange,
                                                 D3D12_SHADER_VISIBILITY_ALL);
@@ -32,16 +33,6 @@ class SolidMeshPSO : public GraphicsPSO {
         rootParameters[4].InitAsConstantBufferView(
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        // VS : t0
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangeVS;
-        textureRangeVS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-        rootParameters[5].InitAsDescriptorTable(1, &textureRangeVS,
-                                                D3D12_SHADER_VISIBILITY_VERTEX);
-        // PS : t0 ~ t4
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangePS;
-        textureRangePS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
-        rootParameters[6].InitAsDescriptorTable(1, &textureRangePS,
-                                                D3D12_SHADER_VISIBILITY_PIXEL);
 
         auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
             ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,
@@ -52,27 +43,29 @@ class SolidMeshPSO : public GraphicsPSO {
         HRESULT hr = D3D12SerializeVersionedRootSignature(&rootSignatureDesc,
                                                           &signature, &error);
 
-        hr = GpuCore::Instance().device->CreateRootSignature(
+        hr = dx12::GpuCore::Instance().device->CreateRootSignature(
             0, signature->GetBufferPointer(), signature->GetBufferSize(),
             IID_PPV_ARGS(&root_signature));
 
         // shader
-        ComPtr<ID3DBlob> basicVS;
-        ComPtr<ID3DBlob> basicPS;
-        Util::CreateVertexShader(GpuCore::Instance().device,
-                                 L"graphics/BasicVS.hlsl", basicVS);
-        Util::CreatePixelShader(GpuCore::Instance().device,
-                                L"graphics/BasicPS.hlsl", basicPS);
-        //
+        ComPtr<ID3DBlob> skyboxVS;
+        ComPtr<ID3DBlob> skyboxPS;
+        dx12::Util::CreateVertexShader(dx12::GpuCore::Instance().device,
+                                       L"core/graphics/SkyboxVS.hlsl",
+                                       skyboxVS);
+        dx12::Util::CreatePixelShader(dx12::GpuCore::Instance().device,
+                                      L"core/graphics/SkyboxPS.hlsl",
+                                      skyboxPS);
+        // pipeline state
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
         psoDesc.pRootSignature = root_signature;
-        psoDesc.VS = CD3DX12_SHADER_BYTECODE(basicVS.Get());
-        psoDesc.PS = CD3DX12_SHADER_BYTECODE(basicPS.Get());
-        psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(rasterizer::solidRS);
+        psoDesc.VS = CD3DX12_SHADER_BYTECODE(skyboxVS.Get());
+        psoDesc.PS = CD3DX12_SHADER_BYTECODE(skyboxPS.Get());
+        psoDesc.RasterizerState =
+            CD3DX12_RASTERIZER_DESC(dx12::rasterizer::solidRS);
         psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-        psoDesc.DepthStencilState = depth::basicDS;
-        psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        psoDesc.DepthStencilState.StencilEnable = false;
         psoDesc.SampleMask = UINT_MAX;
         psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         psoDesc.NumRenderTargets = 1;
@@ -80,15 +73,14 @@ class SolidMeshPSO : public GraphicsPSO {
         psoDesc.SampleDesc.Count = 4;
         psoDesc.SampleDesc.Quality = 0;
 
-        ThrowIfFailed(GpuCore::Instance().device->CreateGraphicsPipelineState(
-            &psoDesc, IID_PPV_ARGS(&pipeline_state)));
+        dx12::ThrowIfFailed(
+            dx12::GpuCore::Instance().device->CreateGraphicsPipelineState(
+                &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
     void Render(ComPtr<ID3D12GraphicsCommandList> command_list,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE render_target_view,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE depth_stencil_view,
-                ComPtr<ID3D12DescriptorHeap> textures_PS,
-                ComPtr<ID3D12DescriptorHeap> textures_VS,
-                ComPtr<ID3D12DescriptorHeap> textures,
+                GpuHeap* descriptor_heap, GpuBufferList *shared_texture,
                 ComPtr<ID3D12DescriptorHeap> samplers,
                 ComPtr<ID3D12Resource> global_consts,
                 ComPtr<ID3D12Resource> mesh_consts,
@@ -99,7 +91,6 @@ class SolidMeshPSO : public GraphicsPSO {
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
             dx12::GpuCore::Instance().resource_HDR.Get(),
             D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET);
-
         command_list->ResourceBarrier(1, &barrier);
 
         command_list->RSSetViewports(1, &dx12::GpuCore::Instance().viewport);
@@ -112,19 +103,15 @@ class SolidMeshPSO : public GraphicsPSO {
 
         command_list->SetGraphicsRootDescriptorTable(
             0, samplers->GetGPUDescriptorHandleForHeapStart());
+        command_list->SetGraphicsRootDescriptorTable(
+            1, descriptor_heap->GetGpuHandle(shared_texture->Index()));
         // global texture
-        // command_list->SetGraphicsRootDescriptorTable(
-		//    1, textures->GetGPUDescriptorHandleForHeapStart());
         command_list->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());
         command_list->SetGraphicsRootConstantBufferView(
             3, mesh_consts.Get()->GetGPUVirtualAddress());
         command_list->SetGraphicsRootConstantBufferView(
             4, material_consts.Get()->GetGPUVirtualAddress());
-        // command_list->SetGraphicsRootDescriptorTable(
-        //     5, textures_VS->GetGPUDescriptorHandleForHeapStart());
-        command_list->SetGraphicsRootDescriptorTable(
-            6, textures_PS->GetGPUDescriptorHandleForHeapStart());
 
         command_list->IASetPrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -137,11 +124,6 @@ class SolidMeshPSO : public GraphicsPSO {
             D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COMMON);
         command_list->ResourceBarrier(1, &barrier);
     };
-};
-class WireMeshPSO : public GraphicsPSO {
-  public:
-    void Initialize(){};
-    void Render(){};
 };
 } // namespace dx12
 #endif

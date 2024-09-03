@@ -1,7 +1,7 @@
-﻿#ifndef _COMPONENT
+#ifndef _COMPONENT
 #define _COMPONENT
 
-#include "../foundation/node.h"
+#include "foundation/node.h"
 
 namespace core {
 enum EnumComponentType {

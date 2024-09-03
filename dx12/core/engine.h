@@ -1,10 +1,10 @@
 #ifndef _APPLICATION
 #define _APPLICATION
 
-#include "../foundation/platform.h"
-#include "../foundation/setting_ui.h"
-#include "../foundation/behavior_tree_builder.h"
-#include "../graphics/graphics_util.h"
+#include "foundation/platform.h"
+#include "foundation/setting_ui.h"
+#include "foundation/behavior_tree_builder.h"
+#include "graphics/graphics_util.h"
 #include "black_board.h"
 #include "message_receiver.h"
 

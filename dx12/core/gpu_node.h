@@ -1,8 +1,8 @@
 #ifndef _GPU_NODE
 #define _GPU_NODE
 
-#include "../foundation/behavior_tree_builder.h"
-#include "../graphics/graphics_util.h"
+#include "foundation/behavior_tree_builder.h"
+#include "graphics/graphics_util.h"
 
 namespace core {
 class GpuInitializeNode : public foundation::BehaviorActionNode {

@@ -1,8 +1,8 @@
 #ifndef _MESSAGERECEIVER
 #define _MESSAGERECEIVER
 
-#include "../foundation/input.h"
-#include "../foundation/setting_ui.h"
+#include "foundation/input.h"
+#include "foundation/setting_ui.h"
 #include "geometry_generator.h"
 #include "render_info.h"
 

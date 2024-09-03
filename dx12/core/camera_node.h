@@ -1,7 +1,7 @@
 #ifndef _CAMERANODE
 #define _CAMERANODE
 
-#include "../foundation/behavior_tree_builder.h"
+#include "foundation/behavior_tree_builder.h"
 #include "black_board.h"
 
 namespace core {

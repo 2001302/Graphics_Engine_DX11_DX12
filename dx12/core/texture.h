@@ -1,7 +1,7 @@
 #ifndef _TEXTURE
 #define _TEXTURE
 
-#include "../graphics/graphics_util.h"
+#include "graphics/graphics_util.h"
 #include "vertex.h"
 #include <directxtk12/ResourceUploadBatch.h>
 #include <filesystem>

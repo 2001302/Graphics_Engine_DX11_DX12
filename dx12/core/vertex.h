@@ -1,7 +1,7 @@
-﻿#ifndef _VERTEX
+#ifndef _VERTEX
 #define _VERTEX
 
-#include "../graphics/graphics_util.h"
+#include "graphics/graphics_util.h"
 
 namespace core {
 

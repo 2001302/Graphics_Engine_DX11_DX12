@@ -1,7 +1,6 @@
 #include "camera.h"
 #include "geometry_generator.h"
-// #include "mesh_renderer.h"
-#include "../foundation/setting_ui.h"
+#include "foundation/setting_ui.h"
 
 namespace core {
 

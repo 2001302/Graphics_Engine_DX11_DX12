@@ -77,35 +77,8 @@
     <ClCompile Include="foundation\setting_ui.cpp">
       <Filter>Foundation\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="engine\engine.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\geometry_generator.cpp">
-      <Filter>Core\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\message_receiver.cpp">
-      <Filter>Core\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\model_loader.cpp">
-      <Filter>Core\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\camera.cpp">
-      <Filter>Core\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\mesh_renderer.cpp">
-      <Filter>Core\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\model.cpp">
-      <Filter>Core\Model</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\graphics_pso.cpp">
       <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\texture.cpp">
-      <Filter>Core\Structure</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\mesh.cpp">
-      <Filter>Core\Structure</Filter>
     </ClCompile>
     <ClCompile Include="graphics\gpu_buffer.cpp">
       <Filter>Graphics\Buffer</Filter>
@@ -115,6 +88,33 @@
     </ClCompile>
     <ClCompile Include="graphics\texture_2d.cpp">
       <Filter>Graphics\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="core\camera.cpp">
+      <Filter>Core\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="core\model.cpp">
+      <Filter>Core\Model</Filter>
+    </ClCompile>
+    <ClCompile Include="core\mesh_renderer.cpp">
+      <Filter>Core\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="core\mesh.cpp">
+      <Filter>Core\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="core\texture.cpp">
+      <Filter>Core\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="core\geometry_generator.cpp">
+      <Filter>Core\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="core\message_receiver.cpp">
+      <Filter>Core\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="core\model_loader.cpp">
+      <Filter>Core\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="core\engine.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -270,56 +270,8 @@
     <ClInclude Include="foundation\setting_ui.h">
       <Filter>Foundation\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="engine\engine.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\gpu_node.h">
-      <Filter>Core\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\gui_node.h">
-      <Filter>Core\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\black_board.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\geometry_generator.h">
-      <Filter>Core\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\message_receiver.h">
-      <Filter>Core\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\model_loader.h">
-      <Filter>Core\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\camera.h">
-      <Filter>Core\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\component.h">
-      <Filter>Core\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\mesh_renderer.h">
-      <Filter>Core\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\game_objects_node.h">
-      <Filter>Core\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\shared_resource_node.h">
-      <Filter>Core\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\model.h">
-      <Filter>Core\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\camera_node.h">
-      <Filter>Core\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\light_node.h">
-      <Filter>Core\BehaviorTreeNode</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\command_pool.h">
       <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\tone_mapping_node.h">
-      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="graphics\graphics_pso.h">
       <Filter>Graphics</Filter>
@@ -333,23 +285,8 @@
     <ClInclude Include="graphics\d3dx12.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="engine\skybox_node.h">
-      <Filter>Core\BehaviorTreeNode</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\skybox_pso.h">
       <Filter>Graphics\PSO</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\constant_buffer.h">
-      <Filter>Core\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\render_info.h">
-      <Filter>Core\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\texture.h">
-      <Filter>Core\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\mesh.h">
-      <Filter>Core\Structure</Filter>
     </ClInclude>
     <ClInclude Include="graphics\gpu_buffer.h">
       <Filter>Graphics\Buffer</Filter>
@@ -362,6 +299,69 @@
     </ClInclude>
     <ClInclude Include="graphics\texture_2d.h">
       <Filter>Graphics\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="core\camera.h">
+      <Filter>Core\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="core\model.h">
+      <Filter>Core\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="core\shared_resource_node.h">
+      <Filter>Core\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="core\skybox_node.h">
+      <Filter>Core\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="core\gpu_node.h">
+      <Filter>Core\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="core\light_node.h">
+      <Filter>Core\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="core\game_objects_node.h">
+      <Filter>Core\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="core\tone_mapping_node.h">
+      <Filter>Core\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="core\gui_node.h">
+      <Filter>Core\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="core\camera_node.h">
+      <Filter>Core\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="core\component.h">
+      <Filter>Core\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="core\mesh_renderer.h">
+      <Filter>Core\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="core\constant_buffer.h">
+      <Filter>Core\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="core\mesh.h">
+      <Filter>Core\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="core\render_info.h">
+      <Filter>Core\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="core\texture.h">
+      <Filter>Core\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="core\geometry_generator.h">
+      <Filter>Core\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="core\message_receiver.h">
+      <Filter>Core\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="core\model_loader.h">
+      <Filter>Core\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="core\black_board.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\engine.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -131,15 +131,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="engine\camera.cpp" />
-    <ClCompile Include="engine\engine.cpp" />
-    <ClCompile Include="engine\geometry_generator.cpp" />
-    <ClCompile Include="engine\mesh.cpp" />
-    <ClCompile Include="engine\mesh_renderer.cpp" />
-    <ClCompile Include="engine\message_receiver.cpp" />
-    <ClCompile Include="engine\model.cpp" />
-    <ClCompile Include="engine\model_loader.cpp" />
-    <ClCompile Include="engine\texture.cpp" />
+    <ClCompile Include="core\camera.cpp" />
+    <ClCompile Include="core\engine.cpp" />
+    <ClCompile Include="core\geometry_generator.cpp" />
+    <ClCompile Include="core\mesh.cpp" />
+    <ClCompile Include="core\mesh_renderer.cpp" />
+    <ClCompile Include="core\message_receiver.cpp" />
+    <ClCompile Include="core\model.cpp" />
+    <ClCompile Include="core\model_loader.cpp" />
+    <ClCompile Include="core\texture.cpp" />
     <ClCompile Include="foundation\action_node.cpp" />
     <ClCompile Include="foundation\animation_node.cpp" />
     <ClCompile Include="foundation\behavior_tree_builder.cpp" />
@@ -172,27 +172,27 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="engine\black_board.h" />
-    <ClInclude Include="engine\camera.h" />
-    <ClInclude Include="engine\camera_node.h" />
-    <ClInclude Include="engine\component.h" />
-    <ClInclude Include="engine\constant_buffer.h" />
-    <ClInclude Include="engine\engine.h" />
-    <ClInclude Include="engine\game_objects_node.h" />
-    <ClInclude Include="engine\geometry_generator.h" />
-    <ClInclude Include="engine\gpu_node.h" />
-    <ClInclude Include="engine\gui_node.h" />
-    <ClInclude Include="engine\render_info.h" />
-    <ClInclude Include="engine\light_node.h" />
-    <ClInclude Include="engine\mesh.h" />
-    <ClInclude Include="engine\mesh_renderer.h" />
-    <ClInclude Include="engine\message_receiver.h" />
-    <ClInclude Include="engine\model.h" />
-    <ClInclude Include="engine\model_loader.h" />
-    <ClInclude Include="engine\shared_resource_node.h" />
-    <ClInclude Include="engine\skybox_node.h" />
-    <ClInclude Include="engine\texture.h" />
-    <ClInclude Include="engine\tone_mapping_node.h" />
+    <ClInclude Include="core\black_board.h" />
+    <ClInclude Include="core\camera.h" />
+    <ClInclude Include="core\camera_node.h" />
+    <ClInclude Include="core\component.h" />
+    <ClInclude Include="core\constant_buffer.h" />
+    <ClInclude Include="core\engine.h" />
+    <ClInclude Include="core\game_objects_node.h" />
+    <ClInclude Include="core\geometry_generator.h" />
+    <ClInclude Include="core\gpu_node.h" />
+    <ClInclude Include="core\gui_node.h" />
+    <ClInclude Include="core\light_node.h" />
+    <ClInclude Include="core\mesh.h" />
+    <ClInclude Include="core\mesh_renderer.h" />
+    <ClInclude Include="core\message_receiver.h" />
+    <ClInclude Include="core\model.h" />
+    <ClInclude Include="core\model_loader.h" />
+    <ClInclude Include="core\render_info.h" />
+    <ClInclude Include="core\shared_resource_node.h" />
+    <ClInclude Include="core\skybox_node.h" />
+    <ClInclude Include="core\texture.h" />
+    <ClInclude Include="core\tone_mapping_node.h" />
     <ClInclude Include="foundation\action_node.h" />
     <ClInclude Include="foundation\animation_node.h" />
     <ClInclude Include="foundation\behavior_tree_builder.h" />

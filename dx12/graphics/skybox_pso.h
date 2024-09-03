@@ -80,8 +80,7 @@ class SkyboxPSO : public GraphicsPSO {
     void Render(ComPtr<ID3D12GraphicsCommandList> command_list,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE render_target_view,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE depth_stencil_view,
-                DescriptorHeapStack* descriptor_heap,
-                DescriptorHeapInfo *shared_texture,
+                GpuHeap* descriptor_heap, GpuBufferList *shared_texture,
                 ComPtr<ID3D12DescriptorHeap> samplers,
                 ComPtr<ID3D12Resource> global_consts,
                 ComPtr<ID3D12Resource> mesh_consts,
@@ -105,7 +104,7 @@ class SkyboxPSO : public GraphicsPSO {
         command_list->SetGraphicsRootDescriptorTable(
             0, samplers->GetGPUDescriptorHandleForHeapStart());
         command_list->SetGraphicsRootDescriptorTable(
-            1, descriptor_heap->GetGpuHandle(shared_texture->GetIndex()));
+            1, descriptor_heap->GetGpuHandle(shared_texture->Index()));
         // global texture
         command_list->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());

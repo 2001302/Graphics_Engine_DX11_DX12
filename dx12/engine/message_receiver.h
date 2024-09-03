@@ -1,10 +1,10 @@
 #ifndef _MESSAGERECEIVER
 #define _MESSAGERECEIVER
 
-#include "geometry_generator.h"
-#include "input.h"
-#include "render_info.h"
+#include "../foundation/input.h"
 #include "../foundation/setting_ui.h"
+#include "geometry_generator.h"
+#include "render_info.h"
 
 namespace core {
 class MessageReceiver {
@@ -13,18 +13,20 @@ class MessageReceiver {
     bool OnSphereLoadRequest(RenderTargetObject *manager);
     bool OnBoxLoadRequest(RenderTargetObject *manager);
     bool OnCylinderLoadRequest(RenderTargetObject *manager);
-    bool OnMouseDownRequest(std::shared_ptr<foundation::Input> input, int mouseX,
-                            int mouseY);
+    bool OnMouseDownRequest(std::shared_ptr<foundation::Input> input,
+                            int mouseX, int mouseY);
     bool OnMouseRightDragRequest(RenderTargetObject *manager,
                                  std::shared_ptr<foundation::Input> input,
                                  int mouseX, int mouseY);
     bool OnMouseWheelRequest(RenderTargetObject *manager,
-                             std::shared_ptr<foundation::Input> input, int wheel);
+                             std::shared_ptr<foundation::Input> input,
+                             int wheel);
     bool OnMouseWheelDragRequest(RenderTargetObject *manager,
                                  std::shared_ptr<foundation::Input> input,
                                  int mouseX, int mouseY);
-    bool OnWindowSizeRequest(foundation::SettingUi *gui, int size_x, int size_y);
+    bool OnWindowSizeRequest(foundation::SettingUi *gui, int size_x,
+                             int size_y);
 };
-} // namespace engine
+} // namespace core
 
 #endif

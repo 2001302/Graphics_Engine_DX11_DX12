@@ -78,37 +78,46 @@
       <Filter>Foundation\Gui</Filter>
     </ClCompile>
     <ClCompile Include="engine\engine.cpp">
-      <Filter>Engine</Filter>
+      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="engine\geometry_generator.cpp">
-      <Filter>Engine\Util</Filter>
+      <Filter>Core\Util</Filter>
     </ClCompile>
     <ClCompile Include="engine\message_receiver.cpp">
-      <Filter>Engine\Util</Filter>
+      <Filter>Core\Util</Filter>
     </ClCompile>
     <ClCompile Include="engine\model_loader.cpp">
-      <Filter>Engine\Util</Filter>
+      <Filter>Core\Util</Filter>
     </ClCompile>
     <ClCompile Include="engine\camera.cpp">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClCompile>
     <ClCompile Include="engine\mesh_renderer.cpp">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClCompile>
     <ClCompile Include="engine\model.cpp">
-      <Filter>Engine\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="engine\texture.cpp">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClCompile>
     <ClCompile Include="graphics\graphics_pso.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="engine\texture.cpp">
+      <Filter>Core\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="engine\mesh.cpp">
+      <Filter>Core\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\gpu_buffer.cpp">
+      <Filter>Graphics\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\texture_cube.cpp">
+      <Filter>Graphics\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\texture_2d.cpp">
+      <Filter>Graphics\Buffer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Engine">
-      <UniqueIdentifier>{dbd5257f-e35e-4c37-8c3a-6cb4f021982b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Foundation">
       <UniqueIdentifier>{f468dcbf-da05-442f-a2fd-59aa3d9f4fec}</UniqueIdentifier>
     </Filter>
@@ -136,20 +145,29 @@
     <Filter Include="Graphics\Shader">
       <UniqueIdentifier>{a029a46a-2389-4ec0-b9dc-91980492c850}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Model">
-      <UniqueIdentifier>{e49dfe72-3ee4-485a-8189-91138a47fab0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\BehaviorTreeNode">
-      <UniqueIdentifier>{693604ef-ac08-43fd-af75-3b70c784e779}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Component">
-      <UniqueIdentifier>{7a076824-9f70-4d32-964b-51b7e3858fb8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Util">
-      <UniqueIdentifier>{773513c6-08ce-4dd1-8d1c-08ee20f6b365}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics\PSO">
       <UniqueIdentifier>{acfa4192-465e-4e10-aaf4-6afa55bd798b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{dbd5257f-e35e-4c37-8c3a-6cb4f021982b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Model">
+      <UniqueIdentifier>{e49dfe72-3ee4-485a-8189-91138a47fab0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\BehaviorTreeNode">
+      <UniqueIdentifier>{693604ef-ac08-43fd-af75-3b70c784e779}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Component">
+      <UniqueIdentifier>{7a076824-9f70-4d32-964b-51b7e3858fb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Util">
+      <UniqueIdentifier>{773513c6-08ce-4dd1-8d1c-08ee20f6b365}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Structure">
+      <UniqueIdentifier>{9bc7b42e-43b6-4ea3-ae3b-3aa9c0f6ca3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Buffer">
+      <UniqueIdentifier>{75e2fdb2-1df3-4f8a-b00e-3f37f241f0c1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -253,70 +271,55 @@
       <Filter>Foundation\Gui</Filter>
     </ClInclude>
     <ClInclude Include="engine\engine.h">
-      <Filter>Engine</Filter>
+      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="engine\gpu_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="engine\gui_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="engine\black_board.h">
-      <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\input.h">
-      <Filter>Engine\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\render_info.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="engine\geometry_generator.h">
-      <Filter>Engine\Util</Filter>
+      <Filter>Core\Util</Filter>
     </ClInclude>
     <ClInclude Include="engine\message_receiver.h">
-      <Filter>Engine\Util</Filter>
+      <Filter>Core\Util</Filter>
     </ClInclude>
     <ClInclude Include="engine\model_loader.h">
-      <Filter>Engine\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\mesh.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Util</Filter>
     </ClInclude>
     <ClInclude Include="engine\camera.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="engine\component.h">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClInclude>
     <ClInclude Include="engine\mesh_renderer.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\constant_buffer.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Component</Filter>
     </ClInclude>
     <ClInclude Include="engine\game_objects_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="engine\shared_resource_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="engine\model.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="engine\camera_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="engine\light_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="graphics\command_pool.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="engine\tone_mapping_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="engine\texture.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="graphics\graphics_pso.h">
       <Filter>Graphics</Filter>
@@ -331,13 +334,34 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="engine\skybox_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="graphics\skybox_pso.h">
       <Filter>Graphics\PSO</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\descriptor_heap_stack.h">
-      <Filter>Graphics</Filter>
+    <ClInclude Include="engine\constant_buffer.h">
+      <Filter>Core\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\render_info.h">
+      <Filter>Core\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\texture.h">
+      <Filter>Core\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="engine\mesh.h">
+      <Filter>Core\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu_buffer.h">
+      <Filter>Graphics\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu_heap.h">
+      <Filter>Graphics\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\texture_cube.h">
+      <Filter>Graphics\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\texture_2d.h">
+      <Filter>Graphics\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

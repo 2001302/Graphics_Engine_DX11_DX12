@@ -3,15 +3,17 @@
 
 #include "../foundation/setting_ui.h"
 #include "../foundation/info.h"
+#include "../foundation/input.h"
 #include "../graphics/command_pool.h"
 #include "../graphics/graphics_util.h"
-#include "../graphics/descriptor_heap_stack.h"
-#include "input.h"
+#include "../graphics/gpu_heap.h"
+#include "../graphics/gpu_buffer.h"
+#include "../graphics/texture_cube.h"
+#include "../graphics/texture_2d.h"
 #include "camera.h"
 #include "constant_buffer.h"
 // #include "ground.h"
 // #include "model.h"
-// #include "skybox.h"
 
 namespace core {
 enum EnumStageType {
@@ -23,7 +25,7 @@ enum EnumStageType {
 class RenderCondition : public foundation::IInfo {
   public:
     RenderCondition()
-        : global_sampler_heap(0), dt(0.0f), draw_wire(false),
+        : sampler_heap(0), dt(0.0f), draw_wire(false),
           light_rotate(false), stage_type(EnumStageType::eInitialize) {
         input = std::make_unique<foundation::Input>();
         gui = std::make_shared<foundation::SettingUi>();
@@ -34,10 +36,11 @@ class RenderCondition : public foundation::IInfo {
     std::shared_ptr<dx12::CommandPool> command_pool;
 
     ConstantBuffer<GlobalConstants> global_consts;
-    std::shared_ptr<dx12::DescriptorHeapStack> global_heap;
-    ComPtr<ID3D12DescriptorHeap> global_sampler_heap;
 
-    std::shared_ptr<dx12::DescriptorHeapInfo> shared_texture; //t10~t16
+    std::shared_ptr<dx12::GpuHeap> gpu_heap;
+    ComPtr<ID3D12DescriptorHeap> sampler_heap;
+
+    std::shared_ptr<dx12::GpuBufferList> shared_texture; // t10~t16
 
     float dt;
     bool draw_wire;

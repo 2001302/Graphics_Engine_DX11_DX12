@@ -34,45 +34,26 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
             skybox = std::make_shared<Model>();
             skybox->AddComponent(EnumComponentType::eRenderer, renderer);
 
-            {
-                auto env_name =
-                    L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
-                auto specular_name =
-                    L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
-                auto irradiance_name =
-                    L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
-                auto brdf_name =
-                    L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
-
-                env_SRV =
-                    Texture::InitAsDDSTexture(env_name, true, command_list);
-                irradiance_SRV = Texture::InitAsDDSTexture(specular_name, true,
-                                                           command_list);
-                specular_SRV = Texture::InitAsDDSTexture(irradiance_name, true,
-                                                         command_list);
-                brdf_SRV =
-                    Texture::InitAsDDSTexture(brdf_name, true, command_list);
-
-                for (int i = 0; i < MAX_LIGHTS; i++) {
-                    MakeTexture(1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM,
-                                shadow_SRV[i]);
-                }
-            }
-
-            auto start =
-                condition->global_heap->AllocateTextureCube(env_SRV.Get());
-            condition->global_heap->AllocateTextureCube(
-                irradiance_SRV.Get());
-            condition->global_heap->AllocateTextureCube(specular_SRV.Get());
-            condition->global_heap->AllocateTexture2D(brdf_SRV.Get());
+            condition->shared_texture = std::make_shared<dx12::GpuBufferList>();
+            condition->shared_texture->Add(std::make_shared<dx12::TextureCube>(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds",
+                command_list, true));
+            condition->shared_texture->Add(std::make_shared<dx12::TextureCube>(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds",
+                command_list, true));
+            condition->shared_texture->Add(std::make_shared<dx12::TextureCube>(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds",
+                command_list, true));
+            condition->shared_texture->Add(std::make_shared<dx12::TextureCube>(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds", command_list,
+                true, true));
 
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                condition->global_heap->AllocateTexture2D(
-                    shadow_SRV[i].Get());
+                condition->shared_texture->Add(
+                    std::make_shared<dx12::Texture2D>(
+                        1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM));
             }
-
-            condition->shared_texture =
-                std::make_shared<dx12::DescriptorHeapInfo>(start, 7);
+            condition->shared_texture->Allocate(condition->gpu_heap.get());
 
             break;
         }
@@ -85,11 +66,11 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
             skyboxPSO->Render(
                 command_list, dx12::GpuCore::Instance().GetHandleHDR(),
                 dx12::GpuCore::Instance().GetHandleDSV(),
-                condition->global_heap.get(),
-                condition->shared_texture.get(), condition->global_sampler_heap,
-                condition->global_consts.Get(), renderer->mesh_consts.Get(),
-                renderer->material_consts.Get(), mesh->vertex_buffer_view,
-                mesh->index_buffer_view, mesh->index_count);
+                condition->gpu_heap.get(), condition->shared_texture.get(),
+                condition->sampler_heap, condition->global_consts.Get(),
+                renderer->mesh_consts.Get(), renderer->material_consts.Get(),
+                mesh->vertex_buffer_view, mesh->index_buffer_view,
+                mesh->index_count);
             break;
         }
         default:
@@ -99,34 +80,8 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
 
-    void MakeTexture(int width, int height, DXGI_FORMAT format,
-                     ComPtr<ID3D12Resource> &texture) {
-
-        D3D12_RESOURCE_DESC txtDesc;
-        ZeroMemory(&txtDesc, sizeof(txtDesc));
-        txtDesc.Width = width;
-        txtDesc.Height = height;
-        txtDesc.MipLevels = 0;
-        txtDesc.DepthOrArraySize = 1;
-        txtDesc.Format = format;
-        txtDesc.SampleDesc.Count = 1;
-        txtDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
-        txtDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
-
-        CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
-        HRESULT hr = dx12::GpuCore::Instance().device->CreateCommittedResource(
-            &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
-            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, nullptr,
-            IID_PPV_ARGS(texture.GetAddressOf()));
-    }
-
     std::shared_ptr<dx12::SkyboxPSO> skyboxPSO;
     std::shared_ptr<Model> skybox;
-    ComPtr<ID3D12Resource> env_SRV;
-    ComPtr<ID3D12Resource> irradiance_SRV;
-    ComPtr<ID3D12Resource> specular_SRV;
-    ComPtr<ID3D12Resource> brdf_SRV;
-    ComPtr<ID3D12Resource> shadow_SRV[MAX_LIGHTS];
 };
 } // namespace core
 

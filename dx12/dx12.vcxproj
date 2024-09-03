@@ -134,6 +134,7 @@
     <ClCompile Include="engine\camera.cpp" />
     <ClCompile Include="engine\engine.cpp" />
     <ClCompile Include="engine\geometry_generator.cpp" />
+    <ClCompile Include="engine\mesh.cpp" />
     <ClCompile Include="engine\mesh_renderer.cpp" />
     <ClCompile Include="engine\message_receiver.cpp" />
     <ClCompile Include="engine\model.cpp" />
@@ -162,9 +163,12 @@
     <ClCompile Include="foundation\sequence_node.cpp" />
     <ClCompile Include="foundation\setting_ui.cpp" />
     <ClCompile Include="foundation\ui.cpp" />
+    <ClCompile Include="graphics\gpu_buffer.cpp" />
     <ClCompile Include="graphics\graphics_core.cpp" />
     <ClCompile Include="graphics\graphics_pso.cpp" />
     <ClCompile Include="graphics\graphics_util.cpp" />
+    <ClCompile Include="graphics\texture_2d.cpp" />
+    <ClCompile Include="graphics\texture_cube.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -178,7 +182,6 @@
     <ClInclude Include="engine\geometry_generator.h" />
     <ClInclude Include="engine\gpu_node.h" />
     <ClInclude Include="engine\gui_node.h" />
-    <ClInclude Include="engine\input.h" />
     <ClInclude Include="engine\render_info.h" />
     <ClInclude Include="engine\light_node.h" />
     <ClInclude Include="engine\mesh.h" />
@@ -222,13 +225,16 @@
     <ClInclude Include="foundation\setting_ui.h" />
     <ClInclude Include="foundation\ui.h" />
     <ClInclude Include="graphics\d3dx12.h" />
+    <ClInclude Include="graphics\gpu_buffer.h" />
     <ClInclude Include="graphics\graphics_core.h" />
     <ClInclude Include="graphics\graphics_pso.h" />
     <ClInclude Include="graphics\graphics_util.h" />
     <ClInclude Include="graphics\command_pool.h" />
-    <ClInclude Include="graphics\descriptor_heap_stack.h" />
+    <ClInclude Include="graphics\gpu_heap.h" />
     <ClInclude Include="graphics\mesh_pso.h" />
     <ClInclude Include="graphics\skybox_pso.h" />
+    <ClInclude Include="graphics\texture_2d.h" />
+    <ClInclude Include="graphics\texture_cube.h" />
     <ClInclude Include="graphics\tone_mapping_pso.h" />
   </ItemGroup>
   <ItemGroup>

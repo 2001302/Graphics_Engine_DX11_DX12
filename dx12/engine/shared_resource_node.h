@@ -39,10 +39,10 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
             dx12::ThrowIfFailed(
                 dx12::GpuCore::Instance().device->CreateDescriptorHeap(
                     &samplerHeapDesc,
-                    IID_PPV_ARGS(&condition->global_sampler_heap)));
+                    IID_PPV_ARGS(&condition->sampler_heap)));
 
             CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
-                condition->global_sampler_heap
+                condition->sampler_heap
                     ->GetCPUDescriptorHandleForHeapStart());
             UINT incrementSize = dx12::GpuCore::Instance()
                                      .device->GetDescriptorHandleIncrementSize(
@@ -55,8 +55,8 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
             }
 
             // descriptor heap
-            condition->global_heap =
-                std::make_shared<dx12::DescriptorHeapStack>(
+            condition->gpu_heap =
+                std::make_shared<dx12::GpuHeap>(
                     1024, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 0);
 
             break;

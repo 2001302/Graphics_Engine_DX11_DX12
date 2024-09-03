@@ -77,124 +77,124 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="model_loader.h">
-      <Filter>Engine\Util</Filter>
+      <Filter>Core\Util</Filter>
     </ClInclude>
     <ClInclude Include="geometry_generator.h">
-      <Filter>Engine\Util</Filter>
+      <Filter>Core\Util</Filter>
     </ClInclude>
     <ClInclude Include="message_receiver.h">
-      <Filter>Engine\Util</Filter>
+      <Filter>Core\Util</Filter>
     </ClInclude>
     <ClInclude Include="mesh_renderer.h">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClInclude>
     <ClInclude Include="component.h">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClInclude>
     <ClInclude Include="node.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
     <ClInclude Include="tone_mapping.h">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClInclude>
     <ClInclude Include="image_filter.h">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClInclude>
     <ClInclude Include="skinned_mesh_renderer.h">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClInclude>
     <ClInclude Include="input.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
     <ClInclude Include="camera_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="game_objects_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="gui_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="light_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="mirror_effect_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="post_process_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="shadow_effect_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="shared_resource_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="skybox_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="tree_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="vertex.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="animation_clip.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="constant_buffer.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="material.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="model.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="structured_buffer.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="texture_3d.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="job_context.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="info.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
     <ClInclude Include="gpu_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="depth_only_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="player_node.h">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="animator.h">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClInclude>
     <ClInclude Include="setting_ui.h">
       <Filter>Foundation\Gui</Filter>
     </ClInclude>
     <ClInclude Include="skybox.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="ground.h">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClInclude>
     <ClInclude Include="black_board.h">
-      <Filter>Engine</Filter>
+      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="engine.h">
-      <Filter>Engine</Filter>
+      <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="graphics_core.h">
       <Filter>Graphics</Filter>
@@ -278,43 +278,43 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="geometry_generator.cpp">
-      <Filter>Engine\Util</Filter>
+      <Filter>Core\Util</Filter>
     </ClCompile>
     <ClCompile Include="message_receiver.cpp">
-      <Filter>Engine\Util</Filter>
+      <Filter>Core\Util</Filter>
     </ClCompile>
     <ClCompile Include="model_loader.cpp">
-      <Filter>Engine\Util</Filter>
+      <Filter>Core\Util</Filter>
     </ClCompile>
     <ClCompile Include="mesh_renderer.cpp">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClCompile>
     <ClCompile Include="node.cpp">
       <Filter>Foundation\Structure</Filter>
     </ClCompile>
     <ClCompile Include="tone_mapping.cpp">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClCompile>
     <ClCompile Include="skinned_mesh_renderer.cpp">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClCompile>
     <ClCompile Include="model.cpp">
-      <Filter>Engine\Model</Filter>
+      <Filter>Core\Model</Filter>
     </ClCompile>
     <ClCompile Include="animator.cpp">
-      <Filter>Engine\Component</Filter>
+      <Filter>Core\Component</Filter>
     </ClCompile>
     <ClCompile Include="player_node.cpp">
-      <Filter>Engine\BehaviorTreeNode</Filter>
+      <Filter>Core\BehaviorTreeNode</Filter>
     </ClCompile>
     <ClCompile Include="setting_ui.cpp">
       <Filter>Foundation\Gui</Filter>
     </ClCompile>
     <ClCompile Include="engine.cpp">
-      <Filter>Engine</Filter>
+      <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="graphics_core.cpp">
       <Filter>Graphics</Filter>
@@ -366,23 +366,23 @@
     <Filter Include="Foundation\BehaviorTree">
       <UniqueIdentifier>{3ab7e496-c4a5-4740-8b84-b148f06891df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine">
-      <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Util">
-      <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\BehaviorTreeNode">
-      <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Component">
-      <UniqueIdentifier>{d7d5b87f-7652-45a9-ac58-3878dc145fe9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Model">
-      <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics\Shader">
       <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Util">
+      <UniqueIdentifier>{82eadd38-7919-4897-973b-ceae628cde63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\BehaviorTreeNode">
+      <UniqueIdentifier>{8b95b958-ddc6-4445-8273-087607899d80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Component">
+      <UniqueIdentifier>{d7d5b87f-7652-45a9-ac58-3878dc145fe9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Model">
+      <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

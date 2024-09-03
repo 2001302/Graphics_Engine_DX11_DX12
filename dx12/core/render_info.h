@@ -1,15 +1,15 @@
 #ifndef _RENDERINFO
 #define _RENDERINFO
 
+#include "camera.h"
 #include "foundation/info.h"
 #include "graphics/command_pool.h"
-#include "graphics/graphics_util.h"
-#include "graphics/gpu_heap.h"
 #include "graphics/gpu_buffer.h"
-#include "graphics/texture_cube.h"
+#include "graphics/gpu_heap.h"
+#include "graphics/graphics_util.h"
 #include "graphics/texture_2d.h"
-#include "camera.h"
-#include "constant_buffer.h"
+#include "graphics/texture_cube.h"
+#include "graphics/constant_buffer.h"
 
 namespace core {
 enum EnumStageType {
@@ -21,8 +21,8 @@ enum EnumStageType {
 class RenderCondition : public foundation::IInfo {
   public:
     RenderCondition()
-        : dt(0.0f), draw_wire(false),
-          light_rotate(false), stage_type(EnumStageType::eInitialize) {
+        : dt(0.0f), draw_wire(false), light_rotate(false),
+          stage_type(EnumStageType::eInitialize) {
         command_pool = std::make_shared<dx12::CommandPool>();
     }
 
@@ -34,7 +34,7 @@ class RenderCondition : public foundation::IInfo {
     bool draw_wire;
     bool light_rotate;
     EnumStageType stage_type;
-    ConstantBuffer<GlobalConstants> global_consts;
+    dx12::ConstantBuffer<dx12::GlobalConstants> global_consts;
 };
 class RenderTargetObject : public foundation::IInfo {
   public:

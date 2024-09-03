@@ -1,12 +1,12 @@
 #ifndef _RENDERER
 #define _RENDERER
 
-#include "foundation/node.h"
-#include "graphics/mesh_pso.h"
 #include "component.h"
-#include "constant_buffer.h"
+#include "foundation/node.h"
 #include "geometry_generator.h"
-#include "mesh.h"
+#include "graphics/mesh_pso.h"
+#include "graphics/constant_buffer.h"
+#include "graphics/mesh.h"
 #include "render_info.h"
 #include <filesystem>
 #include <iostream>
@@ -21,7 +21,7 @@ class MeshRenderer : public Component {
     virtual void Initialize();
     void Initialize(const std::string &basePath, const std::string &filename,
                     ComPtr<ID3D12GraphicsCommandList> command_list);
-    void Initialize(const std::vector<MeshData> &meshes,
+    void Initialize(const std::vector<dx12::MeshData> &meshes,
                     ComPtr<ID3D12GraphicsCommandList> command_list,
                     bool use_texture = true);
 
@@ -37,10 +37,10 @@ class MeshRenderer : public Component {
 
     bool is_visible = true;
 
-    std::vector<std::shared_ptr<Mesh>> meshes;
+    std::vector<std::shared_ptr<dx12::Mesh>> meshes;
 
-    ConstantBuffer<MeshConstants> mesh_consts;
-    ConstantBuffer<MaterialConstants> material_consts;
+    dx12::ConstantBuffer<dx12::MeshConstants> mesh_consts;
+    dx12::ConstantBuffer<dx12::MaterialConstants> material_consts;
 };
 
 } // namespace core

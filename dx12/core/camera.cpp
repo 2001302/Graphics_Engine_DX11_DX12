@@ -34,7 +34,7 @@ void Camera::SetPosition(Vector3 pos) { position = pos; }
 void Camera::SetLookAt(Vector3 look) { lookAtVector = look; }
 
 void Camera::Initialize() {
-    MeshData sphere = GeometryGenerator::MakeSphere(0.01f, 10, 10);
+    dx12::MeshData sphere = GeometryGenerator::MakeSphere(0.01f, 10, 10);
 
     // auto renderer = std::make_shared<MeshRenderer>(std::vector{sphere});
 

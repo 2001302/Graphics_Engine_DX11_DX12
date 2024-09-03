@@ -1,7 +1,7 @@
-﻿#pragma once
+#pragma once
 
 #include "animation_clip.h"
-#include "mesh.h"
+#include "graphics\mesh.h"
 #include <assimp\Importer.hpp>
 #include <assimp\postprocess.h>
 #include <assimp\scene.h>
@@ -27,7 +27,7 @@ class ModelLoader {
     void ProcessNode(aiNode *node, const aiScene *scene,
                      DirectX::SimpleMath::Matrix tr);
 
-    MeshData ProcessMesh(aiMesh *mesh, const aiScene *scene);
+    dx12::MeshData ProcessMesh(aiMesh *mesh, const aiScene *scene);
 
     void ReadAnimation(const aiScene *scene);
 
@@ -53,7 +53,7 @@ class ModelLoader {
 
   public:
     string m_basePath;
-    vector<MeshData> m_meshes;
+    vector<dx12::MeshData> m_meshes;
 
     AnimationData m_aniData;
 

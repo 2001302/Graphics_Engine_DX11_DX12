@@ -71,9 +71,6 @@
     <ClCompile Include="core\graphics\graphics_core.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="core\graphics\graphics_util.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="core\foundation\setting_ui.cpp">
       <Filter>Foundation\Gui</Filter>
     </ClCompile>
@@ -98,12 +95,6 @@
     <ClCompile Include="core\mesh_renderer.cpp">
       <Filter>Core\Component</Filter>
     </ClCompile>
-    <ClCompile Include="core\mesh.cpp">
-      <Filter>Core\Structure</Filter>
-    </ClCompile>
-    <ClCompile Include="core\texture.cpp">
-      <Filter>Core\Structure</Filter>
-    </ClCompile>
     <ClCompile Include="core\geometry_generator.cpp">
       <Filter>Core\Util</Filter>
     </ClCompile>
@@ -118,6 +109,15 @@
     </ClCompile>
     <ClCompile Include="core\graphics\gpu_heap.cpp">
       <Filter>Graphics\Buffer</Filter>
+    </ClCompile>
+    <ClCompile Include="core\graphics\graphics_util.cpp">
+      <Filter>Graphics\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="core\graphics\mesh.cpp">
+      <Filter>Graphics\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="core\graphics\texture.cpp">
+      <Filter>Graphics\Structure</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -166,11 +166,14 @@
     <Filter Include="Core\Util">
       <UniqueIdentifier>{773513c6-08ce-4dd1-8d1c-08ee20f6b365}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Structure">
-      <UniqueIdentifier>{9bc7b42e-43b6-4ea3-ae3b-3aa9c0f6ca3b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics\Buffer">
       <UniqueIdentifier>{75e2fdb2-1df3-4f8a-b00e-3f37f241f0c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Util">
+      <UniqueIdentifier>{1790ab32-b8de-4878-8652-61b7298bd632}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Structure">
+      <UniqueIdentifier>{618c9e8e-c783-44ce-98a1-32a3ad2ed2d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -267,14 +270,8 @@
     <ClInclude Include="core\graphics\graphics_core.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="core\graphics\graphics_util.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="core\foundation\setting_ui.h">
       <Filter>Foundation\Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="core\graphics\command_pool.h">
-      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\graphics_pso.h">
       <Filter>Graphics</Filter>
@@ -339,18 +336,6 @@
     <ClInclude Include="core\mesh_renderer.h">
       <Filter>Core\Component</Filter>
     </ClInclude>
-    <ClInclude Include="core\constant_buffer.h">
-      <Filter>Core\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="core\mesh.h">
-      <Filter>Core\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="core\render_info.h">
-      <Filter>Core\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="core\texture.h">
-      <Filter>Core\Structure</Filter>
-    </ClInclude>
     <ClInclude Include="core\geometry_generator.h">
       <Filter>Core\Util</Filter>
     </ClInclude>
@@ -365,6 +350,27 @@
     </ClInclude>
     <ClInclude Include="core\engine.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\graphics\graphics_util.h">
+      <Filter>Graphics\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="core\graphics\command_pool.h">
+      <Filter>Graphics\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="core\graphics\constant_buffer.h">
+      <Filter>Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="core\graphics\mesh.h">
+      <Filter>Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="core\graphics\texture.h">
+      <Filter>Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="core\render_info.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\graphics\vertex.h">
+      <Filter>Graphics\Structure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

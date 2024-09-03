@@ -12,7 +12,7 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 
-namespace core {
+namespace dx12 {
 void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
                   int &width, int &height, DXGI_FORMAT &pixelFormat) {
 

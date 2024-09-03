@@ -1,4 +1,4 @@
-﻿#include "geometry_generator.h"
+#include "geometry_generator.h"
 
 namespace core {
 
@@ -6,14 +6,13 @@ using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-MeshData GeometryGenerator::MakeSquare(const float scale,
-                                       const Vector2 texScale) {
+dx12::MeshData GeometryGenerator::MakeSquare(const float scale,
+                                             const Vector2 texScale) {
     vector<Vector3> positions;
     vector<Vector3> colors;
     vector<Vector3> normals;
-    vector<Vector2> texcoords; // ?띿뒪異?醫뚰몴
+    vector<Vector2> texcoords;
 
-    // ?욌㈃
     positions.push_back(Vector3(-1.0f, 1.0f, 0.0f) * scale);
     positions.push_back(Vector3(1.0f, 1.0f, 0.0f) * scale);
     positions.push_back(Vector3(1.0f, -1.0f, 0.0f) * scale);
@@ -34,10 +33,10 @@ MeshData GeometryGenerator::MakeSquare(const float scale,
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    MeshData meshData;
+    dx12::MeshData meshData;
 
     for (size_t i = 0; i < positions.size(); i++) {
-        Vertex v;
+        dx12::Vertex v;
         v.position = positions[i];
         v.normal = normals[i];
         v.texcoord = texcoords[i] * texScale;
@@ -54,11 +53,11 @@ MeshData GeometryGenerator::MakeSquare(const float scale,
     return meshData;
 }
 
-MeshData GeometryGenerator::MakeSquareGrid(const int numSlices,
-                                           const int numStacks,
-                                           const float scale,
-                                           const Vector2 texScale) {
-    MeshData meshData;
+dx12::MeshData GeometryGenerator::MakeSquareGrid(const int numSlices,
+                                                 const int numStacks,
+                                                 const float scale,
+                                                 const Vector2 texScale) {
+    dx12::MeshData meshData;
 
     float dx = 2.0f / numSlices;
     float dy = 2.0f / numStacks;
@@ -67,7 +66,7 @@ MeshData GeometryGenerator::MakeSquareGrid(const int numSlices,
     for (int j = 0; j < numStacks + 1; j++) {
         float x = -1.0f;
         for (int i = 0; i < numSlices + 1; i++) {
-            Vertex v;
+            dx12::Vertex v;
             v.position = Vector3(x, y, 0.0f) * scale;
             v.normal = Vector3(0.0f, 0.0f, -1.0f);
             v.texcoord = Vector2(x + 1.0f, y + 1.0f) * 0.5f * texScale;
@@ -94,7 +93,7 @@ MeshData GeometryGenerator::MakeSquareGrid(const int numSlices,
     return meshData;
 }
 
-MeshData GeometryGenerator::MakeBox(const float scale) {
+dx12::MeshData GeometryGenerator::MakeBox(const float scale) {
 
     vector<Vector3> positions;
     vector<Vector3> colors;
@@ -209,42 +208,34 @@ MeshData GeometryGenerator::MakeBox(const float scale) {
     texcoords.push_back(Vector2(1.0f, 1.0f));
     texcoords.push_back(Vector2(0.0f, 1.0f));
 
-    MeshData meshData;
+    dx12::MeshData meshData;
     for (size_t i = 0; i < positions.size(); i++) {
-        Vertex v;
+        dx12::Vertex v;
         v.position = positions[i];
         v.normal = normals[i];
         v.texcoord = texcoords[i];
         meshData.vertices.push_back(v);
     }
 
-    meshData.indices = {
-        0,  1,  2,  0,  2,  3,  // ?쀫㈃
-        4,  5,  6,  4,  6,  7,  // ?꾨옯硫?
-        8,  9,  10, 8,  10, 11, // ?욌㈃
-        12, 13, 14, 12, 14, 15, // ?룸㈃
-        16, 17, 18, 16, 18, 19, // ?쇱そ
-        20, 21, 22, 20, 22, 23  // ?ㅻⅨ履?
-    };
+    meshData.indices = {0,  1,  2,  0,  2,  3,  4,  5,  6,  4,  6,  7,
+                        8,  9,  10, 8,  10, 11, 12, 13, 14, 12, 14, 15,
+                        16, 17, 18, 16, 18, 19, 20, 21, 22, 20, 22, 23};
 
     return meshData;
 }
 
-MeshData GeometryGenerator::MakeCylinder(const float bottomRadius,
-                                         const float topRadius, float height,
-                                         int numSlices) {
-
-    // Texture 醫뚰몴怨꾨븣臾몄뿉 (numSlices + 1) x 2 媛쒖쓽 踰꾪뀓???ъ슜
+dx12::MeshData GeometryGenerator::MakeCylinder(const float bottomRadius,
+                                               const float topRadius,
+                                               float height, int numSlices) {
 
     const float dTheta = -XM_2PI / float(numSlices);
 
-    MeshData meshData;
+    dx12::MeshData meshData;
 
-    vector<Vertex> &vertices = meshData.vertices;
+    vector<dx12::Vertex> &vertices = meshData.vertices;
 
-    // ?녿㈃??諛붾떏 踰꾪뀓?ㅻ뱾 (?몃뜳??0 ?댁긽 numSlices 誘몃쭔)
     for (int i = 0; i <= numSlices; i++) {
-        Vertex v;
+        dx12::Vertex v;
         v.position =
             Vector3::Transform(Vector3(bottomRadius, -0.5f * height, 0.0f),
                                Matrix::CreateRotationY(dTheta * float(i)));
@@ -258,9 +249,8 @@ MeshData GeometryGenerator::MakeCylinder(const float bottomRadius,
         vertices.push_back(v);
     }
 
-    // ?녿㈃??留???踰꾪뀓?ㅻ뱾 (?몃뜳??numSlices ?댁긽 2 * numSlices 誘몃쭔)
     for (int i = 0; i <= numSlices; i++) {
-        Vertex v;
+        dx12::Vertex v;
         v.position =
             Vector3::Transform(Vector3(topRadius, 0.5f * height, 0.0f),
                                Matrix::CreateRotationY(dTheta * float(i)));
@@ -286,42 +276,37 @@ MeshData GeometryGenerator::MakeCylinder(const float bottomRadius,
     return meshData;
 }
 
-MeshData GeometryGenerator::MakeSphere(const float radius, const int numSlices,
-                                       const int numStacks,
-                                       const Vector2 texScale) {
-
-    // 李멸퀬: OpenGL Sphere
-    // http://www.songho.ca/opengl/gl_sphere.html
-    // Texture 醫뚰몴怨꾨븣臾몄뿉 (numSlices + 1) 媛쒖쓽 踰꾪뀓???ъ슜 (留덉?留됱뿉 ?レ븘二쇰뒗
-    // 踰꾪뀓?ㅺ? 以묐났) Stack? y ?꾩そ 諛⑺뼢?쇰줈 ?볦븘媛??諛⑹떇
+dx12::MeshData GeometryGenerator::MakeSphere(const float radius,
+                                             const int numSlices,
+                                             const int numStacks,
+                                             const Vector2 texScale) {
 
     const float dTheta = -XM_2PI / float(numSlices);
     const float dPhi = -XM_PI / float(numStacks);
 
-    MeshData meshData;
+    dx12::MeshData meshData;
 
-    vector<Vertex> &vertices = meshData.vertices;
+    vector<dx12::Vertex> &vertices = meshData.vertices;
 
     for (int j = 0; j <= numStacks; j++) {
 
-        // ?ㅽ깮???볦씪 ?섎줉 ?쒖옉?먯쓣 x-y ?됰㈃?먯꽌 ?뚯쟾 ?쒖폒???꾨줈 ?щ━??援ъ“
+        // ?ㅽ깮???볦씪 ?섎줉 ?쒖옉?먯쓣 x-y ?됰㈃?먯꽌 ?뚯쟾 ?쒖폒???꾨줈
+        // ?щ━??援ъ“
         Vector3 stackStartPoint = Vector3::Transform(
             Vector3(0.0f, -radius, 0.0f), Matrix::CreateRotationZ(dPhi * j));
 
         for (int i = 0; i <= numSlices; i++) {
-            Vertex v;
+            dx12::Vertex v;
 
-            // ?쒖옉?먯쓣 x-z ?됰㈃?먯꽌 ?뚯쟾?쒗궎硫댁꽌 ?먯쓣 留뚮뱶??援ъ“
             v.position = Vector3::Transform(
                 stackStartPoint, Matrix::CreateRotationY(dTheta * float(i)));
 
-            v.normal = v.position; // ?먯젏??援ъ쓽 以묒떖
+            v.normal = v.position;
             v.normal.Normalize();
             v.texcoord =
                 Vector2(float(i) / numSlices, 1.0f - float(j) / numStacks) *
                 texScale;
 
-            // texcoord媛 ?꾨줈 媛덉닔濡?利앷?
             Vector3 biTangent = Vector3(0.0f, 1.0f, 0.0f);
 
             Vector3 normalOrth = v.normal - biTangent.Dot(v.normal) * v.normal;
@@ -329,11 +314,6 @@ MeshData GeometryGenerator::MakeSphere(const float radius, const int numSlices,
 
             v.tangent = biTangent.Cross(normalOrth);
             v.tangent.Normalize();
-
-            /*    Vector3::Transform(Vector3(0.0f, 0.0f, 1.0f),
-                                   Matrix::CreateRotationY(dTheta *
-               float(i)));*/
-            // v.biTangentModel = Vector3(0.0f, 1.0f, 0.0f);
 
             vertices.push_back(v);
         }
@@ -368,16 +348,12 @@ MeshData GeometryGenerator::MakeSphere(const float radius, const int numSlices,
     return meshData;
 }
 
-MeshData GeometryGenerator::MakeIcosahedron() {
-
-    // Luna DX12 援먯옱 李멸퀬
-    // ??0硫댁껜
-    // https://mathworld.wolfram.com/Isohedron.html
+dx12::MeshData GeometryGenerator::MakeIcosahedron() {
 
     const float X = 0.525731f;
     const float Z = 0.850651f;
 
-    MeshData newMesh;
+    dx12::MeshData newMesh;
 
     vector<Vector3> pos = {
         Vector3(-X, 0.0f, Z), Vector3(X, 0.0f, Z),   Vector3(-X, 0.0f, -Z),
@@ -386,7 +362,7 @@ MeshData GeometryGenerator::MakeIcosahedron() {
         Vector3(-Z, X, 0.0f), Vector3(Z, -X, 0.0f),  Vector3(-Z, -X, 0.0f)};
 
     for (size_t i = 0; i < pos.size(); i++) {
-        Vertex v;
+        dx12::Vertex v;
         v.position = pos[i];
         v.normal = v.position;
         v.normal.Normalize();
@@ -402,7 +378,7 @@ MeshData GeometryGenerator::MakeIcosahedron() {
     return newMesh;
 }
 
-MeshData GeometryGenerator::MakeTetrahedron() {
+dx12::MeshData GeometryGenerator::MakeTetrahedron() {
 
     // Regular Tetrahedron
     // https://mathworld.wolfram.com/RegularTetrahedron.html
@@ -428,13 +404,13 @@ MeshData GeometryGenerator::MakeTetrahedron() {
         points[i] -= center;
     }
 
-    MeshData meshData;
+    dx12::MeshData meshData;
 
     for (int i = 0; i < points.size(); i++) {
 
-        Vertex v;
+        dx12::Vertex v;
         v.position = points[i];
-        v.normal = v.position; // 以묒떖???먯젏
+        v.normal = v.position;
         v.normal.Normalize();
 
         meshData.vertices.push_back(v);
@@ -444,30 +420,21 @@ MeshData GeometryGenerator::MakeTetrahedron() {
 
     return meshData;
 }
-MeshData GeometryGenerator::SubdivideToSphere(const float radius,
-                                              MeshData meshData) {
+dx12::MeshData GeometryGenerator::SubdivideToSphere(const float radius,
+                                                    dx12::MeshData meshData) {
 
-    // ?먯젏??以묒떖?대씪怨?媛??
     for (auto &v : meshData.vertices) {
         v.position = v.normal * radius;
     }
 
-    // 援ъ쓽 ?쒕㈃?쇰줈 ??린怨??몃?怨?texture 醫뚰몴 怨꾩궛
-    auto ProjectVertex = [&](Vertex &v) {
+    auto ProjectVertex = [&](dx12::Vertex &v) {
         v.normal = v.position;
         v.normal.Normalize();
         v.position = v.normal * radius;
-
-        // 二쇱쓽: ?띿뒪異곌? ?댁쓬留ㅼ뿉??源⑥쭛?덈떎.
-        // atan vs atan2
-        // https://stackoverflow.com/questions/283406/what-is-the-difference-between-atan-and-atan2-in-c
-        // const float theta = atan2f(v.position.z, v.position.x);
-        // const float phi = acosf(v.position.y / radius);
-        // v.texcoord.x = theta / XM_2PI;
-        // v.texcoord.y = phi / XM_PI;
     };
 
-    auto UpdateFaceNormal = [](Vertex &v0, Vertex &v1, Vertex &v2) {
+    auto UpdateFaceNormal = [](dx12::Vertex &v0, dx12::Vertex &v1,
+                               dx12::Vertex &v2) {
         auto faceNormal =
             (v1.position - v0.position).Cross(v2.position - v0.position);
         faceNormal.Normalize();
@@ -476,29 +443,28 @@ MeshData GeometryGenerator::SubdivideToSphere(const float radius,
         v2.normal = faceNormal;
     };
 
-    // 踰꾪뀓?ㅺ? 以묐났?섎뒗 援ъ“濡?援ы쁽
-    MeshData newMesh;
+    dx12::MeshData newMesh;
     uint32_t count = 0;
     for (size_t i = 0; i < meshData.indices.size(); i += 3) {
         size_t i0 = meshData.indices[i];
         size_t i1 = meshData.indices[i + 1];
         size_t i2 = meshData.indices[i + 2];
 
-        Vertex v0 = meshData.vertices[i0];
-        Vertex v1 = meshData.vertices[i1];
-        Vertex v2 = meshData.vertices[i2];
+        dx12::Vertex v0 = meshData.vertices[i0];
+        dx12::Vertex v1 = meshData.vertices[i1];
+        dx12::Vertex v2 = meshData.vertices[i2];
 
-        Vertex v3;
+        dx12::Vertex v3;
         v3.position = (v0.position + v2.position) * 0.5f;
         v3.texcoord = (v0.texcoord + v2.texcoord) * 0.5f;
         ProjectVertex(v3);
 
-        Vertex v4;
+        dx12::Vertex v4;
         v4.position = (v0.position + v1.position) * 0.5f;
         v4.texcoord = (v0.texcoord + v1.texcoord) * 0.5f;
         ProjectVertex(v4);
 
-        Vertex v5;
+        dx12::Vertex v5;
         v5.position = (v1.position + v2.position) * 0.5f;
         v5.texcoord = (v1.texcoord + v2.texcoord) * 0.5f;
         ProjectVertex(v5);
@@ -532,15 +498,15 @@ MeshData GeometryGenerator::SubdivideToSphere(const float radius,
 
     return newMesh;
 }
-vector<MeshData> GeometryGenerator::ReadFromFile(std::string basePath,
-                                                 std::string filename,
-                                                 bool revertNormals) {
+vector<dx12::MeshData> GeometryGenerator::ReadFromFile(std::string basePath,
+                                                       std::string filename,
+                                                       bool revertNormals) {
 
     using namespace DirectX;
 
     ModelLoader modelLoader;
     modelLoader.Load(basePath, filename, revertNormals);
-    vector<MeshData> &meshes = modelLoader.m_meshes;
+    vector<dx12::MeshData> &meshes = modelLoader.m_meshes;
 
     // Normalize vertices
     Vector3 vmin(1000, 1000, 1000);
@@ -572,49 +538,42 @@ vector<MeshData> GeometryGenerator::ReadFromFile(std::string basePath,
     return meshes;
 }
 
-MeshData GeometryGenerator::MakeWireBox(const Vector3 center,
-                                        const Vector3 extents) {
-
-    // ?곸옄瑜???댁뼱 ?꾨젅?꾩쑝濡?洹몃━???⑸룄
+dx12::MeshData GeometryGenerator::MakeWireBox(const Vector3 center,
+                                              const Vector3 extents) {
 
     vector<Vector3> positions;
 
-    // ?욌㈃
     positions.push_back(center + Vector3(-1.0f, -1.0f, -1.0f) * extents);
     positions.push_back(center + Vector3(-1.0f, 1.0f, -1.0f) * extents);
     positions.push_back(center + Vector3(1.0f, 1.0f, -1.0f) * extents);
     positions.push_back(center + Vector3(1.0f, -1.0f, -1.0f) * extents);
 
-    // ?룸㈃
     positions.push_back(center + Vector3(-1.0f, -1.0f, 1.0f) * extents);
     positions.push_back(center + Vector3(-1.0f, 1.0f, 1.0f) * extents);
     positions.push_back(center + Vector3(1.0f, 1.0f, 1.0f) * extents);
     positions.push_back(center + Vector3(1.0f, -1.0f, 1.0f) * extents);
 
-    MeshData meshData;
+    dx12::MeshData meshData;
     for (size_t i = 0; i < positions.size(); i++) {
-        Vertex v;
+        dx12::Vertex v;
         v.position = positions[i];
         v.normal = positions[i] - center;
         v.normal.Normalize();
-        v.texcoord = Vector2(0.0f); // 誘몄궗??
+        v.texcoord = Vector2(0.0f);
         meshData.vertices.push_back(v);
     }
 
     // Line list
-    meshData.indices = {
-        0, 1, 1, 2, 2, 3, 3, 0, // ?욌㈃
-        4, 5, 5, 6, 6, 7, 7, 4, // ?룸㈃
-        0, 4, 1, 5, 2, 6, 3, 7  // ?녿㈃
-    };
+    meshData.indices = {0, 1, 1, 2, 2, 3, 3, 0, 4, 5, 5, 6,
+                        6, 7, 7, 4, 0, 4, 1, 5, 2, 6, 3, 7};
 
     return meshData;
 }
 
-MeshData GeometryGenerator::MakeWireSphere(const Vector3 center,
-                                           const float radius) {
-    MeshData meshData;
-    vector<Vertex> &vertices = meshData.vertices;
+dx12::MeshData GeometryGenerator::MakeWireSphere(const Vector3 center,
+                                                 const float radius) {
+    dx12::MeshData meshData;
+    vector<dx12::Vertex> &vertices = meshData.vertices;
     vector<uint32_t> &indices = meshData.indices;
 
     const int numPoints = 30;
@@ -625,7 +584,7 @@ MeshData GeometryGenerator::MakeWireSphere(const Vector3 center,
         int offset = int(vertices.size());
         Vector3 start(1.0f, 0.0f, 0.0f);
         for (int i = 0; i < numPoints; i++) {
-            Vertex v;
+            dx12::Vertex v;
             v.position =
                 center + Vector3::Transform(start, Matrix::CreateRotationZ(
                                                        dTheta * float(i))) *
@@ -644,7 +603,7 @@ MeshData GeometryGenerator::MakeWireSphere(const Vector3 center,
         int offset = int(vertices.size());
         Vector3 start(0.0f, 1.0f, 0.0f);
         for (int i = 0; i < numPoints; i++) {
-            Vertex v;
+            dx12::Vertex v;
             v.position =
                 center + Vector3::Transform(start, Matrix::CreateRotationX(
                                                        dTheta * float(i))) *
@@ -663,7 +622,7 @@ MeshData GeometryGenerator::MakeWireSphere(const Vector3 center,
         int offset = int(vertices.size());
         Vector3 start(1.0f, 0.0f, 0.0f);
         for (int i = 0; i < numPoints; i++) {
-            Vertex v;
+            dx12::Vertex v;
             v.position =
                 center + Vector3::Transform(start, Matrix::CreateRotationY(
                                                        dTheta * float(i))) *
@@ -692,7 +651,7 @@ MeshData GeometryGenerator::MakeWireSphere(const Vector3 center,
 
 auto GeometryGenerator::ReadAnimationFromFile(string basePath, string filename,
                                               bool revertNormals)
-    -> tuple<vector<MeshData>, AnimationData> {
+    -> tuple<vector<dx12::MeshData>, AnimationData> {
 
     ModelLoader modelLoader;
     modelLoader.Load(basePath, filename, revertNormals);
@@ -705,10 +664,8 @@ auto GeometryGenerator::ReadAnimationFromFile(string basePath, string filename,
 
 void GeometryGenerator::Normalize(const Vector3 center,
                                   const float longestLength,
-                                  vector<MeshData> &meshes,
+                                  vector<dx12::MeshData> &meshes,
                                   AnimationData &aniData) {
-
-    // 紐⑤뜽??以묒떖???먯젏?쇰줈 ??린怨??ш린瑜?[-1,1]^3?쇰줈 ?ㅼ???
 
     using namespace DirectX;
 
@@ -740,9 +697,8 @@ void GeometryGenerator::Normalize(const Vector3 center,
         }
     }
 
-    // ?좊땲硫붿씠???곗씠??蹂댁젙???ъ슜
     aniData.defaultTransform =
         Matrix::CreateTranslation(translation) * Matrix::CreateScale(scale);
 }
 
-} // namespace engine
+} // namespace core

@@ -1,13 +1,13 @@
 #ifndef _TEXTURE
 #define _TEXTURE
 
-#include "graphics/graphics_util.h"
+#include "graphics_util.h"
 #include "vertex.h"
 #include <directxtk12/ResourceUploadBatch.h>
 #include <filesystem>
 #include <iostream>
 
-namespace core {
+namespace dx12 {
 struct Image {
     int width = 0;
     int height = 0;

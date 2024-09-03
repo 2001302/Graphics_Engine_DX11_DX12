@@ -1,9 +1,9 @@
 #ifndef _VERTEX
 #define _VERTEX
 
-#include "graphics/graphics_util.h"
+#include "graphics_util.h"
 
-namespace core {
+namespace dx12 {
 
 struct Vertex {
     Vector3 position;

@@ -26,14 +26,14 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
             toneMappingPSO->Initialize();
 
             auto mesh_data = GeometryGenerator::MakeSquare();
-            mesh = std::make_shared<Mesh>();
+            mesh = std::make_shared<dx12::Mesh>();
 
             dx12::Util::CreateVertexBuffer(mesh_data.vertices,
                                            mesh->vertex_buffer,
                                            mesh->vertex_buffer_view);
             mesh->index_count = UINT(mesh_data.indices.size());
             mesh->vertex_count = UINT(mesh_data.vertices.size());
-            mesh->stride = UINT(sizeof(Vertex));
+            mesh->stride = UINT(sizeof(dx12::Vertex));
             dx12::Util::CreateIndexBuffer(mesh_data.indices, mesh->index_buffer,
                                           mesh->index_buffer_view);
 
@@ -87,7 +87,7 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
         float gamma;
     };
     std::shared_ptr<dx12::ToneMappingPSO> toneMappingPSO;
-    std::shared_ptr<Mesh> mesh;
+    std::shared_ptr<dx12::Mesh> mesh;
     ComPtr<ID3D12DescriptorHeap> sampler_heap;
     ImageFilterConstData const_data;
     ComPtr<ID3D12Resource> const_buffer;

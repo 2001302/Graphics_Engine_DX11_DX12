@@ -1,12 +1,12 @@
 #ifndef _MESH
 #define _MESH
 
-#include "graphics/command_pool.h"
-#include "graphics/graphics_util.h"
+#include "command_pool.h"
+#include "graphics_util.h"
 #include "texture.h"
 #include "vertex.h"
 
-namespace core {
+namespace dx12 {
 enum EnumTextureType {
     ALBEDO = 0,
     NORMAL = 1,

@@ -1,9 +1,9 @@
 #ifndef _CONSTANTBUFFER
 #define _CONSTANTBUFFER
 
-#include "graphics/graphics_util.h"
+#include "graphics_util.h"
 
-namespace core {
+namespace dx12 {
 
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;

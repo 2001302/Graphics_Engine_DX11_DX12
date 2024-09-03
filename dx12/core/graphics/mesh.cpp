@@ -1,6 +1,6 @@
 #include "mesh.h"
 
-namespace core {
+namespace dx12 {
 void Mesh::Initialize(const MeshData &mesh_data,
                       ComPtr<ID3D12GraphicsCommandList> command_list,
                       bool use_texture) {

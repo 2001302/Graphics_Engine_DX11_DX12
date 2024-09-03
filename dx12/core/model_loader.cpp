@@ -1,5 +1,5 @@
 #include "model_loader.h"
-#include "mesh.h"
+#include "graphics/mesh.h"
 
 #include <DirectXMesh.h>
 #include <filesystem>
@@ -10,7 +10,7 @@ namespace core {
 using namespace std;
 using namespace DirectX::SimpleMath;
 
-void UpdateNormals(vector<MeshData> &meshes) {
+void UpdateNormals(vector<dx12::MeshData> &meshes) {
 
     for (auto &m : meshes) {
 
@@ -270,16 +270,16 @@ string ModelLoader::ReadTextureFilename(const aiScene *scene,
     }
 }
 
-MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
+dx12::MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
 
-    MeshData newMesh;
+    dx12::MeshData newMesh;
     auto &vertices = newMesh.vertices;
     auto &indices = newMesh.indices;
     auto &skinnedVertices = newMesh.skinned_vertices;
 
     // Walk through each of the mesh's vertices
     for (UINT i = 0; i < mesh->mNumVertices; i++) {
-        Vertex vertex;
+        dx12::Vertex vertex;
 
         vertex.position.x = mesh->mVertices[i].x;
         vertex.position.y = mesh->mVertices[i].y;

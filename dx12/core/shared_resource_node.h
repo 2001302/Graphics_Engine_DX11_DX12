@@ -23,7 +23,7 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
             // global constants
             condition->global_consts.Initialize();
 
-            // descriptor heap
+            // gpu heap
             condition->gpu_heap = std::make_shared<dx12::GpuHeap>(
                 1024, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 0);
 
@@ -72,29 +72,6 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
                 condition->global_consts.GetCpu().viewProj.Invert();
 
             condition->global_consts.Upload();
-
-            break;
-        }
-        case EnumStageType::eRender: {
-            // dx11::GpuCore::Instance().device_context->VSSetSamplers(
-            //     0, UINT(dx11::pso::sampleStates.size()),
-            //     dx11::pso::sampleStates.data());
-            // dx11::GpuCore::Instance().device_context->PSSetSamplers(
-            //     0, UINT(dx11::pso::sampleStates.size()),
-            //     dx11::pso::sampleStates.data());
-            // dx11::GpuCore::Instance().device_context->CSSetSamplers(
-            //     0, UINT(dx11::pso::sampleStates.size()),
-            //     dx11::pso::sampleStates.data());
-
-            //// Shared textures: start from register(t10) in 'Common.hlsli'
-            // std::vector<ID3D11ShaderResourceView *> commonSRVs = {
-            //     condition->skybox->env_SRV.Get(),
-            //     condition->skybox->specular_SRV.Get(),
-            //     condition->skybox->irradiance_SRV.Get(),
-            //     condition->skybox->brdf_SRV.Get()};
-            // dx11::GpuCore::Instance()
-            //     .device_context->PSSetShaderResources(
-            //         10, UINT(commonSRVs.size()), commonSRVs.data());
 
             break;
         }

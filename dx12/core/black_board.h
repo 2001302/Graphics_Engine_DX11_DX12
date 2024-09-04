@@ -1,7 +1,8 @@
 #ifndef _BLACKBOARD
 #define _BLACKBOARD
 
-#include "render_info.h"
+#include "render_condition.h"
+#include "render_target_object.h"
 #include "foundation/setting_ui.h"
 #include "foundation/input.h"
 
@@ -18,6 +19,7 @@ struct BlackBoard : public foundation::IDataBlock {
     std::shared_ptr<RenderCondition> conditions;
     std::shared_ptr<foundation::Input> input;
     std::shared_ptr<foundation::SettingUi> gui;
+    //gpu
 };
 
 } // namespace core

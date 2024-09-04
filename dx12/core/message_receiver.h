@@ -4,7 +4,7 @@
 #include "foundation/input.h"
 #include "foundation/setting_ui.h"
 #include "geometry_generator.h"
-#include "render_info.h"
+#include "render_target_object.h"
 
 namespace core {
 class MessageReceiver {

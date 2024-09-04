@@ -191,7 +191,8 @@
     <ClInclude Include="core\message_receiver.h" />
     <ClInclude Include="core\model.h" />
     <ClInclude Include="core\model_loader.h" />
-    <ClInclude Include="core\render_info.h" />
+    <ClInclude Include="core\render_condition.h" />
+    <ClInclude Include="core\render_target_object.h" />
     <ClInclude Include="core\shared_resource_node.h" />
     <ClInclude Include="core\skybox_node.h" />
     <ClInclude Include="core\tone_mapping_node.h" />

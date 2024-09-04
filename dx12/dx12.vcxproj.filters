@@ -366,11 +366,14 @@
     <ClInclude Include="core\graphics\texture.h">
       <Filter>Graphics\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\render_info.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="core\graphics\vertex.h">
       <Filter>Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="core\render_condition.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\render_target_object.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

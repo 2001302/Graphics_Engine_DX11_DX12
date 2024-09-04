@@ -37,9 +37,7 @@ struct Mesh {
           material_consts_GPU(0), heap_PS(0), heap_VS(0),
           vertex_buffer_view(D3D12_VERTEX_BUFFER_VIEW()),
           index_buffer_view(D3D12_INDEX_BUFFER_VIEW()) {}
-    /// <summary>
-    /// 
-    /// </summary>
+
     ComPtr<ID3D12Resource> vertex_buffer;
     ComPtr<ID3D12Resource> index_buffer;
     D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view;

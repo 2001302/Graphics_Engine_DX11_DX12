@@ -7,7 +7,8 @@
 #include "graphics/mesh_pso.h"
 #include "graphics/constant_buffer.h"
 #include "graphics/mesh.h"
-#include "render_info.h"
+#include "render_condition.h"
+#include "render_target_object.h"
 #include <filesystem>
 #include <iostream>
 

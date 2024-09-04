@@ -2,121 +2,121 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="core\foundation\ImGui\NodeEditor\crude_json.cpp">
+    <ClCompile Include="graphics\foundation\ImGui\NodeEditor\crude_json.cpp">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\ImGui\NodeEditor\imgui_canvas.cpp">
+    <ClCompile Include="graphics\foundation\ImGui\NodeEditor\imgui_canvas.cpp">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\ImGui\NodeEditor\imgui_node_editor.cpp">
+    <ClCompile Include="graphics\foundation\ImGui\NodeEditor\imgui_node_editor.cpp">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\ImGui\NodeEditor\imgui_node_editor_api.cpp">
+    <ClCompile Include="graphics\foundation\ImGui\NodeEditor\imgui_node_editor_api.cpp">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\ImGui\imgui.cpp">
+    <ClCompile Include="graphics\foundation\ImGui\imgui.cpp">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\ImGui\imgui_demo.cpp">
+    <ClCompile Include="graphics\foundation\ImGui\imgui_demo.cpp">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\ImGui\imgui_draw.cpp">
+    <ClCompile Include="graphics\foundation\ImGui\imgui_draw.cpp">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\ImGui\imgui_impl_win32.cpp">
+    <ClCompile Include="graphics\foundation\ImGui\imgui_impl_win32.cpp">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\ImGui\imgui_tables.cpp">
+    <ClCompile Include="graphics\foundation\ImGui\imgui_tables.cpp">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\ImGui\imgui_widgets.cpp">
+    <ClCompile Include="graphics\foundation\ImGui\imgui_widgets.cpp">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\ImGui\imgui_impl_dx12.cpp">
+    <ClCompile Include="graphics\foundation\ImGui\imgui_impl_dx12.cpp">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\ui.cpp">
+    <ClCompile Include="graphics\foundation\ui.cpp">
       <Filter>Foundation\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\action_node.cpp">
+    <ClCompile Include="graphics\foundation\action_node.cpp">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\animation_node.cpp">
+    <ClCompile Include="graphics\foundation\animation_node.cpp">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\behavior_tree_builder.cpp">
+    <ClCompile Include="graphics\foundation\behavior_tree_builder.cpp">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\conditional_node.cpp">
+    <ClCompile Include="graphics\foundation\conditional_node.cpp">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\selector_node.cpp">
+    <ClCompile Include="graphics\foundation\selector_node.cpp">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\sequence_node.cpp">
+    <ClCompile Include="graphics\foundation\sequence_node.cpp">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\platform.cpp">
+    <ClCompile Include="graphics\foundation\platform.cpp">
       <Filter>Foundation\Platform</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\entity.cpp">
+    <ClCompile Include="graphics\foundation\entity.cpp">
       <Filter>Foundation\Structure</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\id_generator.cpp">
+    <ClCompile Include="graphics\foundation\id_generator.cpp">
       <Filter>Foundation\Structure</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\node.cpp">
+    <ClCompile Include="graphics\foundation\node.cpp">
       <Filter>Foundation\Structure</Filter>
     </ClCompile>
-    <ClCompile Include="core\graphics_core.cpp">
+    <ClCompile Include="graphics\graphics_core.cpp">
       <Filter>Graphics\Gpu</Filter>
     </ClCompile>
-    <ClCompile Include="core\foundation\setting_ui.cpp">
+    <ClCompile Include="graphics\foundation\setting_ui.cpp">
       <Filter>Foundation\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="core\gpu_buffer.cpp">
+    <ClCompile Include="graphics\gpu_buffer.cpp">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="core\texture_cube.cpp">
+    <ClCompile Include="graphics\texture_cube.cpp">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="core\texture_2d.cpp">
+    <ClCompile Include="graphics\texture_2d.cpp">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="core\camera.cpp">
+    <ClCompile Include="graphics\camera.cpp">
       <Filter>Graphics\Model</Filter>
     </ClCompile>
-    <ClCompile Include="core\model.cpp">
+    <ClCompile Include="graphics\model.cpp">
       <Filter>Graphics\Model</Filter>
     </ClCompile>
-    <ClCompile Include="core\mesh_renderer.cpp">
+    <ClCompile Include="graphics\mesh_renderer.cpp">
       <Filter>Graphics\Component</Filter>
     </ClCompile>
-    <ClCompile Include="core\geometry_generator.cpp">
+    <ClCompile Include="graphics\geometry_generator.cpp">
       <Filter>Graphics\Util</Filter>
     </ClCompile>
-    <ClCompile Include="core\message_receiver.cpp">
+    <ClCompile Include="graphics\message_receiver.cpp">
       <Filter>Graphics\Util</Filter>
     </ClCompile>
-    <ClCompile Include="core\model_loader.cpp">
+    <ClCompile Include="graphics\model_loader.cpp">
       <Filter>Graphics\Util</Filter>
     </ClCompile>
-    <ClCompile Include="core\engine.cpp">
+    <ClCompile Include="graphics\engine.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="core\gpu_heap.cpp">
+    <ClCompile Include="graphics\gpu_heap.cpp">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="core\graphics_util.cpp">
+    <ClCompile Include="graphics\graphics_util.cpp">
       <Filter>Graphics\Gpu\Util</Filter>
     </ClCompile>
-    <ClCompile Include="core\mesh.cpp">
+    <ClCompile Include="graphics\mesh.cpp">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClCompile>
-    <ClCompile Include="core\image.cpp">
+    <ClCompile Include="graphics\image.cpp">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClCompile>
-    <ClCompile Include="core\graphics_pso.cpp">
+    <ClCompile Include="graphics\graphics_pso.cpp">
       <Filter>Graphics\Gpu\PSO</Filter>
     </ClCompile>
   </ItemGroup>
@@ -180,260 +180,260 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\crude_json.h">
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\crude_json.h">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_bezier_math.h">
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_bezier_math.h">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_canvas.h">
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_canvas.h">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_extra_keys.h">
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_extra_keys.h">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_extra_math.h">
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_extra_math.h">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_node_editor.h">
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_node_editor.h">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_node_editor_internal.h">
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_node_editor_internal.h">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\imgui.h">
+    <ClInclude Include="graphics\foundation\ImGui\imgui.h">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\imgui_impl_win32.h">
+    <ClInclude Include="graphics\foundation\ImGui\imgui_impl_win32.h">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\imgui_internal.h">
+    <ClInclude Include="graphics\foundation\ImGui\imgui_internal.h">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\imstb_rectpack.h">
+    <ClInclude Include="graphics\foundation\ImGui\imstb_rectpack.h">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\imstb_textedit.h">
+    <ClInclude Include="graphics\foundation\ImGui\imstb_textedit.h">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\imstb_truetype.h">
+    <ClInclude Include="graphics\foundation\ImGui\imstb_truetype.h">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ImGui\imgui_impl_dx12.h">
+    <ClInclude Include="graphics\foundation\ImGui\imgui_impl_dx12.h">
       <Filter>Foundation\Gui\ImGui</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\ui.h">
+    <ClInclude Include="graphics\foundation\ui.h">
       <Filter>Foundation\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\action_node.h">
+    <ClInclude Include="graphics\foundation\action_node.h">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\animation_node.h">
+    <ClInclude Include="graphics\foundation\animation_node.h">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\behavior_tree_builder.h">
+    <ClInclude Include="graphics\foundation\behavior_tree_builder.h">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\conditional_node.h">
+    <ClInclude Include="graphics\foundation\conditional_node.h">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\selector_node.h">
+    <ClInclude Include="graphics\foundation\selector_node.h">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\sequence_node.h">
+    <ClInclude Include="graphics\foundation\sequence_node.h">
       <Filter>Foundation\BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\platform.h">
+    <ClInclude Include="graphics\foundation\platform.h">
       <Filter>Foundation\Platform</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\node.h">
+    <ClInclude Include="graphics\foundation\node.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\dataBlock.h">
+    <ClInclude Include="graphics\foundation\dataBlock.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\entity.h">
+    <ClInclude Include="graphics\foundation\entity.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\env.h">
+    <ClInclude Include="graphics\foundation\env.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\id_generator.h">
+    <ClInclude Include="graphics\foundation\id_generator.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\info.h">
+    <ClInclude Include="graphics\foundation\info.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\input.h">
+    <ClInclude Include="graphics\foundation\input.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\message.h">
+    <ClInclude Include="graphics\foundation\message.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\graphics_core.h">
+    <ClInclude Include="graphics\graphics_core.h">
       <Filter>Graphics\Gpu</Filter>
     </ClInclude>
-    <ClInclude Include="core\foundation\setting_ui.h">
+    <ClInclude Include="graphics\foundation\setting_ui.h">
       <Filter>Foundation\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="core\mesh_pso.h">
+    <ClInclude Include="graphics\mesh_pso.h">
       <Filter>Graphics\Gpu\PSO</Filter>
     </ClInclude>
-    <ClInclude Include="core\tone_mapping_pso.h">
+    <ClInclude Include="graphics\tone_mapping_pso.h">
       <Filter>Graphics\Gpu\PSO</Filter>
     </ClInclude>
-    <ClInclude Include="core\skybox_pso.h">
+    <ClInclude Include="graphics\skybox_pso.h">
       <Filter>Graphics\Gpu\PSO</Filter>
     </ClInclude>
-    <ClInclude Include="core\gpu_buffer.h">
+    <ClInclude Include="graphics\gpu_buffer.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="core\gpu_heap.h">
+    <ClInclude Include="graphics\gpu_heap.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="core\texture_cube.h">
+    <ClInclude Include="graphics\texture_cube.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="core\texture_2d.h">
+    <ClInclude Include="graphics\texture_2d.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="core\camera.h">
+    <ClInclude Include="graphics\camera.h">
       <Filter>Graphics\Model</Filter>
     </ClInclude>
-    <ClInclude Include="core\model.h">
+    <ClInclude Include="graphics\model.h">
       <Filter>Graphics\Model</Filter>
     </ClInclude>
-    <ClInclude Include="core\shared_resource_node.h">
+    <ClInclude Include="graphics\shared_resource_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="core\skybox_node.h">
+    <ClInclude Include="graphics\skybox_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="core\gpu_node.h">
+    <ClInclude Include="graphics\gpu_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="core\light_node.h">
+    <ClInclude Include="graphics\light_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="core\game_objects_node.h">
+    <ClInclude Include="graphics\game_objects_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="core\tone_mapping_node.h">
+    <ClInclude Include="graphics\tone_mapping_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="core\gui_node.h">
+    <ClInclude Include="graphics\gui_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="core\camera_node.h">
+    <ClInclude Include="graphics\camera_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="core\component.h">
+    <ClInclude Include="graphics\component.h">
       <Filter>Graphics\Component</Filter>
     </ClInclude>
-    <ClInclude Include="core\mesh_renderer.h">
+    <ClInclude Include="graphics\mesh_renderer.h">
       <Filter>Graphics\Component</Filter>
     </ClInclude>
-    <ClInclude Include="core\geometry_generator.h">
+    <ClInclude Include="graphics\geometry_generator.h">
       <Filter>Graphics\Util</Filter>
     </ClInclude>
-    <ClInclude Include="core\message_receiver.h">
+    <ClInclude Include="graphics\message_receiver.h">
       <Filter>Graphics\Util</Filter>
     </ClInclude>
-    <ClInclude Include="core\model_loader.h">
+    <ClInclude Include="graphics\model_loader.h">
       <Filter>Graphics\Util</Filter>
     </ClInclude>
-    <ClInclude Include="core\engine.h">
+    <ClInclude Include="graphics\engine.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="core\graphics_util.h">
+    <ClInclude Include="graphics\graphics_util.h">
       <Filter>Graphics\Gpu\Util</Filter>
     </ClInclude>
-    <ClInclude Include="core\command_pool.h">
+    <ClInclude Include="graphics\command_pool.h">
       <Filter>Graphics\Gpu\Util</Filter>
     </ClInclude>
-    <ClInclude Include="core\constant_buffer.h">
+    <ClInclude Include="graphics\constant_buffer.h">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\mesh.h">
+    <ClInclude Include="graphics\mesh.h">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\vertex.h">
+    <ClInclude Include="graphics\vertex.h">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\image.h">
+    <ClInclude Include="graphics\image.h">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="core\graphics_pso.h">
+    <ClInclude Include="graphics\graphics_pso.h">
       <Filter>Graphics\Gpu\PSO</Filter>
     </ClInclude>
-    <ClInclude Include="core\d3dx12.h">
+    <ClInclude Include="graphics\d3dx12.h">
       <Filter>Graphics\Gpu\Util</Filter>
     </ClInclude>
-    <ClInclude Include="core\render_target_object.h">
+    <ClInclude Include="graphics\render_target_object.h">
       <Filter>Graphics\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="core\render_condition.h">
+    <ClInclude Include="graphics\render_condition.h">
       <Filter>Graphics\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="core\black_board.h">
+    <ClInclude Include="graphics\black_board.h">
       <Filter>Graphics\Pipeline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="core\foundation\ImGui\NodeEditor\imgui_bezier_math.inl">
+    <None Include="graphics\foundation\ImGui\NodeEditor\imgui_bezier_math.inl">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </None>
-    <None Include="core\foundation\ImGui\NodeEditor\imgui_extra_math.inl">
+    <None Include="graphics\foundation\ImGui\NodeEditor\imgui_extra_math.inl">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </None>
-    <None Include="core\foundation\ImGui\NodeEditor\imgui_node_editor_internal.inl">
+    <None Include="graphics\foundation\ImGui\NodeEditor\imgui_node_editor_internal.inl">
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </None>
-    <None Include="core\shader\Common.hlsli">
+    <None Include="graphics\shader\Common.hlsli">
       <Filter>Graphics\Gpu\Shader</Filter>
     </None>
-    <None Include="core\shader\DiskSamples.hlsli">
+    <None Include="graphics\shader\DiskSamples.hlsli">
       <Filter>Graphics\Gpu\Shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="core\shader\BasicPS.hlsl">
+    <FxCompile Include="graphics\shader\BasicPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\BasicVS.hlsl">
+    <FxCompile Include="graphics\shader\BasicVS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\BloomCompositeCS.hlsl">
+    <FxCompile Include="graphics\shader\BloomCompositeCS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\BlurHorizontalCS.hlsl">
+    <FxCompile Include="graphics\shader\BlurHorizontalCS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\BlurVerticalCS.hlsl">
+    <FxCompile Include="graphics\shader\BlurVerticalCS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\BrightPassCS.hlsl">
+    <FxCompile Include="graphics\shader\BrightPassCS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\DepthOnlyPS.hlsl">
+    <FxCompile Include="graphics\shader\DepthOnlyPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\DepthOnlyVS.hlsl">
+    <FxCompile Include="graphics\shader\DepthOnlyVS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\SkyboxPS.hlsl">
+    <FxCompile Include="graphics\shader\SkyboxPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\ToneMappingVS.hlsl">
+    <FxCompile Include="graphics\shader\ToneMappingVS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\ToneMappingPS.hlsl">
+    <FxCompile Include="graphics\shader\ToneMappingPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\ToneMappingCS.hlsl">
+    <FxCompile Include="graphics\shader\ToneMappingCS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="core\shader\SkyboxVS.hlsl">
+    <FxCompile Include="graphics\shader\SkyboxVS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
   </ItemGroup>

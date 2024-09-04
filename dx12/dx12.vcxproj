@@ -131,196 +131,196 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="core\camera.cpp" />
-    <ClCompile Include="core\engine.cpp" />
-    <ClCompile Include="core\geometry_generator.cpp" />
-    <ClCompile Include="core\gpu_heap.cpp" />
-    <ClCompile Include="core\image.cpp" />
-    <ClCompile Include="core\mesh.cpp" />
-    <ClCompile Include="core\mesh_renderer.cpp" />
-    <ClCompile Include="core\message_receiver.cpp" />
-    <ClCompile Include="core\model.cpp" />
-    <ClCompile Include="core\model_loader.cpp" />
-    <ClCompile Include="core\foundation\action_node.cpp" />
-    <ClCompile Include="core\foundation\animation_node.cpp" />
-    <ClCompile Include="core\foundation\behavior_tree_builder.cpp" />
-    <ClCompile Include="core\foundation\conditional_node.cpp" />
-    <ClCompile Include="core\foundation\entity.cpp" />
-    <ClCompile Include="core\foundation\id_generator.cpp" />
-    <ClCompile Include="core\foundation\ImGui\imgui.cpp" />
-    <ClCompile Include="core\foundation\ImGui\imgui_demo.cpp" />
-    <ClCompile Include="core\foundation\ImGui\imgui_draw.cpp" />
-    <ClCompile Include="core\foundation\ImGui\imgui_impl_dx12.cpp" />
-    <ClCompile Include="core\foundation\ImGui\imgui_impl_win32.cpp" />
-    <ClCompile Include="core\foundation\ImGui\imgui_tables.cpp" />
-    <ClCompile Include="core\foundation\ImGui\imgui_widgets.cpp" />
-    <ClCompile Include="core\foundation\ImGui\NodeEditor\crude_json.cpp" />
-    <ClCompile Include="core\foundation\ImGui\NodeEditor\imgui_canvas.cpp" />
-    <ClCompile Include="core\foundation\ImGui\NodeEditor\imgui_node_editor.cpp" />
-    <ClCompile Include="core\foundation\ImGui\NodeEditor\imgui_node_editor_api.cpp" />
-    <ClCompile Include="core\foundation\node.cpp" />
-    <ClCompile Include="core\foundation\platform.cpp" />
-    <ClCompile Include="core\foundation\selector_node.cpp" />
-    <ClCompile Include="core\foundation\sequence_node.cpp" />
-    <ClCompile Include="core\foundation\setting_ui.cpp" />
-    <ClCompile Include="core\foundation\ui.cpp" />
-    <ClCompile Include="core\gpu_buffer.cpp" />
-    <ClCompile Include="core\graphics_core.cpp" />
-    <ClCompile Include="core\graphics_pso.cpp" />
-    <ClCompile Include="core\graphics_util.cpp" />
-    <ClCompile Include="core\texture_2d.cpp" />
-    <ClCompile Include="core\texture_cube.cpp" />
+    <ClCompile Include="graphics\camera.cpp" />
+    <ClCompile Include="graphics\engine.cpp" />
+    <ClCompile Include="graphics\geometry_generator.cpp" />
+    <ClCompile Include="graphics\gpu_heap.cpp" />
+    <ClCompile Include="graphics\image.cpp" />
+    <ClCompile Include="graphics\mesh.cpp" />
+    <ClCompile Include="graphics\mesh_renderer.cpp" />
+    <ClCompile Include="graphics\message_receiver.cpp" />
+    <ClCompile Include="graphics\model.cpp" />
+    <ClCompile Include="graphics\model_loader.cpp" />
+    <ClCompile Include="graphics\foundation\action_node.cpp" />
+    <ClCompile Include="graphics\foundation\animation_node.cpp" />
+    <ClCompile Include="graphics\foundation\behavior_tree_builder.cpp" />
+    <ClCompile Include="graphics\foundation\conditional_node.cpp" />
+    <ClCompile Include="graphics\foundation\entity.cpp" />
+    <ClCompile Include="graphics\foundation\id_generator.cpp" />
+    <ClCompile Include="graphics\foundation\ImGui\imgui.cpp" />
+    <ClCompile Include="graphics\foundation\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="graphics\foundation\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="graphics\foundation\ImGui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="graphics\foundation\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="graphics\foundation\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="graphics\foundation\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="graphics\foundation\ImGui\NodeEditor\crude_json.cpp" />
+    <ClCompile Include="graphics\foundation\ImGui\NodeEditor\imgui_canvas.cpp" />
+    <ClCompile Include="graphics\foundation\ImGui\NodeEditor\imgui_node_editor.cpp" />
+    <ClCompile Include="graphics\foundation\ImGui\NodeEditor\imgui_node_editor_api.cpp" />
+    <ClCompile Include="graphics\foundation\node.cpp" />
+    <ClCompile Include="graphics\foundation\platform.cpp" />
+    <ClCompile Include="graphics\foundation\selector_node.cpp" />
+    <ClCompile Include="graphics\foundation\sequence_node.cpp" />
+    <ClCompile Include="graphics\foundation\setting_ui.cpp" />
+    <ClCompile Include="graphics\foundation\ui.cpp" />
+    <ClCompile Include="graphics\gpu_buffer.cpp" />
+    <ClCompile Include="graphics\graphics_core.cpp" />
+    <ClCompile Include="graphics\graphics_pso.cpp" />
+    <ClCompile Include="graphics\graphics_util.cpp" />
+    <ClCompile Include="graphics\texture_2d.cpp" />
+    <ClCompile Include="graphics\texture_cube.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="core\black_board.h" />
-    <ClInclude Include="core\camera.h" />
-    <ClInclude Include="core\camera_node.h" />
-    <ClInclude Include="core\component.h" />
-    <ClInclude Include="core\engine.h" />
-    <ClInclude Include="core\game_objects_node.h" />
-    <ClInclude Include="core\geometry_generator.h" />
-    <ClInclude Include="core\gpu_node.h" />
-    <ClInclude Include="core\constant_buffer.h" />
-    <ClInclude Include="core\image.h" />
-    <ClInclude Include="core\mesh.h" />
-    <ClInclude Include="core\vertex.h" />
-    <ClInclude Include="core\gui_node.h" />
-    <ClInclude Include="core\light_node.h" />
-    <ClInclude Include="core\mesh_renderer.h" />
-    <ClInclude Include="core\message_receiver.h" />
-    <ClInclude Include="core\model.h" />
-    <ClInclude Include="core\model_loader.h" />
-    <ClInclude Include="core\render_condition.h" />
-    <ClInclude Include="core\render_target_object.h" />
-    <ClInclude Include="core\shared_resource_node.h" />
-    <ClInclude Include="core\skybox_node.h" />
-    <ClInclude Include="core\tone_mapping_node.h" />
-    <ClInclude Include="core\foundation\action_node.h" />
-    <ClInclude Include="core\foundation\animation_node.h" />
-    <ClInclude Include="core\foundation\behavior_tree_builder.h" />
-    <ClInclude Include="core\foundation\conditional_node.h" />
-    <ClInclude Include="core\foundation\dataBlock.h" />
-    <ClInclude Include="core\foundation\entity.h" />
-    <ClInclude Include="core\foundation\env.h" />
-    <ClInclude Include="core\foundation\id_generator.h" />
-    <ClInclude Include="core\foundation\ImGui\imgui.h" />
-    <ClInclude Include="core\foundation\ImGui\imgui_impl_dx12.h" />
-    <ClInclude Include="core\foundation\ImGui\imgui_impl_win32.h" />
-    <ClInclude Include="core\foundation\ImGui\imgui_internal.h" />
-    <ClInclude Include="core\foundation\ImGui\imstb_rectpack.h" />
-    <ClInclude Include="core\foundation\ImGui\imstb_textedit.h" />
-    <ClInclude Include="core\foundation\ImGui\imstb_truetype.h" />
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\crude_json.h" />
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_bezier_math.h" />
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_canvas.h" />
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_extra_keys.h" />
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_extra_math.h" />
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_node_editor.h" />
-    <ClInclude Include="core\foundation\ImGui\NodeEditor\imgui_node_editor_internal.h" />
-    <ClInclude Include="core\foundation\info.h" />
-    <ClInclude Include="core\foundation\input.h" />
-    <ClInclude Include="core\foundation\message.h" />
-    <ClInclude Include="core\foundation\node.h" />
-    <ClInclude Include="core\foundation\platform.h" />
-    <ClInclude Include="core\foundation\selector_node.h" />
-    <ClInclude Include="core\foundation\sequence_node.h" />
-    <ClInclude Include="core\foundation\setting_ui.h" />
-    <ClInclude Include="core\foundation\ui.h" />
-    <ClInclude Include="core\d3dx12.h" />
-    <ClInclude Include="core\gpu_buffer.h" />
-    <ClInclude Include="core\graphics_core.h" />
-    <ClInclude Include="core\graphics_pso.h" />
-    <ClInclude Include="core\graphics_util.h" />
-    <ClInclude Include="core\command_pool.h" />
-    <ClInclude Include="core\gpu_heap.h" />
-    <ClInclude Include="core\mesh_pso.h" />
-    <ClInclude Include="core\skybox_pso.h" />
-    <ClInclude Include="core\texture_2d.h" />
-    <ClInclude Include="core\texture_cube.h" />
-    <ClInclude Include="core\tone_mapping_pso.h" />
+    <ClInclude Include="graphics\black_board.h" />
+    <ClInclude Include="graphics\camera.h" />
+    <ClInclude Include="graphics\camera_node.h" />
+    <ClInclude Include="graphics\component.h" />
+    <ClInclude Include="graphics\engine.h" />
+    <ClInclude Include="graphics\game_objects_node.h" />
+    <ClInclude Include="graphics\geometry_generator.h" />
+    <ClInclude Include="graphics\gpu_node.h" />
+    <ClInclude Include="graphics\constant_buffer.h" />
+    <ClInclude Include="graphics\image.h" />
+    <ClInclude Include="graphics\mesh.h" />
+    <ClInclude Include="graphics\vertex.h" />
+    <ClInclude Include="graphics\gui_node.h" />
+    <ClInclude Include="graphics\light_node.h" />
+    <ClInclude Include="graphics\mesh_renderer.h" />
+    <ClInclude Include="graphics\message_receiver.h" />
+    <ClInclude Include="graphics\model.h" />
+    <ClInclude Include="graphics\model_loader.h" />
+    <ClInclude Include="graphics\render_condition.h" />
+    <ClInclude Include="graphics\render_target_object.h" />
+    <ClInclude Include="graphics\shared_resource_node.h" />
+    <ClInclude Include="graphics\skybox_node.h" />
+    <ClInclude Include="graphics\tone_mapping_node.h" />
+    <ClInclude Include="graphics\foundation\action_node.h" />
+    <ClInclude Include="graphics\foundation\animation_node.h" />
+    <ClInclude Include="graphics\foundation\behavior_tree_builder.h" />
+    <ClInclude Include="graphics\foundation\conditional_node.h" />
+    <ClInclude Include="graphics\foundation\dataBlock.h" />
+    <ClInclude Include="graphics\foundation\entity.h" />
+    <ClInclude Include="graphics\foundation\env.h" />
+    <ClInclude Include="graphics\foundation\id_generator.h" />
+    <ClInclude Include="graphics\foundation\ImGui\imgui.h" />
+    <ClInclude Include="graphics\foundation\ImGui\imgui_impl_dx12.h" />
+    <ClInclude Include="graphics\foundation\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="graphics\foundation\ImGui\imgui_internal.h" />
+    <ClInclude Include="graphics\foundation\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="graphics\foundation\ImGui\imstb_textedit.h" />
+    <ClInclude Include="graphics\foundation\ImGui\imstb_truetype.h" />
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\crude_json.h" />
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_bezier_math.h" />
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_canvas.h" />
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_extra_keys.h" />
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_extra_math.h" />
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_node_editor.h" />
+    <ClInclude Include="graphics\foundation\ImGui\NodeEditor\imgui_node_editor_internal.h" />
+    <ClInclude Include="graphics\foundation\info.h" />
+    <ClInclude Include="graphics\foundation\input.h" />
+    <ClInclude Include="graphics\foundation\message.h" />
+    <ClInclude Include="graphics\foundation\node.h" />
+    <ClInclude Include="graphics\foundation\platform.h" />
+    <ClInclude Include="graphics\foundation\selector_node.h" />
+    <ClInclude Include="graphics\foundation\sequence_node.h" />
+    <ClInclude Include="graphics\foundation\setting_ui.h" />
+    <ClInclude Include="graphics\foundation\ui.h" />
+    <ClInclude Include="graphics\d3dx12.h" />
+    <ClInclude Include="graphics\gpu_buffer.h" />
+    <ClInclude Include="graphics\graphics_core.h" />
+    <ClInclude Include="graphics\graphics_pso.h" />
+    <ClInclude Include="graphics\graphics_util.h" />
+    <ClInclude Include="graphics\command_pool.h" />
+    <ClInclude Include="graphics\gpu_heap.h" />
+    <ClInclude Include="graphics\mesh_pso.h" />
+    <ClInclude Include="graphics\skybox_pso.h" />
+    <ClInclude Include="graphics\texture_2d.h" />
+    <ClInclude Include="graphics\texture_cube.h" />
+    <ClInclude Include="graphics\tone_mapping_pso.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="core\foundation\ImGui\NodeEditor\imgui_bezier_math.inl" />
-    <None Include="core\foundation\ImGui\NodeEditor\imgui_extra_math.inl" />
-    <None Include="core\foundation\ImGui\NodeEditor\imgui_node_editor_internal.inl" />
-    <None Include="core\shader\Common.hlsli" />
-    <None Include="core\shader\DiskSamples.hlsli" />
+    <None Include="graphics\foundation\ImGui\NodeEditor\imgui_bezier_math.inl" />
+    <None Include="graphics\foundation\ImGui\NodeEditor\imgui_extra_math.inl" />
+    <None Include="graphics\foundation\ImGui\NodeEditor\imgui_node_editor_internal.inl" />
+    <None Include="graphics\shader\Common.hlsli" />
+    <None Include="graphics\shader\DiskSamples.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="core\shader\BasicPS.hlsl">
+    <FxCompile Include="graphics\shader\BasicPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\BasicVS.hlsl">
+    <FxCompile Include="graphics\shader\BasicVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\BloomCompositeCS.hlsl">
+    <FxCompile Include="graphics\shader\BloomCompositeCS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\BlurHorizontalCS.hlsl">
+    <FxCompile Include="graphics\shader\BlurHorizontalCS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\BlurVerticalCS.hlsl">
+    <FxCompile Include="graphics\shader\BlurVerticalCS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\BrightPassCS.hlsl">
+    <FxCompile Include="graphics\shader\BrightPassCS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\ToneMappingPS.hlsl">
+    <FxCompile Include="graphics\shader\ToneMappingPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\ToneMappingVS.hlsl">
+    <FxCompile Include="graphics\shader\ToneMappingVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\DepthOnlyPS.hlsl">
+    <FxCompile Include="graphics\shader\DepthOnlyPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\DepthOnlyVS.hlsl">
+    <FxCompile Include="graphics\shader\DepthOnlyVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\SkyboxPS.hlsl">
+    <FxCompile Include="graphics\shader\SkyboxPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\SkyboxVS.hlsl">
+    <FxCompile Include="graphics\shader\SkyboxVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\shader\ToneMappingCS.hlsl">
+    <FxCompile Include="graphics\shader\ToneMappingCS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>

@@ -69,22 +69,19 @@
       <Filter>Foundation\Structure</Filter>
     </ClCompile>
     <ClCompile Include="core\graphics\graphics_core.cpp">
-      <Filter>Graphics</Filter>
+      <Filter>Core\Graphics</Filter>
     </ClCompile>
     <ClCompile Include="core\foundation\setting_ui.cpp">
       <Filter>Foundation\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="core\graphics\graphics_pso.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="core\graphics\gpu_buffer.cpp">
-      <Filter>Graphics\Buffer</Filter>
+      <Filter>Core\Graphics\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="core\graphics\texture_cube.cpp">
-      <Filter>Graphics\Buffer</Filter>
+      <Filter>Core\Graphics\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="core\graphics\texture_2d.cpp">
-      <Filter>Graphics\Buffer</Filter>
+      <Filter>Core\Graphics\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="core\camera.cpp">
       <Filter>Core\Model</Filter>
@@ -108,24 +105,24 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="core\graphics\gpu_heap.cpp">
-      <Filter>Graphics\Buffer</Filter>
+      <Filter>Core\Graphics\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="core\graphics\graphics_util.cpp">
-      <Filter>Graphics\Util</Filter>
+      <Filter>Core\Graphics\Util</Filter>
     </ClCompile>
     <ClCompile Include="core\graphics\mesh.cpp">
-      <Filter>Graphics\Structure</Filter>
+      <Filter>Core\Graphics\Structure</Filter>
     </ClCompile>
     <ClCompile Include="core\graphics\image.cpp">
-      <Filter>Graphics\Structure</Filter>
+      <Filter>Core\Graphics\Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="core\graphics\graphics_pso.cpp">
+      <Filter>Core\Graphics\PSO</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Foundation">
       <UniqueIdentifier>{f468dcbf-da05-442f-a2fd-59aa3d9f4fec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics">
-      <UniqueIdentifier>{d032a418-4ef4-4335-b85d-1cbbc9c551cb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Foundation\Gui">
       <UniqueIdentifier>{3a910365-870e-4d11-a663-71da58281561}</UniqueIdentifier>
@@ -145,12 +142,6 @@
     <Filter Include="Foundation\Structure">
       <UniqueIdentifier>{152d738b-0f12-40e4-9670-30581632dd15}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Shader">
-      <UniqueIdentifier>{a029a46a-2389-4ec0-b9dc-91980492c850}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\PSO">
-      <UniqueIdentifier>{acfa4192-465e-4e10-aaf4-6afa55bd798b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{dbd5257f-e35e-4c37-8c3a-6cb4f021982b}</UniqueIdentifier>
     </Filter>
@@ -166,13 +157,25 @@
     <Filter Include="Core\Util">
       <UniqueIdentifier>{773513c6-08ce-4dd1-8d1c-08ee20f6b365}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Buffer">
+    <Filter Include="Core\Pipeline">
+      <UniqueIdentifier>{ec5de175-27e8-4a2f-a596-dc8c68ce24b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics">
+      <UniqueIdentifier>{d032a418-4ef4-4335-b85d-1cbbc9c551cb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Shader">
+      <UniqueIdentifier>{a029a46a-2389-4ec0-b9dc-91980492c850}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\PSO">
+      <UniqueIdentifier>{acfa4192-465e-4e10-aaf4-6afa55bd798b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Graphics\Buffer">
       <UniqueIdentifier>{75e2fdb2-1df3-4f8a-b00e-3f37f241f0c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Util">
+    <Filter Include="Core\Graphics\Util">
       <UniqueIdentifier>{1790ab32-b8de-4878-8652-61b7298bd632}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Structure">
+    <Filter Include="Core\Graphics\Structure">
       <UniqueIdentifier>{618c9e8e-c783-44ce-98a1-32a3ad2ed2d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -268,37 +271,31 @@
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\graphics_core.h">
-      <Filter>Graphics</Filter>
+      <Filter>Core\Graphics</Filter>
     </ClInclude>
     <ClInclude Include="core\foundation\setting_ui.h">
       <Filter>Foundation\Gui</Filter>
     </ClInclude>
-    <ClInclude Include="core\graphics\graphics_pso.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="core\graphics\mesh_pso.h">
-      <Filter>Graphics\PSO</Filter>
+      <Filter>Core\Graphics\PSO</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\tone_mapping_pso.h">
-      <Filter>Graphics\PSO</Filter>
-    </ClInclude>
-    <ClInclude Include="core\graphics\d3dx12.h">
-      <Filter>Graphics</Filter>
+      <Filter>Core\Graphics\PSO</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\skybox_pso.h">
-      <Filter>Graphics\PSO</Filter>
+      <Filter>Core\Graphics\PSO</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\gpu_buffer.h">
-      <Filter>Graphics\Buffer</Filter>
+      <Filter>Core\Graphics\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\gpu_heap.h">
-      <Filter>Graphics\Buffer</Filter>
+      <Filter>Core\Graphics\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\texture_cube.h">
-      <Filter>Graphics\Buffer</Filter>
+      <Filter>Core\Graphics\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\texture_2d.h">
-      <Filter>Graphics\Buffer</Filter>
+      <Filter>Core\Graphics\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="core\camera.h">
       <Filter>Core\Model</Filter>
@@ -345,35 +342,41 @@
     <ClInclude Include="core\model_loader.h">
       <Filter>Core\Util</Filter>
     </ClInclude>
-    <ClInclude Include="core\black_board.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="core\engine.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\graphics_util.h">
-      <Filter>Graphics\Util</Filter>
+      <Filter>Core\Graphics\Util</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\command_pool.h">
-      <Filter>Graphics\Util</Filter>
+      <Filter>Core\Graphics\Util</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\constant_buffer.h">
-      <Filter>Graphics\Structure</Filter>
+      <Filter>Core\Graphics\Structure</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\mesh.h">
-      <Filter>Graphics\Structure</Filter>
+      <Filter>Core\Graphics\Structure</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\vertex.h">
-      <Filter>Graphics\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="core\render_condition.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\render_target_object.h">
-      <Filter>Core</Filter>
+      <Filter>Core\Graphics\Structure</Filter>
     </ClInclude>
     <ClInclude Include="core\graphics\image.h">
-      <Filter>Graphics\Structure</Filter>
+      <Filter>Core\Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="core\graphics\graphics_pso.h">
+      <Filter>Core\Graphics\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="core\graphics\d3dx12.h">
+      <Filter>Core\Graphics\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="core\render_target_object.h">
+      <Filter>Core\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="core\render_condition.h">
+      <Filter>Core\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="core\black_board.h">
+      <Filter>Core\Pipeline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -387,51 +390,51 @@
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </None>
     <None Include="core\graphics\DiskSamples.hlsli">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </None>
     <None Include="core\graphics\Common.hlsli">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="core\graphics\SkyboxPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\SkyboxVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\DepthOnlyVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\DepthOnlyPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\BrightPassCS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\BlurVerticalCS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\BlurHorizontalCS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\BloomCompositeCS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\BasicVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\BasicPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\ToneMappingCS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\ToneMappingPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
     <FxCompile Include="core\graphics\ToneMappingVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Core\Graphics\Shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

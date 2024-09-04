@@ -19,12 +19,14 @@ auto shared_resource_node = std::make_shared<SharedResourceNodeInvoker>();
 auto game_object_node = std::make_shared<GameObjectNodeInvoker>();
 auto gui_node = std::make_shared<GuiNodeInvoker>();
 auto present = std::make_shared<PresentNode>();
+auto fence = std::make_shared<GpuFenceNode>();
 auto light_node = std::make_shared<LightNodeInvoker>();
 auto resolve_buffer = std::make_shared<ResolveBuffer>();
 auto tone_mapping = std::make_shared<ToneMappingNodeInvoker>();
 auto begin_init = std::make_shared<BeginInitNode>();
 auto end_init = std::make_shared<EndInitNode>();
 auto skybox_node = std::make_shared<SkyBoxNodeInvoker>();
+
 
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
@@ -53,22 +55,10 @@ bool Engine::Start() {
         ->Excute(gui_node)
         ->Excute(skybox_node)
         ->Excute(end_init)
+        ->Excute(fence)
     ->Close()
     ->Run();
     
-    const UINT64 fence = dx12::GpuCore::Instance().fence_value;
-    dx12::GpuCore::Instance().command_queue->Signal(
-        dx12::GpuCore::Instance().fence.Get(), fence);
-    dx12::GpuCore::Instance().fence_value++;
-
-    // Wait until the previous frame is finished.
-    if (dx12::GpuCore::Instance().fence->GetCompletedValue() < fence) {
-        dx12::GpuCore::Instance().fence->SetEventOnCompletion(
-            fence, dx12::GpuCore::Instance().fence_event);
-        WaitForSingleObject(dx12::GpuCore::Instance().fence_event,
-                            INFINITE);
-    }
-
     //update
     update_tree->Build(black_board.get())
     ->Sequence()
@@ -82,13 +72,14 @@ bool Engine::Start() {
     render_tree->Build(black_board.get())
     ->Sequence()
         ->Excute(begin_render)
-        ->Excute(skybox_node)
-        ->Excute(game_object_node)
-        ->Excute(resolve_buffer)
-        ->Excute(tone_mapping)
+        //->Excute(skybox_node)
+        //->Excute(game_object_node)
+        //->Excute(resolve_buffer)
+        //->Excute(tone_mapping)
         ->Excute(gui_node)
         ->Excute(end_render)
         ->Excute(present)
+        ->Excute(fence)
     ->Close();
 
     Frame();

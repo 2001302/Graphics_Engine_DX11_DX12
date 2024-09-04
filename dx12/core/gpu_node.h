@@ -114,7 +114,7 @@ class EndRenderNode : public foundation::BehaviorActionNode {
     }
 };
 
-class PresentNode : public foundation::BehaviorActionNode {
+class GpuFenceNode : public foundation::BehaviorActionNode {
 
     void WaitForPreviousFrame() {
         // Signal and increment the fence value.
@@ -137,8 +137,17 @@ class PresentNode : public foundation::BehaviorActionNode {
 
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
-        dx12::GpuCore::Instance().swap_chain->Present(1, 0);
         WaitForPreviousFrame();
+
+        return foundation::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
+class PresentNode : public foundation::BehaviorActionNode {
+
+    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+
+        dx12::GpuCore::Instance().swap_chain->Present(1, 0);
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }

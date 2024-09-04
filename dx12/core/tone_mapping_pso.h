@@ -43,11 +43,11 @@ class ToneMappingPSO : public GraphicsPSO {
         // shader
         ComPtr<ID3DBlob> tone_mappingVS;
         dx12::Util::CreateVertexShader(dx12::GpuCore::Instance().device,
-                                       L"core/graphics/ToneMappingVS.hlsl",
+                                       L"Core/Shader//ToneMappingVS.hlsl",
                                        tone_mappingVS);
         ComPtr<ID3DBlob> tone_mappingPS;
         dx12::Util::CreatePixelShader(dx12::GpuCore::Instance().device,
-                                      L"core/graphics/ToneMappingPS.hlsl",
+                                      L"Core/Shader//ToneMappingPS.hlsl",
                                       tone_mappingPS);
         // pipeline state
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};

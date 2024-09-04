@@ -2,13 +2,13 @@
 #define _RENDER_CONDITION
 
 #include "foundation/info.h"
-#include "graphics/command_pool.h"
-#include "graphics/constant_buffer.h"
-#include "graphics/gpu_buffer.h"
-#include "graphics/gpu_heap.h"
-#include "graphics/graphics_util.h"
-#include "graphics/texture_2d.h"
-#include "graphics/texture_cube.h"
+#include "command_pool.h"
+#include "constant_buffer.h"
+#include "gpu_buffer.h"
+#include "gpu_heap.h"
+#include "graphics_util.h"
+#include "texture_2d.h"
+#include "texture_cube.h"
 
 namespace core {
 enum EnumStageType {

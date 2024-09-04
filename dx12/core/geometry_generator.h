@@ -1,7 +1,7 @@
 #ifndef _GEOMETRYGENERATOR
 #define _GEOMETRYGENERATOR
 
-#include "graphics/graphics_util.h"
+#include "graphics_util.h"
 #include "model.h"
 #include "model_loader.h"
 #include "animation_clip.h"

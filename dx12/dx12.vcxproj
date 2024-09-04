@@ -134,9 +134,9 @@
     <ClCompile Include="core\camera.cpp" />
     <ClCompile Include="core\engine.cpp" />
     <ClCompile Include="core\geometry_generator.cpp" />
-    <ClCompile Include="core\graphics\gpu_heap.cpp" />
-    <ClCompile Include="core\graphics\image.cpp" />
-    <ClCompile Include="core\graphics\mesh.cpp" />
+    <ClCompile Include="core\gpu_heap.cpp" />
+    <ClCompile Include="core\image.cpp" />
+    <ClCompile Include="core\mesh.cpp" />
     <ClCompile Include="core\mesh_renderer.cpp" />
     <ClCompile Include="core\message_receiver.cpp" />
     <ClCompile Include="core\model.cpp" />
@@ -164,12 +164,12 @@
     <ClCompile Include="core\foundation\sequence_node.cpp" />
     <ClCompile Include="core\foundation\setting_ui.cpp" />
     <ClCompile Include="core\foundation\ui.cpp" />
-    <ClCompile Include="core\graphics\gpu_buffer.cpp" />
-    <ClCompile Include="core\graphics\graphics_core.cpp" />
-    <ClCompile Include="core\graphics\graphics_pso.cpp" />
-    <ClCompile Include="core\graphics\graphics_util.cpp" />
-    <ClCompile Include="core\graphics\texture_2d.cpp" />
-    <ClCompile Include="core\graphics\texture_cube.cpp" />
+    <ClCompile Include="core\gpu_buffer.cpp" />
+    <ClCompile Include="core\graphics_core.cpp" />
+    <ClCompile Include="core\graphics_pso.cpp" />
+    <ClCompile Include="core\graphics_util.cpp" />
+    <ClCompile Include="core\texture_2d.cpp" />
+    <ClCompile Include="core\texture_cube.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -181,10 +181,10 @@
     <ClInclude Include="core\game_objects_node.h" />
     <ClInclude Include="core\geometry_generator.h" />
     <ClInclude Include="core\gpu_node.h" />
-    <ClInclude Include="core\graphics\constant_buffer.h" />
-    <ClInclude Include="core\graphics\image.h" />
-    <ClInclude Include="core\graphics\mesh.h" />
-    <ClInclude Include="core\graphics\vertex.h" />
+    <ClInclude Include="core\constant_buffer.h" />
+    <ClInclude Include="core\image.h" />
+    <ClInclude Include="core\mesh.h" />
+    <ClInclude Include="core\vertex.h" />
     <ClInclude Include="core\gui_node.h" />
     <ClInclude Include="core\light_node.h" />
     <ClInclude Include="core\mesh_renderer.h" />
@@ -227,100 +227,100 @@
     <ClInclude Include="core\foundation\sequence_node.h" />
     <ClInclude Include="core\foundation\setting_ui.h" />
     <ClInclude Include="core\foundation\ui.h" />
-    <ClInclude Include="core\graphics\d3dx12.h" />
-    <ClInclude Include="core\graphics\gpu_buffer.h" />
-    <ClInclude Include="core\graphics\graphics_core.h" />
-    <ClInclude Include="core\graphics\graphics_pso.h" />
-    <ClInclude Include="core\graphics\graphics_util.h" />
-    <ClInclude Include="core\graphics\command_pool.h" />
-    <ClInclude Include="core\graphics\gpu_heap.h" />
-    <ClInclude Include="core\graphics\mesh_pso.h" />
-    <ClInclude Include="core\graphics\skybox_pso.h" />
-    <ClInclude Include="core\graphics\texture_2d.h" />
-    <ClInclude Include="core\graphics\texture_cube.h" />
-    <ClInclude Include="core\graphics\tone_mapping_pso.h" />
+    <ClInclude Include="core\d3dx12.h" />
+    <ClInclude Include="core\gpu_buffer.h" />
+    <ClInclude Include="core\graphics_core.h" />
+    <ClInclude Include="core\graphics_pso.h" />
+    <ClInclude Include="core\graphics_util.h" />
+    <ClInclude Include="core\command_pool.h" />
+    <ClInclude Include="core\gpu_heap.h" />
+    <ClInclude Include="core\mesh_pso.h" />
+    <ClInclude Include="core\skybox_pso.h" />
+    <ClInclude Include="core\texture_2d.h" />
+    <ClInclude Include="core\texture_cube.h" />
+    <ClInclude Include="core\tone_mapping_pso.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="core\foundation\ImGui\NodeEditor\imgui_bezier_math.inl" />
     <None Include="core\foundation\ImGui\NodeEditor\imgui_extra_math.inl" />
     <None Include="core\foundation\ImGui\NodeEditor\imgui_node_editor_internal.inl" />
-    <None Include="core\graphics\Common.hlsli" />
-    <None Include="core\graphics\DiskSamples.hlsli" />
+    <None Include="core\shader\Common.hlsli" />
+    <None Include="core\shader\DiskSamples.hlsli" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="core\graphics\BasicPS.hlsl">
+    <FxCompile Include="core\shader\BasicPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\BasicVS.hlsl">
+    <FxCompile Include="core\shader\BasicVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\BloomCompositeCS.hlsl">
+    <FxCompile Include="core\shader\BloomCompositeCS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\BlurHorizontalCS.hlsl">
+    <FxCompile Include="core\shader\BlurHorizontalCS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\BlurVerticalCS.hlsl">
+    <FxCompile Include="core\shader\BlurVerticalCS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\BrightPassCS.hlsl">
+    <FxCompile Include="core\shader\BrightPassCS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\ToneMappingPS.hlsl">
+    <FxCompile Include="core\shader\ToneMappingPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\ToneMappingVS.hlsl">
+    <FxCompile Include="core\shader\ToneMappingVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\DepthOnlyPS.hlsl">
+    <FxCompile Include="core\shader\DepthOnlyPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\DepthOnlyVS.hlsl">
+    <FxCompile Include="core\shader\DepthOnlyVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\SkyboxPS.hlsl">
+    <FxCompile Include="core\shader\SkyboxPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\SkyboxVS.hlsl">
+    <FxCompile Include="core\shader\SkyboxVS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
     </FxCompile>
-    <FxCompile Include="core\graphics\ToneMappingCS.hlsl">
+    <FxCompile Include="core\shader\ToneMappingCS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Compute</ShaderType>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Compute</ShaderType>

@@ -3,7 +3,7 @@
 
 #include "foundation/behavior_tree_builder.h"
 #include "foundation/env.h"
-#include "graphics/graphics_util.h"
+#include "graphics_util.h"
 #include "foundation/node.h"
 #include "model.h"
 

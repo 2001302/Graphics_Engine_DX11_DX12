@@ -1,9 +1,8 @@
-﻿#ifndef _BASEGUI
+#ifndef _BASEGUI
 #define _BASEGUI
 
 #include "dataBlock.h"
 #include "node.h"
-#include "../graphics/graphics_util.h"
 
 namespace foundation {
 class IGui : public IDataBlock {

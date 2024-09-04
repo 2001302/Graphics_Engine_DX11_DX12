@@ -5,7 +5,7 @@
 #include "foundation/behavior_tree_builder.h"
 #include "foundation/platform.h"
 #include "foundation/setting_ui.h"
-#include "graphics/graphics_util.h"
+#include "graphics_util.h"
 #include "message_receiver.h"
 
 namespace core {

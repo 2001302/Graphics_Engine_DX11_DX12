@@ -3,8 +3,8 @@
 
 #include "black_board.h"
 #include "foundation/behavior_tree_builder.h"
-#include "graphics/command_pool.h"
-#include "graphics/skybox_pso.h"
+#include "command_pool.h"
+#include "skybox_pso.h"
 #include "mesh_renderer.h"
 
 namespace core {

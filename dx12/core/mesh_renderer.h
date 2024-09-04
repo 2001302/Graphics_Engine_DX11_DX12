@@ -2,11 +2,11 @@
 #define _RENDERER
 
 #include "component.h"
+#include "constant_buffer.h"
 #include "foundation/node.h"
 #include "geometry_generator.h"
-#include "graphics/mesh_pso.h"
-#include "graphics/constant_buffer.h"
-#include "graphics/mesh.h"
+#include "mesh.h"
+#include "mesh_pso.h"
 #include "render_condition.h"
 #include "render_target_object.h"
 #include <filesystem>

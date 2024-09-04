@@ -2,8 +2,8 @@
 #define _TONE_MAPPING_NODE
 
 #include "foundation/behavior_tree_builder.h"
-#include "graphics/command_pool.h"
-#include "graphics/tone_mapping_pso.h"
+#include "command_pool.h"
+#include "tone_mapping_pso.h"
 #include "black_board.h"
 #include "mesh_renderer.h"
 

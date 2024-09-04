@@ -22,7 +22,7 @@
 #include <windows.h>
 #include <wrl/client.h> // ComPtr
 
-#include "../foundation/env.h"
+#include "foundation/env.h"
 #include "d3dx12.h"
 
 using DirectX::SimpleMath::Matrix;

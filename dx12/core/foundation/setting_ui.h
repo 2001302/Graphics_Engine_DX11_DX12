@@ -1,13 +1,14 @@
-﻿#ifndef _PANEL
+#ifndef _PANEL
 #define _PANEL
 
-#include "../graphics/graphics_util.h"
 #include "message.h"
 #include "node.h"
 #include "ui.h"
 #include "info.h"
+#include "env.h"
 #include <map>
 #include <string>
+#include <vector>
 
 namespace ed = ax::NodeEditor;
 

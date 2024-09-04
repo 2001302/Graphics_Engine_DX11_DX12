@@ -31,6 +31,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
 
             auto renderer = std::make_shared<MeshRenderer>();
             renderer->Initialize(base_path, file_name,
+                                 condition->gpu_heap.get(),
                                  condition->command_pool->Get(0));
 
             renderer->material_consts.GetCpu().albedo_factor = Vector3(1.0f);

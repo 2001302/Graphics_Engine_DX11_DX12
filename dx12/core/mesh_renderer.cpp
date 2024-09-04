@@ -10,13 +10,14 @@ void MeshRenderer::Initialize() {
 }
 
 void MeshRenderer::Initialize(const std::string &basePath,
-                              const std::string &filename,
+                              const std::string &filename, dx12::GpuHeap *heap,
                               ComPtr<ID3D12GraphicsCommandList> command_list) {
     auto meshes = GeometryGenerator::ReadFromFile(basePath, filename);
-    Initialize(meshes, command_list);
+    Initialize(meshes, heap, command_list);
 }
 
 void MeshRenderer::Initialize(const vector<dx12::MeshData> &mesh_data,
+                              dx12::GpuHeap *heap,
                               ComPtr<ID3D12GraphicsCommandList> command_list,
                               bool use_texture) {
 
@@ -25,40 +26,9 @@ void MeshRenderer::Initialize(const vector<dx12::MeshData> &mesh_data,
 
         dx12::MeshData meshData = mesh_data[i];
         meshes[i] = std::make_shared<dx12::Mesh>();
-        meshes[i]->Initialize(meshData, command_list, use_texture);
-
-        if (use_texture) {
-            material_consts.GetCpu().use_albedo_map =
-                meshes[i]
-                    ->textures[dx12::EnumTextureType::ALBEDO]
-                    ->is_initialized;
-            material_consts.GetCpu().use_normal_map =
-                meshes[i]
-                    ->textures[dx12::EnumTextureType::NORMAL]
-                    ->is_initialized;
-            material_consts.GetCpu().use_emissive_map =
-                meshes[i]
-                    ->textures[dx12::EnumTextureType::EMISSIVE]
-                    ->is_initialized;
-            material_consts.GetCpu().use_ambient_occlusion_map =
-                meshes[i]
-                    ->textures[dx12::EnumTextureType::AMBIENT_OCCLUSION]
-                    ->is_initialized;
-            material_consts.GetCpu().use_metallic_map =
-                meshes[i]
-                    ->textures[dx12::EnumTextureType::METALLIC_ROUGHNESS]
-                    ->is_initialized;
-            material_consts.GetCpu().use_roughness_map =
-                meshes[i]
-                    ->textures[dx12::EnumTextureType::METALLIC_ROUGHNESS]
-                    ->is_initialized;
-            mesh_consts.GetCpu().useHeightMap =
-                meshes[i]
-                    ->textures[dx12::EnumTextureType::HEIGHT]
-                    ->is_initialized;
-        }
+        meshes[i]->Initialize(meshData, mesh_consts, material_consts, heap,
+                              command_list, use_texture);
         mesh_consts.GetCpu().world = Matrix();
-
         material_consts.Initialize();
         mesh_consts.Initialize();
     }
@@ -77,16 +47,14 @@ void MeshRenderer::Render(RenderCondition *render_condition,
 
         auto command_list = render_condition->command_pool->Get(0);
         for (const auto &mesh : meshes) {
-            // PSO->Render(command_list,
-            // dx12::GpuCore::Instance().GetHandleHDR(),
-            //             dx12::GpuCore::Instance().GetHandleDSV(),
-            //             mesh->heap_PS, mesh->heap_VS,
-            //             render_condition->cbv_srv_uav_heap,
-            //             render_condition->sampler_heap,
-            //             render_condition->global_consts.Get(),
-            //             mesh_consts.Get(), material_consts.Get(),
-            //             mesh->vertex_buffer_view, mesh->index_buffer_view,
-            //             mesh->index_count);
+            PSO->Render(
+                command_list, dx12::GpuCore::Instance().GetHandleHDR(),
+                dx12::GpuCore::Instance().GetHandleDSV(),
+                render_condition->shared_texture.get(), mesh->buffer_PS.get(),
+                mesh->buffer_VS.get(), render_condition->gpu_heap.get(),
+                render_condition->global_consts.Get(), mesh_consts.Get(),
+                material_consts.Get(), mesh->vertex_buffer_view,
+                mesh->index_buffer_view, mesh->index_count);
         }
     }
 }

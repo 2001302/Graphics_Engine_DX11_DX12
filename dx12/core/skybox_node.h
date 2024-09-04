@@ -29,7 +29,9 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
             std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
 
             auto renderer = std::make_shared<MeshRenderer>();
-            renderer->Initialize(std::vector{mesh_data}, command_list, false);
+            renderer->Initialize(std::vector{mesh_data},
+                                 condition->gpu_heap.get(), command_list,
+                                 false);
 
             skybox = std::make_shared<Model>();
             skybox->AddComponent(EnumComponentType::eRenderer, renderer);

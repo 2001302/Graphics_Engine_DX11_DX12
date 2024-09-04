@@ -21,8 +21,10 @@ class MeshRenderer : public Component {
 
     virtual void Initialize();
     void Initialize(const std::string &basePath, const std::string &filename,
+                    dx12::GpuHeap *heap,
                     ComPtr<ID3D12GraphicsCommandList> command_list);
     void Initialize(const std::vector<dx12::MeshData> &meshes,
+                    dx12::GpuHeap *heap,
                     ComPtr<ID3D12GraphicsCommandList> command_list,
                     bool use_texture = true);
 

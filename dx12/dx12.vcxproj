@@ -135,8 +135,8 @@
     <ClCompile Include="core\engine.cpp" />
     <ClCompile Include="core\geometry_generator.cpp" />
     <ClCompile Include="core\graphics\gpu_heap.cpp" />
+    <ClCompile Include="core\graphics\image.cpp" />
     <ClCompile Include="core\graphics\mesh.cpp" />
-    <ClCompile Include="core\graphics\texture.cpp" />
     <ClCompile Include="core\mesh_renderer.cpp" />
     <ClCompile Include="core\message_receiver.cpp" />
     <ClCompile Include="core\model.cpp" />
@@ -182,8 +182,8 @@
     <ClInclude Include="core\geometry_generator.h" />
     <ClInclude Include="core\gpu_node.h" />
     <ClInclude Include="core\graphics\constant_buffer.h" />
+    <ClInclude Include="core\graphics\image.h" />
     <ClInclude Include="core\graphics\mesh.h" />
-    <ClInclude Include="core\graphics\texture.h" />
     <ClInclude Include="core\graphics\vertex.h" />
     <ClInclude Include="core\gui_node.h" />
     <ClInclude Include="core\light_node.h" />

@@ -26,8 +26,8 @@ __declspec(align(256)) struct MaterialConstants {
     float metallic_factor = 1.0f;
     Vector3 emission_factor = Vector3(0.0f);
 
-    int use_albedo_map = 0;
-    int use_normal_map = 0;
+    int use_albedo_map = 1;
+    int use_normal_map = 1;
     int use_ambient_occlusion_map = 0;
     int invert_normal_map_Y = 0;
     int use_metallic_map = 0;

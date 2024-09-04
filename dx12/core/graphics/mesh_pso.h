@@ -86,10 +86,8 @@ class SolidMeshPSO : public GraphicsPSO {
     void Render(ComPtr<ID3D12GraphicsCommandList> command_list,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE render_target_view,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE depth_stencil_view,
-                ComPtr<ID3D12DescriptorHeap> textures_PS,
-                ComPtr<ID3D12DescriptorHeap> textures_VS,
-                ComPtr<ID3D12DescriptorHeap> textures,
-                ComPtr<ID3D12DescriptorHeap> samplers,
+                GpuBufferList *shared_texture, GpuBufferList *buffer_PS,
+                GpuBufferList *buffer_VS, GpuHeap *gpu_heap,
                 ComPtr<ID3D12Resource> global_consts,
                 ComPtr<ID3D12Resource> mesh_consts,
                 ComPtr<ID3D12Resource> material_consts,
@@ -111,20 +109,20 @@ class SolidMeshPSO : public GraphicsPSO {
         command_list->SetPipelineState(pipeline_state);
 
         command_list->SetGraphicsRootDescriptorTable(
-            0, samplers->GetGPUDescriptorHandleForHeapStart());
+            0, gpu_heap->GetSamplerGpuHandle());
         // global texture
-        // command_list->SetGraphicsRootDescriptorTable(
-		//    1, textures->GetGPUDescriptorHandleForHeapStart());
+        command_list->SetGraphicsRootDescriptorTable(
+            1, shared_texture->GetGpuHandle());
         command_list->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());
         command_list->SetGraphicsRootConstantBufferView(
             3, mesh_consts.Get()->GetGPUVirtualAddress());
         command_list->SetGraphicsRootConstantBufferView(
             4, material_consts.Get()->GetGPUVirtualAddress());
-        // command_list->SetGraphicsRootDescriptorTable(
-        //     5, textures_VS->GetGPUDescriptorHandleForHeapStart());
-        command_list->SetGraphicsRootDescriptorTable(
-            6, textures_PS->GetGPUDescriptorHandleForHeapStart());
+        command_list->SetGraphicsRootDescriptorTable(5,
+                                                     buffer_VS->GetGpuHandle());
+        command_list->SetGraphicsRootDescriptorTable(6,
+                                                     buffer_PS->GetGpuHandle());
 
         command_list->IASetPrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

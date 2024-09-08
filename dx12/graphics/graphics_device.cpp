@@ -1,4 +1,4 @@
-#include "graphics_core.h"
+#include "graphics_device.h"
 
 #include <filesystem>
 #include <knownfolders.h>
@@ -34,7 +34,7 @@ static std::wstring GetLatestWinPixGpuCapturerPath_Cpp17() {
 
 namespace graphics {
 
-bool GpuCore::InitializeGPU() {
+bool GpuDevice::InitializeGPU() {
     if (GetModuleHandle(L"WinPixGpuCapturer.dll") == 0) {
         LoadLibrary(GetLatestWinPixGpuCapturerPath_Cpp17().c_str());
     }
@@ -162,7 +162,7 @@ bool GpuCore::InitializeGPU() {
 
     return true;
 }
-void GpuCore::CreateBuffer() {
+void GpuDevice::CreateBuffer() {
     if (useMSAA) {
         // for HDR
         DXGI_SAMPLE_DESC sampleDesc = {};
@@ -305,17 +305,17 @@ void GpuCore::CreateBuffer() {
             heap_LDR->GetCPUDescriptorHandleForHeapStart());
     }
 }
-CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleHDR() {
+CD3DX12_CPU_DESCRIPTOR_HANDLE GpuDevice::GetHandleHDR() {
     CD3DX12_CPU_DESCRIPTOR_HANDLE
     rtvHandle(heap_HDR->GetCPUDescriptorHandleForHeapStart());
     return rtvHandle;
 };
-CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleLDR() {
+CD3DX12_CPU_DESCRIPTOR_HANDLE GpuDevice::GetHandleLDR() {
     CD3DX12_CPU_DESCRIPTOR_HANDLE
     rtvHandle(heap_LDR->GetCPUDescriptorHandleForHeapStart());
     return rtvHandle;
 };
-CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleFLIP() {
+CD3DX12_CPU_DESCRIPTOR_HANDLE GpuDevice::GetHandleFLIP() {
     UINT desc_size_RTV = device->GetDescriptorHandleIncrementSize(
         D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(
@@ -323,7 +323,7 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleFLIP() {
         desc_size_RTV);
     return rtvHandle;
 };
-CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleDSV() {
+CD3DX12_CPU_DESCRIPTOR_HANDLE GpuDevice::GetHandleDSV() {
     CD3DX12_CPU_DESCRIPTOR_HANDLE
     dsvHandle(heap_DSV->GetCPUDescriptorHandleForHeapStart());
     return dsvHandle;

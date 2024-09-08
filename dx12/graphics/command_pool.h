@@ -3,7 +3,7 @@
 
 #define NUM_COMAAND_LIST 1
 
-#include "graphics_core.h"
+#include "graphics_device.h"
 
 namespace graphics {
 class CommandPool {
@@ -11,10 +11,10 @@ class CommandPool {
     CommandPool(){};
     void InitializeAll() {
         for (int i = 0; i < NUM_COMAAND_LIST; i++) {
-            ThrowIfFailed(GpuCore::Instance().device->CreateCommandAllocator(
+            ThrowIfFailed(GpuDevice::Get().device->CreateCommandAllocator(
                 D3D12_COMMAND_LIST_TYPE_DIRECT,
                 IID_PPV_ARGS(&command_allocator[i])));
-            ThrowIfFailed(GpuCore::Instance().device->CreateCommandList(
+            ThrowIfFailed(GpuDevice::Get().device->CreateCommandList(
                 0, D3D12_COMMAND_LIST_TYPE_DIRECT, command_allocator[i].Get(),
                 nullptr, IID_PPV_ARGS(&command_lists[i])));
             command_lists[i]->Close();
@@ -32,7 +32,7 @@ class CommandPool {
             ThrowIfFailed(command_lists[i]->Close());
         }
 
-        GpuCore::Instance().command_queue->ExecuteCommandLists(
+        GpuDevice::Get().command_queue->ExecuteCommandLists(
             NUM_COMAAND_LIST, CommandListCast(command_lists[0].GetAddressOf()));
     }
 

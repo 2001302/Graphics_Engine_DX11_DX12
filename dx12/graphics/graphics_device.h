@@ -1,5 +1,5 @@
-#ifndef _GRAPHICSMANAGER
-#define _GRAPHICSMANAGER
+#ifndef _GRAPHICSDEVICE
+#define _GRAPHICSDEVICE
 
 #define MAX_LIGHTS 3
 #define LIGHT_OFF 0x00
@@ -37,10 +37,10 @@ inline void ThrowIfFailed(HRESULT hr) {
     }
 }
 
-class GpuCore {
+class GpuDevice {
   public:
-    static GpuCore &Instance() {
-        static GpuCore instance;
+    static GpuDevice &Get() {
+        static GpuDevice instance;
         return instance;
     }
     bool InitializeGPU();
@@ -77,7 +77,7 @@ class GpuCore {
     UINT64 fence_value;
 
   private:
-    GpuCore()
+    GpuDevice()
         : swap_chain(0), device(0), viewport(D3D12_VIEWPORT()), frame_index(0),
           fence_value(0), fence_event(0) {}
 };

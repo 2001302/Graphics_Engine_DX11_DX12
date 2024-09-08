@@ -52,16 +52,16 @@ class SolidMeshPSO : public GraphicsPSO {
         HRESULT hr = D3D12SerializeVersionedRootSignature(&rootSignatureDesc,
                                                           &signature, &error);
 
-        hr = GpuCore::Instance().device->CreateRootSignature(
+        hr = GpuDevice::Get().device->CreateRootSignature(
             0, signature->GetBufferPointer(), signature->GetBufferSize(),
             IID_PPV_ARGS(&root_signature));
 
         // shader
         ComPtr<ID3DBlob> basicVS;
         ComPtr<ID3DBlob> basicPS;
-        Util::CreateVertexShader(GpuCore::Instance().device,
+        Util::CreateVertexShader(GpuDevice::Get().device,
                                  L"Graphics/Shader/BasicVS.hlsl", basicVS);
-        Util::CreatePixelShader(GpuCore::Instance().device,
+        Util::CreatePixelShader(GpuDevice::Get().device,
                                 L"Graphics/Shader/BasicPS.hlsl", basicPS);
         //
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
@@ -80,7 +80,7 @@ class SolidMeshPSO : public GraphicsPSO {
         psoDesc.SampleDesc.Count = 4;
         psoDesc.SampleDesc.Quality = 0;
 
-        ThrowIfFailed(GpuCore::Instance().device->CreateGraphicsPipelineState(
+        ThrowIfFailed(GpuDevice::Get().device->CreateGraphicsPipelineState(
             &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
     void Render(ComPtr<ID3D12GraphicsCommandList> command_list,
@@ -96,13 +96,13 @@ class SolidMeshPSO : public GraphicsPSO {
                 D3D12_INDEX_BUFFER_VIEW index_buffer_view, UINT index_count) {
 
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            GpuCore::Instance().resource_HDR.Get(), D3D12_RESOURCE_STATE_COMMON,
+            GpuDevice::Get().resource_HDR.Get(), D3D12_RESOURCE_STATE_COMMON,
             D3D12_RESOURCE_STATE_RENDER_TARGET);
 
         command_list->ResourceBarrier(1, &barrier);
 
-        command_list->RSSetViewports(1, &GpuCore::Instance().viewport);
-        command_list->RSSetScissorRects(1, &GpuCore::Instance().scissorRect);
+        command_list->RSSetViewports(1, &GpuDevice::Get().viewport);
+        command_list->RSSetScissorRects(1, &GpuDevice::Get().scissorRect);
         command_list->OMSetRenderTargets(1, &render_target_view, false,
                                          &depth_stencil_view);
         command_list->SetGraphicsRootSignature(root_signature);
@@ -131,7 +131,7 @@ class SolidMeshPSO : public GraphicsPSO {
         command_list->DrawIndexedInstanced(index_count, 1, 0, 0, 0);
 
         barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            GpuCore::Instance().resource_HDR.Get(),
+            GpuDevice::Get().resource_HDR.Get(),
             D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COMMON);
         command_list->ResourceBarrier(1, &barrier);
     };

@@ -1,7 +1,7 @@
 #ifndef _GRAPHICSUTIL
 #define _GRAPHICSUTIL
 
-#include "graphics_core.h"
+#include "graphics_device.h"
 #include "graphics_pso.h"
 
 namespace graphics {
@@ -23,7 +23,7 @@ class Util {
         resourceDesc.SampleDesc.Count = 1;
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-        ThrowIfFailed(GpuCore::Instance().device->CreateCommittedResource(
+        ThrowIfFailed(GpuDevice::Get().device->CreateCommittedResource(
             &heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&indexBuffer)));
@@ -59,7 +59,7 @@ class Util {
         resourceDesc.SampleDesc.Count = 1;
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-        ThrowIfFailed(GpuCore::Instance().device->CreateCommittedResource(
+        ThrowIfFailed(GpuDevice::Get().device->CreateCommittedResource(
             &heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&vertexBuffer)));
@@ -98,7 +98,7 @@ class Util {
         resourceDesc.SampleDesc.Count = 1;
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-        ThrowIfFailed(GpuCore::Instance().device->CreateCommittedResource(
+        ThrowIfFailed(GpuDevice::Get().device->CreateCommittedResource(
             &heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&constantBuffer)));

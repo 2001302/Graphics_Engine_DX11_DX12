@@ -36,17 +36,17 @@ class ToneMappingPSO : public GraphicsPSO {
         HRESULT hr = D3D12SerializeVersionedRootSignature(&rootSignatureDesc,
                                                           &signature, &error);
 
-        hr = GpuCore::Instance().device->CreateRootSignature(
+        hr = GpuDevice::Get().device->CreateRootSignature(
             0, signature->GetBufferPointer(), signature->GetBufferSize(),
             IID_PPV_ARGS(&root_signature));
 
         // shader
         ComPtr<ID3DBlob> tone_mappingVS;
-        Util::CreateVertexShader(GpuCore::Instance().device,
+        Util::CreateVertexShader(GpuDevice::Get().device,
                                  L"Graphics/Shader//ToneMappingVS.hlsl",
                                  tone_mappingVS);
         ComPtr<ID3DBlob> tone_mappingPS;
-        Util::CreatePixelShader(GpuCore::Instance().device,
+        Util::CreatePixelShader(GpuDevice::Get().device,
                                 L"Graphics/Shader//ToneMappingPS.hlsl",
                                 tone_mappingPS);
         // pipeline state
@@ -66,7 +66,7 @@ class ToneMappingPSO : public GraphicsPSO {
         psoDesc.SampleDesc.Count = 1;
         psoDesc.SampleDesc.Quality = 0;
 
-        ThrowIfFailed(GpuCore::Instance().device->CreateGraphicsPipelineState(
+        ThrowIfFailed(GpuDevice::Get().device->CreateGraphicsPipelineState(
             &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
     void Render(ComPtr<ID3D12GraphicsCommandList> command_list,
@@ -76,28 +76,28 @@ class ToneMappingPSO : public GraphicsPSO {
                 D3D12_INDEX_BUFFER_VIEW index_buffer_view, UINT index_count) {
 
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            GpuCore::Instance()
-                .resource_FLIP[GpuCore::Instance().frame_index]
+            GpuDevice::Get()
+                .resource_FLIP[GpuDevice::Get().frame_index]
                 .Get(),
             D3D12_RESOURCE_STATE_COMMON, D3D12_RESOURCE_STATE_RENDER_TARGET);
         command_list->ResourceBarrier(1, &barrier);
 
         barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            GpuCore::Instance().resource_LDR.Get(), D3D12_RESOURCE_STATE_COMMON,
+            GpuDevice::Get().resource_LDR.Get(), D3D12_RESOURCE_STATE_COMMON,
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
                 D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE);
         command_list->ResourceBarrier(1, &barrier);
 
         auto handle_resolved =
-            GpuCore::Instance().heap_LDR->GetGPUDescriptorHandleForHeapStart();
-        auto handle_back_buffer = GpuCore::Instance().GetHandleFLIP();
+            GpuDevice::Get().heap_LDR->GetGPUDescriptorHandleForHeapStart();
+        auto handle_back_buffer = GpuDevice::Get().GetHandleFLIP();
 
         ID3D12DescriptorHeap *descriptorHeaps[] = {
-            GpuCore::Instance().heap_LDR.Get(), sampler.Get()};
+            GpuDevice::Get().heap_LDR.Get(), sampler.Get()};
 
         // Set the compute root signature and pipeline state
-        command_list->RSSetViewports(1, &GpuCore::Instance().viewport);
-        command_list->RSSetScissorRects(1, &GpuCore::Instance().scissorRect);
+        command_list->RSSetViewports(1, &GpuDevice::Get().viewport);
+        command_list->RSSetScissorRects(1, &GpuDevice::Get().scissorRect);
         command_list->OMSetRenderTargets(1, &handle_back_buffer, false,
                                          nullptr);
         command_list->SetGraphicsRootSignature(root_signature);
@@ -121,14 +121,14 @@ class ToneMappingPSO : public GraphicsPSO {
         command_list->DrawIndexedInstanced(index_count, 1, 0, 0, 0);
 
         barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            GpuCore::Instance()
-                .resource_FLIP[GpuCore::Instance().frame_index]
+            GpuDevice::Get()
+                .resource_FLIP[GpuDevice::Get().frame_index]
                 .Get(),
             D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COMMON);
         command_list->ResourceBarrier(1, &barrier);
 
         barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            GpuCore::Instance().resource_LDR.Get(),
+            GpuDevice::Get().resource_LDR.Get(),
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
                 D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
             D3D12_RESOURCE_STATE_COMMON);

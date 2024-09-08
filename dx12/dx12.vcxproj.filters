@@ -68,7 +68,7 @@
     <ClCompile Include="graphics\foundation\node.cpp">
       <Filter>Foundation\Structure</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\graphics_core.cpp">
+    <ClCompile Include="graphics\graphics_device.cpp">
       <Filter>Graphics\Gpu</Filter>
     </ClCompile>
     <ClCompile Include="graphics\foundation\setting_ui.cpp">
@@ -113,11 +113,11 @@
     <ClCompile Include="graphics\image.cpp">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\gpu_heap.cpp">
-      <Filter>Graphics\Gpu</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\graphics_pso.cpp">
       <Filter>Graphics\Gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics\gpu_heap.cpp">
+      <Filter>Graphics\Gpu\Heap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -177,6 +177,9 @@
     </Filter>
     <Filter Include="Graphics\Gpu\Structure">
       <UniqueIdentifier>{618c9e8e-c783-44ce-98a1-32a3ad2ed2d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Gpu\Heap">
+      <UniqueIdentifier>{6a573e0e-ae59-4d24-b0c9-b46c7a7f18d1}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -270,7 +273,7 @@
     <ClInclude Include="graphics\foundation\message.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\graphics_core.h">
+    <ClInclude Include="graphics\graphics_device.h">
       <Filter>Graphics\Gpu</Filter>
     </ClInclude>
     <ClInclude Include="graphics\foundation\setting_ui.h">
@@ -372,9 +375,6 @@
     <ClInclude Include="graphics\black_board.h">
       <Filter>Graphics\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\gpu_heap.h">
-      <Filter>Graphics\Gpu</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\graphics_pso.h">
       <Filter>Graphics\Gpu</Filter>
     </ClInclude>
@@ -383,6 +383,9 @@
     </ClInclude>
     <ClInclude Include="graphics\sampler_state.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu_heap.h">
+      <Filter>Graphics\Gpu\Heap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

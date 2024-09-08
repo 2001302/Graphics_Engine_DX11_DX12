@@ -17,7 +17,7 @@ void Texture2D::CreateTextureHelper(
     txtDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
     CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
-    HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
+    HRESULT hr = GpuDevice::Get().device->CreateCommittedResource(
         &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
         D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
         IID_PPV_ARGS(texture.GetAddressOf()));
@@ -28,7 +28,7 @@ void Texture2D::CreateTextureHelper(
 
     auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
     auto buffer_size = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
-    ThrowIfFailed(GpuCore::Instance().device->CreateCommittedResource(
+    ThrowIfFailed(GpuDevice::Get().device->CreateCommittedResource(
         &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_size,
         D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&upload)));
 
@@ -61,7 +61,7 @@ Texture2D::Texture2D(int width, int height, DXGI_FORMAT format) {
     txtDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
     CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
-    HRESULT hr = GpuCore::Instance().device->CreateCommittedResource(
+    HRESULT hr = GpuDevice::Get().device->CreateCommittedResource(
         &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, nullptr,
         IID_PPV_ARGS(buffer_.GetAddressOf()));
@@ -81,7 +81,7 @@ void Texture2D::Allocate(GpuHeap *heap, UINT &index) {
 
     desc.Texture2D.MipLevels = 1;
 
-    GpuCore::Instance().device->CreateShaderResourceView(buffer_.Get(), &desc,
+    GpuDevice::Get().device->CreateShaderResourceView(buffer_.Get(), &desc,
                                                          cpu_handle_);
 }
 } // namespace core

@@ -1,7 +1,7 @@
 #ifndef _GPU_HEAP
 #define _GPU_HEAP
 
-#include "graphics_core.h"
+#include "graphics_device.h"
 #include "graphics_pso.h"
 
 namespace graphics {

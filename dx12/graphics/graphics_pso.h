@@ -2,7 +2,7 @@
 #define _GRAPHICSPSO
 
 #include "d3dx12.h"
-#include "graphics_core.h"
+#include "graphics_device.h"
 
 namespace graphics {
 class PSO {

@@ -47,16 +47,16 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
             samplerHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
             samplerHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-            ThrowIfFailed(GpuCore::Instance().device->CreateDescriptorHeap(
+            ThrowIfFailed(GpuDevice::Get().device->CreateDescriptorHeap(
                 &samplerHeapDesc, IID_PPV_ARGS(&sampler_heap)));
 
             CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
                 sampler_heap->GetCPUDescriptorHandleForHeapStart());
             UINT incrementSize =
-                GpuCore::Instance().device->GetDescriptorHandleIncrementSize(
+                GpuDevice::Get().device->GetDescriptorHandleIncrementSize(
                     D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
 
-            GpuCore::Instance().device->CreateSampler(&sampler::linearClampSS,
+            GpuDevice::Get().device->CreateSampler(&sampler::linearClampSS,
                                                       handle);
 
             break;

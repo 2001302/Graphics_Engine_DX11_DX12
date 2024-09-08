@@ -14,7 +14,7 @@ class SamplerState : public GpuResource {
 
     void Allocate(GpuHeap *heap, UINT &index) override {
         GpuResource::Allocate(heap, index);
-        GpuCore::Instance().device->CreateSampler(&sampler_desc_, cpu_handle_);
+        GpuDevice::Get().device->CreateSampler(&sampler_desc_, cpu_handle_);
     };
 
   private:

@@ -8,11 +8,11 @@ GpuHeap::GpuHeap(UINT num_descriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,
     desc.Type = type;
     desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     desc.NodeMask = NodeMask;
-    GpuCore::Instance().device->CreateDescriptorHeap(
+    GpuDevice::Get().device->CreateDescriptorHeap(
         &desc, IID_PPV_ARGS(&descriptor_heap));
 
     descriptor_size =
-        GpuCore::Instance().device->GetDescriptorHandleIncrementSize(type);
+        GpuDevice::Get().device->GetDescriptorHandleIncrementSize(type);
     descriptor_heap_cpu_handle =
         descriptor_heap->GetCPUDescriptorHandleForHeapStart();
 }

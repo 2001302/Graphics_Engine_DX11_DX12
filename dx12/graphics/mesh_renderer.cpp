@@ -47,8 +47,8 @@ void MeshRenderer::Render(RenderCondition *render_condition,
         auto command_list = render_condition->command_pool->Get(0);
         for (const auto &mesh : meshes) {
             PSO->Render(
-                command_list, GpuCore::Instance().GetHandleHDR(),
-                GpuCore::Instance().GetHandleDSV(),
+                command_list, GpuDevice::Get().GetHandleHDR(),
+                GpuDevice::Get().GetHandleDSV(),
                 render_condition->shared_texture.get(), mesh->buffer_PS.get(),
                 mesh->buffer_VS.get(), render_condition->gpu_heap.get(),
                 render_condition->sampler_heap.get(),

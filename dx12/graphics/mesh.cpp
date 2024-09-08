@@ -5,7 +5,7 @@ namespace graphics {
 void Mesh::Initialize(const MeshData &mesh_data,
                       ConstantBuffer<MeshConstants> &mesh_consts,
                       ConstantBuffer<MaterialConstants> &material_consts,
-                      GpuHeap *heap,
+                      DescriptorHeap *heap,
                       ComPtr<ID3D12GraphicsCommandList> command_list,
                       bool use_texture) {
     buffer_PS = std::make_shared<GpuResourceList>(heap);

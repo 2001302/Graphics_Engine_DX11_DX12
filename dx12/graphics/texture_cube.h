@@ -13,7 +13,7 @@ class TextureCube : public GpuResource {
     TextureCube(const wchar_t *file_name,
                 ComPtr<ID3D12GraphicsCommandList> command_list, bool isCubeMap,
                 bool isBrdf = false);
-    void Allocate(GpuHeap *heap, UINT &index) override;
+    void Allocate(DescriptorHeap *heap, UINT &index) override;
   private:
       bool isBrdf_;
 };

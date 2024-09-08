@@ -11,7 +11,7 @@ class Texture2D : public GpuResource {
     Texture2D() : GpuResource(){};
     Texture2D(int width, int height, DXGI_FORMAT format);
     Texture2D(Image image, ComPtr<ID3D12GraphicsCommandList> command_list);
-    void Allocate(GpuHeap *heap, UINT &index) override;
+    void Allocate(DescriptorHeap *heap, UINT &index) override;
 
   private:
     void CreateTextureHelper(Image *image, ComPtr<ID3D12Resource> &texture,

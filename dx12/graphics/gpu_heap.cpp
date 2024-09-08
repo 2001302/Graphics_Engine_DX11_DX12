@@ -1,7 +1,7 @@
 #include "gpu_heap.h"
 
 namespace graphics {
-GpuHeap::GpuHeap(UINT num_descriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,
+DescriptorHeap::DescriptorHeap(UINT num_descriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,
                  UINT NodeMask) {
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
     desc.NumDescriptors = num_descriptors;
@@ -17,17 +17,17 @@ GpuHeap::GpuHeap(UINT num_descriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,
         descriptor_heap->GetCPUDescriptorHandleForHeapStart();
 }
 
-ID3D12DescriptorHeap &GpuHeap::GetDescriptorHeap() {
+ID3D12DescriptorHeap &DescriptorHeap::Get() {
     return *descriptor_heap.Get();
 }
 
-D3D12_GPU_DESCRIPTOR_HANDLE GpuHeap::GetGpuHandle(UINT descriptor_index) {
+D3D12_GPU_DESCRIPTOR_HANDLE DescriptorHeap::GetGpuHandle(UINT descriptor_index) {
     return CD3DX12_GPU_DESCRIPTOR_HANDLE(
         descriptor_heap->GetGPUDescriptorHandleForHeapStart(), descriptor_index,
         descriptor_size);
 }
 
-void GpuHeap::AllocateDescriptor(_Out_ D3D12_CPU_DESCRIPTOR_HANDLE &cpu_handle,
+void DescriptorHeap::AllocateDescriptor(_Out_ D3D12_CPU_DESCRIPTOR_HANDLE &cpu_handle,
                                  _Out_ UINT &descriptor_heap_index) {
     descriptor_heap_index = descriptors_allocated;
     cpu_handle = CD3DX12_CPU_DESCRIPTOR_HANDLE(

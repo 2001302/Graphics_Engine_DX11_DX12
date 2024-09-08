@@ -15,7 +15,7 @@ class GpuBuffer : public GpuResource{
     {
 
     }
-    void Allocate(GpuHeap *heap, UINT &index) override {
+    void Allocate(DescriptorHeap *heap, UINT &index) override {
         GpuResource::Allocate(heap, index);
 
     };

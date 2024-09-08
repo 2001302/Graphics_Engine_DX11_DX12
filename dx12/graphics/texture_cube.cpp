@@ -20,7 +20,7 @@ TextureCube::TextureCube(const wchar_t *file_name,
     isBrdf_ = isBrdf;
 }
 
-void TextureCube::Allocate(GpuHeap *heap, UINT &index) {
+void TextureCube::Allocate(DescriptorHeap *heap, UINT &index) {
     GpuResource::Allocate(heap, index);
 
     if (!isBrdf_) {

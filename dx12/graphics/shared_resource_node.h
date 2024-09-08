@@ -25,9 +25,9 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
             condition->global_consts.Initialize();
 
             // gpu heap
-            condition->gpu_heap = std::make_shared<GpuHeap>(
+            condition->gpu_heap = std::make_shared<DescriptorHeap>(
                 1024, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 0);
-            condition->sampler_heap = std::make_shared<GpuHeap>(
+            condition->sampler_heap = std::make_shared<DescriptorHeap>(
                 7, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, 0);
 
             condition->shared_texture =

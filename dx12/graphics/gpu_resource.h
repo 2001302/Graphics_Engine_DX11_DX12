@@ -12,10 +12,10 @@ class GpuResource {
   public:
     GpuResource()
         : buffer_(0), index_(0), cpu_handle_(D3D12_CPU_DESCRIPTOR_HANDLE()){};
-    virtual void Allocate(GpuHeap *heap, UINT &index);
+    virtual void Allocate(DescriptorHeap *heap, UINT &index);
 
   protected:
-    void Allocate(GpuHeap *heap);
+    void Allocate(DescriptorHeap *heap);
     Microsoft::WRL::ComPtr<ID3D12Resource> buffer_;
     D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle_;
     UINT index_;
@@ -23,7 +23,7 @@ class GpuResource {
 
 class GpuResourceList {
   public:
-    GpuResourceList(GpuHeap *heap) : buffer_list_(0), index_(0) { heap_ = heap; };
+    GpuResourceList(DescriptorHeap *heap) : buffer_list_(0), index_(0) { heap_ = heap; };
     void Add(std::shared_ptr<GpuResource> buffer);
     void Allocate();
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle();
@@ -31,7 +31,7 @@ class GpuResourceList {
   private:
     std::vector<std::shared_ptr<GpuResource>> buffer_list_;
     UINT index_;
-    GpuHeap *heap_;
+    DescriptorHeap *heap_;
 };
 
 } // namespace dx12

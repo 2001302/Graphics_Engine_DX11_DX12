@@ -119,6 +119,9 @@
     <ClCompile Include="graphics\gpu_heap.cpp">
       <Filter>Graphics\Gpu\Heap</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\graphics_core.cpp">
+      <Filter>Graphics\Gpu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Foundation">
@@ -386,6 +389,9 @@
     </ClInclude>
     <ClInclude Include="graphics\gpu_heap.h">
       <Filter>Graphics\Gpu\Heap</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics_core.h">
+      <Filter>Graphics\Gpu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

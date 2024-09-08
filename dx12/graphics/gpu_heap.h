@@ -5,11 +5,11 @@
 #include "graphics_pso.h"
 
 namespace graphics {
-class GpuHeap {
+class DescriptorHeap {
   public:
-    GpuHeap(UINT num_descriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,
+    DescriptorHeap(UINT num_descriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,
             UINT NodeMask);
-    ID3D12DescriptorHeap &GetDescriptorHeap();
+    ID3D12DescriptorHeap &Get();
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle(UINT descriptor_index);
     void AllocateDescriptor(_Out_ D3D12_CPU_DESCRIPTOR_HANDLE &cpu_handle,
                             _Out_ UINT &descriptor_heap_index);

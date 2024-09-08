@@ -10,13 +10,13 @@ void MeshRenderer::Initialize() {
 }
 
 void MeshRenderer::Initialize(const std::string &basePath,
-                              const std::string &filename, GpuHeap *heap,
+                              const std::string &filename, DescriptorHeap *heap,
                               ComPtr<ID3D12GraphicsCommandList> command_list) {
     auto meshes = GeometryGenerator::ReadFromFile(basePath, filename);
     Initialize(meshes, heap, command_list);
 }
 
-void MeshRenderer::Initialize(const vector<MeshData> &mesh_data, GpuHeap *heap,
+void MeshRenderer::Initialize(const vector<MeshData> &mesh_data, DescriptorHeap *heap,
                               ComPtr<ID3D12GraphicsCommandList> command_list,
                               bool use_texture) {
 

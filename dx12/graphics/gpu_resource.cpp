@@ -1,12 +1,12 @@
 #include "gpu_resource.h"
 
 namespace graphics {
-void GpuResource::Allocate(GpuHeap *heap, UINT &index) {
+void GpuResource::Allocate(DescriptorHeap *heap, UINT &index) {
     Allocate(heap);
     index = index_;
 };
 
-void GpuResource::Allocate(GpuHeap *heap) {
+void GpuResource::Allocate(DescriptorHeap *heap) {
     heap->AllocateDescriptor(cpu_handle_, index_);
 };
 

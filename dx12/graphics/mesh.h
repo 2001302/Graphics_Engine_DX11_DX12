@@ -47,7 +47,7 @@ struct Mesh {
     void Initialize(const MeshData &mesh_data,
                     ConstantBuffer<MeshConstants> &mesh_consts,
                     ConstantBuffer<MaterialConstants> &material_consts,
-                    GpuHeap *heap,
+                    DescriptorHeap *heap,
                     ComPtr<ID3D12GraphicsCommandList> command_list,
                     bool use_texture = true);
 };

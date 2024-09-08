@@ -26,8 +26,8 @@ class RenderCondition : public foundation::IInfo {
     }
 
     std::shared_ptr<CommandPool> command_pool;
-    std::shared_ptr<GpuHeap> gpu_heap;
-    std::shared_ptr<GpuHeap> sampler_heap;
+    std::shared_ptr<DescriptorHeap> gpu_heap;
+    std::shared_ptr<DescriptorHeap> sampler_heap;
     std::shared_ptr<GpuResourceList> shared_texture; // t10~t16
     ConstantBuffer<GlobalConstants> global_consts;
 

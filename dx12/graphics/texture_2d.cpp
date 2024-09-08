@@ -72,7 +72,7 @@ Texture2D::Texture2D(Image image,
     CreateTextureHelper(&image, buffer_, command_list);
 }
 
-void Texture2D::Allocate(GpuHeap *heap, UINT &index) {
+void Texture2D::Allocate(DescriptorHeap *heap, UINT &index) {
     GpuResource::Allocate(heap, index);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC desc = {

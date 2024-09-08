@@ -86,8 +86,9 @@ class SolidMeshPSO : public GraphicsPSO {
     void Render(ComPtr<ID3D12GraphicsCommandList> command_list,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE render_target_view,
                 CD3DX12_CPU_DESCRIPTOR_HANDLE depth_stencil_view,
-                GpuBufferList *shared_texture, GpuBufferList *buffer_PS,
-                GpuBufferList *buffer_VS, GpuHeap *gpu_heap,
+                GpuResourceList *shared_texture, GpuResourceList *buffer_PS,
+                GpuResourceList *buffer_VS, GpuHeap *gpu_heap,
+                GpuHeap *sampler_heap,
                 ComPtr<ID3D12Resource> global_consts,
                 ComPtr<ID3D12Resource> mesh_consts,
                 ComPtr<ID3D12Resource> material_consts,
@@ -108,7 +109,7 @@ class SolidMeshPSO : public GraphicsPSO {
         command_list->SetPipelineState(pipeline_state);
 
         command_list->SetGraphicsRootDescriptorTable(
-            0, gpu_heap->GetSamplerGpuHandle());
+            0, sampler_heap->GetGpuHandle(0));
         // global texture
         command_list->SetGraphicsRootDescriptorTable(
             1, shared_texture->GetGpuHandle());

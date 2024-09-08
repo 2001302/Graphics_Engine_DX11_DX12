@@ -48,6 +48,7 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
                 command_list, GpuCore::Instance().GetHandleHDR(),
                 GpuCore::Instance().GetHandleDSV(),
                 condition->shared_texture.get(), condition->gpu_heap.get(),
+                condition->sampler_heap.get(),
                 condition->global_consts.Get(), renderer->mesh_consts.Get(),
                 renderer->material_consts.Get(), mesh->vertex_buffer_view,
                 mesh->index_buffer_view, mesh->index_count);

@@ -3,7 +3,7 @@
 
 #include "command_pool.h"
 #include "constant_buffer.h"
-#include "gpu_buffer.h"
+#include "gpu_resource.h"
 #include "graphics_util.h"
 #include "vertex.h"
 
@@ -41,8 +41,8 @@ struct Mesh {
     ComPtr<ID3D12Resource> mesh_consts_GPU;
     ComPtr<ID3D12Resource> material_consts_GPU;
 
-    std::shared_ptr<GpuBufferList> buffer_PS; // t0 ~ t4
-    std::shared_ptr<GpuBufferList> buffer_VS; // t0
+    std::shared_ptr<GpuResourceList> buffer_PS; // t0 ~ t4
+    std::shared_ptr<GpuResourceList> buffer_VS; // t0
 
     void Initialize(const MeshData &mesh_data,
                     ConstantBuffer<MeshConstants> &mesh_consts,

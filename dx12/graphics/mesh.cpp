@@ -8,8 +8,8 @@ void Mesh::Initialize(const MeshData &mesh_data,
                       GpuHeap *heap,
                       ComPtr<ID3D12GraphicsCommandList> command_list,
                       bool use_texture) {
-    buffer_PS = std::make_shared<GpuBufferList>(heap);
-    buffer_VS = std::make_shared<GpuBufferList>(heap);
+    buffer_PS = std::make_shared<GpuResourceList>(heap);
+    buffer_VS = std::make_shared<GpuResourceList>(heap);
 
     Util::CreateVertexBuffer(mesh_data.vertices, vertex_buffer,
                              vertex_buffer_view);

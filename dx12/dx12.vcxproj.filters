@@ -74,7 +74,7 @@
     <ClCompile Include="graphics\foundation\setting_ui.cpp">
       <Filter>Foundation\Gui</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\gpu_buffer.cpp">
+    <ClCompile Include="graphics\gpu_resource.cpp">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClCompile>
     <ClCompile Include="graphics\texture_cube.cpp">
@@ -104,9 +104,6 @@
     <ClCompile Include="graphics\engine.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\gpu_heap.cpp">
-      <Filter>Graphics\Gpu\Buffer</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\graphics_util.cpp">
       <Filter>Graphics\Gpu\Util</Filter>
     </ClCompile>
@@ -116,8 +113,11 @@
     <ClCompile Include="graphics\image.cpp">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClCompile>
+    <ClCompile Include="graphics\gpu_heap.cpp">
+      <Filter>Graphics\Gpu</Filter>
+    </ClCompile>
     <ClCompile Include="graphics\graphics_pso.cpp">
-      <Filter>Graphics\Gpu\PSO</Filter>
+      <Filter>Graphics\Gpu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -285,10 +285,7 @@
     <ClInclude Include="graphics\skybox_pso.h">
       <Filter>Graphics\Gpu\PSO</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\gpu_buffer.h">
-      <Filter>Graphics\Gpu\Buffer</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\gpu_heap.h">
+    <ClInclude Include="graphics\gpu_resource.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="graphics\texture_cube.h">
@@ -363,9 +360,6 @@
     <ClInclude Include="graphics\image.h">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\graphics_pso.h">
-      <Filter>Graphics\Gpu\PSO</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\d3dx12.h">
       <Filter>Graphics\Gpu\Util</Filter>
     </ClInclude>
@@ -377,6 +371,18 @@
     </ClInclude>
     <ClInclude Include="graphics\black_board.h">
       <Filter>Graphics\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu_heap.h">
+      <Filter>Graphics\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics_pso.h">
+      <Filter>Graphics\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\gpu_buffer.h">
+      <Filter>Graphics\Gpu\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\sampler_state.h">
+      <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

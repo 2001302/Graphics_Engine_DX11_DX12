@@ -73,7 +73,7 @@ Texture2D::Texture2D(Image image,
 }
 
 void Texture2D::Allocate(GpuHeap *heap, UINT &index) {
-    GpuBuffer::Allocate(heap, index);
+    GpuResource::Allocate(heap, index);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC desc = {
         buffer_->GetDesc().Format, D3D12_SRV_DIMENSION_TEXTURE2D,

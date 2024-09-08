@@ -62,10 +62,10 @@ bool Engine::Start() {
     //update
     update_tree->Build(black_board.get())
     ->Sequence()
-        //->Excute(camera_node)
-        //->Excute(light_node)
-        //->Excute(shared_resource_node)
-        //->Excute(game_object_node)
+        ->Excute(camera_node)
+        ->Excute(light_node)
+        ->Excute(shared_resource_node)
+        ->Excute(game_object_node)
     ->Close();
      
     //render

@@ -4,6 +4,7 @@
 #include "black_board.h"
 #include "foundation/behavior_tree_builder.h"
 #include "mesh_renderer.h"
+#include "sampler_state.h"
 
 namespace graphics {
 
@@ -26,9 +27,11 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
             // gpu heap
             condition->gpu_heap = std::make_shared<GpuHeap>(
                 1024, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 0);
+            condition->sampler_heap = std::make_shared<GpuHeap>(
+                7, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, 0);
 
             condition->shared_texture =
-                std::make_shared<GpuBufferList>(condition->gpu_heap.get());
+                std::make_shared<GpuResourceList>(condition->gpu_heap.get());
             condition->shared_texture->Add(std::make_shared<TextureCube>(
                 L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds",
                 command_list, true));
@@ -47,6 +50,23 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
                     1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM));
             }
             condition->shared_texture->Allocate();
+
+            auto samplers = std::make_shared<GpuResourceList>(
+                condition->sampler_heap.get());
+            samplers->Add(
+                std::make_shared<SamplerState>(sampler::linearWrapSS));
+            samplers->Add(
+                std::make_shared<SamplerState>(sampler::linearClampSS));
+            samplers->Add(
+                std::make_shared<SamplerState>(sampler::shadowPointSS));
+            samplers->Add(
+                std::make_shared<SamplerState>(sampler::shadowCompareSS));
+            samplers->Add(std::make_shared<SamplerState>(sampler::pointWrapSS));
+            samplers->Add(
+                std::make_shared<SamplerState>(sampler::linearMirrorSS));
+            samplers->Add(
+                std::make_shared<SamplerState>(sampler::pointClampSS));
+            samplers->Allocate();
 
             break;
         }
@@ -82,6 +102,6 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
     }
 };
 
-} // namespace core
+} // namespace graphics
 
 #endif

@@ -164,7 +164,7 @@
     <ClCompile Include="graphics\foundation\sequence_node.cpp" />
     <ClCompile Include="graphics\foundation\setting_ui.cpp" />
     <ClCompile Include="graphics\foundation\ui.cpp" />
-    <ClCompile Include="graphics\gpu_buffer.cpp" />
+    <ClCompile Include="graphics\gpu_resource.cpp" />
     <ClCompile Include="graphics\graphics_core.cpp" />
     <ClCompile Include="graphics\graphics_pso.cpp" />
     <ClCompile Include="graphics\graphics_util.cpp" />
@@ -180,10 +180,12 @@
     <ClInclude Include="graphics\engine.h" />
     <ClInclude Include="graphics\game_objects_node.h" />
     <ClInclude Include="graphics\geometry_generator.h" />
+    <ClInclude Include="graphics\gpu_buffer.h" />
     <ClInclude Include="graphics\gpu_node.h" />
     <ClInclude Include="graphics\constant_buffer.h" />
     <ClInclude Include="graphics\image.h" />
     <ClInclude Include="graphics\mesh.h" />
+    <ClInclude Include="graphics\sampler_state.h" />
     <ClInclude Include="graphics\vertex.h" />
     <ClInclude Include="graphics\gui_node.h" />
     <ClInclude Include="graphics\light_node.h" />
@@ -228,7 +230,7 @@
     <ClInclude Include="graphics\foundation\setting_ui.h" />
     <ClInclude Include="graphics\foundation\ui.h" />
     <ClInclude Include="graphics\d3dx12.h" />
-    <ClInclude Include="graphics\gpu_buffer.h" />
+    <ClInclude Include="graphics\gpu_resource.h" />
     <ClInclude Include="graphics\graphics_core.h" />
     <ClInclude Include="graphics\graphics_pso.h" />
     <ClInclude Include="graphics\graphics_util.h" />

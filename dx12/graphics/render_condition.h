@@ -4,7 +4,7 @@
 #include "command_pool.h"
 #include "constant_buffer.h"
 #include "foundation/info.h"
-#include "gpu_buffer.h"
+#include "gpu_resource.h"
 #include "gpu_heap.h"
 #include "graphics_util.h"
 #include "texture_2d.h"
@@ -27,7 +27,8 @@ class RenderCondition : public foundation::IInfo {
 
     std::shared_ptr<CommandPool> command_pool;
     std::shared_ptr<GpuHeap> gpu_heap;
-    std::shared_ptr<GpuBufferList> shared_texture; // t10~t16
+    std::shared_ptr<GpuHeap> sampler_heap;
+    std::shared_ptr<GpuResourceList> shared_texture; // t10~t16
     ConstantBuffer<GlobalConstants> global_consts;
 
     float dt;

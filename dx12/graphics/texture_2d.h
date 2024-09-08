@@ -1,14 +1,14 @@
 #ifndef _TEXTURE2D
 #define _TEXTURE2D
 
-#include "gpu_buffer.h"
+#include "gpu_resource.h"
 #include "image.h"
 #include <filesystem>
 
 namespace graphics {
-class Texture2D : public GpuBuffer {
+class Texture2D : public GpuResource {
   public:
-    Texture2D() : GpuBuffer(){};
+    Texture2D() : GpuResource(){};
     Texture2D(int width, int height, DXGI_FORMAT format);
     Texture2D(Image image, ComPtr<ID3D12GraphicsCommandList> command_list);
     void Allocate(GpuHeap *heap, UINT &index) override;

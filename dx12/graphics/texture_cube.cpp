@@ -21,7 +21,7 @@ TextureCube::TextureCube(const wchar_t *file_name,
 }
 
 void TextureCube::Allocate(GpuHeap *heap, UINT &index) {
-    GpuBuffer::Allocate(heap, index);
+    GpuResource::Allocate(heap, index);
 
     if (!isBrdf_) {
         D3D12_SHADER_RESOURCE_VIEW_DESC desc = {

@@ -51,6 +51,7 @@ void MeshRenderer::Render(RenderCondition *render_condition,
                 GpuCore::Instance().GetHandleDSV(),
                 render_condition->shared_texture.get(), mesh->buffer_PS.get(),
                 mesh->buffer_VS.get(), render_condition->gpu_heap.get(),
+                render_condition->sampler_heap.get(),
                 render_condition->global_consts.Get(), mesh_consts.Get(),
                 material_consts.Get(), mesh->vertex_buffer_view,
                 mesh->index_buffer_view, mesh->index_count);
@@ -69,4 +70,4 @@ void MeshRenderer::UpdateWorldRow(const Matrix &worldRow) {
     mesh_consts.GetCpu().worldInv = mesh_consts.GetCpu().world.Invert();
 }
 
-} // namespace core
+} // namespace graphics

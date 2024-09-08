@@ -8,28 +8,18 @@
 #include "vertex.h"
 
 namespace graphics {
-enum EnumTextureType {
-    ALBEDO = 0,
-    NORMAL = 1,
-    AMBIENT_OCCLUSION = 2,
-    METALLIC_ROUGHNESS = 3,
-    EMISSIVE = 4,
-    HEIGHT = 5,
-    END = 6
-};
-
 struct MeshData {
     std::vector<Vertex> vertices;
     std::vector<SkinnedVertex> skinned_vertices;
     std::vector<uint32_t> indices;
-    std::string albedoTextureFilename;
-    std::string emissiveTextureFilename;
-    std::string normalTextureFilename;
-    std::string heightTextureFilename;
-    std::string aoTextureFilename; // Ambient Occlusion
-    std::string metallicTextureFilename;
-    std::string roughnessTextureFilename;
-    std::string opacityTextureFilename;
+    std::string albedo_name;
+    std::string emissive_name;
+    std::string normal_name;
+    std::string height_name;
+    std::string ambient_occlusion_name;
+    std::string metallic_name;
+    std::string roughness_name;
+    std::string opacity_name;
 };
 
 struct Mesh {

@@ -164,7 +164,7 @@ bool GpuCore::InitializeGPU() {
 }
 void GpuCore::CreateBuffer() {
     if (useMSAA) {
-        //for HDR
+        // for HDR
         DXGI_SAMPLE_DESC sampleDesc = {};
         sampleDesc.Count = 4;
         sampleDesc.Quality = 0;
@@ -288,9 +288,9 @@ void GpuCore::CreateBuffer() {
         heap_desc_RTV.NumDescriptors = 1;
         heap_desc_RTV.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
         heap_desc_RTV.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
-        ThrowIfFailed(device->CreateDescriptorHeap(
-            &heap_desc_RTV, IID_PPV_ARGS(&heap_LDR)));
-        
+        ThrowIfFailed(device->CreateDescriptorHeap(&heap_desc_RTV,
+                                                   IID_PPV_ARGS(&heap_LDR)));
+
         D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
         srvDesc.Shader4ComponentMapping =
             D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
@@ -300,10 +300,10 @@ void GpuCore::CreateBuffer() {
         srvDesc.Texture2D.MipLevels = 1;
         srvDesc.Texture2D.PlaneSlice = 0;
         srvDesc.Texture2D.ResourceMinLODClamp = 0.0f;
-        device->CreateShaderResourceView(resource_LDR.Get(), &srvDesc,
-                                         heap_LDR->GetCPUDescriptorHandleForHeapStart());
+        device->CreateShaderResourceView(
+            resource_LDR.Get(), &srvDesc,
+            heap_LDR->GetCPUDescriptorHandleForHeapStart());
     }
-
 }
 CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleHDR() {
     CD3DX12_CPU_DESCRIPTOR_HANDLE
@@ -328,4 +328,4 @@ CD3DX12_CPU_DESCRIPTOR_HANDLE GpuCore::GetHandleDSV() {
     dsvHandle(heap_DSV->GetCPUDescriptorHandleForHeapStart());
     return dsvHandle;
 };
-} // namespace dx12
+} // namespace graphics

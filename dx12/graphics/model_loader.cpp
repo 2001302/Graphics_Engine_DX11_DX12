@@ -380,34 +380,34 @@ MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
 
         aiMaterial *material = scene->mMaterials[mesh->mMaterialIndex];
 
-        newMesh.albedoTextureFilename =
+        newMesh.albedo_name =
             ReadTextureFilename(scene, material, aiTextureType_BASE_COLOR);
-        if (newMesh.albedoTextureFilename.empty()) {
-            newMesh.albedoTextureFilename =
+        if (newMesh.albedo_name.empty()) {
+            newMesh.albedo_name =
                 ReadTextureFilename(scene, material, aiTextureType_DIFFUSE);
         }
-        newMesh.emissiveTextureFilename =
+        newMesh.emissive_name =
             ReadTextureFilename(scene, material, aiTextureType_EMISSIVE);
-        newMesh.heightTextureFilename =
+        newMesh.height_name =
             ReadTextureFilename(scene, material, aiTextureType_HEIGHT);
-        newMesh.normalTextureFilename =
+        newMesh.normal_name =
             ReadTextureFilename(scene, material, aiTextureType_NORMALS);
-        newMesh.metallicTextureFilename =
+        newMesh.metallic_name =
             ReadTextureFilename(scene, material, aiTextureType_METALNESS);
-        newMesh.roughnessTextureFilename = ReadTextureFilename(
+        newMesh.roughness_name = ReadTextureFilename(
             scene, material, aiTextureType_DIFFUSE_ROUGHNESS);
-        newMesh.aoTextureFilename = ReadTextureFilename(
+        newMesh.ambient_occlusion_name = ReadTextureFilename(
             scene, material, aiTextureType_AMBIENT_OCCLUSION);
-        if (newMesh.aoTextureFilename.empty()) {
-            newMesh.aoTextureFilename =
+        if (newMesh.ambient_occlusion_name.empty()) {
+            newMesh.ambient_occlusion_name =
                 ReadTextureFilename(scene, material, aiTextureType_LIGHTMAP);
         }
-        newMesh.opacityTextureFilename =
+        newMesh.opacity_name =
             ReadTextureFilename(scene, material, aiTextureType_OPACITY);
 
-        if (!newMesh.opacityTextureFilename.empty()) {
-            cout << newMesh.albedoTextureFilename << endl;
-            cout << "Opacity " << newMesh.opacityTextureFilename << endl;
+        if (!newMesh.opacity_name.empty()) {
+            cout << newMesh.albedo_name << endl;
+            cout << "Opacity " << newMesh.opacity_name << endl;
         }
 
         // for (size_t i = 0; i < 22; i++) {

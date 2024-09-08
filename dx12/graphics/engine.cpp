@@ -62,20 +62,20 @@ bool Engine::Start() {
     //update
     update_tree->Build(black_board.get())
     ->Sequence()
-        ->Excute(camera_node)
-        ->Excute(light_node)
-        ->Excute(shared_resource_node)
-        ->Excute(game_object_node)
+        //->Excute(camera_node)
+        //->Excute(light_node)
+        //->Excute(shared_resource_node)
+        //->Excute(game_object_node)
     ->Close();
      
     //render
     render_tree->Build(black_board.get())
     ->Sequence()
         ->Excute(begin_render)
-        ->Excute(skybox_node)
-        ->Excute(game_object_node)
-        ->Excute(resolve_buffer)
-        ->Excute(tone_mapping)
+        //->Excute(skybox_node)
+        //->Excute(game_object_node)
+        //->Excute(resolve_buffer)
+        //->Excute(tone_mapping)
         ->Excute(gui_node)
         ->Excute(end_render)
         ->Excute(present)

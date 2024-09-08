@@ -5,7 +5,7 @@
 #include "constant_buffer.h"
 #include "foundation/info.h"
 #include "gpu_resource.h"
-#include "gpu_heap.h"
+#include "descriptor_heap.h"
 #include "graphics_util.h"
 #include "texture_2d.h"
 #include "texture_cube.h"

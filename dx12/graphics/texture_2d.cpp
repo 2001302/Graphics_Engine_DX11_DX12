@@ -64,24 +64,24 @@ Texture2D::Texture2D(int width, int height, DXGI_FORMAT format) {
     HRESULT hr = GpuDevice::Get().device->CreateCommittedResource(
         &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
         D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, nullptr,
-        IID_PPV_ARGS(buffer_.GetAddressOf()));
+        IID_PPV_ARGS(resouce_.GetAddressOf()));
 }
 
 Texture2D::Texture2D(Image image,
                      ComPtr<ID3D12GraphicsCommandList> command_list) {
-    CreateTextureHelper(&image, buffer_, command_list);
+    CreateTextureHelper(&image, resouce_, command_list);
 }
 
 void Texture2D::Allocate(DescriptorHeap *heap, UINT &index) {
     GpuResource::Allocate(heap, index);
 
     D3D12_SHADER_RESOURCE_VIEW_DESC desc = {
-        buffer_->GetDesc().Format, D3D12_SRV_DIMENSION_TEXTURE2D,
+        resouce_->GetDesc().Format, D3D12_SRV_DIMENSION_TEXTURE2D,
         D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING};
 
     desc.Texture2D.MipLevels = 1;
 
-    GpuDevice::Get().device->CreateShaderResourceView(buffer_.Get(), &desc,
+    GpuDevice::Get().device->CreateShaderResourceView(resouce_.Get(), &desc,
                                                          cpu_handle_);
 }
 } // namespace core

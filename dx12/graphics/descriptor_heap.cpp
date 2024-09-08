@@ -1,4 +1,4 @@
-#include "gpu_heap.h"
+#include "descriptor_heap.h"
 
 namespace graphics {
 DescriptorHeap::DescriptorHeap(UINT num_descriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,

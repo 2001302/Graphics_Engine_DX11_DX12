@@ -116,7 +116,7 @@
     <ClCompile Include="graphics\graphics_pso.cpp">
       <Filter>Graphics\Gpu</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\gpu_heap.cpp">
+    <ClCompile Include="graphics\descriptor_heap.cpp">
       <Filter>Graphics\Gpu\Heap</Filter>
     </ClCompile>
     <ClCompile Include="graphics\graphics_core.cpp">
@@ -387,7 +387,7 @@
     <ClInclude Include="graphics\sampler_state.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\gpu_heap.h">
+    <ClInclude Include="graphics\descriptor_heap.h">
       <Filter>Graphics\Gpu\Heap</Filter>
     </ClInclude>
     <ClInclude Include="graphics\graphics_core.h">

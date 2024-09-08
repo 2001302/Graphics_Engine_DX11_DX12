@@ -134,7 +134,7 @@
     <ClCompile Include="graphics\camera.cpp" />
     <ClCompile Include="graphics\engine.cpp" />
     <ClCompile Include="graphics\geometry_generator.cpp" />
-    <ClCompile Include="graphics\gpu_heap.cpp" />
+    <ClCompile Include="graphics\descriptor_heap.cpp" />
     <ClCompile Include="graphics\graphics_core.cpp" />
     <ClCompile Include="graphics\image.cpp" />
     <ClCompile Include="graphics\mesh.cpp" />
@@ -237,7 +237,7 @@
     <ClInclude Include="graphics\graphics_pso.h" />
     <ClInclude Include="graphics\graphics_util.h" />
     <ClInclude Include="graphics\command_pool.h" />
-    <ClInclude Include="graphics\gpu_heap.h" />
+    <ClInclude Include="graphics\descriptor_heap.h" />
     <ClInclude Include="graphics\mesh_pso.h" />
     <ClInclude Include="graphics\skybox_pso.h" />
     <ClInclude Include="graphics\texture_2d.h" />

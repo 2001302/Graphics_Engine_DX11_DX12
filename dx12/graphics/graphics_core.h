@@ -2,7 +2,7 @@
 #define _GRAPHICS_CORE
 
 #include "graphics_device.h"
-#include "gpu_heap.h"
+#include "descriptor_heap.h"
 #include "command_pool.h"
 
 namespace graphics {

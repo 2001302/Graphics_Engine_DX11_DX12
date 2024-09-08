@@ -11,16 +11,16 @@ void GpuResource::Allocate(DescriptorHeap *heap) {
 };
 
 void GpuResourceList::Add(std::shared_ptr<GpuResource> buffer) {
-    buffer_list_.push_back(buffer);
+    resource_list_.push_back(buffer);
 }
 
 void GpuResourceList::Allocate() {
-    for (int i = 0; i < buffer_list_.size(); i++) {
+    for (int i = 0; i < resource_list_.size(); i++) {
         if (i == 0)
-            buffer_list_[i]->Allocate(heap_, index_);
+            resource_list_[i]->Allocate(heap_, index_);
         else {
             UINT index = 0;
-            buffer_list_[i]->Allocate(heap_, index);
+            resource_list_[i]->Allocate(heap_, index);
         }
     }
 }

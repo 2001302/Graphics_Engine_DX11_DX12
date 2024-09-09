@@ -56,6 +56,7 @@ Texture2D::Texture2D(int width, int height, DXGI_FORMAT format) {
     txtDesc.MipLevels = 0;
     txtDesc.DepthOrArraySize = 1;
     txtDesc.Format = format;
+
     txtDesc.SampleDesc.Count = 1;
     txtDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
     txtDesc.Flags = D3D12_RESOURCE_FLAG_NONE;

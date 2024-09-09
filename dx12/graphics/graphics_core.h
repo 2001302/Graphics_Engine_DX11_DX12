@@ -4,10 +4,16 @@
 #include "graphics_device.h"
 #include "descriptor_heap.h"
 #include "command_pool.h"
+#include "color_buffer.h"
+#include "depth_buffer.h"
+#include "back_buffer.h"
 
 namespace graphics {
 class GpuBufferManager {
-    //Gpu buffer 를 관리 : back buffer, hdr, shared tex, shadow map 등..
+    std::shared_ptr<BackBuffer> back_buffer;
+    std::shared_ptr<ColorBuffer> hdr_buffer;
+    std::shared_ptr<ColorBuffer> ldr_buffer;
+    std::shared_ptr<DepthBuffer> dsv_buffer;
 };
 class GpuHeapManager {
     std::shared_ptr<DescriptorHeap> view_heap;    // CBV_SRV_UAV
@@ -28,9 +34,8 @@ class GpuCore {
         static GpuCore instance;
         return instance;
     }
-    bool InitializeGPU();
-    ComPtr<IDXGISwapChain3> GetSwapChain() { return swap_chain; }
-    ComPtr<ID3D12Device> GetDevice() { return device; }
+    bool Initialize();
+    ID3D12Device* GetDevice() { return device.Get(); }
     GpuBufferManager *GetBufferMgr() { return buffer_manager.get(); }
     GpuCommandManager *GetCommandMgr() { return command_manager.get(); }
     GpuContextManager *GetContextMgr() { return context_manager.get(); }

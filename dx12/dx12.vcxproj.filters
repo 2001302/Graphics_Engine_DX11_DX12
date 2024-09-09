@@ -184,6 +184,9 @@
     <Filter Include="Graphics\Gpu\Heap">
       <UniqueIdentifier>{6a573e0e-ae59-4d24-b0c9-b46c7a7f18d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Graphics\Gpu\Command">
+      <UniqueIdentifier>{7a7980fb-704b-4a96-8ea3-1afbf20510fc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="graphics\foundation\ImGui\NodeEditor\crude_json.h">
@@ -381,7 +384,7 @@
     <ClInclude Include="graphics\graphics_pso.h">
       <Filter>Graphics\Gpu</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\gpu_buffer.h">
+    <ClInclude Include="graphics\color_buffer.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
     <ClInclude Include="graphics\sampler_state.h">
@@ -392,6 +395,12 @@
     </ClInclude>
     <ClInclude Include="graphics\graphics_core.h">
       <Filter>Graphics\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\depth_buffer.h">
+      <Filter>Graphics\Gpu\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\back_buffer.h">
+      <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -34,7 +34,7 @@ static std::wstring GetLatestWinPixGpuCapturerPath_Cpp17() {
 
 namespace graphics {
 
-bool GpuCore::InitializeGPU() {
+bool GpuCore::Initialize() {
     if (GetModuleHandle(L"WinPixGpuCapturer.dll") == 0) {
         LoadLibrary(GetLatestWinPixGpuCapturerPath_Cpp17().c_str());
     }

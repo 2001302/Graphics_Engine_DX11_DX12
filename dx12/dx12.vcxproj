@@ -178,10 +178,12 @@
     <ClInclude Include="graphics\camera.h" />
     <ClInclude Include="graphics\camera_node.h" />
     <ClInclude Include="graphics\component.h" />
+    <ClInclude Include="graphics\depth_buffer.h" />
+    <ClInclude Include="graphics\back_buffer.h" />
     <ClInclude Include="graphics\engine.h" />
     <ClInclude Include="graphics\game_objects_node.h" />
     <ClInclude Include="graphics\geometry_generator.h" />
-    <ClInclude Include="graphics\gpu_buffer.h" />
+    <ClInclude Include="graphics\color_buffer.h" />
     <ClInclude Include="graphics\gpu_node.h" />
     <ClInclude Include="graphics\constant_buffer.h" />
     <ClInclude Include="graphics\graphics_core.h" />

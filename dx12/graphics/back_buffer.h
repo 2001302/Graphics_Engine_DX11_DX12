@@ -1,6 +1,6 @@
 #ifndef _BACK_BUFFER
 #define _BACK_BUFFER
-#define SWAP_CHAIN_BUFFER_COUNT 3
+#define SWAP_CHAIN_BUFFER_COUNT 2
 
 #include "gpu_resource.h"
 

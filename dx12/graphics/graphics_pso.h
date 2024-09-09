@@ -2,7 +2,15 @@
 #define _GRAPHICSPSO
 
 #include "d3dx12.h"
-#include "graphics_device.h"
+#include <d3d12.h>
+#include <d3dcompiler.h>
+#include <wrl/client.h>
+#include <directxtk/SimpleMath.h>
+
+using DirectX::SimpleMath::Matrix;
+using DirectX::SimpleMath::Vector2;
+using DirectX::SimpleMath::Vector3;
+using Microsoft::WRL::ComPtr;
 
 namespace graphics {
 class PSO {
@@ -46,7 +54,7 @@ extern D3D12_RASTERIZER_DESC postRS;
 
 namespace depth {
 extern D3D12_DEPTH_STENCIL_DESC basicDS;
-} // namespace depthstencil
+} // namespace depth
 
-} // namespace dx12
+} // namespace graphics
 #endif

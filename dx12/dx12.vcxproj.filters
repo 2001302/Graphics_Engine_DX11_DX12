@@ -402,6 +402,15 @@
     <ClInclude Include="graphics\back_buffer.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\command_list.h">
+      <Filter>Graphics\Gpu\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\command_queue.h">
+      <Filter>Graphics\Gpu\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\graphics_common.h">
+      <Filter>Graphics\Gpu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="graphics\foundation\ImGui\NodeEditor\imgui_bezier_math.inl">

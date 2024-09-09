@@ -1,8 +1,10 @@
 #ifndef _GPU_HEAP
 #define _GPU_HEAP
 
-#include "graphics_device.h"
+#include <d3d12.h>
+#include <wrl/client.h>
 #include "graphics_pso.h"
+#include "graphics_device.h"
 
 namespace graphics {
 class DescriptorHeap {

@@ -52,6 +52,8 @@ class GpuDevice {
 
     bool useMSAA = true;
 
+
+
     ComPtr<IDXGISwapChain3> swap_chain;
     ComPtr<ID3D12Device> device;
     ComPtr<ID3D12CommandQueue> command_queue;

@@ -7,7 +7,7 @@
 namespace graphics {
 class BackBuffer : GpuResource {
   public:
-    BackBuffer() : index_(), rtv_handle_(), rtv_heap_(0){};
+    BackBuffer() : device_(0), index_(), rtv_handle_(), rtv_heap_(0){};
     void Create(ID3D12Device *device, DescriptorHeap *heap,
                 IDXGISwapChain1 *swap_chain) {
         device_ = device;

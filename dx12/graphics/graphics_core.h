@@ -9,27 +9,42 @@
 #include "descriptor_heap.h"
 
 namespace graphics {
-class GpuBufferManager {
-  public:
-    GpuBufferManager(){};
-    BackBuffer* back_buffer;
-    ColorBuffer* hdr_buffer;
-    ColorBuffer* ldr_buffer;
-    DepthBuffer* dsv_buffer;
+struct GlobalGpuBuffer {
+    BackBuffer back_buffer;
+    ColorBuffer hdr_buffer;
+    ColorBuffer ldr_buffer;
+    DepthBuffer dsv_buffer;
 };
 
 class GpuHeapManager {
   public:
-    GpuHeapManager(){};
-    DescriptorHeap* view_heap;    // CBV_SRV_UAV
-    DescriptorHeap* sampler_heap; // SAMPLER
-    DescriptorHeap* rtv_heap;     // RTV
-    DescriptorHeap* dsv_heap;     // DSV
+    GpuHeapManager()
+        : heap_view(0), heap_sampler(0), heap_RTV(0), heap_DSV(0){};
+    void Initialize(ID3D12Device *device, UINT num_descriptor) {
+        heap_RTV = new DescriptorHeap(device, num_descriptor,
+                                      D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 1);
+        heap_view = new DescriptorHeap(
+            device, num_descriptor, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+        heap_DSV = new DescriptorHeap(device, num_descriptor,
+                                      D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
+        heap_sampler = new DescriptorHeap(
+            device, num_descriptor, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, 1);
+    };
+    DescriptorHeap &GetViewHeap() { return *heap_view; }
+    DescriptorHeap &GetSamplerHeap() { return *heap_sampler; }
+    DescriptorHeap &GetRTVHeap() { return *heap_RTV; }
+    DescriptorHeap &GetDSVHeap() { return *heap_DSV; }
+
+  private:
+    DescriptorHeap *heap_view;    // CBV_SRV_UAV
+    DescriptorHeap *heap_sampler; // SAMPLER
+    DescriptorHeap *heap_RTV;     // RTV
+    DescriptorHeap *heap_DSV;     // DSV
 };
 
 class GpuCommandManager {
   public:
-    GpuCommandManager(ID3D12Device* device)
+    GpuCommandManager(ID3D12Device *device)
         : graphics_queue(D3D12_COMMAND_LIST_TYPE_DIRECT),
           compute_queue(D3D12_COMMAND_LIST_TYPE_COMPUTE),
           copy_queue(D3D12_COMMAND_LIST_TYPE_COPY) {
@@ -94,8 +109,7 @@ class GpuCommandManager {
     CommandQueue copy_queue;
 };
 
-class GpuContextManager {
-  public:
+struct GpuContextManager {
     ID3D12CommandAllocator *graphics_list_allocator;
     ID3D12CommandAllocator *compute_list_allocator;
     ID3D12CommandAllocator *copy_list_allocator;
@@ -111,20 +125,41 @@ class GpuCore {
         return instance;
     }
     bool Initialize();
+    bool InitializeBuffer() {
+        buffer_manager.back_buffer.Create(
+            device.Get(), &heap_manager->GetRTVHeap(), swap_chain.Get());
+        buffer_manager.hdr_buffer.Create(
+            device.Get(), &heap_manager->GetRTVHeap(),
+            &heap_manager->GetViewHeap(), DXGI_FORMAT_R16G16B16A16_FLOAT);
+        buffer_manager.ldr_buffer.Create(
+            device.Get(), &heap_manager->GetRTVHeap(),
+            &heap_manager->GetViewHeap(), DXGI_FORMAT_R8G8B8A8_UNORM);
+        buffer_manager.dsv_buffer.Create(
+            device.Get(), &heap_manager->GetDSVHeap(), DXGI_FORMAT_D32_FLOAT);
+
+        buffer_manager.back_buffer.Allocate();
+        buffer_manager.hdr_buffer.Allocate();
+        buffer_manager.ldr_buffer.Allocate();
+        buffer_manager.dsv_buffer.Allocate();
+        return true;
+    };
+    GlobalGpuBuffer Buffer() { return buffer_manager; }
+
     ID3D12Device *GetDevice() { return device.Get(); }
-    GpuHeapManager *GetHeapMgr() { return heap_manager; }
-    GpuBufferManager *GetBufferMgr() { return buffer_manager; }
-    GpuCommandManager *GetCommandMgr() { return command_manager; }
-    GpuContextManager *GetContextMgr() { return context_manager; }
+    GpuHeapManager *GetHeapMgr() { return heap_manager.get(); }
+    GpuCommandManager *GetCommandMgr() { return command_manager.get(); }
+    GpuContextManager *GetContextMgr() { return context_manager.get(); }
 
   private:
-    GpuCore() : swap_chain(0), device(0) {}
+    GpuCore()
+        : swap_chain(0), device(0), heap_manager(0), command_manager(0),
+          context_manager(0) {}
     ComPtr<IDXGISwapChain1> swap_chain;
     ComPtr<ID3D12Device> device;
-    GpuHeapManager* heap_manager;
-    GpuBufferManager* buffer_manager;
-    GpuCommandManager* command_manager;
-    GpuContextManager* context_manager;
+    std::shared_ptr<GpuHeapManager> heap_manager;
+    std::shared_ptr<GpuCommandManager> command_manager;
+    std::shared_ptr<GpuContextManager> context_manager;
+    GlobalGpuBuffer buffer_manager;
 };
 
 } // namespace graphics

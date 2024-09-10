@@ -29,10 +29,13 @@ class Texture2D : public GpuResource {
             &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, nullptr,
             IID_PPV_ARGS(&resource_));
+
+        heap_ = heap;
     };
     void Create(DescriptorHeap *heap, Image image,
                 ComPtr<ID3D12GraphicsCommandList> command_list) {
         CreateTextureHelper(&image, resource_, command_list.Get());
+        heap_ = heap;
     };
     void Allocate() override {
         heap_->AllocateDescriptor(cpu_handle_, index_);

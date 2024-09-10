@@ -5,6 +5,11 @@
 #define LIGHT_SPOT 0x04
 #define LIGHT_SHADOW 0x10
 
+#define ASSERT_FAILED(hr)                                                      \
+    if (FAILED(hr)) {                                                          \
+        throw std::exception();                                                \
+    }
+
 #include <d3d12.h>
 #include <d3dcompiler.h>
 #include <directxtk/SimpleMath.h>
@@ -19,13 +24,8 @@
 #include <windows.h>
 #include <wrl/client.h> // ComPtr
 
-#include "foundation/env.h"
 #include "d3dx12.h"
-
-#define ASSERT_FAILED(hr)\
-    if (FAILED(hr)) {\
-        throw std::exception();\
-    }
+#include "foundation/env.h"
 
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;

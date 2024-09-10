@@ -68,9 +68,6 @@
     <ClCompile Include="graphics\foundation\node.cpp">
       <Filter>Foundation\Structure</Filter>
     </ClCompile>
-    <ClCompile Include="graphics\graphics_device.cpp">
-      <Filter>Graphics\Gpu</Filter>
-    </ClCompile>
     <ClCompile Include="graphics\foundation\setting_ui.cpp">
       <Filter>Foundation\Gui</Filter>
     </ClCompile>
@@ -279,9 +276,6 @@
     <ClInclude Include="graphics\foundation\message.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
-    <ClInclude Include="graphics\graphics_device.h">
-      <Filter>Graphics\Gpu</Filter>
-    </ClInclude>
     <ClInclude Include="graphics\foundation\setting_ui.h">
       <Filter>Foundation\Gui</Filter>
     </ClInclude>
@@ -352,9 +346,6 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="graphics\graphics_util.h">
-      <Filter>Graphics\Gpu\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics\command_pool.h">
       <Filter>Graphics\Gpu\Util</Filter>
     </ClInclude>
     <ClInclude Include="graphics\constant_buffer.h">

@@ -7,8 +7,9 @@ namespace graphics {
 class SamplerState : public GpuResource {
   public:
     SamplerState() : heap_(0){};
-    void Create(DescriptorHeap *heap,
+    void Create(ID3D12Device *device, DescriptorHeap *heap,
                 std::vector<D3D12_SAMPLER_DESC> sampler_desc) {
+        device_ = device;
         sampler_desc_ = sampler_desc;
         heap_ = heap;
     };
@@ -20,8 +21,7 @@ class SamplerState : public GpuResource {
 
         for (int i = 0; i < sampler_desc_.size(); i++) {
             heap_->AllocateDescriptor(cpu_handle_[i], index_[i]);
-            GpuDevice::Get().device->CreateSampler(&sampler_desc_[i],
-                                                   cpu_handle_[i]);
+            device_->CreateSampler(&sampler_desc_[i], cpu_handle_[i]);
         }
     };
 
@@ -30,6 +30,7 @@ class SamplerState : public GpuResource {
     };
 
   private:
+    ID3D12Device *device_;
     DescriptorHeap *heap_;
     std::vector<UINT> index_;
     std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> cpu_handle_;

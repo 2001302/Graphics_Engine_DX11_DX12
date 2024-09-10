@@ -166,7 +166,6 @@
     <ClCompile Include="graphics\foundation\setting_ui.cpp" />
     <ClCompile Include="graphics\foundation\ui.cpp" />
     <ClCompile Include="graphics\gpu_resource.cpp" />
-    <ClCompile Include="graphics\graphics_device.cpp" />
     <ClCompile Include="graphics\graphics_pso.cpp" />
     <ClCompile Include="graphics\graphics_util.cpp" />
     <ClCompile Include="graphics\texture_2d.cpp" />
@@ -238,10 +237,8 @@
     <ClInclude Include="graphics\foundation\ui.h" />
     <ClInclude Include="graphics\d3dx12.h" />
     <ClInclude Include="graphics\gpu_resource.h" />
-    <ClInclude Include="graphics\graphics_device.h" />
     <ClInclude Include="graphics\graphics_pso.h" />
     <ClInclude Include="graphics\graphics_util.h" />
-    <ClInclude Include="graphics\command_pool.h" />
     <ClInclude Include="graphics\descriptor_heap.h" />
     <ClInclude Include="graphics\mesh_pso.h" />
     <ClInclude Include="graphics\skybox_pso.h" />

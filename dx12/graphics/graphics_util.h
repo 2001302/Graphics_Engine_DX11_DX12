@@ -1,7 +1,7 @@
 #ifndef _GRAPHICSUTIL
 #define _GRAPHICSUTIL
 
-#include "graphics_device.h"
+#include "graphics_core.h"
 #include "graphics_pso.h"
 
 namespace graphics {
@@ -23,14 +23,14 @@ class Util {
         resourceDesc.SampleDesc.Count = 1;
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-        ThrowIfFailed(GpuDevice::Get().device->CreateCommittedResource(
+        ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
             &heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&indexBuffer)));
 
         uint8_t *pIndexDataBegin;
         D3D12_RANGE readRange = {};
-        ThrowIfFailed(indexBuffer->Map(
+        ASSERT_FAILED(indexBuffer->Map(
             0, &readRange, reinterpret_cast<void **>(&pIndexDataBegin)));
         memcpy(pIndexDataBegin, indices.data(),
                indices.size() * sizeof(uint32_t));
@@ -59,14 +59,14 @@ class Util {
         resourceDesc.SampleDesc.Count = 1;
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-        ThrowIfFailed(GpuDevice::Get().device->CreateCommittedResource(
+        ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
             &heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&vertexBuffer)));
 
         uint8_t *pVertexDataBegin;
         D3D12_RANGE readRange = {};
-        ThrowIfFailed(vertexBuffer->Map(
+        ASSERT_FAILED(vertexBuffer->Map(
             0, &readRange, reinterpret_cast<void **>(&pVertexDataBegin)));
         memcpy(pVertexDataBegin, vertices.data(),
                vertices.size() * sizeof(T_VERTEX));
@@ -98,14 +98,14 @@ class Util {
         resourceDesc.SampleDesc.Count = 1;
         resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-        ThrowIfFailed(GpuDevice::Get().device->CreateCommittedResource(
+        ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
             &heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&constantBuffer)));
 
         UINT8 *begin = 0;
         D3D12_RANGE readRange = {};
-        ThrowIfFailed(constantBuffer->Map(0, &readRange,
+        ASSERT_FAILED(constantBuffer->Map(0, &readRange,
                                           reinterpret_cast<void **>(&begin)));
         memcpy(begin, &constantBufferData, sizeof(constantBufferData));
         constantBuffer->Unmap(0, nullptr);
@@ -122,7 +122,7 @@ class Util {
 
         UINT8 *begin = 0;
         CD3DX12_RANGE readRange(0, 0);
-        ThrowIfFailed(
+        ASSERT_FAILED(
             buffer->Map(0, &readRange, reinterpret_cast<void **>(&begin)));
         memcpy(begin, &bufferData.data(), sizeof(T_DATA) * bufferData.size());
         buffer->Unmap(0, nullptr);
@@ -139,23 +139,23 @@ class Util {
 
         UINT8 *begin = 0;
         CD3DX12_RANGE readRange(0, 0);
-        ThrowIfFailed(
+        ASSERT_FAILED(
             buffer->Map(0, &readRange, reinterpret_cast<void **>(&begin)));
         memcpy(begin, &bufferData, sizeof(T_DATA));
         buffer->Unmap(0, nullptr);
     }
 
     static void
-    CreateVertexShader(ComPtr<ID3D12Device> &device, std::wstring filename,
+    CreateVertexShader(ComPtr<ID3D12Device> device, std::wstring filename,
                        ComPtr<ID3DBlob> &m_vertexShader,
                        const std::vector<D3D_SHADER_MACRO> shaderMacros = {
                            /* Empty default */});
 
-    static void CreatePixelShader(ComPtr<ID3D12Device> &device,
+    static void CreatePixelShader(ComPtr<ID3D12Device> device,
                                   std::wstring filename,
                                   ComPtr<ID3DBlob> &shader);
 
-    static void CreateComputeShader(ComPtr<ID3D12Device> &device,
+    static void CreateComputeShader(ComPtr<ID3D12Device> device,
                                     std::wstring filename,
                                     ComPtr<ID3DBlob> &shader);
 };

@@ -31,7 +31,7 @@ class Engine : public foundation::Platform {
 
         auto CheckIfMouseInViewport = [](foundation::SettingUi *ui, int mouseX,
                                          int mouseY) -> bool {
-            if (GpuDevice::Get().swap_chain) {
+            if (GpuCore::Instance().GetSwapChain()) {
                 if ((0 < mouseX && mouseX < ui->GetSize().x) &&
                     (0 < mouseY && mouseY < ui->GetSize().y))
                     return false;
@@ -126,5 +126,5 @@ class Engine : public foundation::Platform {
         }
     }
 };
-} // namespace core
+} // namespace graphics
 #endif

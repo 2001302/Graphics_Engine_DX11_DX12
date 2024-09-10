@@ -222,6 +222,7 @@ class GpuCore {
     GlobalGpuBuffer Buffer() { return buffer_manager; }
 
     ID3D12Device *GetDevice() { return device.Get(); }
+    IDXGISwapChain1 *GetSwapChain() { return swap_chain.Get(); }
     GpuHeapManager *GetHeapMgr() { return heap_manager.get(); }
     GpuCommandManager *GetCommandMgr() { return command_manager.get(); }
 

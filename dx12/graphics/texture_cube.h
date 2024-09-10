@@ -9,18 +9,24 @@
 namespace graphics {
 class TextureCube : public GpuResource {
   public:
-    TextureCube() : heap_(0), resource_(0), cpu_handle_(), index_(0), isBrdf_(0){};
+    TextureCube()
+        : device_(0), heap_(0), resource_(0), cpu_handle_(), index_(0),
+          isBrdf_(0){};
 
-    void Create(DescriptorHeap *heap, const wchar_t *file_name,
+    void Create(ID3D12Device *device, DescriptorHeap *heap,
+                const wchar_t *file_name,
                 ComPtr<ID3D12GraphicsCommandList> command_list, bool isCubeMap,
                 bool isBrdf = false) {
-        DirectX::ResourceUploadBatch upload(GpuDevice::Get().device.Get());
+        device_ = device;
+        DirectX::ResourceUploadBatch upload(device_);
         upload.Begin();
-        DirectX::CreateDDSTextureFromFile(GpuDevice::Get().device.Get(), upload,
-                                          file_name, &resource_, false,
-                                          isCubeMap);
-        auto finished = upload.End(GpuDevice::Get().command_queue.Get());
-        finished.wait();
+        DirectX::CreateDDSTextureFromFile(device_, upload, file_name,
+                                          &resource_, false, isCubeMap);
+        //auto finished = upload.End(GpuCore::Instance()
+        //                               .GetCommandMgr()
+        //                               ->GetCopyQueue()
+        //                               .GetCommandQueue());
+        //finished.wait();
 
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
             resource_, D3D12_RESOURCE_STATE_COPY_DEST,
@@ -44,8 +50,7 @@ class TextureCube : public GpuResource {
             desc.TextureCube.MostDetailedMip = 0;
             desc.TextureCube.ResourceMinLODClamp = 0;
 
-            GpuDevice::Get().device->CreateShaderResourceView(resource_, &desc,
-                                                              cpu_handle_);
+            device_->CreateShaderResourceView(resource_, &desc, cpu_handle_);
         } else {
             D3D12_SHADER_RESOURCE_VIEW_DESC desc = {
                 resource_->GetDesc().Format, D3D12_SRV_DIMENSION_TEXTURE2D,
@@ -53,8 +58,7 @@ class TextureCube : public GpuResource {
 
             desc.Texture2D.MipLevels = resource_->GetDesc().MipLevels;
 
-            GpuDevice::Get().device->CreateShaderResourceView(resource_, &desc,
-                                                              cpu_handle_);
+            device_->CreateShaderResourceView(resource_, &desc, cpu_handle_);
         }
     };
 
@@ -65,6 +69,7 @@ class TextureCube : public GpuResource {
   private:
     bool isBrdf_;
     UINT index_;
+    ID3D12Device *device_;
     DescriptorHeap *heap_;
     ID3D12Resource *resource_;
     D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle_;

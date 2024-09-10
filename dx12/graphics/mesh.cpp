@@ -5,8 +5,6 @@ namespace graphics {
 void Mesh::Initialize(const MeshData &mesh_data,
                       ConstantBuffer<MeshConstants> &mesh_consts,
                       ConstantBuffer<MaterialConstants> &material_consts,
-                      DescriptorHeap *heap,
-                      ComPtr<ID3D12GraphicsCommandList> command_list,
                       bool use_texture) {
 
     Util::CreateVertexBuffer(mesh_data.vertices, vertex_buffer,

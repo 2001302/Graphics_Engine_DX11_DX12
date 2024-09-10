@@ -24,7 +24,7 @@ void CheckResult(HRESULT hr, ID3DBlob *errorBlob) {
 }
 
 void Util::CreateVertexShader(
-    ComPtr<ID3D12Device> &device, std::wstring filename,
+    ComPtr<ID3D12Device> device, std::wstring filename,
     ComPtr<ID3DBlob> &m_vertexShader,
     const std::vector<D3D_SHADER_MACRO> shaderMacros) {
 
@@ -41,7 +41,7 @@ void Util::CreateVertexShader(
     CheckResult(hr, errorBlob.Get());
 }
 
-void Util::CreatePixelShader(ComPtr<ID3D12Device> &device,
+void Util::CreatePixelShader(ComPtr<ID3D12Device> device,
                              std::wstring filename, ComPtr<ID3DBlob> &shader) {
     UINT compileFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)
@@ -55,7 +55,7 @@ void Util::CreatePixelShader(ComPtr<ID3D12Device> &device,
     CheckResult(hr, errorBlob.Get());
 }
 
-void Util::CreateComputeShader(ComPtr<ID3D12Device> &device,
+void Util::CreateComputeShader(ComPtr<ID3D12Device> device,
                                std::wstring filename,
                                ComPtr<ID3DBlob> &shader) {
     UINT compileFlags = 0;

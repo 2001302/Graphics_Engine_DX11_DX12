@@ -21,10 +21,10 @@ void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
     const std::wstring wFilename(filename.begin(), filename.end());
 
     DirectX::TexMetadata metadata;
-    ThrowIfFailed(GetMetadataFromEXRFile(wFilename.c_str(), metadata));
+    ASSERT_FAILED(GetMetadataFromEXRFile(wFilename.c_str(), metadata));
 
     DirectX::ScratchImage scratchImage;
-    ThrowIfFailed(
+    ASSERT_FAILED(
         DirectX::LoadFromEXRFile(wFilename.c_str(), NULL, scratchImage));
 
     width = static_cast<int>(metadata.width);
@@ -217,4 +217,4 @@ Image Image::ReadMetallicRoughness(
 
     return image;
 }
-} // namespace core
+} // namespace graphics

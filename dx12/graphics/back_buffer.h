@@ -13,7 +13,7 @@ class BackBuffer : GpuResource {
         device_ = device;
         rtv_heap_ = heap;
         for (UINT n = 0; n < SWAP_CHAIN_BUFFER_COUNT; n++) {
-            ThrowIfFailed(
+            ASSERT_FAILED(
                 swap_chain->GetBuffer(n, IID_PPV_ARGS(&resource_[n])));
         }
     };

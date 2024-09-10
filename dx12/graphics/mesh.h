@@ -1,7 +1,6 @@
 #ifndef _MESH
 #define _MESH
 
-#include "command_pool.h"
 #include "constant_buffer.h"
 #include "gpu_resource.h"
 #include "graphics_util.h"
@@ -47,8 +46,6 @@ struct Mesh {
     void Initialize(const MeshData &mesh_data,
                     ConstantBuffer<MeshConstants> &mesh_consts,
                     ConstantBuffer<MaterialConstants> &material_consts,
-                    DescriptorHeap *heap,
-                    ComPtr<ID3D12GraphicsCommandList> command_list,
                     bool use_texture = true);
 };
 

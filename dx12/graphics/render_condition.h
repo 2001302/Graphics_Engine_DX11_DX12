@@ -1,7 +1,6 @@
 #ifndef _RENDER_CONDITION
 #define _RENDER_CONDITION
 
-#include "command_pool.h"
 #include "constant_buffer.h"
 #include "foundation/info.h"
 #include "gpu_resource.h"
@@ -22,12 +21,8 @@ class RenderCondition : public foundation::IInfo {
     RenderCondition()
         : dt(0.0f), draw_wire(false), light_rotate(false),
           stage_type(EnumStageType::eInitialize) {
-        command_pool = std::make_shared<CommandPool>();
     }
 
-    std::shared_ptr<CommandPool> command_pool;
-    std::shared_ptr<DescriptorHeap> gpu_heap;
-    std::shared_ptr<DescriptorHeap> sampler_heap;
     std::shared_ptr<GpuResourceList> shared_texture; // t10~t16
     ConstantBuffer<GlobalConstants> global_consts;
 

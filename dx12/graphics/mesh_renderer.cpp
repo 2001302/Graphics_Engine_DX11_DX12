@@ -10,14 +10,12 @@ void MeshRenderer::Initialize() {
 }
 
 void MeshRenderer::Initialize(const std::string &basePath,
-                              const std::string &filename, DescriptorHeap *heap,
-                              ComPtr<ID3D12GraphicsCommandList> command_list) {
+                              const std::string &filename) {
     auto meshes = GeometryGenerator::ReadFromFile(basePath, filename);
-    Initialize(meshes, heap, command_list);
+    Initialize(meshes);
 }
 
-void MeshRenderer::Initialize(const vector<MeshData> &mesh_data, DescriptorHeap *heap,
-                              ComPtr<ID3D12GraphicsCommandList> command_list,
+void MeshRenderer::Initialize(const vector<MeshData> &mesh_data,
                               bool use_texture) {
 
     meshes.resize(mesh_data.size());
@@ -25,8 +23,7 @@ void MeshRenderer::Initialize(const vector<MeshData> &mesh_data, DescriptorHeap 
 
         MeshData meshData = mesh_data[i];
         meshes[i] = std::make_shared<Mesh>();
-        meshes[i]->Initialize(meshData, mesh_consts, material_consts, heap,
-                              command_list, use_texture);
+        meshes[i]->Initialize(meshData, mesh_consts, material_consts, use_texture);
         mesh_consts.GetCpu().world = Matrix();
         material_consts.Initialize();
         mesh_consts.Initialize();
@@ -44,17 +41,16 @@ void MeshRenderer::Render(RenderCondition *render_condition,
                           SolidMeshPSO *PSO) {
     if (is_visible) {
 
-        auto command_list = render_condition->command_pool->Get(0);
         for (const auto &mesh : meshes) {
-            PSO->Render(
-                command_list, GpuDevice::Get().GetHandleHDR(),
-                GpuDevice::Get().GetHandleDSV(),
-                render_condition->shared_texture.get(), mesh->buffer_PS.get(),
-                mesh->buffer_VS.get(), render_condition->gpu_heap.get(),
-                render_condition->sampler_heap.get(),
-                render_condition->global_consts.Get(), mesh_consts.Get(),
-                material_consts.Get(), mesh->vertex_buffer_view,
-                mesh->index_buffer_view, mesh->index_count);
+            //PSO->Render(
+            //    command_list, GpuDevice::Get().GetHandleHDR(),
+            //    GpuDevice::Get().GetHandleDSV(),
+            //    render_condition->shared_texture.get(), mesh->buffer_PS.get(),
+            //    mesh->buffer_VS.get(), render_condition->gpu_heap.get(),
+            //    render_condition->sampler_heap.get(),
+            //    render_condition->global_consts.Get(), mesh_consts.Get(),
+            //    material_consts.Get(), mesh->vertex_buffer_view,
+            //    mesh->index_buffer_view, mesh->index_count);
         }
     }
 }

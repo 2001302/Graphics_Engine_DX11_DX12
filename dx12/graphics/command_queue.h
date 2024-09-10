@@ -38,7 +38,7 @@ class CommandQueue {
         device->CreateCommandQueue(&queue_desc, IID_PPV_ARGS(&command_queue_));
         command_queue_->SetName(L"CommandQueue");
 
-        ThrowIfFailed(device->CreateFence(0, D3D12_FENCE_FLAG_NONE,
+        ASSERT_FAILED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE,
                                           IID_PPV_ARGS(&fence_)));
         fence_->SetName(L"Fence");
         fence_->Signal((uint64_t)type_ << 56);

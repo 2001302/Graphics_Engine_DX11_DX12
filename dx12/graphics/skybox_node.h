@@ -2,7 +2,6 @@
 #define _SKYBOX_NODE
 
 #include "black_board.h"
-#include "command_pool.h"
 #include "foundation/behavior_tree_builder.h"
 #include "mesh_renderer.h"
 #include "skybox_pso.h"
@@ -18,7 +17,6 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
         auto condition = black_board->conditions.get();
         auto targets = black_board->targets.get();
 
-        auto command_list = condition->command_pool->Get(0);
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
@@ -30,7 +28,6 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
 
             auto renderer = std::make_shared<MeshRenderer>();
             renderer->Initialize(std::vector{mesh_data},
-                                 condition->gpu_heap.get(), command_list,
                                  false);
 
             skybox = std::make_shared<Model>();
@@ -44,14 +41,14 @@ class SkyBoxNodeInvoker : public foundation::BehaviorActionNode {
                 EnumComponentType::eRenderer);
             auto mesh = renderer->meshes.front();
 
-            skyboxPSO->Render(
-                command_list, GpuDevice::Get().GetHandleHDR(),
-                GpuDevice::Get().GetHandleDSV(),
-                condition->shared_texture.get(), condition->gpu_heap.get(),
-                condition->sampler_heap.get(),
-                condition->global_consts.Get(), renderer->mesh_consts.Get(),
-                renderer->material_consts.Get(), mesh->vertex_buffer_view,
-                mesh->index_buffer_view, mesh->index_count);
+            //skyboxPSO->Render(
+            //    command_list, GpuDevice::Get().GetHandleHDR(),
+            //    GpuDevice::Get().GetHandleDSV(),
+            //    condition->shared_texture.get(), condition->gpu_heap.get(),
+            //    condition->sampler_heap.get(),
+            //    condition->global_consts.Get(), renderer->mesh_consts.Get(),
+            //    renderer->material_consts.Get(), mesh->vertex_buffer_view,
+            //    mesh->index_buffer_view, mesh->index_count);
             break;
         }
         default:

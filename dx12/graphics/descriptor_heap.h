@@ -4,7 +4,6 @@
 #include <d3d12.h>
 #include <wrl/client.h>
 #include "graphics_pso.h"
-#include "graphics_device.h"
 #include "graphics_common.h"
 
 namespace graphics {

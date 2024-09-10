@@ -13,8 +13,8 @@
 #include <d3d12.h>
 #include <d3dcompiler.h>
 #include <directxtk/SimpleMath.h>
-#include <dxgi.h>    // DXGIFactory
-#include <dxgi1_4.h> // DXGIFactory4
+#include <dxgi.h>   
+#include <dxgi1_4.h> 
 #include <iostream>
 #include <map>
 #include <memory>
@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 #include <windows.h>
-#include <wrl/client.h> // ComPtr
+#include <wrl/client.h>
 
 #include "d3dx12.h"
 #include "foundation/env.h"

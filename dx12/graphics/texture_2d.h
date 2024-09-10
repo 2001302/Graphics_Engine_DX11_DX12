@@ -5,13 +5,15 @@
 #include "image.h"
 #include <filesystem>
 
-// command list 를 사용하는 방법 말고 copy하는 방법이 있는지?
 namespace graphics {
 class Texture2D : public GpuResource {
   public:
-    Texture2D() : heap_(0), upload(0), resource_(0), cpu_handle_(), index_(0){};
-    void Create(DescriptorHeap *heap, int width, int height,
-                DXGI_FORMAT format) {
+    Texture2D()
+        : device_(0), heap_(0), upload(0), resource_(0), cpu_handle_(),
+          index_(0){};
+    void Create(ID3D12Device *device, DescriptorHeap *heap, int width,
+                int height, DXGI_FORMAT format) {
+        device_ = device;
         D3D12_RESOURCE_DESC txtDesc;
         ZeroMemory(&txtDesc, sizeof(txtDesc));
         txtDesc.Width = width;
@@ -25,17 +27,18 @@ class Texture2D : public GpuResource {
         txtDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
         CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
-        HRESULT hr = GpuDevice::Get().device->CreateCommittedResource(
+        HRESULT hr = device_->CreateCommittedResource(
             &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, nullptr,
             IID_PPV_ARGS(&resource_));
 
         heap_ = heap;
     };
-    void Create(DescriptorHeap *heap, Image image,
+    void Create(ID3D12Device *device, DescriptorHeap *heap, Image image,
                 ComPtr<ID3D12GraphicsCommandList> command_list) {
-        CreateTextureHelper(&image, resource_, command_list.Get());
+        device_ = device;
         heap_ = heap;
+        CreateTextureHelper(&image, resource_, command_list.Get());
     };
     void Allocate() override {
         heap_->AllocateDescriptor(cpu_handle_, index_);
@@ -46,8 +49,7 @@ class Texture2D : public GpuResource {
 
         desc.Texture2D.MipLevels = 1;
 
-        GpuDevice::Get().device->CreateShaderResourceView(resource_, &desc,
-                                                          cpu_handle_);
+        device_->CreateShaderResourceView(resource_, &desc, cpu_handle_);
     };
 
   private:
@@ -66,9 +68,9 @@ class Texture2D : public GpuResource {
         txtDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
         CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
-        HRESULT hr = GpuDevice::Get().device->CreateCommittedResource(
+        ASSERT_FAILED(device_->CreateCommittedResource(
             &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
-            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&texture));
+            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&texture)));
 
         // 2.upload heap
         const uint64_t uploadBufferSize =
@@ -76,7 +78,7 @@ class Texture2D : public GpuResource {
 
         auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
         auto buffer_size = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
-        ThrowIfFailed(GpuDevice::Get().device->CreateCommittedResource(
+        ASSERT_FAILED(device_->CreateCommittedResource(
             &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_size,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&upload)));
 
@@ -100,6 +102,7 @@ class Texture2D : public GpuResource {
     };
 
     UINT index_;
+    ID3D12Device *device_;
     DescriptorHeap *heap_;
     ID3D12Resource *upload;
     ID3D12Resource *resource_;

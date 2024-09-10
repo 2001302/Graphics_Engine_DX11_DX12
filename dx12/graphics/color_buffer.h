@@ -40,7 +40,7 @@ class ColorBuffer : GpuResource {
         memcpy(clear_value_RTV.Color, clear_color, sizeof(clear_color));
 
         auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT);
-        ThrowIfFailed(device->CreateCommittedResource(
+        ASSERT_FAILED(device->CreateCommittedResource(
             &heap_property, D3D12_HEAP_FLAG_NONE, &resource_desc_RTV,
             D3D12_RESOURCE_STATE_RENDER_TARGET, &clear_value_RTV,
             IID_PPV_ARGS(&resource_)));

@@ -1,18 +1,17 @@
 #include "descriptor_heap.h"
 
 namespace graphics {
-DescriptorHeap::DescriptorHeap(UINT num_descriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,
+DescriptorHeap::DescriptorHeap(ID3D12Device *device, UINT num_descriptors,
+                               D3D12_DESCRIPTOR_HEAP_TYPE type,
                  UINT NodeMask) {
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
     desc.NumDescriptors = num_descriptors;
     desc.Type = type;
     desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
     desc.NodeMask = NodeMask;
-    GpuDevice::Get().device->CreateDescriptorHeap(
-        &desc, IID_PPV_ARGS(&descriptor_heap));
+    device->CreateDescriptorHeap(&desc, IID_PPV_ARGS(&descriptor_heap));
 
-    descriptor_size =
-        GpuDevice::Get().device->GetDescriptorHandleIncrementSize(type);
+    descriptor_size = device->GetDescriptorHandleIncrementSize(type);
     descriptor_heap_cpu_handle =
         descriptor_heap->GetCPUDescriptorHandleForHeapStart();
 }

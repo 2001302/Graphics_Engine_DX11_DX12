@@ -22,6 +22,11 @@
 #include "foundation/env.h"
 #include "d3dx12.h"
 
+#define ASSERT_FAILED(hr)\
+    if (FAILED(hr)) {\
+        throw std::exception();\
+    }
+
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;
 using DirectX::SimpleMath::Vector3;

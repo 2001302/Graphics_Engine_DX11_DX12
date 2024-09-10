@@ -10,29 +10,30 @@
 namespace graphics {
 class GpuResource {
   public:
-    GpuResource()
-        : resouce_(0), index_(0), cpu_handle_(D3D12_CPU_DESCRIPTOR_HANDLE()){};
-    virtual void Allocate(DescriptorHeap *heap, UINT &index);
-
-  protected:
-    void Allocate(DescriptorHeap *heap);
-    Microsoft::WRL::ComPtr<ID3D12Resource> resouce_;
-    D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle_;
-    UINT index_;
+    GpuResource(){};
+    virtual void Allocate(){};
+    virtual D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
+        return D3D12_GPU_DESCRIPTOR_HANDLE();
+    };
 };
 
 class GpuResourceList {
   public:
-    GpuResourceList(DescriptorHeap *heap) : resource_list_(0), index_(0) { heap_ = heap; };
-    void Add(std::shared_ptr<GpuResource> buffer);
-    void Allocate();
-    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle();
+    GpuResourceList(std::vector<GpuResource *> resources) {
+        resources_ = resources;
+    };
+    void Allocate()
+    {
+        for (int i = 0; i < resources_.size(); i++)
+			resources_[i]->Allocate();
+    };
+    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
+        return resources_.front()->GetGpuHandle();
+    };
 
   private:
-    std::vector<std::shared_ptr<GpuResource>> resource_list_;
-    UINT index_;
-    DescriptorHeap *heap_;
+    std::vector<GpuResource *> resources_;
 };
 
-} // namespace dx12
+} // namespace graphics
 #endif

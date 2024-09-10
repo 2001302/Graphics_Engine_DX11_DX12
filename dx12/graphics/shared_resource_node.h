@@ -26,46 +26,51 @@ class SharedResourceNodeInvoker : public foundation::BehaviorActionNode {
 
             // gpu heap
             condition->gpu_heap = std::make_shared<DescriptorHeap>(
-                1024, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 0);
+                GpuDevice::Get().device.Get(), 1024,
+                D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 0);
             condition->sampler_heap = std::make_shared<DescriptorHeap>(
-                7, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, 0);
+                GpuDevice::Get().device.Get(), 7,
+                D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, 0);
 
-            condition->shared_texture =
-                std::make_shared<GpuResourceList>(condition->gpu_heap.get());
-            condition->shared_texture->Add(std::make_shared<TextureCube>(
-                L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds",
-                command_list, true));
-            condition->shared_texture->Add(std::make_shared<TextureCube>(
+            auto env = new TextureCube();
+            auto specular = new TextureCube();
+            auto diffuse = new TextureCube();
+            auto brdf = new TextureCube();
+            auto shadow = new Texture2D[MAX_LIGHTS];
+
+            env->Create(condition->gpu_heap.get(),
+                        L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds",
+                        command_list, true);
+            specular->Create(
+                condition->gpu_heap.get(),
                 L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds",
-                command_list, true));
-            condition->shared_texture->Add(std::make_shared<TextureCube>(
+                command_list, true);
+            diffuse->Create(
+                condition->gpu_heap.get(),
                 L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds",
-                command_list, true));
-            condition->shared_texture->Add(std::make_shared<TextureCube>(
-                L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds", command_list,
-                true, true));
+                command_list, true);
+            brdf->Create(condition->gpu_heap.get(),
+                         L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds",
+                         command_list, true, true);
+            std::vector<GpuResource *> tex = {env, specular, diffuse, brdf};
 
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                condition->shared_texture->Add(std::make_shared<Texture2D>(
-                    1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM));
+                shadow[i].Create(condition->gpu_heap.get(), 1024, 1024,
+                                 DXGI_FORMAT_R8G8B8A8_UNORM);
+                tex.push_back(&shadow[i]);
             }
+
+            condition->shared_texture = std::make_shared<GpuResourceList>(tex);
             condition->shared_texture->Allocate();
 
-            auto samplers = std::make_shared<GpuResourceList>(
-                condition->sampler_heap.get());
-            samplers->Add(
-                std::make_shared<SamplerState>(sampler::linearWrapSS));
-            samplers->Add(
-                std::make_shared<SamplerState>(sampler::linearClampSS));
-            samplers->Add(
-                std::make_shared<SamplerState>(sampler::shadowPointSS));
-            samplers->Add(
-                std::make_shared<SamplerState>(sampler::shadowCompareSS));
-            samplers->Add(std::make_shared<SamplerState>(sampler::pointWrapSS));
-            samplers->Add(
-                std::make_shared<SamplerState>(sampler::linearMirrorSS));
-            samplers->Add(
-                std::make_shared<SamplerState>(sampler::pointClampSS));
+            std::vector<D3D12_SAMPLER_DESC> sampler_desc{
+                sampler::linearWrapSS,  sampler::linearClampSS,
+                sampler::shadowPointSS, sampler::shadowCompareSS,
+                sampler::pointWrapSS,   sampler::linearMirrorSS,
+                sampler::pointClampSS};
+
+            auto samplers = std::make_shared<SamplerState>();
+            samplers->Create(condition->sampler_heap.get(), sampler_desc);
             samplers->Allocate();
 
             break;

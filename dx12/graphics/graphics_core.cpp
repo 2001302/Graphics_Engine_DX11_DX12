@@ -91,51 +91,51 @@ bool GpuCore::Initialize() {
     // Heap
     heap_manager = new GpuHeapManager();
 
-    heap_manager->rtv_heap =
-        new DescriptorHeap(1024, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 1);
-    heap_manager->view_heap =
-        new DescriptorHeap(1024, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
-    heap_manager->dsv_heap =
-        new DescriptorHeap(1024, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
-    heap_manager->sampler_heap =
-        new DescriptorHeap(1024, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, 1);
+    heap_manager->rtv_heap = new DescriptorHeap(
+        device.Get(), 1024, D3D12_DESCRIPTOR_HEAP_TYPE_RTV, 1);
+    heap_manager->view_heap = new DescriptorHeap(
+        device.Get(), 1024, D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV, 1);
+    heap_manager->dsv_heap = new DescriptorHeap(
+        device.Get(), 1024, D3D12_DESCRIPTOR_HEAP_TYPE_DSV, 1);
+    heap_manager->sampler_heap = new DescriptorHeap(
+        device.Get(), 1024, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, 1);
 
-    // Buffer
-    buffer_manager = new GpuBufferManager();
+    //// Buffer
+    //buffer_manager = new GpuBufferManager();
 
-    buffer_manager->back_buffer = new BackBuffer(swap_chain.Get());
-    buffer_manager->back_buffer->Allocate(device.Get(), heap_manager->rtv_heap);
+    //buffer_manager->back_buffer = new BackBuffer(swap_chain.Get());
+    //buffer_manager->back_buffer->Allocate(device.Get(), heap_manager->rtv_heap);
 
-    buffer_manager->hdr_buffer =
-        new ColorBuffer(device.Get(), DXGI_FORMAT_R16G16B16A16_FLOAT);
-    buffer_manager->hdr_buffer->Allocate(device.Get(), heap_manager->rtv_heap,
-                                         heap_manager->view_heap);
+    //buffer_manager->hdr_buffer =
+    //    new ColorBuffer(device.Get(), DXGI_FORMAT_R16G16B16A16_FLOAT);
+    //buffer_manager->hdr_buffer->Allocate(device.Get(), heap_manager->rtv_heap,
+    //                                     heap_manager->view_heap);
 
-    buffer_manager->ldr_buffer =
-        new ColorBuffer(device.Get(), DXGI_FORMAT_R8G8B8A8_UNORM);
-    buffer_manager->ldr_buffer->Allocate(device.Get(), heap_manager->rtv_heap,
-                                         heap_manager->view_heap);
+    //buffer_manager->ldr_buffer =
+    //    new ColorBuffer(device.Get(), DXGI_FORMAT_R8G8B8A8_UNORM);
+    //buffer_manager->ldr_buffer->Allocate(device.Get(), heap_manager->rtv_heap,
+    //                                     heap_manager->view_heap);
 
-    buffer_manager->dsv_buffer =
-        new DepthBuffer(device.Get(), DXGI_FORMAT_R16G16B16A16_FLOAT);
-    buffer_manager->dsv_buffer->Allocate(device.Get(), heap_manager->dsv_heap);
+    //buffer_manager->dsv_buffer =
+    //    new DepthBuffer(device.Get(), DXGI_FORMAT_R16G16B16A16_FLOAT);
+    //buffer_manager->dsv_buffer->Allocate(device.Get(), heap_manager->dsv_heap);
 
-    // Command
-    command_manager = new GpuCommandManager(device.Get());
+    //// Command
+    //command_manager = new GpuCommandManager(device.Get());
 
-    context_manager = new GpuContextManager();
+    //context_manager = new GpuContextManager();
 
-    command_manager->CreateNewCommandList(
-        device.Get(), D3D12_COMMAND_LIST_TYPE_DIRECT,
-        &context_manager->graphics_list,
-        &context_manager->graphics_list_allocator);
-    command_manager->CreateNewCommandList(
-        device.Get(), D3D12_COMMAND_LIST_TYPE_COMPUTE,
-        &context_manager->compute_list,
-        &context_manager->compute_list_allocator);
-    command_manager->CreateNewCommandList(
-        device.Get(), D3D12_COMMAND_LIST_TYPE_COPY, &context_manager->copy_list,
-        &context_manager->copy_list_allocator);
+    //command_manager->CreateNewCommandList(
+    //    device.Get(), D3D12_COMMAND_LIST_TYPE_DIRECT,
+    //    &context_manager->graphics_list,
+    //    &context_manager->graphics_list_allocator);
+    //command_manager->CreateNewCommandList(
+    //    device.Get(), D3D12_COMMAND_LIST_TYPE_COMPUTE,
+    //    &context_manager->compute_list,
+    //    &context_manager->compute_list_allocator);
+    //command_manager->CreateNewCommandList(
+    //    device.Get(), D3D12_COMMAND_LIST_TYPE_COPY, &context_manager->copy_list,
+    //    &context_manager->copy_list_allocator);
 
     return true;
 }

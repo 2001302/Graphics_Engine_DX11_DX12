@@ -9,7 +9,8 @@
 namespace graphics {
 class DescriptorHeap {
   public:
-    DescriptorHeap(UINT num_descriptors, D3D12_DESCRIPTOR_HEAP_TYPE type,
+    DescriptorHeap(ID3D12Device* device, UINT num_descriptors,
+                   D3D12_DESCRIPTOR_HEAP_TYPE type,
             UINT NodeMask);
     ID3D12DescriptorHeap &Get();
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle(UINT descriptor_index);

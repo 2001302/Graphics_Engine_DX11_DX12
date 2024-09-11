@@ -101,9 +101,6 @@
     <ClCompile Include="engine.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics_util.cpp">
-      <Filter>Graphics\Gpu\Util</Filter>
-    </ClCompile>
     <ClCompile Include="mesh.cpp">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClCompile>
@@ -118,6 +115,21 @@
     </ClCompile>
     <ClCompile Include="graphics_core.cpp">
       <Filter>Graphics\Gpu</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics_util.cpp">
+      <Filter>Graphics\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="heap_manager.cpp">
+      <Filter>Graphics\Gpu\Heap</Filter>
+    </ClCompile>
+    <ClCompile Include="command_queue.cpp">
+      <Filter>Graphics\Gpu\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="command_manager.cpp">
+      <Filter>Graphics\Gpu\Command</Filter>
+    </ClCompile>
+    <ClCompile Include="command_list.cpp">
+      <Filter>Graphics\Gpu\Command</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -171,9 +183,6 @@
     </Filter>
     <Filter Include="Graphics\Gpu\Buffer">
       <UniqueIdentifier>{75e2fdb2-1df3-4f8a-b00e-3f37f241f0c1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Gpu\Util">
-      <UniqueIdentifier>{1790ab32-b8de-4878-8652-61b7298bd632}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\Gpu\Structure">
       <UniqueIdentifier>{618c9e8e-c783-44ce-98a1-32a3ad2ed2d8}</UniqueIdentifier>
@@ -345,9 +354,6 @@
     <ClInclude Include="engine.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics_util.h">
-      <Filter>Graphics\Gpu\Util</Filter>
-    </ClInclude>
     <ClInclude Include="constant_buffer.h">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClInclude>
@@ -359,9 +365,6 @@
     </ClInclude>
     <ClInclude Include="image.h">
       <Filter>Graphics\Gpu\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>Graphics\Gpu\Util</Filter>
     </ClInclude>
     <ClInclude Include="render_target_object.h">
       <Filter>Graphics\Pipeline</Filter>
@@ -407,6 +410,12 @@
     </ClInclude>
     <ClInclude Include="heap_manager.h">
       <Filter>Graphics\Gpu\Heap</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Graphics\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_util.h">
+      <Filter>Graphics\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

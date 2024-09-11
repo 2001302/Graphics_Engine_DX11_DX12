@@ -88,9 +88,9 @@ class GpuCommandManager {
     CommandQueue compute_queue;
     CommandQueue copy_queue;
 
-    CommandList graphics_list;
-    CommandList compute_list;
-    CommandList copy_list;
+    GraphicsCommandList graphics_list;
+    ComputeCommandList compute_list;
+    CopyCommandList copy_list;
 };
 
 } // namespace graphics

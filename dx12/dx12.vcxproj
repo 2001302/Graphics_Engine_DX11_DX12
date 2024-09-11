@@ -132,10 +132,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="command_queue.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="geometry_generator.cpp" />
     <ClCompile Include="descriptor_heap.cpp" />
     <ClCompile Include="graphics_core.cpp" />
+    <ClCompile Include="heap_manager.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="mesh_renderer.cpp" />
@@ -168,6 +170,8 @@
     <ClCompile Include="gpu_resource.cpp" />
     <ClCompile Include="graphics_pso.cpp" />
     <ClCompile Include="graphics_util.cpp" />
+    <ClCompile Include="command_manager.cpp" />
+    <ClCompile Include="command_list.cpp" />
     <ClCompile Include="texture_2d.cpp" />
     <ClCompile Include="texture_cube.cpp" />
     <ClCompile Include="main.cpp" />

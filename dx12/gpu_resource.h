@@ -10,7 +10,7 @@
 namespace graphics {
 class GpuResource {
   public:
-    GpuResource(){};
+    GpuResource() {};
     virtual void Allocate(){};
     virtual D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
         return D3D12_GPU_DESCRIPTOR_HANDLE();

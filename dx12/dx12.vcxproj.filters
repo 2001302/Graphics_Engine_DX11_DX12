@@ -402,6 +402,12 @@
     <ClInclude Include="graphics\graphics_common.h">
       <Filter>Graphics\Gpu</Filter>
     </ClInclude>
+    <ClInclude Include="graphics\command_manager.h">
+      <Filter>Graphics\Gpu\Command</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics\heap_manager.h">
+      <Filter>Graphics\Gpu\Heap</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="graphics\foundation\ImGui\NodeEditor\imgui_bezier_math.inl">

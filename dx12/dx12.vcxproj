@@ -177,6 +177,7 @@
     <ClInclude Include="graphics\camera.h" />
     <ClInclude Include="graphics\camera_node.h" />
     <ClInclude Include="graphics\command_list.h" />
+    <ClInclude Include="graphics\command_manager.h" />
     <ClInclude Include="graphics\command_queue.h" />
     <ClInclude Include="graphics\component.h" />
     <ClInclude Include="graphics\depth_buffer.h" />
@@ -189,6 +190,7 @@
     <ClInclude Include="graphics\constant_buffer.h" />
     <ClInclude Include="graphics\graphics_common.h" />
     <ClInclude Include="graphics\graphics_core.h" />
+    <ClInclude Include="graphics\heap_manager.h" />
     <ClInclude Include="graphics\image.h" />
     <ClInclude Include="graphics\mesh.h" />
     <ClInclude Include="graphics\sampler_state.h" />

@@ -91,7 +91,7 @@ class CommandQueue {
     };
     void WaitForIdle(void) { WaitForFence(IncrementFence()); }
 
-    ID3D12CommandQueue *GetCommandQueue() { return command_queue_; }
+    ID3D12CommandQueue *Get() { return command_queue_; }
 
     uint64_t GetNextFenceValue() { return next_fence_value_; }
 

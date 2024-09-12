@@ -1,6 +1,7 @@
 #ifndef _COMMAND_LIST
 #define _COMMAND_LIST
 
+#include "back_buffer.h"
 #include "color_buffer.h"
 #include "depth_buffer.h"
 #include "descriptor_heap.h"
@@ -30,10 +31,15 @@ class CommandList {
 class GraphicsCommandList : public CommandList {
   public:
     GraphicsCommandList() : CommandList(){};
-    void SetDescriptorHeaps(std::vector<DescriptorHeap> descriptorHeaps) {
+    void Reset() {
+        command_allocator_->Reset();
+        command_list_->Reset(command_allocator_, nullptr);
+    }
+    void Close() { command_list_->Close(); }
+    void SetDescriptorHeaps(std::vector<DescriptorHeap*> descriptorHeaps) {
         std::vector<ID3D12DescriptorHeap *> heaps;
         for (auto x : descriptorHeaps) {
-            heaps.push_back(&x.Get());
+            heaps.push_back(&x->Get());
         }
         command_list_->SetDescriptorHeaps(heaps.size(), heaps.data());
     };
@@ -48,6 +54,10 @@ class GraphicsCommandList : public CommandList {
         D3D12_RECT scissorRect = {x, y, x + width, y + height};
         command_list_->RSSetViewports(1, &viewport);
         command_list_->RSSetScissorRects(1, &scissorRect);
+    };
+    void SetRenderTargetView(BackBuffer *renderTarget) {
+        auto rtv = renderTarget->GetCpuHandle();
+        command_list_->OMSetRenderTargets(1, &rtv, false, nullptr);
     };
     void SetRenderTargetView(ColorBuffer *renderTarget) {
         auto rtv = renderTarget->GetRtvHandle();
@@ -77,6 +87,11 @@ class GraphicsCommandList : public CommandList {
     void DrawIndexedInstanced(UINT index_count) {
         command_list_->DrawIndexedInstanced(index_count, 0, 0, 0, 0);
     };
+    void ClearRenderTargetView(BackBuffer *renderTarget) {
+        const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+        command_list_->ClearRenderTargetView(renderTarget->GetCpuHandle(),
+                                             clearColor, 0, nullptr);
+    };
     void ClearRenderTargetView(ColorBuffer *renderTarget) {
         command_list_->ClearRenderTargetView(renderTarget->GetRtvHandle(),
                                              renderTarget->ClearColor(), 0,
@@ -87,6 +102,31 @@ class GraphicsCommandList : public CommandList {
                                              D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0,
                                              nullptr);
     };
+    void TransitionResource(BackBuffer *resource,
+                            D3D12_RESOURCE_STATES new_state,
+                            bool flush_immediate) {
+        D3D12_RESOURCE_STATES old_state = resource->GetCurrentState();
+
+        if (old_state != new_state) {
+            assert(num_barriers_to_flush < 16,
+                   "Exceeded arbitrary limit on buffered barriers");
+            D3D12_RESOURCE_BARRIER &BarrierDesc =
+                resource_barrier_buffer[num_barriers_to_flush++];
+
+            BarrierDesc.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+            BarrierDesc.Transition.pResource = resource->Get();
+            BarrierDesc.Transition.Subresource =
+                D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+            BarrierDesc.Transition.StateBefore = old_state;
+            BarrierDesc.Transition.StateAfter = new_state;
+            BarrierDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+
+            resource->SetCurrentState(new_state);
+        }
+
+        if (flush_immediate || num_barriers_to_flush == 16)
+            FlushResourceBarriers();
+    }
     void TransitionResource(ColorBuffer *resource,
                             D3D12_RESOURCE_STATES new_state,
                             bool flush_immediate) {
@@ -118,6 +158,11 @@ class GraphicsCommandList : public CommandList {
                                            resource_barrier_buffer);
             num_barriers_to_flush = 0;
         }
+    }
+    void ResolveSubresource(ColorBuffer *dest, ColorBuffer *src,
+                            DXGI_FORMAT format) {
+        command_list_->ResolveSubresource(dest->Get(), 0, src->Get(), 0,
+                                          format);
     }
 };
 

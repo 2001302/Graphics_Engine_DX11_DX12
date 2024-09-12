@@ -3,16 +3,15 @@
 
 #include "back_buffer.h"
 #include "color_buffer.h"
-#include "depth_buffer.h"
 #include "command_manager.h"
+#include "depth_buffer.h"
 #include "heap_manager.h"
 
 namespace graphics {
 struct GlobalGpuBuffer {
-    BackBuffer back_buffer;
-    ColorBuffer hdr_buffer;
-    ColorBuffer ldr_buffer;
-    DepthBuffer dsv_buffer;
+    ColorBuffer* hdr_buffer;
+    ColorBuffer* ldr_buffer;
+    DepthBuffer* dsv_buffer;
 };
 
 class GpuCore {
@@ -75,48 +74,57 @@ class GpuCore {
     };
 
     bool InitializeBuffer() {
-        buffer_manager.back_buffer.Create(
-            device.Get(), &heap_manager->GetRTVHeap(), swap_chain.Get());
-        buffer_manager.hdr_buffer.Create(
-            device.Get(), &heap_manager->GetRTVHeap(),
-            &heap_manager->GetViewHeap(), DXGI_FORMAT_R16G16B16A16_FLOAT);
-        buffer_manager.ldr_buffer.Create(
-            device.Get(), &heap_manager->GetRTVHeap(),
-            &heap_manager->GetViewHeap(), DXGI_FORMAT_R8G8B8A8_UNORM);
-        buffer_manager.dsv_buffer.Create(
-            device.Get(), &heap_manager->GetDSVHeap(), DXGI_FORMAT_D32_FLOAT);
 
-        buffer_manager.back_buffer.Allocate();
-        buffer_manager.hdr_buffer.Allocate();
-        buffer_manager.ldr_buffer.Allocate();
-        buffer_manager.dsv_buffer.Allocate();
+        buffers.hdr_buffer = new ColorBuffer();
+        buffers.ldr_buffer = new ColorBuffer();
+        buffers.dsv_buffer = new DepthBuffer();
+
+        buffers.hdr_buffer->Create(device.Get(), heap_manager.GetRTVHeap(),
+                                  heap_manager.GetViewHeap(),
+                                  DXGI_FORMAT_R16G16B16A16_FLOAT);
+        buffers.ldr_buffer->Create(device.Get(), heap_manager.GetRTVHeap(),
+                                  heap_manager.GetViewHeap(),
+                                  DXGI_FORMAT_R8G8B8A8_UNORM);
+        buffers.dsv_buffer->Create(device.Get(), heap_manager.GetDSVHeap(),
+                                  DXGI_FORMAT_D32_FLOAT);
+
+        buffers.hdr_buffer->Allocate();
+        buffers.ldr_buffer->Allocate();
+        buffers.dsv_buffer->Allocate();
         return true;
     };
     bool InitializeCommand() {
-        command_manager = std::make_shared<GpuCommandManager>();
-        command_manager->Initialize(device.Get());
+        command_manager.Initialize(device.Get());
         return true;
     };
     bool InitializeHeap() {
-        heap_manager = std::make_shared<GpuHeapManager>();
-        heap_manager->Initialize(device.Get(), 1024);
+        heap_manager.Initialize(device.Get(), 1024);
+
+        back_buffer.Create(device.Get(), heap_manager.GetRTVHeap(),
+                           swap_chain.Get());
+        back_buffer.Allocate();
         return true;
     };
-
-    GlobalGpuBuffer Buffer() { return buffer_manager; }
+    void Shutdown() {
+        //TODO: release all resources
+	};
 
     ID3D12Device *GetDevice() { return device.Get(); }
     IDXGISwapChain1 *GetSwapChain() { return swap_chain.Get(); }
-    GpuHeapManager *GetHeapMgr() { return heap_manager.get(); }
-    GpuCommandManager *GetCommandMgr() { return command_manager.get(); }
+    BackBuffer *GetDisplay() { return &back_buffer; }
+
+    GpuHeap GetHeap() { return heap_manager; }
+    GpuCommand GetCommand() { return command_manager; }
+    GlobalGpuBuffer GetBuffers() { return buffers; }
 
   private:
-    GpuCore() : swap_chain(0), device(0), heap_manager(0), command_manager(0) {}
+    GpuCore() : swap_chain(0), device(0), buffers(){};
     ComPtr<IDXGISwapChain1> swap_chain;
     ComPtr<ID3D12Device> device;
-    std::shared_ptr<GpuHeapManager> heap_manager;
-    std::shared_ptr<GpuCommandManager> command_manager;
-    GlobalGpuBuffer buffer_manager;
+    BackBuffer back_buffer;
+    GpuHeap heap_manager;
+    GpuCommand command_manager;
+    GlobalGpuBuffer buffers;
 };
 
 } // namespace graphics

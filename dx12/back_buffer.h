@@ -40,6 +40,9 @@ class BackBuffer {
     void SetCurrentState(D3D12_RESOURCE_STATES state) {
         current_state_[current_index_] = state;
     };
+    void MoveToNext() {
+		current_index_ = (current_index_ + 1) % SWAP_CHAIN_BUFFER_COUNT;
+	};
 
   private:
     ID3D12Device *device_;

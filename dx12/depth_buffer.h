@@ -34,7 +34,7 @@ class DepthBuffer : public GpuResource {
         resource_desc_DSV.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 
         D3D12_CLEAR_VALUE clear_value_DSV = {};
-        clear_value_DSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+        clear_value_DSV.Format = format;
         clear_value_DSV.DepthStencil.Depth = 1.0f;
         clear_value_DSV.DepthStencil.Stencil = 0;
 

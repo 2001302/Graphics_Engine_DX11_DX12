@@ -37,15 +37,7 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
 
         auto command_manager = GpuCore::Instance().GetCommand();
 
-        command_manager.GraphicsList()->Reset();
-
-        //     command_manager->GraphicsList().TransitionResource(
-        // GpuCore::Instance().GetBackBuffer(),
-        //         D3D12_RESOURCE_STATE_RENDER_TARGET, true);
-        //     command_manager->GraphicsList().ClearRenderTargetView(
-        //         GpuCore::Instance().GetBackBuffer());
-        //     command_manager->GraphicsList().SetRenderTargetView(
-        //         GpuCore::Instance().GetBackBuffer());
+        command_manager.Start(D3D12_COMMAND_LIST_TYPE_DIRECT);
 
         command_manager.GraphicsList()->SetDescriptorHeaps(
             std::vector{GpuCore::Instance().GetHeap().GetRTVHeap(),
@@ -82,27 +74,9 @@ class EndRenderNode : public foundation::BehaviorActionNode {
 
 class GpuFenceNode : public foundation::BehaviorActionNode {
 
-    void WaitForPreviousFrame() {
-        //// Signal and increment the fence value.
-        // const UINT64 fence = GpuDevice::Get().fence_value;
-        // GpuDevice::Get().command_queue->Signal(
-        //     GpuDevice::Get().fence.Get(), fence);
-        // GpuDevice::Get().fence_value++;
-
-        //// Wait until the previous frame is finished.
-        // if (GpuDevice::Get().fence->GetCompletedValue() < fence) {
-        //     GpuDevice::Get().fence->SetEventOnCompletion(
-        //         fence, GpuDevice::Get().fence_event);
-        //     WaitForSingleObject(GpuDevice::Get().fence_event, INFINITE);
-        // }
-
-        // GpuDevice::Get().frame_index =
-        //     GpuDevice::Get().swap_chain->GetCurrentBackBufferIndex();
-    }
-
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
-        WaitForPreviousFrame();
+        //Not implemented
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
@@ -112,7 +86,13 @@ class PresentNode : public foundation::BehaviorActionNode {
 
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
+        GpuCore::Instance().GetCommand().GraphicsList()->TransitionResource(
+            GpuCore::Instance().GetDisplay(), D3D12_RESOURCE_STATE_PRESENT,
+            true);
+
+        GpuCore::Instance().GetCommand().Finish(D3D12_COMMAND_LIST_TYPE_DIRECT);
         GpuCore::Instance().GetSwapChain()->Present(1, 0);
+        GpuCore::Instance().GetDisplay()->MoveToNext();
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }

@@ -10,8 +10,9 @@ bool GpuCore::Initialize() {
 
     InitializePix();
     InitializeDevice();
-    InitializeHeap();
     InitializeCommand();
+    InitializeSwapchain();
+    InitializeHeap();
     InitializeBuffer();
     return true;
 }

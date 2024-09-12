@@ -10,6 +10,9 @@
 
 namespace graphics {
 class CommandQueue {
+
+    friend class GpuCommand;
+
   public:
     CommandQueue(D3D12_COMMAND_LIST_TYPE type)
         : type_(type), command_queue_(nullptr), fence_(nullptr),
@@ -63,11 +66,12 @@ class CommandQueue {
 
         return fence_value <= last_completed_fence_value_;
     };
-    //void StallForFence(uint64_t FenceValue) {
-    //    CommandQueue &Producer = GpuCore::Instance().GetCommandMgr()->GetQueue(
-    //        (D3D12_COMMAND_LIST_TYPE)(FenceValue >> 56));
-    //    command_queue_->Wait(Producer.fence_, FenceValue);
-    //};
+    // void StallForFence(uint64_t FenceValue) {
+    //     CommandQueue &Producer =
+    //     GpuCore::Instance().GetCommandMgr()->GetQueue(
+    //         (D3D12_COMMAND_LIST_TYPE)(FenceValue >> 56));
+    //     command_queue_->Wait(Producer.fence_, FenceValue);
+    // };
     void StallForProducer(CommandQueue &Producer) {
         assert(Producer.next_fence_value_ > 0);
         command_queue_->Wait(Producer.fence_, Producer.next_fence_value_ - 1);
@@ -102,6 +106,7 @@ class CommandQueue {
         device->CreateCommandAllocator(type_, IID_PPV_ARGS(&allocator));
         return allocator;
     };
+
   private:
     uint64_t ExecuteCommandList(ID3D12CommandList *list) {
         std::lock_guard<std::mutex> LockGuard(fence_mutex_);

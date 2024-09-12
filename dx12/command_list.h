@@ -19,6 +19,10 @@ class CommandList {
 
     ID3D12CommandAllocator *GetAllocator() { return command_allocator_; };
     ID3D12GraphicsCommandList *GetList() { return command_list_; }
+    void Reset() {
+        command_allocator_->Reset();
+        command_list_->Reset(command_allocator_, nullptr);
+    }
 
   protected:
     ID3D12CommandAllocator *command_allocator_;
@@ -31,10 +35,6 @@ class CommandList {
 class GraphicsCommandList : public CommandList {
   public:
     GraphicsCommandList() : CommandList(){};
-    void Reset() {
-        command_allocator_->Reset();
-        command_list_->Reset(command_allocator_, nullptr);
-    }
     void Close() { command_list_->Close(); }
     void SetDescriptorHeaps(std::vector<DescriptorHeap*> descriptorHeaps) {
         std::vector<ID3D12DescriptorHeap *> heaps;

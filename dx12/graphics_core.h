@@ -9,9 +9,9 @@
 
 namespace graphics {
 struct GlobalGpuBuffer {
-    ColorBuffer* hdr_buffer;
-    ColorBuffer* ldr_buffer;
-    DepthBuffer* dsv_buffer;
+    ColorBuffer *hdr_buffer;
+    ColorBuffer *ldr_buffer;
+    DepthBuffer *dsv_buffer;
 };
 
 class GpuCore {
@@ -34,8 +34,7 @@ class GpuCore {
             dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
         }
 #endif
-
-        ComPtr<IDXGIFactory4> factory;
+        Microsoft::WRL::ComPtr<IDXGIFactory4> factory;
         ASSERT_FAILED(
             CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)));
 
@@ -53,6 +52,12 @@ class GpuCore {
                                             D3D_FEATURE_LEVEL_11_0,
                                             IID_PPV_ARGS(&device)));
         }
+    };
+
+    bool InitializeSwapchain() {
+        Microsoft::WRL::ComPtr<IDXGIFactory4> factory;
+        ASSERT_FAILED(
+            CreateDXGIFactory2(0, IID_PPV_ARGS(&factory)));
 
         // Describe and create the swap chain.
         DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
@@ -66,8 +71,9 @@ class GpuCore {
         swapChainDesc.SampleDesc.Quality = 0;
 
         ASSERT_FAILED(factory->CreateSwapChainForHwnd(
-            device.Get(), foundation::Env::Instance().main_window,
-            &swapChainDesc, nullptr, nullptr, swap_chain.GetAddressOf()));
+            command_manager.GraphicsQueue()->Get(),
+            foundation::Env::Instance().main_window, &swapChainDesc, nullptr,
+            nullptr, swap_chain.GetAddressOf()));
 
         ASSERT_FAILED(factory->MakeWindowAssociation(
             foundation::Env::Instance().main_window, DXGI_MWA_NO_ALT_ENTER));
@@ -80,13 +86,13 @@ class GpuCore {
         buffers.dsv_buffer = new DepthBuffer();
 
         buffers.hdr_buffer->Create(device.Get(), heap_manager.GetRTVHeap(),
-                                  heap_manager.GetViewHeap(),
-                                  DXGI_FORMAT_R16G16B16A16_FLOAT);
+                                   heap_manager.GetViewHeap(),
+                                   DXGI_FORMAT_R16G16B16A16_FLOAT);
         buffers.ldr_buffer->Create(device.Get(), heap_manager.GetRTVHeap(),
-                                  heap_manager.GetViewHeap(),
-                                  DXGI_FORMAT_R8G8B8A8_UNORM);
+                                   heap_manager.GetViewHeap(),
+                                   DXGI_FORMAT_R8G8B8A8_UNORM);
         buffers.dsv_buffer->Create(device.Get(), heap_manager.GetDSVHeap(),
-                                  DXGI_FORMAT_D32_FLOAT);
+                                   DXGI_FORMAT_D32_FLOAT);
 
         buffers.hdr_buffer->Allocate();
         buffers.ldr_buffer->Allocate();
@@ -105,9 +111,9 @@ class GpuCore {
         back_buffer.Allocate();
         return true;
     };
-    void Shutdown() {
-        //TODO: release all resources
-	};
+    void Shutdown(){
+        // TODO: release all resources
+    };
 
     ID3D12Device *GetDevice() { return device.Get(); }
     IDXGISwapChain1 *GetSwapChain() { return swap_chain.Get(); }
@@ -121,6 +127,7 @@ class GpuCore {
     GpuCore() : swap_chain(0), device(0), buffers(){};
     ComPtr<IDXGISwapChain1> swap_chain;
     ComPtr<ID3D12Device> device;
+
     BackBuffer back_buffer;
     GpuHeap heap_manager;
     GpuCommand command_manager;

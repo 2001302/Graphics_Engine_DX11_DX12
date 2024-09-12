@@ -19,6 +19,10 @@ class GpuCommand {
         compute_queue->Create(device);
         copy_queue->Create(device);
 
+        graphics_list = new GraphicsCommandList();
+        compute_list = new ComputeCommandList();
+        copy_list = new CopyCommandList();
+
         auto graphics_command_list = graphics_list->GetList();
         auto graphics_command_allocator = graphics_list->GetAllocator();
         CreateNewCommandList(device, D3D12_COMMAND_LIST_TYPE_DIRECT,
@@ -44,7 +48,6 @@ class GpuCommand {
     ComputeCommandList *ComputeList(void) { return compute_list; }
     CopyCommandList *CopyList(void) { return copy_list; }
 
-    ID3D12CommandQueue *Queue() { return graphics_queue->Get(); }
     void CreateNewCommandList(ID3D12Device *device,
                               D3D12_COMMAND_LIST_TYPE type,
                               ID3D12GraphicsCommandList **list,
@@ -76,7 +79,59 @@ class GpuCommand {
         copy_queue->WaitForIdle();
     }
 
+    void Start(D3D12_COMMAND_LIST_TYPE type) {
+        switch (type) {
+        case D3D12_COMMAND_LIST_TYPE_DIRECT:
+            graphics_list->Reset();
+            break;
+        case D3D12_COMMAND_LIST_TYPE_COMPUTE:
+            compute_list->Reset();
+            break;
+        case D3D12_COMMAND_LIST_TYPE_COPY:
+            copy_list->Reset();
+            break;
+        default:
+            throw std::exception("Not supported command list type");
+            break;
+        }
+    };
+
+    void Finish(D3D12_COMMAND_LIST_TYPE type) {
+        uint64_t fence_value = 0;
+
+        switch (type) {
+        case D3D12_COMMAND_LIST_TYPE_DIRECT:
+            fence_value =
+                graphics_queue->ExecuteCommandList(graphics_list->GetList());
+            break;
+        case D3D12_COMMAND_LIST_TYPE_COMPUTE:
+            fence_value =
+                compute_queue->ExecuteCommandList(compute_list->GetList());
+            break;
+        case D3D12_COMMAND_LIST_TYPE_COPY:
+            fence_value = copy_queue->ExecuteCommandList(copy_list->GetList());
+            break;
+        default:
+            throw std::exception("Not supported command list type");
+            break;
+        }
+
+        GetQueue(type)->WaitForFence(fence_value);
+    };
+
   private:
+    CommandQueue *
+    GetQueue(D3D12_COMMAND_LIST_TYPE Type = D3D12_COMMAND_LIST_TYPE_DIRECT) {
+        switch (Type) {
+        case D3D12_COMMAND_LIST_TYPE_COMPUTE:
+            return compute_queue;
+        case D3D12_COMMAND_LIST_TYPE_COPY:
+            return copy_queue;
+        default:
+            return graphics_queue;
+        }
+    }
+
     CommandQueue *graphics_queue;
     CommandQueue *compute_queue;
     CommandQueue *copy_queue;

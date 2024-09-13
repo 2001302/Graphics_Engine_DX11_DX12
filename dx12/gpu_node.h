@@ -70,8 +70,6 @@ class EndRenderNode : public foundation::BehaviorActionNode {
 
         GpuCore::Instance().GetCommand().Finish(D3D12_COMMAND_LIST_TYPE_DIRECT);
 
-        GpuCore::Instance().GetCommand().GraphicsList()->Close();
-
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
 };
@@ -96,6 +94,7 @@ class PresentNode : public foundation::BehaviorActionNode {
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
 };
+
 
 class ResolveBuffer : public foundation::BehaviorActionNode {
     foundation::EnumBehaviorTreeStatus OnInvoke() override {

@@ -56,8 +56,7 @@ class GpuCore {
 
     bool InitializeSwapchain() {
         Microsoft::WRL::ComPtr<IDXGIFactory4> factory;
-        ASSERT_FAILED(
-            CreateDXGIFactory2(0, IID_PPV_ARGS(&factory)));
+        ASSERT_FAILED(CreateDXGIFactory2(0, IID_PPV_ARGS(&factory)));
 
         // Describe and create the swap chain.
         DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
@@ -87,12 +86,12 @@ class GpuCore {
 
         buffers.hdr_buffer->Create(device.Get(), heap_manager.RTV(),
                                    heap_manager.View(),
-                                   DXGI_FORMAT_R16G16B16A16_FLOAT);
+                                   DXGI_FORMAT_R16G16B16A16_FLOAT, true);
         buffers.ldr_buffer->Create(device.Get(), heap_manager.RTV(),
                                    heap_manager.View(),
-                                   DXGI_FORMAT_R8G8B8A8_UNORM);
+                                   DXGI_FORMAT_R16G16B16A16_FLOAT);
         buffers.dsv_buffer->Create(device.Get(), heap_manager.DSV(),
-                                   DXGI_FORMAT_D32_FLOAT);
+                                   DXGI_FORMAT_D32_FLOAT, true);
 
         buffers.hdr_buffer->Allocate();
         buffers.ldr_buffer->Allocate();
@@ -106,8 +105,7 @@ class GpuCore {
     bool InitializeHeap() {
         heap_manager.Initialize(device.Get(), 1024);
 
-        back_buffer.Create(device.Get(), heap_manager.RTV(),
-                           swap_chain.Get());
+        back_buffer.Create(device.Get(), heap_manager.RTV(), swap_chain.Get());
         back_buffer.Allocate();
         return true;
     };

@@ -23,21 +23,17 @@ class GpuCommand {
         compute_list = new ComputeCommandList();
         copy_list = new CopyCommandList();
 
-        auto graphics_command_list = graphics_list->GetList();
-        auto graphics_command_allocator = graphics_list->GetAllocator();
         CreateNewCommandList(device, D3D12_COMMAND_LIST_TYPE_DIRECT,
-                             &graphics_command_list,
-                             &graphics_command_allocator);
+                             graphics_list->GetListAdress(),
+                             graphics_list->GetAllocatorAdress());
 
-        auto compute_command_list = compute_list->GetList();
-        auto compute_command_allocator = compute_list->GetAllocator();
         CreateNewCommandList(device, D3D12_COMMAND_LIST_TYPE_COMPUTE,
-                             &compute_command_list, &compute_command_allocator);
+                             compute_list->GetListAdress(),
+                             compute_list->GetAllocatorAdress());
 
-        auto copy_command_list = copy_list->GetList();
-        auto copy_command_allocator = copy_list->GetAllocator();
         CreateNewCommandList(device, D3D12_COMMAND_LIST_TYPE_COPY,
-                             &copy_command_list, &copy_command_allocator);
+                             copy_list->GetListAdress(),
+                             copy_list->GetAllocatorAdress());
     };
 
     CommandQueue *GraphicsQueue(void) { return graphics_queue; }
@@ -71,6 +67,7 @@ class GpuCommand {
         device->CreateCommandList(1, type, *allocator, nullptr,
                                   IID_PPV_ARGS(list));
         (*list)->SetName(L"CommandList");
+        (*list)->Close();
     };
 
     void IdleGPU(void) {

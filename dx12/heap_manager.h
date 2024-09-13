@@ -19,10 +19,10 @@ class GpuHeap {
         heap_sampler = new DescriptorHeap(
             device, num_descriptor, D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER, 1);
     };
-    DescriptorHeap *GetViewHeap() { return heap_view; }
-    DescriptorHeap *GetSamplerHeap() { return heap_sampler; }
-    DescriptorHeap *GetRTVHeap() { return heap_RTV; }
-    DescriptorHeap *GetDSVHeap() { return heap_DSV; }
+    DescriptorHeap *View() { return heap_view; }
+    DescriptorHeap *Sampler() { return heap_sampler; }
+    DescriptorHeap *RTV() { return heap_RTV; }
+    DescriptorHeap *DSV() { return heap_DSV; }
 
   private:
     DescriptorHeap *heap_view;    // CBV_SRV_UAV

@@ -12,6 +12,9 @@
 
 namespace graphics {
 class CommandList {
+
+    friend class GpuCommand;
+
   public:
     CommandList()
         : command_allocator_(0), command_list_(0), num_barriers_to_flush(0),
@@ -19,6 +22,7 @@ class CommandList {
 
     ID3D12CommandAllocator *GetAllocator() { return command_allocator_; };
     ID3D12GraphicsCommandList *GetList() { return command_list_; }
+
     void Reset() {
         command_allocator_->Reset();
         command_list_->Reset(command_allocator_, nullptr);
@@ -30,13 +34,19 @@ class CommandList {
 
     D3D12_RESOURCE_BARRIER resource_barrier_buffer[16];
     UINT num_barriers_to_flush;
+
+  private:
+    ID3D12CommandAllocator **GetAllocatorAdress() {
+        return &command_allocator_;
+    };
+    ID3D12GraphicsCommandList **GetListAdress() { return &command_list_; };
 };
 
 class GraphicsCommandList : public CommandList {
   public:
     GraphicsCommandList() : CommandList(){};
     void Close() { command_list_->Close(); }
-    void SetDescriptorHeaps(std::vector<DescriptorHeap*> descriptorHeaps) {
+    void SetDescriptorHeaps(std::vector<DescriptorHeap *> descriptorHeaps) {
         std::vector<ID3D12DescriptorHeap *> heaps;
         for (auto x : descriptorHeaps) {
             heaps.push_back(&x->Get());

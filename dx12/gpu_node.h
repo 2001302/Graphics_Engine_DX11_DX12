@@ -40,10 +40,8 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
         command_manager.Start(D3D12_COMMAND_LIST_TYPE_DIRECT);
 
         command_manager.GraphicsList()->SetDescriptorHeaps(
-            std::vector{GpuCore::Instance().GetHeap().GetRTVHeap(),
-                        GpuCore::Instance().GetHeap().GetViewHeap(),
-                        GpuCore::Instance().GetHeap().GetSamplerHeap(),
-                        GpuCore::Instance().GetHeap().GetDSVHeap()});
+            std::vector{GpuCore::Instance().GetHeap().View(),
+                        GpuCore::Instance().GetHeap().Sampler()});
 
         command_manager.GraphicsList()->TransitionResource(
             GpuCore::Instance().GetBuffers().hdr_buffer,
@@ -66,6 +64,12 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
 class EndRenderNode : public foundation::BehaviorActionNode {
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
+        GpuCore::Instance().GetCommand().GraphicsList()->TransitionResource(
+            GpuCore::Instance().GetDisplay(), D3D12_RESOURCE_STATE_PRESENT,
+            true);
+
+        GpuCore::Instance().GetCommand().Finish(D3D12_COMMAND_LIST_TYPE_DIRECT);
+
         GpuCore::Instance().GetCommand().GraphicsList()->Close();
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
@@ -76,7 +80,7 @@ class GpuFenceNode : public foundation::BehaviorActionNode {
 
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
-        //Not implemented
+        // Not implemented
 
         return foundation::EnumBehaviorTreeStatus::eSuccess;
     }
@@ -86,11 +90,6 @@ class PresentNode : public foundation::BehaviorActionNode {
 
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 
-        GpuCore::Instance().GetCommand().GraphicsList()->TransitionResource(
-            GpuCore::Instance().GetDisplay(), D3D12_RESOURCE_STATE_PRESENT,
-            true);
-
-        GpuCore::Instance().GetCommand().Finish(D3D12_COMMAND_LIST_TYPE_DIRECT);
         GpuCore::Instance().GetSwapChain()->Present(1, 0);
         GpuCore::Instance().GetDisplay()->MoveToNext();
 

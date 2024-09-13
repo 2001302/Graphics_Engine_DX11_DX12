@@ -7,7 +7,7 @@ DescriptorHeap::DescriptorHeap(ID3D12Device *device, UINT num_descriptors,
     desc.NumDescriptors = num_descriptors;
     desc.Type = type;
     if (type == D3D12_DESCRIPTOR_HEAP_TYPE_RTV ||
-        D3D12_DESCRIPTOR_HEAP_TYPE_DSV) {
+        type == D3D12_DESCRIPTOR_HEAP_TYPE_DSV) {
         desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
     } else {
         desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
@@ -28,6 +28,12 @@ DescriptorHeap::GetGpuHandle(UINT descriptor_index) {
     return CD3DX12_GPU_DESCRIPTOR_HANDLE(
         descriptor_heap->GetGPUDescriptorHandleForHeapStart(), descriptor_index,
         descriptor_size);
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE
+DescriptorHeap::GetCpuHandle(UINT descriptor_index) {
+    return CD3DX12_CPU_DESCRIPTOR_HANDLE(descriptor_heap_cpu_handle,
+                                         descriptor_index, descriptor_size);
 }
 
 void DescriptorHeap::AllocateDescriptor(

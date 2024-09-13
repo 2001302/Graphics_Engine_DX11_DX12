@@ -85,13 +85,13 @@ class GpuCore {
         buffers.ldr_buffer = new ColorBuffer();
         buffers.dsv_buffer = new DepthBuffer();
 
-        buffers.hdr_buffer->Create(device.Get(), heap_manager.GetRTVHeap(),
-                                   heap_manager.GetViewHeap(),
+        buffers.hdr_buffer->Create(device.Get(), heap_manager.RTV(),
+                                   heap_manager.View(),
                                    DXGI_FORMAT_R16G16B16A16_FLOAT);
-        buffers.ldr_buffer->Create(device.Get(), heap_manager.GetRTVHeap(),
-                                   heap_manager.GetViewHeap(),
+        buffers.ldr_buffer->Create(device.Get(), heap_manager.RTV(),
+                                   heap_manager.View(),
                                    DXGI_FORMAT_R8G8B8A8_UNORM);
-        buffers.dsv_buffer->Create(device.Get(), heap_manager.GetDSVHeap(),
+        buffers.dsv_buffer->Create(device.Get(), heap_manager.DSV(),
                                    DXGI_FORMAT_D32_FLOAT);
 
         buffers.hdr_buffer->Allocate();
@@ -106,7 +106,7 @@ class GpuCore {
     bool InitializeHeap() {
         heap_manager.Initialize(device.Get(), 1024);
 
-        back_buffer.Create(device.Get(), heap_manager.GetRTVHeap(),
+        back_buffer.Create(device.Get(), heap_manager.RTV(),
                            swap_chain.Get());
         back_buffer.Allocate();
         return true;

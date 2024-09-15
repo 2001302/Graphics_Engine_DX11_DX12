@@ -7,11 +7,11 @@
 #include "sequence_node.h"
 #include "animation_node.h"
 
-namespace foundation {
+namespace common {
 
 class BehaviorTreeBuilder {
   public:
-    BehaviorTreeBuilder *Build(foundation::IDataBlock *dataBlock) {
+    BehaviorTreeBuilder *Build(common::IDataBlock *dataBlock) {
         tree = std::make_shared<SequenceNode>(dataBlock);
         current = tree.get();
         return this;

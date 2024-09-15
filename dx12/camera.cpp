@@ -27,7 +27,7 @@ Vector3 Camera::GetLookAt() { return lookAtVector; }
 Matrix Camera::GetProjection() {
     return DirectX::XMMatrixPerspectiveFovLH(
         DirectX::XMConvertToRadians(projection_fov_angle_y),
-        foundation::Env::Instance().GetAspect(), near_z, far_z);
+        common::Env::Instance().GetAspect(), near_z, far_z);
 }
 
 void Camera::SetPosition(Vector3 pos) { position = pos; }

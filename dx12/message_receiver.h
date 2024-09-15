@@ -13,18 +13,18 @@ class MessageReceiver {
     bool OnSphereLoadRequest(RenderTargetObject *manager);
     bool OnBoxLoadRequest(RenderTargetObject *manager);
     bool OnCylinderLoadRequest(RenderTargetObject *manager);
-    bool OnMouseDownRequest(std::shared_ptr<foundation::Input> input,
+    bool OnMouseDownRequest(std::shared_ptr<common::Input> input,
                             int mouseX, int mouseY);
     bool OnMouseRightDragRequest(RenderTargetObject *manager,
-                                 std::shared_ptr<foundation::Input> input,
+                                 std::shared_ptr<common::Input> input,
                                  int mouseX, int mouseY);
     bool OnMouseWheelRequest(RenderTargetObject *manager,
-                             std::shared_ptr<foundation::Input> input,
+                             std::shared_ptr<common::Input> input,
                              int wheel);
     bool OnMouseWheelDragRequest(RenderTargetObject *manager,
-                                 std::shared_ptr<foundation::Input> input,
+                                 std::shared_ptr<common::Input> input,
                                  int mouseX, int mouseY);
-    bool OnWindowSizeRequest(foundation::SettingUi *gui, int size_x,
+    bool OnWindowSizeRequest(common::SettingUi *gui, int size_x,
                              int size_y);
 };
 } // namespace core

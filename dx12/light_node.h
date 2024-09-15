@@ -7,8 +7,8 @@
 
 namespace graphics {
 
-class LightNodeInvoker : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class LightNodeInvoker : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
@@ -120,7 +120,7 @@ class LightNodeInvoker : public foundation::BehaviorActionNode {
             break;
         }
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 
     //std::shared_ptr<Model> light_spheres[MAX_LIGHTS];

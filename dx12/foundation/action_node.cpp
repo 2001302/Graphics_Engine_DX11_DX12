@@ -1,6 +1,6 @@
 #include "action_node.h"
 
-namespace foundation {
+namespace common {
 
 EnumBehaviorTreeStatus BehaviorActionNode::Invoke() {
     return OnInvoke();

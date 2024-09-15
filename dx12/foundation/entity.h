@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace foundation {
+namespace common {
 class IEntity {
   public:
     IEntity();

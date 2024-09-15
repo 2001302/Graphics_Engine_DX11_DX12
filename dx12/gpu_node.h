@@ -5,35 +5,35 @@
 #include "graphics_util.h"
 
 namespace graphics {
-class GpuInitializeNode : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class GpuInitializeNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         GpuCore::Instance().Initialize();
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class BeginInitNode : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class BeginInitNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         // GpuCore::Instance().GetCommandMgr()->Queue()
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class EndInitNode : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class EndInitNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         // GpuCore::Instance().GetCommandMgr()->Queue()
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class BeginRenderNode : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class BeginRenderNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto command_manager = GpuCore::Instance().GetCommand();
 
@@ -57,12 +57,12 @@ class BeginRenderNode : public foundation::BehaviorActionNode {
             GpuCore::Instance().GetBuffers().hdr_buffer,
             GpuCore::Instance().GetBuffers().dsv_buffer);
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class EndRenderNode : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class EndRenderNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         GpuCore::Instance().GetCommand().GraphicsList()->TransitionResource(
             GpuCore::Instance().GetDisplay(), D3D12_RESOURCE_STATE_PRESENT,
@@ -70,34 +70,34 @@ class EndRenderNode : public foundation::BehaviorActionNode {
 
         GpuCore::Instance().GetCommand().Finish(D3D12_COMMAND_LIST_TYPE_DIRECT);
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class GpuFenceNode : public foundation::BehaviorActionNode {
+class GpuFenceNode : public common::BehaviorActionNode {
 
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         // Not implemented
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
-class PresentNode : public foundation::BehaviorActionNode {
+class PresentNode : public common::BehaviorActionNode {
 
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         GpuCore::Instance().GetSwapChain()->Present(1, 0);
         GpuCore::Instance().GetDisplay()->MoveToNext();
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 
 
-class ResolveBuffer : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class ResolveBuffer : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto command_manager = GpuCore::Instance().GetCommand();
 
@@ -114,7 +114,7 @@ class ResolveBuffer : public foundation::BehaviorActionNode {
             GpuCore::Instance().GetBuffers().hdr_buffer,
             DXGI_FORMAT_R16G16B16A16_FLOAT);
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 

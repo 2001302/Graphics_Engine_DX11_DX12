@@ -5,7 +5,7 @@
 #include "foundation/info.h"
 
 namespace graphics {
-class RenderTargetObject : public foundation::IInfo {
+class RenderTargetObject : public common::IInfo {
   public:
     RenderTargetObject() {}
     std::unique_ptr<Camera> camera;

@@ -8,8 +8,8 @@
 
 namespace graphics {
 
-class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class ToneMappingNodeInvoker : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
@@ -73,7 +73,7 @@ class ToneMappingNodeInvoker : public foundation::BehaviorActionNode {
             break;
         }
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 
     __declspec(align(256)) struct ImageFilterConstData {

@@ -3,7 +3,7 @@
 
 #include "entity.h"
 
-namespace foundation {
+namespace common {
 
 struct IInfo : public IEntity {
   public:

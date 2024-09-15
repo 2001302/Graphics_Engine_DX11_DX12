@@ -62,9 +62,6 @@
     <ClCompile Include="foundation\entity.cpp">
       <Filter>Foundation\Structure</Filter>
     </ClCompile>
-    <ClCompile Include="foundation\id_generator.cpp">
-      <Filter>Foundation\Structure</Filter>
-    </ClCompile>
     <ClCompile Include="foundation\node.cpp">
       <Filter>Foundation\Structure</Filter>
     </ClCompile>
@@ -131,6 +128,9 @@
     <ClCompile Include="command_list.cpp">
       <Filter>Graphics\Gpu\Command</Filter>
     </ClCompile>
+    <ClCompile Include="foundation\id_generator.cpp">
+      <Filter>Foundation\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Foundation">
@@ -192,6 +192,9 @@
     </Filter>
     <Filter Include="Graphics\Gpu\Command">
       <UniqueIdentifier>{7a7980fb-704b-4a96-8ea3-1afbf20510fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Foundation\Util">
+      <UniqueIdentifier>{3f80a57b-a4c0-433a-9fbc-b5ebe1f1ca75}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -271,9 +274,6 @@
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
     <ClInclude Include="foundation\env.h">
-      <Filter>Foundation\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="foundation\id_generator.h">
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
     <ClInclude Include="foundation\info.h">
@@ -416,6 +416,9 @@
     </ClInclude>
     <ClInclude Include="graphics_util.h">
       <Filter>Graphics\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\id_generator.h">
+      <Filter>Foundation\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

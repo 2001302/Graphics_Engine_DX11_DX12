@@ -3,7 +3,7 @@
 
 #include "action_node.h"
 
-namespace foundation {
+namespace common {
 class ConditionalNode : public BehaviorActionNode {
   protected:
     EnumBehaviorTreeStatus OnInvoke() override;

@@ -1,6 +1,6 @@
 ﻿#include "sequence_node.H"
 
-namespace foundation {
+namespace common {
 
 EnumBehaviorTreeStatus SequenceNode::OnInvoke() {
     for (auto &child : child_nodes) {

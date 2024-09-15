@@ -1,6 +1,6 @@
 #include "behavior_tree_builder.h"
 
-namespace foundation {
+namespace common {
 
 BehaviorTreeBuilder *
 BehaviorTreeBuilder::Excute(std::shared_ptr<BehaviorActionNode> node) {

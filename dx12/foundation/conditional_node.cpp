@@ -1,6 +1,6 @@
 ﻿#include "conditional_node.h"
 
-namespace foundation {
+namespace common {
 
 EnumBehaviorTreeStatus ConditionalNode::OnInvoke() {
     for (auto &child : child_nodes) {

@@ -1,6 +1,6 @@
 ﻿#include "node.h"
 
-using namespace foundation;
+using namespace common;
 
 void INode::Show() {
     auto &io = ImGui::GetIO();

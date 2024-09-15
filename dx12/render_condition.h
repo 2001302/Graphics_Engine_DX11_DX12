@@ -16,7 +16,7 @@ enum EnumStageType {
     eRender = 2,
 };
 
-class RenderCondition : public foundation::IInfo {
+class RenderCondition : public common::IInfo {
   public:
     RenderCondition()
         : dt(0.0f), draw_wire(false), light_rotate(false),

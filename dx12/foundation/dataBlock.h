@@ -1,7 +1,7 @@
 ﻿#ifndef _IDATABLOCK
 #define _IDATABLOCK
 
-namespace foundation {
+namespace common {
 struct IDataBlock {
     virtual ~IDataBlock(){};
 };

@@ -10,7 +10,7 @@
 
 namespace graphics {
 
-class Engine : public foundation::Platform {
+class Engine : public common::Platform {
   public:
     Engine();
 
@@ -22,14 +22,14 @@ class Engine : public foundation::Platform {
     std::shared_ptr<BlackBoard> black_board;
     std::unique_ptr<MessageReceiver> message_receiver;
 
-    std::shared_ptr<foundation::BehaviorTreeBuilder> start_tree;
-    std::shared_ptr<foundation::BehaviorTreeBuilder> update_tree;
-    std::shared_ptr<foundation::BehaviorTreeBuilder> render_tree;
+    std::shared_ptr<common::BehaviorTreeBuilder> start_tree;
+    std::shared_ptr<common::BehaviorTreeBuilder> update_tree;
+    std::shared_ptr<common::BehaviorTreeBuilder> render_tree;
 
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,
                                     LPARAM lparam) {
 
-        auto CheckIfMouseInViewport = [](foundation::SettingUi *ui, int mouseX,
+        auto CheckIfMouseInViewport = [](common::SettingUi *ui, int mouseX,
                                          int mouseY) -> bool {
             if (GpuCore::Instance().GetSwapChain()) {
                 if ((0 < mouseX && mouseX < ui->GetSize().x) &&

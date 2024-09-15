@@ -6,8 +6,8 @@
 
 namespace graphics {
 
-class GuiNodeInvoker : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class GuiNodeInvoker : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
@@ -22,7 +22,7 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
             gui->Start();
             gui->PushInfoItem(target);
 
-            ImGui_ImplWin32_Init(foundation::Env::Instance().main_window);
+            ImGui_ImplWin32_Init(common::Env::Instance().main_window);
             ImGui_ImplDX12_Init(
                 GpuCore::Instance().GetDevice(), SWAP_CHAIN_BUFFER_COUNT,
                 DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -43,8 +43,8 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
                 D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
             command_manager.GraphicsList()->SetViewportAndScissorRect(
-                0, 0, (UINT)foundation::Env::Instance().screen_width,
-                (UINT)foundation::Env::Instance().screen_height);
+                0, 0, (UINT)common::Env::Instance().screen_width,
+                (UINT)common::Env::Instance().screen_height);
 
             command_manager.GraphicsList()->SetRenderTargetView(
                 GpuCore::Instance().GetDisplay());
@@ -59,7 +59,7 @@ class GuiNodeInvoker : public foundation::BehaviorActionNode {
             break;
         }
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 

@@ -3,12 +3,12 @@
 
 #include "foundation/behavior_tree_builder.h"
 #include "foundation/env.h"
-#include "graphics_util.h"
 #include "foundation/node.h"
+#include "graphics_util.h"
 #include "model.h"
 
 namespace graphics {
-class Camera : public foundation::INode {
+class Camera : public common::INode {
   public:
     Camera();
     Matrix GetView();
@@ -31,7 +31,7 @@ class Camera : public foundation::INode {
 
     Vector3 upVector;
     Vector3 lookAtVector;
-    float yaw; 
+    float yaw;
     float pitch;
 
     float projection_fov_angle_y;
@@ -39,5 +39,5 @@ class Camera : public foundation::INode {
     float far_z;
 };
 
-} // namespace engine
+} // namespace graphics
 #endif

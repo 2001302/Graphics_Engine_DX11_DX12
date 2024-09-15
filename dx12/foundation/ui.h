@@ -4,7 +4,7 @@
 #include "dataBlock.h"
 #include "node.h"
 
-namespace foundation {
+namespace common {
 class IGui : public IDataBlock {
   public:
     bool Start();

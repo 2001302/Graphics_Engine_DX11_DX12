@@ -31,9 +31,9 @@ auto skybox_node = std::make_shared<SkyBoxNodeInvoker>();
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
     message_receiver = std::make_unique<MessageReceiver>();
-    start_tree = std::make_shared<foundation::BehaviorTreeBuilder>();
-    update_tree = std::make_shared<foundation::BehaviorTreeBuilder>();
-    render_tree = std::make_shared<foundation::BehaviorTreeBuilder>();
+    start_tree = std::make_shared<common::BehaviorTreeBuilder>();
+    update_tree = std::make_shared<common::BehaviorTreeBuilder>();
+    render_tree = std::make_shared<common::BehaviorTreeBuilder>();
 };
 
 bool Engine::Start() {

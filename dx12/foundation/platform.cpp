@@ -1,4 +1,4 @@
-﻿#include "platform.h"
+#include "platform.h"
 
 namespace common {
 
@@ -7,9 +7,7 @@ namespace common {
 /// </summary>
 static Platform *g_system = nullptr;
 
-Platform::Platform() : application_name(0), hinstance(0) {
-    g_system = this;
-}
+Platform::Platform() : application_name(0), hinstance(0) { g_system = this; }
 
 Platform::~Platform() {}
 
@@ -70,13 +68,13 @@ void Platform::Run() {
 
 bool Platform::Stop() {
     // Shutdown the window.
-    if (common::Env::Instance().full_screen) {
+    if (common::env::full_screen) {
         ChangeDisplaySettings(NULL, 0);
     }
 
     // Remove the window.
-    DestroyWindow(common::Env::Instance().main_window);
-    common::Env::Instance().main_window = NULL;
+    DestroyWindow(common::env::main_window);
+    common::env::main_window = NULL;
 
     // Remove the application instance.
     UnregisterClass(application_name, hinstance);
@@ -113,25 +111,20 @@ bool Platform::InitializeWindow() {
         return false;
     }
 
-    RECT wr = {0, 0, common::Env::Instance().screen_width,
-               common::Env::Instance().screen_height};
+    RECT wr = {0, 0, common::env::screen_width, common::env::screen_height};
 
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
 
-    common::Env::Instance().main_window =
-        CreateWindow(wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW,
-                     10,                 
-                     10,                 
-                     wr.right - wr.left, 
-                     wr.bottom - wr.top, 
-                     NULL, NULL, wc.hInstance, NULL);
+    common::env::main_window = CreateWindow(
+        wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW, 10, 10,
+        wr.right - wr.left, wr.bottom - wr.top, NULL, NULL, wc.hInstance, NULL);
 
-    if (!common::Env::Instance().main_window) {
+    if (!common::env::main_window) {
         std::cout << "CreateWindow() failed." << std::endl;
         return false;
     }
 
-    ShowWindow(common::Env::Instance().main_window, SW_SHOWDEFAULT);
-    UpdateWindow(common::Env::Instance().main_window);
+    ShowWindow(common::env::main_window, SW_SHOWDEFAULT);
+    UpdateWindow(common::env::main_window);
 }
-} // namespace dx11
+} // namespace common

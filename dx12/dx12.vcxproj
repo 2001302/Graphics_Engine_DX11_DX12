@@ -134,6 +134,7 @@
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="command_queue.cpp" />
     <ClCompile Include="engine.cpp" />
+    <ClCompile Include="foundation\env.cpp" />
     <ClCompile Include="geometry_generator.cpp" />
     <ClCompile Include="descriptor_heap.cpp" />
     <ClCompile Include="graphics_core.cpp" />

@@ -17,8 +17,8 @@ class DepthBuffer : public GpuResource {
         D3D12_RESOURCE_DESC resource_desc_DSV = {};
         resource_desc_DSV.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
         resource_desc_DSV.Alignment = 0;
-        resource_desc_DSV.Width = common::Env::Instance().screen_width;
-        resource_desc_DSV.Height = common::Env::Instance().screen_height;
+        resource_desc_DSV.Width = common::env::screen_width;
+        resource_desc_DSV.Height = common::env::screen_height;
         resource_desc_DSV.DepthOrArraySize = 1;
         resource_desc_DSV.MipLevels = 1;
         resource_desc_DSV.Format = format;

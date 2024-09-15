@@ -1,5 +1,5 @@
 #include "message_receiver.h"
-//#include "mesh_renderer.h"
+// #include "mesh_renderer.h"
 
 namespace graphics {
 using namespace DirectX::SimpleMath;
@@ -7,12 +7,11 @@ using namespace DirectX::SimpleMath;
 bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
                                           int size_y) {
 
-    common::Env::Instance().screen_width = size_x;
-    common::Env::Instance().screen_height = size_y;
+    common::env::screen_width = size_x;
+    common::env::screen_height = size_y;
 
-    if (common::Env::Instance().screen_width &&
-        common::Env::Instance().screen_height) {
-        //if (dx11::GpuCore::Instance().swap_chain) {
+    if (common::env::screen_width && common::env::screen_height) {
+        // if (dx11::GpuCore::Instance().swap_chain) {
 
         //    gui->Shutdown();
 
@@ -35,8 +34,8 @@ bool MessageReceiver::OnMouseDownRequest(std::shared_ptr<common::Input> input,
 }
 
 bool MessageReceiver::OnMouseRightDragRequest(
-    RenderTargetObject *manager, std::shared_ptr<common::Input> input, int mouseX,
-    int mouseY) {
+    RenderTargetObject *manager, std::shared_ptr<common::Input> input,
+    int mouseX, int mouseY) {
 
     Vector2 move = Vector2(input->MouseX() - mouseX, input->MouseY() - mouseY);
     move = move / -1000.0f;
@@ -75,8 +74,8 @@ bool MessageReceiver::OnMouseWheelRequest(RenderTargetObject *manager,
 }
 
 bool MessageReceiver::OnMouseWheelDragRequest(
-    RenderTargetObject *manager, std::shared_ptr<common::Input> input, int mouseX,
-    int mouseY) {
+    RenderTargetObject *manager, std::shared_ptr<common::Input> input,
+    int mouseX, int mouseY) {
     auto offsetX = input->MouseX() - mouseX;
     auto offsetY = input->MouseY() - mouseY;
 
@@ -133,14 +132,15 @@ bool MessageReceiver::OnModelLoadRequest(RenderTargetObject *manager,
     ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
     //// show file explorer
-    //if (GetOpenFileName(&ofn)) {
+    // if (GetOpenFileName(&ofn)) {
 
     //    std::string fullPath = ToString(ofn.lpstrFile);
     //    size_t lastSlash = fullPath.find_last_of('\\');
     //    std::string fileName = fullPath.substr(lastSlash + 1);
     //    std::string directoryPath = fullPath.substr(0, lastSlash) + "\\";
 
-    //    auto renderer = std::make_shared<MeshRenderer>(directoryPath, fileName);
+    //    auto renderer = std::make_shared<MeshRenderer>(directoryPath,
+    //    fileName);
 
     //    renderer->UpdateConstantBuffers();
 
@@ -158,46 +158,46 @@ bool MessageReceiver::OnModelLoadRequest(RenderTargetObject *manager,
 
 bool MessageReceiver::OnSphereLoadRequest(RenderTargetObject *manager) {
 
-    //MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
-    //auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
-    //renderer->UpdateConstantBuffers();
+    // MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
+    // auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
+    // renderer->UpdateConstantBuffers();
 
-    //auto obj = std::make_shared<Model>();
-    //obj->AddComponent(EnumComponentType::eRenderer, renderer);
-    //obj->SetName("sphere");
+    // auto obj = std::make_shared<Model>();
+    // obj->AddComponent(EnumComponentType::eRenderer, renderer);
+    // obj->SetName("sphere");
 
-    //manager->objects.insert({obj->GetEntityId(), obj});
+    // manager->objects.insert({obj->GetEntityId(), obj});
 
     return true;
 }
 
 bool MessageReceiver::OnBoxLoadRequest(RenderTargetObject *manager) {
 
-    //MeshData mesh = GeometryGenerator::MakeBox(1.0f);
-    //auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
-    //renderer->UpdateConstantBuffers();
+    // MeshData mesh = GeometryGenerator::MakeBox(1.0f);
+    // auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
+    // renderer->UpdateConstantBuffers();
 
-    //auto obj = std::make_shared<Model>();
-    //obj->AddComponent(EnumComponentType::eRenderer, renderer);
-    //obj->SetName("box");
+    // auto obj = std::make_shared<Model>();
+    // obj->AddComponent(EnumComponentType::eRenderer, renderer);
+    // obj->SetName("box");
 
-    //manager->objects.insert({obj->GetEntityId(), obj});
+    // manager->objects.insert({obj->GetEntityId(), obj});
 
     return true;
 }
 
 bool MessageReceiver::OnCylinderLoadRequest(RenderTargetObject *manager) {
 
-    //MeshData mesh = GeometryGenerator::MakeCylinder(5.0f, 5.0f, 15.0f, 30);
-    //auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
-    //renderer->UpdateConstantBuffers();
+    // MeshData mesh = GeometryGenerator::MakeCylinder(5.0f, 5.0f, 15.0f, 30);
+    // auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
+    // renderer->UpdateConstantBuffers();
 
-    //auto obj = std::make_shared<Model>();
-    //obj->AddComponent(EnumComponentType::eRenderer, renderer);
-    //obj->SetName("box");
+    // auto obj = std::make_shared<Model>();
+    // obj->AddComponent(EnumComponentType::eRenderer, renderer);
+    // obj->SetName("box");
 
-    //manager->objects.insert({obj->GetEntityId(), obj});
+    // manager->objects.insert({obj->GetEntityId(), obj});
 
     return true;
 }
-} // namespace core
+} // namespace graphics

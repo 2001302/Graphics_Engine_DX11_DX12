@@ -61,8 +61,8 @@ class GpuCore {
         // Describe and create the swap chain.
         DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
         swapChainDesc.BufferCount = SWAP_CHAIN_BUFFER_COUNT;
-        swapChainDesc.Width = common::Env::Instance().screen_width;
-        swapChainDesc.Height = common::Env::Instance().screen_height;
+        swapChainDesc.Width = common::env::screen_width;
+        swapChainDesc.Height = common::env::screen_height;
         swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
         swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
         swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
@@ -70,12 +70,11 @@ class GpuCore {
         swapChainDesc.SampleDesc.Quality = 0;
 
         ASSERT_FAILED(factory->CreateSwapChainForHwnd(
-            command_manager.GraphicsQueue()->Get(),
-            common::Env::Instance().main_window, &swapChainDesc, nullptr,
-            nullptr, swap_chain.GetAddressOf()));
+            command_manager.GraphicsQueue()->Get(), common::env::main_window,
+            &swapChainDesc, nullptr, nullptr, swap_chain.GetAddressOf()));
 
-        ASSERT_FAILED(factory->MakeWindowAssociation(
-            common::Env::Instance().main_window, DXGI_MWA_NO_ALT_ENTER));
+        ASSERT_FAILED(factory->MakeWindowAssociation(common::env::main_window,
+                                                     DXGI_MWA_NO_ALT_ENTER));
     };
 
     bool InitializeBuffer() {

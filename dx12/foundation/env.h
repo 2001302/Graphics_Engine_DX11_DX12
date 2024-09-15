@@ -7,26 +7,18 @@
 const double PI = std::acos(-1);
 
 namespace common {
-struct Env {
-  private:
-    Env() : main_window(0), screen_width(1920), screen_height(1080){};
+namespace env {
+extern const bool full_screen;
+extern const bool vsync_enabled;
+extern const double field_of_view;
+extern const float screen_depth;
+extern const float screen_near;
 
-  public:
-    static Env &Instance() {
-        static Env instance;
-        return instance;
-    }
-    float GetAspect() { return ((float)screen_width / (float)screen_height); }
+extern HWND main_window;
+extern int screen_width;
+extern int screen_height;
+extern float aspect_ratio;
 
-    const bool full_screen = false;
-    const bool vsync_enabled = true;
-    const double field_of_view = PI / 4.0f;
-    const float screen_depth = 1000.0f;
-    const float screen_near = 0.3f;
-
-    HWND main_window;
-    int screen_width;
-    int screen_height;
-};
+} // namespace env
 } // namespace common
 #endif

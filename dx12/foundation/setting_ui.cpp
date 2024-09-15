@@ -1,4 +1,4 @@
-﻿#include "setting_ui.h"
+#include "setting_ui.h"
 
 namespace common {
 void SetWindowLocation(float x, float y, float width, float height) {
@@ -41,8 +41,8 @@ void SettingUi::OnStart() {
 
 void SettingUi::OnFrame() {
 
-    screen_width = (float)Env::Instance().screen_width;
-    screen_hieght = (float)Env::Instance().screen_height;
+    screen_width = (float)common::env::screen_width;
+    screen_hieght = (float)common::env::screen_height;
 
     TopBar();
     MainView();
@@ -108,19 +108,19 @@ void SettingUi::LeftPanel() {
     if (ImGui::TreeNode("Assets")) {
 
         if (ImGui::Button("Sphere")) {
-            SendMessage(Env::Instance().main_window, WM_SPHERE_LOAD, 0, 0);
+            SendMessage(common::env::main_window, WM_SPHERE_LOAD, 0, 0);
         }
         ImGui::SameLine();
         if (ImGui::Button("Box")) {
-            SendMessage(Env::Instance().main_window, WM_BOX_LOAD, 0, 0);
+            SendMessage(common::env::main_window, WM_BOX_LOAD, 0, 0);
         }
         ImGui::SameLine();
         if (ImGui::Button("Cylinder")) {
-            SendMessage(Env::Instance().main_window, WM_CYLINDER_LOAD, 0, 0);
+            SendMessage(common::env::main_window, WM_CYLINDER_LOAD, 0, 0);
         }
         ImGui::SameLine();
         if (ImGui::Button("Search")) {
-            SendMessage(Env::Instance().main_window, WM_MODEL_LOAD, 0, 0);
+            SendMessage(common::env::main_window, WM_MODEL_LOAD, 0, 0);
         }
         ImGui::TreePop();
     }
@@ -186,4 +186,4 @@ void SettingUi::Hierarchy() {
 
     ImGui::EndTable();
 }
-} // namespace foundation
+} // namespace common

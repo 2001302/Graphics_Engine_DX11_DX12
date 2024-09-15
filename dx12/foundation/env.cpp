@@ -1,0 +1,17 @@
+#include "env.h"
+
+namespace common {
+namespace env {
+const bool full_screen = false;
+const bool vsync_enabled = true;
+const double field_of_view = PI / 4.0f;
+const float screen_depth = 1000.0f;
+const float screen_near = 0.3f;
+
+HWND main_window = 0;
+int screen_width = 1920;
+int screen_height = 1080;
+float aspect_ratio = 0.0f;
+
+} // namespace env
+} // namespace common

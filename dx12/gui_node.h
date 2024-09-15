@@ -22,7 +22,7 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
             gui->Start();
             gui->PushInfoItem(target);
 
-            ImGui_ImplWin32_Init(common::Env::Instance().main_window);
+            ImGui_ImplWin32_Init(common::env::main_window);
             ImGui_ImplDX12_Init(
                 GpuCore::Instance().GetDevice(), SWAP_CHAIN_BUFFER_COUNT,
                 DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -43,8 +43,8 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
                 D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
             command_manager.GraphicsList()->SetViewportAndScissorRect(
-                0, 0, (UINT)common::Env::Instance().screen_width,
-                (UINT)common::Env::Instance().screen_height);
+                0, 0, (UINT)common::env::screen_width,
+                (UINT)common::env::screen_height);
 
             command_manager.GraphicsList()->SetRenderTargetView(
                 GpuCore::Instance().GetDisplay());

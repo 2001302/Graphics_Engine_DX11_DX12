@@ -20,8 +20,8 @@ class ColorBuffer : GpuResource {
         D3D12_RESOURCE_DESC resource_desc_RTV = {};
         resource_desc_RTV.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
         resource_desc_RTV.Alignment = 0;
-        resource_desc_RTV.Width = common::Env::Instance().screen_width;
-        resource_desc_RTV.Height = common::Env::Instance().screen_height;
+        resource_desc_RTV.Width = common::env::screen_width;
+        resource_desc_RTV.Height = common::env::screen_height;
         resource_desc_RTV.DepthOrArraySize = 1;
         resource_desc_RTV.MipLevels = 1;
         resource_desc_RTV.Format = format;

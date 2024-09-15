@@ -76,7 +76,7 @@ class GpuCommand {
         copy_queue->WaitForIdle();
     }
 
-    void Start(D3D12_COMMAND_LIST_TYPE type) {
+    void Begin(D3D12_COMMAND_LIST_TYPE type) {
         switch (type) {
         case D3D12_COMMAND_LIST_TYPE_DIRECT:
             graphics_list->Reset();
@@ -93,7 +93,7 @@ class GpuCommand {
         }
     };
 
-    void Finish(D3D12_COMMAND_LIST_TYPE type) {
+    void Finish(D3D12_COMMAND_LIST_TYPE type, bool wait_for_completion = false) {
         uint64_t fence_value = 0;
 
         switch (type) {
@@ -113,7 +113,8 @@ class GpuCommand {
             break;
         }
 
-        GetQueue(type)->WaitForFence(fence_value);
+        if (wait_for_completion)
+            GetQueue(type)->WaitForFence(fence_value);
     };
 
   private:

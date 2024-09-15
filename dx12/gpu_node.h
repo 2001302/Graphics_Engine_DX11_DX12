@@ -37,7 +37,7 @@ class BeginRenderNode : public common::BehaviorActionNode {
 
         auto command_manager = GpuCore::Instance().GetCommand();
 
-        command_manager.Start(D3D12_COMMAND_LIST_TYPE_DIRECT);
+        command_manager.Begin(D3D12_COMMAND_LIST_TYPE_DIRECT);
 
         command_manager.GraphicsList()->SetDescriptorHeaps(
             std::vector{GpuCore::Instance().GetHeap().View(),
@@ -68,7 +68,8 @@ class EndRenderNode : public common::BehaviorActionNode {
             GpuCore::Instance().GetDisplay(), D3D12_RESOURCE_STATE_PRESENT,
             true);
 
-        GpuCore::Instance().GetCommand().Finish(D3D12_COMMAND_LIST_TYPE_DIRECT);
+        GpuCore::Instance().GetCommand().Finish(D3D12_COMMAND_LIST_TYPE_DIRECT,
+                                                true);
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }

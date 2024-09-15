@@ -86,12 +86,12 @@ class GpuCore {
 
         buffers.hdr_buffer->Create(device.Get(), heap_manager.RTV(),
                                    heap_manager.View(),
-                                   DXGI_FORMAT_R16G16B16A16_FLOAT, true);
+                                   DXGI_FORMAT_R16G16B16A16_FLOAT);
         buffers.ldr_buffer->Create(device.Get(), heap_manager.RTV(),
                                    heap_manager.View(),
                                    DXGI_FORMAT_R16G16B16A16_FLOAT);
         buffers.dsv_buffer->Create(device.Get(), heap_manager.DSV(),
-                                   DXGI_FORMAT_D32_FLOAT, true);
+                                   DXGI_FORMAT_D32_FLOAT);
 
         buffers.hdr_buffer->Allocate();
         buffers.ldr_buffer->Allocate();

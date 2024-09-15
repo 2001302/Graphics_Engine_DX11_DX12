@@ -1,10 +1,10 @@
 #ifndef _BLACKBOARD
 #define _BLACKBOARD
 
+#include "common/input.h"
+#include "common/setting_ui.h"
 #include "render_condition.h"
 #include "render_target_object.h"
-#include "foundation/setting_ui.h"
-#include "foundation/input.h"
 
 namespace graphics {
 
@@ -19,8 +19,8 @@ struct BlackBoard : public common::IDataBlock {
     std::shared_ptr<RenderCondition> conditions;
     std::shared_ptr<common::Input> input;
     std::shared_ptr<common::SettingUi> gui;
-    //gpu
+    // gpu
 };
 
-} // namespace core
+} // namespace graphics
 #endif

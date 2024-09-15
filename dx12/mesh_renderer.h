@@ -1,9 +1,9 @@
 #ifndef _RENDERER
 #define _RENDERER
 
+#include "common/node.h"
 #include "component.h"
 #include "constant_buffer.h"
-#include "foundation/node.h"
 #include "geometry_generator.h"
 #include "mesh.h"
 #include "mesh_pso.h"
@@ -41,5 +41,5 @@ class MeshRenderer : public Component {
     ConstantBuffer<MaterialConstants> material_consts;
 };
 
-} // namespace core
+} // namespace graphics
 #endif

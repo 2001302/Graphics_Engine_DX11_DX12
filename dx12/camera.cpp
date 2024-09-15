@@ -1,5 +1,5 @@
 #include "camera.h"
-#include "foundation/setting_ui.h"
+#include "common/setting_ui.h"
 #include "geometry_generator.h"
 
 namespace graphics {

@@ -2,7 +2,7 @@
 #define _TONE_MAPPING_NODE
 
 #include "black_board.h"
-#include "foundation/behavior_tree_builder.h"
+#include "common/behavior_tree_builder.h"
 #include "mesh_renderer.h"
 #include "tone_mapping_pso.h"
 
@@ -20,42 +20,43 @@ class ToneMappingNodeInvoker : public common::BehaviorActionNode {
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
-            //toneMappingPSO = std::make_shared<ToneMappingPSO>();
-            //toneMappingPSO->Initialize();
+            // toneMappingPSO = std::make_shared<ToneMappingPSO>();
+            // toneMappingPSO->Initialize();
 
-            //auto mesh_data = GeometryGenerator::MakeSquare();
-            //mesh = std::make_shared<Mesh>();
+            // auto mesh_data = GeometryGenerator::MakeSquare();
+            // mesh = std::make_shared<Mesh>();
 
-            //Util::CreateVertexBuffer(mesh_data.vertices, mesh->vertex_buffer,
-            //                         mesh->vertex_buffer_view);
-            //mesh->index_count = UINT(mesh_data.indices.size());
-            //mesh->vertex_count = UINT(mesh_data.vertices.size());
-            //mesh->stride = UINT(sizeof(Vertex));
-            //Util::CreateIndexBuffer(mesh_data.indices, mesh->index_buffer,
-            //                        mesh->index_buffer_view);
+            // Util::CreateVertexBuffer(mesh_data.vertices, mesh->vertex_buffer,
+            //                          mesh->vertex_buffer_view);
+            // mesh->index_count = UINT(mesh_data.indices.size());
+            // mesh->vertex_count = UINT(mesh_data.vertices.size());
+            // mesh->stride = UINT(sizeof(Vertex));
+            // Util::CreateIndexBuffer(mesh_data.indices, mesh->index_buffer,
+            //                         mesh->index_buffer_view);
 
-            //const_data.strength = 0.5f;
-            //const_data.exposure = 1.0f;
-            //const_data.gamma = 2.2f;
+            // const_data.strength = 0.5f;
+            // const_data.exposure = 1.0f;
+            // const_data.gamma = 2.2f;
 
-            //Util::CreateConstBuffer(const_data, const_buffer);
+            // Util::CreateConstBuffer(const_data, const_buffer);
 
-            //D3D12_DESCRIPTOR_HEAP_DESC samplerHeapDesc = {};
-            //samplerHeapDesc.NumDescriptors = 1;
-            //samplerHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
-            //samplerHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+            // D3D12_DESCRIPTOR_HEAP_DESC samplerHeapDesc = {};
+            // samplerHeapDesc.NumDescriptors = 1;
+            // samplerHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER;
+            // samplerHeapDesc.Flags =
+            // D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-            //ThrowIfFailed(GpuDevice::Get().device->CreateDescriptorHeap(
-            //    &samplerHeapDesc, IID_PPV_ARGS(&sampler_heap)));
+            // ThrowIfFailed(GpuDevice::Get().device->CreateDescriptorHeap(
+            //     &samplerHeapDesc, IID_PPV_ARGS(&sampler_heap)));
 
-            //CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
-            //    sampler_heap->GetCPUDescriptorHandleForHeapStart());
-            //UINT incrementSize =
-            //    GpuDevice::Get().device->GetDescriptorHandleIncrementSize(
-            //        D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
+            // CD3DX12_CPU_DESCRIPTOR_HANDLE handle(
+            //     sampler_heap->GetCPUDescriptorHandleForHeapStart());
+            // UINT incrementSize =
+            //     GpuDevice::Get().device->GetDescriptorHandleIncrementSize(
+            //         D3D12_DESCRIPTOR_HEAP_TYPE_SAMPLER);
 
-            //GpuDevice::Get().device->CreateSampler(&sampler::linearClampSS,
-            //                                          handle);
+            // GpuDevice::Get().device->CreateSampler(&sampler::linearClampSS,
+            //                                           handle);
 
             break;
         }
@@ -64,9 +65,10 @@ class ToneMappingNodeInvoker : public common::BehaviorActionNode {
             break;
         }
         case EnumStageType::eRender: {
-            //toneMappingPSO->Render(command_list, sampler_heap, const_buffer,
-            //                       mesh->vertex_buffer_view,
-            //                       mesh->index_buffer_view, mesh->index_count);
+            // toneMappingPSO->Render(command_list, sampler_heap, const_buffer,
+            //                        mesh->vertex_buffer_view,
+            //                        mesh->index_buffer_view,
+            //                        mesh->index_count);
             break;
         }
         default:
@@ -88,6 +90,6 @@ class ToneMappingNodeInvoker : public common::BehaviorActionNode {
     ImageFilterConstData const_data;
     ComPtr<ID3D12Resource> const_buffer;
 };
-} // namespace core
+} // namespace graphics
 
 #endif

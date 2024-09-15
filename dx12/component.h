@@ -1,7 +1,7 @@
 #ifndef _COMPONENT
 #define _COMPONENT
 
-#include "foundation/node.h"
+#include "common/node.h"
 
 namespace graphics {
 enum EnumComponentType {
@@ -14,5 +14,5 @@ class Component {
     Component(){};
 };
 
-} // namespace engine
+} // namespace graphics
 #endif

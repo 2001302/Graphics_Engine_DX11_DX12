@@ -2,7 +2,7 @@
 #define _GUINODE
 
 #include "black_board.h"
-#include "foundation/behavior_tree_builder.h"
+#include "common/behavior_tree_builder.h"
 
 namespace graphics {
 

@@ -1,10 +1,10 @@
 #ifndef _RENDER_CONDITION
 #define _RENDER_CONDITION
 
+#include "common/info.h"
 #include "constant_buffer.h"
-#include "foundation/info.h"
-#include "gpu_resource.h"
 #include "descriptor_heap.h"
+#include "gpu_resource.h"
 #include "graphics_util.h"
 #include "texture_2d.h"
 #include "texture_cube.h"
@@ -20,8 +20,7 @@ class RenderCondition : public common::IInfo {
   public:
     RenderCondition()
         : dt(0.0f), draw_wire(false), light_rotate(false),
-          stage_type(EnumStageType::eInitialize) {
-    }
+          stage_type(EnumStageType::eInitialize) {}
 
     std::shared_ptr<GpuResourceList> shared_texture; // t10~t16
     ConstantBuffer<GlobalConstants> global_consts;
@@ -31,5 +30,5 @@ class RenderCondition : public common::IInfo {
     bool light_rotate;
     EnumStageType stage_type;
 };
-} // namespace core
+} // namespace graphics
 #endif

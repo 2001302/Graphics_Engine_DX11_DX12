@@ -13,8 +13,8 @@
 #include <d3d12.h>
 #include <d3dcompiler.h>
 #include <directxtk/SimpleMath.h>
-#include <dxgi.h>   
-#include <dxgi1_4.h> 
+#include <dxgi.h>
+#include <dxgi1_4.h>
 #include <iostream>
 #include <map>
 #include <memory>
@@ -24,8 +24,8 @@
 #include <windows.h>
 #include <wrl/client.h>
 
+#include "common/env.h"
 #include "d3dx12.h"
-#include "foundation/env.h"
 
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;

@@ -2,7 +2,7 @@
 #define _RENDER_TARGET_OBJECT
 
 #include "camera.h"
-#include "foundation/info.h"
+#include "common/info.h"
 
 namespace graphics {
 class RenderTargetObject : public common::IInfo {
@@ -87,5 +87,5 @@ class RenderTargetObject : public common::IInfo {
     //    }
     //}
 };
-} // namespace core
+} // namespace graphics
 #endif

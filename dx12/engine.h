@@ -2,9 +2,9 @@
 #define _APPLICATION
 
 #include "black_board.h"
-#include "foundation/behavior_tree_builder.h"
-#include "foundation/platform.h"
-#include "foundation/setting_ui.h"
+#include "common/behavior_tree_builder.h"
+#include "common/platform.h"
+#include "common/setting_ui.h"
 #include "graphics_util.h"
 #include "message_receiver.h"
 

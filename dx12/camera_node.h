@@ -1,8 +1,8 @@
 #ifndef _CAMERANODE
 #define _CAMERANODE
 
-#include "foundation/behavior_tree_builder.h"
 #include "black_board.h"
+#include "common/behavior_tree_builder.h"
 
 namespace graphics {
 
@@ -28,12 +28,12 @@ class CameraNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
 
-            //dx11::Util::SetPipelineState(
-            //    manager->draw_wire ? dx11::pso::defaultWirePSO
-            //                       : dx11::pso::defaultSolidPSO);
-            //dx11::Util::SetGlobalConsts(manager->global_consts_GPU);
+            // dx11::Util::SetPipelineState(
+            //     manager->draw_wire ? dx11::pso::defaultWirePSO
+            //                        : dx11::pso::defaultSolidPSO);
+            // dx11::Util::SetGlobalConsts(manager->global_consts_GPU);
 
-            //manager->camera->Draw();
+            // manager->camera->Draw();
             break;
         }
         default:
@@ -44,6 +44,6 @@ class CameraNodeInvoker : public common::BehaviorActionNode {
     }
 };
 
-} // namespace core
+} // namespace graphics
 
 #endif

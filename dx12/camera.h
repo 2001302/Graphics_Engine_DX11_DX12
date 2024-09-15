@@ -1,9 +1,9 @@
 #ifndef CAMERA
 #define CAMERA
 
-#include "foundation/behavior_tree_builder.h"
-#include "foundation/env.h"
-#include "foundation/node.h"
+#include "common/behavior_tree_builder.h"
+#include "common/env.h"
+#include "common/node.h"
 #include "graphics_util.h"
 #include "model.h"
 

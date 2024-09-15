@@ -1,8 +1,8 @@
 #ifndef _LIGHTNODE
 #define _LIGHTNODE
 
-#include "foundation/behavior_tree_builder.h"
 #include "black_board.h"
+#include "common/behavior_tree_builder.h"
 #include "mesh_renderer.h"
 
 namespace graphics {
@@ -19,7 +19,8 @@ class LightNodeInvoker : public common::BehaviorActionNode {
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
             {
-                condition->global_consts.GetCpu().lights[0].radiance = Vector3(5.0f);
+                condition->global_consts.GetCpu().lights[0].radiance =
+                    Vector3(5.0f);
                 condition->global_consts.GetCpu().lights[0].position =
                     Vector3(0.0f, 1.5f, 1.1f);
                 condition->global_consts.GetCpu().lights[0].direction =
@@ -29,7 +30,8 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                 condition->global_consts.GetCpu().lights[0].type =
                     LIGHT_SPOT | LIGHT_SHADOW; // Point with shadow
 
-                condition->global_consts.GetCpu().lights[1].radiance = Vector3(5.0f);
+                condition->global_consts.GetCpu().lights[1].radiance =
+                    Vector3(5.0f);
                 condition->global_consts.GetCpu().lights[1].spotPower = 3.0f;
                 condition->global_consts.GetCpu().lights[1].fallOffEnd = 20.0f;
                 condition->global_consts.GetCpu().lights[1].radius = 0.02f;
@@ -54,7 +56,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
             //        renderer->material_consts.GetCpu().emissionFactor =
             //            Vector3(1.0f, 1.0f, 0.0f);
             //        renderer->cast_shadow =
-            //            false; 
+            //            false;
 
             //        if (condition->global_consts.GetCpu().lights[i].type == 0)
             //            renderer->is_visible = false;
@@ -80,7 +82,8 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                 Vector3(0.0f, 1.1f, 2.0f) + lightDev;
             Vector3 focusPosition = Vector3(0.0f, -0.5f, 1.7f);
             condition->global_consts.GetCpu().lights[1].direction =
-                focusPosition - condition->global_consts.GetCpu().lights[1].position;
+                focusPosition -
+                condition->global_consts.GetCpu().lights[1].position;
             condition->global_consts.GetCpu().lights[1].direction.Normalize();
 
             // for (int i = 0; i < MAX_LIGHTS; i++) {
@@ -109,7 +112,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
             //     condition->draw_wire ? dx11::pso::defaultWirePSO
             //                            : dx11::pso::defaultSolidPSO);
             // dx11::Util::SetGlobalConsts(condition->global_consts_GPU);
-            //for (auto &i : light_spheres) {
+            // for (auto &i : light_spheres) {
             //    auto renderer = (MeshRenderer *)i->GetComponent(
             //        EnumComponentType::eRenderer);
             //    renderer->Render();
@@ -123,9 +126,9 @@ class LightNodeInvoker : public common::BehaviorActionNode {
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
 
-    //std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
+    // std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
 };
 
-} // namespace core
+} // namespace graphics
 
 #endif

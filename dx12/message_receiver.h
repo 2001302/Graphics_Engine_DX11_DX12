@@ -1,8 +1,8 @@
 #ifndef _MESSAGERECEIVER
 #define _MESSAGERECEIVER
 
-#include "foundation/input.h"
-#include "foundation/setting_ui.h"
+#include "common/input.h"
+#include "common/setting_ui.h"
 #include "geometry_generator.h"
 #include "render_target_object.h"
 
@@ -13,20 +13,18 @@ class MessageReceiver {
     bool OnSphereLoadRequest(RenderTargetObject *manager);
     bool OnBoxLoadRequest(RenderTargetObject *manager);
     bool OnCylinderLoadRequest(RenderTargetObject *manager);
-    bool OnMouseDownRequest(std::shared_ptr<common::Input> input,
-                            int mouseX, int mouseY);
+    bool OnMouseDownRequest(std::shared_ptr<common::Input> input, int mouseX,
+                            int mouseY);
     bool OnMouseRightDragRequest(RenderTargetObject *manager,
                                  std::shared_ptr<common::Input> input,
                                  int mouseX, int mouseY);
     bool OnMouseWheelRequest(RenderTargetObject *manager,
-                             std::shared_ptr<common::Input> input,
-                             int wheel);
+                             std::shared_ptr<common::Input> input, int wheel);
     bool OnMouseWheelDragRequest(RenderTargetObject *manager,
                                  std::shared_ptr<common::Input> input,
                                  int mouseX, int mouseY);
-    bool OnWindowSizeRequest(common::SettingUi *gui, int size_x,
-                             int size_y);
+    bool OnWindowSizeRequest(common::SettingUi *gui, int size_x, int size_y);
 };
-} // namespace core
+} // namespace graphics
 
 #endif

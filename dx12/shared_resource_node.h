@@ -2,7 +2,7 @@
 #define _SHARED_RESOURCE_NODE
 
 #include "black_board.h"
-#include "foundation/behavior_tree_builder.h"
+#include "common/behavior_tree_builder.h"
 #include "mesh_renderer.h"
 #include "sampler_state.h"
 
@@ -11,15 +11,15 @@ namespace graphics {
 class SharedResourceNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        //auto black_board = dynamic_cast<BlackBoard *>(data_block);
-        //assert(black_board != nullptr);
+        // auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        // assert(black_board != nullptr);
 
-        //auto target = black_board->targets.get();
-        //auto condition = black_board->conditions.get();
-        //auto command_list = condition->command_pool->Get(0);
+        // auto target = black_board->targets.get();
+        // auto condition = black_board->conditions.get();
+        // auto command_list = condition->command_pool->Get(0);
 
-        //switch (condition->stage_type) {
-        //case EnumStageType::eInitialize: {
+        // switch (condition->stage_type) {
+        // case EnumStageType::eInitialize: {
 
         //    // global constants
         //    condition->global_consts.Initialize();
@@ -60,7 +60,8 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
         //        tex.push_back(&shadow[i]);
         //    }
 
-        //    condition->shared_texture = std::make_shared<GpuResourceList>(tex);
+        //    condition->shared_texture =
+        //    std::make_shared<GpuResourceList>(tex);
         //    condition->shared_texture->Allocate();
 
         //    std::vector<D3D12_SAMPLER_DESC> sampler_desc{
@@ -75,7 +76,7 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
 
         //    break;
         //}
-        //case EnumStageType::eUpdate: {
+        // case EnumStageType::eUpdate: {
 
         //    const Vector3 eyeWorld = target->camera->GetPosition();
         //    // const Matrix reflectRow =
@@ -99,7 +100,7 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
 
         //    break;
         //}
-        //default:
+        // default:
         //    break;
         //}
 

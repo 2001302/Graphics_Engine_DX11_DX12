@@ -1,7 +1,7 @@
 #ifndef _GPU_NODE
 #define _GPU_NODE
 
-#include "foundation/behavior_tree_builder.h"
+#include "common/behavior_tree_builder.h"
 #include "graphics_util.h"
 
 namespace graphics {

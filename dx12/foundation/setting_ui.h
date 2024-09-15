@@ -1,11 +1,11 @@
 #ifndef _PANEL
 #define _PANEL
 
+#include "env.h"
+#include "info.h"
 #include "message.h"
 #include "node.h"
 #include "ui.h"
-#include "info.h"
-#include "env.h"
 #include <map>
 #include <string>
 #include <vector>
@@ -54,5 +54,5 @@ class SettingUi : public IGui {
 
     INode selected_object;
 };
-} // namespace engine
+} // namespace common
 #endif

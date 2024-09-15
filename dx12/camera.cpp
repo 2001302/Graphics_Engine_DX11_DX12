@@ -25,11 +25,10 @@ Vector3 Camera::GetPosition() { return position; }
 Vector3 Camera::GetLookAt() { return lookAtVector; }
 
 Matrix Camera::GetProjection() {
-    common::env::aspect_ratio =
-        (float)common::env::screen_width / (float)common::env::screen_height;
     return DirectX::XMMatrixPerspectiveFovLH(
         DirectX::XMConvertToRadians(projection_fov_angle_y),
-        common::env::aspect_ratio, near_z, far_z);
+        (float)common::env::screen_width / (float)common::env::screen_height,
+        near_z, far_z);
 }
 
 void Camera::SetPosition(Vector3 pos) { position = pos; }

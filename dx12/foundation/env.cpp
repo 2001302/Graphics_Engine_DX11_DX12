@@ -11,7 +11,6 @@ const float screen_near = 0.3f;
 HWND main_window = 0;
 int screen_width = 1920;
 int screen_height = 1080;
-float aspect_ratio = 0.0f;
 
 } // namespace env
 } // namespace common

@@ -1,6 +1,7 @@
 #ifndef _GRAPHICS_CORE
 #define _GRAPHICS_CORE
 
+#include "foundation/logger.h"
 #include "back_buffer.h"
 #include "color_buffer.h"
 #include "command_manager.h"

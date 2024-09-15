@@ -95,10 +95,8 @@ class PresentNode : public common::BehaviorActionNode {
     }
 };
 
-
 class ResolveBuffer : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
-
         auto command_manager = GpuCore::Instance().GetCommand();
 
         command_manager.GraphicsList()->TransitionResource(

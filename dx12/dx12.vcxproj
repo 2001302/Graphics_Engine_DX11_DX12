@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -135,6 +135,7 @@
     <ClCompile Include="command_queue.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="foundation\env.cpp" />
+    <ClCompile Include="foundation\logger.cpp" />
     <ClCompile Include="geometry_generator.cpp" />
     <ClCompile Include="descriptor_heap.cpp" />
     <ClCompile Include="graphics_core.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="depth_buffer.h" />
     <ClInclude Include="back_buffer.h" />
     <ClInclude Include="engine.h" />
+    <ClInclude Include="foundation\logger.h" />
     <ClInclude Include="game_objects_node.h" />
     <ClInclude Include="geometry_generator.h" />
     <ClInclude Include="color_buffer.h" />

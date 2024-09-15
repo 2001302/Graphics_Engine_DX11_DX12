@@ -134,6 +134,9 @@
     <ClCompile Include="foundation\env.cpp">
       <Filter>Common\Structure</Filter>
     </ClCompile>
+    <ClCompile Include="foundation\logger.cpp">
+      <Filter>Common\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphics">
@@ -421,6 +424,9 @@
       <Filter>Graphics\Util</Filter>
     </ClInclude>
     <ClInclude Include="foundation\id_generator.h">
+      <Filter>Common\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="foundation\logger.h">
       <Filter>Common\Util</Filter>
     </ClInclude>
   </ItemGroup>

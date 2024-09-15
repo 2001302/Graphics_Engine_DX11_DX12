@@ -12,8 +12,8 @@ bool IGui::Start() {
     ImGui::StyleColorsDark();
     RecreateFontAtlas();
 
-    //ImGui_ImplWin32_Init();
-    //ImGui_ImplDX12_Init();
+    // ImGui_ImplWin32_Init();
+    // ImGui_ImplDX12_Init();
 
     return true;
 }

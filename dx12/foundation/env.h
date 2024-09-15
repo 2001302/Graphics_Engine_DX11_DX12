@@ -17,7 +17,6 @@ extern const float screen_near;
 extern HWND main_window;
 extern int screen_width;
 extern int screen_height;
-extern float aspect_ratio;
 
 } // namespace env
 } // namespace common

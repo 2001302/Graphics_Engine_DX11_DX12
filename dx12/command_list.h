@@ -11,17 +11,21 @@
 #include <wrl/client.h>
 
 namespace graphics {
-class CommandList {
+class CommandContext {
 
     friend class GpuCommand;
 
   public:
-    CommandList()
+    CommandContext()
         : command_allocator_(0), command_list_(0), num_barriers_to_flush(0),
           resource_barrier_buffer(){};
 
     ID3D12CommandAllocator *GetAllocator() { return command_allocator_; };
     ID3D12GraphicsCommandList *GetList() { return command_list_; }
+    void Finish() {
+		Close();
+		Reset();
+	};
 
   protected:
     ID3D12CommandAllocator *command_allocator_;
@@ -42,9 +46,9 @@ class CommandList {
     void Close() { command_list_->Close(); };
 };
 
-class GraphicsCommandList : public CommandList {
+class GraphicsCommandContext : public CommandContext {
   public:
-    GraphicsCommandList() : CommandList(){};
+    GraphicsCommandContext() : CommandContext(){};
     void SetDescriptorHeaps(std::vector<DescriptorHeap *> descriptorHeaps) {
         std::vector<ID3D12DescriptorHeap *> heaps;
         for (auto x : descriptorHeaps) {
@@ -175,8 +179,8 @@ class GraphicsCommandList : public CommandList {
     }
 };
 
-class ComputeCommandList : public CommandList {};
+class ComputeCommandContext : public CommandContext {};
 
-class CopyCommandList : public CommandList {};
+class CopyCommandContext : public CommandContext {};
 } // namespace graphics
 #endif

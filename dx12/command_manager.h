@@ -19,30 +19,30 @@ class GpuCommand {
         compute_queue->Create(device);
         copy_queue->Create(device);
 
-        graphics_list = new GraphicsCommandList();
-        compute_list = new ComputeCommandList();
-        copy_list = new CopyCommandList();
+        graphics_context = new GraphicsCommandContext();
+        compute_context = new ComputeCommandContext();
+        copy_context = new CopyCommandContext();
 
         CreateNewCommandList(device, D3D12_COMMAND_LIST_TYPE_DIRECT,
-                             graphics_list->GetListAdress(),
-                             graphics_list->GetAllocatorAdress());
+                             graphics_context->GetListAdress(),
+                             graphics_context->GetAllocatorAdress());
 
         CreateNewCommandList(device, D3D12_COMMAND_LIST_TYPE_COMPUTE,
-                             compute_list->GetListAdress(),
-                             compute_list->GetAllocatorAdress());
+                             compute_context->GetListAdress(),
+                             compute_context->GetAllocatorAdress());
 
         CreateNewCommandList(device, D3D12_COMMAND_LIST_TYPE_COPY,
-                             copy_list->GetListAdress(),
-                             copy_list->GetAllocatorAdress());
+                             copy_context->GetListAdress(),
+                             copy_context->GetAllocatorAdress());
     };
 
     CommandQueue *GraphicsQueue(void) { return graphics_queue; }
     CommandQueue *ComputeQueue(void) { return compute_queue; }
     CommandQueue *CopyQueue(void) { return copy_queue; }
 
-    GraphicsCommandList *GraphicsList(void) { return graphics_list; }
-    ComputeCommandList *ComputeList(void) { return compute_list; }
-    CopyCommandList *CopyList(void) { return copy_list; }
+    GraphicsCommandContext *GraphicsList(void) { return graphics_context; }
+    ComputeCommandContext *ComputeList(void) { return compute_context; }
+    CopyCommandContext *CopyList(void) { return copy_context; }
 
     void CreateNewCommandList(ID3D12Device *device,
                               D3D12_COMMAND_LIST_TYPE type,
@@ -79,13 +79,13 @@ class GpuCommand {
     void Begin(D3D12_COMMAND_LIST_TYPE type) {
         switch (type) {
         case D3D12_COMMAND_LIST_TYPE_DIRECT:
-            graphics_list->Reset();
+            graphics_context->Reset();
             break;
         case D3D12_COMMAND_LIST_TYPE_COMPUTE:
-            compute_list->Reset();
+            compute_context->Reset();
             break;
         case D3D12_COMMAND_LIST_TYPE_COPY:
-            copy_list->Reset();
+            copy_context->Reset();
             break;
         default:
             throw std::exception("Not supported command list type");
@@ -93,20 +93,22 @@ class GpuCommand {
         }
     };
 
-    void Finish(D3D12_COMMAND_LIST_TYPE type, bool wait_for_completion = false) {
+    void Finish(D3D12_COMMAND_LIST_TYPE type,
+                bool wait_for_completion = false) {
         uint64_t fence_value = 0;
 
         switch (type) {
         case D3D12_COMMAND_LIST_TYPE_DIRECT:
             fence_value =
-                graphics_queue->ExecuteCommandList(graphics_list->GetList());
+                graphics_queue->ExecuteCommandList(graphics_context->GetList());
             break;
         case D3D12_COMMAND_LIST_TYPE_COMPUTE:
             fence_value =
-                compute_queue->ExecuteCommandList(compute_list->GetList());
+                compute_queue->ExecuteCommandList(compute_context->GetList());
             break;
         case D3D12_COMMAND_LIST_TYPE_COPY:
-            fence_value = copy_queue->ExecuteCommandList(copy_list->GetList());
+            fence_value =
+                copy_queue->ExecuteCommandList(copy_context->GetList());
             break;
         default:
             throw std::exception("Not supported command list type");
@@ -134,9 +136,9 @@ class GpuCommand {
     CommandQueue *compute_queue;
     CommandQueue *copy_queue;
 
-    GraphicsCommandList *graphics_list;
-    ComputeCommandList *compute_list;
-    CopyCommandList *copy_list;
+    GraphicsCommandContext *graphics_context;
+    ComputeCommandContext *compute_context;
+    CopyCommandContext *copy_context;
 };
 
 } // namespace graphics

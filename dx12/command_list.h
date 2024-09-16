@@ -7,27 +7,32 @@
 #include "descriptor_heap.h"
 #include <d3d12.h>
 #include <memory>
+#include <pix3.h>
 #include <vector>
 #include <wrl/client.h>
 
 namespace graphics {
-class CommandContext {
+struct NonCopyable {
+    NonCopyable() = default;
+    NonCopyable(const NonCopyable &) = delete;
+    NonCopyable &operator=(const NonCopyable &) = delete;
+};
+
+class CommandContext : public NonCopyable {
 
     friend class GpuCommand;
 
   public:
     CommandContext()
         : command_allocator_(0), command_list_(0), num_barriers_to_flush(0),
-          resource_barrier_buffer(){};
+          resource_barrier_buffer(), type_(D3D12_COMMAND_LIST_TYPE_DIRECT){};
 
     ID3D12CommandAllocator *GetAllocator() { return command_allocator_; };
     ID3D12GraphicsCommandList *GetList() { return command_list_; }
-    void Finish() {
-		Close();
-		Reset();
-	};
+    D3D12_COMMAND_LIST_TYPE GetType() { return type_; }
 
   protected:
+    D3D12_COMMAND_LIST_TYPE type_;
     ID3D12CommandAllocator *command_allocator_;
     ID3D12GraphicsCommandList *command_list_;
 
@@ -35,15 +40,40 @@ class CommandContext {
     UINT num_barriers_to_flush;
 
   private:
-    ID3D12CommandAllocator **GetAllocatorAdress() {
-        return &command_allocator_;
-    };
-    ID3D12GraphicsCommandList **GetListAdress() { return &command_list_; };
+    void Close() { command_list_->Close(); };
     void Reset() {
         command_allocator_->Reset();
         command_list_->Reset(command_allocator_, nullptr);
     };
-    void Close() { command_list_->Close(); };
+    void Initialize(ID3D12Device *device, D3D12_COMMAND_LIST_TYPE type) {
+        type_ = type;
+        device->CreateCommandAllocator(type, IID_PPV_ARGS(&command_allocator_));
+        device->CreateCommandList(0, type, command_allocator_, nullptr,
+                                  IID_PPV_ARGS(&command_list_));
+        command_list_->SetName(L"CommandList");
+    };
+
+    void PIXBeginEvent(const wchar_t *label) {
+#ifdef RELEASE
+        (label);
+#else
+        ::PIXBeginEvent(command_list_, 0, label);
+#endif
+    }
+
+    void PIXEndEvent(void) {
+#ifndef RELEASE
+        ::PIXEndEvent(command_list_);
+#endif
+    }
+
+    void PIXSetMarker(const wchar_t *label) {
+#ifdef RELEASE
+        (label);
+#else
+        ::PIXSetMarker(command_list_, 0, label);
+#endif
+    }
 };
 
 class GraphicsCommandContext : public CommandContext {

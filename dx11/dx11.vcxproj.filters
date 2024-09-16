@@ -404,6 +404,7 @@
     <None Include="DiskSamples.hlsli">
       <Filter>Graphics\Shader</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CombinePS.hlsl">

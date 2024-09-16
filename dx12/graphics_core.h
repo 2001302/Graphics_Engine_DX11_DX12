@@ -116,9 +116,9 @@ class GpuCore {
     ID3D12Device *GetDevice() { return device.Get(); }
     IDXGISwapChain1 *GetSwapChain() { return swap_chain.Get(); }
     BackBuffer *GetDisplay() { return &back_buffer; }
+    GpuCommand *GetCommand() { return &command_manager; }
 
     GpuHeap GetHeap() { return heap_manager; }
-    GpuCommand GetCommand() { return command_manager; }
     GlobalGpuBuffer GetBuffers() { return buffers; }
 
   private:

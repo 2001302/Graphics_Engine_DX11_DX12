@@ -36,22 +36,22 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
             gui->Frame();
             gui->ClearNodeItem();
 
-            auto command_manager = GpuCore::Instance().GetCommand();
+            auto context = (GraphicsCommandContext *)GpuCore::Instance()
+                               .GetCommand()
+                               ->Rent(D3D12_COMMAND_LIST_TYPE_DIRECT);
 
-            command_manager.GraphicsList()->TransitionResource(
-                GpuCore::Instance().GetDisplay(),
-                D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+            context->TransitionResource(GpuCore::Instance().GetDisplay(),
+                                        D3D12_RESOURCE_STATE_RENDER_TARGET,
+                                        true);
 
-            command_manager.GraphicsList()->SetViewportAndScissorRect(
+            context->SetViewportAndScissorRect(
                 0, 0, (UINT)common::env::screen_width,
                 (UINT)common::env::screen_height);
 
-            command_manager.GraphicsList()->SetRenderTargetView(
-                GpuCore::Instance().GetDisplay());
+            context->SetRenderTargetView(GpuCore::Instance().GetDisplay());
 
-            ImGui_ImplDX12_RenderDrawData(
-                ImGui::GetDrawData(),
-                command_manager.GraphicsList()->GetList());
+            ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
+                                          context->GetList());
 
             break;
         }

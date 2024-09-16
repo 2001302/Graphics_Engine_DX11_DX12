@@ -35,25 +35,24 @@ class EndInitNode : public common::BehaviorActionNode {
 class BeginRenderNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        auto command_manager = GpuCore::Instance().GetCommand();
+        auto context =
+            (GraphicsCommandContext *)GpuCore::Instance().GetCommand()->Begin(
+                D3D12_COMMAND_LIST_TYPE_DIRECT, L"Render");
 
-        command_manager.Begin(D3D12_COMMAND_LIST_TYPE_DIRECT);
-
-        command_manager.GraphicsList()->SetDescriptorHeaps(
+        context->SetDescriptorHeaps(
             std::vector{GpuCore::Instance().GetHeap().View(),
                         GpuCore::Instance().GetHeap().Sampler()});
 
-        command_manager.GraphicsList()->TransitionResource(
-            GpuCore::Instance().GetBuffers().hdr_buffer,
-            D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+        context->TransitionResource(GpuCore::Instance().GetBuffers().hdr_buffer,
+                                    D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
-        command_manager.GraphicsList()->ClearRenderTargetView(
+        context->ClearRenderTargetView(
             GpuCore::Instance().GetBuffers().hdr_buffer);
 
-        command_manager.GraphicsList()->ClearDepthStencilView(
+        context->ClearDepthStencilView(
             GpuCore::Instance().GetBuffers().dsv_buffer);
 
-        command_manager.GraphicsList()->SetRenderTargetView(
+        context->SetRenderTargetView(
             GpuCore::Instance().GetBuffers().hdr_buffer,
             GpuCore::Instance().GetBuffers().dsv_buffer);
 
@@ -64,12 +63,14 @@ class BeginRenderNode : public common::BehaviorActionNode {
 class EndRenderNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
-        GpuCore::Instance().GetCommand().GraphicsList()->TransitionResource(
-            GpuCore::Instance().GetDisplay(), D3D12_RESOURCE_STATE_PRESENT,
-            true);
+        auto context =
+            (GraphicsCommandContext *)GpuCore::Instance().GetCommand()->Rent(
+                D3D12_COMMAND_LIST_TYPE_DIRECT);
 
-        GpuCore::Instance().GetCommand().Finish(D3D12_COMMAND_LIST_TYPE_DIRECT,
-                                                true);
+        context->TransitionResource(GpuCore::Instance().GetDisplay(),
+                                    D3D12_RESOURCE_STATE_PRESENT, true);
+
+        GpuCore::Instance().GetCommand()->Finish(context, true);
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
@@ -98,20 +99,20 @@ class PresentNode : public common::BehaviorActionNode {
 
 class ResolveBuffer : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
-        auto command_manager = GpuCore::Instance().GetCommand();
+        // auto command_manager = GpuCore::Instance().GetCommand();
 
-        command_manager.GraphicsList()->TransitionResource(
-            GpuCore::Instance().GetBuffers().hdr_buffer,
-            D3D12_RESOURCE_STATE_RESOLVE_SOURCE, true);
+        // command_manager.GraphicsList()->TransitionResource(
+        //     GpuCore::Instance().GetBuffers().hdr_buffer,
+        //     D3D12_RESOURCE_STATE_RESOLVE_SOURCE, true);
 
-        command_manager.GraphicsList()->TransitionResource(
-            GpuCore::Instance().GetBuffers().ldr_buffer,
-            D3D12_RESOURCE_STATE_RESOLVE_DEST, true);
+        // command_manager.GraphicsList()->TransitionResource(
+        //     GpuCore::Instance().GetBuffers().ldr_buffer,
+        //     D3D12_RESOURCE_STATE_RESOLVE_DEST, true);
 
-        command_manager.GraphicsList()->ResolveSubresource(
-            GpuCore::Instance().GetBuffers().ldr_buffer,
-            GpuCore::Instance().GetBuffers().hdr_buffer,
-            DXGI_FORMAT_R16G16B16A16_FLOAT);
+        // command_manager.GraphicsList()->ResolveSubresource(
+        //     GpuCore::Instance().GetBuffers().ldr_buffer,
+        //     GpuCore::Instance().GetBuffers().hdr_buffer,
+        //     DXGI_FORMAT_R16G16B16A16_FLOAT);
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }

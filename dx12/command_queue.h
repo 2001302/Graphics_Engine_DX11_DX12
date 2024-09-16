@@ -6,6 +6,7 @@
 #include <memory>
 #include <mutex>
 #include <vector>
+#include <queue>
 #include <wrl/client.h>
 
 namespace graphics {

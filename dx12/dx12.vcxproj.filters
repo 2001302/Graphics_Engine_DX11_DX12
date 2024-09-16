@@ -446,6 +446,7 @@
     <None Include="shader\DiskSamples.hlsli">
       <Filter>Graphics\Gpu\Shader</Filter>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="shader\BasicPS.hlsl">

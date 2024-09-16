@@ -8,116 +8,58 @@ namespace graphics {
 
 class GpuCommand {
   public:
-    GpuCommand(){};
+    GpuCommand()
+        : device_(nullptr), graphics_queue(nullptr), compute_queue(nullptr),
+          copy_queue(nullptr), context_allocation_mutex_(){};
 
     void Initialize(ID3D12Device *device) {
+        device_ = device;
+
         graphics_queue = new CommandQueue(D3D12_COMMAND_LIST_TYPE_DIRECT);
         compute_queue = new CommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);
         copy_queue = new CommandQueue(D3D12_COMMAND_LIST_TYPE_COPY);
 
-        graphics_queue->Create(device);
-        compute_queue->Create(device);
-        copy_queue->Create(device);
+        graphics_queue->Create(device_);
+        compute_queue->Create(device_);
+        copy_queue->Create(device_);
+    };
 
-        graphics_context = new GraphicsCommandContext();
-        compute_context = new ComputeCommandContext();
-        copy_context = new CopyCommandContext();
+    CommandContext *Begin(D3D12_COMMAND_LIST_TYPE type, const wchar_t *label) {
+        CommandContext *new_context =
+            AllocateContext(device_, D3D12_COMMAND_LIST_TYPE_DIRECT);
+        new_context->PIXBeginEvent(label);
+        return new_context;
+    };
 
-        CreateNewCommandList(device, D3D12_COMMAND_LIST_TYPE_DIRECT,
-                             graphics_context->GetListAdress(),
-                             graphics_context->GetAllocatorAdress());
+    void Finish(CommandContext *context, bool wait_for_completion = false) {
 
-        CreateNewCommandList(device, D3D12_COMMAND_LIST_TYPE_COMPUTE,
-                             compute_context->GetListAdress(),
-                             compute_context->GetAllocatorAdress());
+        context->PIXEndEvent();
+        uint64_t fence_value = 0;
 
-        CreateNewCommandList(device, D3D12_COMMAND_LIST_TYPE_COPY,
-                             copy_context->GetListAdress(),
-                             copy_context->GetAllocatorAdress());
+        fence_value = GetQueue(context->GetType())
+                          ->ExecuteCommandList(context->GetList());
+
+        if (wait_for_completion)
+            GetQueue(context->GetType())->WaitForFence(fence_value);
+
+        available_contexts_[context->GetType()].push(context);
+        context_pool_[context->GetType()].pop();
+    };
+
+    CommandContext *Rent(D3D12_COMMAND_LIST_TYPE type) {
+        CommandContext *new_context = nullptr;
+
+        auto &context_pool = context_pool_[type];
+
+        if (!context_pool.empty()) {
+            new_context = context_pool.front();
+        } else
+            throw std::exception("No available command list in the pool");
+
+        return new_context;
     };
 
     CommandQueue *GraphicsQueue(void) { return graphics_queue; }
-    CommandQueue *ComputeQueue(void) { return compute_queue; }
-    CommandQueue *CopyQueue(void) { return copy_queue; }
-
-    GraphicsCommandContext *GraphicsList(void) { return graphics_context; }
-    ComputeCommandContext *ComputeList(void) { return compute_context; }
-    CopyCommandContext *CopyList(void) { return copy_context; }
-
-    void CreateNewCommandList(ID3D12Device *device,
-                              D3D12_COMMAND_LIST_TYPE type,
-                              ID3D12GraphicsCommandList **list,
-                              ID3D12CommandAllocator **allocator) {
-        assert(type != D3D12_COMMAND_LIST_TYPE_BUNDLE,
-               "Bundles are not yet supported");
-        switch (type) {
-        case D3D12_COMMAND_LIST_TYPE_DIRECT:
-            *allocator = graphics_queue->RequestAllocator(device);
-            break;
-        case D3D12_COMMAND_LIST_TYPE_BUNDLE:
-            break;
-        case D3D12_COMMAND_LIST_TYPE_COMPUTE:
-            *allocator = compute_queue->RequestAllocator(device);
-            break;
-        case D3D12_COMMAND_LIST_TYPE_COPY:
-            *allocator = copy_queue->RequestAllocator(device);
-            break;
-        }
-
-        device->CreateCommandList(1, type, *allocator, nullptr,
-                                  IID_PPV_ARGS(list));
-        (*list)->SetName(L"CommandList");
-        (*list)->Close();
-    };
-
-    void IdleGPU(void) {
-        graphics_queue->WaitForIdle();
-        compute_queue->WaitForIdle();
-        copy_queue->WaitForIdle();
-    }
-
-    void Begin(D3D12_COMMAND_LIST_TYPE type) {
-        switch (type) {
-        case D3D12_COMMAND_LIST_TYPE_DIRECT:
-            graphics_context->Reset();
-            break;
-        case D3D12_COMMAND_LIST_TYPE_COMPUTE:
-            compute_context->Reset();
-            break;
-        case D3D12_COMMAND_LIST_TYPE_COPY:
-            copy_context->Reset();
-            break;
-        default:
-            throw std::exception("Not supported command list type");
-            break;
-        }
-    };
-
-    void Finish(D3D12_COMMAND_LIST_TYPE type,
-                bool wait_for_completion = false) {
-        uint64_t fence_value = 0;
-
-        switch (type) {
-        case D3D12_COMMAND_LIST_TYPE_DIRECT:
-            fence_value =
-                graphics_queue->ExecuteCommandList(graphics_context->GetList());
-            break;
-        case D3D12_COMMAND_LIST_TYPE_COMPUTE:
-            fence_value =
-                compute_queue->ExecuteCommandList(compute_context->GetList());
-            break;
-        case D3D12_COMMAND_LIST_TYPE_COPY:
-            fence_value =
-                copy_queue->ExecuteCommandList(copy_context->GetList());
-            break;
-        default:
-            throw std::exception("Not supported command list type");
-            break;
-        }
-
-        if (wait_for_completion)
-            GetQueue(type)->WaitForFence(fence_value);
-    };
 
   private:
     CommandQueue *
@@ -130,15 +72,40 @@ class GpuCommand {
         default:
             return graphics_queue;
         }
+    };
+
+    CommandContext *AllocateContext(ID3D12Device *device,
+                                    D3D12_COMMAND_LIST_TYPE type) {
+        std::lock_guard<std::mutex> lock_guard(context_allocation_mutex_);
+
+        auto &available_contexts = available_contexts_[type];
+
+        CommandContext *context = nullptr;
+        if (available_contexts.empty()) {
+            context = new CommandContext();
+            context->Initialize(device, type);
+            context_pool_[type].push(context);
+        } else {
+            context = available_contexts.front();
+            available_contexts.pop();
+            context->Reset();
+            context_pool_[type].push(context);
+        }
+
+        assert(context != nullptr);
+
+        return context;
     }
+
+    ID3D12Device *device_;
 
     CommandQueue *graphics_queue;
     CommandQueue *compute_queue;
     CommandQueue *copy_queue;
 
-    GraphicsCommandContext *graphics_context;
-    ComputeCommandContext *compute_context;
-    CopyCommandContext *copy_context;
+    std::queue<CommandContext *> available_contexts_[4];
+    std::queue<CommandContext *> context_pool_[4];
+    std::mutex context_allocation_mutex_;
 };
 
 } // namespace graphics

@@ -36,9 +36,9 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
             gui->Frame();
             gui->ClearNodeItem();
 
-            auto context = (GraphicsCommandContext *)GpuCore::Instance()
+            auto context = GpuCore::Instance()
                                .GetCommand()
-                               ->Rent(D3D12_COMMAND_LIST_TYPE_DIRECT);
+                               ->Context<GraphicsCommandContext>();
 
             context->TransitionResource(GpuCore::Instance().GetDisplay(),
                                         D3D12_RESOURCE_STATE_RENDER_TARGET,

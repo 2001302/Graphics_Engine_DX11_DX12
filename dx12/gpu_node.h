@@ -36,8 +36,8 @@ class BeginRenderNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto context =
-            (GraphicsCommandContext *)GpuCore::Instance().GetCommand()->Begin(
-                D3D12_COMMAND_LIST_TYPE_DIRECT, L"Render");
+            GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
+                L"Render");
 
         context->SetDescriptorHeaps(
             std::vector{GpuCore::Instance().GetHeap().View(),
@@ -64,8 +64,7 @@ class EndRenderNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto context =
-            (GraphicsCommandContext *)GpuCore::Instance().GetCommand()->Rent(
-                D3D12_COMMAND_LIST_TYPE_DIRECT);
+            GpuCore::Instance().GetCommand()->Context<GraphicsCommandContext>();
 
         context->TransitionResource(GpuCore::Instance().GetDisplay(),
                                     D3D12_RESOURCE_STATE_PRESENT, true);

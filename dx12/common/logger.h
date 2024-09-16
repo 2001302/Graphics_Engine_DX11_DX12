@@ -8,9 +8,6 @@
 namespace common {
 class Logger {
   public:
-    // static void Info(std::string message);
-    // static void Error(std::string message);
-    // static void Warning(std::string message);
     static void Debug(std::string message) {
         std::cout << message << std::endl;
     };

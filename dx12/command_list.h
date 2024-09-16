@@ -25,23 +25,58 @@ class CommandContext : public NonCopyable {
   public:
     CommandContext()
         : command_allocator_(0), command_list_(0), num_barriers_to_flush(0),
-          resource_barrier_buffer(){};
+          resource_barrier_buffer(), fence_(nullptr), next_fence_value_(0),
+          last_completed_fence_value_(0), fence_event_handle_(0){};
 
-    virtual void Initialize(ID3D12Device *device){};
+    void Initialize(ID3D12Device *device) {
+        device->CreateCommandAllocator(GetType(),
+                                       IID_PPV_ARGS(&command_allocator_));
+        device->CreateCommandList(0, GetType(), command_allocator_, nullptr,
+                                  IID_PPV_ARGS(&command_list_));
+        command_list_->SetName(L"CommandContext");
+
+        ASSERT_FAILED(device->CreateFence(0, D3D12_FENCE_FLAG_NONE,
+                                          IID_PPV_ARGS(&fence_)));
+        fence_->SetName(L"Fence");
+        fence_->Signal((uint64_t)GetType() << 56);
+
+        fence_event_handle_ = CreateEvent(nullptr, false, false, nullptr);
+        assert(fence_event_handle_ != NULL);
+    };
+
+    void Shutdown() {
+        command_allocator_->Release();
+        command_list_->Release();
+
+        fence_->Release();
+        fence_ = nullptr;
+        CloseHandle(fence_event_handle_);
+    };
+
     virtual D3D12_COMMAND_LIST_TYPE GetType() {
         return D3D12_COMMAND_LIST_TYPE_DIRECT;
     };
-    ID3D12CommandAllocator *GetAllocator() { return command_allocator_; };
-    ID3D12GraphicsCommandList *GetList() { return command_list_; }
 
-  protected:
-    ID3D12CommandAllocator *command_allocator_;
-    ID3D12GraphicsCommandList *command_list_;
+    bool IsFenceComplete(ID3D12CommandQueue *command_queue) {
+        command_queue->Signal(fence_, next_fence_value_);
+        auto completed_fence_value = fence_->GetCompletedValue();
 
-    D3D12_RESOURCE_BARRIER resource_barrier_buffer[16];
-    UINT num_barriers_to_flush;
+        if (next_fence_value_ <= completed_fence_value) {
+            last_completed_fence_value_ = completed_fence_value;
+            return true;
+        } else {
+            fence_->SetEventOnCompletion(next_fence_value_, fence_event_handle_);
+            WaitForSingleObject(fence_event_handle_, INFINITE);
+            return false;
+        }
+    };
 
-  private:
+    void ExecuteCommandLists(ID3D12CommandQueue *command_queue) {
+        auto command_list = (ID3D12CommandList *)command_list_;
+        command_queue->ExecuteCommandLists(1, &command_list);
+        next_fence_value_++;
+    };
+
     void Close() { command_list_->Close(); };
     void Reset() {
         command_allocator_->Reset();
@@ -69,19 +104,28 @@ class CommandContext : public NonCopyable {
         ::PIXSetMarker(command_list_, 0, label);
 #endif
     };
+
+    ID3D12CommandAllocator *GetAllocator() { return command_allocator_; };
+    ID3D12GraphicsCommandList *GetList() { return command_list_; }
+
+  protected:
+    ID3D12CommandAllocator *command_allocator_;
+    ID3D12GraphicsCommandList *command_list_;
+
+    D3D12_RESOURCE_BARRIER resource_barrier_buffer[16];
+    UINT num_barriers_to_flush;
+
+    // std::mutex fence_mutex_;
+    // std::mutex event_mutex_;
+    ID3D12Fence *fence_;
+    uint64_t next_fence_value_;
+    uint64_t last_completed_fence_value_;
+    HANDLE fence_event_handle_;
 };
 
 class GraphicsCommandContext : public CommandContext {
   public:
     GraphicsCommandContext() : CommandContext(){};
-    void Initialize(ID3D12Device *device) override {
-        device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT,
-                                       IID_PPV_ARGS(&command_allocator_));
-        device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT,
-                                  command_allocator_, nullptr,
-                                  IID_PPV_ARGS(&command_list_));
-        command_list_->SetName(L"GraphicsCommandContext");
-    };
     D3D12_COMMAND_LIST_TYPE GetType() { return D3D12_COMMAND_LIST_TYPE_DIRECT; }
     void SetDescriptorHeaps(std::vector<DescriptorHeap *> descriptorHeaps) {
         std::vector<ID3D12DescriptorHeap *> heaps;
@@ -215,15 +259,6 @@ class GraphicsCommandContext : public CommandContext {
 
 class ComputeCommandContext : public CommandContext {
   public:
-    ComputeCommandContext() : CommandContext(){};
-    void Initialize(ID3D12Device *device) override {
-        device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_COMPUTE,
-                                       IID_PPV_ARGS(&command_allocator_));
-        device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_COMPUTE,
-                                  command_allocator_, nullptr,
-                                  IID_PPV_ARGS(&command_list_));
-        command_list_->SetName(L"ComputeCommandContext");
-    };
     D3D12_COMMAND_LIST_TYPE GetType() {
         return D3D12_COMMAND_LIST_TYPE_COMPUTE;
     }
@@ -232,14 +267,6 @@ class ComputeCommandContext : public CommandContext {
 class CopyCommandContext : public CommandContext {
   public:
     CopyCommandContext() : CommandContext(){};
-    void Initialize(ID3D12Device *device) override {
-        device->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_COPY,
-                                       IID_PPV_ARGS(&command_allocator_));
-        device->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_COPY,
-                                  command_allocator_, nullptr,
-                                  IID_PPV_ARGS(&command_list_));
-        command_list_->SetName(L"CopyCommandContext");
-    };
     D3D12_COMMAND_LIST_TYPE GetType() { return D3D12_COMMAND_LIST_TYPE_COPY; }
 };
 } // namespace graphics

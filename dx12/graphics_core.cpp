@@ -98,8 +98,9 @@ bool GpuCore::InitializeSwapchain() {
     swapChainDesc.SampleDesc.Quality = 0;
 
     ASSERT_FAILED(factory->CreateSwapChainForHwnd(
-        command_manager.Queue()->Get(), common::env::main_window,
-        &swapChainDesc, nullptr, nullptr, swap_chain.GetAddressOf()));
+        command_manager.Queue(D3D12_COMMAND_LIST_TYPE_DIRECT)->Get(),
+        common::env::main_window, &swapChainDesc, nullptr, nullptr,
+        swap_chain.GetAddressOf()));
 
     ASSERT_FAILED(factory->MakeWindowAssociation(common::env::main_window,
                                                  DXGI_MWA_NO_ALT_ENTER));

@@ -13,13 +13,11 @@ namespace graphics {
 
 auto gpu_initialize = std::make_shared<GpuInitializeNode>();
 auto begin_render = std::make_shared<BeginRenderNode>();
-auto end_render = std::make_shared<EndRenderNode>();
 auto camera_node = std::make_shared<CameraNodeInvoker>();
 auto shared_resource_node = std::make_shared<SharedResourceNodeInvoker>();
 auto game_object_node = std::make_shared<GameObjectNodeInvoker>();
 auto gui_node = std::make_shared<GuiNodeInvoker>();
 auto present = std::make_shared<PresentNode>();
-auto fence = std::make_shared<GpuFenceNode>();
 auto light_node = std::make_shared<LightNodeInvoker>();
 auto resolve_buffer = std::make_shared<ResolveBuffer>();
 auto tone_mapping = std::make_shared<ToneMappingNodeInvoker>();
@@ -55,7 +53,6 @@ bool Engine::Start() {
         //->Excute(skybox_node)
         ->Excute(gui_node)
         ->Excute(end_init)
-        ->Excute(fence)
     ->Close()
     ->Run();
     
@@ -77,9 +74,8 @@ bool Engine::Start() {
         //->Excute(resolve_buffer)
         //->Excute(tone_mapping)
         ->Excute(gui_node)
-        ->Excute(end_render)
+        //->Excute(end_render)
         ->Excute(present)
-        ->Excute(fence)
     ->Close();
 
     Frame();

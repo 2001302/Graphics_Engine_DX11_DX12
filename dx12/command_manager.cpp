@@ -42,7 +42,7 @@ CommandContext *GpuCommand::AllocateContext(ID3D12Device *device,
         context_pool_[type].push(context);
 
         common::Logger::Debug(
-            "Allocated new command context. #Retired context :" +
+            "Allocated new command context. Retired context #" +
             retired_contexts_->size());
     } else {
         context = available_contexts_[type].front();
@@ -56,14 +56,4 @@ CommandContext *GpuCommand::AllocateContext(ID3D12Device *device,
     return context;
 }
 
-void GpuCommand::ReadyContext(D3D12_COMMAND_LIST_TYPE type) {
-    while (
-        !retired_contexts_[type].empty() &&
-        retired_contexts_[type].front()->IsFenceComplete(Queue(type)->Get())) {
-
-        auto context = retired_contexts_[type].front();
-        available_contexts_[type].push(context);
-        retired_contexts_[type].pop();
-    }
-}
 } // namespace graphics

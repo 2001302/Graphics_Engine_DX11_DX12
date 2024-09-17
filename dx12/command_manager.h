@@ -29,7 +29,6 @@ class GpuCommand {
         } else
             throw std::exception("Invalid command list type");
 
-        ReadyContext(type);
         T *new_context = (T *)AllocateContext(device_, type);
         new_context->PIXBeginEvent(label);
         return new_context;
@@ -65,20 +64,31 @@ class GpuCommand {
             throw std::exception("No available command list in the pool");
     };
 
+    void Wait(D3D12_COMMAND_LIST_TYPE type) {
+        auto begin = common::TimeLogger::Begin();
+
+        while (!retired_contexts_[type].empty()) {
+
+            retired_contexts_[type].front()->IsFenceComplete(
+                Queue(type)->Get());
+
+            auto context = retired_contexts_[type].front();
+            available_contexts_[type].push(context);
+            retired_contexts_[type].pop();
+        }
+
+        common::TimeLogger::End("Waiting for completion ", begin);
+    }
+
   private:
     CommandContext *AllocateContext(ID3D12Device *device,
                                     D3D12_COMMAND_LIST_TYPE type);
-    void ReadyContext(D3D12_COMMAND_LIST_TYPE type);
 
     ID3D12Device *device_;
 
     CommandQueue *graphics_queue;
     CommandQueue *compute_queue;
     CommandQueue *copy_queue;
-
-    // available context : GPU 작업이 끝나서 다시 사용할 수 있는 context
-    // retired context   : GPU으로 보내진 context
-    // context pool      : Recording 할 수 있는 context
 
     std::queue<CommandContext *> available_contexts_[4];
     std::queue<CommandContext *> retired_contexts_[4];

@@ -26,7 +26,7 @@ class CommandContext : public NonCopyable {
     CommandContext()
         : command_allocator_(0), command_list_(0), num_barriers_to_flush(0),
           resource_barrier_buffer(), fence_(nullptr), next_fence_value_(0),
-          last_completed_fence_value_(0), fence_event_handle_(0){};
+          fence_event_handle_(0){};
 
     void Initialize(ID3D12Device *device) {
         device->CreateCommandAllocator(GetType(),
@@ -62,10 +62,10 @@ class CommandContext : public NonCopyable {
         auto completed_fence_value = fence_->GetCompletedValue();
 
         if (next_fence_value_ <= completed_fence_value) {
-            last_completed_fence_value_ = completed_fence_value;
             return true;
         } else {
-            fence_->SetEventOnCompletion(next_fence_value_, fence_event_handle_);
+            fence_->SetEventOnCompletion(next_fence_value_,
+                                         fence_event_handle_);
             WaitForSingleObject(fence_event_handle_, INFINITE);
             return false;
         }
@@ -74,6 +74,7 @@ class CommandContext : public NonCopyable {
     void ExecuteCommandLists(ID3D12CommandQueue *command_queue) {
         auto command_list = (ID3D12CommandList *)command_list_;
         command_queue->ExecuteCommandLists(1, &command_list);
+        command_queue->Signal(fence_, next_fence_value_);
         next_fence_value_++;
     };
 
@@ -119,7 +120,6 @@ class CommandContext : public NonCopyable {
     // std::mutex event_mutex_;
     ID3D12Fence *fence_;
     uint64_t next_fence_value_;
-    uint64_t last_completed_fence_value_;
     HANDLE fence_event_handle_;
 };
 

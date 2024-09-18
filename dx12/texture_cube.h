@@ -2,6 +2,7 @@
 #define _TEXTURECUBE
 
 #include "gpu_resource.h"
+#include "graphics_core.h"
 #include <directxtk12/DDSTextureLoader.h>
 #include <directxtk12/ResourceUploadBatch.h>
 #include <filesystem>
@@ -13,7 +14,7 @@ class TextureCube : public GpuResource {
         : device_(0), heap_(0), resource_(0), cpu_handle_(), index_(0),
           isBrdf_(0){};
 
-    void Create(ID3D12Device *device, DescriptorHeap *heap,
+    void Create(ID3D12Device *device, DynamicDescriptorHeap *heap,
                 const wchar_t *file_name,
                 ComPtr<ID3D12GraphicsCommandList> command_list, bool isCubeMap,
                 bool isBrdf = false) {
@@ -22,16 +23,14 @@ class TextureCube : public GpuResource {
         upload.Begin();
         DirectX::CreateDDSTextureFromFile(device_, upload, file_name,
                                           &resource_, false, isCubeMap);
-        //auto finished = upload.End(GpuCore::Instance()
-        //                               .GetCommandMgr()
-        //                               ->GetCopyQueue()
-        //                               .GetCommandQueue());
+        auto finished = upload.End(GpuCore::Instance().GetCommand()->Queue(D3D12_COMMAND_LIST_TYPE_DIRECT)
+                                       ->Get());
         //finished.wait();
-
-        auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            resource_, D3D12_RESOURCE_STATE_COPY_DEST,
-            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-        command_list->ResourceBarrier(1, &barrier);
+        
+        //auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+        //    resource_, D3D12_RESOURCE_STATE_COPY_DEST,
+        //    D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+        //command_list->ResourceBarrier(1, &barrier);
 
         isBrdf_ = isBrdf;
         heap_ = heap;
@@ -70,7 +69,7 @@ class TextureCube : public GpuResource {
     bool isBrdf_;
     UINT index_;
     ID3D12Device *device_;
-    DescriptorHeap *heap_;
+    DynamicDescriptorHeap *heap_;
     ID3D12Resource *resource_;
     D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle_;
 };

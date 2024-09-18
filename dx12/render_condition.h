@@ -6,6 +6,7 @@
 #include "descriptor_heap.h"
 #include "gpu_resource.h"
 #include "graphics_util.h"
+#include "sampler_state.h"
 #include "texture_2d.h"
 #include "texture_cube.h"
 
@@ -23,6 +24,7 @@ class RenderCondition : public common::IInfo {
           stage_type(EnumStageType::eInitialize) {}
 
     std::shared_ptr<GpuResourceList> shared_texture; // t10~t16
+    std::shared_ptr<SamplerState> shared_sampler;
     ConstantBuffer<GlobalConstants> global_consts;
 
     float dt;

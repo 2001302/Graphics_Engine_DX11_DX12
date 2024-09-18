@@ -11,7 +11,7 @@ class Texture2D : public GpuResource {
     Texture2D()
         : device_(0), heap_(0), upload(0), resource_(0), cpu_handle_(),
           index_(0){};
-    void Create(ID3D12Device *device, DescriptorHeap *heap, int width,
+    void Create(ID3D12Device *device, DynamicDescriptorHeap *heap, int width,
                 int height, DXGI_FORMAT format) {
         device_ = device;
         D3D12_RESOURCE_DESC txtDesc;
@@ -34,7 +34,7 @@ class Texture2D : public GpuResource {
 
         heap_ = heap;
     };
-    void Create(ID3D12Device *device, DescriptorHeap *heap, Image image,
+    void Create(ID3D12Device *device, DynamicDescriptorHeap *heap, Image image,
                 ComPtr<ID3D12GraphicsCommandList> command_list) {
         device_ = device;
         heap_ = heap;
@@ -103,7 +103,7 @@ class Texture2D : public GpuResource {
 
     UINT index_;
     ID3D12Device *device_;
-    DescriptorHeap *heap_;
+    DynamicDescriptorHeap *heap_;
     ID3D12Resource *upload;
     ID3D12Resource *resource_;
     D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle_;

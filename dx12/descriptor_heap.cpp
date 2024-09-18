@@ -1,7 +1,7 @@
 #include "descriptor_heap.h"
 
 namespace graphics {
-DescriptorHeap::DescriptorHeap(ID3D12Device *device, UINT num_descriptors,
+DynamicDescriptorHeap::DynamicDescriptorHeap(ID3D12Device *device, UINT num_descriptors,
                                D3D12_DESCRIPTOR_HEAP_TYPE type, UINT NodeMask) {
     D3D12_DESCRIPTOR_HEAP_DESC desc = {};
     desc.NumDescriptors = num_descriptors;
@@ -21,22 +21,22 @@ DescriptorHeap::DescriptorHeap(ID3D12Device *device, UINT num_descriptors,
         descriptor_heap->GetCPUDescriptorHandleForHeapStart();
 }
 
-ID3D12DescriptorHeap &DescriptorHeap::Get() { return *descriptor_heap.Get(); }
+ID3D12DescriptorHeap &DynamicDescriptorHeap::Get() { return *descriptor_heap.Get(); }
 
 D3D12_GPU_DESCRIPTOR_HANDLE
-DescriptorHeap::GetGpuHandle(UINT descriptor_index) {
+DynamicDescriptorHeap::GetGpuHandle(UINT descriptor_index) {
     return CD3DX12_GPU_DESCRIPTOR_HANDLE(
         descriptor_heap->GetGPUDescriptorHandleForHeapStart(), descriptor_index,
         descriptor_size);
 }
 
 D3D12_CPU_DESCRIPTOR_HANDLE
-DescriptorHeap::GetCpuHandle(UINT descriptor_index) {
+DynamicDescriptorHeap::GetCpuHandle(UINT descriptor_index) {
     return CD3DX12_CPU_DESCRIPTOR_HANDLE(descriptor_heap_cpu_handle,
                                          descriptor_index, descriptor_size);
 }
 
-void DescriptorHeap::AllocateDescriptor(
+void DynamicDescriptorHeap::AllocateDescriptor(
     _Out_ D3D12_CPU_DESCRIPTOR_HANDLE &cpu_handle,
     _Out_ UINT &descriptor_heap_index) {
     descriptor_heap_index = descriptors_allocated;

@@ -10,7 +10,7 @@ class BackBuffer {
     BackBuffer()
         : device_(0), index_(), rtv_handle_(), rtv_heap_(0), current_index_(0),
           current_state_(){};
-    void Create(ID3D12Device *device, DescriptorHeap *heap,
+    void Create(ID3D12Device *device, DynamicDescriptorHeap *heap,
                 IDXGISwapChain1 *swap_chain) {
         device_ = device;
         rtv_heap_ = heap;
@@ -46,7 +46,7 @@ class BackBuffer {
 
   private:
     ID3D12Device *device_;
-    DescriptorHeap *rtv_heap_;
+    DynamicDescriptorHeap *rtv_heap_;
     ComPtr<ID3D12Resource> resource_[SWAP_CHAIN_BUFFER_COUNT];
     UINT index_[SWAP_CHAIN_BUFFER_COUNT];
     D3D12_CPU_DESCRIPTOR_HANDLE rtv_handle_[SWAP_CHAIN_BUFFER_COUNT];

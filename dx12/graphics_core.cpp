@@ -14,6 +14,7 @@ bool GpuCore::Initialize() {
     InitializeSwapchain();
     InitializeHeap();
     InitializeBuffer();
+    AllocateBuffer();
     return true;
 }
 
@@ -109,21 +110,14 @@ bool GpuCore::InitializeSwapchain() {
 bool GpuCore::InitializeBuffer() {
 
     buffers.hdr_buffer = new ColorBuffer();
-    buffers.ldr_buffer = new ColorBuffer();
     buffers.dsv_buffer = new DepthBuffer();
 
     buffers.hdr_buffer->Create(device.Get(), heap_manager.RTV(),
                                heap_manager.View(),
                                DXGI_FORMAT_R16G16B16A16_FLOAT);
-    buffers.ldr_buffer->Create(device.Get(), heap_manager.RTV(),
-                               heap_manager.View(),
-                               DXGI_FORMAT_R16G16B16A16_FLOAT);
     buffers.dsv_buffer->Create(device.Get(), heap_manager.DSV(),
                                DXGI_FORMAT_D32_FLOAT);
 
-    buffers.hdr_buffer->Allocate();
-    buffers.ldr_buffer->Allocate();
-    buffers.dsv_buffer->Allocate();
     return true;
 };
 
@@ -136,7 +130,13 @@ bool GpuCore::InitializeHeap() {
     heap_manager.Initialize(device.Get(), 1024);
 
     back_buffer.Create(device.Get(), heap_manager.RTV(), swap_chain.Get());
+    return true;
+};
+
+bool GpuCore::AllocateBuffer() { 
     back_buffer.Allocate();
+    buffers.hdr_buffer->Allocate();
+    buffers.dsv_buffer->Allocate();
     return true;
 };
 

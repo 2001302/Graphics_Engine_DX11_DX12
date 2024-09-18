@@ -210,7 +210,6 @@
     <ClInclude Include="model_loader.h" />
     <ClInclude Include="render_condition.h" />
     <ClInclude Include="render_target_object.h" />
-    <ClInclude Include="shared_resource_node.h" />
     <ClInclude Include="skybox_node.h" />
     <ClInclude Include="tone_mapping_node.h" />
     <ClInclude Include="common\action_node.h" />

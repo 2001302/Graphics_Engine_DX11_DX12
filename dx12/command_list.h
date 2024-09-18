@@ -127,7 +127,7 @@ class GraphicsCommandContext : public CommandContext {
   public:
     GraphicsCommandContext() : CommandContext(){};
     D3D12_COMMAND_LIST_TYPE GetType() { return D3D12_COMMAND_LIST_TYPE_DIRECT; }
-    void SetDescriptorHeaps(std::vector<DescriptorHeap *> descriptorHeaps) {
+    void SetDescriptorHeaps(std::vector<DynamicDescriptorHeap *> descriptorHeaps) {
         std::vector<ID3D12DescriptorHeap *> heaps;
         for (auto x : descriptorHeaps) {
             heaps.push_back(&x->Get());

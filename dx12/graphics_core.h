@@ -11,7 +11,6 @@
 namespace graphics {
 struct GlobalGpuBuffer {
     ColorBuffer *hdr_buffer;
-    ColorBuffer *ldr_buffer;
     DepthBuffer *dsv_buffer;
 };
 
@@ -28,6 +27,7 @@ class GpuCore {
     bool InitializeBuffer();
     bool InitializeHeap();
     bool InitializeCommand();
+    bool AllocateBuffer();
     void Shutdown();
 
     ID3D12Device *GetDevice() { return device.Get(); }

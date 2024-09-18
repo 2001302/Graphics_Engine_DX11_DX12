@@ -318,9 +318,6 @@
     <ClInclude Include="model.h">
       <Filter>Graphics\Model</Filter>
     </ClInclude>
-    <ClInclude Include="shared_resource_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
     <ClInclude Include="skybox_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>

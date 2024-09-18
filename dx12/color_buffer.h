@@ -9,8 +9,8 @@ class ColorBuffer : GpuResource {
     ColorBuffer()
         : device_(0), resource_(0), heap_RTV_(0), heap_SRV_(0), handle_RTV_(),
           handle_SRV_(), use_MSAA_(false), current_state_(){};
-    void Create(ID3D12Device *device, DescriptorHeap *heap_RTV,
-                DescriptorHeap *heap_SRV, DXGI_FORMAT format,
+    void Create(ID3D12Device *device, DynamicDescriptorHeap *heap_RTV,
+                DynamicDescriptorHeap *heap_SRV, DXGI_FORMAT format,
                 bool use_msaa = false) {
         heap_RTV_ = heap_RTV;
         heap_SRV_ = heap_SRV;
@@ -81,8 +81,8 @@ class ColorBuffer : GpuResource {
   private:
     ID3D12Device *device_;
     ID3D12Resource *resource_;
-    DescriptorHeap *heap_RTV_;
-    DescriptorHeap *heap_SRV_;
+    DynamicDescriptorHeap *heap_RTV_;
+    DynamicDescriptorHeap *heap_SRV_;
     D3D12_RESOURCE_STATES current_state_;
     D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV_;
     D3D12_CPU_DESCRIPTOR_HANDLE handle_SRV_;

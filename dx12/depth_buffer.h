@@ -9,7 +9,7 @@ class DepthBuffer : public GpuResource {
     DepthBuffer()
         : device_(0), resource_(0), heap_DSV_(0), handle_DSV_(),
           use_MSAA_(false), current_state_(){};
-    void Create(ID3D12Device *device, DescriptorHeap *heap_DSV,
+    void Create(ID3D12Device *device, DynamicDescriptorHeap *heap_DSV,
                 DXGI_FORMAT format, bool use_msaa = false) {
         device_ = device;
         heap_DSV_ = heap_DSV;
@@ -68,7 +68,7 @@ class DepthBuffer : public GpuResource {
   private:
     ID3D12Device *device_;
     ID3D12Resource *resource_;
-    DescriptorHeap *heap_DSV_;
+    DynamicDescriptorHeap *heap_DSV_;
     D3D12_CPU_DESCRIPTOR_HANDLE handle_DSV_;
     D3D12_RESOURCE_STATES current_state_;
     bool use_MSAA_ = false;

@@ -11,7 +11,7 @@
 namespace graphics {
 
 auto gpu_initialize = std::make_shared<GpuInitializeNode>();
-auto begin_render = std::make_shared<BeginRenderNode>();
+auto clear_buffer = std::make_shared<ClearBufferNode>();
 auto camera_node = std::make_shared<CameraNodeInvoker>();
 auto shared_resource_node = std::make_shared<SharedResourceNode>();
 auto game_object_node = std::make_shared<GameObjectNodeInvoker>();
@@ -65,7 +65,7 @@ bool Engine::Start() {
     //render
     render_tree->Build(black_board.get())
     ->Sequence()
-        ->Excute(begin_render)
+        ->Excute(clear_buffer)
         //->Excute(skybox_node)
         //->Excute(game_object_node)
         //->Excute(resolve_buffer)

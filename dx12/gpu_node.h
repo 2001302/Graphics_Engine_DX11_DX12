@@ -37,28 +37,28 @@ class BeginRenderNode : public common::BehaviorActionNode {
 
         GpuCore::Instance().GetCommand()->Wait(D3D12_COMMAND_LIST_TYPE_DIRECT);
 
-        auto context =
-            GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
-                L"BeginRenderNode");
+        //auto context =
+        //    GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
+        //        L"BeginRenderNode");
 
-        context->SetDescriptorHeaps(
-            std::vector{GpuCore::Instance().GetHeap().View(),
-                        GpuCore::Instance().GetHeap().Sampler()});
+        //context->SetDescriptorHeaps(
+        //    std::vector{GpuCore::Instance().GetHeap().View(),
+        //                GpuCore::Instance().GetHeap().Sampler()});
 
-        context->TransitionResource(GpuCore::Instance().GetBuffers().hdr_buffer,
-                                    D3D12_RESOURCE_STATE_RENDER_TARGET, true);
+        //context->TransitionResource(GpuCore::Instance().GetBuffers().hdr_buffer,
+        //                            D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
-        context->ClearRenderTargetView(
-            GpuCore::Instance().GetBuffers().hdr_buffer);
+        //context->ClearRenderTargetView(
+        //    GpuCore::Instance().GetBuffers().hdr_buffer);
 
-        context->ClearDepthStencilView(
-            GpuCore::Instance().GetBuffers().dsv_buffer);
+        //context->ClearDepthStencilView(
+        //    GpuCore::Instance().GetBuffers().dsv_buffer);
 
-        context->SetRenderTargetView(
-            GpuCore::Instance().GetBuffers().hdr_buffer,
-            GpuCore::Instance().GetBuffers().dsv_buffer);
+        //context->SetRenderTargetView(
+        //    GpuCore::Instance().GetBuffers().hdr_buffer,
+        //    GpuCore::Instance().GetBuffers().dsv_buffer);
 
-        GpuCore::Instance().GetCommand()->Finish(context, true);
+        //GpuCore::Instance().GetCommand()->Finish(context, true);
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }

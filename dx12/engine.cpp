@@ -48,7 +48,7 @@ bool Engine::Start() {
         ->Excute(light_node)
         //->Excute(game_object_node)
         //->Excute(skybox_node)
-        //->Excute(tone_mapping)
+        ->Excute(tone_mapping)
         ->Excute(gui_node)
     ->Close()
     ->Run();
@@ -69,7 +69,7 @@ bool Engine::Start() {
         //->Excute(skybox_node)
         //->Excute(game_object_node)
         //->Excute(resolve_buffer)
-        //->Excute(tone_mapping)
+        ->Excute(tone_mapping)
         ->Excute(gui_node)
         ->Excute(present)
     ->Close();

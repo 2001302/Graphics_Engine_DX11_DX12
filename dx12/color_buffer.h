@@ -8,7 +8,8 @@ class ColorBuffer : GpuResource {
   public:
     ColorBuffer()
         : device_(0), resource_(0), heap_RTV_(0), heap_SRV_(0), handle_RTV_(),
-          handle_SRV_(), use_MSAA_(false), current_state_(){};
+          handle_SRV_(), use_MSAA_(false), current_state_(), rtv_index_(0),
+          srv_index_(0){};
     void Create(ID3D12Device *device, DynamicDescriptorHeap *heap_RTV,
                 DynamicDescriptorHeap *heap_SRV, DXGI_FORMAT format,
                 bool use_msaa = false) {
@@ -51,13 +52,12 @@ class ColorBuffer : GpuResource {
 
         auto dimension_RTV = use_MSAA_ ? D3D12_RTV_DIMENSION_TEXTURE2DMS
                                        : D3D12_RTV_DIMENSION_TEXTURE2D;
-        UINT rtv_index = 0;
-        heap_RTV_->AllocateDescriptor(handle_RTV_, rtv_index);
+
+        heap_RTV_->AllocateDescriptor(handle_RTV_, rtv_index_);
         D3D12_RENDER_TARGET_VIEW_DESC desc_RTV = {format, dimension_RTV};
         device_->CreateRenderTargetView(resource_, &desc_RTV, handle_RTV_);
 
-        UINT srv_index = 0;
-        heap_SRV_->AllocateDescriptor(handle_SRV_, srv_index);
+        heap_SRV_->AllocateDescriptor(handle_SRV_, srv_index_);
         auto dimension_SRV = use_MSAA_ ? D3D12_SRV_DIMENSION_TEXTURE2DMS
                                        : D3D12_SRV_DIMENSION_TEXTURE2D;
         D3D12_SHADER_RESOURCE_VIEW_DESC desc_SRV = {
@@ -71,16 +71,23 @@ class ColorBuffer : GpuResource {
     ID3D12Resource *Get() { return resource_; };
     D3D12_CPU_DESCRIPTOR_HANDLE GetRtvHandle() { return handle_RTV_; };
     D3D12_CPU_DESCRIPTOR_HANDLE GetSrvHandle() { return handle_SRV_; };
+    D3D12_GPU_DESCRIPTOR_HANDLE GetRtvGpuHandle() {
+        return heap_RTV_->GetGpuHandle(rtv_index_);
+    };
+    D3D12_GPU_DESCRIPTOR_HANDLE GetSrvGpuHandle() {
+        return heap_SRV_->GetGpuHandle(srv_index_);
+    };
     D3D12_RESOURCE_STATES GetCurrentState() { return current_state_; };
     void SetCurrentState(D3D12_RESOURCE_STATES state) {
         current_state_ = state;
     };
     const float *ClearColor() { return clear_color; };
 
-
   private:
     ID3D12Device *device_;
     ID3D12Resource *resource_;
+    UINT rtv_index_;
+    UINT srv_index_;
     DynamicDescriptorHeap *heap_RTV_;
     DynamicDescriptorHeap *heap_SRV_;
     D3D12_RESOURCE_STATES current_state_;

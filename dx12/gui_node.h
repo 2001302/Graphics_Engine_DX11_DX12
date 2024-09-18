@@ -22,13 +22,17 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
             gui->Start();
             gui->PushInfoItem(target);
 
+            UINT index = 0;
+            D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle;
+            GpuCore::Instance().GetHeap().View()->AllocateDescriptor(cpu_handle,
+                                                                     index);
+
             ImGui_ImplWin32_Init(common::env::main_window);
             ImGui_ImplDX12_Init(
                 GpuCore::Instance().GetDevice(), SWAP_CHAIN_BUFFER_COUNT,
                 DXGI_FORMAT_R8G8B8A8_UNORM,
-                &GpuCore::Instance().GetHeap().View()->Get(),
-                GpuCore::Instance().GetHeap().View()->GetCpuHandle(0),
-                GpuCore::Instance().GetHeap().View()->GetGpuHandle(0));
+                &GpuCore::Instance().GetHeap().View()->Get(), cpu_handle,
+                GpuCore::Instance().GetHeap().View()->GetGpuHandle(index));
 
             break;
         }

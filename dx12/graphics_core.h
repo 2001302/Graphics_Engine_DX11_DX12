@@ -7,6 +7,7 @@
 #include "common/logger.h"
 #include "depth_buffer.h"
 #include "heap_manager.h"
+#include "pch.h"
 
 namespace graphics {
 struct GlobalGpuBuffer {

@@ -120,6 +120,69 @@ class CommandContext : public NonCopyable {
                                 query_idx);
     }
 
+    void TransitionResource(BackBuffer *resource,
+                            D3D12_RESOURCE_STATES new_state,
+                            bool flush_immediate) {
+        D3D12_RESOURCE_STATES old_state = resource->GetCurrentState();
+
+        if (old_state != new_state) {
+            assert(num_barriers_to_flush < 16,
+                   "Exceeded arbitrary limit on buffered barriers");
+            D3D12_RESOURCE_BARRIER &barrier_desc =
+                resource_barrier_buffer[num_barriers_to_flush++];
+
+            barrier_desc.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+            barrier_desc.Transition.pResource = resource->Get();
+            barrier_desc.Transition.Subresource =
+                D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+            barrier_desc.Transition.StateBefore = old_state;
+            barrier_desc.Transition.StateAfter = new_state;
+            barrier_desc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+
+            resource->SetCurrentState(new_state);
+        }
+
+        if (flush_immediate || num_barriers_to_flush == 16)
+            FlushResourceBarriers();
+    }
+    void TransitionResource(ColorBuffer *resource,
+                            D3D12_RESOURCE_STATES new_state,
+                            bool flush_immediate) {
+        D3D12_RESOURCE_STATES old_state = resource->GetCurrentState();
+
+        if (old_state != new_state) {
+            assert(num_barriers_to_flush < 16,
+                   "Exceeded arbitrary limit on buffered barriers");
+            D3D12_RESOURCE_BARRIER &barrier_desc =
+                resource_barrier_buffer[num_barriers_to_flush++];
+
+            barrier_desc.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
+            barrier_desc.Transition.pResource = resource->Get();
+            barrier_desc.Transition.Subresource =
+                D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
+            barrier_desc.Transition.StateBefore = old_state;
+            barrier_desc.Transition.StateAfter = new_state;
+            barrier_desc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
+
+            resource->SetCurrentState(new_state);
+        }
+
+        if (flush_immediate || num_barriers_to_flush == 16)
+            FlushResourceBarriers();
+    }
+    void FlushResourceBarriers() {
+        if (num_barriers_to_flush > 0) {
+            command_list_->ResourceBarrier(num_barriers_to_flush,
+                                           resource_barrier_buffer);
+            num_barriers_to_flush = 0;
+        }
+    }
+    void ResolveSubresource(ColorBuffer *dest, ColorBuffer *src,
+                            DXGI_FORMAT format) {
+        command_list_->ResolveSubresource(dest->Get(), 0, src->Get(), 0,
+                                          format);
+    }
+
     ID3D12CommandAllocator *GetAllocator() { return command_allocator_; };
     ID3D12GraphicsCommandList *GetList() { return command_list_; }
 
@@ -208,68 +271,6 @@ class GraphicsCommandContext : public CommandContext {
                                              D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0,
                                              nullptr);
     };
-    void TransitionResource(BackBuffer *resource,
-                            D3D12_RESOURCE_STATES new_state,
-                            bool flush_immediate) {
-        D3D12_RESOURCE_STATES old_state = resource->GetCurrentState();
-
-        if (old_state != new_state) {
-            assert(num_barriers_to_flush < 16,
-                   "Exceeded arbitrary limit on buffered barriers");
-            D3D12_RESOURCE_BARRIER &BarrierDesc =
-                resource_barrier_buffer[num_barriers_to_flush++];
-
-            BarrierDesc.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-            BarrierDesc.Transition.pResource = resource->Get();
-            BarrierDesc.Transition.Subresource =
-                D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-            BarrierDesc.Transition.StateBefore = old_state;
-            BarrierDesc.Transition.StateAfter = new_state;
-            BarrierDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-
-            resource->SetCurrentState(new_state);
-        }
-
-        if (flush_immediate || num_barriers_to_flush == 16)
-            FlushResourceBarriers();
-    }
-    void TransitionResource(ColorBuffer *resource,
-                            D3D12_RESOURCE_STATES new_state,
-                            bool flush_immediate) {
-        D3D12_RESOURCE_STATES old_state = resource->GetCurrentState();
-
-        if (old_state != new_state) {
-            assert(num_barriers_to_flush < 16,
-                   "Exceeded arbitrary limit on buffered barriers");
-            D3D12_RESOURCE_BARRIER &BarrierDesc =
-                resource_barrier_buffer[num_barriers_to_flush++];
-
-            BarrierDesc.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-            BarrierDesc.Transition.pResource = resource->Get();
-            BarrierDesc.Transition.Subresource =
-                D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-            BarrierDesc.Transition.StateBefore = old_state;
-            BarrierDesc.Transition.StateAfter = new_state;
-            BarrierDesc.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-
-            resource->SetCurrentState(new_state);
-        }
-
-        if (flush_immediate || num_barriers_to_flush == 16)
-            FlushResourceBarriers();
-    }
-    void FlushResourceBarriers() {
-        if (num_barriers_to_flush > 0) {
-            command_list_->ResourceBarrier(num_barriers_to_flush,
-                                           resource_barrier_buffer);
-            num_barriers_to_flush = 0;
-        }
-    }
-    void ResolveSubresource(ColorBuffer *dest, ColorBuffer *src,
-                            DXGI_FORMAT format) {
-        command_list_->ResolveSubresource(dest->Get(), 0, src->Get(), 0,
-                                          format);
-    }
 };
 
 class ComputeCommandContext : public CommandContext {

@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="command_queue.cpp" />
+    <ClCompile Include="dds_texture_loader.cpp" />
     <ClCompile Include="engine.cpp" />
     <ClCompile Include="common\env.cpp" />
     <ClCompile Include="common\logger.cpp" />
@@ -189,6 +190,8 @@
     <ClInclude Include="command_manager.h" />
     <ClInclude Include="command_queue.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="dds.h" />
+    <ClInclude Include="dds_texture_loader.h" />
     <ClInclude Include="depth_buffer.h" />
     <ClInclude Include="back_buffer.h" />
     <ClInclude Include="engine.h" />

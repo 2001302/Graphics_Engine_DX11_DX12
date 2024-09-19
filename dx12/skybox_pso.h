@@ -8,117 +8,121 @@ namespace graphics {
 class SkyboxPSO : public GraphicsPSO {
   public:
     void Initialize() override {
-        //// rootSignature
-        //// s0 ~ s6
-        //CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
-        //samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0);
+        // rootSignature
+        // s0 ~ s6
+        CD3DX12_DESCRIPTOR_RANGE1 sampler_range;
+        sampler_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0);
 
-        //// t10 ~ t16
-        //CD3DX12_DESCRIPTOR_RANGE1 textureRange;
-        //textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
+        // t10 ~ t16
+        CD3DX12_DESCRIPTOR_RANGE1 texture_range;
+        texture_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
 
-        //// rootSignature
-        //CD3DX12_ROOT_PARAMETER1 rootParameters[5] = {};
-        //// Common.hlsli : s0~s6,t10~t16,b0~b2
-        //rootParameters[0].InitAsDescriptorTable(1, &samplerRange,
-        //                                        D3D12_SHADER_VISIBILITY_ALL);
-        //rootParameters[1].InitAsDescriptorTable(1, &textureRange,
-        //                                        D3D12_SHADER_VISIBILITY_ALL);
-        //rootParameters[2].InitAsConstantBufferView(
-        //    0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
-        //    D3D12_SHADER_VISIBILITY_ALL);
-        //rootParameters[3].InitAsConstantBufferView(
-        //    1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
-        //    D3D12_SHADER_VISIBILITY_ALL);
-        //rootParameters[4].InitAsConstantBufferView(
-        //    2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
-        //    D3D12_SHADER_VISIBILITY_ALL);
+        // rootSignature
+        CD3DX12_ROOT_PARAMETER1 root_parameters[5] = {};
+        // Common.hlsli : s0~s6,t10~t16,b0~b2
+        root_parameters[0].InitAsDescriptorTable(1, &sampler_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[1].InitAsDescriptorTable(1, &texture_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[2].InitAsConstantBufferView(
+            0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
+            D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[3].InitAsConstantBufferView(
+            1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
+            D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[4].InitAsConstantBufferView(
+            2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
+            D3D12_SHADER_VISIBILITY_ALL);
 
-        //auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
-        //    ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,
-        //    D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+        auto root_signature_desc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
+            ARRAYSIZE(root_parameters), root_parameters, 0, nullptr,
+            D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
-        //ComPtr<ID3DBlob> signature;
-        //ComPtr<ID3DBlob> error;
-        //HRESULT hr = D3D12SerializeVersionedRootSignature(&rootSignatureDesc,
-        //                                                  &signature, &error);
+        ComPtr<ID3DBlob> signature;
+        ComPtr<ID3DBlob> error;
+        ASSERT_FAILED(D3D12SerializeVersionedRootSignature(&root_signature_desc,
+                                                           &signature, &error));
 
-        //hr = GpuDevice::Get().device->CreateRootSignature(
-        //    0, signature->GetBufferPointer(), signature->GetBufferSize(),
-        //    IID_PPV_ARGS(&root_signature));
+        ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateRootSignature(
+            0, signature->GetBufferPointer(), signature->GetBufferSize(),
+            IID_PPV_ARGS(&root_signature)));
 
-        //// shader
-        //ComPtr<ID3DBlob> skyboxVS;
-        //ComPtr<ID3DBlob> skyboxPS;
-        //Util::CreateVertexShader(GpuDevice::Get().device,
-        //                         L"Graphics/Shader/SkyboxVS.hlsl", skyboxVS);
-        //Util::CreatePixelShader(GpuDevice::Get().device,
-        //                        L"Graphics/Shader/SkyboxPS.hlsl", skyboxPS);
-        //// pipeline state
-        //D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
-        //psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
-        //psoDesc.pRootSignature = root_signature;
-        //psoDesc.VS = CD3DX12_SHADER_BYTECODE(skyboxVS.Get());
-        //psoDesc.PS = CD3DX12_SHADER_BYTECODE(skyboxPS.Get());
-        //psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(rasterizer::solidRS);
-        //psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-        //psoDesc.DepthStencilState.StencilEnable = false;
-        //psoDesc.SampleMask = UINT_MAX;
-        //psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-        //psoDesc.NumRenderTargets = 1;
-        //psoDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
-        //psoDesc.SampleDesc.Count = 4;
-        //psoDesc.SampleDesc.Quality = 0;
+        // shader
+        ComPtr<ID3DBlob> skyboxVS;
+        ComPtr<ID3DBlob> skyboxPS;
+        Util::CreateVertexShader(GpuCore::Instance().GetDevice(),
+                                 L"Shader/SkyboxVS.hlsl", skyboxVS);
+        Util::CreatePixelShader(GpuCore::Instance().GetDevice(),
+                                L"Shader/SkyboxPS.hlsl", skyboxPS);
+        // pipeline state
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
+        psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
+        psoDesc.pRootSignature = root_signature;
+        psoDesc.VS = CD3DX12_SHADER_BYTECODE(skyboxVS.Get());
+        psoDesc.PS = CD3DX12_SHADER_BYTECODE(skyboxPS.Get());
+        psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(rasterizer::solidRS);
+        psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+        psoDesc.DepthStencilState.StencilEnable = false;
+        psoDesc.SampleMask = UINT_MAX;
+        psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+        psoDesc.NumRenderTargets = 1;
+        psoDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        psoDesc.SampleDesc.Count = 1;
+        psoDesc.SampleDesc.Quality = 0;
 
-        //ThrowIfFailed(GpuDevice::Get().device->CreateGraphicsPipelineState(
-        //    &psoDesc, IID_PPV_ARGS(&pipeline_state)));
+        ASSERT_FAILED(
+            GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
+                &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(ComPtr<ID3D12GraphicsCommandList> command_list,
-                CD3DX12_CPU_DESCRIPTOR_HANDLE render_target_view,
-                CD3DX12_CPU_DESCRIPTOR_HANDLE depth_stencil_view,
-                GpuResourceList *shared_texture, DynamicDescriptorHeap *gpu_heap,
-                DynamicDescriptorHeap *sampler_heap,
+    void Render(SamplerState *shared_sampler,
+                GpuResourceList *shared_texture,
                 ComPtr<ID3D12Resource> global_consts,
                 ComPtr<ID3D12Resource> mesh_consts,
                 ComPtr<ID3D12Resource> material_consts,
                 D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view,
                 D3D12_INDEX_BUFFER_VIEW index_buffer_view, UINT index_count) {
 
-        //auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-        //    GpuDevice::Get().resource_HDR.Get(), D3D12_RESOURCE_STATE_COMMON,
-        //    D3D12_RESOURCE_STATE_RENDER_TARGET);
-        //command_list->ResourceBarrier(1, &barrier);
+        auto context =
+            GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
+                L"Skybox");
 
-        //command_list->RSSetViewports(1, &GpuDevice::Get().viewport);
-        //command_list->RSSetScissorRects(1, &GpuDevice::Get().scissorRect);
-        //command_list->OMSetRenderTargets(1, &render_target_view, false,
-        //                                 &depth_stencil_view);
-        //command_list->SetGraphicsRootSignature(root_signature);
-        //command_list->SetPipelineState(pipeline_state);
+        context->SetDescriptorHeaps(
+            std::vector{GpuCore::Instance().GetHeap().View(),
+                        GpuCore::Instance().GetHeap().Sampler()});
 
-        //command_list->SetGraphicsRootDescriptorTable(
-        //    0, sampler_heap->GetGpuHandle(0));
-        //command_list->SetGraphicsRootDescriptorTable(
-        //    1, shared_texture->GetGpuHandle());
-        //// global texture
-        //command_list->SetGraphicsRootConstantBufferView(
-        //    2, global_consts->GetGPUVirtualAddress());
-        //command_list->SetGraphicsRootConstantBufferView(
-        //    3, mesh_consts.Get()->GetGPUVirtualAddress());
-        //command_list->SetGraphicsRootConstantBufferView(
-        //    4, material_consts.Get()->GetGPUVirtualAddress());
+        context->TransitionResource(GpuCore::Instance().GetBuffers().hdr_buffer,
+                                    D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
-        //command_list->IASetPrimitiveTopology(
-        //    D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        //command_list->IASetVertexBuffers(0, 1, &vertex_buffer_view);
-        //command_list->IASetIndexBuffer(&index_buffer_view);
-        //command_list->DrawIndexedInstanced(index_count, 1, 0, 0, 0);
+        context->SetViewportAndScissorRect(0, 0,
+                                           (UINT)common::env::screen_width,
+                                           (UINT)common::env::screen_height);
 
-        //barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-        //    GpuDevice::Get().resource_HDR.Get(),
-        //    D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_COMMON);
-        //command_list->ResourceBarrier(1, &barrier);
+        context->SetRenderTargetView(
+            GpuCore::Instance().GetBuffers().hdr_buffer);
+
+        context->SetRootSignature(root_signature);
+        context->SetPipelineState(pipeline_state);
+
+        context->GetList()->SetGraphicsRootDescriptorTable(
+            0, shared_sampler->GetGpuHandle());
+        context->GetList()->SetGraphicsRootDescriptorTable(
+            1, shared_texture->GetGpuHandle());
+        // global texture
+        context->GetList()->SetGraphicsRootConstantBufferView(
+            2, global_consts->GetGPUVirtualAddress());
+        context->GetList()->SetGraphicsRootConstantBufferView(
+            3, mesh_consts.Get()->GetGPUVirtualAddress());
+        context->GetList()->SetGraphicsRootConstantBufferView(
+            4, material_consts.Get()->GetGPUVirtualAddress());
+
+        context->GetList()->IASetPrimitiveTopology(
+            D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+        context->GetList()->IASetVertexBuffers(0, 1, &vertex_buffer_view);
+        context->GetList()->IASetIndexBuffer(&index_buffer_view);
+        context->GetList()->DrawIndexedInstanced(index_count, 1, 0, 0, 0);
+
+        GpuCore::Instance().GetCommand()->Finish(context, true);
     };
 };
-} // namespace core
+} // namespace graphics
 #endif

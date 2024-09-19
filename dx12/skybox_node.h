@@ -40,14 +40,12 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
                 EnumComponentType::eRenderer);
             auto mesh = renderer->meshes.front();
 
-            // skyboxPSO->Render(
-            //     command_list, GpuDevice::Get().GetHandleHDR(),
-            //     GpuDevice::Get().GetHandleDSV(),
-            //     condition->shared_texture.get(), condition->gpu_heap.get(),
-            //     condition->sampler_heap.get(),
-            //     condition->global_consts.Get(), renderer->mesh_consts.Get(),
-            //     renderer->material_consts.Get(), mesh->vertex_buffer_view,
-            //     mesh->index_buffer_view, mesh->index_count);
+            skyboxPSO->Render(
+                condition->shared_sampler.get(),
+                condition->shared_texture.get(), condition->global_consts.Get(),
+                renderer->mesh_consts.Get(), renderer->material_consts.Get(),
+                mesh->vertex_buffer_view, mesh->index_buffer_view,
+                mesh->index_count);
             break;
         }
         default:

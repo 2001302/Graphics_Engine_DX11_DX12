@@ -167,22 +167,20 @@ class GlobalResourceNode : public common::BehaviorActionNode {
 
             env->Create(GpuCore::Instance().GetDevice(),
                         GpuCore::Instance().GetHeap().View(),
-                        L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds",
-                        context->GetList(), true);
+                        context->GetList(),
+                        L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds");
             specular->Create(
                 GpuCore::Instance().GetDevice(),
-                GpuCore::Instance().GetHeap().View(),
-                L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds",
-                context->GetList(), true);
+                GpuCore::Instance().GetHeap().View(), context->GetList(),
+                L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds");
             diffuse->Create(
                 GpuCore::Instance().GetDevice(),
-                GpuCore::Instance().GetHeap().View(),
-                L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds",
-                context->GetList(), true);
+                GpuCore::Instance().GetHeap().View(), context->GetList(),
+                L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds");
             brdf->Create(GpuCore::Instance().GetDevice(),
                          GpuCore::Instance().GetHeap().View(),
-                         L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds",
-                         context->GetList(), true, true);
+                         context->GetList(),
+                         L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds");
 
             std::vector<GpuResource *> tex = {env, specular, diffuse, brdf};
 
@@ -206,10 +204,10 @@ class GlobalResourceNode : public common::BehaviorActionNode {
                 GpuCore::Instance().GetDevice(),
                 GpuCore::Instance().GetHeap().Sampler(), sampler_desc);
 
-            GpuCore::Instance().GetCommand()->Finish(context, true);
-
             condition->shared_texture->Allocate();
             condition->shared_sampler->Allocate();
+
+            GpuCore::Instance().GetCommand()->Finish(context, true);
 
             break;
         }

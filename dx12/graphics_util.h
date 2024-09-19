@@ -159,5 +159,5 @@ class Util {
                                     std::wstring filename,
                                     ComPtr<ID3DBlob> &shader);
 };
-} // namespace core
+} // namespace graphics
 #endif

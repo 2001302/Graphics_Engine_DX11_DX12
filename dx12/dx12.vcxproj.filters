@@ -140,6 +140,9 @@
     <ClCompile Include="query_heap.cpp">
       <Filter>Graphics\Gpu\Heap</Filter>
     </ClCompile>
+    <ClCompile Include="dds_texture_loader.cpp">
+      <Filter>Graphics\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphics">
@@ -414,9 +417,6 @@
     <ClInclude Include="heap_manager.h">
       <Filter>Graphics\Gpu\Heap</Filter>
     </ClInclude>
-    <ClInclude Include="d3dx12.h">
-      <Filter>Graphics\Gpu</Filter>
-    </ClInclude>
     <ClInclude Include="graphics_util.h">
       <Filter>Graphics\Util</Filter>
     </ClInclude>
@@ -431,6 +431,15 @@
     </ClInclude>
     <ClInclude Include="pch.h">
       <Filter>Graphics\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="d3dx12.h">
+      <Filter>Graphics\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="dds.h">
+      <Filter>Graphics\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="dds_texture_loader.h">
+      <Filter>Graphics\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

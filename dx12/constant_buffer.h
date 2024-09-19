@@ -68,7 +68,7 @@ __declspec(align(256)) struct GlobalConstants {
     Vector3 eyeWorld;
     float strengthIBL = 0.5f;
 
-    int textureToDraw = 2;
+    int textureToDraw = 0;
     float envLodBias = 0.0f;
     float lodBias = 2.0f;
     float dummy2 = 0.0f;

@@ -2,7 +2,7 @@
 #define _SKYBOX_PSO
 
 #include "graphics_pso.h"
-#include "graphics_util.h"
+#include "shader_util.h"
 
 namespace graphics {
 class SkyboxPSO : public GraphicsPSO {
@@ -50,9 +50,9 @@ class SkyboxPSO : public GraphicsPSO {
         // shader
         ComPtr<ID3DBlob> skyboxVS;
         ComPtr<ID3DBlob> skyboxPS;
-        Util::CreateVertexShader(GpuCore::Instance().GetDevice(),
+        ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
                                  L"Shader/SkyboxVS.hlsl", skyboxVS);
-        Util::CreatePixelShader(GpuCore::Instance().GetDevice(),
+        ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
                                 L"Shader/SkyboxPS.hlsl", skyboxPS);
         // pipeline state
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};

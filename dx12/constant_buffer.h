@@ -4,11 +4,6 @@
 #include "graphics_util.h"
 
 namespace graphics {
-
-using DirectX::SimpleMath::Matrix;
-using DirectX::SimpleMath::Vector2;
-using DirectX::SimpleMath::Vector3;
-
 __declspec(align(256)) struct MeshConstants {
     Matrix world;
     Matrix worldIT;
@@ -93,16 +88,16 @@ __declspec(align(256)) struct VolumeConsts {
 
 template <typename T_CONSTS> class ConstantBuffer {
   public:
-    void Initialize() { Util::CreateConstBuffer(m_cpu, m_gpu); }
-    void Upload() { Util::UpdateBuffer(m_cpu, m_gpu); }
+    void Initialize() { Util::CreateConstBuffer(cpu, gpu); }
+    void Upload() { Util::UpdateBuffer(cpu, gpu); }
 
   public:
-    T_CONSTS &GetCpu() { return m_cpu; }
-    const auto Get() { return m_gpu.Get(); }
-    const auto GetAddressOf() { return m_gpu.GetAddressOf(); }
+    T_CONSTS &GetCpu() { return cpu; }
+    const auto Get() { return gpu.Get(); }
+    const auto GetAddressOf() { return gpu.GetAddressOf(); }
 
-    T_CONSTS m_cpu;
-    ComPtr<ID3D12Resource> m_gpu;
+    T_CONSTS cpu;
+    ComPtr<ID3D12Resource> gpu;
 };
 
 } // namespace core

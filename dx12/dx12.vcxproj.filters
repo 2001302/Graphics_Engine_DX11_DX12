@@ -143,6 +143,9 @@
     <ClCompile Include="dds_texture_loader.cpp">
       <Filter>Graphics\Util</Filter>
     </ClCompile>
+    <ClCompile Include="shader_util.cpp">
+      <Filter>Graphics\Util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphics">
@@ -439,6 +442,9 @@
       <Filter>Graphics\Util</Filter>
     </ClInclude>
     <ClInclude Include="dds_texture_loader.h">
+      <Filter>Graphics\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_util.h">
       <Filter>Graphics\Util</Filter>
     </ClInclude>
   </ItemGroup>

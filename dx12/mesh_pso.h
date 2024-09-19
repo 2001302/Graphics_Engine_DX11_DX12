@@ -2,7 +2,7 @@
 #define _MESH_PSO
 
 #include "graphics_pso.h"
-#include "graphics_util.h"
+#include "shader_util.h"
 
 namespace graphics {
 class SolidMeshPSO : public GraphicsPSO {
@@ -59,10 +59,10 @@ class SolidMeshPSO : public GraphicsPSO {
         // shader
         ComPtr<ID3DBlob> basicVS;
         ComPtr<ID3DBlob> basicPS;
-        Util::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                 L"Shader/BasicVS.hlsl", basicVS);
-        Util::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                L"Shader/BasicPS.hlsl", basicPS);
+        ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
+                                       L"Shader/BasicVS.hlsl", basicVS);
+        ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
+                                      L"Shader/BasicPS.hlsl", basicPS);
         //
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};

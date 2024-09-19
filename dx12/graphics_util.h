@@ -145,20 +145,6 @@ class Util {
         memcpy(begin, &bufferData, sizeof(T_DATA));
         buffer->Unmap(0, nullptr);
     }
-
-    static void
-    CreateVertexShader(ComPtr<ID3D12Device> device, std::wstring filename,
-                       ComPtr<ID3DBlob> &m_vertexShader,
-                       const std::vector<D3D_SHADER_MACRO> shaderMacros = {
-                           /* Empty default */});
-
-    static void CreatePixelShader(ComPtr<ID3D12Device> device,
-                                  std::wstring filename,
-                                  ComPtr<ID3DBlob> &shader);
-
-    static void CreateComputeShader(ComPtr<ID3D12Device> device,
-                                    std::wstring filename,
-                                    ComPtr<ID3DBlob> &shader);
 };
 } // namespace graphics
 #endif

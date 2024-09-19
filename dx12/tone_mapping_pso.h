@@ -2,7 +2,7 @@
 #define _TONEMAPPING_PSO
 
 #include "graphics_pso.h"
-#include "graphics_util.h"
+#include "shader_util.h"
 
 namespace graphics {
 class ToneMappingPSO : public GraphicsPSO {
@@ -42,11 +42,13 @@ class ToneMappingPSO : public GraphicsPSO {
 
         // shader
         ComPtr<ID3DBlob> tone_mappingVS;
-        Util::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                 L"Shader//ToneMappingVS.hlsl", tone_mappingVS);
+        ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
+                                       L"Shader//ToneMappingVS.hlsl",
+                                       tone_mappingVS);
         ComPtr<ID3DBlob> tone_mappingPS;
-        Util::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                L"Shader//ToneMappingPS.hlsl", tone_mappingPS);
+        ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
+                                      L"Shader//ToneMappingPS.hlsl",
+                                      tone_mappingPS);
         // pipeline state
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::combineIEs,

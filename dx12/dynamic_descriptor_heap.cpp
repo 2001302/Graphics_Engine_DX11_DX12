@@ -1,4 +1,4 @@
-#include "descriptor_heap.h"
+#include "dynamic_descriptor_heap.h"
 
 namespace graphics {
 DynamicDescriptorHeap::DynamicDescriptorHeap(ID3D12Device *device, UINT num_descriptors,

@@ -1,7 +1,7 @@
 #ifndef _HEAP_MANAGER
 #define _HEAP_MANAGER
 
-#include "descriptor_heap.h"
+#include "dynamic_descriptor_heap.h"
 
 namespace graphics {
 

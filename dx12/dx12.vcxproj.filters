@@ -107,7 +107,7 @@
     <ClCompile Include="graphics_pso.cpp">
       <Filter>Graphics\Gpu</Filter>
     </ClCompile>
-    <ClCompile Include="descriptor_heap.cpp">
+    <ClCompile Include="dynamic_descriptor_heap.cpp">
       <Filter>Graphics\Gpu\Heap</Filter>
     </ClCompile>
     <ClCompile Include="graphics_core.cpp">
@@ -136,6 +136,9 @@
     </ClCompile>
     <ClCompile Include="common\logger.cpp">
       <Filter>Common\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="query_heap.cpp">
+      <Filter>Graphics\Gpu\Heap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -387,7 +390,7 @@
     <ClInclude Include="sampler_state.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="descriptor_heap.h">
+    <ClInclude Include="dynamic_descriptor_heap.h">
       <Filter>Graphics\Gpu\Heap</Filter>
     </ClInclude>
     <ClInclude Include="graphics_core.h">
@@ -425,6 +428,9 @@
     </ClInclude>
     <ClInclude Include="common\logger.h">
       <Filter>Common\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="query_heap.h">
+      <Filter>Graphics\Gpu\Heap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

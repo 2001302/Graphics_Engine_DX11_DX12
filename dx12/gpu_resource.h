@@ -1,7 +1,7 @@
 #ifndef _GPU_RESOURCE
 #define _GPU_RESOURCE
 
-#include "descriptor_heap.h"
+#include "dynamic_descriptor_heap.h"
 #include <d3d12.h>
 #include <memory>
 #include <vector>

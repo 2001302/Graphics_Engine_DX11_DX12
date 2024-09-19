@@ -4,7 +4,7 @@
 #include "back_buffer.h"
 #include "color_buffer.h"
 #include "depth_buffer.h"
-#include "descriptor_heap.h"
+#include "dynamic_descriptor_heap.h"
 #include <d3d12.h>
 #include <memory>
 #include <pix3.h>

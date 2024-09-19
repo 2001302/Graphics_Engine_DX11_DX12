@@ -3,7 +3,7 @@
 
 #include "common/info.h"
 #include "constant_buffer.h"
-#include "descriptor_heap.h"
+#include "dynamic_descriptor_heap.h"
 #include "gpu_resource.h"
 #include "graphics_util.h"
 #include "sampler_state.h"

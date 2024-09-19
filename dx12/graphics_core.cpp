@@ -68,7 +68,7 @@ bool GpuCore::InitializeDevice() {
     Microsoft::WRL::ComPtr<IDXGIFactory4> factory;
     ASSERT_FAILED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)));
 
-    bool useWarpDevice = true;
+    bool useWarpDevice = false;
     if (useWarpDevice) {
         ComPtr<IDXGIAdapter> warpAdapter;
         ASSERT_FAILED(factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)));
@@ -122,7 +122,8 @@ bool GpuCore::InitializeBuffer() {
 };
 
 bool GpuCore::InitializeCommand() {
-    command_manager.Initialize(device.Get());
+    query_heap.Initialize(device.Get());
+    command_manager.Initialize(device.Get(), query_heap.Get());
     return true;
 };
 
@@ -133,7 +134,7 @@ bool GpuCore::InitializeHeap() {
     return true;
 };
 
-bool GpuCore::AllocateBuffer() { 
+bool GpuCore::AllocateBuffer() {
     back_buffer.Allocate();
     buffers.hdr_buffer->Allocate();
     buffers.dsv_buffer->Allocate();

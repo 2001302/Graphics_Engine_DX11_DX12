@@ -430,7 +430,7 @@
       <Filter>Graphics\Gpu\Heap</Filter>
     </ClInclude>
     <ClInclude Include="pch.h">
-      <Filter>Graphics</Filter>
+      <Filter>Graphics\Gpu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

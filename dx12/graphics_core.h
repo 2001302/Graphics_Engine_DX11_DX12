@@ -43,6 +43,7 @@ class GpuCore {
     ComPtr<IDXGISwapChain1> swap_chain;
     ComPtr<ID3D12Device> device;
 
+    QueryHeap query_heap;
     BackBuffer back_buffer;
     GpuHeap heap_manager;
     GpuCommand command_manager;

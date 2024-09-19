@@ -11,10 +11,11 @@ namespace graphics {
 class GpuCommand {
   public:
     GpuCommand()
-        : device_(nullptr), graphics_queue(nullptr), compute_queue(nullptr),
-          copy_queue(nullptr), context_allocation_mutex_(){};
+        : device_(nullptr), query_heap_(nullptr), graphics_queue(nullptr),
+          compute_queue(nullptr), copy_queue(nullptr),
+          context_allocation_mutex_(){};
 
-    void Initialize(ID3D12Device *device);
+    void Initialize(ID3D12Device *device, ID3D12QueryHeap *query_heap);
     CommandQueue *Queue(D3D12_COMMAND_LIST_TYPE type);
 
     template <typename T> T *Begin(const wchar_t *label) {
@@ -30,13 +31,20 @@ class GpuCommand {
             throw std::exception("Invalid command list type");
 
         T *new_context = (T *)AllocateContext(device_, type);
-        new_context->PIXBeginEvent(label);
+
+        if (type == D3D12_COMMAND_LIST_TYPE_DIRECT ||
+            type == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+            new_context->StartTiming(query_heap_, label);
+
         return new_context;
     };
 
     void Finish(CommandContext *context, bool wait_for_completion = false) {
 
-        context->PIXEndEvent();
+        if (context->GetType() == D3D12_COMMAND_LIST_TYPE_DIRECT ||
+            context->GetType() == D3D12_COMMAND_LIST_TYPE_COMPUTE)
+            context->EndTiming(query_heap_);
+
         context->Close();
         context->ExecuteCommandLists(Queue(context->GetType())->Get());
 
@@ -85,6 +93,7 @@ class GpuCommand {
                                     D3D12_COMMAND_LIST_TYPE type);
 
     ID3D12Device *device_;
+    ID3D12QueryHeap *query_heap_;
 
     CommandQueue *graphics_queue;
     CommandQueue *compute_queue;

@@ -83,6 +83,15 @@ class CommandContext : public NonCopyable {
         command_allocator_->Reset();
         command_list_->Reset(command_allocator_, nullptr);
     };
+    void StartTiming(ID3D12QueryHeap *query_heap, const wchar_t *label) {
+        InsertTimeStamp(query_heap, 0);
+        PIXBeginEvent(label);
+    };
+
+    void EndTiming(ID3D12QueryHeap *query_heap) {
+        InsertTimeStamp(query_heap, 1);
+        PIXEndEvent();
+    };
 
     void PIXBeginEvent(const wchar_t *label) {
 #ifdef RELEASE
@@ -106,6 +115,11 @@ class CommandContext : public NonCopyable {
 #endif
     };
 
+    void InsertTimeStamp(ID3D12QueryHeap *query_heap, uint32_t query_idx) {
+        command_list_->EndQuery(query_heap, D3D12_QUERY_TYPE_TIMESTAMP,
+                                query_idx);
+    }
+
     ID3D12CommandAllocator *GetAllocator() { return command_allocator_; };
     ID3D12GraphicsCommandList *GetList() { return command_list_; }
 
@@ -127,7 +141,8 @@ class GraphicsCommandContext : public CommandContext {
   public:
     GraphicsCommandContext() : CommandContext(){};
     D3D12_COMMAND_LIST_TYPE GetType() { return D3D12_COMMAND_LIST_TYPE_DIRECT; }
-    void SetDescriptorHeaps(std::vector<DynamicDescriptorHeap *> descriptorHeaps) {
+    void
+    SetDescriptorHeaps(std::vector<DynamicDescriptorHeap *> descriptorHeaps) {
         std::vector<ID3D12DescriptorHeap *> heaps;
         for (auto x : descriptorHeaps) {
             heaps.push_back(&x->Get());

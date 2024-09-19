@@ -1,8 +1,9 @@
 #include "command_manager.h"
 
 namespace graphics {
-void GpuCommand::Initialize(ID3D12Device *device) {
+void GpuCommand::Initialize(ID3D12Device *device, ID3D12QueryHeap *query_heap) {
     device_ = device;
+    query_heap_ = query_heap;
 
     graphics_queue = new CommandQueue(D3D12_COMMAND_LIST_TYPE_DIRECT);
     compute_queue = new CommandQueue(D3D12_COMMAND_LIST_TYPE_COMPUTE);

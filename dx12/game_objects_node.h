@@ -19,30 +19,28 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
-            //// pso
-            // mesh_solid_PSO = std::make_shared<SolidMeshPSO>();
-            // mesh_solid_PSO->Initialize();
+            // pso
+             mesh_solid_PSO = std::make_shared<SolidMeshPSO>();
+             mesh_solid_PSO->Initialize();
 
-            //// sample object
-            // Vector3 center(0.0f, 0.0f, 0.0f);
-            // std::string base_path = "Assets/Characters/Mixamo/";
-            // std::string file_name = "character.fbx";
+            // sample object
+             Vector3 center(0.0f, 0.0f, 0.0f);
+             std::string base_path = "Assets/Characters/Mixamo/";
+             std::string file_name = "character.fbx";
 
-            // auto renderer = std::make_shared<MeshRenderer>();
-            // renderer->Initialize(base_path, file_name,
-            //                      condition->gpu_heap.get(),
-            //                      condition->command_pool->Get(0));
+             auto renderer = std::make_shared<MeshRenderer>();
+             renderer->Initialize(base_path, file_name);
 
-            // renderer->material_consts.GetCpu().albedo_factor = Vector3(1.0f);
-            // renderer->material_consts.GetCpu().roughness_factor = 0.8f;
-            // renderer->material_consts.GetCpu().metallic_factor = 0.0f;
-            // renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
-            // renderer->UpdateConstantBuffers();
+             renderer->material_consts.GetCpu().albedo_factor = Vector3(1.0f);
+             renderer->material_consts.GetCpu().roughness_factor = 0.8f;
+             renderer->material_consts.GetCpu().metallic_factor = 0.0f;
+             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
+             renderer->UpdateConstantBuffers();
 
-            // auto obj = std::make_shared<Model>();
-            // obj->AddComponent(EnumComponentType::eRenderer, renderer);
+             auto obj = std::make_shared<Model>();
+             obj->AddComponent(EnumComponentType::eRenderer, renderer);
 
-            // targets->objects.insert({obj->GetEntityId(), obj});
+             targets->objects.insert({obj->GetEntityId(), obj});
 
             break;
         }

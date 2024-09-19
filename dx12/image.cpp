@@ -1,6 +1,5 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "image.h"
-
 #include <DirectXTexEXR.h>
 #include <algorithm>
 #include <dxgi.h>    // DXGIFactory

@@ -38,7 +38,7 @@ class Texture2D : public GpuResource {
                 ComPtr<ID3D12GraphicsCommandList> command_list) {
         device_ = device;
         heap_ = heap;
-        CreateTextureHelper(&image, resource_, command_list.Get());
+        CreateTextureHelper(&image, command_list.Get());
     };
     void Allocate() override {
         heap_->AllocateDescriptor(cpu_handle_, index_);
@@ -54,7 +54,7 @@ class Texture2D : public GpuResource {
 
   private:
     void CreateTextureHelper(
-        Image *image, ID3D12Resource *texture,
+        Image *image,
         ID3D12GraphicsCommandList *command_list) { // 1.resource creation
         D3D12_RESOURCE_DESC txtDesc;
         ZeroMemory(&txtDesc, sizeof(txtDesc));
@@ -70,11 +70,11 @@ class Texture2D : public GpuResource {
         CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
         ASSERT_FAILED(device_->CreateCommittedResource(
             &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
-            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&texture)));
+            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource_)));
 
         // 2.upload heap
         const uint64_t uploadBufferSize =
-            GetRequiredIntermediateSize(texture, 0, 1);
+            GetRequiredIntermediateSize(resource_, 0, 1);
 
         auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
         auto buffer_size = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
@@ -88,11 +88,11 @@ class Texture2D : public GpuResource {
         textureData.RowPitch = image->Width() * 4;
         textureData.SlicePitch = textureData.RowPitch * image->Height();
 
-        UpdateSubresources(command_list, texture, upload, 0, 0, 1,
+        UpdateSubresources(command_list, resource_, upload, 0, 0, 1,
                            &textureData);
 
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            texture, D3D12_RESOURCE_STATE_COPY_DEST,
+            resource_, D3D12_RESOURCE_STATE_COPY_DEST,
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
         command_list->ResourceBarrier(1, &barrier);
     };

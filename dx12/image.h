@@ -1,7 +1,7 @@
 #ifndef _IMAGE
 #define _IMAGE
 
-#include "graphics_util.h"
+#include "pch.h"
 #include <filesystem>
 #include <iostream>
 

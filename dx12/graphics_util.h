@@ -3,6 +3,7 @@
 
 #include "graphics_core.h"
 #include "graphics_pso.h"
+#include "sampler_state.h"
 
 namespace graphics {
 class Util {

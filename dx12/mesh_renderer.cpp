@@ -23,7 +23,8 @@ void MeshRenderer::Initialize(const vector<MeshData> &mesh_data,
 
         MeshData meshData = mesh_data[i];
         meshes[i] = std::make_shared<Mesh>();
-        meshes[i]->Initialize(meshData, mesh_consts, material_consts, use_texture);
+        meshes[i]->Initialize(meshData, mesh_consts, material_consts,
+                              use_texture);
         mesh_consts.GetCpu().world = Matrix();
         material_consts.Initialize();
         mesh_consts.Initialize();
@@ -42,15 +43,13 @@ void MeshRenderer::Render(RenderCondition *render_condition,
     if (is_visible) {
 
         for (const auto &mesh : meshes) {
-            //PSO->Render(
-            //    command_list, GpuDevice::Get().GetHandleHDR(),
-            //    GpuDevice::Get().GetHandleDSV(),
-            //    render_condition->shared_texture.get(), mesh->buffer_PS.get(),
-            //    mesh->buffer_VS.get(), render_condition->gpu_heap.get(),
-            //    render_condition->sampler_heap.get(),
-            //    render_condition->global_consts.Get(), mesh_consts.Get(),
-            //    material_consts.Get(), mesh->vertex_buffer_view,
-            //    mesh->index_buffer_view, mesh->index_count);
+            PSO->Render(render_condition->shared_texture.get(),
+                        render_condition->shared_sampler.get(),
+                        mesh->buffer_PS.get(), mesh->buffer_VS.get(),
+                        render_condition->global_consts.Get(),
+                        mesh_consts.Get(), material_consts.Get(),
+                        mesh->vertex_buffer_view, mesh->index_buffer_view,
+                        mesh->index_count);
         }
     }
 }

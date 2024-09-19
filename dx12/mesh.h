@@ -4,6 +4,7 @@
 #include "constant_buffer.h"
 #include "gpu_resource.h"
 #include "graphics_util.h"
+#include "graphics_core.h"
 #include "vertex.h"
 
 namespace graphics {
@@ -23,8 +24,7 @@ struct MeshData {
 
 struct Mesh {
     Mesh()
-        : vertex_buffer(0), index_buffer(0), mesh_consts_GPU(0),
-          material_consts_GPU(0),
+        : vertex_buffer(0), index_buffer(0),
           vertex_buffer_view(D3D12_VERTEX_BUFFER_VIEW()),
           index_buffer_view(D3D12_INDEX_BUFFER_VIEW()) {}
 
@@ -36,9 +36,6 @@ struct Mesh {
     UINT vertex_count = 0;
     UINT stride = 0;
     UINT offset = 0;
-
-    ComPtr<ID3D12Resource> mesh_consts_GPU;
-    ComPtr<ID3D12Resource> material_consts_GPU;
 
     std::shared_ptr<GpuResourceList> buffer_PS; // t0 ~ t4
     std::shared_ptr<GpuResourceList> buffer_VS; // t0

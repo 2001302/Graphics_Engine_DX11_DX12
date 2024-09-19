@@ -3,7 +3,6 @@
 
 #include "dds_texture_loader.h"
 #include "gpu_resource.h"
-#include "graphics_util.h"
 #include <filesystem>
 
 namespace graphics {

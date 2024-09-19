@@ -156,7 +156,7 @@ class GlobalResourceNode : public common::BehaviorActionNode {
         case EnumStageType::eInitialize: {
 
             auto context =
-                GpuCore::Instance().GetCommand()->Begin<CopyCommandContext>(
+                GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
                     L"SharedResourceNode");
 
             auto env = new TextureCube();
@@ -208,6 +208,8 @@ class GlobalResourceNode : public common::BehaviorActionNode {
             condition->shared_sampler->Allocate();
 
             GpuCore::Instance().GetCommand()->Finish(context, true);
+            GpuCore::Instance().GetCommand()->Wait(
+                D3D12_COMMAND_LIST_TYPE_DIRECT);
 
             break;
         }

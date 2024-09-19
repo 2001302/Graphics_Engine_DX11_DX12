@@ -47,7 +47,7 @@ bool Engine::Start() {
         ->Excute(global_constant_node)
         ->Excute(camera_node)
         ->Excute(light_node)
-        //->Excute(game_object_node)
+        ->Excute(game_object_node)
         ->Excute(skybox_node)
         ->Excute(tone_mapping)
         ->Excute(gui_node)
@@ -61,16 +61,15 @@ bool Engine::Start() {
         ->Excute(light_node)
         ->Excute(global_resource_node)
         ->Excute(global_constant_node)
-        //->Excute(game_object_node)
+        ->Excute(game_object_node)
     ->Close();
      
     //render
     render_tree->Build(black_board.get())
     ->Sequence()
         ->Excute(clear_buffer)
-        //->Excute(game_object_node)
-        //->Excute(resolve_buffer)
         ->Excute(skybox_node)
+        ->Excute(game_object_node)
         ->Excute(tone_mapping)
         ->Excute(gui_node)
         ->Excute(present)

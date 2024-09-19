@@ -20,14 +20,14 @@ enum EnumStageType {
 class RenderCondition : public common::IInfo {
   public:
     RenderCondition()
-        : dt(0.0f), draw_wire(false), light_rotate(false),
+        : delta_time(0.0f), draw_wire(false), light_rotate(false),
           stage_type(EnumStageType::eInitialize) {}
 
     std::shared_ptr<GpuResourceList> shared_texture; // t10~t16
     std::shared_ptr<SamplerState> shared_sampler;
     ConstantBuffer<GlobalConstants> global_consts;
 
-    float dt;
+    float delta_time;
     bool draw_wire;
     bool light_rotate;
     EnumStageType stage_type;

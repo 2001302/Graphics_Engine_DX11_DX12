@@ -68,19 +68,9 @@ bool GpuCore::InitializeDevice() {
     Microsoft::WRL::ComPtr<IDXGIFactory4> factory;
     ASSERT_FAILED(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)));
 
-    bool useWarpDevice = false;
-    if (useWarpDevice) {
-        ComPtr<IDXGIAdapter> warpAdapter;
-        ASSERT_FAILED(factory->EnumWarpAdapter(IID_PPV_ARGS(&warpAdapter)));
-        ASSERT_FAILED(D3D12CreateDevice(
-            warpAdapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&device)));
-    } else {
-        ComPtr<IDXGIAdapter1> hardwareAdapter;
-        // GetHardwareAdapter(factory.Get(), &hardwareAdapter);
-        ASSERT_FAILED(D3D12CreateDevice(hardwareAdapter.Get(),
-                                        D3D_FEATURE_LEVEL_11_0,
-                                        IID_PPV_ARGS(&device)));
-    }
+    ComPtr<IDXGIAdapter1> hardware_adapter;
+    ASSERT_FAILED(D3D12CreateDevice(
+        hardware_adapter.Get(), D3D_FEATURE_LEVEL_11_0, IID_PPV_ARGS(&device)));
 };
 
 bool GpuCore::InitializeSwapchain() {

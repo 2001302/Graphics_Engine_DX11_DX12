@@ -71,7 +71,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eUpdate: {
 
-            float dt = condition->dt;
+            float dt = condition->delta_time;
 
             static Vector3 lightDev = Vector3(1.0f, 0.0f, 0.0f);
             if (condition->light_rotate) {

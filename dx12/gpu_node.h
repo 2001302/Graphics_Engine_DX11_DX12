@@ -95,7 +95,55 @@ class ResolveBuffer : public common::BehaviorActionNode {
     }
 };
 
-class SharedResourceNode : public common::BehaviorActionNode {
+class GlobalConstantNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
+
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto target = black_board->targets.get();
+        auto condition = black_board->conditions.get();
+
+        switch (condition->stage_type) {
+        case EnumStageType::eInitialize: {
+
+            condition->global_consts.Initialize();
+
+            break;
+        }
+        case EnumStageType::eUpdate: {
+
+            const Vector3 eyeWorld = target->camera->GetPosition();
+            // const Matrix reflectRow =
+            //     Matrix::CreateReflection(condition->ground->mirror_plane);
+            const Matrix viewRow = target->camera->GetView();
+            const Matrix projRow = target->camera->GetProjection();
+
+            condition->global_consts.GetCpu().eyeWorld = eyeWorld;
+            condition->global_consts.GetCpu().view = viewRow.Transpose();
+            condition->global_consts.GetCpu().proj = projRow.Transpose();
+            condition->global_consts.GetCpu().invProj =
+                projRow.Invert().Transpose();
+            condition->global_consts.GetCpu().viewProj =
+                (viewRow * projRow).Transpose();
+
+            // used to shadow rendering
+            condition->global_consts.GetCpu().invViewProj =
+                condition->global_consts.GetCpu().viewProj.Invert();
+
+            condition->global_consts.Upload();
+
+            break;
+        }
+        default:
+            break;
+        }
+
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
+class GlobalResourceNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
@@ -110,9 +158,6 @@ class SharedResourceNode : public common::BehaviorActionNode {
             auto context =
                 GpuCore::Instance().GetCommand()->Begin<CopyCommandContext>(
                     L"SharedResourceNode");
-
-            // global constants
-            condition->global_consts.Initialize();
 
             auto env = new TextureCube();
             auto specular = new TextureCube();
@@ -165,30 +210,6 @@ class SharedResourceNode : public common::BehaviorActionNode {
 
             condition->shared_texture->Allocate();
             condition->shared_sampler->Allocate();
-
-            break;
-        }
-        case EnumStageType::eUpdate: {
-
-            const Vector3 eyeWorld = target->camera->GetPosition();
-            // const Matrix reflectRow =
-            //     Matrix::CreateReflection(condition->ground->mirror_plane);
-            const Matrix viewRow = target->camera->GetView();
-            const Matrix projRow = target->camera->GetProjection();
-
-            condition->global_consts.GetCpu().eyeWorld = eyeWorld;
-            condition->global_consts.GetCpu().view = viewRow.Transpose();
-            condition->global_consts.GetCpu().proj = projRow.Transpose();
-            condition->global_consts.GetCpu().invProj =
-                projRow.Invert().Transpose();
-            condition->global_consts.GetCpu().viewProj =
-                (viewRow * projRow).Transpose();
-
-            // used to shadow rendering
-            condition->global_consts.GetCpu().invViewProj =
-                condition->global_consts.GetCpu().viewProj.Invert();
-
-            condition->global_consts.Upload();
 
             break;
         }

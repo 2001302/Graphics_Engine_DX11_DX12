@@ -13,7 +13,8 @@ namespace graphics {
 auto gpu_initialize = std::make_shared<GpuInitializeNode>();
 auto clear_buffer = std::make_shared<ClearBufferNode>();
 auto camera_node = std::make_shared<CameraNodeInvoker>();
-auto shared_resource_node = std::make_shared<SharedResourceNode>();
+auto global_resource_node = std::make_shared<GlobalResourceNode>();
+auto global_constant_node = std::make_shared<GlobalConstantNode>();
 auto game_object_node = std::make_shared<GameObjectNodeInvoker>();
 auto gui_node = std::make_shared<GuiNodeInvoker>();
 auto present = std::make_shared<PresentNode>();
@@ -23,7 +24,6 @@ auto tone_mapping = std::make_shared<ToneMappingNodeInvoker>();
 auto begin_init = std::make_shared<BeginInitNode>();
 auto end_init = std::make_shared<EndInitNode>();
 auto skybox_node = std::make_shared<SkyBoxNodeInvoker>();
-
 
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
@@ -43,11 +43,12 @@ bool Engine::Start() {
     start_tree->Build(black_board.get())
     ->Sequence()
         ->Excute(gpu_initialize)
-        ->Excute(shared_resource_node)
+        ->Excute(global_resource_node)
+        ->Excute(global_constant_node)
         ->Excute(camera_node)
         ->Excute(light_node)
         //->Excute(game_object_node)
-        //->Excute(skybox_node)
+        ->Excute(skybox_node)
         ->Excute(tone_mapping)
         ->Excute(gui_node)
     ->Close()
@@ -56,9 +57,10 @@ bool Engine::Start() {
     //update
     update_tree->Build(black_board.get())
     ->Sequence()
-        //->Excute(camera_node)
-        //->Excute(light_node)
-        ->Excute(shared_resource_node)
+        ->Excute(camera_node)
+        ->Excute(light_node)
+        ->Excute(global_resource_node)
+        ->Excute(global_constant_node)
         //->Excute(game_object_node)
     ->Close();
      
@@ -66,9 +68,9 @@ bool Engine::Start() {
     render_tree->Build(black_board.get())
     ->Sequence()
         ->Excute(clear_buffer)
-        //->Excute(skybox_node)
         //->Excute(game_object_node)
         //->Excute(resolve_buffer)
+        ->Excute(skybox_node)
         ->Excute(tone_mapping)
         ->Excute(gui_node)
         ->Excute(present)
@@ -83,7 +85,7 @@ bool Engine::Start() {
 bool Engine::Frame() {
 
     // update
-    black_board->conditions->dt = ImGui::GetIO().DeltaTime;
+    black_board->conditions->delta_time = ImGui::GetIO().DeltaTime;
     black_board->conditions->stage_type = EnumStageType::eUpdate;
     update_tree->Run();
 
@@ -113,7 +115,9 @@ bool Engine::Stop() {
         }
     }
 
+    GpuCore::Instance().Shutdown();
+
     return true;
 }
 
-} // namespace core
+} // namespace graphics

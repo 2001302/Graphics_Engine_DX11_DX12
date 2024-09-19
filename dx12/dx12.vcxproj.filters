@@ -408,9 +408,6 @@
     <ClInclude Include="command_queue.h">
       <Filter>Graphics\Gpu\Command</Filter>
     </ClInclude>
-    <ClInclude Include="graphics_common.h">
-      <Filter>Graphics\Gpu</Filter>
-    </ClInclude>
     <ClInclude Include="command_manager.h">
       <Filter>Graphics\Gpu\Command</Filter>
     </ClInclude>
@@ -431,6 +428,9 @@
     </ClInclude>
     <ClInclude Include="query_heap.h">
       <Filter>Graphics\Gpu\Heap</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

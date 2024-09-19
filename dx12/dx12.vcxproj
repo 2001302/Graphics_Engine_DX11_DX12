@@ -105,6 +105,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -121,6 +122,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -196,11 +198,11 @@
     <ClInclude Include="color_buffer.h" />
     <ClInclude Include="gpu_node.h" />
     <ClInclude Include="constant_buffer.h" />
-    <ClInclude Include="graphics_common.h" />
     <ClInclude Include="graphics_core.h" />
     <ClInclude Include="heap_manager.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="mesh.h" />
+    <ClInclude Include="pch.h" />
     <ClInclude Include="query_heap.h" />
     <ClInclude Include="sampler_state.h" />
     <ClInclude Include="vertex.h" />

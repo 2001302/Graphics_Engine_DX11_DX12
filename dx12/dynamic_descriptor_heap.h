@@ -1,7 +1,7 @@
 #ifndef _GPU_HEAP
 #define _GPU_HEAP
 
-#include "graphics_common.h"
+#include "pch.h"
 #include "graphics_pso.h"
 #include <d3d12.h>
 #include <wrl/client.h>

@@ -9,7 +9,7 @@
 namespace graphics {
 class TextureCube : public GpuResource {
   public:
-    TextureCube() : resource_(0), cpu_handle_(), index_(0){};
+    TextureCube() : cpu_handle_(), index_(0){};
 
     static TextureCube *Create(const wchar_t *file_name) {
         TextureCube *cube = new TextureCube();
@@ -17,7 +17,6 @@ class TextureCube : public GpuResource {
         return cube;
     };
 
-    ID3D12Resource *Get() { return resource_; };
     D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle() { return cpu_handle_; };
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() override {
         return GpuCore::Instance().GetHeap().View()->GetGpuHandle(index_);
@@ -59,31 +58,23 @@ class TextureCube : public GpuResource {
         buffer_desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
         buffer_desc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
+        current_state_ = D3D12_RESOURCE_STATE_COMMON;
+
         ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
-            &heap_props, D3D12_HEAP_FLAG_NONE, &buffer_desc,
-            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-            IID_PPV_ARGS(&result_.UploadBuffer)));
+            &heap_props, D3D12_HEAP_FLAG_NONE, &buffer_desc, current_state_,
+            nullptr, IID_PPV_ARGS(&result_.UploadBuffer)));
 
-        auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            resource_, D3D12_RESOURCE_STATE_COMMON,
-            D3D12_RESOURCE_STATE_COPY_DEST);
-        context->GetList()->ResourceBarrier(1, &barrier);
-
+        context->TransitionResource(this, D3D12_RESOURCE_STATE_COPY_DEST, true);
         UpdateSubresources(context->GetList(), resource_, result_.UploadBuffer,
                            0, 0, result_.NumSubresources,
                            result_.initData.get());
-
-        barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            resource_, D3D12_RESOURCE_STATE_COPY_DEST,
-            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-        context->GetList()->ResourceBarrier(1, &barrier);
+        context->TransitionResource(
+            this, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, true);
 
         GpuCore::Instance().GetCommand()->Finish(context, true);
-        GpuCore::Instance().GetCommand()->Wait(D3D12_COMMAND_LIST_TYPE_DIRECT);
     };
 
     UINT index_;
-    ID3D12Resource *resource_;
     D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle_;
     TextureLoadResult result_;
 };

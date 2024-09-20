@@ -145,7 +145,7 @@ class CommandContext : public NonCopyable {
         if (flush_immediate || num_barriers_to_flush == 16)
             FlushResourceBarriers();
     }
-    void TransitionResource(ColorBuffer *resource,
+    void TransitionResource(GpuResource *resource,
                             D3D12_RESOURCE_STATES new_state,
                             bool flush_immediate) {
         D3D12_RESOURCE_STATES old_state = resource->GetCurrentState();
@@ -177,7 +177,7 @@ class CommandContext : public NonCopyable {
             num_barriers_to_flush = 0;
         }
     }
-    void ResolveSubresource(ColorBuffer *dest, ColorBuffer *src,
+    void ResolveSubresource(GpuResource *dest, GpuResource *src,
                             DXGI_FORMAT format) {
         command_list_->ResolveSubresource(dest->Get(), 0, src->Get(), 0,
                                           format);

@@ -7,8 +7,8 @@ namespace graphics {
 class DepthBuffer : public GpuResource {
   public:
     DepthBuffer()
-        : device_(0), resource_(0), heap_DSV_(0), handle_DSV_(),
-          use_MSAA_(false), current_state_(){};
+        : device_(0), heap_DSV_(0), handle_DSV_(),
+          use_MSAA_(false){};
     void Create(ID3D12Device *device, DynamicDescriptorHeap *heap_DSV,
                 DXGI_FORMAT format, bool use_msaa = false) {
         device_ = device;
@@ -60,17 +60,11 @@ class DepthBuffer : public GpuResource {
         device_->CreateDepthStencilView(resource_, &desc_DSV, handle_DSV_);
     };
     D3D12_CPU_DESCRIPTOR_HANDLE GetDsvHandle() { return handle_DSV_; };
-    D3D12_RESOURCE_STATES GetCurrentState() { return current_state_; };
-    void SetCurrentState(D3D12_RESOURCE_STATES state) {
-        current_state_ = state;
-    };
 
   private:
     ID3D12Device *device_;
-    ID3D12Resource *resource_;
     DynamicDescriptorHeap *heap_DSV_;
     D3D12_CPU_DESCRIPTOR_HANDLE handle_DSV_;
-    D3D12_RESOURCE_STATES current_state_;
     bool use_MSAA_ = false;
 };
 } // namespace graphics

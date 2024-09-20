@@ -48,7 +48,7 @@ class ClearBufferNode : public common::BehaviorActionNode {
         context->ClearRenderTargetView(GpuBuffer::Instance().GetHDR());
         context->ClearDepthStencilView(GpuBuffer::Instance().GetDSV());
 
-        GpuCore::Instance().GetCommand()->Finish(context, true);
+        GpuCore::Instance().GetCommand()->Finish(context);
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
@@ -63,7 +63,7 @@ class PresentNode : public common::BehaviorActionNode {
                 L"PresentNode");
         context->TransitionResource(GpuBuffer::Instance().GetDisplay(),
                                     D3D12_RESOURCE_STATE_PRESENT, true);
-        GpuCore::Instance().GetCommand()->Finish(context, true);
+        GpuCore::Instance().GetCommand()->Finish(context);
 
         GpuCore::Instance().GetSwapChain()->Present(1, 0);
         GpuBuffer::Instance().GetDisplay()->MoveToNext();
@@ -194,8 +194,6 @@ class GlobalResourceNode : public common::BehaviorActionNode {
             condition->shared_sampler->Allocate();
 
             GpuCore::Instance().GetCommand()->Finish(context, true);
-            GpuCore::Instance().GetCommand()->Wait(
-                D3D12_COMMAND_LIST_TYPE_DIRECT);
 
             break;
         }

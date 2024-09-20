@@ -61,7 +61,7 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
             ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
                                           context->GetList());
 
-            GpuCore::Instance().GetCommand()->Finish(context, true);
+            GpuCore::Instance().GetCommand()->Finish(context);
 
             break;
         }

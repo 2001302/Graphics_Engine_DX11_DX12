@@ -125,6 +125,5 @@ void Mesh::Initialize(const MeshData &mesh_data,
     buffer_VS->Allocate();
 
     GpuCore::Instance().GetCommand()->Finish(context, true);
-    GpuCore::Instance().GetCommand()->Wait(D3D12_COMMAND_LIST_TYPE_DIRECT);
 }
 } // namespace graphics

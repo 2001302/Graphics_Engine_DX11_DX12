@@ -4,12 +4,11 @@
 #include "gpu_resource.h"
 
 namespace graphics {
-class ColorBuffer : GpuResource {
+class ColorBuffer : public GpuResource {
   public:
     ColorBuffer()
-        : device_(0), resource_(0), heap_RTV_(0), heap_SRV_(0), handle_RTV_(),
-          handle_SRV_(), use_MSAA_(false), current_state_(), rtv_index_(0),
-          srv_index_(0){};
+        : device_(0), heap_RTV_(0), heap_SRV_(0), handle_RTV_(), handle_SRV_(),
+          use_MSAA_(false), rtv_index_(0), srv_index_(0){};
     void Create(ID3D12Device *device, DynamicDescriptorHeap *heap_RTV,
                 DynamicDescriptorHeap *heap_SRV, DXGI_FORMAT format,
                 bool use_msaa = false) {
@@ -68,7 +67,6 @@ class ColorBuffer : GpuResource {
         desc_SRV.Texture2D.ResourceMinLODClamp = 0.0f;
         device_->CreateShaderResourceView(resource_, &desc_SRV, handle_SRV_);
     };
-    ID3D12Resource *Get() { return resource_; };
     D3D12_CPU_DESCRIPTOR_HANDLE GetRtvHandle() { return handle_RTV_; };
     D3D12_CPU_DESCRIPTOR_HANDLE GetSrvHandle() { return handle_SRV_; };
     D3D12_GPU_DESCRIPTOR_HANDLE GetRtvGpuHandle() {
@@ -77,20 +75,14 @@ class ColorBuffer : GpuResource {
     D3D12_GPU_DESCRIPTOR_HANDLE GetSrvGpuHandle() {
         return heap_SRV_->GetGpuHandle(srv_index_);
     };
-    D3D12_RESOURCE_STATES GetCurrentState() { return current_state_; };
-    void SetCurrentState(D3D12_RESOURCE_STATES state) {
-        current_state_ = state;
-    };
     const float *ClearColor() { return clear_color; };
 
   private:
     ID3D12Device *device_;
-    ID3D12Resource *resource_;
     UINT rtv_index_;
     UINT srv_index_;
     DynamicDescriptorHeap *heap_RTV_;
     DynamicDescriptorHeap *heap_SRV_;
-    D3D12_RESOURCE_STATES current_state_;
     D3D12_CPU_DESCRIPTOR_HANDLE handle_RTV_;
     D3D12_CPU_DESCRIPTOR_HANDLE handle_SRV_;
     const float clear_color[4] = {0.0f, 0.0f, 0.0f, 1.0f};

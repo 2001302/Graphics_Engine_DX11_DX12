@@ -117,7 +117,7 @@ class ToneMappingPSO : public GraphicsPSO {
         context->GetList()->IASetIndexBuffer(&index_buffer_view);
         context->GetList()->DrawIndexedInstanced(index_count, 1, 0, 0, 0);
 
-        GpuCore::Instance().GetCommand()->Finish(context, true);
+        GpuCore::Instance().GetCommand()->Finish(context);
     };
 };
 } // namespace graphics

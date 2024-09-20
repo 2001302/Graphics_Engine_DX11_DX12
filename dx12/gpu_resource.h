@@ -10,11 +10,21 @@
 namespace graphics {
 class GpuResource {
   public:
-    GpuResource() {};
+    GpuResource() : resource_(0), current_state_(){};
+
     virtual void Allocate(){};
+    virtual ID3D12Resource *Get() { return resource_; };
     virtual D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
-        return D3D12_GPU_DESCRIPTOR_HANDLE();
+        throw std::runtime_error("Not implemented");
     };
+    virtual D3D12_RESOURCE_STATES GetCurrentState() { return current_state_; };
+    virtual void SetCurrentState(D3D12_RESOURCE_STATES state) {
+        current_state_ = state;
+    };
+
+  protected:
+    D3D12_RESOURCE_STATES current_state_;
+    ID3D12Resource *resource_;
 };
 
 class GpuResourceList {
@@ -22,10 +32,9 @@ class GpuResourceList {
     GpuResourceList(std::vector<GpuResource *> resources) {
         resources_ = resources;
     };
-    void Allocate()
-    {
+    void Allocate() {
         for (int i = 0; i < resources_.size(); i++)
-			resources_[i]->Allocate();
+            resources_[i]->Allocate();
     };
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
         return resources_.front()->GetGpuHandle();

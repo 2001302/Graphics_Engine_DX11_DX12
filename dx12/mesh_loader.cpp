@@ -1,4 +1,4 @@
-#include "model_loader.h"
+#include "mesh_loader.h"
 #include "mesh.h"
 
 #include <DirectXMesh.h>
@@ -53,7 +53,7 @@ string GetExtension(const string filename) {
     return ext;
 }
 
-void ModelLoader::ReadAnimation(const aiScene *pScene) {
+void MeshLoader::ReadAnimation(const aiScene *pScene) {
 
     m_aniData.clips.resize(pScene->mNumAnimations);
 
@@ -87,7 +87,7 @@ void ModelLoader::ReadAnimation(const aiScene *pScene) {
     }
 }
 
-void ModelLoader::Load(std::string basePath, std::string filename,
+void MeshLoader::Load(std::string basePath, std::string filename,
                        bool revertNormals) {
 
     if (GetExtension(filename) == ".gltf") {
@@ -130,7 +130,7 @@ void ModelLoader::Load(std::string basePath, std::string filename,
     }
 }
 
-void ModelLoader::LoadAnimation(string basePath, string filename) {
+void MeshLoader::LoadAnimation(string basePath, string filename) {
 
     m_basePath = basePath;
 
@@ -150,7 +150,7 @@ void ModelLoader::LoadAnimation(string basePath, string filename) {
     }
 }
 
-void ModelLoader::UpdateTangents() {
+void MeshLoader::UpdateTangents() {
 
     using namespace std;
     using namespace DirectX;
@@ -186,7 +186,7 @@ void ModelLoader::UpdateTangents() {
         }
     }
 }
-void ModelLoader::FindDeformingBones(const aiScene *scene) {
+void MeshLoader::FindDeformingBones(const aiScene *scene) {
     for (uint32_t i = 0; i < scene->mNumMeshes; i++) {
         const auto *mesh = scene->mMeshes[i];
         if (mesh->HasBones()) {
@@ -199,7 +199,7 @@ void ModelLoader::FindDeformingBones(const aiScene *scene) {
     }
 }
 
-const aiNode *ModelLoader::FindParent(const aiNode *node) {
+const aiNode *MeshLoader::FindParent(const aiNode *node) {
     if (!node)
         return nullptr;
     if (m_aniData.boneNameToId.count(node->mName.C_Str()) > 0)
@@ -207,7 +207,7 @@ const aiNode *ModelLoader::FindParent(const aiNode *node) {
     return FindParent(node->mParent);
 }
 
-void ModelLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
+void MeshLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
 
     if (node->mParent && m_aniData.boneNameToId.count(node->mName.C_Str()) &&
         FindParent(node->mParent)) {
@@ -233,7 +233,7 @@ void ModelLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
     }
 }
 
-string ModelLoader::ReadTextureFilename(const aiScene *scene,
+string MeshLoader::ReadTextureFilename(const aiScene *scene,
                                         aiMaterial *material,
                                         aiTextureType type) {
 
@@ -270,7 +270,7 @@ string ModelLoader::ReadTextureFilename(const aiScene *scene,
     }
 }
 
-MeshData ModelLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
+MeshData MeshLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
 
     MeshData newMesh;
     auto &vertices = newMesh.vertices;

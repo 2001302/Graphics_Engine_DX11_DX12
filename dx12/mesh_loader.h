@@ -17,7 +17,7 @@ using std::map;
 using std::string;
 using std::vector;
 
-class ModelLoader {
+class MeshLoader {
   public:
     void Load(string basePath, string filename, bool revertNormals);
     void LoadAnimation(string basePath, string filename);

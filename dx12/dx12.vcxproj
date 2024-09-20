@@ -149,7 +149,7 @@
     <ClCompile Include="mesh_renderer.cpp" />
     <ClCompile Include="message_receiver.cpp" />
     <ClCompile Include="model.cpp" />
-    <ClCompile Include="model_loader.cpp" />
+    <ClCompile Include="mesh_loader.cpp" />
     <ClCompile Include="common\action_node.cpp" />
     <ClCompile Include="common\animation_node.cpp" />
     <ClCompile Include="common\behavior_tree_builder.cpp" />
@@ -218,7 +218,7 @@
     <ClInclude Include="mesh_renderer.h" />
     <ClInclude Include="message_receiver.h" />
     <ClInclude Include="model.h" />
-    <ClInclude Include="model_loader.h" />
+    <ClInclude Include="mesh_loader.h" />
     <ClInclude Include="render_condition.h" />
     <ClInclude Include="render_target_object.h" />
     <ClInclude Include="skybox_node.h" />

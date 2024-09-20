@@ -1,5 +1,4 @@
 #include "message_receiver.h"
-// #include "mesh_renderer.h"
 
 namespace graphics {
 using namespace DirectX::SimpleMath;

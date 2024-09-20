@@ -4,7 +4,7 @@
 #include "animation_clip.h"
 #include "mesh_util.h"
 #include "model.h"
-#include "model_loader.h"
+#include "mesh_loader.h"
 #include <tuple>
 
 namespace graphics {

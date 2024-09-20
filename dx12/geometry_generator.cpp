@@ -502,7 +502,7 @@ vector<MeshData> GeometryGenerator::ReadFromFile(std::string basePath,
 
     using namespace DirectX;
 
-    ModelLoader modelLoader;
+    MeshLoader modelLoader;
     modelLoader.Load(basePath, filename, revertNormals);
     vector<MeshData> &meshes = modelLoader.m_meshes;
 
@@ -651,7 +651,7 @@ auto GeometryGenerator::ReadAnimationFromFile(string basePath, string filename,
                                               bool revertNormals)
     -> tuple<vector<MeshData>, AnimationData> {
 
-    ModelLoader modelLoader;
+    MeshLoader modelLoader;
     modelLoader.Load(basePath, filename, revertNormals);
 
     GeometryGenerator::Normalize(Vector3(0.0f), 1.0f, modelLoader.m_meshes,

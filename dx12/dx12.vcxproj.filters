@@ -92,7 +92,7 @@
     <ClCompile Include="message_receiver.cpp">
       <Filter>Graphics\Util</Filter>
     </ClCompile>
-    <ClCompile Include="model_loader.cpp">
+    <ClCompile Include="mesh_loader.cpp">
       <Filter>Graphics\Util</Filter>
     </ClCompile>
     <ClCompile Include="engine.cpp">
@@ -366,7 +366,7 @@
     <ClInclude Include="message_receiver.h">
       <Filter>Graphics\Util</Filter>
     </ClInclude>
-    <ClInclude Include="model_loader.h">
+    <ClInclude Include="mesh_loader.h">
       <Filter>Graphics\Util</Filter>
     </ClInclude>
     <ClInclude Include="engine.h">

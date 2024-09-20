@@ -2,31 +2,39 @@
 #define _TEXTURECUBE
 
 #include "dds_texture_loader.h"
+#include "device_manager.h"
 #include "gpu_resource.h"
 #include <filesystem>
 
 namespace graphics {
 class TextureCube : public GpuResource {
   public:
-    TextureCube()
-        : device_(0), heap_(0), resource_(0), cpu_handle_(), index_(0),
-          file_name_(0), command_list_(0){};
+    TextureCube() : resource_(0), cpu_handle_(), index_(0){};
 
-    void Create(ID3D12Device *device, DynamicDescriptorHeap *heap,
-                ID3D12GraphicsCommandList *command_list,
-                const wchar_t *file_name) {
-        device_ = device;
-        heap_ = heap;
-        file_name_ = file_name;
-        command_list_ = command_list;
+    static TextureCube *Create(const wchar_t *file_name) {
+        TextureCube *cube = new TextureCube();
+        cube->Initialize(file_name);
+        return cube;
     };
 
-    void Allocate() override {
+    ID3D12Resource *Get() { return resource_; };
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle() { return cpu_handle_; };
+    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() override {
+        return GpuCore::Instance().GetHeap().View()->GetGpuHandle(index_);
+    };
 
-        heap_->AllocateDescriptor(cpu_handle_, index_);
+  private:
+    void Initialize(const wchar_t *file_name) {
 
-        CreateDDSTextureFromFile(device_, file_name_, 0, true, &resource_,
-                                 cpu_handle_, result_);
+        auto context =
+            GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
+                L"TextureCube");
+
+        GpuCore::Instance().GetHeap().View()->AllocateDescriptor(cpu_handle_,
+                                                                 index_);
+
+        CreateDDSTextureFromFile(GpuCore::Instance().GetDevice(), file_name, 0,
+                                 true, &resource_, cpu_handle_, result_);
 
         UINT64 upload_buffer_size =
             GetRequiredIntermediateSize(resource_, 0, result_.NumSubresources);
@@ -51,7 +59,7 @@ class TextureCube : public GpuResource {
         buffer_desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
         buffer_desc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
-        ASSERT_FAILED(device_->CreateCommittedResource(
+        ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
             &heap_props, D3D12_HEAP_FLAG_NONE, &buffer_desc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&result_.UploadBuffer)));
@@ -59,30 +67,25 @@ class TextureCube : public GpuResource {
         auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
             resource_, D3D12_RESOURCE_STATE_COMMON,
             D3D12_RESOURCE_STATE_COPY_DEST);
-        command_list_->ResourceBarrier(1, &barrier);
+        context->GetList()->ResourceBarrier(1, &barrier);
 
-        UpdateSubresources(command_list_, resource_, result_.UploadBuffer, 0, 0,
-                           result_.NumSubresources, result_.initData.get());
+        UpdateSubresources(context->GetList(), resource_, result_.UploadBuffer,
+                           0, 0, result_.NumSubresources,
+                           result_.initData.get());
 
         barrier = CD3DX12_RESOURCE_BARRIER::Transition(
             resource_, D3D12_RESOURCE_STATE_COPY_DEST,
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-        command_list_->ResourceBarrier(1, &barrier);
-    };
-    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() override {
-        return heap_->GetGpuHandle(index_);
-    };
-    ID3D12Resource *Get() { return resource_; };
+        context->GetList()->ResourceBarrier(1, &barrier);
 
-  private:
+        GpuCore::Instance().GetCommand()->Finish(context, true);
+        GpuCore::Instance().GetCommand()->Wait(D3D12_COMMAND_LIST_TYPE_DIRECT);
+    };
+
     UINT index_;
-    ID3D12Device *device_;
-    DynamicDescriptorHeap *heap_;
     ID3D12Resource *resource_;
     D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle_;
     TextureLoadResult result_;
-    ID3D12GraphicsCommandList *command_list_;
-    const wchar_t *file_name_;
 };
 } // namespace graphics
 #endif

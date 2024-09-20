@@ -50,6 +50,9 @@ class GpuCommand {
 
         retired_contexts_[context->GetType()].push(context);
         context_pool_[context->GetType()].pop();
+
+        if (wait_for_completion) {
+        }
     };
 
     template <typename T> T *Context() {

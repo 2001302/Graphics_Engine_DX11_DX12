@@ -157,30 +157,18 @@ class GlobalResourceNode : public common::BehaviorActionNode {
                 GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
                     L"SharedResourceNode");
 
-            auto env = new TextureCube();
-            auto specular = new TextureCube();
-            auto diffuse = new TextureCube();
-            auto brdf = new TextureCube();
+            auto env = TextureCube::Create(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds");
+            auto specular = TextureCube::Create(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds");
+            auto diffuse = TextureCube::Create(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds");
+            auto brdf = TextureCube::Create(
+                L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds");
             auto shadow = new Texture2D[MAX_LIGHTS];
 
-            env->Create(GpuCore::Instance().GetDevice(),
-                        GpuCore::Instance().GetHeap().View(),
-                        context->GetList(),
-                        L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds");
-            specular->Create(
-                GpuCore::Instance().GetDevice(),
-                GpuCore::Instance().GetHeap().View(), context->GetList(),
-                L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds");
-            diffuse->Create(
-                GpuCore::Instance().GetDevice(),
-                GpuCore::Instance().GetHeap().View(), context->GetList(),
-                L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds");
-            brdf->Create(GpuCore::Instance().GetDevice(),
-                         GpuCore::Instance().GetHeap().View(),
-                         context->GetList(),
-                         L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds");
-
-            std::vector<GpuResource *> tex = {env, specular, diffuse, brdf};
+            std::vector<GpuResource *> tex = {std::move(env), std::move(specular),
+                                              std::move(diffuse), std::move(brdf)};
 
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 shadow[i].Create(GpuCore::Instance().GetDevice(),

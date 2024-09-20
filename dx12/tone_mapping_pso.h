@@ -70,10 +70,8 @@ class ToneMappingPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(ComPtr<ID3D12Resource> const_buffer,
-                D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view,
-                D3D12_INDEX_BUFFER_VIEW index_buffer_view, UINT index_count,
-                SamplerState* sampler) {
+    void Render(ComPtr<ID3D12Resource> const_buffer, Mesh *mesh,
+                SamplerState *sampler) {
 
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
@@ -113,9 +111,9 @@ class ToneMappingPSO : public GraphicsPSO {
 
         context->GetList()->IASetPrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        context->GetList()->IASetVertexBuffers(0, 1, &vertex_buffer_view);
-        context->GetList()->IASetIndexBuffer(&index_buffer_view);
-        context->GetList()->DrawIndexedInstanced(index_count, 1, 0, 0, 0);
+        context->GetList()->IASetVertexBuffers(0, 1, &mesh->vertex_buffer_view);
+        context->GetList()->IASetIndexBuffer(&mesh->index_buffer_view);
+        context->GetList()->DrawIndexedInstanced(mesh->index_count, 1, 0, 0, 0);
 
         GpuCore::Instance().GetCommand()->Finish(context);
     };

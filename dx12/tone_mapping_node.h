@@ -49,9 +49,7 @@ class ToneMappingNodeInvoker : public common::BehaviorActionNode {
             break;
         }
         case EnumStageType::eRender: {
-            toneMappingPSO->Render(const_buffer, mesh->vertex_buffer_view,
-                                   mesh->index_buffer_view, mesh->index_count,
-                                   sampler);
+            toneMappingPSO->Render(const_buffer, mesh.get(), sampler);
             break;
         }
         default:
@@ -69,7 +67,7 @@ class ToneMappingNodeInvoker : public common::BehaviorActionNode {
     };
     std::shared_ptr<ToneMappingPSO> toneMappingPSO;
     std::shared_ptr<Mesh> mesh;
-    SamplerState* sampler;
+    SamplerState *sampler;
     ImageFilterConstData const_data;
     ComPtr<ID3D12Resource> const_buffer;
 };

@@ -76,10 +76,7 @@ class SkyboxPSO : public GraphicsPSO {
     };
     void Render(SamplerState *shared_sampler, GpuResourceList *shared_texture,
                 ComPtr<ID3D12Resource> global_consts,
-                ComPtr<ID3D12Resource> mesh_consts,
-                ComPtr<ID3D12Resource> material_consts,
-                D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view,
-                D3D12_INDEX_BUFFER_VIEW index_buffer_view, UINT index_count) {
+                MeshRenderer *mesh_renderer) {
 
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
@@ -109,15 +106,18 @@ class SkyboxPSO : public GraphicsPSO {
         context->GetList()->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            3, mesh_consts.Get()->GetGPUVirtualAddress());
+            3, mesh_renderer->GetMeshConsts()->GetGPUVirtualAddress());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            4, material_consts.Get()->GetGPUVirtualAddress());
+            4, mesh_renderer->GetMaterialConsts()->GetGPUVirtualAddress());
 
         context->GetList()->IASetPrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        context->GetList()->IASetVertexBuffers(0, 1, &vertex_buffer_view);
-        context->GetList()->IASetIndexBuffer(&index_buffer_view);
-        context->GetList()->DrawIndexedInstanced(index_count, 1, 0, 0, 0);
+        context->GetList()->IASetVertexBuffers(
+            0, 1, &mesh_renderer->GetMeshes().front()->vertex_buffer_view);
+        context->GetList()->IASetIndexBuffer(
+            &mesh_renderer->GetMeshes().front()->index_buffer_view);
+        context->GetList()->DrawIndexedInstanced(
+            mesh_renderer->GetMeshes().front()->index_count, 1, 0, 0, 0);
 
         GpuCore::Instance().GetCommand()->Finish(context);
     };

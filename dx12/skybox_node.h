@@ -26,25 +26,22 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
             auto mesh_data = GeometryGenerator::MakeBox(40.0f);
             std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
 
-            auto renderer = std::make_shared<MeshRenderer>();
-            renderer->Initialize(std::vector{mesh_data});
+            auto component = std::make_shared<MeshRenderer>();
+            component->Initialize(std::vector{mesh_data});
 
             skybox = std::make_shared<Model>();
-            skybox->AddComponent(EnumComponentType::eRenderer, renderer);
+            skybox->AddComponent(EnumComponentType::eRenderer, component);
 
             break;
         }
         case EnumStageType::eRender: {
 
-            auto renderer = (MeshRenderer *)skybox->GetComponent(
+            auto component = (MeshRenderer *)skybox->GetComponent(
                 EnumComponentType::eRenderer);
-            auto mesh = renderer->GetMeshes().front();
 
-            skyboxPSO->Render(
-                condition->shared_sampler, condition->shared_texture,
-                condition->global_consts.Get(), renderer->GetMeshConsts(),
-                renderer->GetMaterialConsts(), mesh->vertex_buffer_view,
-                mesh->index_buffer_view, mesh->index_count);
+            skyboxPSO->Render(condition->shared_sampler,
+                              condition->shared_texture,
+                              condition->global_consts.Get(), component);
             break;
         }
         default:

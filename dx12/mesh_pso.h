@@ -100,7 +100,7 @@ class SolidMeshPSO : public GraphicsPSO {
         context->TransitionResource(GpuBuffer::Instance().GetHDR(),
                                     D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
-        for (auto mesh : mesh_renderer->meshes) {
+        for (auto mesh : mesh_renderer->GetMeshes()) {
 
             context->SetViewportAndScissorRect(
                 0, 0, (UINT)common::env::screen_width,
@@ -119,10 +119,9 @@ class SolidMeshPSO : public GraphicsPSO {
             context->GetList()->SetGraphicsRootConstantBufferView(
                 2, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                3, mesh_renderer->mesh_consts.Get()->GetGPUVirtualAddress());
+                3, mesh_renderer->GetMeshConsts()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                4,
-                mesh_renderer->material_consts.Get()->GetGPUVirtualAddress());
+                4, mesh_renderer->GetMaterialConsts()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootDescriptorTable(
                 5, mesh->buffer_VS->GetGpuHandle());
             context->GetList()->SetGraphicsRootDescriptorTable(

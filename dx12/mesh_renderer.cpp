@@ -23,17 +23,15 @@ void MeshRenderer::Initialize(const vector<MeshData> &mesh_data) {
         MeshData meshData = mesh_data[i];
         meshes[i] = std::make_shared<Mesh>();
         meshes[i]->Initialize(meshData, mesh_consts, material_consts);
-        mesh_consts.GetCpu().world = Matrix();
         material_consts.Initialize();
         mesh_consts.Initialize();
     }
 }
 
 void MeshRenderer::UpdateConstantBuffers() {
-    if (is_visible) {
-        mesh_consts.Upload();
-        material_consts.Upload();
-    }
+
+    mesh_consts.Upload();
+    material_consts.Upload();
 }
 
 void MeshRenderer::UpdateWorldRow(const Matrix &worldRow) {

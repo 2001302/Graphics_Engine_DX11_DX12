@@ -38,14 +38,13 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
 
             auto renderer = (MeshRenderer *)skybox->GetComponent(
                 EnumComponentType::eRenderer);
-            auto mesh = renderer->meshes.front();
+            auto mesh = renderer->GetMeshes().front();
 
             skyboxPSO->Render(
-                condition->shared_sampler,
-                condition->shared_texture, condition->global_consts.Get(),
-                renderer->mesh_consts.Get(), renderer->material_consts.Get(),
-                mesh->vertex_buffer_view, mesh->index_buffer_view,
-                mesh->index_count);
+                condition->shared_sampler, condition->shared_texture,
+                condition->global_consts.Get(), renderer->GetMeshConsts(),
+                renderer->GetMaterialConsts(), mesh->vertex_buffer_view,
+                mesh->index_buffer_view, mesh->index_count);
             break;
         }
         default:

@@ -23,11 +23,13 @@ class MeshRenderer : public Component {
     void UpdateConstantBuffers();
     void UpdateWorldRow(const Matrix &worldRow);
 
-  public:
+    std::vector<std::shared_ptr<Mesh>> GetMeshes() { return meshes; }
+    ID3D12Resource *GetMeshConsts() { return mesh_consts.Get(); }
+    ID3D12Resource *GetMaterialConsts() { return material_consts.Get(); }
+
+  private:
     Matrix world_row = Matrix();    // Model(Object) To World
     Matrix world_row_IT = Matrix(); // InverseTranspose
-
-    bool is_visible = true;
 
     std::vector<std::shared_ptr<Mesh>> meshes;
 

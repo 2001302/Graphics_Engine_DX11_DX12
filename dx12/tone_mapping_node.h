@@ -34,22 +34,18 @@ class ToneMappingNodeInvoker : public common::BehaviorActionNode {
             Util::CreateIndexBuffer(mesh_data.indices, mesh->index_buffer,
                                     mesh->index_buffer_view);
 
-            const_data.strength = 0.5f;
-            const_data.exposure = 1.0f;
-            const_data.gamma = 2.2f;
-
-            Util::CreateConstBuffer(const_data, const_buffer);
+            const_buffer.Initialize();
 
             sampler = SamplerState::Create({sampler::linearClampSS});
 
             break;
         }
         case EnumStageType::eUpdate: {
-
+            const_buffer.Upload();
             break;
         }
         case EnumStageType::eRender: {
-            toneMappingPSO->Render(const_buffer, mesh.get(), sampler);
+            toneMappingPSO->Render(const_buffer.Get(), mesh.get(), sampler);
             break;
         }
         default:
@@ -60,16 +56,15 @@ class ToneMappingNodeInvoker : public common::BehaviorActionNode {
     }
 
     __declspec(align(256)) struct ImageFilterConstData {
-        float threshold;
-        float strength;
-        float exposure;
-        float gamma;
+        float threshold = 0.0f;
+        float strength = 0.5f;
+        float exposure = 1.0f;
+        float gamma = 2.2f;
     };
     std::shared_ptr<ToneMappingPSO> toneMappingPSO;
     std::shared_ptr<Mesh> mesh;
     SamplerState *sampler;
-    ImageFilterConstData const_data;
-    ComPtr<ID3D12Resource> const_buffer;
+    ConstantBuffer<ImageFilterConstData> const_buffer;
 };
 } // namespace graphics
 

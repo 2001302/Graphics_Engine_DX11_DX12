@@ -83,11 +83,11 @@ class ToneMappingPSO : public GraphicsPSO {
             std::vector{GpuCore::Instance().GetHeap().View(),
                         GpuCore::Instance().GetHeap().Sampler()});
 
-        context->TransitionResource(GpuCore::Instance().GetDisplay(),
+        context->TransitionResource(GpuBuffer::Instance().GetDisplay(),
                                     D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
         context->TransitionResource(
-            GpuCore::Instance().GetBuffers().hdr_buffer,
+            GpuBuffer::Instance().GetHDR(),
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE |
                 D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE,
             true);
@@ -96,7 +96,7 @@ class ToneMappingPSO : public GraphicsPSO {
                                            (UINT)common::env::screen_width,
                                            (UINT)common::env::screen_height);
 
-        context->SetRenderTargetView(GpuCore::Instance().GetDisplay());
+        context->SetRenderTargetView(GpuBuffer::Instance().GetDisplay());
 
         context->SetRootSignature(root_signature);
         context->SetPipelineState(pipeline_state);
@@ -109,7 +109,7 @@ class ToneMappingPSO : public GraphicsPSO {
             1, sampler.GetGpuHandle());
         // 3:srv
         context->GetList()->SetGraphicsRootDescriptorTable(
-            2, GpuCore::Instance().GetBuffers().hdr_buffer->GetSrvGpuHandle());
+            2, GpuBuffer::Instance().GetHDR()->GetSrvGpuHandle());
 
         context->GetList()->IASetPrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

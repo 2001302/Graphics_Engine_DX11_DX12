@@ -9,6 +9,7 @@ class GpuInitializeNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         GpuCore::Instance().Initialize();
+        GpuBuffer::Instance().Initialize();
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
@@ -41,14 +42,11 @@ class ClearBufferNode : public common::BehaviorActionNode {
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
                 L"ClearBufferNode");
 
-        context->TransitionResource(GpuCore::Instance().GetBuffers().hdr_buffer,
+        context->TransitionResource(GpuBuffer::Instance().GetHDR(),
                                     D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
-        context->ClearRenderTargetView(
-            GpuCore::Instance().GetBuffers().hdr_buffer);
-
-        context->ClearDepthStencilView(
-            GpuCore::Instance().GetBuffers().dsv_buffer);
+        context->ClearRenderTargetView(GpuBuffer::Instance().GetHDR());
+        context->ClearDepthStencilView(GpuBuffer::Instance().GetDSV());
 
         GpuCore::Instance().GetCommand()->Finish(context, true);
 
@@ -63,12 +61,12 @@ class PresentNode : public common::BehaviorActionNode {
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
                 L"PresentNode");
-        context->TransitionResource(GpuCore::Instance().GetDisplay(),
+        context->TransitionResource(GpuBuffer::Instance().GetDisplay(),
                                     D3D12_RESOURCE_STATE_PRESENT, true);
         GpuCore::Instance().GetCommand()->Finish(context, true);
 
         GpuCore::Instance().GetSwapChain()->Present(1, 0);
-        GpuCore::Instance().GetDisplay()->MoveToNext();
+        GpuBuffer::Instance().GetDisplay()->MoveToNext();
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }

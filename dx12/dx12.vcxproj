@@ -141,6 +141,7 @@
     <ClCompile Include="common\logger.cpp" />
     <ClCompile Include="geometry_generator.cpp" />
     <ClCompile Include="dynamic_descriptor_heap.cpp" />
+    <ClCompile Include="buffer_manager.cpp" />
     <ClCompile Include="graphics_core.cpp" />
     <ClCompile Include="heap_manager.cpp" />
     <ClCompile Include="image.cpp" />
@@ -202,6 +203,7 @@
     <ClInclude Include="color_buffer.h" />
     <ClInclude Include="gpu_node.h" />
     <ClInclude Include="constant_buffer.h" />
+    <ClInclude Include="buffer_manager.h" />
     <ClInclude Include="graphics_core.h" />
     <ClInclude Include="heap_manager.h" />
     <ClInclude Include="image.h" />

@@ -100,15 +100,14 @@ class SolidMeshPSO : public GraphicsPSO {
             std::vector{GpuCore::Instance().GetHeap().View(),
                         GpuCore::Instance().GetHeap().Sampler()});
 
-        context->TransitionResource(GpuCore::Instance().GetBuffers().hdr_buffer,
+        context->TransitionResource(GpuBuffer::Instance().GetHDR(),
                                     D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
         context->SetViewportAndScissorRect(0, 0,
                                            (UINT)common::env::screen_width,
                                            (UINT)common::env::screen_height);
-        context->SetRenderTargetView(
-            GpuCore::Instance().GetBuffers().hdr_buffer,
-            GpuCore::Instance().GetBuffers().dsv_buffer);
+        context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
+                                     GpuBuffer::Instance().GetDSV());
 
         context->SetRootSignature(root_signature);
         context->SetPipelineState(pipeline_state);

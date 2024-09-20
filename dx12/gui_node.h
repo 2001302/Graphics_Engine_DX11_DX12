@@ -44,7 +44,7 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
                 GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
                     L"GuiNode");
 
-            context->TransitionResource(GpuCore::Instance().GetDisplay(),
+            context->TransitionResource(GpuBuffer::Instance().GetDisplay(),
                                         D3D12_RESOURCE_STATE_RENDER_TARGET,
                                         true);
 
@@ -56,7 +56,7 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
                 0, 0, (UINT)common::env::screen_width,
                 (UINT)common::env::screen_height);
 
-            context->SetRenderTargetView(GpuCore::Instance().GetDisplay());
+            context->SetRenderTargetView(GpuBuffer::Instance().GetDisplay());
 
             ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
                                           context->GetList());

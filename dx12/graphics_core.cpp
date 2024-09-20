@@ -13,8 +13,6 @@ bool GpuCore::Initialize() {
     InitializeCommand();
     InitializeSwapchain();
     InitializeHeap();
-    InitializeBuffer();
-    AllocateBuffer();
     return true;
 }
 
@@ -97,20 +95,6 @@ bool GpuCore::InitializeSwapchain() {
                                                  DXGI_MWA_NO_ALT_ENTER));
 };
 
-bool GpuCore::InitializeBuffer() {
-
-    buffers.hdr_buffer = new ColorBuffer();
-    buffers.dsv_buffer = new DepthBuffer();
-
-    buffers.hdr_buffer->Create(device.Get(), heap_manager.RTV(),
-                               heap_manager.View(),
-                               DXGI_FORMAT_R16G16B16A16_FLOAT);
-    buffers.dsv_buffer->Create(device.Get(), heap_manager.DSV(),
-                               DXGI_FORMAT_D32_FLOAT);
-
-    return true;
-};
-
 bool GpuCore::InitializeCommand() {
     query_heap.Initialize(device.Get());
     command_manager.Initialize(device.Get(), query_heap.Get());
@@ -119,15 +103,6 @@ bool GpuCore::InitializeCommand() {
 
 bool GpuCore::InitializeHeap() {
     heap_manager.Initialize(device.Get(), 1024);
-
-    back_buffer.Create(device.Get(), heap_manager.RTV(), swap_chain.Get());
-    return true;
-};
-
-bool GpuCore::AllocateBuffer() {
-    back_buffer.Allocate();
-    buffers.hdr_buffer->Allocate();
-    buffers.dsv_buffer->Allocate();
     return true;
 };
 

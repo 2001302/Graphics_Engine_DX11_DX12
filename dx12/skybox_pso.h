@@ -51,9 +51,9 @@ class SkyboxPSO : public GraphicsPSO {
         ComPtr<ID3DBlob> skyboxVS;
         ComPtr<ID3DBlob> skyboxPS;
         ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                 L"Shader/SkyboxVS.hlsl", skyboxVS);
+                                       L"Shader/SkyboxVS.hlsl", skyboxVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                L"Shader/SkyboxPS.hlsl", skyboxPS);
+                                      L"Shader/SkyboxPS.hlsl", skyboxPS);
         // pipeline state
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
@@ -74,8 +74,7 @@ class SkyboxPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(SamplerState *shared_sampler,
-                GpuResourceList *shared_texture,
+    void Render(SamplerState *shared_sampler, GpuResourceList *shared_texture,
                 ComPtr<ID3D12Resource> global_consts,
                 ComPtr<ID3D12Resource> mesh_consts,
                 ComPtr<ID3D12Resource> material_consts,
@@ -90,15 +89,14 @@ class SkyboxPSO : public GraphicsPSO {
             std::vector{GpuCore::Instance().GetHeap().View(),
                         GpuCore::Instance().GetHeap().Sampler()});
 
-        context->TransitionResource(GpuCore::Instance().GetBuffers().hdr_buffer,
+        context->TransitionResource(GpuBuffer::Instance().GetHDR(),
                                     D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
         context->SetViewportAndScissorRect(0, 0,
                                            (UINT)common::env::screen_width,
                                            (UINT)common::env::screen_height);
 
-        context->SetRenderTargetView(
-            GpuCore::Instance().GetBuffers().hdr_buffer);
+        context->SetRenderTargetView(GpuBuffer::Instance().GetHDR());
 
         context->SetRootSignature(root_signature);
         context->SetPipelineState(pipeline_state);

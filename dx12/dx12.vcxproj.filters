@@ -104,25 +104,13 @@
     <ClCompile Include="image.cpp">
       <Filter>Graphics\Gpu\Structure</Filter>
     </ClCompile>
-    <ClCompile Include="graphics_pso.cpp">
-      <Filter>Graphics\Gpu</Filter>
-    </ClCompile>
     <ClCompile Include="dynamic_descriptor_heap.cpp">
       <Filter>Graphics\Gpu\Heap</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics_core.cpp">
-      <Filter>Graphics\Gpu</Filter>
     </ClCompile>
     <ClCompile Include="graphics_util.cpp">
       <Filter>Graphics\Util</Filter>
     </ClCompile>
-    <ClCompile Include="heap_manager.cpp">
-      <Filter>Graphics\Gpu\Heap</Filter>
-    </ClCompile>
     <ClCompile Include="command_queue.cpp">
-      <Filter>Graphics\Gpu\Command</Filter>
-    </ClCompile>
-    <ClCompile Include="command_manager.cpp">
       <Filter>Graphics\Gpu\Command</Filter>
     </ClCompile>
     <ClCompile Include="command_list.cpp">
@@ -145,6 +133,21 @@
     </ClCompile>
     <ClCompile Include="shader_util.cpp">
       <Filter>Graphics\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics_core.cpp">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics_pso.cpp">
+      <Filter>Graphics\Gpu\PSO</Filter>
+    </ClCompile>
+    <ClCompile Include="command_manager.cpp">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="heap_manager.cpp">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="buffer_manager.cpp">
+      <Filter>Graphics\Gpu\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -210,6 +213,9 @@
     </Filter>
     <Filter Include="Common\Util">
       <UniqueIdentifier>{3f80a57b-a4c0-433a-9fbc-b5ebe1f1ca75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Gpu\Core">
+      <UniqueIdentifier>{44860be7-9917-4790-b438-ee4b6ee0aa43}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -387,9 +393,6 @@
     <ClInclude Include="black_board.h">
       <Filter>Graphics\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="graphics_pso.h">
-      <Filter>Graphics\Gpu</Filter>
-    </ClInclude>
     <ClInclude Include="color_buffer.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
@@ -398,9 +401,6 @@
     </ClInclude>
     <ClInclude Include="dynamic_descriptor_heap.h">
       <Filter>Graphics\Gpu\Heap</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics_core.h">
-      <Filter>Graphics\Gpu</Filter>
     </ClInclude>
     <ClInclude Include="depth_buffer.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
@@ -413,12 +413,6 @@
     </ClInclude>
     <ClInclude Include="command_queue.h">
       <Filter>Graphics\Gpu\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="command_manager.h">
-      <Filter>Graphics\Gpu\Command</Filter>
-    </ClInclude>
-    <ClInclude Include="heap_manager.h">
-      <Filter>Graphics\Gpu\Heap</Filter>
     </ClInclude>
     <ClInclude Include="graphics_util.h">
       <Filter>Graphics\Util</Filter>
@@ -446,6 +440,21 @@
     </ClInclude>
     <ClInclude Include="shader_util.h">
       <Filter>Graphics\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_core.h">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_pso.h">
+      <Filter>Graphics\Gpu\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="command_manager.h">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="heap_manager.h">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="buffer_manager.h">
+      <Filter>Graphics\Gpu\Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

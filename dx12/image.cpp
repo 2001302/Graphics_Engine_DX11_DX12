@@ -127,9 +127,7 @@ void ReadImage(const std::string albedoFilename,
         }
 }
 
-Image Image::Read(const std::string path,
-                  ComPtr<ID3D12GraphicsCommandList> command_list,
-                  const bool usSRGB) {
+Image Image::Read(const std::string path, const bool usSRGB) {
     Image image;
 
     if (!std::filesystem::exists(path)) {
@@ -153,7 +151,6 @@ Image Image::Read(const std::string path,
     return image;
 };
 Image Image::Read(const std::string path1, const std::string path2,
-                  ComPtr<ID3D12GraphicsCommandList> command_list,
                   const bool usSRGB) {
     Image image;
 
@@ -161,11 +158,11 @@ Image Image::Read(const std::string path1, const std::string path2,
         return image;
     } else if (std::filesystem::exists(path1) &&
                !std::filesystem::exists(path2)) {
-        image = Read(path1, command_list, usSRGB);
+        image = Read(path1, usSRGB);
         return image;
     } else if (!std::filesystem::exists(path1) &&
                std::filesystem::exists(path2)) {
-        image = Read(path2, command_list, usSRGB);
+        image = Read(path2, usSRGB);
         return image;
     }
 
@@ -177,13 +174,13 @@ Image Image::Read(const std::string path1, const std::string path2,
     return image;
 };
 
-Image Image::ReadMetallicRoughness(
-    const std::string metallic, const std::string roughness,
-    ComPtr<ID3D12GraphicsCommandList> command_list, const bool usSRGB) {
+Image Image::ReadMetallicRoughness(const std::string metallic,
+                                   const std::string roughness,
+                                   const bool usSRGB) {
     Image image;
 
     if (!metallic.empty() && (metallic == roughness)) {
-        image = Read(metallic, command_list, false);
+        image = Read(metallic, false);
     } else {
         int mWidth = 0, mHeight = 0;
         int rWidth = 0, rHeight = 0;

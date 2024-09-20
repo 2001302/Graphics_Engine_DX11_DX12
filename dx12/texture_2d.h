@@ -1,6 +1,8 @@
 #ifndef _TEXTURE2D
 #define _TEXTURE2D
 
+#include "common/logger.h"
+#include "device_manager.h"
 #include "gpu_resource.h"
 #include "image.h"
 #include <filesystem>
@@ -8,12 +10,69 @@
 namespace graphics {
 class Texture2D : public GpuResource {
   public:
-    Texture2D()
-        : device_(0), heap_(0), upload(0), resource_(0), cpu_handle_(),
-          index_(0){};
-    void Create(ID3D12Device *device, DynamicDescriptorHeap *heap, int width,
-                int height, DXGI_FORMAT format) {
-        device_ = device;
+    Texture2D() : upload(0), cpu_handle_(), index_(0){};
+
+    static Texture2D *Create(const std::string path1, const std::string path2) {
+
+        auto image = Image::Read(path1, path2, false);
+        Texture2D *tex = new Texture2D();
+
+        if (!image.IsEmpty()) {
+            tex->Initialize(image);
+        } else { // dummy
+            tex->Initialize(256, 256, DXGI_FORMAT_R8G8B8A8_UNORM);
+            common::Logger::Debug(path1 + "," + path2 +
+                                  ": not exists. skip texture reading.");
+        }
+        return tex;
+    };
+    static Texture2D *Create(const std::string path) {
+
+        auto image = Image::Read(path, false);
+        Texture2D *tex = new Texture2D();
+
+        if (!image.IsEmpty()) {
+            tex->Initialize(image);
+        } else { // dummy
+            tex->Initialize(256, 256, DXGI_FORMAT_R8G8B8A8_UNORM);
+            common::Logger::Debug(path + ": not exists. skip texture reading.");
+        }
+        return tex;
+    };
+    static Texture2D *Create(const std::string metalic,
+                             const std::string roughness,
+                             bool is_metalic_roughness) {
+
+        auto image = Image::ReadMetallicRoughness(metalic, roughness, false);
+        Texture2D *tex = new Texture2D();
+
+        if (!image.IsEmpty()) {
+            tex->Initialize(image);
+        } else { // dummy
+            tex->Initialize(256, 256, DXGI_FORMAT_R8G8B8A8_UNORM);
+            common::Logger::Debug(metalic + "," + roughness +
+                                  ": not exists. skip texture reading.");
+        }
+        return tex;
+    };
+    static Texture2D *Create(int width, int height, DXGI_FORMAT format) {
+
+        Texture2D *tex = new Texture2D();
+        tex->Initialize(width, height, format);
+
+        return tex;
+    };
+    D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle() { return cpu_handle_; };
+    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() override {
+        return GpuCore::Instance().GetHeap().View()->GetGpuHandle(index_);
+    };
+
+  private:
+    void Initialize(int width, int height, DXGI_FORMAT format) {
+        auto context =
+            GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
+                L"Texture2D");
+
         D3D12_RESOURCE_DESC txtDesc;
         ZeroMemory(&txtDesc, sizeof(txtDesc));
         txtDesc.Width = width;
@@ -27,50 +86,47 @@ class Texture2D : public GpuResource {
         txtDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
         CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
-        HRESULT hr = device_->CreateCommittedResource(
+        HRESULT hr = GpuCore::Instance().GetDevice()->CreateCommittedResource(
             &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
             D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, nullptr,
             IID_PPV_ARGS(&resource_));
 
-        heap_ = heap;
-    };
-    void Create(ID3D12Device *device, DynamicDescriptorHeap *heap, Image image,
-                ComPtr<ID3D12GraphicsCommandList> command_list) {
-        device_ = device;
-        heap_ = heap;
-        CreateTextureHelper(&image, command_list.Get());
-    };
-    void Allocate() override {
-        heap_->AllocateDescriptor(cpu_handle_, index_);
+        GpuCore::Instance().GetCommand()->Finish(context, true);
 
+        // view
+        GpuCore::Instance().GetHeap().View()->AllocateDescriptor(cpu_handle_,
+                                                                 index_);
         D3D12_SHADER_RESOURCE_VIEW_DESC desc = {
             resource_->GetDesc().Format, D3D12_SRV_DIMENSION_TEXTURE2D,
             D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING};
 
         desc.Texture2D.MipLevels = 1;
 
-        device_->CreateShaderResourceView(resource_, &desc, cpu_handle_);
+        GpuCore::Instance().GetDevice()->CreateShaderResourceView(
+            resource_, &desc, cpu_handle_);
     };
+    void Initialize(Image image) {
+        current_state_ = D3D12_RESOURCE_STATE_COMMON;
 
-  private:
-    void CreateTextureHelper(
-        Image *image,
-        ID3D12GraphicsCommandList *command_list) { // 1.resource creation
+        auto context =
+            GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
+                L"Texture2D");
+
         D3D12_RESOURCE_DESC txtDesc;
         ZeroMemory(&txtDesc, sizeof(txtDesc));
-        txtDesc.Width = image->Width();
-        txtDesc.Height = image->Height();
+        txtDesc.Width = image.Width();
+        txtDesc.Height = image.Height();
         txtDesc.MipLevels = 0;
         txtDesc.DepthOrArraySize = 1;
-        txtDesc.Format = image->Format();
+        txtDesc.Format = image.Format();
         txtDesc.SampleDesc.Count = 1;
         txtDesc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
         txtDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
 
         CD3DX12_HEAP_PROPERTIES heapProperties(D3D12_HEAP_TYPE_DEFAULT);
-        ASSERT_FAILED(device_->CreateCommittedResource(
-            &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc,
-            D3D12_RESOURCE_STATE_COPY_DEST, nullptr, IID_PPV_ARGS(&resource_)));
+        ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
+            &heapProperties, D3D12_HEAP_FLAG_NONE, &txtDesc, current_state_,
+            nullptr, IID_PPV_ARGS(&resource_)));
 
         // 2.upload heap
         const uint64_t uploadBufferSize =
@@ -78,34 +134,39 @@ class Texture2D : public GpuResource {
 
         auto heap_property = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
         auto buffer_size = CD3DX12_RESOURCE_DESC::Buffer(uploadBufferSize);
-        ASSERT_FAILED(device_->CreateCommittedResource(
-            &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_size,
-            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr, IID_PPV_ARGS(&upload)));
+        ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
+            &heap_property, D3D12_HEAP_FLAG_NONE, &buffer_size, current_state_,
+            nullptr, IID_PPV_ARGS(&upload)));
 
         // 3.copy data to upload heap
         D3D12_SUBRESOURCE_DATA textureData = {};
-        textureData.pData = image->Buffer().data();
-        textureData.RowPitch = image->Width() * 4;
-        textureData.SlicePitch = textureData.RowPitch * image->Height();
+        textureData.pData = image.Buffer().data();
+        textureData.RowPitch = image.Width() * 4;
+        textureData.SlicePitch = textureData.RowPitch * image.Height();
 
-        UpdateSubresources(command_list, resource_, upload, 0, 0, 1,
+        context->TransitionResource(this, D3D12_RESOURCE_STATE_COPY_DEST, true);
+        UpdateSubresources(context->GetList(), resource_, upload, 0, 0, 1,
                            &textureData);
+        context->TransitionResource(
+            this, D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE, true);
 
-        auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-            resource_, D3D12_RESOURCE_STATE_COPY_DEST,
-            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-        command_list->ResourceBarrier(1, &barrier);
-    };
+        GpuCore::Instance().GetCommand()->Finish(context, true);
 
-    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() override {
-        return heap_->GetGpuHandle(index_);
+        // view
+        GpuCore::Instance().GetHeap().View()->AllocateDescriptor(cpu_handle_,
+                                                                 index_);
+        D3D12_SHADER_RESOURCE_VIEW_DESC desc = {
+            resource_->GetDesc().Format, D3D12_SRV_DIMENSION_TEXTURE2D,
+            D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING};
+
+        desc.Texture2D.MipLevels = 1;
+
+        GpuCore::Instance().GetDevice()->CreateShaderResourceView(
+            resource_, &desc, cpu_handle_);
     };
 
     UINT index_;
-    ID3D12Device *device_;
-    DynamicDescriptorHeap *heap_;
     ID3D12Resource *upload;
-    ID3D12Resource *resource_;
     D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle_;
 };
 } // namespace graphics

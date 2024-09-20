@@ -24,6 +24,7 @@ class TextureCube : public GpuResource {
 
   private:
     void Initialize(const wchar_t *file_name) {
+        current_state_ = D3D12_RESOURCE_STATE_COMMON;
 
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
@@ -57,8 +58,6 @@ class TextureCube : public GpuResource {
         buffer_desc.SampleDesc.Quality = 0;
         buffer_desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
         buffer_desc.Flags = D3D12_RESOURCE_FLAG_NONE;
-
-        current_state_ = D3D12_RESOURCE_STATE_COMMON;
 
         ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
             &heap_props, D3D12_HEAP_FLAG_NONE, &buffer_desc, current_state_,

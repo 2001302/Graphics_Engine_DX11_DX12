@@ -16,14 +16,11 @@ class Image {
     bool IsEmpty() { return width == 0 || height == 0; }
 
     static Image Read(const std::string path,
-                      ComPtr<ID3D12GraphicsCommandList> command_list,
                       const bool usSRGB);
     static Image Read(const std::string path1, const std::string path2,
-                      ComPtr<ID3D12GraphicsCommandList> command_list,
                       const bool usSRGB);
     static Image ReadMetallicRoughness(
-        const std::string metallic, const std::string roughness,
-        ComPtr<ID3D12GraphicsCommandList> command_list, const bool usSRGB);
+        const std::string metallic, const std::string roughness,const bool usSRGB);
 
   private:
     int width;

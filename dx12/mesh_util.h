@@ -3,7 +3,6 @@
 
 #include "buffer_manager.h"
 #include "device_manager.h"
-#include "graphics_pso.h"
 #include "sampler_state.h"
 
 namespace graphics {

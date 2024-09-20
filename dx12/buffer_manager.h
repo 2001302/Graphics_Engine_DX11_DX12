@@ -4,6 +4,8 @@
 #include "back_buffer.h"
 #include "color_buffer.h"
 #include "depth_buffer.h"
+#include "texture_cube.h"
+#include "texture_2d.h"
 #include "device_manager.h"
 
 namespace graphics {

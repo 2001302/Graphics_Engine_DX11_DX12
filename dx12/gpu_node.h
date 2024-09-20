@@ -167,14 +167,13 @@ class GlobalResourceNode : public common::BehaviorActionNode {
                 L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds");
             auto shadow = new Texture2D[MAX_LIGHTS];
 
-            std::vector<GpuResource *> tex = {std::move(env), std::move(specular),
-                                              std::move(diffuse), std::move(brdf)};
+            std::vector<GpuResource *> tex = {
+                std::move(env), std::move(specular), std::move(diffuse),
+                std::move(brdf)};
 
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                shadow[i].Create(GpuCore::Instance().GetDevice(),
-                                 GpuCore::Instance().GetHeap().View(), 1024,
-                                 1024, DXGI_FORMAT_R8G8B8A8_UNORM);
-                tex.push_back(&shadow[i]);
+                tex.push_back(std::move(
+                    Texture2D::Create(1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM)));
             }
 
             condition->shared_texture = std::make_shared<GpuResourceList>(tex);

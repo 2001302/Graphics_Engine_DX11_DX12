@@ -41,7 +41,7 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
             auto mesh = renderer->meshes.front();
 
             skyboxPSO->Render(
-                condition->shared_sampler.get(),
+                condition->shared_sampler,
                 condition->shared_texture.get(), condition->global_consts.Get(),
                 renderer->mesh_consts.Get(), renderer->material_consts.Get(),
                 mesh->vertex_buffer_view, mesh->index_buffer_view,

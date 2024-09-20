@@ -22,9 +22,19 @@ class RenderCondition : public common::IInfo {
     RenderCondition()
         : delta_time(0.0f), draw_wire(false), light_rotate(false),
           stage_type(EnumStageType::eInitialize) {}
+    ~RenderCondition() {
+
+        if (shared_texture) {
+			shared_texture.reset();
+		}
+        if (shared_sampler) {
+            delete shared_sampler;
+            shared_sampler = 0;
+        }
+    }
 
     std::shared_ptr<GpuResourceList> shared_texture; // t10~t16
-    std::shared_ptr<SamplerState> shared_sampler;
+    SamplerState* shared_sampler;
     ConstantBuffer<GlobalConstants> global_consts;
 
     float delta_time;

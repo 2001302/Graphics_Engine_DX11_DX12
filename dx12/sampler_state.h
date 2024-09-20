@@ -4,37 +4,35 @@
 #include "gpu_resource.h"
 
 namespace graphics {
-class SamplerState : public GpuResource {
+class SamplerState {
   public:
-    SamplerState() : heap_(0){};
-    void Create(ID3D12Device *device, DynamicDescriptorHeap *heap,
-                std::vector<D3D12_SAMPLER_DESC> sampler_desc) {
-        device_ = device;
-        sampler_desc_ = sampler_desc;
-        heap_ = heap;
+    SamplerState(){};
+    static SamplerState *Create(std::vector<D3D12_SAMPLER_DESC> sampler_desc) {
+        SamplerState *sampler = new SamplerState();
+        sampler->Initailize(sampler_desc);
+        return sampler;
     };
 
-    void Allocate() override {
+    void Initailize(std::vector<D3D12_SAMPLER_DESC> sampler_desc) {
+        cpu_handle_.resize(sampler_desc.size());
+        index_.resize(sampler_desc.size());
 
-        cpu_handle_.resize(sampler_desc_.size());
-        index_.resize(sampler_desc_.size());
-
-        for (int i = 0; i < sampler_desc_.size(); i++) {
-            heap_->AllocateDescriptor(cpu_handle_[i], index_[i]);
-            device_->CreateSampler(&sampler_desc_[i], cpu_handle_[i]);
+        for (int i = 0; i < sampler_desc.size(); i++) {
+            GpuCore::Instance().GetHeap().Sampler()->AllocateDescriptor(
+                cpu_handle_[i], index_[i]);
+            GpuCore::Instance().GetDevice()->CreateSampler(&sampler_desc[i],
+                                                           cpu_handle_[i]);
         }
     };
 
-    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() override {
-        return heap_->GetGpuHandle(index_.front());
+    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
+        return GpuCore::Instance().GetHeap().Sampler()->GetGpuHandle(
+            index_.front());
     };
 
   private:
-    ID3D12Device *device_;
-    DynamicDescriptorHeap *heap_;
     std::vector<UINT> index_;
     std::vector<D3D12_CPU_DESCRIPTOR_HANDLE> cpu_handle_;
-    std::vector<D3D12_SAMPLER_DESC> sampler_desc_;
 };
 } // namespace graphics
 #endif

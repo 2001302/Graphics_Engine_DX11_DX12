@@ -184,13 +184,7 @@ class GlobalResourceNode : public common::BehaviorActionNode {
                 sampler::pointWrapSS,   sampler::linearMirrorSS,
                 sampler::pointClampSS};
 
-            condition->shared_sampler = std::make_shared<SamplerState>();
-            condition->shared_sampler->Create(
-                GpuCore::Instance().GetDevice(),
-                GpuCore::Instance().GetHeap().Sampler(), sampler_desc);
-
-            condition->shared_texture->Allocate();
-            condition->shared_sampler->Allocate();
+            condition->shared_sampler = SamplerState::Create(sampler_desc);
 
             GpuCore::Instance().GetCommand()->Finish(context, true);
 

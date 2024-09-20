@@ -73,7 +73,7 @@ class ToneMappingPSO : public GraphicsPSO {
     void Render(ComPtr<ID3D12Resource> const_buffer,
                 D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view,
                 D3D12_INDEX_BUFFER_VIEW index_buffer_view, UINT index_count,
-                SamplerState sampler) {
+                SamplerState* sampler) {
 
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
@@ -106,7 +106,7 @@ class ToneMappingPSO : public GraphicsPSO {
             0, const_buffer->GetGPUVirtualAddress());
         // 2:sampler
         context->GetList()->SetGraphicsRootDescriptorTable(
-            1, sampler.GetGpuHandle());
+            1, sampler->GetGpuHandle());
         // 3:srv
         context->GetList()->SetGraphicsRootDescriptorTable(
             2, GpuBuffer::Instance().GetHDR()->GetSrvGpuHandle());

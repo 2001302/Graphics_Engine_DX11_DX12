@@ -40,10 +40,7 @@ class ToneMappingNodeInvoker : public common::BehaviorActionNode {
 
             Util::CreateConstBuffer(const_data, const_buffer);
 
-            sampler.Create(GpuCore::Instance().GetDevice(),
-                           GpuCore::Instance().GetHeap().Sampler(),
-                           {sampler::linearClampSS});
-            sampler.Allocate();
+            sampler = SamplerState::Create({sampler::linearClampSS});
 
             break;
         }
@@ -72,7 +69,7 @@ class ToneMappingNodeInvoker : public common::BehaviorActionNode {
     };
     std::shared_ptr<ToneMappingPSO> toneMappingPSO;
     std::shared_ptr<Mesh> mesh;
-    SamplerState sampler;
+    SamplerState* sampler;
     ImageFilterConstData const_data;
     ComPtr<ID3D12Resource> const_buffer;
 };

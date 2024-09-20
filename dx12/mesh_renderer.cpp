@@ -44,7 +44,7 @@ void MeshRenderer::Render(RenderCondition *render_condition,
 
         for (const auto &mesh : meshes) {
             PSO->Render(render_condition->shared_texture.get(),
-                        render_condition->shared_sampler.get(),
+                        render_condition->shared_sampler,
                         mesh->buffer_PS.get(), mesh->buffer_VS.get(),
                         render_condition->global_consts.Get(),
                         mesh_consts.Get(), material_consts.Get(),

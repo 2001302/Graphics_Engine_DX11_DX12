@@ -28,7 +28,7 @@ void Mesh::Initialize(const MeshData &mesh_data,
         std::move(metallic_roughness), std::move(emissive)};
     auto tex_VS = std::vector<GpuResource *>{std::move(height)};
 
-    buffer_PS = std::make_shared<GpuResourceList>(tex_PS);
-    buffer_VS = std::make_shared<GpuResourceList>(tex_VS);
+    texture_PS = std::make_shared<GpuResourceList>(tex_PS);
+    texture_VS = std::make_shared<GpuResourceList>(tex_VS);
 }
 } // namespace graphics

@@ -123,9 +123,9 @@ class SolidMeshPSO : public GraphicsPSO {
             context->GetList()->SetGraphicsRootConstantBufferView(
                 4, mesh_renderer->GetMaterialConsts()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                5, mesh->buffer_VS->GetGpuHandle());
+                5, mesh->texture_VS->GetGpuHandle());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                6, mesh->buffer_PS->GetGpuHandle());
+                6, mesh->texture_PS->GetGpuHandle());
 
             context->GetList()->IASetPrimitiveTopology(
                 D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

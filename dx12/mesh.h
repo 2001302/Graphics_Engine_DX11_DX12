@@ -37,8 +37,8 @@ struct Mesh {
     UINT stride = 0;
     UINT offset = 0;
 
-    std::shared_ptr<GpuResourceList> buffer_PS; // t0 ~ t4
-    std::shared_ptr<GpuResourceList> buffer_VS; // t0
+    std::shared_ptr<GpuResourceList> texture_PS; // t0 ~ t4
+    std::shared_ptr<GpuResourceList> texture_VS; // t0
 
     void Initialize(const MeshData &mesh_data,
                     ConstantBuffer<MeshConstants> &mesh_consts,

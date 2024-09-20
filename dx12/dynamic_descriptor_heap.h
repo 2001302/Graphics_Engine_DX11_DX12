@@ -16,9 +16,7 @@ class DynamicDescriptorHeap {
     D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle(UINT descriptor_index);
     void AllocateDescriptor(_Out_ D3D12_CPU_DESCRIPTOR_HANDLE &cpu_handle,
                             _Out_ UINT &descriptor_heap_index);
-    void FreeDescriptor() {
-		descriptors_allocated = 0;
-	}
+
   private:
     ComPtr<ID3D12DescriptorHeap> descriptor_heap;
     UINT descriptors_allocated = 0;

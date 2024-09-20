@@ -1,7 +1,8 @@
 #ifndef _MESH_PSO
 #define _MESH_PSO
 
-#include "graphics_pso.h"
+#include "mesh_renderer.h"
+#include "pipeline_state_object.h"
 #include "shader_util.h"
 
 namespace graphics {
@@ -85,12 +86,8 @@ class SolidMeshPSO : public GraphicsPSO {
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
     void Render(GpuResourceList *shared_texture, SamplerState *sampler_state,
-                GpuResourceList *buffer_PS, GpuResourceList *buffer_VS,
                 ComPtr<ID3D12Resource> global_consts,
-                ComPtr<ID3D12Resource> mesh_consts,
-                ComPtr<ID3D12Resource> material_consts,
-                D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view,
-                D3D12_INDEX_BUFFER_VIEW index_buffer_view, UINT index_count) {
+                MeshRenderer *mesh_renderer) {
 
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
@@ -103,36 +100,42 @@ class SolidMeshPSO : public GraphicsPSO {
         context->TransitionResource(GpuBuffer::Instance().GetHDR(),
                                     D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
-        context->SetViewportAndScissorRect(0, 0,
-                                           (UINT)common::env::screen_width,
-                                           (UINT)common::env::screen_height);
-        context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
-                                     GpuBuffer::Instance().GetDSV());
+        for (auto mesh : mesh_renderer->meshes) {
 
-        context->SetRootSignature(root_signature);
-        context->SetPipelineState(pipeline_state);
+            context->SetViewportAndScissorRect(
+                0, 0, (UINT)common::env::screen_width,
+                (UINT)common::env::screen_height);
+            context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
+                                         GpuBuffer::Instance().GetDSV());
 
-        context->GetList()->SetGraphicsRootDescriptorTable(
-            0, sampler_state->GetGpuHandle());
-        // global texture
-        context->GetList()->SetGraphicsRootDescriptorTable(
-            1, shared_texture->GetGpuHandle());
-        context->GetList()->SetGraphicsRootConstantBufferView(
-            2, global_consts->GetGPUVirtualAddress());
-        context->GetList()->SetGraphicsRootConstantBufferView(
-            3, mesh_consts.Get()->GetGPUVirtualAddress());
-        context->GetList()->SetGraphicsRootConstantBufferView(
-            4, material_consts.Get()->GetGPUVirtualAddress());
-        context->GetList()->SetGraphicsRootDescriptorTable(
-            5, buffer_VS->GetGpuHandle());
-        context->GetList()->SetGraphicsRootDescriptorTable(
-            6, buffer_PS->GetGpuHandle());
+            context->SetRootSignature(root_signature);
+            context->SetPipelineState(pipeline_state);
 
-        context->GetList()->IASetPrimitiveTopology(
-            D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        context->GetList()->IASetVertexBuffers(0, 1, &vertex_buffer_view);
-        context->GetList()->IASetIndexBuffer(&index_buffer_view);
-        context->GetList()->DrawIndexedInstanced(index_count, 1, 0, 0, 0);
+            context->GetList()->SetGraphicsRootDescriptorTable(
+                0, sampler_state->GetGpuHandle());
+            // global texture
+            context->GetList()->SetGraphicsRootDescriptorTable(
+                1, shared_texture->GetGpuHandle());
+            context->GetList()->SetGraphicsRootConstantBufferView(
+                2, global_consts->GetGPUVirtualAddress());
+            context->GetList()->SetGraphicsRootConstantBufferView(
+                3, mesh_renderer->mesh_consts.Get()->GetGPUVirtualAddress());
+            context->GetList()->SetGraphicsRootConstantBufferView(
+                4,
+                mesh_renderer->material_consts.Get()->GetGPUVirtualAddress());
+            context->GetList()->SetGraphicsRootDescriptorTable(
+                5, mesh->buffer_VS->GetGpuHandle());
+            context->GetList()->SetGraphicsRootDescriptorTable(
+                6, mesh->buffer_PS->GetGpuHandle());
+
+            context->GetList()->IASetPrimitiveTopology(
+                D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+            context->GetList()->IASetVertexBuffers(0, 1,
+                                                   &mesh->vertex_buffer_view);
+            context->GetList()->IASetIndexBuffer(&mesh->index_buffer_view);
+            context->GetList()->DrawIndexedInstanced(mesh->index_count, 1, 0, 0,
+                                                     0);
+        }
 
         GpuCore::Instance().GetCommand()->Finish(context);
     };

@@ -137,7 +137,7 @@
     <ClCompile Include="device_manager.cpp">
       <Filter>Graphics\Gpu\Core</Filter>
     </ClCompile>
-    <ClCompile Include="graphics_pso.cpp">
+    <ClCompile Include="pipeline_state_object.cpp">
       <Filter>Graphics\Gpu\PSO</Filter>
     </ClCompile>
     <ClCompile Include="command_manager.cpp">
@@ -444,7 +444,7 @@
     <ClInclude Include="device_manager.h">
       <Filter>Graphics\Gpu\Core</Filter>
     </ClInclude>
-    <ClInclude Include="graphics_pso.h">
+    <ClInclude Include="pipeline_state_object.h">
       <Filter>Graphics\Gpu\PSO</Filter>
     </ClInclude>
     <ClInclude Include="command_manager.h">

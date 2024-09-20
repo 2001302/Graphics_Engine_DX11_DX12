@@ -2,7 +2,7 @@
 #define _GPU_HEAP
 
 #include "pch.h"
-#include "graphics_pso.h"
+#include "pipeline_state_object.h"
 #include <d3d12.h>
 #include <wrl/client.h>
 

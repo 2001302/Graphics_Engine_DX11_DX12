@@ -21,11 +21,12 @@ class RenderCondition : public common::IInfo {
   public:
     RenderCondition()
         : delta_time(0.0f), draw_wire(false), light_rotate(false),
-          stage_type(EnumStageType::eInitialize) {}
+          stage_type(EnumStageType::eInitialize), shared_sampler (0){}
     ~RenderCondition() {
 
         if (shared_texture) {
-			shared_texture.reset();
+            delete shared_texture;
+            shared_texture = 0;
 		}
         if (shared_sampler) {
             delete shared_sampler;
@@ -33,7 +34,7 @@ class RenderCondition : public common::IInfo {
         }
     }
 
-    std::shared_ptr<GpuResourceList> shared_texture; // t10~t16
+    GpuResourceList* shared_texture; // t10~t16
     SamplerState* shared_sampler;
     ConstantBuffer<GlobalConstants> global_consts;
 

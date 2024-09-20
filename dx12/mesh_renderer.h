@@ -6,9 +6,6 @@
 #include "constant_buffer.h"
 #include "geometry_generator.h"
 #include "mesh.h"
-#include "mesh_pso.h"
-#include "render_condition.h"
-#include "render_target_object.h"
 #include <filesystem>
 #include <iostream>
 
@@ -21,13 +18,10 @@ class MeshRenderer : public Component {
 
     virtual void Initialize();
     void Initialize(const std::string &basePath, const std::string &filename);
-    void Initialize(const std::vector<MeshData> &meshes,
-                    bool use_texture = true);
+    void Initialize(const std::vector<MeshData> &meshes);
 
     void UpdateConstantBuffers();
     void UpdateWorldRow(const Matrix &worldRow);
-
-    virtual void Render(RenderCondition *render_condition, SolidMeshPSO *PSO);
 
   public:
     Matrix world_row = Matrix();    // Model(Object) To World

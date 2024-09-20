@@ -4,8 +4,7 @@
 namespace graphics {
 void Mesh::Initialize(const MeshData &mesh_data,
                       ConstantBuffer<MeshConstants> &mesh_consts,
-                      ConstantBuffer<MaterialConstants> &material_consts,
-                      bool use_texture) {
+                      ConstantBuffer<MaterialConstants> &material_consts) {
 
     Util::CreateVertexBuffer(mesh_data.vertices, vertex_buffer,
                              vertex_buffer_view);

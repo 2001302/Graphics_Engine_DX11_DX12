@@ -176,7 +176,7 @@ class GlobalResourceNode : public common::BehaviorActionNode {
                     Texture2D::Create(1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM)));
             }
 
-            condition->shared_texture = std::make_shared<GpuResourceList>(tex);
+            condition->shared_texture = new GpuResourceList(tex);
 
             std::vector<D3D12_SAMPLER_DESC> sampler_desc{
                 sampler::linearWrapSS,  sampler::linearClampSS,

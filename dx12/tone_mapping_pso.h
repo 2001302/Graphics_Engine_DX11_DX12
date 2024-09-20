@@ -1,7 +1,7 @@
 #ifndef _TONEMAPPING_PSO
 #define _TONEMAPPING_PSO
 
-#include "graphics_pso.h"
+#include "pipeline_state_object.h"
 #include "shader_util.h"
 
 namespace graphics {

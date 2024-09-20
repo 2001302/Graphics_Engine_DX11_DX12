@@ -1,7 +1,7 @@
 #ifndef _QUERY_HEAP
 #define _QUERY_HEAP
 
-#include "graphics_pso.h"
+#include "pipeline_state_object.h"
 #include "pch.h"
 #include <d3d12.h>
 #include <wrl/client.h>

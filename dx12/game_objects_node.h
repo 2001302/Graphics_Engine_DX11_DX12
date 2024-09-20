@@ -3,6 +3,7 @@
 
 #include "black_board.h"
 #include "common/behavior_tree_builder.h"
+#include "mesh_pso.h"
 #include "mesh_renderer.h"
 
 namespace graphics {
@@ -20,44 +21,41 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eInitialize: {
 
             // pso
-             mesh_solid_PSO = std::make_shared<SolidMeshPSO>();
-             mesh_solid_PSO->Initialize();
+            mesh_solid_PSO = std::make_shared<SolidMeshPSO>();
+            mesh_solid_PSO->Initialize();
 
             // sample object
-             Vector3 center(0.0f, 0.0f, 0.0f);
-             std::string base_path = "Assets/Characters/Mixamo/";
-             std::string file_name = "character.fbx";
+            std::string base_path = "Assets/Characters/Mixamo/";
+            std::string file_name = "character.fbx";
 
-             auto renderer = std::make_shared<MeshRenderer>();
-             renderer->Initialize(base_path, file_name);
+            auto component = std::make_shared<MeshRenderer>();
+            component->Initialize(base_path, file_name);
+            component->UpdateConstantBuffers();
 
-             renderer->material_consts.GetCpu().albedo_factor = Vector3(1.0f);
-             renderer->material_consts.GetCpu().roughness_factor = 0.8f;
-             renderer->material_consts.GetCpu().metallic_factor = 0.0f;
-             renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
-             renderer->UpdateConstantBuffers();
+            auto model = std::make_shared<Model>();
+            model->AddComponent(EnumComponentType::eRenderer, component);
 
-             auto obj = std::make_shared<Model>();
-             obj->AddComponent(EnumComponentType::eRenderer, renderer);
-
-             targets->objects.insert({obj->GetEntityId(), obj});
+            targets->objects.insert({model->GetEntityId(), model});
 
             break;
         }
         case EnumStageType::eUpdate: {
             for (auto &i : targets->objects) {
-                auto renderer = (MeshRenderer *)i.second->GetComponent(
+                auto component = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->UpdateConstantBuffers();
+                component->UpdateConstantBuffers();
             }
 
             break;
         }
         case EnumStageType::eRender: {
             for (auto &i : targets->objects) {
-                auto renderer = (MeshRenderer *)i.second->GetComponent(
+                auto component = (MeshRenderer *)i.second->GetComponent(
                     EnumComponentType::eRenderer);
-                renderer->Render(condition, mesh_solid_PSO.get());
+
+                mesh_solid_PSO->Render(
+                    condition->shared_texture, condition->shared_sampler,
+                    condition->global_consts.Get(), component);
             }
 
             break;

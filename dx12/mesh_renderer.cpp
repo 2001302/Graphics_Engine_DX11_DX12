@@ -15,16 +15,14 @@ void MeshRenderer::Initialize(const std::string &basePath,
     Initialize(meshes);
 }
 
-void MeshRenderer::Initialize(const vector<MeshData> &mesh_data,
-                              bool use_texture) {
+void MeshRenderer::Initialize(const vector<MeshData> &mesh_data) {
 
     meshes.resize(mesh_data.size());
     for (int i = 0; i < mesh_data.size(); i++) {
 
         MeshData meshData = mesh_data[i];
         meshes[i] = std::make_shared<Mesh>();
-        meshes[i]->Initialize(meshData, mesh_consts, material_consts,
-                              use_texture);
+        meshes[i]->Initialize(meshData, mesh_consts, material_consts);
         mesh_consts.GetCpu().world = Matrix();
         material_consts.Initialize();
         mesh_consts.Initialize();
@@ -35,22 +33,6 @@ void MeshRenderer::UpdateConstantBuffers() {
     if (is_visible) {
         mesh_consts.Upload();
         material_consts.Upload();
-    }
-}
-
-void MeshRenderer::Render(RenderCondition *render_condition,
-                          SolidMeshPSO *PSO) {
-    if (is_visible) {
-
-        for (const auto &mesh : meshes) {
-            PSO->Render(render_condition->shared_texture.get(),
-                        render_condition->shared_sampler,
-                        mesh->buffer_PS.get(), mesh->buffer_VS.get(),
-                        render_condition->global_consts.Get(),
-                        mesh_consts.Get(), material_consts.Get(),
-                        mesh->vertex_buffer_view, mesh->index_buffer_view,
-                        mesh->index_count);
-        }
     }
 }
 

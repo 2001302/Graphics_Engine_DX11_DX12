@@ -2,7 +2,7 @@
 #define _SHADER_UTIL
 
 #include "device_manager.h"
-#include "graphics_pso.h"
+#include "pipeline_state_object.h"
 #include "sampler_state.h"
 
 namespace graphics {

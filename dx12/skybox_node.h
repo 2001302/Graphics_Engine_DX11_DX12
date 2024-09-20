@@ -27,7 +27,7 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
             std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
 
             auto renderer = std::make_shared<MeshRenderer>();
-            renderer->Initialize(std::vector{mesh_data}, false);
+            renderer->Initialize(std::vector{mesh_data});
 
             skybox = std::make_shared<Model>();
             skybox->AddComponent(EnumComponentType::eRenderer, renderer);
@@ -42,7 +42,7 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
 
             skyboxPSO->Render(
                 condition->shared_sampler,
-                condition->shared_texture.get(), condition->global_consts.Get(),
+                condition->shared_texture, condition->global_consts.Get(),
                 renderer->mesh_consts.Get(), renderer->material_consts.Get(),
                 mesh->vertex_buffer_view, mesh->index_buffer_view,
                 mesh->index_count);

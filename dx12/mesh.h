@@ -42,8 +42,7 @@ struct Mesh {
 
     void Initialize(const MeshData &mesh_data,
                     ConstantBuffer<MeshConstants> &mesh_consts,
-                    ConstantBuffer<MaterialConstants> &material_consts,
-                    bool use_texture = true);
+                    ConstantBuffer<MaterialConstants> &material_consts);
 };
 
 } // namespace dx12

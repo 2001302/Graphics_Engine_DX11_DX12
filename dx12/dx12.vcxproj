@@ -174,7 +174,7 @@
     <ClCompile Include="common\setting_ui.cpp" />
     <ClCompile Include="common\ui.cpp" />
     <ClCompile Include="gpu_resource.cpp" />
-    <ClCompile Include="graphics_pso.cpp" />
+    <ClCompile Include="pipeline_state_object.cpp" />
     <ClCompile Include="mesh_util.cpp" />
     <ClCompile Include="command_manager.cpp" />
     <ClCompile Include="command_list.cpp" />
@@ -256,7 +256,7 @@
     <ClInclude Include="common\ui.h" />
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="gpu_resource.h" />
-    <ClInclude Include="graphics_pso.h" />
+    <ClInclude Include="pipeline_state_object.h" />
     <ClInclude Include="mesh_util.h" />
     <ClInclude Include="dynamic_descriptor_heap.h" />
     <ClInclude Include="mesh_pso.h" />

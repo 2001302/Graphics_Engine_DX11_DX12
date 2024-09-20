@@ -1,4 +1,4 @@
-#include "graphics_pso.h"
+#include "pipeline_state_object.h"
 
 namespace graphics {
 namespace sampler {

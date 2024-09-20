@@ -13,21 +13,21 @@ using DirectX::SimpleMath::Vector3;
 using Microsoft::WRL::ComPtr;
 
 namespace graphics {
-class PSO {
+class PipelineStateObject {
   public:
-    PSO() : root_signature(nullptr), pipeline_state(nullptr) {}
+    PipelineStateObject() : root_signature(nullptr), pipeline_state(nullptr) {}
     virtual void Initialize(){};
 
     ID3D12RootSignature *root_signature;
     ID3D12PipelineState *pipeline_state;
 };
 
-class GraphicsPSO : public PSO {
+class GraphicsPSO : public PipelineStateObject {
   public:
     D3D12_GRAPHICS_PIPELINE_STATE_DESC description;
 };
 
-class ComputePSO : public PSO {
+class ComputePSO : public PipelineStateObject {
   public:
     D3D12_COMPUTE_PIPELINE_STATE_DESC description;
 };

@@ -1,4 +1,4 @@
-#include "graphics_core.h"
+#include "device_manager.h"
 
 #include <filesystem>
 #include <knownfolders.h>

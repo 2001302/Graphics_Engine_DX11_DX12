@@ -1,7 +1,7 @@
 #ifndef _VERTEX
 #define _VERTEX
 
-#include "graphics_util.h"
+#include "mesh_util.h"
 
 namespace graphics {
 

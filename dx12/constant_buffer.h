@@ -1,7 +1,7 @@
 #ifndef _CONSTANTBUFFER
 #define _CONSTANTBUFFER
 
-#include "graphics_util.h"
+#include "mesh_util.h"
 
 namespace graphics {
 __declspec(align(256)) struct MeshConstants {

@@ -5,7 +5,7 @@
 #include "common/behavior_tree_builder.h"
 #include "common/platform.h"
 #include "common/setting_ui.h"
-#include "graphics_util.h"
+#include "mesh_util.h"
 #include "message_receiver.h"
 
 namespace graphics {

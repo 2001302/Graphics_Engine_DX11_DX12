@@ -3,7 +3,7 @@
 
 #include "common/node.h"
 #include "component.h"
-#include "graphics_util.h"
+#include "mesh_util.h"
 #include <unordered_map>
 
 namespace graphics {

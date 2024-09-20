@@ -4,7 +4,7 @@
 #include "common/behavior_tree_builder.h"
 #include "common/env.h"
 #include "common/node.h"
-#include "graphics_util.h"
+#include "mesh_util.h"
 #include "model.h"
 
 namespace graphics {

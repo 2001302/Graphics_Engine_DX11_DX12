@@ -107,7 +107,7 @@
     <ClCompile Include="dynamic_descriptor_heap.cpp">
       <Filter>Graphics\Gpu\Heap</Filter>
     </ClCompile>
-    <ClCompile Include="graphics_util.cpp">
+    <ClCompile Include="mesh_util.cpp">
       <Filter>Graphics\Util</Filter>
     </ClCompile>
     <ClCompile Include="command_queue.cpp">
@@ -134,7 +134,7 @@
     <ClCompile Include="shader_util.cpp">
       <Filter>Graphics\Util</Filter>
     </ClCompile>
-    <ClCompile Include="graphics_core.cpp">
+    <ClCompile Include="device_manager.cpp">
       <Filter>Graphics\Gpu\Core</Filter>
     </ClCompile>
     <ClCompile Include="graphics_pso.cpp">
@@ -414,7 +414,7 @@
     <ClInclude Include="command_queue.h">
       <Filter>Graphics\Gpu\Command</Filter>
     </ClInclude>
-    <ClInclude Include="graphics_util.h">
+    <ClInclude Include="mesh_util.h">
       <Filter>Graphics\Util</Filter>
     </ClInclude>
     <ClInclude Include="common\id_generator.h">
@@ -441,7 +441,7 @@
     <ClInclude Include="shader_util.h">
       <Filter>Graphics\Util</Filter>
     </ClInclude>
-    <ClInclude Include="graphics_core.h">
+    <ClInclude Include="device_manager.h">
       <Filter>Graphics\Gpu\Core</Filter>
     </ClInclude>
     <ClInclude Include="graphics_pso.h">

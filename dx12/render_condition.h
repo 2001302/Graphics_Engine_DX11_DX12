@@ -5,7 +5,7 @@
 #include "constant_buffer.h"
 #include "dynamic_descriptor_heap.h"
 #include "gpu_resource.h"
-#include "graphics_util.h"
+#include "mesh_util.h"
 #include "sampler_state.h"
 #include "texture_2d.h"
 #include "texture_cube.h"

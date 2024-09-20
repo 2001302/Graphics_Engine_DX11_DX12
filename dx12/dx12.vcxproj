@@ -142,7 +142,7 @@
     <ClCompile Include="geometry_generator.cpp" />
     <ClCompile Include="dynamic_descriptor_heap.cpp" />
     <ClCompile Include="buffer_manager.cpp" />
-    <ClCompile Include="graphics_core.cpp" />
+    <ClCompile Include="device_manager.cpp" />
     <ClCompile Include="heap_manager.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="mesh.cpp" />
@@ -175,7 +175,7 @@
     <ClCompile Include="common\ui.cpp" />
     <ClCompile Include="gpu_resource.cpp" />
     <ClCompile Include="graphics_pso.cpp" />
-    <ClCompile Include="graphics_util.cpp" />
+    <ClCompile Include="mesh_util.cpp" />
     <ClCompile Include="command_manager.cpp" />
     <ClCompile Include="command_list.cpp" />
     <ClCompile Include="query_heap.cpp" />
@@ -204,7 +204,7 @@
     <ClInclude Include="gpu_node.h" />
     <ClInclude Include="constant_buffer.h" />
     <ClInclude Include="buffer_manager.h" />
-    <ClInclude Include="graphics_core.h" />
+    <ClInclude Include="device_manager.h" />
     <ClInclude Include="heap_manager.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="mesh.h" />
@@ -257,7 +257,7 @@
     <ClInclude Include="d3dx12.h" />
     <ClInclude Include="gpu_resource.h" />
     <ClInclude Include="graphics_pso.h" />
-    <ClInclude Include="graphics_util.h" />
+    <ClInclude Include="mesh_util.h" />
     <ClInclude Include="dynamic_descriptor_heap.h" />
     <ClInclude Include="mesh_pso.h" />
     <ClInclude Include="skybox_pso.h" />

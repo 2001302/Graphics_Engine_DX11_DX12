@@ -3,8 +3,8 @@
 
 #include "constant_buffer.h"
 #include "gpu_resource.h"
-#include "graphics_util.h"
-#include "graphics_core.h"
+#include "mesh_util.h"
+#include "device_manager.h"
 #include "vertex.h"
 
 namespace graphics {

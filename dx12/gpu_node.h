@@ -2,7 +2,7 @@
 #define _GPU_NODE
 
 #include "common/behavior_tree_builder.h"
-#include "graphics_util.h"
+#include "mesh_util.h"
 
 namespace graphics {
 class GpuInitializeNode : public common::BehaviorActionNode {

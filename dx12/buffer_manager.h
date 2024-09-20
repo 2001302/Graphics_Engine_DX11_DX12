@@ -4,7 +4,7 @@
 #include "back_buffer.h"
 #include "color_buffer.h"
 #include "depth_buffer.h"
-#include "graphics_core.h"
+#include "device_manager.h"
 
 namespace graphics {
 class GpuBuffer {

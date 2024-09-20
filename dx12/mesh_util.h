@@ -2,7 +2,7 @@
 #define _GRAPHICSUTIL
 
 #include "buffer_manager.h"
-#include "graphics_core.h"
+#include "device_manager.h"
 #include "graphics_pso.h"
 #include "sampler_state.h"
 

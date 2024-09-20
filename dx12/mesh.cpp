@@ -31,8 +31,5 @@ void Mesh::Initialize(const MeshData &mesh_data,
 
     buffer_PS = std::make_shared<GpuResourceList>(tex_PS);
     buffer_VS = std::make_shared<GpuResourceList>(tex_VS);
-
-    buffer_PS->Allocate();
-    buffer_VS->Allocate();
 }
 } // namespace graphics

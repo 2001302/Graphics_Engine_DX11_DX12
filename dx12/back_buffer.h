@@ -8,25 +8,25 @@ namespace graphics {
 class BackBuffer {
   public:
     BackBuffer()
-        : device_(0), index_(), rtv_handle_(), rtv_heap_(0), current_index_(0),
+        : index_(), rtv_handle_(), rtv_heap_(0), current_index_(0),
           current_state_(){};
     void Create(ID3D12Device *device, DynamicDescriptorHeap *heap,
                 IDXGISwapChain1 *swap_chain) {
-        device_ = device;
         rtv_heap_ = heap;
+
         for (UINT n = 0; n < SWAP_CHAIN_BUFFER_COUNT; n++) {
             ASSERT_FAILED(
                 swap_chain->GetBuffer(n, IID_PPV_ARGS(&resource_[n])));
             current_state_[n] = D3D12_RESOURCE_STATE_COMMON;
         }
-    };
-    void Allocate() {
+
         for (UINT n = 0; n < SWAP_CHAIN_BUFFER_COUNT; n++) {
             rtv_heap_->AllocateDescriptor(rtv_handle_[n], index_[n]);
-            device_->CreateRenderTargetView(resource_[n].Get(), nullptr,
-                                            rtv_handle_[n]);
+            device->CreateRenderTargetView(resource_[n].Get(), nullptr,
+                                           rtv_handle_[n]);
         }
     };
+
     D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle() {
         return rtv_handle_[current_index_];
     };
@@ -41,11 +41,10 @@ class BackBuffer {
         current_state_[current_index_] = state;
     };
     void MoveToNext() {
-		current_index_ = (current_index_ + 1) % SWAP_CHAIN_BUFFER_COUNT;
-	};
+        current_index_ = (current_index_ + 1) % SWAP_CHAIN_BUFFER_COUNT;
+    };
 
   private:
-    ID3D12Device *device_;
     DynamicDescriptorHeap *rtv_heap_;
     ComPtr<ID3D12Resource> resource_[SWAP_CHAIN_BUFFER_COUNT];
     UINT index_[SWAP_CHAIN_BUFFER_COUNT];

@@ -17,7 +17,6 @@ class GpuBuffer {
     }
     bool Initialize();
     bool InitializeBuffer();
-    bool AllocateBuffer();
     void Shutdown();
 
     BackBuffer *GetDisplay() { return &back_buffer; }

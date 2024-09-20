@@ -5,7 +5,6 @@ namespace graphics {
 bool GpuBuffer::Initialize() {
 
     InitializeBuffer();
-    AllocateBuffer();
     return true;
 }
 
@@ -21,13 +20,6 @@ bool GpuBuffer::InitializeBuffer() {
                       GpuCore::Instance().GetHeap().DSV(),
                       DXGI_FORMAT_D32_FLOAT);
 
-    return true;
-};
-
-bool GpuBuffer::AllocateBuffer() {
-    back_buffer.Allocate();
-    hdr_buffer.Allocate();
-    dsv_buffer.Allocate();
     return true;
 };
 

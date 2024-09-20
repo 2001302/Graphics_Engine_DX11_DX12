@@ -6,12 +6,9 @@
 namespace graphics {
 class DepthBuffer : public GpuResource {
   public:
-    DepthBuffer()
-        : device_(0), heap_DSV_(0), handle_DSV_(),
-          use_MSAA_(false){};
+    DepthBuffer() : heap_DSV_(0), handle_DSV_(), use_MSAA_(false){};
     void Create(ID3D12Device *device, DynamicDescriptorHeap *heap_DSV,
                 DXGI_FORMAT format, bool use_msaa = false) {
-        device_ = device;
         heap_DSV_ = heap_DSV;
         current_state_ = D3D12_RESOURCE_STATE_DEPTH_WRITE;
         D3D12_RESOURCE_DESC resource_desc_DSV = {};
@@ -42,10 +39,6 @@ class DepthBuffer : public GpuResource {
         ASSERT_FAILED(device->CreateCommittedResource(
             &heap_property, D3D12_HEAP_FLAG_NONE, &resource_desc_DSV,
             current_state_, &clear_value_DSV, IID_PPV_ARGS(&resource_)));
-    };
-
-    void Allocate() override {
-        auto format = resource_->GetDesc().Format;
 
         auto dimension_RTV = use_MSAA_ ? D3D12_DSV_DIMENSION_TEXTURE2DMS
                                        : D3D12_DSV_DIMENSION_TEXTURE2D;
@@ -57,12 +50,12 @@ class DepthBuffer : public GpuResource {
         desc_DSV.ViewDimension = dimension_RTV;
         desc_DSV.Flags = D3D12_DSV_FLAG_NONE;
 
-        device_->CreateDepthStencilView(resource_, &desc_DSV, handle_DSV_);
+        device->CreateDepthStencilView(resource_, &desc_DSV, handle_DSV_);
     };
+
     D3D12_CPU_DESCRIPTOR_HANDLE GetDsvHandle() { return handle_DSV_; };
 
   private:
-    ID3D12Device *device_;
     DynamicDescriptorHeap *heap_DSV_;
     D3D12_CPU_DESCRIPTOR_HANDLE handle_DSV_;
     bool use_MSAA_ = false;

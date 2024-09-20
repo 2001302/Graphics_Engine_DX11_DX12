@@ -12,7 +12,6 @@ class GpuResource {
   public:
     GpuResource() : resource_(0), current_state_(){};
 
-    virtual void Allocate(){};
     virtual ID3D12Resource *Get() { return resource_; };
     virtual D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
         throw std::runtime_error("Not implemented");
@@ -31,10 +30,6 @@ class GpuResourceList {
   public:
     GpuResourceList(std::vector<GpuResource *> resources) {
         resources_ = resources;
-    };
-    void Allocate() {
-        for (int i = 0; i < resources_.size(); i++)
-            resources_[i]->Allocate();
     };
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
         return resources_.front()->GetGpuHandle();

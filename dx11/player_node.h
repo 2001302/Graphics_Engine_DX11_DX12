@@ -9,7 +9,7 @@
 
 namespace graphics {
 
-using namespace foundation;
+using namespace common;
 
 class PlayerAnimator : public Animator {
   public:

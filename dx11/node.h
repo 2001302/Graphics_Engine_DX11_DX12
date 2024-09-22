@@ -10,7 +10,7 @@
 
 namespace ed = ax::NodeEditor;
 
-namespace foundation {
+namespace common {
 
 struct INode : public IEntity {
   public:

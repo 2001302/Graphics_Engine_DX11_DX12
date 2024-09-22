@@ -6,7 +6,7 @@
 
 const double PI = std::acos(-1);
 
-namespace foundation {
+namespace common {
 struct Env {
   private:
     Env() : main_window(0), screen_width(1920), screen_height(1080){};

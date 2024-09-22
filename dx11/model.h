@@ -7,7 +7,7 @@
 #include <unordered_map>
 
 namespace graphics {
-class Model : public foundation::INode {
+class Model : public common::INode {
   public:
     Model(){};
     ~Model();

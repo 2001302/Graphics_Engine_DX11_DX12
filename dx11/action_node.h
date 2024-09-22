@@ -7,7 +7,7 @@
 #include <map>
 #include <vector>
 
-namespace foundation {
+namespace common {
 enum EnumBehaviorTreeStatus {
     eSuccess = 0,
     eFail = 1,
@@ -34,8 +34,8 @@ class BehaviorActionNode {
     virtual EnumBehaviorTreeStatus OnReset();
     BehaviorActionNode * parent_node;
     std::vector<std::shared_ptr<BehaviorActionNode>> child_nodes;
-    foundation::IDataBlock * data_block;
-    foundation::INode *target_object;
+    common::IDataBlock * data_block;
+    common::INode *target_object;
 };
 } // namespace common
 #endif

@@ -13,17 +13,17 @@ class MessageReceiver {
     bool OnSphereLoadRequest(JobContext *manager);
     bool OnBoxLoadRequest(JobContext *manager);
     bool OnCylinderLoadRequest(JobContext *manager);
-    bool OnMouseDownRequest(std::shared_ptr<foundation::Input> input, int mouseX,
+    bool OnMouseDownRequest(std::shared_ptr<common::Input> input, int mouseX,
                             int mouseY);
     bool OnMouseRightDragRequest(JobContext *manager,
-                                 std::shared_ptr<foundation::Input> input,
+                                 std::shared_ptr<common::Input> input,
                                  int mouseX, int mouseY);
     bool OnMouseWheelRequest(JobContext *manager,
-                             std::shared_ptr<foundation::Input> input, int wheel);
+                             std::shared_ptr<common::Input> input, int wheel);
     bool OnMouseWheelDragRequest(JobContext *manager,
-                                 std::shared_ptr<foundation::Input> input,
+                                 std::shared_ptr<common::Input> input,
                                  int mouseX, int mouseY);
-    bool OnWindowSizeRequest(foundation::SettingUi *gui, int size_x, int size_y);
+    bool OnWindowSizeRequest(common::SettingUi *gui, int size_x, int size_y);
 };
 } // namespace engine
 

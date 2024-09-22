@@ -1,7 +1,7 @@
 #ifndef _INPUT
 #define _INPUT
 
-namespace foundation {
+namespace common {
 class Input {
   public:
     Input() : mouse_x(0), mouse_y(0){};

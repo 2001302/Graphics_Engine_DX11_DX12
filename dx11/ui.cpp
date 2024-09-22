@@ -1,6 +1,6 @@
 #include "ui.h"
 
-using namespace foundation;
+using namespace common;
 
 bool IGui::Start() {
 

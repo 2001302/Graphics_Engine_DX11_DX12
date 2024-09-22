@@ -6,8 +6,8 @@
 #include "graphics_util.h"
 
 namespace graphics {
-class OnlyDepthNode : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class OnlyDepthNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
@@ -18,8 +18,8 @@ class OnlyDepthNode : public foundation::BehaviorActionNode {
         case EnumStageType::eInitialize: {
 
             D3D11_TEXTURE2D_DESC desc;
-            desc.Width = foundation::Env::Instance().screen_width;
-            desc.Height = foundation::Env::Instance().screen_height;
+            desc.Width = common::Env::Instance().screen_width;
+            desc.Height = common::Env::Instance().screen_height;
             desc.MipLevels = 1;
             desc.ArraySize = 1;
             desc.Usage = D3D11_USAGE_DEFAULT;
@@ -71,7 +71,7 @@ class OnlyDepthNode : public foundation::BehaviorActionNode {
             break;
         }
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 
     ComPtr<ID3D11Texture2D> depthOnlyBuffer; // No MSAA

@@ -10,9 +10,9 @@ namespace graphics {
 /// <summary>
 /// Bloom + ToneMapping
 /// </summary>
-class PostProcessingNode : public foundation::BehaviorActionNode,
-                           public foundation::IInfo {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class PostProcessingNode : public common::BehaviorActionNode,
+                           public common::IInfo {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
@@ -21,8 +21,8 @@ class PostProcessingNode : public foundation::BehaviorActionNode,
 
         switch (job_context->stage_type) {
         case EnumStageType::eInitialize: {
-            const_data.dx = 1.0f / foundation::Env::Instance().screen_width;
-            const_data.dy = 1.0f / foundation::Env::Instance().screen_height;
+            const_data.dx = 1.0f / common::Env::Instance().screen_width;
+            const_data.dy = 1.0f / common::Env::Instance().screen_height;
             const_data.strength = 0.5f; // Bloom strength
             const_data.option1 = 1.0f;  // Exposure
             const_data.option2 = 2.2f;  // Gamma
@@ -32,20 +32,20 @@ class PostProcessingNode : public foundation::BehaviorActionNode,
 
             // bloom
             graphics::Util::CreateUATexture(
-                foundation::Env::Instance().screen_width,
-                foundation::Env::Instance().screen_height,
+                common::Env::Instance().screen_width,
+                common::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, bright_pass_buffer,
                 bright_pass_RTV, bright_pass_SRV, bright_pass_UAV);
 
             graphics::Util::CreateUATexture(
-                foundation::Env::Instance().screen_width,
-                foundation::Env::Instance().screen_height,
+                common::Env::Instance().screen_width,
+                common::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_vertical_buffer,
                 blur_vertical_RTV, blur_vertical_SRV, blur_vertical_UAV);
 
             graphics::Util::CreateUATexture(
-                foundation::Env::Instance().screen_width,
-                foundation::Env::Instance().screen_height,
+                common::Env::Instance().screen_width,
+                common::Env::Instance().screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_horizontal_buffer,
                 blur_horizontal_RTV, blur_horizontal_SRV, blur_horizontal_UAV);
 
@@ -91,7 +91,7 @@ class PostProcessingNode : public foundation::BehaviorActionNode,
         default:
             break;
         }
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 
     void OnShow() override {

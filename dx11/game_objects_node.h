@@ -8,8 +8,8 @@
 
 namespace graphics {
 
-class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
-    foundation::EnumBehaviorTreeStatus OnInvoke() override {
+class GameObjectNodeInvoker : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
@@ -114,7 +114,7 @@ class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
             break;
         }
 
-        return foundation::EnumBehaviorTreeStatus::eSuccess;
+        return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
 } // namespace core

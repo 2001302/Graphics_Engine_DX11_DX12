@@ -12,7 +12,7 @@
 
 namespace graphics {
 
-class Engine : public foundation::Platform, TreeNode {
+class Engine : public common::Platform, TreeNode {
   public:
     Engine();
 

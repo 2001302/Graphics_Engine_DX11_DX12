@@ -3,14 +3,14 @@
 
 #include "graphics_pso.h"
 
-namespace dx11 {
+namespace graphics {
 inline void ThrowIfFailed(HRESULT hr) {
     if (FAILED(hr)) {
         throw std::exception();
     }
 }
 
-namespace pso {
+namespace pipeline {
 // Samplers
 extern ComPtr<ID3D11SamplerState> linearWrapSS;
 extern ComPtr<ID3D11SamplerState> linearClampSS;
@@ -120,8 +120,8 @@ void CreateComputeShader(ComPtr<ID3D11Device> &device,
                          const std::wstring &filename,
                          ComPtr<ID3D11ComputeShader> &computeShader);
 
-} // namespace graphics
+} // namespace pipeline
 
-} // namespace core
+} // namespace graphics
 
 #endif

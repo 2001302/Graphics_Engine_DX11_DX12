@@ -24,12 +24,12 @@ void MeshRenderer::Initialize() {
 void MeshRenderer::InitMeshBuffers(const MeshData &meshData,
                                    shared_ptr<Mesh> &newMesh) {
 
-    dx11::Util::CreateVertexBuffer(meshData.vertices,
+    graphics::Util::CreateVertexBuffer(meshData.vertices,
                                        newMesh->vertexBuffer);
     newMesh->indexCount = UINT(meshData.indices.size());
     newMesh->vertexCount = UINT(meshData.vertices.size());
     newMesh->stride = UINT(sizeof(Vertex));
-    dx11::Util::CreateIndexBuffer(meshData.indices, newMesh->indexBuffer);
+    graphics::Util::CreateIndexBuffer(meshData.indices, newMesh->indexBuffer);
 }
 
 void MeshRenderer::Initialize(const std::string &basePath,
@@ -88,12 +88,12 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
         if (!meshData.albedoTextureFilename.empty()) {
             if (filesystem::exists(meshData.albedoTextureFilename)) {
                 if (!meshData.opacityTextureFilename.empty()) {
-                    dx11::Util::CreateTexture(
+                    graphics::Util::CreateTexture(
                         meshData.albedoTextureFilename,
                         meshData.opacityTextureFilename, false,
                         newMesh->albedoTexture, newMesh->albedoSRV);
                 } else {
-                    dx11::Util::CreateTexture(
+                    graphics::Util::CreateTexture(
                         meshData.albedoTextureFilename, true,
                         newMesh->albedoTexture, newMesh->albedoSRV);
                 }
@@ -107,7 +107,7 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
         if (!meshData.emissiveTextureFilename.empty()) {
             if (filesystem::exists(meshData.emissiveTextureFilename)) {
-                dx11::Util::CreateTexture(meshData.emissiveTextureFilename,
+                graphics::Util::CreateTexture(meshData.emissiveTextureFilename,
                                               true, newMesh->emissiveTexture,
                                               newMesh->emissiveSRV);
                 material_consts.GetCpu().useEmissiveMap = true;
@@ -119,7 +119,7 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
         if (!meshData.normalTextureFilename.empty()) {
             if (filesystem::exists(meshData.normalTextureFilename)) {
-                dx11::Util::CreateTexture(meshData.normalTextureFilename,
+                graphics::Util::CreateTexture(meshData.normalTextureFilename,
                                               false, newMesh->normalTexture,
                                               newMesh->normalSRV);
                 material_consts.GetCpu().useNormalMap = true;
@@ -131,7 +131,7 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
         if (!meshData.heightTextureFilename.empty()) {
             if (filesystem::exists(meshData.heightTextureFilename)) {
-                dx11::Util::CreateTexture(meshData.heightTextureFilename,
+                graphics::Util::CreateTexture(meshData.heightTextureFilename,
                                               false, newMesh->heightTexture,
                                               newMesh->heightSRV);
                 mesh_consts.GetCpu().useHeightMap = true;
@@ -143,7 +143,7 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
 
         if (!meshData.aoTextureFilename.empty()) {
             if (filesystem::exists(meshData.aoTextureFilename)) {
-                dx11::Util::CreateTexture(meshData.aoTextureFilename, false,
+                graphics::Util::CreateTexture(meshData.aoTextureFilename, false,
                                               newMesh->aoTexture,
                                               newMesh->aoSRV);
                 material_consts.GetCpu().useAOMap = true;
@@ -161,7 +161,7 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
             if (filesystem::exists(meshData.metallicTextureFilename) &&
                 filesystem::exists(meshData.roughnessTextureFilename)) {
 
-                dx11::Util::CreateMetallicRoughnessTexture(
+                graphics::Util::CreateMetallicRoughnessTexture(
                     meshData.metallicTextureFilename,
                     meshData.roughnessTextureFilename,
                     newMesh->metallicRoughnessTexture,
@@ -198,12 +198,12 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
             bounding_box.Center,
             Vector3(bounding_box.Extents) + Vector3(1e-3f));
         bounding_box_mesh = std::make_shared<Mesh>();
-        dx11::Util::CreateVertexBuffer(meshData.vertices,
+        graphics::Util::CreateVertexBuffer(meshData.vertices,
                                            bounding_box_mesh->vertexBuffer);
         bounding_box_mesh->indexCount = UINT(meshData.indices.size());
         bounding_box_mesh->vertexCount = UINT(meshData.vertices.size());
         bounding_box_mesh->stride = UINT(sizeof(Vertex));
-        dx11::Util::CreateIndexBuffer(meshData.indices,
+        graphics::Util::CreateIndexBuffer(meshData.indices,
                                           bounding_box_mesh->indexBuffer);
         bounding_box_mesh->meshConstsGPU = mesh_consts.Get();
         bounding_box_mesh->materialConstsGPU = material_consts.Get();
@@ -224,12 +224,12 @@ void MeshRenderer::Initialize(const vector<MeshData> &meshes) {
         auto meshData = GeometryGenerator::MakeWireSphere(
             bounding_sphere.Center, bounding_sphere.Radius);
         bounding_sphere_mesh = std::make_shared<Mesh>();
-        dx11::Util::CreateVertexBuffer(meshData.vertices,
+        graphics::Util::CreateVertexBuffer(meshData.vertices,
                                            bounding_sphere_mesh->vertexBuffer);
         bounding_sphere_mesh->indexCount = UINT(meshData.indices.size());
         bounding_sphere_mesh->vertexCount = UINT(meshData.vertices.size());
         bounding_sphere_mesh->stride = UINT(sizeof(Vertex));
-        dx11::Util::CreateIndexBuffer(meshData.indices,
+        graphics::Util::CreateIndexBuffer(meshData.indices,
                                           bounding_sphere_mesh->indexBuffer);
         bounding_sphere_mesh->meshConstsGPU = mesh_consts.Get();
         bounding_sphere_mesh->materialConstsGPU = material_consts.Get();
@@ -243,18 +243,18 @@ void MeshRenderer::UpdateConstantBuffers() {
     }
 }
 
-dx11::PipelineState &MeshRenderer::GetPSO(const bool wired) {
-    return wired ? dx11::pso::defaultWirePSO
-                 : dx11::pso::defaultSolidPSO;
+graphics::PipelineState &MeshRenderer::GetPSO(const bool wired) {
+    return wired ? graphics::pipeline::defaultWirePSO
+                 : graphics::pipeline::defaultSolidPSO;
 }
 
-dx11::PipelineState &MeshRenderer::GetDepthOnlyPSO() {
-    return dx11::pso::depthOnlyPSO;
+graphics::PipelineState &MeshRenderer::GetDepthOnlyPSO() {
+    return graphics::pipeline::depthOnlyPSO;
 }
 
-dx11::PipelineState &MeshRenderer::GetReflectPSO(const bool wired) {
-    return wired ? dx11::pso::reflectWirePSO
-                 : dx11::pso::reflectSolidPSO;
+graphics::PipelineState &MeshRenderer::GetReflectPSO(const bool wired) {
+    return wired ? graphics::pipeline::reflectWirePSO
+                 : graphics::pipeline::reflectSolidPSO;
 }
 
 void MeshRenderer::Render() {
@@ -263,10 +263,10 @@ void MeshRenderer::Render() {
 
             ID3D11Buffer *constBuffers[2] = {mesh->meshConstsGPU.Get(),
                                              mesh->materialConstsGPU.Get()};
-            dx11::GpuCore::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->VSSetConstantBuffers(1, 2, constBuffers);
 
-            dx11::GpuCore::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->VSSetShaderResources(
                     0, 1, mesh->heightSRV.GetAddressOf());
 
@@ -274,35 +274,35 @@ void MeshRenderer::Render() {
             vector<ID3D11ShaderResourceView *> resViews = {
                 mesh->albedoSRV.Get(), mesh->normalSRV.Get(), mesh->aoSRV.Get(),
                 mesh->metallicRoughnessSRV.Get(), mesh->emissiveSRV.Get()};
-            dx11::GpuCore::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->PSSetShaderResources(0, // register(t0)
                                                       UINT(resViews.size()),
                                                       resViews.data());
-            dx11::GpuCore::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->PSSetConstantBuffers(1, 2, constBuffers);
 
             // Volume Rendering
             if (mesh->densityTex.GetSRV())
-                dx11::GpuCore::Instance()
+                graphics::GpuCore::Instance()
                     .device_context->PSSetShaderResources(
                         5, 1, mesh->densityTex.GetAddressOfSRV());
             if (mesh->lightingTex.GetSRV())
-                dx11::GpuCore::Instance()
+                graphics::GpuCore::Instance()
                     .device_context->PSSetShaderResources(
                         6, 1, mesh->lightingTex.GetAddressOfSRV());
 
-            dx11::GpuCore::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->IASetVertexBuffers(
                     0, 1, mesh->vertexBuffer.GetAddressOf(), &mesh->stride,
                     &mesh->offset);
-            dx11::GpuCore::Instance().device_context->IASetIndexBuffer(
+            graphics::GpuCore::Instance().device_context->IASetIndexBuffer(
                 mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-            dx11::GpuCore::Instance().device_context->DrawIndexed(
+            graphics::GpuCore::Instance().device_context->DrawIndexed(
                 mesh->indexCount, 0, 0);
 
             // Release resources
             ID3D11ShaderResourceView *nulls[3] = {NULL, NULL, NULL};
-            dx11::GpuCore::Instance()
+            graphics::GpuCore::Instance()
                 .device_context->PSSetShaderResources(5, 3, nulls);
         }
     }
@@ -312,12 +312,12 @@ void MeshRenderer::RenderNormals() {
     for (const auto &mesh : meshes) {
         ID3D11Buffer *constBuffers[2] = {mesh->meshConstsGPU.Get(),
                                          mesh->materialConstsGPU.Get()};
-        dx11::GpuCore::Instance().device_context->GSSetConstantBuffers(
+        graphics::GpuCore::Instance().device_context->GSSetConstantBuffers(
             1, 2, constBuffers);
-        dx11::GpuCore::Instance().device_context->IASetVertexBuffers(
+        graphics::GpuCore::Instance().device_context->IASetVertexBuffers(
             0, 1, mesh->vertexBuffer.GetAddressOf(), &mesh->stride,
             &mesh->offset);
-        dx11::GpuCore::Instance().device_context->Draw(
+        graphics::GpuCore::Instance().device_context->Draw(
             mesh->vertexCount, 0);
     }
 }
@@ -326,14 +326,14 @@ void MeshRenderer::RenderWireBoundingBox() {
     ID3D11Buffer *constBuffers[2] = {
         bounding_box_mesh->meshConstsGPU.Get(),
         bounding_box_mesh->materialConstsGPU.Get()};
-    dx11::GpuCore::Instance().device_context->VSSetConstantBuffers(
+    graphics::GpuCore::Instance().device_context->VSSetConstantBuffers(
         1, 2, constBuffers);
-    dx11::GpuCore::Instance().device_context->IASetVertexBuffers(
+    graphics::GpuCore::Instance().device_context->IASetVertexBuffers(
         0, 1, bounding_box_mesh->vertexBuffer.GetAddressOf(),
         &bounding_box_mesh->stride, &bounding_box_mesh->offset);
-    dx11::GpuCore::Instance().device_context->IASetIndexBuffer(
+    graphics::GpuCore::Instance().device_context->IASetIndexBuffer(
         bounding_box_mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-    dx11::GpuCore::Instance().device_context->DrawIndexed(
+    graphics::GpuCore::Instance().device_context->DrawIndexed(
         bounding_box_mesh->indexCount, 0, 0);
 }
 
@@ -341,14 +341,14 @@ void MeshRenderer::RenderWireBoundingSphere() {
     ID3D11Buffer *constBuffers[2] = {
         bounding_box_mesh->meshConstsGPU.Get(),
         bounding_box_mesh->materialConstsGPU.Get()};
-    dx11::GpuCore::Instance().device_context->VSSetConstantBuffers(
+    graphics::GpuCore::Instance().device_context->VSSetConstantBuffers(
         1, 2, constBuffers);
-    dx11::GpuCore::Instance().device_context->IASetVertexBuffers(
+    graphics::GpuCore::Instance().device_context->IASetVertexBuffers(
         0, 1, bounding_sphere_mesh->vertexBuffer.GetAddressOf(),
         &bounding_sphere_mesh->stride, &bounding_sphere_mesh->offset);
-    dx11::GpuCore::Instance().device_context->IASetIndexBuffer(
+    graphics::GpuCore::Instance().device_context->IASetIndexBuffer(
         bounding_sphere_mesh->indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-    dx11::GpuCore::Instance().device_context->DrawIndexed(
+    graphics::GpuCore::Instance().device_context->DrawIndexed(
         bounding_sphere_mesh->indexCount, 0, 0);
 }
 

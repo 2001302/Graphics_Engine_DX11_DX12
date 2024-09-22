@@ -3,7 +3,7 @@
 
 #include "graphics_core.h"
 
-namespace dx11 {
+namespace graphics {
 class Util {
   public:
     static void CreateIndexBuffer(const std::vector<uint32_t> &indices,

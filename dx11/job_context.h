@@ -64,9 +64,9 @@ class JobContext : public foundation::IInfo {
                                          ground->mirror_alpha,
                                          ground->mirror_alpha, 1.0f};
             if (draw_wire)
-                dx11::pso::mirrorBlendWirePSO.SetBlendFactor(blendColor);
+                graphics::pipeline::mirrorBlendWirePSO.SetBlendFactor(blendColor);
             else
-                dx11::pso::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
+                graphics::pipeline::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
 
             auto renderer = (MeshRenderer *)ground->mirror->GetComponent(
                 EnumComponentType::eRenderer);

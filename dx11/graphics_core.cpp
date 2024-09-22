@@ -1,6 +1,6 @@
 #include "graphics_core.h"
 
-namespace dx11 {
+namespace graphics {
 
 bool GpuCore::Initialize() {
     const D3D_DRIVER_TYPE driverType = D3D_DRIVER_TYPE_HARDWARE;
@@ -50,7 +50,7 @@ bool GpuCore::Initialize() {
     rastDesc.FrontCounterClockwise = false;
     rastDesc.DepthClipEnable = true;
 
-    pso::InitCommonStates(device);
+    pipeline::InitCommonStates(device);
 
     return true;
 }

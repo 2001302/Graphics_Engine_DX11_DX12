@@ -11,7 +11,7 @@
 #include "env.h"
 #include "graphics_common.h"
 
-namespace dx11 {
+namespace graphics {
 class GpuCore {
   public:
     static GpuCore &Instance() {

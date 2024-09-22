@@ -17,11 +17,11 @@ template <typename T_ELEMENT> class StructuredBuffer {
     }
 
     virtual void Initialize() {
-        dx11::Util::CreateStructuredBuffer(UINT(m_cpu.size()),
+        graphics::Util::CreateStructuredBuffer(UINT(m_cpu.size()),
                                                sizeof(T_ELEMENT), m_cpu.data(),
                                                m_gpu, m_srv, m_uav);
         // Staging은 주로 디버깅 용도입니다.
-        dx11::Util::CreateStagingBuffer(UINT(m_cpu.size()),
+        graphics::Util::CreateStagingBuffer(UINT(m_cpu.size()),
                                             sizeof(T_ELEMENT), NULL, m_staging);
     }
 
@@ -31,9 +31,9 @@ template <typename T_ELEMENT> class StructuredBuffer {
 
         assert(arrCpu.size() == m_cpu.size());
 
-        dx11::Util::CopyToStagingBuffer(
+        graphics::Util::CopyToStagingBuffer(
             m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)), arrCpu.data());
-        dx11::GpuCore::Instance().device_context->CopyResource(
+        graphics::GpuCore::Instance().device_context->CopyResource(
             m_gpu.Get(), m_staging.Get());
     }
 
@@ -43,9 +43,9 @@ template <typename T_ELEMENT> class StructuredBuffer {
 
         assert(arrCpu.size() == m_cpu.size());
 
-        dx11::GpuCore::Instance().device_context->CopyResource(
+        graphics::GpuCore::Instance().device_context->CopyResource(
             m_staging.Get(), m_gpu.Get());
-        dx11::Util::CopyFromStagingBuffer(
+        graphics::Util::CopyFromStagingBuffer(
             m_staging, UINT(arrCpu.size() * sizeof(T_ELEMENT)), arrCpu.data());
     }
 
@@ -72,7 +72,7 @@ class AppendBuffer : public StructuredBuffer<T_ELEMENT> {
 
   public:
     void Initialize() {
-        dx11::Util::CreateAppendBuffer(
+        graphics::Util::CreateAppendBuffer(
             UINT(BASE::m_cpu.size()), sizeof(T_ELEMENT), BASE::m_cpu.data(),
             BASE::m_gpu, BASE::m_srv, BASE::m_uav);
     }

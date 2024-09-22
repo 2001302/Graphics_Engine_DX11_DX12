@@ -113,10 +113,10 @@ class LightNodeInvoker : public foundation::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
 
-            dx11::Util::SetPipelineState(
-                job_context->draw_wire ? dx11::pso::defaultWirePSO
-                                       : dx11::pso::defaultSolidPSO);
-            dx11::Util::SetGlobalConsts(job_context->global_consts_GPU);
+            graphics::Util::SetPipelineState(
+                job_context->draw_wire ? graphics::pipeline::defaultWirePSO
+                                       : graphics::pipeline::defaultSolidPSO);
+            graphics::Util::SetGlobalConsts(job_context->global_consts_GPU);
             for (auto &i : light_spheres) {
                 auto renderer = (MeshRenderer *)i->GetComponent(
                     EnumComponentType::eRenderer);

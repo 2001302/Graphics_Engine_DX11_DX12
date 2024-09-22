@@ -14,7 +14,7 @@
 #include "stb_image.h"
 #include "stb_image_write.h"
 
-namespace dx11 {
+namespace graphics {
 
 using namespace std;
 using namespace DirectX;

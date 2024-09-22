@@ -38,21 +38,21 @@ class SkyboxNodeInvoker : public foundation::BehaviorActionNode {
             auto brdfFilename =
                 L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
-            dx11::Util::CreateDDSTexture(envFilename, true,
+            graphics::Util::CreateDDSTexture(envFilename, true,
                                              manager->skybox->env_SRV);
-            dx11::Util::CreateDDSTexture(specularFilename, true,
+            graphics::Util::CreateDDSTexture(specularFilename, true,
                                              manager->skybox->specular_SRV);
-            dx11::Util::CreateDDSTexture(irradianceFilename, true,
+            graphics::Util::CreateDDSTexture(irradianceFilename, true,
                                              manager->skybox->irradiance_SRV);
-            dx11::Util::CreateDDSTexture(brdfFilename, true,
+            graphics::Util::CreateDDSTexture(brdfFilename, true,
                                              manager->skybox->brdf_SRV);
             break;
         }
         case EnumStageType::eRender: {
 
-            dx11::Util::SetPipelineState(
-                manager->draw_wire ? dx11::pso::skyboxWirePSO
-                                   : dx11::pso::skyboxSolidPSO);
+            graphics::Util::SetPipelineState(
+                manager->draw_wire ? graphics::pipeline::skyboxWirePSO
+                                   : graphics::pipeline::skyboxSolidPSO);
             auto renderer =
                 (MeshRenderer *)manager->skybox->model->GetComponent(
                     EnumComponentType::eRenderer);

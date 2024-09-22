@@ -1,8 +1,8 @@
 #include "graphics_common.h"
 
-namespace dx11 {
+namespace graphics {
 
-namespace pso {
+namespace pipeline {
 
 // Sampler States
 ComPtr<ID3D11SamplerState> linearWrapSS;
@@ -94,7 +94,7 @@ void CheckResult(HRESULT hr, ID3DBlob *errorBlob) {
     }
 }
 
-void pso::CreateVertexShaderAndInputLayout(
+void pipeline::CreateVertexShaderAndInputLayout(
     ComPtr<ID3D11Device> &device, std::wstring filename,
     const std::vector<D3D11_INPUT_ELEMENT_DESC> &inputElements,
     ComPtr<ID3D11VertexShader> &m_vertexShader,
@@ -136,7 +136,7 @@ void pso::CreateVertexShaderAndInputLayout(
                               shaderBlob->GetBufferSize(), &m_inputLayout);
 }
 
-void pso::CreateHullShader(ComPtr<ID3D11Device> &device,
+void pipeline::CreateHullShader(ComPtr<ID3D11Device> &device,
                                 const std::wstring &filename,
                                 ComPtr<ID3D11HullShader> &m_hullShader) {
     ComPtr<ID3DBlob> shaderBlob;
@@ -157,7 +157,7 @@ void pso::CreateHullShader(ComPtr<ID3D11Device> &device,
                              shaderBlob->GetBufferSize(), NULL, &m_hullShader);
 }
 
-void pso::CreateDomainShader(ComPtr<ID3D11Device> &device,
+void pipeline::CreateDomainShader(ComPtr<ID3D11Device> &device,
                                   const std::wstring &filename,
                                   ComPtr<ID3D11DomainShader> &m_domainShader) {
 
@@ -180,7 +180,7 @@ void pso::CreateDomainShader(ComPtr<ID3D11Device> &device,
                                &m_domainShader);
 }
 
-void pso::CreatePixelShader(ComPtr<ID3D11Device> &device,
+void pipeline::CreatePixelShader(ComPtr<ID3D11Device> &device,
                                  const std::wstring &filename,
                                  ComPtr<ID3D11PixelShader> &m_pixelShader) {
     ComPtr<ID3DBlob> shaderBlob;
@@ -202,7 +202,7 @@ void pso::CreatePixelShader(ComPtr<ID3D11Device> &device,
                               &m_pixelShader);
 }
 
-void pso::CreateGeometryShader(
+void pipeline::CreateGeometryShader(
     ComPtr<ID3D11Device> &device, const std::wstring &filename,
     ComPtr<ID3D11GeometryShader> &geometryShader) {
 
@@ -223,7 +223,7 @@ void pso::CreateGeometryShader(
                                  &geometryShader);
 }
 
-void pso::CreateComputeShader(ComPtr<ID3D11Device> &device,
+void pipeline::CreateComputeShader(ComPtr<ID3D11Device> &device,
                                    const std::wstring &filename,
                                    ComPtr<ID3D11ComputeShader> &computeShader) {
 
@@ -244,7 +244,7 @@ void pso::CreateComputeShader(ComPtr<ID3D11Device> &device,
                                               &computeShader));
 }
 
-void pso::InitCommonStates(ComPtr<ID3D11Device> &device) {
+void pipeline::InitCommonStates(ComPtr<ID3D11Device> &device) {
 
     InitShaders(device);
     InitSamplers(device);
@@ -254,7 +254,7 @@ void pso::InitCommonStates(ComPtr<ID3D11Device> &device) {
     InitPipelineStates(device);
 }
 
-void pso::InitSamplers(ComPtr<ID3D11Device> &device) {
+void pipeline::InitSamplers(ComPtr<ID3D11Device> &device) {
 
     D3D11_SAMPLER_DESC sampDesc;
     ZeroMemory(&sampDesc, sizeof(sampDesc));
@@ -297,7 +297,7 @@ void pso::InitSamplers(ComPtr<ID3D11Device> &device) {
     sampleStates.push_back(shadowCompareSS.Get());
 }
 
-void pso::InitRasterizerStates(ComPtr<ID3D11Device> &device) {
+void pipeline::InitRasterizerStates(ComPtr<ID3D11Device> &device) {
 
     // Rasterizer States
     D3D11_RASTERIZER_DESC rastDesc;
@@ -332,7 +332,7 @@ void pso::InitRasterizerStates(ComPtr<ID3D11Device> &device) {
         &rastDesc, postProcessingRS.GetAddressOf()));
 }
 
-void pso::InitBlendStates(ComPtr<ID3D11Device> &device) {
+void pipeline::InitBlendStates(ComPtr<ID3D11Device> &device) {
 
     // "이미 그려져있는 화면"과 어떻게 섞을지를 결정
     // Dest: 이미 그려져 있는 값들을 의미
@@ -360,7 +360,7 @@ void pso::InitBlendStates(ComPtr<ID3D11Device> &device) {
         device->CreateBlendState(&mirrorBlendDesc, mirrorBS.GetAddressOf()));
 }
 
-void pso::InitDepthStencilStates(ComPtr<ID3D11Device> &device) {
+void pipeline::InitDepthStencilStates(ComPtr<ID3D11Device> &device) {
 
     // D3D11_DEPTH_STENCIL_DESC 옵션 정리
     // https://learn.microsoft.com/en-us/windows/win32/api/d3d11/ns-d3d11-d3d11_depth_stencil_desc
@@ -428,7 +428,7 @@ void pso::InitDepthStencilStates(ComPtr<ID3D11Device> &device) {
         device->CreateDepthStencilState(&dsDesc, drawMaskedDSS.GetAddressOf()));
 }
 
-void pso::InitShaders(ComPtr<ID3D11Device> &device) {
+void pipeline::InitShaders(ComPtr<ID3D11Device> &device) {
 
     // Shaders, InputLayouts
 
@@ -520,7 +520,7 @@ void pso::InitShaders(ComPtr<ID3D11Device> &device) {
     CreateComputeShader(device, L"BloomCompositeCS.hlsl", bloomComposite);
 }
 
-void pso::InitPipelineStates(ComPtr<ID3D11Device> &device) {
+void pipeline::InitPipelineStates(ComPtr<ID3D11Device> &device) {
 
     // defaultSolidPSO;
     defaultSolidPSO.vertex_shader = basicVS;

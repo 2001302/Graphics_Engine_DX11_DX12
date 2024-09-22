@@ -111,27 +111,29 @@ class SolidMeshPSO : public GraphicsPSO {
             context->SetRootSignature(root_signature);
             context->SetPipelineState(pipeline_state);
 
-            context->SetGraphicsRootDescriptorTable(
+            context->GetList()->SetGraphicsRootDescriptorTable(
                 0, sampler_state->GetGpuHandle());
             // global texture
-            context->SetGraphicsRootDescriptorTable(
+            context->GetList()->SetGraphicsRootDescriptorTable(
                 1, shared_texture->GetGpuHandle());
-            context->SetGraphicsRootConstantBufferView(
+            context->GetList()->SetGraphicsRootConstantBufferView(
                 2, global_consts->GetGPUVirtualAddress());
-            context->SetGraphicsRootConstantBufferView(
+            context->GetList()->SetGraphicsRootConstantBufferView(
                 3, mesh_renderer->GetMeshConsts()->GetGPUVirtualAddress());
-            context->SetGraphicsRootConstantBufferView(
+            context->GetList()->SetGraphicsRootConstantBufferView(
                 4, mesh_renderer->GetMaterialConsts()->GetGPUVirtualAddress());
-            context->SetGraphicsRootDescriptorTable(
+            context->GetList()->SetGraphicsRootDescriptorTable(
                 5, mesh->texture_VS->GetGpuHandle());
-            context->SetGraphicsRootDescriptorTable(
+            context->GetList()->SetGraphicsRootDescriptorTable(
                 6, mesh->texture_PS->GetGpuHandle());
 
-            context->SetTrimitiveTopology(
+            context->GetList()->IASetPrimitiveTopology(
                 D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-            context->SetVertexBuffers(&mesh->vertex_buffer_view);
-            context->SetIndexBuffers(&mesh->index_buffer_view);
-            context->DrawIndexedInstanced(mesh->index_count);
+            context->GetList()->IASetVertexBuffers(0, 1,
+                                                   &mesh->vertex_buffer_view);
+            context->GetList()->IASetIndexBuffer(&mesh->index_buffer_view);
+            context->GetList()->DrawIndexedInstanced(mesh->index_count, 1, 0, 0,
+                                                     0);
         }
 
         GpuCore::Instance().GetCommand()->Finish(context);

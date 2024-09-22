@@ -244,11 +244,6 @@ class GraphicsCommandContext : public CommandContext {
         command_list_->SetGraphicsRootDescriptorTable(root_parameter_index,
                                                       descriptor);
     };
-    void SetGraphicsRootConstantBufferView(UINT root_parameter_index,
-										   D3D12_GPU_VIRTUAL_ADDRESS buffer) {
-		command_list_->SetGraphicsRootConstantBufferView(root_parameter_index,
-														 buffer);
-	};
     void SetTrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY primitive_topology) {
         command_list_->IASetPrimitiveTopology(primitive_topology);
     };

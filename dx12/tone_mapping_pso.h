@@ -100,19 +100,20 @@ class ToneMappingPSO : public GraphicsPSO {
         context->SetPipelineState(pipeline_state);
 
         // 1:constant buffer
-        context->SetGraphicsRootConstantBufferView(
+        context->GetList()->SetGraphicsRootConstantBufferView(
             0, const_buffer->GetGPUVirtualAddress());
         // 2:sampler
-        context->SetGraphicsRootDescriptorTable(1, sampler->GetGpuHandle());
+        context->GetList()->SetGraphicsRootDescriptorTable(
+            1, sampler->GetGpuHandle());
         // 3:srv
-        context->SetGraphicsRootDescriptorTable(
+        context->GetList()->SetGraphicsRootDescriptorTable(
             2, GpuBuffer::Instance().GetHDR()->GetSrvGpuHandle());
 
-        context->SetTrimitiveTopology(
+        context->GetList()->IASetPrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        context->SetVertexBuffers(&mesh->vertex_buffer_view);
-        context->SetIndexBuffers(&mesh->index_buffer_view);
-        context->DrawIndexedInstanced(mesh->index_count);
+        context->GetList()->IASetVertexBuffers(0, 1, &mesh->vertex_buffer_view);
+        context->GetList()->IASetIndexBuffer(&mesh->index_buffer_view);
+        context->GetList()->DrawIndexedInstanced(mesh->index_count, 1, 0, 0, 0);
 
         GpuCore::Instance().GetCommand()->Finish(context);
     };

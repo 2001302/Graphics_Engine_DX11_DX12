@@ -30,7 +30,7 @@ bool GpuCore::Initialize() {
     sd.SampleDesc.Count = 1; // _FLIP_은 MSAA 미지원
     sd.SampleDesc.Quality = 0;
 
-    ThrowIfFailed(D3D11CreateDeviceAndSwapChain(
+    ASSERT_FAILED(D3D11CreateDeviceAndSwapChain(
         0, driverType, 0, createDeviceFlags, featureLevels, 1,
         D3D11_SDK_VERSION, &sd, swap_chain.GetAddressOf(),
         device.GetAddressOf(), &featureLevel, device_context.GetAddressOf()));
@@ -61,13 +61,13 @@ bool GpuCore::CreateBuffer() {
 
     // BackBuffer는 화면으로 최종 출력되기 때문에  RTV만 필요하고 SRV는 불필요
     ComPtr<ID3D11Texture2D> backBuffer;
-    ThrowIfFailed(
+    ASSERT_FAILED(
         swap_chain->GetBuffer(0, IID_PPV_ARGS(backBuffer.GetAddressOf())));
-    ThrowIfFailed(device->CreateRenderTargetView(
+    ASSERT_FAILED(device->CreateRenderTargetView(
         backBuffer.Get(), NULL, back_buffer_RTV.GetAddressOf()));
 
     // FLOAT MSAA RenderTargetView/ShaderResourceView
-    ThrowIfFailed(device->CheckMultisampleQualityLevels(
+    ASSERT_FAILED(device->CheckMultisampleQualityLevels(
         DXGI_FORMAT_R16G16B16A16_FLOAT, 4, &num_quality_levels));
 
     {
@@ -87,9 +87,9 @@ bool GpuCore::CreateBuffer() {
             desc.SampleDesc.Quality = 0;
         }
 
-        ThrowIfFailed(
+        ASSERT_FAILED(
             device->CreateTexture2D(&desc, NULL, float_buffer.GetAddressOf()));
-        ThrowIfFailed(device->CreateRenderTargetView(float_buffer.Get(), NULL,
+        ASSERT_FAILED(device->CreateRenderTargetView(float_buffer.Get(), NULL,
                                                      float_RTV.GetAddressOf()));
     }
 
@@ -109,13 +109,13 @@ bool GpuCore::CreateBuffer() {
         txtDesc.MiscFlags = 0;
         txtDesc.CPUAccessFlags = 0;
 
-        ThrowIfFailed(device->CreateTexture2D(&txtDesc, NULL,
+        ASSERT_FAILED(device->CreateTexture2D(&txtDesc, NULL,
                                               resolved_buffer.GetAddressOf()));
-        ThrowIfFailed(device->CreateRenderTargetView(
+        ASSERT_FAILED(device->CreateRenderTargetView(
             resolved_buffer.Get(), NULL, resolved_RTV.GetAddressOf()));
-        ThrowIfFailed(device->CreateShaderResourceView(
+        ASSERT_FAILED(device->CreateShaderResourceView(
             resolved_buffer.Get(), NULL, resolved_SRV.GetAddressOf()));
-        ThrowIfFailed(device->CreateUnorderedAccessView(
+        ASSERT_FAILED(device->CreateUnorderedAccessView(
             resolved_buffer.Get(), NULL, resolved_UAV.GetAddressOf()));
     }
 
@@ -146,10 +146,10 @@ void GpuCore::CreateDepthBuffer() {
 
     ComPtr<ID3D11Texture2D> depthStencilBuffer;
 
-    ThrowIfFailed(
+    ASSERT_FAILED(
         device->CreateTexture2D(&desc, 0, depthStencilBuffer.GetAddressOf()));
 
-    ThrowIfFailed(device->CreateDepthStencilView(
+    ASSERT_FAILED(device->CreateDepthStencilView(
         depthStencilBuffer.Get(), 0, m_depthStencilView.GetAddressOf()));
 }
 

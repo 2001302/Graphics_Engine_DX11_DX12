@@ -1,21 +1,7 @@
 #ifndef _GRAPHICSPSO
 #define _GRAPHICSPSO
 
-#include <d3d11.h>
-#include <d3dcompiler.h>
-#include <directxtk/SimpleMath.h>
-#include <iostream>
-#include <memory>
-#include <string>
-#include <vector>
-#include <windows.h>
-#include <wrl/client.h> // ComPtr
-
-using DirectX::SimpleMath::Matrix;
-using DirectX::SimpleMath::Vector2;
-using DirectX::SimpleMath::Vector3;
-using DirectX::SimpleMath::Vector4;
-using Microsoft::WRL::ComPtr;
+#include "pch.h"
 
 namespace graphics {
 class PipelineState {
@@ -31,7 +17,7 @@ class PipelineState {
     ComPtr<ID3D11GeometryShader> geometry_shader;
     ComPtr<ID3D11ComputeShader> compute_shader;
     ComPtr<ID3D11InputLayout> input_layout;
-    
+
     ComPtr<ID3D11BlendState> blend_state;
     ComPtr<ID3D11DepthStencilState> depth_stencil_state;
     ComPtr<ID3D11RasterizerState> rasterizer_state;
@@ -43,5 +29,5 @@ class PipelineState {
         D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 };
 
-} // namespace engine
+} // namespace graphics
 #endif

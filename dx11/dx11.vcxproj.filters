@@ -1,15 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="graphics_util.h">
-      <Filter>Graphics\Gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics_pso.h">
-      <Filter>Graphics\Gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics_common.h">
-      <Filter>Graphics\Gpu</Filter>
-    </ClInclude>
     <ClInclude Include="model_loader.h">
       <Filter>Graphics\Util</Filter>
     </ClInclude>
@@ -115,24 +106,27 @@
     <ClInclude Include="engine.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="graphics_core.h">
-      <Filter>Graphics\Gpu</Filter>
-    </ClInclude>
     <ClInclude Include="black_board.h">
       <Filter>Graphics\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Graphics\Gpu</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_pso.h">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_common.h">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_core.h">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="graphics_util.h">
+      <Filter>Graphics\Gpu\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="graphics_util.cpp">
-      <Filter>Graphics\Gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics_pso.cpp">
-      <Filter>Graphics\Gpu</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics_common.cpp">
-      <Filter>Graphics\Gpu</Filter>
-    </ClCompile>
     <ClCompile Include="geometry_generator.cpp">
       <Filter>Graphics\Util</Filter>
     </ClCompile>
@@ -166,8 +160,17 @@
     <ClCompile Include="engine.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="graphics_common.cpp">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClCompile>
     <ClCompile Include="graphics_core.cpp">
-      <Filter>Graphics\Gpu</Filter>
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics_pso.cpp">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="graphics_util.cpp">
+      <Filter>Graphics\Gpu\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -194,6 +197,12 @@
     </Filter>
     <Filter Include="Graphics\Pipeline">
       <UniqueIdentifier>{7505e9a1-1b93-4685-980a-51d7b44b728c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Gpu\Core">
+      <UniqueIdentifier>{18879377-765a-43a1-bb7d-084d0477f6b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Gpu\Util">
+      <UniqueIdentifier>{59b7ae61-0b36-4324-b833-d240c47db907}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

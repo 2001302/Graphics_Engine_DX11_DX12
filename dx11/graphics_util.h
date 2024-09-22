@@ -29,7 +29,7 @@ class Util {
         vertexBufferData.SysMemPitch = 0;
         vertexBufferData.SysMemSlicePitch = 0;
 
-        ThrowIfFailed(GpuCore::Instance().device->CreateBuffer(
+        ASSERT_FAILED(GpuCore::Instance().device->CreateBuffer(
             &bufferDesc, &vertexBufferData, vertexBuffer.GetAddressOf()));
     }
 
@@ -55,7 +55,7 @@ class Util {
         initData.SysMemPitch = 0;
         initData.SysMemSlicePitch = 0;
 
-        ThrowIfFailed(GpuCore::Instance().device->CreateBuffer(
+        ASSERT_FAILED(GpuCore::Instance().device->CreateBuffer(
             &desc, &initData, constantBuffer.GetAddressOf()));
     }
 

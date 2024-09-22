@@ -44,10 +44,10 @@ void ReadEXRImage(const std::string filename, std::vector<uint8_t> &image,
     const std::wstring wFilename(filename.begin(), filename.end());
 
     TexMetadata metadata;
-    ThrowIfFailed(GetMetadataFromEXRFile(wFilename.c_str(), metadata));
+    ASSERT_FAILED(GetMetadataFromEXRFile(wFilename.c_str(), metadata));
 
     ScratchImage scratchImage;
-    ThrowIfFailed(LoadFromEXRFile(wFilename.c_str(), NULL, scratchImage));
+    ASSERT_FAILED(LoadFromEXRFile(wFilename.c_str(), NULL, scratchImage));
 
     width = static_cast<int>(metadata.width);
     height = static_cast<int>(metadata.height);
@@ -148,8 +148,8 @@ void ReadImage(const std::string albedoFilename,
 }
 
 ComPtr<ID3D11Texture2D>
-CreateStagingTexture(const int width,
-                     const int height, const std::vector<uint8_t> &image,
+CreateStagingTexture(const int width, const int height,
+                     const std::vector<uint8_t> &image,
                      const DXGI_FORMAT pixelFormat = DXGI_FORMAT_R8G8B8A8_UNORM,
                      const int mipLevels = 1, const int arraySize = 1) {
 
@@ -166,8 +166,7 @@ CreateStagingTexture(const int width,
 
     ComPtr<ID3D11Texture2D> stagingTexture;
     if (FAILED(GpuCore::Instance().device->CreateTexture2D(
-            &txtDesc, NULL,
-                                       stagingTexture.GetAddressOf()))) {
+            &txtDesc, NULL, stagingTexture.GetAddressOf()))) {
         cout << "Failed()" << endl;
     }
 
@@ -175,10 +174,10 @@ CreateStagingTexture(const int width,
     if (pixelFormat == DXGI_FORMAT_R16G16B16A16_FLOAT) {
         pixelSize = sizeof(uint16_t) * 4;
     }
-    
+
     D3D11_MAPPED_SUBRESOURCE ms;
     GpuCore::Instance().device_context->Map(stagingTexture.Get(), NULL,
-                                                 D3D11_MAP_WRITE, NULL, &ms);
+                                            D3D11_MAP_WRITE, NULL, &ms);
     uint8_t *pData = (uint8_t *)ms.pData;
     for (UINT h = 0; h < UINT(height); h++) {
         memcpy(&pData[h * ms.RowPitch], &image[h * width * pixelSize],
@@ -189,14 +188,14 @@ CreateStagingTexture(const int width,
     return stagingTexture;
 }
 
-void CreateTextureHelper(const int width,
-                         const int height, const vector<uint8_t> &image,
+void CreateTextureHelper(const int width, const int height,
+                         const vector<uint8_t> &image,
                          const DXGI_FORMAT pixelFormat,
                          ComPtr<ID3D11Texture2D> &texture,
                          ComPtr<ID3D11ShaderResourceView> &srv) {
 
-    ComPtr<ID3D11Texture2D> stagingTexture = CreateStagingTexture(width,
-                             height, image, pixelFormat);
+    ComPtr<ID3D11Texture2D> stagingTexture =
+        CreateStagingTexture(width, height, image, pixelFormat);
 
     D3D11_TEXTURE2D_DESC txtDesc;
     ZeroMemory(&txtDesc, sizeof(txtDesc));
@@ -212,8 +211,8 @@ void CreateTextureHelper(const int width,
     txtDesc.CPUAccessFlags = 0;
 
     // 초기 데이터 없이 텍스춰 생성 (전부 검은색)
-    GpuCore::Instance().device->CreateTexture2D(
-        &txtDesc, NULL, texture.GetAddressOf());
+    GpuCore::Instance().device->CreateTexture2D(&txtDesc, NULL,
+                                                texture.GetAddressOf());
 
     // 실제로 생성된 MipLevels를 확인해보고 싶을 경우
     // texture->GetDesc(&txtDesc);
@@ -221,12 +220,11 @@ void CreateTextureHelper(const int width,
 
     // 스테이징 텍스춰로부터 가장 해상도가 높은 이미지 복사
     GpuCore::Instance().device_context->CopySubresourceRegion(
-        texture.Get(), 0, 0, 0, 0,
-                                   stagingTexture.Get(), 0, NULL);
+        texture.Get(), 0, 0, 0, 0, stagingTexture.Get(), 0, NULL);
 
     // ResourceView 만들기
-    GpuCore::Instance().device->CreateShaderResourceView(
-        texture.Get(), 0, srv.GetAddressOf());
+    GpuCore::Instance().device->CreateShaderResourceView(texture.Get(), 0,
+                                                         srv.GetAddressOf());
 
     // 해상도를 낮춰가며 밉맵 생성
     GpuCore::Instance().device_context->GenerateMips(srv.Get());
@@ -277,15 +275,14 @@ void Util::CreateMetallicRoughnessTexture(
                 combinedImage[4 * i + 2] = mImage[4 * i]; // Blue = Metalness
         }
 
-        CreateTextureHelper( mWidth, mHeight, combinedImage,
+        CreateTextureHelper(mWidth, mHeight, combinedImage,
                             DXGI_FORMAT_R8G8B8A8_UNORM, texture, srv);
     }
 }
 
-void Util::CreateTexture(
-                                 const std::string filename, const bool usSRGB,
-                                 ComPtr<ID3D11Texture2D> &tex,
-                                 ComPtr<ID3D11ShaderResourceView> &srv) {
+void Util::CreateTexture(const std::string filename, const bool usSRGB,
+                         ComPtr<ID3D11Texture2D> &tex,
+                         ComPtr<ID3D11ShaderResourceView> &srv) {
 
     int width = 0, height = 0;
     std::vector<uint8_t> image;
@@ -301,16 +298,13 @@ void Util::CreateTexture(
         ReadImage(filename, image, width, height);
     }
 
-    CreateTextureHelper( width, height, image, pixelFormat, tex,
-                        srv);
+    CreateTextureHelper(width, height, image, pixelFormat, tex, srv);
 }
 
-void Util::CreateTexture(
-                                 const std::string albedoFilename,
-                                 const std::string opacityFilename,
-                                 const bool usSRGB,
-                                 ComPtr<ID3D11Texture2D> &texture,
-                                 ComPtr<ID3D11ShaderResourceView> &srv) {
+void Util::CreateTexture(const std::string albedoFilename,
+                         const std::string opacityFilename, const bool usSRGB,
+                         ComPtr<ID3D11Texture2D> &texture,
+                         ComPtr<ID3D11ShaderResourceView> &srv) {
 
     int width = 0, height = 0;
     std::vector<uint8_t> image;
@@ -319,8 +313,7 @@ void Util::CreateTexture(
 
     ReadImage(albedoFilename, opacityFilename, image, width, height);
 
-    CreateTextureHelper(width, height, image, pixelFormat,
-                        texture, srv);
+    CreateTextureHelper(width, height, image, pixelFormat, texture, srv);
 }
 
 void Util::CreateTextureArray(
@@ -366,7 +359,7 @@ void Util::CreateTextureArray(
 
     // 초기 데이터 없이 텍스춰를 만듭니다.
     GpuCore::Instance().device->CreateTexture2D(&txtDesc, NULL,
-                                                     texture.GetAddressOf());
+                                                texture.GetAddressOf());
 
     // 실제로 만들어진 MipLevels를 확인
     texture->GetDesc(&txtDesc);
@@ -378,27 +371,26 @@ void Util::CreateTextureArray(
         auto &image = imageArray[i];
 
         // StagingTexture는 Texture2DArray가 아니라 Texture2D 입니다.
-        ComPtr<ID3D11Texture2D> stagingTexture = CreateStagingTexture(
-             width, height, image, txtDesc.Format, 1, 1);
+        ComPtr<ID3D11Texture2D> stagingTexture =
+            CreateStagingTexture(width, height, image, txtDesc.Format, 1, 1);
 
         // 스테이징 텍스춰를 텍스춰 배열의 해당 위치에 복사합니다.
         UINT subresourceIndex =
             D3D11CalcSubresource(0, UINT(i), txtDesc.MipLevels);
 
         GpuCore::Instance().device_context->CopySubresourceRegion(
-            texture.Get(), subresourceIndex, 0, 0, 0,
-                                       stagingTexture.Get(), 0, NULL);
+            texture.Get(), subresourceIndex, 0, 0, 0, stagingTexture.Get(), 0,
+            NULL);
     }
 
     GpuCore::Instance().device->CreateShaderResourceView(
-        texture.Get(), NULL,
-                                     textureResourceView.GetAddressOf());
+        texture.Get(), NULL, textureResourceView.GetAddressOf());
 
-    GpuCore::Instance().device_context->GenerateMips(
-        textureResourceView.Get());
+    GpuCore::Instance().device_context->GenerateMips(textureResourceView.Get());
 }
 
-void Util::CreateDDSTexture( const wchar_t *filename, bool isCubeMap,
+void Util::CreateDDSTexture(
+    const wchar_t *filename, bool isCubeMap,
     ComPtr<ID3D11ShaderResourceView> &textureResourceView) {
 
     ComPtr<ID3D11Texture2D> texture;
@@ -409,16 +401,15 @@ void Util::CreateDDSTexture( const wchar_t *filename, bool isCubeMap,
     }
 
     // https://github.com/microsoft/DirectXTK/wiki/DDSTextureLoader
-    ThrowIfFailed(CreateDDSTextureFromFileEx(
+    ASSERT_FAILED(CreateDDSTextureFromFileEx(
         GpuCore::Instance().device.Get(), filename, 0, D3D11_USAGE_DEFAULT,
         D3D11_BIND_SHADER_RESOURCE, 0, miscFlags, DDS_LOADER_FLAGS(false),
         (ID3D11Resource **)texture.GetAddressOf(),
         textureResourceView.GetAddressOf(), NULL));
 }
 
-void Util::WriteToFile(
-                               ComPtr<ID3D11Texture2D> &textureToWrite,
-                               const std::string filename) {
+void Util::WriteToFile(ComPtr<ID3D11Texture2D> &textureToWrite,
+                       const std::string filename) {
 
     D3D11_TEXTURE2D_DESC desc;
     textureToWrite->GetDesc(&desc);
@@ -431,8 +422,7 @@ void Util::WriteToFile(
 
     ComPtr<ID3D11Texture2D> stagingTexture;
     if (FAILED(GpuCore::Instance().device->CreateTexture2D(
-            &desc, NULL,
-                                       stagingTexture.GetAddressOf()))) {
+            &desc, NULL, stagingTexture.GetAddressOf()))) {
         cout << "Failed()" << endl;
     }
 
@@ -448,16 +438,15 @@ void Util::WriteToFile(
     box.front = 0;
     box.back = 1;
     GpuCore::Instance().device_context->CopySubresourceRegion(
-        stagingTexture.Get(), 0, 0, 0, 0,
-                                   textureToWrite.Get(), 0, &box);
+        stagingTexture.Get(), 0, 0, 0, 0, textureToWrite.Get(), 0, &box);
 
     // R8G8B8A8 이라고 가정
     std::vector<uint8_t> pixels(desc.Width * desc.Height * 4);
 
     D3D11_MAPPED_SUBRESOURCE ms;
     GpuCore::Instance().device_context->Map(stagingTexture.Get(), NULL,
-                                                 D3D11_MAP_READ, NULL,
-                 &ms); // D3D11_MAP_READ 주의
+                                            D3D11_MAP_READ, NULL,
+                                            &ms); // D3D11_MAP_READ 주의
 
     // 텍스춰가 작을 경우에는
     // ms.RowPitch가 width * sizeof(uint8_t) * 4보다 클 수도 있어서
@@ -476,13 +465,12 @@ void Util::WriteToFile(
     cout << filename << endl;
 }
 
-void Util::CreateUATexture(
-                                   const int width, const int height,
-                                   const DXGI_FORMAT pixelFormat,
-                                   ComPtr<ID3D11Texture2D> &texture,
-                                   ComPtr<ID3D11RenderTargetView> &rtv,
-                                   ComPtr<ID3D11ShaderResourceView> &srv,
-                                   ComPtr<ID3D11UnorderedAccessView> &uav) {
+void Util::CreateUATexture(const int width, const int height,
+                           const DXGI_FORMAT pixelFormat,
+                           ComPtr<ID3D11Texture2D> &texture,
+                           ComPtr<ID3D11RenderTargetView> &rtv,
+                           ComPtr<ID3D11ShaderResourceView> &srv,
+                           ComPtr<ID3D11UnorderedAccessView> &uav) {
 
     D3D11_TEXTURE2D_DESC txtDesc;
     ZeroMemory(&txtDesc, sizeof(txtDesc));
@@ -498,17 +486,14 @@ void Util::CreateUATexture(
     txtDesc.MiscFlags = 0;
     txtDesc.CPUAccessFlags = 0;
 
-    ThrowIfFailed(GpuCore::Instance().device->CreateTexture2D(
+    ASSERT_FAILED(GpuCore::Instance().device->CreateTexture2D(
         &txtDesc, NULL, texture.GetAddressOf()));
-    ThrowIfFailed(GpuCore::Instance().device->CreateRenderTargetView(
-        texture.Get(), NULL,
-                                                 rtv.GetAddressOf()));
-    ThrowIfFailed(GpuCore::Instance().device->CreateShaderResourceView(
-        texture.Get(), NULL,
-                                                   srv.GetAddressOf()));
-    ThrowIfFailed(GpuCore::Instance().device->CreateUnorderedAccessView(
-        texture.Get(), NULL,
-                                                    uav.GetAddressOf()));
+    ASSERT_FAILED(GpuCore::Instance().device->CreateRenderTargetView(
+        texture.Get(), NULL, rtv.GetAddressOf()));
+    ASSERT_FAILED(GpuCore::Instance().device->CreateShaderResourceView(
+        texture.Get(), NULL, srv.GetAddressOf()));
+    ASSERT_FAILED(GpuCore::Instance().device->CreateUnorderedAccessView(
+        texture.Get(), NULL, uav.GetAddressOf()));
 }
 
 void Util::ComputeShaderBarrier() {
@@ -517,17 +502,17 @@ void Util::ComputeShaderBarrier() {
     ID3D11ShaderResourceView *nullSRV[6] = {
         0,
     };
-    GpuCore::Instance().device_context->CSSetShaderResources(0, 6,
-                                                                  nullSRV);
+    GpuCore::Instance().device_context->CSSetShaderResources(0, 6, nullSRV);
     ID3D11UnorderedAccessView *nullUAV[6] = {
         0,
     };
-    GpuCore::Instance().device_context->CSSetUnorderedAccessViews(
-        0, 6, nullUAV, NULL);
+    GpuCore::Instance().device_context->CSSetUnorderedAccessViews(0, 6, nullUAV,
+                                                                  NULL);
 }
 
-ComPtr<ID3D11Texture3D> Util::CreateStagingTexture3D( const int width, const int height,
-    const int depth, const DXGI_FORMAT pixelFormat) {
+ComPtr<ID3D11Texture3D>
+Util::CreateStagingTexture3D(const int width, const int height, const int depth,
+                             const DXGI_FORMAT pixelFormat) {
 
     // 스테이징 텍스춰 만들기
     D3D11_TEXTURE3D_DESC txtDesc;
@@ -542,8 +527,7 @@ ComPtr<ID3D11Texture3D> Util::CreateStagingTexture3D( const int width, const int
 
     ComPtr<ID3D11Texture3D> stagingTexture;
     if (FAILED(GpuCore::Instance().device->CreateTexture3D(
-            &txtDesc, NULL,
-                                       stagingTexture.GetAddressOf()))) {
+            &txtDesc, NULL, stagingTexture.GetAddressOf()))) {
         cout << "CreateStagingTexture3D() failed." << endl;
     }
 
@@ -574,11 +558,13 @@ size_t Util::GetPixelSize(DXGI_FORMAT pixelFormat) {
     return sizeof(uint8_t) * 4;
 }
 
-void Util::CreateTexture3D(const int width, const int height,
-    const int depth, const DXGI_FORMAT pixelFormat,
-    const vector<float> &initData, ComPtr<ID3D11Texture3D> &texture,
-    ComPtr<ID3D11RenderTargetView> &rtv, ComPtr<ID3D11ShaderResourceView> &srv,
-    ComPtr<ID3D11UnorderedAccessView> &uav) {
+void Util::CreateTexture3D(const int width, const int height, const int depth,
+                           const DXGI_FORMAT pixelFormat,
+                           const vector<float> &initData,
+                           ComPtr<ID3D11Texture3D> &texture,
+                           ComPtr<ID3D11RenderTargetView> &rtv,
+                           ComPtr<ID3D11ShaderResourceView> &srv,
+                           ComPtr<ID3D11UnorderedAccessView> &uav) {
 
     D3D11_TEXTURE3D_DESC txtDesc;
     ZeroMemory(&txtDesc, sizeof(txtDesc));
@@ -600,29 +586,26 @@ void Util::CreateTexture3D(const int width, const int height,
         bufferData.pSysMem = initData.data();
         bufferData.SysMemPitch = UINT(width * pixelSize);
         bufferData.SysMemSlicePitch = UINT(width * height * pixelSize);
-        ThrowIfFailed(GpuCore::Instance().device->CreateTexture3D(
-            &txtDesc, &bufferData,
-                                              texture.GetAddressOf()));
+        ASSERT_FAILED(GpuCore::Instance().device->CreateTexture3D(
+            &txtDesc, &bufferData, texture.GetAddressOf()));
     } else {
-        ThrowIfFailed(GpuCore::Instance().device->CreateTexture3D(
+        ASSERT_FAILED(GpuCore::Instance().device->CreateTexture3D(
             &txtDesc, NULL, texture.GetAddressOf()));
     }
 
-    ThrowIfFailed(GpuCore::Instance().device->CreateRenderTargetView(
-        texture.Get(), NULL,
-                                                 rtv.GetAddressOf()));
-    ThrowIfFailed(GpuCore::Instance().device->CreateShaderResourceView(
-        texture.Get(), NULL,
-                                                   srv.GetAddressOf()));
-    ThrowIfFailed(GpuCore::Instance().device->CreateUnorderedAccessView(
-        texture.Get(), NULL,
-                                                    uav.GetAddressOf()));
+    ASSERT_FAILED(GpuCore::Instance().device->CreateRenderTargetView(
+        texture.Get(), NULL, rtv.GetAddressOf()));
+    ASSERT_FAILED(GpuCore::Instance().device->CreateShaderResourceView(
+        texture.Get(), NULL, srv.GetAddressOf()));
+    ASSERT_FAILED(GpuCore::Instance().device->CreateUnorderedAccessView(
+        texture.Get(), NULL, uav.GetAddressOf()));
 }
 
-void Util::CreateStructuredBuffer( const UINT numElements,
-    const UINT sizeElement, const void *initData, ComPtr<ID3D11Buffer> &buffer,
-    ComPtr<ID3D11ShaderResourceView> &srv,
-    ComPtr<ID3D11UnorderedAccessView> &uav) {
+void Util::CreateStructuredBuffer(const UINT numElements,
+                                  const UINT sizeElement, const void *initData,
+                                  ComPtr<ID3D11Buffer> &buffer,
+                                  ComPtr<ID3D11ShaderResourceView> &srv,
+                                  ComPtr<ID3D11UnorderedAccessView> &uav) {
 
     D3D11_BUFFER_DESC bufferDesc;
     ZeroMemory(&bufferDesc, sizeof(bufferDesc));
@@ -639,11 +622,10 @@ void Util::CreateStructuredBuffer( const UINT numElements,
         D3D11_SUBRESOURCE_DATA bufferData;
         ZeroMemory(&bufferData, sizeof(bufferData));
         bufferData.pSysMem = initData;
-        ThrowIfFailed(GpuCore::Instance().device->CreateBuffer(
-            &bufferDesc, &bufferData,
-                                           buffer.GetAddressOf()));
+        ASSERT_FAILED(GpuCore::Instance().device->CreateBuffer(
+            &bufferDesc, &bufferData, buffer.GetAddressOf()));
     } else {
-        ThrowIfFailed(GpuCore::Instance().device->CreateBuffer(
+        ASSERT_FAILED(GpuCore::Instance().device->CreateBuffer(
             &bufferDesc, NULL, buffer.GetAddressOf()));
     }
 
@@ -653,24 +635,20 @@ void Util::CreateStructuredBuffer( const UINT numElements,
     uavDesc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
     uavDesc.Buffer.NumElements = numElements;
     GpuCore::Instance().device->CreateUnorderedAccessView(
-        buffer.Get(), &uavDesc,
-                                      uav.GetAddressOf());
+        buffer.Get(), &uavDesc, uav.GetAddressOf());
 
     D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
     ZeroMemory(&srvDesc, sizeof(srvDesc));
     srvDesc.Format = DXGI_FORMAT_UNKNOWN;
     srvDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
     srvDesc.BufferEx.NumElements = numElements;
-    GpuCore::Instance().device->CreateShaderResourceView(
-        buffer.Get(), &srvDesc,
-                                     srv.GetAddressOf());
+    GpuCore::Instance().device->CreateShaderResourceView(buffer.Get(), &srvDesc,
+                                                         srv.GetAddressOf());
 }
 
-void Util::CreateStagingBuffer(
-                                       const UINT numElements,
-                                       const UINT sizeElement,
-                                       const void *initData,
-                                       ComPtr<ID3D11Buffer> &buffer) {
+void Util::CreateStagingBuffer(const UINT numElements, const UINT sizeElement,
+                               const void *initData,
+                               ComPtr<ID3D11Buffer> &buffer) {
 
     D3D11_BUFFER_DESC desc;
     ZeroMemory(&desc, sizeof(desc));
@@ -683,10 +661,10 @@ void Util::CreateStagingBuffer(
         D3D11_SUBRESOURCE_DATA bufferData;
         ZeroMemory(&bufferData, sizeof(bufferData));
         bufferData.pSysMem = initData;
-        ThrowIfFailed(GpuCore::Instance().device->CreateBuffer(
+        ASSERT_FAILED(GpuCore::Instance().device->CreateBuffer(
             &desc, &bufferData, buffer.GetAddressOf()));
     } else {
-        ThrowIfFailed(GpuCore::Instance().device->CreateBuffer(
+        ASSERT_FAILED(GpuCore::Instance().device->CreateBuffer(
             &desc, NULL, buffer.GetAddressOf()));
     }
 }

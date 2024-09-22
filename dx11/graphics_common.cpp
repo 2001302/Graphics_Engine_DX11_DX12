@@ -80,7 +80,7 @@ PipelineState depthOnlySkinnedPSO;
 PipelineState postEffectsPSO;
 PipelineState postProcessingPSO;
 
-} // namespace graphics
+} // namespace pipeline
 
 void CheckResult(HRESULT hr, ID3DBlob *errorBlob) {
     if (FAILED(hr)) {
@@ -239,7 +239,7 @@ void pipeline::CreateComputeShader(ComPtr<ID3D11Device> &device,
         filename.c_str(), 0, D3D_COMPILE_STANDARD_FILE_INCLUDE, "main",
         "cs_5_0", compileFlags, 0, &shaderBlob, &errorBlob);
 
-    ThrowIfFailed(device->CreateComputeShader(shaderBlob->GetBufferPointer(),
+    ASSERT_FAILED(device->CreateComputeShader(shaderBlob->GetBufferPointer(),
                                               shaderBlob->GetBufferSize(), NULL,
                                               &computeShader));
 }
@@ -307,20 +307,20 @@ void pipeline::InitRasterizerStates(ComPtr<ID3D11Device> &device) {
     rastDesc.FrontCounterClockwise = false;
     rastDesc.DepthClipEnable = true;
     rastDesc.MultisampleEnable = true;
-    ThrowIfFailed(
+    ASSERT_FAILED(
         device->CreateRasterizerState(&rastDesc, solidRS.GetAddressOf()));
 
     // 거울에 반사되면 삼각형의 Winding이 바뀌기 때문에 CCW로 그려야함
     rastDesc.FrontCounterClockwise = true;
-    ThrowIfFailed(
+    ASSERT_FAILED(
         device->CreateRasterizerState(&rastDesc, solidCCWRS.GetAddressOf()));
 
     rastDesc.FillMode = D3D11_FILL_MODE::D3D11_FILL_WIREFRAME;
-    ThrowIfFailed(
+    ASSERT_FAILED(
         device->CreateRasterizerState(&rastDesc, wireCCWRS.GetAddressOf()));
 
     rastDesc.FrontCounterClockwise = false;
-    ThrowIfFailed(
+    ASSERT_FAILED(
         device->CreateRasterizerState(&rastDesc, wireRS.GetAddressOf()));
 
     ZeroMemory(&rastDesc, sizeof(D3D11_RASTERIZER_DESC));
@@ -328,7 +328,7 @@ void pipeline::InitRasterizerStates(ComPtr<ID3D11Device> &device) {
     rastDesc.CullMode = D3D11_CULL_MODE::D3D11_CULL_NONE;
     rastDesc.FrontCounterClockwise = false;
     rastDesc.DepthClipEnable = false;
-    ThrowIfFailed(device->CreateRasterizerState(
+    ASSERT_FAILED(device->CreateRasterizerState(
         &rastDesc, postProcessingRS.GetAddressOf()));
 }
 
@@ -356,7 +356,7 @@ void pipeline::InitBlendStates(ComPtr<ID3D11Device> &device) {
     mirrorBlendDesc.RenderTarget[0].RenderTargetWriteMask =
         D3D11_COLOR_WRITE_ENABLE_ALL;
 
-    ThrowIfFailed(
+    ASSERT_FAILED(
         device->CreateBlendState(&mirrorBlendDesc, mirrorBS.GetAddressOf()));
 }
 
@@ -392,7 +392,7 @@ void pipeline::InitDepthStencilStates(ComPtr<ID3D11Device> &device) {
     dsDesc.BackFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
     dsDesc.BackFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-    ThrowIfFailed(
+    ASSERT_FAILED(
         device->CreateDepthStencilState(&dsDesc, drawDSS.GetAddressOf()));
 
     // Stencil에 1로 표기해주는 DSS
@@ -408,7 +408,7 @@ void pipeline::InitDepthStencilStates(ComPtr<ID3D11Device> &device) {
     dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_REPLACE;
     dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_ALWAYS;
 
-    ThrowIfFailed(
+    ASSERT_FAILED(
         device->CreateDepthStencilState(&dsDesc, maskDSS.GetAddressOf()));
 
     // Stencil에 1로 표기된 경우에"만" 그리는 DSS
@@ -424,7 +424,7 @@ void pipeline::InitDepthStencilStates(ComPtr<ID3D11Device> &device) {
     dsDesc.FrontFace.StencilPassOp = D3D11_STENCIL_OP_KEEP;
     dsDesc.FrontFace.StencilFunc = D3D11_COMPARISON_EQUAL;
 
-    ThrowIfFailed(
+    ASSERT_FAILED(
         device->CreateDepthStencilState(&dsDesc, drawMaskedDSS.GetAddressOf()));
 }
 
@@ -630,4 +630,4 @@ void pipeline::InitPipelineStates(ComPtr<ID3D11Device> &device) {
     postProcessingPSO.rasterizer_state = postProcessingRS;
 }
 
-} // namespace core
+} // namespace graphics

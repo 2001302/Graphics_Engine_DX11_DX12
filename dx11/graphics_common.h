@@ -4,12 +4,6 @@
 #include "graphics_pso.h"
 
 namespace graphics {
-inline void ThrowIfFailed(HRESULT hr) {
-    if (FAILED(hr)) {
-        throw std::exception();
-    }
-}
-
 namespace pipeline {
 // Samplers
 extern ComPtr<ID3D11SamplerState> linearWrapSS;

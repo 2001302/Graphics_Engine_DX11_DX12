@@ -32,7 +32,7 @@ class OnlyDepthNode : public common::BehaviorActionNode {
                 D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
             desc.SampleDesc.Count = 1;
             desc.SampleDesc.Quality = 0;
-            ThrowIfFailed(GraphicsCore::Instance().device->CreateTexture2D(
+            ASSERT_FAILED(GraphicsCore::Instance().device->CreateTexture2D(
                 &desc, NULL, depthOnlyBuffer.GetAddressOf()));
             break;
         }

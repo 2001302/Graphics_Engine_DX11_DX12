@@ -509,9 +509,6 @@
     <FxCompile Include="shader\ToneMappingPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="shader\ToneMappingCS.hlsl">
-      <Filter>Graphics\Gpu\Shader</Filter>
-    </FxCompile>
     <FxCompile Include="shader\SkyboxVS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>

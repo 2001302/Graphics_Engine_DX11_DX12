@@ -98,26 +98,26 @@ class SkyboxPSO : public GraphicsPSO {
         context->SetRootSignature(root_signature);
         context->SetPipelineState(pipeline_state);
 
-        context->GetList()->SetGraphicsRootDescriptorTable(
-            0, shared_sampler->GetGpuHandle());
-        context->GetList()->SetGraphicsRootDescriptorTable(
-            1, shared_texture->GetGpuHandle());
+        context->SetGraphicsRootDescriptorTable(0,
+                                                shared_sampler->GetGpuHandle());
+        context->SetGraphicsRootDescriptorTable(1,
+                                                shared_texture->GetGpuHandle());
         // global texture
-        context->GetList()->SetGraphicsRootConstantBufferView(
+        context->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());
-        context->GetList()->SetGraphicsRootConstantBufferView(
+        context->SetGraphicsRootConstantBufferView(
             3, mesh_renderer->GetMeshConsts()->GetGPUVirtualAddress());
-        context->GetList()->SetGraphicsRootConstantBufferView(
+        context->SetGraphicsRootConstantBufferView(
             4, mesh_renderer->GetMaterialConsts()->GetGPUVirtualAddress());
 
-        context->GetList()->IASetPrimitiveTopology(
+        context->SetTrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-        context->GetList()->IASetVertexBuffers(
-            0, 1, &mesh_renderer->GetMeshes().front()->vertex_buffer_view);
-        context->GetList()->IASetIndexBuffer(
+        context->SetVertexBuffers(
+            &mesh_renderer->GetMeshes().front()->vertex_buffer_view);
+        context->SetIndexBuffers(
             &mesh_renderer->GetMeshes().front()->index_buffer_view);
-        context->GetList()->DrawIndexedInstanced(
-            mesh_renderer->GetMeshes().front()->index_count, 1, 0, 0, 0);
+        context->DrawIndexedInstanced(
+            mesh_renderer->GetMeshes().front()->index_count);
 
         GpuCore::Instance().GetCommand()->Finish(context);
     };

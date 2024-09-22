@@ -1,8 +1,8 @@
 #ifndef _GPU_NODE
 #define _GPU_NODE
 
-#include "common/behavior_tree_builder.h"
 #include "mesh_util.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 class GpuInitializeNode : public common::BehaviorActionNode {

@@ -1,7 +1,7 @@
 #ifndef _COMPONENT
 #define _COMPONENT
 
-#include "common/node.h"
+#include <node.h>
 
 namespace graphics {
 enum EnumComponentType {

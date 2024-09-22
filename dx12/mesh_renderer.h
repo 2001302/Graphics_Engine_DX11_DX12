@@ -1,13 +1,13 @@
 #ifndef _RENDERER
 #define _RENDERER
 
-#include "common/node.h"
 #include "component.h"
 #include "constant_buffer.h"
 #include "geometry_generator.h"
 #include "mesh.h"
 #include <filesystem>
 #include <iostream>
+#include <node.h>
 
 namespace graphics {
 using Microsoft::WRL::ComPtr;

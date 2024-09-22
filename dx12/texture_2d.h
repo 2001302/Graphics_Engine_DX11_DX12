@@ -1,11 +1,11 @@
 #ifndef _TEXTURE2D
 #define _TEXTURE2D
 
-#include "common/logger.h"
 #include "device_manager.h"
 #include "gpu_resource.h"
 #include "image.h"
 #include <filesystem>
+#include <logger.h>
 
 namespace graphics {
 class Texture2D : public GpuResource {

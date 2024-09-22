@@ -2,7 +2,7 @@
 #define _RENDER_TARGET_OBJECT
 
 #include "camera.h"
-#include "common/info.h"
+#include <info.h>
 
 namespace graphics {
 class RenderTargetObject : public common::IInfo {

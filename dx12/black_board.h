@@ -1,10 +1,10 @@
 #ifndef _BLACKBOARD
 #define _BLACKBOARD
 
-#include "common/input.h"
-#include "common/setting_ui.h"
 #include "render_condition.h"
 #include "render_target_object.h"
+#include <input.h>
+#include <setting_ui.h>
 
 namespace graphics {
 

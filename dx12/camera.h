@@ -1,11 +1,11 @@
 #ifndef CAMERA
 #define CAMERA
 
-#include "common/behavior_tree_builder.h"
-#include "common/env.h"
-#include "common/node.h"
 #include "mesh_util.h"
 #include "model.h"
+#include <behavior_tree_builder.h>
+#include <env.h>
+#include <node.h>
 
 namespace graphics {
 class Camera : public common::INode {

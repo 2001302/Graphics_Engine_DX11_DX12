@@ -1,10 +1,10 @@
 #ifndef _MESSAGERECEIVER
 #define _MESSAGERECEIVER
 
-#include "common/input.h"
-#include "common/setting_ui.h"
 #include "geometry_generator.h"
 #include "render_target_object.h"
+#include <input.h>
+#include <setting_ui.h>
 
 namespace graphics {
 class MessageReceiver {

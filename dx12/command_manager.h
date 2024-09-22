@@ -3,7 +3,7 @@
 
 #include "command_list.h"
 #include "command_queue.h"
-#include "common/logger.h"
+#include <logger.h>
 #include <type_traits>
 
 namespace graphics {
@@ -76,8 +76,7 @@ class GpuCommand {
     };
 
     void Wait(D3D12_COMMAND_LIST_TYPE type) {
-        auto begin = common::TimeLogger::Begin();
-
+        //auto begin = common::TimeLogger::Begin();
         while (!retired_contexts_[type].empty()) {
 
             retired_contexts_[type].front()->IsFenceComplete(
@@ -87,8 +86,7 @@ class GpuCommand {
             available_contexts_[type].push(context);
             retired_contexts_[type].pop();
         }
-
-        common::TimeLogger::End("Waiting for completion ", begin);
+        //common::TimeLogger::End("Waiting for completion ", begin);
     }
 
   private:

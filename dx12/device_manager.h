@@ -2,9 +2,9 @@
 #define _GRAPHICS_CORE
 
 #include "command_manager.h"
-#include "common/logger.h"
 #include "heap_manager.h"
 #include "pch.h"
+#include <logger.h>
 
 namespace graphics {
 class GpuCore {
@@ -28,7 +28,7 @@ class GpuCore {
     GpuHeap GetHeap() { return heap_manager; }
 
   private:
-    GpuCore() : swap_chain(0), device(0) {};
+    GpuCore() : swap_chain(0), device(0){};
     ComPtr<IDXGISwapChain1> swap_chain;
     ComPtr<ID3D12Device> device;
 

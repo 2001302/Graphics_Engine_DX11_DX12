@@ -2,7 +2,7 @@
 #define _CAMERANODE
 
 #include "black_board.h"
-#include "common/behavior_tree_builder.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 

@@ -2,11 +2,11 @@
 #define _APPLICATION
 
 #include "black_board.h"
-#include "common/behavior_tree_builder.h"
-#include "common/platform.h"
-#include "common/setting_ui.h"
 #include "mesh_util.h"
 #include "message_receiver.h"
+#include <behavior_tree_builder.h>
+#include <platform.h>
+#include <setting_ui.h>
 
 namespace graphics {
 

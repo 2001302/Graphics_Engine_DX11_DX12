@@ -26,8 +26,8 @@
 #include <windows.h>
 #include <wrl/client.h>
 
-#include "common/env.h"
 #include "d3dx12.h"
+#include <env.h>
 
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;

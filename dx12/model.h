@@ -1,9 +1,9 @@
 #ifndef _MODEL
 #define _MODEL
 
-#include "common/node.h"
 #include "component.h"
 #include "mesh_util.h"
+#include <node.h>
 #include <unordered_map>
 
 namespace graphics {

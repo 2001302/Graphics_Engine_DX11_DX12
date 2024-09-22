@@ -18,13 +18,24 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {
             gui->Start();
+
+            ImGui_ImplWin32_Init(common::env::main_window);
+            ImGui_ImplDX11_Init(GpuCore::Instance().device.Get(),
+                                GpuCore::Instance().device_context.Get());
+
             gui->PushInfoItem(manager);
             break;
         }
         case EnumStageType::eRender: {
+
+            ImGui_ImplWin32_NewFrame();
+            ImGui_ImplDX11_NewFrame();
+
             gui->Frame();
             gui->ClearNodeItem();
 
+            ImGui::Render();
+            ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
             break;
         }
         default:
@@ -33,8 +44,14 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
+
+  public:
+    static void Shutdown() {
+		  ImGui_ImplDX11_Shutdown();
+		  ImGui_ImplWin32_Shutdown();
+	  }
 };
 
-} // namespace engine
+} // namespace graphics
 
 #endif

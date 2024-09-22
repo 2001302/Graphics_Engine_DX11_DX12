@@ -1,11 +1,11 @@
 #ifndef CAMERA
 #define CAMERA
 
-#include "behavior_tree_builder.h"
-#include "env.h"
 #include "graphics_util.h"
-#include "node.h"
 #include "model.h"
+#include <behavior_tree_builder.h>
+#include <env.h>
+#include <node.h>
 
 namespace graphics {
 class Camera : public common::INode {
@@ -31,7 +31,7 @@ class Camera : public common::INode {
 
     Vector3 upVector;
     Vector3 lookAtVector;
-    float yaw; 
+    float yaw;
     float pitch;
 
     float projection_fov_angle_y;
@@ -39,5 +39,5 @@ class Camera : public common::INode {
     float far_z;
 };
 
-} // namespace engine
+} // namespace graphics
 #endif

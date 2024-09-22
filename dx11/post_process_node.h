@@ -21,8 +21,8 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
         switch (job_context->stage_type) {
         case EnumStageType::eInitialize: {
-            const_data.dx = 1.0f / common::Env::Instance().screen_width;
-            const_data.dy = 1.0f / common::Env::Instance().screen_height;
+            const_data.dx = 1.0f / common::env::screen_width;
+            const_data.dy = 1.0f / common::env::screen_height;
             const_data.strength = 0.5f; // Bloom strength
             const_data.option1 = 1.0f;  // Exposure
             const_data.option2 = 2.2f;  // Gamma
@@ -32,20 +32,17 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
             // bloom
             graphics::Util::CreateUATexture(
-                common::Env::Instance().screen_width,
-                common::Env::Instance().screen_height,
+                common::env::screen_width, common::env::screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, bright_pass_buffer,
                 bright_pass_RTV, bright_pass_SRV, bright_pass_UAV);
 
             graphics::Util::CreateUATexture(
-                common::Env::Instance().screen_width,
-                common::Env::Instance().screen_height,
+                common::env::screen_width, common::env::screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_vertical_buffer,
                 blur_vertical_RTV, blur_vertical_SRV, blur_vertical_UAV);
 
             graphics::Util::CreateUATexture(
-                common::Env::Instance().screen_width,
-                common::Env::Instance().screen_height,
+                common::env::screen_width, common::env::screen_height,
                 DXGI_FORMAT_R16G16B16A16_FLOAT, blur_horizontal_buffer,
                 blur_horizontal_RTV, blur_horizontal_SRV, blur_horizontal_UAV);
 
@@ -59,10 +56,10 @@ class PostProcessingNode : public common::BehaviorActionNode,
 
             if (use_bloom) {
                 // bright pass->blur vertical->blur horizontal->composite
-                bright_pass.Render(
-                    graphics::pipeline::brightPassCS, const_buffer,
-                    {graphics::GpuCore::Instance().resolved_SRV},
-                    bright_pass_UAV);
+                bright_pass.Render(graphics::pipeline::brightPassCS,
+                                   const_buffer,
+                                   {graphics::GpuCore::Instance().resolved_SRV},
+                                   bright_pass_UAV);
 
                 blur_vertical.Render(graphics::pipeline::blurVerticalCS,
                                      const_buffer, {bright_pass_SRV},
@@ -84,7 +81,8 @@ class PostProcessingNode : public common::BehaviorActionNode,
             }
 
             // tone mapping
-            graphics::Util::SetPipelineState(graphics::pipeline::postProcessingPSO);
+            graphics::Util::SetPipelineState(
+                graphics::pipeline::postProcessingPSO);
             tone_mapping.Render(const_buffer);
             break;
         }
@@ -126,6 +124,6 @@ class PostProcessingNode : public common::BehaviorActionNode,
     ComPtr<ID3D11ShaderResourceView> blur_horizontal_SRV;
     ComPtr<ID3D11UnorderedAccessView> blur_horizontal_UAV;
 };
-} // namespace core
+} // namespace graphics
 
 #endif

@@ -16,14 +16,14 @@ bool GpuCore::Initialize() {
 
     DXGI_SWAP_CHAIN_DESC sd;
     ZeroMemory(&sd, sizeof(sd));
-    sd.BufferDesc.Width = common::Env::Instance().screen_width;
-    sd.BufferDesc.Height = common::Env::Instance().screen_height;
+    sd.BufferDesc.Width = common::env::screen_width;
+    sd.BufferDesc.Height = common::env::screen_height;
     sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
     sd.BufferCount = 2;
     sd.BufferDesc.RefreshRate.Numerator = 60;
     sd.BufferDesc.RefreshRate.Denominator = 1;
     sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    sd.OutputWindow = common::Env::Instance().main_window;
+    sd.OutputWindow = common::env::main_window;
     sd.Windowed = TRUE;
     sd.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
     sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
@@ -96,8 +96,8 @@ bool GpuCore::CreateBuffer() {
     {
         D3D11_TEXTURE2D_DESC txtDesc;
         ZeroMemory(&txtDesc, sizeof(txtDesc));
-        txtDesc.Width = common::Env::Instance().screen_width;
-        txtDesc.Height = common::Env::Instance().screen_height;
+        txtDesc.Width = common::env::screen_width;
+        txtDesc.Height = common::env::screen_height;
         txtDesc.MipLevels = 1;
         txtDesc.ArraySize = 1;
         txtDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
@@ -111,8 +111,8 @@ bool GpuCore::CreateBuffer() {
 
         ThrowIfFailed(device->CreateTexture2D(&txtDesc, NULL,
                                               resolved_buffer.GetAddressOf()));
-        ThrowIfFailed(device->CreateRenderTargetView(resolved_buffer.Get(),
-                                                     NULL, resolved_RTV.GetAddressOf()));
+        ThrowIfFailed(device->CreateRenderTargetView(
+            resolved_buffer.Get(), NULL, resolved_RTV.GetAddressOf()));
         ThrowIfFailed(device->CreateShaderResourceView(
             resolved_buffer.Get(), NULL, resolved_SRV.GetAddressOf()));
         ThrowIfFailed(device->CreateUnorderedAccessView(
@@ -127,8 +127,8 @@ bool GpuCore::CreateBuffer() {
 void GpuCore::CreateDepthBuffer() {
 
     D3D11_TEXTURE2D_DESC desc;
-    desc.Width = common::Env::Instance().screen_width;
-    desc.Height = common::Env::Instance().screen_height;
+    desc.Width = common::env::screen_width;
+    desc.Height = common::env::screen_height;
     desc.MipLevels = 1;
     desc.ArraySize = 1;
     desc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -159,12 +159,12 @@ void GpuCore::SetMainViewport() {
     ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
     viewport.TopLeftX = 0;
     viewport.TopLeftY = 0;
-    viewport.Width = float(common::Env::Instance().screen_width);
-    viewport.Height = float(common::Env::Instance().screen_height);
+    viewport.Width = float(common::env::screen_width);
+    viewport.Height = float(common::env::screen_height);
     viewport.MinDepth = 0.0f;
     viewport.MaxDepth = 1.0f;
 
     device_context->RSSetViewports(1, &viewport);
 }
 
-} // namespace engine
+} // namespace graphics

@@ -12,16 +12,10 @@ bool IGui::Start() {
     ImGui::StyleColorsDark();
     RecreateFontAtlas();
 
-    // ImGui_ImplWin32_Init();
-    // ImGui_ImplDX12_Init();
-
     return true;
 }
 
 bool IGui::Frame() {
-    //ImGui_ImplWin32_NewFrame();
-    //ImGui_ImplDX12_NewFrame();
-
     auto &io = ImGui::GetIO();
 
     ImGui::NewFrame();

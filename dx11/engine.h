@@ -1,14 +1,14 @@
 #ifndef _APPLICATION
 #define _APPLICATION
 
-#include "action_node.h"
+#include "black_board.h"
 #include "geometry_generator.h"
 #include "graphics_util.h"
-#include "message.h"
 #include "message_receiver.h"
-#include "platform.h"
 #include "tree_node.h"
-#include "black_board.h"
+#include <action_node.h>
+#include <message.h>
+#include <platform.h>
 
 namespace graphics {
 
@@ -109,7 +109,7 @@ class Engine : public common::Platform, TreeNode {
             break;
         }
         case WM_KEYDOWN:
-            black_board->input->KeyPressed(wparam,true);
+            black_board->input->KeyPressed(wparam, true);
             if (wparam == VK_ESCAPE) {
                 Stop();
                 DestroyWindow(main_window);
@@ -127,5 +127,5 @@ class Engine : public common::Platform, TreeNode {
         }
     }
 };
-} // namespace engine
+} // namespace graphics
 #endif

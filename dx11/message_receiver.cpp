@@ -1,4 +1,5 @@
 #include "message_receiver.h"
+#include "gui_node.h"
 #include "mesh_renderer.h"
 
 namespace graphics {
@@ -7,14 +8,13 @@ using namespace DirectX::SimpleMath;
 bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
                                           int size_y) {
 
-    common::Env::Instance().screen_width = size_x;
-    common::Env::Instance().screen_height = size_y;
+    common::env::screen_width = size_x;
+    common::env::screen_height = size_y;
 
-    if (common::Env::Instance().screen_width &&
-        common::Env::Instance().screen_height) {
+    if (common::env::screen_width && common::env::screen_height) {
         if (graphics::GpuCore::Instance().swap_chain) {
 
-            gui->Shutdown();
+            GuiNodeInvoker::Shutdown();
 
             graphics::GpuCore::Instance().back_buffer_RTV.Reset();
             graphics::GpuCore::Instance().swap_chain->ResizeBuffers(
@@ -197,4 +197,4 @@ bool MessageReceiver::OnCylinderLoadRequest(JobContext *manager) {
 
     return true;
 }
-} // namespace core
+} // namespace graphics

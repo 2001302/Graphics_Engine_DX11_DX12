@@ -109,7 +109,7 @@ bool Engine::Stop() {
         }
 
         if (black_board->gui) {
-            black_board->gui->Shutdown();
+            GuiNodeInvoker::Shutdown();
             black_board->gui.reset();
         }
 

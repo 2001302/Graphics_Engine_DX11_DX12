@@ -21,7 +21,7 @@ class PresentNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         // Present the rendered scene to the screen.
-        if (common::Env::Instance().vsync_enabled) {
+        if (common::env::vsync_enabled) {
             graphics::GpuCore::Instance().swap_chain->Present(1, 0);
         } else {
             graphics::GpuCore::Instance().swap_chain->Present(0, 0);

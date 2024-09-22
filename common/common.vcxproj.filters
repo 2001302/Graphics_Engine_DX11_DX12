@@ -76,6 +76,9 @@
     <ClCompile Include="ImGui\imgui_widgets.cpp">
       <Filter>Gui\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
+      <Filter>Gui\ImGui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="platform.h">
@@ -175,6 +178,9 @@
       <Filter>Gui\ImGui</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
+      <Filter>Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="ImGui\imgui_impl_dx11.h">
       <Filter>Gui\ImGui</Filter>
     </ClInclude>
   </ItemGroup>

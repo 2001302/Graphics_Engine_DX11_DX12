@@ -1,9 +1,9 @@
 #ifndef _BLACKBOARD
 #define _BLACKBOARD
 
-#include "input.h"
 #include "job_context.h"
-#include "setting_ui.h"
+#include <input.h>
+#include <setting_ui.h>
 
 namespace graphics {
 
@@ -18,5 +18,5 @@ struct BlackBoard : public common::IDataBlock {
     std::shared_ptr<common::SettingUi> gui;
 };
 
-} // namespace core
+} // namespace graphics
 #endif

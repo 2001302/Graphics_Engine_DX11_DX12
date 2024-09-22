@@ -5,10 +5,10 @@
 #include "component.h"
 #include "graphics_util.h"
 #include "mesh_renderer.h"
-#include "node.h"
 #include "structured_buffer.h"
 #include <filesystem>
 #include <iostream>
+#include <node.h>
 
 namespace graphics {
 using Microsoft::WRL::ComPtr;
@@ -29,5 +29,5 @@ class Animator : public Component {
     StructuredBuffer<Matrix> bone_transforms;
     AnimationData animation_data;
 };
-} // namespace core
+} // namespace graphics
 #endif

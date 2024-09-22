@@ -1,7 +1,7 @@
 #include "camera.h"
 #include "geometry_generator.h"
-#include "mesh_renderer.h"
 #include "job_context.h"
+#include "mesh_renderer.h"
 #include "setting_ui.h"
 
 namespace graphics {
@@ -32,7 +32,8 @@ Vector3 Camera::GetLookAt() { return lookAtVector; }
 Matrix Camera::GetProjection() {
     return DirectX::XMMatrixPerspectiveFovLH(
         DirectX::XMConvertToRadians(projection_fov_angle_y),
-        common::Env::Instance().GetAspect(), near_z, far_z);
+        (float)common::env::screen_width / (float)common::env::screen_height,
+        near_z, far_z);
 }
 
 void Camera::SetPosition(Vector3 pos) { position = pos; }
@@ -59,8 +60,8 @@ void Camera::Update() {
     auto up = XMVector3TransformCoord(upVector, rotationMatrix);
     view = XMMatrixLookAtLH(position, lookAtVector, up);
 
-    auto renderer =
-        (MeshRenderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
+    auto renderer = (MeshRenderer *)look_at_target->GetComponent(
+        EnumComponentType::eRenderer);
 
     renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
                              Matrix::CreateTranslation(lookAtVector));
@@ -68,8 +69,8 @@ void Camera::Update() {
 }
 
 void Camera::Draw() {
-    auto renderer =
-        (MeshRenderer *)look_at_target->GetComponent(EnumComponentType::eRenderer);
+    auto renderer = (MeshRenderer *)look_at_target->GetComponent(
+        EnumComponentType::eRenderer);
     renderer->Render();
 }
-} // namespace engine
+} // namespace graphics

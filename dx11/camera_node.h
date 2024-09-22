@@ -1,8 +1,8 @@
 #ifndef _CAMERANODE
 #define _CAMERANODE
 
-#include "behavior_tree_builder.h"
 #include "black_board.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 
@@ -43,6 +43,6 @@ class CameraNodeInvoker : public common::BehaviorActionNode {
     }
 };
 
-} // namespace core
+} // namespace graphics
 
 #endif

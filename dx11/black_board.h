@@ -5,7 +5,7 @@
 #include "job_context.h"
 #include "setting_ui.h"
 
-namespace core {
+namespace graphics {
 
 struct BlackBoard : public foundation::IDataBlock {
     BlackBoard() {

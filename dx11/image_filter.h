@@ -4,7 +4,7 @@
 #include "graphics_pso.h"
 #include "tone_mapping.h"
 
-namespace core {
+namespace graphics {
 
 class ImageFilter : public Component {
   public:

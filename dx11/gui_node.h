@@ -4,7 +4,7 @@
 #include "behavior_tree_builder.h"
 #include "black_board.h"
 
-namespace core {
+namespace graphics {
 
 class GuiNodeInvoker : public foundation::BehaviorActionNode {
     foundation::EnumBehaviorTreeStatus OnInvoke() override {

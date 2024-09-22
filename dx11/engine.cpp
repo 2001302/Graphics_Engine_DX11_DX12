@@ -1,7 +1,7 @@
 #include "engine.h"
 #include "behavior_tree_builder.h"
 
-namespace core {
+namespace graphics {
 
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();

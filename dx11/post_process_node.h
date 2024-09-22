@@ -6,7 +6,7 @@
 #include "image_filter.h"
 #include "tone_mapping.h"
 
-namespace core {
+namespace graphics {
 /// <summary>
 /// Bloom + ToneMapping
 /// </summary>

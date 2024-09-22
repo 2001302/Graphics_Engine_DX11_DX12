@@ -1,6 +1,6 @@
 #include "player_node.h"
 
-namespace core {
+namespace graphics {
 PlayerAnimator::PlayerAnimator(const AnimationData &aniData,
                                SkinnedMeshRenderer *renderer,
                                foundation::Input *input)

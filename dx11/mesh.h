@@ -5,7 +5,7 @@
 #include "vertex.h"
 #include "texture_3d.h"
 
-namespace core {
+namespace graphics {
 
 struct MeshData {
     std::vector<Vertex> vertices;

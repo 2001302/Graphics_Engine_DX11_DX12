@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-namespace core {
+namespace graphics {
 
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Quaternion;

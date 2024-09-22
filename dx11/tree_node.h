@@ -15,7 +15,7 @@
 #include "shared_resource_node.h"
 
 // clang-format off
-namespace core {
+namespace graphics {
 class TreeNode {
   public:
     TreeNode() {

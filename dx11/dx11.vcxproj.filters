@@ -53,7 +53,7 @@
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClInclude>
     <ClInclude Include="graphics_util.h">
-      <Filter>Graphics</Filter>
+      <Filter>Gpu</Filter>
     </ClInclude>
     <ClInclude Include="message.h">
       <Filter>Foundation\Structure</Filter>
@@ -71,10 +71,10 @@
       <Filter>Foundation\Structure</Filter>
     </ClInclude>
     <ClInclude Include="graphics_pso.h">
-      <Filter>Graphics</Filter>
+      <Filter>Gpu</Filter>
     </ClInclude>
     <ClInclude Include="graphics_common.h">
-      <Filter>Graphics</Filter>
+      <Filter>Gpu</Filter>
     </ClInclude>
     <ClInclude Include="model_loader.h">
       <Filter>Core\Util</Filter>
@@ -197,7 +197,7 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="graphics_core.h">
-      <Filter>Graphics</Filter>
+      <Filter>Gpu</Filter>
     </ClInclude>
     <ClInclude Include="action_node.h">
       <Filter>Foundation\BehaviorTree</Filter>
@@ -263,7 +263,7 @@
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </ClCompile>
     <ClCompile Include="graphics_util.cpp">
-      <Filter>Graphics</Filter>
+      <Filter>Gpu</Filter>
     </ClCompile>
     <ClCompile Include="id_generator.cpp">
       <Filter>Foundation\Structure</Filter>
@@ -272,10 +272,10 @@
       <Filter>Foundation\Structure</Filter>
     </ClCompile>
     <ClCompile Include="graphics_pso.cpp">
-      <Filter>Graphics</Filter>
+      <Filter>Gpu</Filter>
     </ClCompile>
     <ClCompile Include="graphics_common.cpp">
-      <Filter>Graphics</Filter>
+      <Filter>Gpu</Filter>
     </ClCompile>
     <ClCompile Include="geometry_generator.cpp">
       <Filter>Core\Util</Filter>
@@ -317,7 +317,7 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="graphics_core.cpp">
-      <Filter>Graphics</Filter>
+      <Filter>Gpu</Filter>
     </ClCompile>
     <ClCompile Include="action_node.cpp">
       <Filter>Foundation\BehaviorTree</Filter>
@@ -342,9 +342,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Graphics">
-      <UniqueIdentifier>{1a58e045-98f9-419c-972d-1f2ad2b6a109}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Foundation">
       <UniqueIdentifier>{cd4d1aed-5e7a-4f54-8223-c66fbe383b80}</UniqueIdentifier>
     </Filter>
@@ -366,9 +363,6 @@
     <Filter Include="Foundation\BehaviorTree">
       <UniqueIdentifier>{3ab7e496-c4a5-4740-8b84-b148f06891df}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Shader">
-      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{05dc446f-8a32-4f98-9f30-cf72b7cc2f60}</UniqueIdentifier>
     </Filter>
@@ -383,6 +377,12 @@
     </Filter>
     <Filter Include="Core\Model">
       <UniqueIdentifier>{0b569e3e-70fb-479a-a225-7de4add8f966}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gpu">
+      <UniqueIdentifier>{1a58e045-98f9-419c-972d-1f2ad2b6a109}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Gpu\Shader">
+      <UniqueIdentifier>{2703a152-551d-4384-95f5-f66624506b3d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -399,73 +399,73 @@
       <Filter>Foundation\Gui\ImGui\NodeEditor</Filter>
     </None>
     <None Include="Common.hlsli">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </None>
     <None Include="DiskSamples.hlsli">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="CombinePS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SamplingVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SamplingPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="SkyboxVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BloomDownPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BloomUpPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="DepthOnlyVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="DepthOnlyPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="PostEffectsPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="NormalGS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BasicVS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BasicPS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="CombineCS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BlurHorizontal.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BrightPassCS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BloomCompositeCS.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BlurVertical.hlsl">
-      <Filter>Graphics\Shader</Filter>
+      <Filter>Gpu\Shader</Filter>
     </FxCompile>
   </ItemGroup>
 </Project>

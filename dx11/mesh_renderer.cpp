@@ -1,6 +1,6 @@
 #include "mesh_renderer.h"
 
-namespace core {
+namespace graphics {
 
 using namespace std;
 using namespace DirectX;

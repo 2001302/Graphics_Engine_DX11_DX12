@@ -3,7 +3,7 @@
 
 #include "node.h"
 
-namespace core {
+namespace graphics {
 enum EnumComponentType {
     eRenderer = 0,
     eAnimator = 1,

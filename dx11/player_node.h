@@ -7,7 +7,7 @@
 #include "mesh_renderer.h"
 #include "skinned_mesh_renderer.h"
 
-namespace core {
+namespace graphics {
 
 using namespace foundation;
 

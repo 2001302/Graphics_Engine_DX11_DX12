@@ -6,7 +6,7 @@
 #include <iostream>
 #include <vector>
 
-namespace core {
+namespace graphics {
 using std::vector;
 
 template <typename T_ELEMENT> class StructuredBuffer {

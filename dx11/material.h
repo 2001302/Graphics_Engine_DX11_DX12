@@ -3,7 +3,7 @@
 
 #include "graphics_util.h"
 
-namespace core {
+namespace graphics {
 
 struct Material {
     Vector3 ambient = Vector3(0.1f);  // 12

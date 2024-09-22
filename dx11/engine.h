@@ -10,7 +10,7 @@
 #include "tree_node.h"
 #include "black_board.h"
 
-namespace core {
+namespace graphics {
 
 class Engine : public foundation::Platform, TreeNode {
   public:

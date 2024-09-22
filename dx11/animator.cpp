@@ -1,6 +1,6 @@
 #include "animator.h"
 
-namespace core {
+namespace graphics {
 Animator::Animator(const AnimationData &aniData) { InitAnimationData(aniData); }
 
 void Animator::InitAnimationData(const AnimationData &aniData) {

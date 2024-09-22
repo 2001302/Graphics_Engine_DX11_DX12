@@ -7,7 +7,7 @@
 #include "node.h"
 #include "model.h"
 
-namespace core {
+namespace graphics {
 class Camera : public foundation::INode {
   public:
     Camera();

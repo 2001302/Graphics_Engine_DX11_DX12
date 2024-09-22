@@ -6,7 +6,7 @@
 #include "node.h"
 #include <unordered_map>
 
-namespace core {
+namespace graphics {
 class Model : public foundation::INode {
   public:
     Model(){};

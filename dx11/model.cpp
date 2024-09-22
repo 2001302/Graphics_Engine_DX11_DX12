@@ -1,6 +1,6 @@
 #include "model.h"
 
-namespace core {
+namespace graphics {
 Model::~Model() {
     for (auto component : components) {
         component.second.reset();

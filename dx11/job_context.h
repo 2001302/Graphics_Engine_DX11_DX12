@@ -11,7 +11,7 @@
 #include "model.h"
 #include "skybox.h"
 
-namespace core {
+namespace graphics {
 enum EnumStageType {
     eInitialize = 0,
     eUpdate = 1,

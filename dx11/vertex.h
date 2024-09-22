@@ -3,7 +3,7 @@
 
 #include "graphics_util.h"
 
-namespace core {
+namespace graphics {
 
 struct Vertex {
     Vector3 position;

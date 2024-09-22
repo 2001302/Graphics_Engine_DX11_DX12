@@ -1,6 +1,6 @@
 #include "geometry_generator.h"
 
-namespace core {
+namespace graphics {
 
 using namespace std;
 using namespace DirectX;

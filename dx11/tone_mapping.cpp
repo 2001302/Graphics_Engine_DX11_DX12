@@ -3,7 +3,7 @@
 #include "graphics_common.h"
 #include "graphics_util.h"
 
-namespace core {
+namespace graphics {
 
 void ToneMapping::Initialize() {
 

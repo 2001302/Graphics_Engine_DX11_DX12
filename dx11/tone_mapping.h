@@ -6,7 +6,7 @@
 #include "env.h"
 #include "mesh.h"
 
-namespace core {
+namespace graphics {
 struct ImageFilterConstData {
     float dx;
     float dy;

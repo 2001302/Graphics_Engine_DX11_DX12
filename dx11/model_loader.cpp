@@ -5,7 +5,7 @@
 #include <filesystem>
 #include <vector>
 
-namespace core {
+namespace graphics {
 
 using namespace std;
 using namespace DirectX::SimpleMath;

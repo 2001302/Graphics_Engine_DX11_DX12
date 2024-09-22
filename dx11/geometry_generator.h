@@ -7,7 +7,7 @@
 #include "animation_clip.h"
 #include <tuple>
 
-namespace core {
+namespace graphics {
 class GeometryGenerator {
 
   public:

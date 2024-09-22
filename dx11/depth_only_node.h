@@ -5,7 +5,7 @@
 #include "black_board.h"
 #include "graphics_util.h"
 
-namespace core {
+namespace graphics {
 class OnlyDepthNode : public foundation::BehaviorActionNode {
     foundation::EnumBehaviorTreeStatus OnInvoke() override {
 

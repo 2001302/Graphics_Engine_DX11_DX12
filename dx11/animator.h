@@ -10,7 +10,7 @@
 #include <filesystem>
 #include <iostream>
 
-namespace core {
+namespace graphics {
 using Microsoft::WRL::ComPtr;
 
 class Animator : public Component {

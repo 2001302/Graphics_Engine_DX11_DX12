@@ -6,7 +6,7 @@
 #include "mesh_renderer.h"
 #include "skinned_mesh_renderer.h"
 
-namespace core {
+namespace graphics {
 
 class GameObjectNodeInvoker : public foundation::BehaviorActionNode {
     foundation::EnumBehaviorTreeStatus OnInvoke() override {

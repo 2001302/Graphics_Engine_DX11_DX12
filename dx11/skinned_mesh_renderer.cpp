@@ -1,6 +1,6 @@
 #include "skinned_mesh_renderer.h"
 
-namespace core {
+namespace graphics {
 SkinnedMeshRenderer::SkinnedMeshRenderer(const vector<MeshData> &meshes) {
     Initialize(meshes);
 }

@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 
-namespace core {
+namespace graphics {
 
 using std::map;
 using std::string;

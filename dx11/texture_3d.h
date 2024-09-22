@@ -6,7 +6,7 @@
 #include <random>
 #include <vector>
 
-namespace core {
+namespace graphics {
 
 using std::vector;
 

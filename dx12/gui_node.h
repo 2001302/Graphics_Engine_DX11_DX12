@@ -37,6 +37,9 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
             break;
         }
         case EnumStageType::eRender: {
+            ImGui_ImplWin32_NewFrame();
+            ImGui_ImplDX12_NewFrame();
+
             gui->Frame();
             gui->ClearNodeItem();
 
@@ -71,6 +74,13 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
+
+  public:
+      static void Shutdown() {
+		  ImGui_ImplDX12_Shutdown();
+		  ImGui_ImplWin32_Shutdown();
+		  ImGui::DestroyContext();
+	  }
 };
 
 } // namespace graphics

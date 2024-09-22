@@ -106,7 +106,7 @@ bool Engine::Stop() {
             black_board->targets->camera.reset();
         }
         if (black_board->gui) {
-            black_board->gui->Shutdown();
+            GuiNodeInvoker::Shutdown();
             black_board->gui.reset();
         }
         if (black_board->input) {

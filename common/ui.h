@@ -9,7 +9,6 @@ class IGui : public IDataBlock {
   public:
     bool Start();
     bool Frame();
-    void Shutdown();
 
     virtual void OnStart(){};
     virtual void OnFrame(){};

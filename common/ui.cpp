@@ -19,11 +19,10 @@ bool IGui::Start() {
 }
 
 bool IGui::Frame() {
+    //ImGui_ImplWin32_NewFrame();
+    //ImGui_ImplDX12_NewFrame();
 
     auto &io = ImGui::GetIO();
-
-    ImGui_ImplWin32_NewFrame();
-    ImGui_ImplDX12_NewFrame();
 
     ImGui::NewFrame();
 
@@ -40,12 +39,6 @@ bool IGui::Frame() {
     ImGui::Render();
 
     return true;
-}
-
-void IGui::Shutdown() {
-    ImGui_ImplDX12_Shutdown();
-    ImGui_ImplWin32_Shutdown();
-    ImGui::DestroyContext();
 }
 
 void IGui::RecreateFontAtlas() {

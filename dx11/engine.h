@@ -111,8 +111,8 @@ class Engine : public common::Platform, TreeNode {
         case WM_KEYDOWN:
             black_board->input->KeyPressed(wparam, true);
             if (wparam == VK_ESCAPE) {
-                Stop();
                 DestroyWindow(main_window);
+                PostQuitMessage(0);
             }
             break;
         case WM_KEYUP:

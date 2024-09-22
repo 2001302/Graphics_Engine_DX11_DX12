@@ -14,7 +14,7 @@ bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
     if (common::env::screen_width && common::env::screen_height) {
         if (graphics::GpuCore::Instance().swap_chain) {
 
-            GuiNodeInvoker::Shutdown();
+            ImGui_ImplDX11_Shutdown();
 
             graphics::GpuCore::Instance().back_buffer_RTV.Reset();
             graphics::GpuCore::Instance().swap_chain->ResizeBuffers(
@@ -24,6 +24,10 @@ bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
             graphics::GpuCore::Instance().SetMainViewport();
 
             gui->Start();
+            ImGui_ImplWin32_Init(common::env::main_window);
+            ImGui_ImplDX11_Init(GpuCore::Instance().device.Get(),
+                                GpuCore::Instance().device_context.Get());
+
         }
     }
     return true;

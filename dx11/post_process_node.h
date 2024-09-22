@@ -1,10 +1,10 @@
 #ifndef _POSTPROCESSNODE
 #define _POSTPROCESSNODE
 
-#include "behavior_tree_builder.h"
 #include "black_board.h"
 #include "image_filter.h"
 #include "tone_mapping.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 /// <summary>

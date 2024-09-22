@@ -3,7 +3,7 @@
 
 #include "component.h"
 #include "graphics_util.h"
-#include "node.h"
+#include <node.h>
 #include <unordered_map>
 
 namespace graphics {
@@ -19,5 +19,5 @@ class Model : public common::INode {
     std::unordered_map<EnumComponentType, std::shared_ptr<Component>>
         components;
 };
-} // namespace engine
+} // namespace graphics
 #endif

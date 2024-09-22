@@ -1,9 +1,9 @@
 #ifndef _MIRROR_EFFECT
 #define _MIRROR_EFFECT
 
-#include "behavior_tree_builder.h"
 #include "black_board.h"
 #include "mesh_renderer.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 
@@ -88,7 +88,8 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
                 // Mirror 2. Mark only the mirror position as 1 in the
                 // StencilBuffer.
-                graphics::Util::SetPipelineState(graphics::pipeline::stencilMaskPSO);
+                graphics::Util::SetPipelineState(
+                    graphics::pipeline::stencilMaskPSO);
 
                 if (true) {
                     auto renderer =
@@ -106,8 +107,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
                 graphics::GpuCore::Instance()
                     .device_context->ClearDepthStencilView(
-                        graphics::GpuCore::Instance()
-                            .m_depthStencilView.Get(),
+                        graphics::GpuCore::Instance().m_depthStencilView.Get(),
                         D3D11_CLEAR_DEPTH, 1.0f, 0);
 
                 for (auto &i : manager->objects) {
@@ -155,6 +155,6 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
     ComPtr<ID3D11Buffer> reflect_global_consts_GPU;
 };
 
-} // namespace core
+} // namespace graphics
 
 #endif

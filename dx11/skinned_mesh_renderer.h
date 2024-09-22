@@ -6,9 +6,9 @@
 #include "geometry_generator.h"
 #include "mesh.h"
 #include "mesh_renderer.h"
-#include "node.h"
 #include <filesystem>
 #include <iostream>
+#include <node.h>
 
 namespace graphics {
 using Microsoft::WRL::ComPtr;
@@ -23,5 +23,5 @@ class SkinnedMeshRenderer : public MeshRenderer {
     void InitMeshBuffers(const MeshData &meshData,
                          std::shared_ptr<Mesh> &newMesh) override;
 };
-} // namespace core
+} // namespace graphics
 #endif

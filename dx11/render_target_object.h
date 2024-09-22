@@ -3,13 +3,13 @@
 
 #include "camera.h"
 #include "constant_buffer.h"
-#include "dataBlock.h"
 #include "graphics_util.h"
 #include "ground.h"
-#include "info.h"
 #include "mesh_renderer.h"
 #include "model.h"
 #include "skybox.h"
+#include <dataBlock.h>
+#include <info.h>
 
 namespace graphics {
 enum EnumStageType {
@@ -18,7 +18,7 @@ enum EnumStageType {
     eRender = 2,
 };
 
-class JobContext : public common::IInfo {
+class RenderTargetObject : public common::IInfo {
   public:
     std::unique_ptr<Camera> camera;
     std::shared_ptr<Ground> ground;
@@ -29,7 +29,7 @@ class JobContext : public common::IInfo {
     // condition
     GlobalConstants global_consts_CPU;
     ComPtr<ID3D11Buffer> global_consts_GPU;
-    float dt;
+    float delta_time;
     bool draw_wire = false;
     bool light_rotate = false;
     EnumStageType stage_type;
@@ -64,9 +64,11 @@ class JobContext : public common::IInfo {
                                          ground->mirror_alpha,
                                          ground->mirror_alpha, 1.0f};
             if (draw_wire)
-                graphics::pipeline::mirrorBlendWirePSO.SetBlendFactor(blendColor);
+                graphics::pipeline::mirrorBlendWirePSO.SetBlendFactor(
+                    blendColor);
             else
-                graphics::pipeline::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
+                graphics::pipeline::mirrorBlendSolidPSO.SetBlendFactor(
+                    blendColor);
 
             auto renderer = (MeshRenderer *)ground->mirror->GetComponent(
                 EnumComponentType::eRenderer);
@@ -106,5 +108,5 @@ class JobContext : public common::IInfo {
         }
     }
 };
-} // namespace core
+} // namespace graphics
 #endif

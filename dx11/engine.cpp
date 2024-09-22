@@ -48,7 +48,7 @@ bool Engine::Frame() {
 
 bool Engine::OnUpdate(float dt) {
 
-    black_board->job_context->dt = dt;
+    black_board->job_context->delta_time = dt;
     black_board->job_context->stage_type = EnumStageType::eUpdate;
 
     // clang-format off

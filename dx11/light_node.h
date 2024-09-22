@@ -1,9 +1,9 @@
 #ifndef _LIGHTNODE
 #define _LIGHTNODE
 
-#include "behavior_tree_builder.h"
 #include "black_board.h"
 #include "mesh_renderer.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 
@@ -75,7 +75,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eUpdate: {
 
-            float dt = job_context->dt;
+            float dt = job_context->delta_time;
 
             // 회전하는 lights[1] 업데이트
             static Vector3 lightDev = Vector3(1.0f, 0.0f, 0.0f);
@@ -134,6 +134,6 @@ class LightNodeInvoker : public common::BehaviorActionNode {
     std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
 };
 
-} // namespace core
+} // namespace graphics
 
 #endif

@@ -182,7 +182,7 @@
     <ClInclude Include="game_objects_node.h" />
     <ClInclude Include="model_loader.h" />
     <ClInclude Include="model.h" />
-    <ClInclude Include="job_context.h" />
+    <ClInclude Include="render_target_object.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
   <ItemGroup>

@@ -1,7 +1,7 @@
 #ifndef _BLACKBOARD
 #define _BLACKBOARD
 
-#include "job_context.h"
+#include "render_target_object.h"
 #include <input.h>
 #include <setting_ui.h>
 
@@ -9,11 +9,11 @@ namespace graphics {
 
 struct BlackBoard : public common::IDataBlock {
     BlackBoard() {
-        job_context = std::make_shared<JobContext>();
+        job_context = std::make_shared<RenderTargetObject>();
         input = std::make_unique<common::Input>();
         gui = std::make_shared<common::SettingUi>();
     }
-    std::shared_ptr<JobContext> job_context;
+    std::shared_ptr<RenderTargetObject> job_context;
     std::shared_ptr<common::Input> input;
     std::shared_ptr<common::SettingUi> gui;
 };

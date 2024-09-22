@@ -1,9 +1,9 @@
 #ifndef _DEPTH_ONLY_NODE
 #define _DEPTH_ONLY_NODE
 
-#include "behavior_tree_builder.h"
 #include "black_board.h"
 #include "graphics_util.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 class OnlyDepthNode : public common::BehaviorActionNode {
@@ -78,6 +78,6 @@ class OnlyDepthNode : public common::BehaviorActionNode {
     ComPtr<ID3D11DepthStencilView> depthOnlyDSV;
     ComPtr<ID3D11ShaderResourceView> depthOnlySRV;
 };
-} // namespace core
+} // namespace graphics
 
 #endif

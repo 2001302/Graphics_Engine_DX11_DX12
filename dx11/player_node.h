@@ -2,10 +2,10 @@
 #define _PLAYER_NODE
 
 #include "animator.h"
-#include "behavior_tree_builder.h"
 #include "black_board.h"
 #include "mesh_renderer.h"
 #include "skinned_mesh_renderer.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 
@@ -143,7 +143,7 @@ class PlayerNodeInvoker : public BehaviorActionNode {
             auto animator = (PlayerAnimator *)job_context->player->GetComponent(
                 EnumComponentType::eAnimator);
 
-            animator->Run(job_context->dt);
+            animator->Run(job_context->delta_time);
 
             renderer->UpdateConstantBuffers();
 
@@ -171,6 +171,6 @@ class PlayerNodeInvoker : public BehaviorActionNode {
         return EnumBehaviorTreeStatus::eSuccess;
     }
 };
-} // namespace core
+} // namespace graphics
 
 #endif

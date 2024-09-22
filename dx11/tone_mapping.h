@@ -3,8 +3,8 @@
 
 #include "component.h"
 #include "constant_buffer.h"
-#include "env.h"
 #include "mesh.h"
+#include <env.h>
 
 namespace graphics {
 struct ImageFilterConstData {
@@ -26,5 +26,5 @@ class ToneMapping : public Component {
   private:
     std::shared_ptr<Mesh> mesh;
 };
-} // namespace core
+} // namespace graphics
 #endif

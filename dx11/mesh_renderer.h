@@ -5,9 +5,9 @@
 #include "constant_buffer.h"
 #include "geometry_generator.h"
 #include "mesh.h"
-#include "node.h"
 #include <filesystem>
 #include <iostream>
+#include <node.h>
 
 namespace graphics {
 using Microsoft::WRL::ComPtr;
@@ -61,5 +61,5 @@ class MeshRenderer : public Component {
     std::shared_ptr<Mesh> bounding_sphere_mesh;
 };
 
-} // namespace core
+} // namespace graphics
 #endif

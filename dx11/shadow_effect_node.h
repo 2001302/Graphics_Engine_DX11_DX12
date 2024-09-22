@@ -1,9 +1,9 @@
 #ifndef _SHADOW_EFFECT
 #define _SHADOW_EFFECT
 
-#include "behavior_tree_builder.h"
 #include "black_board.h"
 #include "mesh_renderer.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 class ShadowEffectNodeInvoker : public common::BehaviorActionNode {

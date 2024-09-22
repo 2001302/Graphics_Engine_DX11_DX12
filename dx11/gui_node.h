@@ -1,8 +1,8 @@
 #ifndef _GUINODE
 #define _GUINODE
 
-#include "behavior_tree_builder.h"
 #include "black_board.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 
@@ -47,9 +47,9 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
 
   public:
     static void Shutdown() {
-		  ImGui_ImplDX11_Shutdown();
-		  ImGui_ImplWin32_Shutdown();
-	  }
+        ImGui_ImplDX11_Shutdown();
+        ImGui_ImplWin32_Shutdown();
+    }
 };
 
 } // namespace graphics

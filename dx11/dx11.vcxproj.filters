@@ -82,9 +82,6 @@
     <ClInclude Include="texture_3d.h">
       <Filter>Graphics\Model</Filter>
     </ClInclude>
-    <ClInclude Include="job_context.h">
-      <Filter>Graphics\Model</Filter>
-    </ClInclude>
     <ClInclude Include="gpu_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
@@ -123,6 +120,9 @@
     </ClInclude>
     <ClInclude Include="graphics_util.h">
       <Filter>Graphics\Gpu\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="render_target_object.h">
+      <Filter>Graphics\Pipeline</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

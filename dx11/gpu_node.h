@@ -1,8 +1,8 @@
 #ifndef _GPU_NODE
 #define _GPU_NODE
 
-#include "behavior_tree_builder.h"
 #include "graphics_util.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 class ResolveBufferNode : public common::BehaviorActionNode {
@@ -31,6 +31,6 @@ class PresentNode : public common::BehaviorActionNode {
     }
 };
 
-} // namespace core
+} // namespace graphics
 
 #endif

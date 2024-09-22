@@ -1,9 +1,9 @@
 #ifndef _SKYBOXNODE
 #define _SKYBOXNODE
 
-#include "behavior_tree_builder.h"
 #include "black_board.h"
 #include "mesh_renderer.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 
@@ -67,6 +67,6 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
     }
 };
 
-} // namespace core
+} // namespace graphics
 
 #endif

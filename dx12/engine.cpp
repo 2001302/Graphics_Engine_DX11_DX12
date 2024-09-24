@@ -83,14 +83,20 @@ bool Engine::Start() {
 
 bool Engine::Frame() {
 
-    // update
-    black_board->conditions->delta_time = ImGui::GetIO().DeltaTime;
-    black_board->conditions->stage_type = EnumStageType::eUpdate;
-    update_tree->Run();
+    {
+        common::ScopeStopWatch stop_watch("Update tree");
+        // update
+        black_board->conditions->delta_time = ImGui::GetIO().DeltaTime;
+        black_board->conditions->stage_type = EnumStageType::eUpdate;
+        update_tree->Run();
+    }
 
-    // render
-    black_board->conditions->stage_type = EnumStageType::eRender;
-    render_tree->Run();
+    {
+        common::ScopeStopWatch stop_watch("Render tree");
+        // render
+        black_board->conditions->stage_type = EnumStageType::eRender;
+        render_tree->Run();
+    }
 
     return true;
 }

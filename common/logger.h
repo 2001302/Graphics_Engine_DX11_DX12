@@ -12,20 +12,24 @@ class Logger {
         std::cout << message << std::endl;
     };
 };
-class TimeLogger {
+
+class ScopeStopWatch {
   public:
-    static std::chrono::steady_clock::time_point Begin() {
-        return std::chrono::high_resolution_clock::now();
-    };
-    static void End(std::string message,
-                    std::chrono::steady_clock::time_point begin) {
+	ScopeStopWatch(std::string message) : message(message) {
+        begin = std::chrono::high_resolution_clock::now();
+	};
+	~ScopeStopWatch() {
         auto end = std::chrono::high_resolution_clock::now();
         auto duration =
             std::chrono::duration_cast<std::chrono::milliseconds>(end - begin)
                 .count();
 
-        Logger::Debug(message + "Elapsed Time is " + std::to_string(duration) + "ms");
-    };
+        Logger::Debug(message + ": " + std::to_string(duration) + "ms");
+	};
+
+  private:
+	std::string message;
+	std::chrono::steady_clock::time_point begin;
 };
 } // namespace common
 

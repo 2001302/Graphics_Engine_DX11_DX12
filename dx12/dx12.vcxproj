@@ -157,6 +157,8 @@
     <ClCompile Include="command_list.cpp" />
     <ClCompile Include="query_heap.cpp" />
     <ClCompile Include="shader_util.cpp" />
+    <ClCompile Include="shadow_effect.cpp" />
+    <ClCompile Include="mirror_effect.cpp" />
     <ClCompile Include="texture_2d.cpp" />
     <ClCompile Include="texture_cube.cpp" />
     <ClCompile Include="main.cpp" />
@@ -186,8 +188,10 @@
     <ClInclude Include="mesh.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="query_heap.h" />
+    <ClInclude Include="mirror_effect.h" />
     <ClInclude Include="sampler_state.h" />
     <ClInclude Include="shader_util.h" />
+    <ClInclude Include="shadow_effect.h" />
     <ClInclude Include="vertex.h" />
     <ClInclude Include="gui_node.h" />
     <ClInclude Include="light_node.h" />

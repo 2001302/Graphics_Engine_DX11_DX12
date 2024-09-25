@@ -1,0 +1,4 @@
+#ifndef _REFLECTABLE_COMPONENT
+#define _REFLECTABLE_COMPONENT
+
+#endif

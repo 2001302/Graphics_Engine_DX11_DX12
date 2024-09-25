@@ -1,0 +1,4 @@
+#ifndef _SHADOW_COMPONENT
+#define _SHADOW_COMPONENT
+
+#endif

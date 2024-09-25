@@ -74,6 +74,12 @@
     <ClCompile Include="buffer_manager.cpp">
       <Filter>Graphics\Gpu\Core</Filter>
     </ClCompile>
+    <ClCompile Include="shadow_effect.cpp">
+      <Filter>Graphics\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="mirror_effect.cpp">
+      <Filter>Graphics\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphics">
@@ -260,6 +266,12 @@
     </ClInclude>
     <ClInclude Include="buffer_manager.h">
       <Filter>Graphics\Gpu\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="shadow_effect.h">
+      <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="mirror_effect.h">
+      <Filter>Graphics\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

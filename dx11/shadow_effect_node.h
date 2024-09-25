@@ -31,11 +31,11 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             desc.SampleDesc.Quality = 0;
 
             // shadow buffers (depth only)
-            desc.Width = m_shadowWidth;
-            desc.Height = m_shadowHeight;
+            desc.Width = shadow_width;
+            desc.Height = shadow_height;
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 ASSERT_FAILED(GpuCore::Instance().device->CreateTexture2D(
-                    &desc, NULL, m_shadowBuffers[i].GetAddressOf()));
+                    &desc, NULL, shadow_buffers[i].GetAddressOf()));
             }
 
             D3D11_DEPTH_STENCIL_VIEW_DESC dsvDesc;
@@ -47,8 +47,8 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 ASSERT_FAILED(
                     GpuCore::Instance().device->CreateDepthStencilView(
-                        m_shadowBuffers[i].Get(), &dsvDesc,
-                        m_shadowDSVs[i].GetAddressOf()));
+                        shadow_buffers[i].Get(), &dsvDesc,
+                        shadow_DSVs[i].GetAddressOf()));
             }
 
             D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc;
@@ -61,8 +61,8 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 ASSERT_FAILED(
                     GpuCore::Instance().device->CreateShaderResourceView(
-                        m_shadowBuffers[i].Get(), &srvDesc,
-                        m_shadowSRVs[i].GetAddressOf()));
+                        shadow_buffers[i].Get(), &srvDesc,
+                        shadow_SRVs[i].GetAddressOf()));
             }
 
             // shadow global constant buffer
@@ -124,9 +124,9 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                 if (manager->global_consts_CPU.lights[i].type & LIGHT_SHADOW) {
                     // no RTS
                     GpuCore::Instance().device_context->OMSetRenderTargets(
-                        0, NULL, m_shadowDSVs[i].Get());
+                        0, NULL, shadow_DSVs[i].Get());
                     GpuCore::Instance().device_context->ClearDepthStencilView(
-                        m_shadowDSVs[i].Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
+                        shadow_DSVs[i].Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
                     Util::SetGlobalConsts(shadow_global_consts_GPU[i]);
 
                     for (auto &i : manager->objects) {
@@ -164,7 +164,7 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
         // it.
         std::vector<ID3D11ShaderResourceView *> shadowSRVs;
         for (int i = 0; i < MAX_LIGHTS; i++) {
-            shadowSRVs.push_back(m_shadowSRVs[i].Get());
+            shadowSRVs.push_back(shadow_SRVs[i].Get());
         }
         GpuCore::Instance().device_context->PSSetShaderResources(
             15, UINT(shadowSRVs.size()), shadowSRVs.data());
@@ -182,19 +182,19 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
         ZeroMemory(&shadowViewport, sizeof(D3D11_VIEWPORT));
         shadowViewport.TopLeftX = 0;
         shadowViewport.TopLeftY = 0;
-        shadowViewport.Width = float(m_shadowWidth);
-        shadowViewport.Height = float(m_shadowHeight);
+        shadowViewport.Width = float(shadow_width);
+        shadowViewport.Height = float(shadow_height);
         shadowViewport.MinDepth = 0.0f;
         shadowViewport.MaxDepth = 1.0f;
 
         GpuCore::Instance().device_context->RSSetViewports(1, &shadowViewport);
     }
 
-    int m_shadowWidth = 1280;
-    int m_shadowHeight = 1280;
-    ComPtr<ID3D11Texture2D> m_shadowBuffers[MAX_LIGHTS]; // No MSAA
-    ComPtr<ID3D11DepthStencilView> m_shadowDSVs[MAX_LIGHTS];
-    ComPtr<ID3D11ShaderResourceView> m_shadowSRVs[MAX_LIGHTS];
+    int shadow_width = 1280;
+    int shadow_height = 1280;
+    ComPtr<ID3D11Texture2D> shadow_buffers[MAX_LIGHTS]; // No MSAA
+    ComPtr<ID3D11DepthStencilView> shadow_DSVs[MAX_LIGHTS];
+    ComPtr<ID3D11ShaderResourceView> shadow_SRVs[MAX_LIGHTS];
 
     GlobalConstants shadow_global_consts_CPU[MAX_LIGHTS];
     ComPtr<ID3D11Buffer> shadow_global_consts_GPU[MAX_LIGHTS];

@@ -150,7 +150,7 @@ void GpuCore::CreateDepthBuffer() {
         device->CreateTexture2D(&desc, 0, depthStencilBuffer.GetAddressOf()));
 
     ASSERT_FAILED(device->CreateDepthStencilView(
-        depthStencilBuffer.Get(), 0, m_depthStencilView.GetAddressOf()));
+        depthStencilBuffer.Get(), 0, depth_stencil_view.GetAddressOf()));
 }
 
 void GpuCore::SetMainViewport() {

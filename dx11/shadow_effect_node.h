@@ -137,41 +137,42 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                     }
                 }
             }
+
+            // rendering resolution
+            GpuCore::Instance().SetMainViewport();
+
+            const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
+            std::vector<ID3D11RenderTargetView *> rtvs = {
+                GpuCore::Instance().float_RTV.Get()};
+
+            // Mirror 1. Draw it as it originally is, without the mirror.
+            for (size_t i = 0; i < rtvs.size(); i++) {
+                GpuCore::Instance().device_context->ClearRenderTargetView(
+                    rtvs[i], clearColor);
+            }
+            GpuCore::Instance().device_context->OMSetRenderTargets(
+                UINT(rtvs.size()), rtvs.data(),
+                GpuCore::Instance().depth_stencil_view.Get());
+
+            // Shadow textures: start from register(15)
+            // Note: Unbind the last shadowDSV from the RenderTarget before
+            // setting it.
+            std::vector<ID3D11ShaderResourceView *> shadowSRVs;
+            for (int i = 0; i < MAX_LIGHTS; i++) {
+                shadowSRVs.push_back(shadow_SRVs[i].Get());
+            }
+            GpuCore::Instance().device_context->PSSetShaderResources(
+                15, UINT(shadowSRVs.size()), shadowSRVs.data());
+
+            GpuCore::Instance().device_context->ClearDepthStencilView(
+                GpuCore::Instance().depth_stencil_view.Get(),
+                D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
             break;
         }
         default:
             break;
         }
 
-        // rendering resolution
-        GpuCore::Instance().SetMainViewport();
-
-        const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-        std::vector<ID3D11RenderTargetView *> rtvs = {
-            GpuCore::Instance().float_RTV.Get()};
-
-        // Mirror 1. Draw it as it originally is, without the mirror.
-        for (size_t i = 0; i < rtvs.size(); i++) {
-            GpuCore::Instance().device_context->ClearRenderTargetView(
-                rtvs[i], clearColor);
-        }
-        GpuCore::Instance().device_context->OMSetRenderTargets(
-            UINT(rtvs.size()), rtvs.data(),
-            GpuCore::Instance().m_depthStencilView.Get());
-
-        // Shadow textures: start from register(15)
-        // Note: Unbind the last shadowDSV from the RenderTarget before setting
-        // it.
-        std::vector<ID3D11ShaderResourceView *> shadowSRVs;
-        for (int i = 0; i < MAX_LIGHTS; i++) {
-            shadowSRVs.push_back(shadow_SRVs[i].Get());
-        }
-        GpuCore::Instance().device_context->PSSetShaderResources(
-            15, UINT(shadowSRVs.size()), shadowSRVs.data());
-
-        GpuCore::Instance().device_context->ClearDepthStencilView(
-            GpuCore::Instance().m_depthStencilView.Get(),
-            D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
         return common::EnumBehaviorTreeStatus::eSuccess;
     }

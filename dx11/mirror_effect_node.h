@@ -107,7 +107,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
                 graphics::GpuCore::Instance()
                     .device_context->ClearDepthStencilView(
-                        graphics::GpuCore::Instance().m_depthStencilView.Get(),
+                        graphics::GpuCore::Instance().depth_stencil_view.Get(),
                         D3D11_CLEAR_DEPTH, 1.0f, 0);
 
                 for (auto &i : manager->objects) {

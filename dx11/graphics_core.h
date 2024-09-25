@@ -33,7 +33,7 @@ class GpuCore {
     ComPtr<ID3D11ShaderResourceView> resolved_SRV;
     ComPtr<ID3D11UnorderedAccessView> resolved_UAV;
 
-    ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+    ComPtr<ID3D11DepthStencilView> depth_stencil_view;
 
     D3D11_VIEWPORT viewport;
 

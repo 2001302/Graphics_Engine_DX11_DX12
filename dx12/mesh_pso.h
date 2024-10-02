@@ -72,7 +72,7 @@ class SolidMeshPSO : public GraphicsPSO {
         psoDesc.PS = CD3DX12_SHADER_BYTECODE(basicPS.Get());
         psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(rasterizer::solidRS);
         psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-        psoDesc.DepthStencilState = depth::basicDS;
+        psoDesc.DepthStencilState = depth::drawDSS;
         psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
         psoDesc.SampleMask = UINT_MAX;
         psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
@@ -144,5 +144,6 @@ class WireMeshPSO : public GraphicsPSO {
     void Initialize(){};
     void Render(){};
 };
+
 } // namespace graphics
 #endif

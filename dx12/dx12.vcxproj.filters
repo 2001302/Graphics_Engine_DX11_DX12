@@ -80,6 +80,9 @@
     <ClCompile Include="mirror_effect.cpp">
       <Filter>Graphics\Component</Filter>
     </ClCompile>
+    <ClCompile Include="reflectable_model.cpp">
+      <Filter>Graphics\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphics">
@@ -272,6 +275,12 @@
     </ClInclude>
     <ClInclude Include="mirror_effect.h">
       <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="reflectable_model.h">
+      <Filter>Graphics\Model</Filter>
+    </ClInclude>
+    <ClInclude Include="mirror_effect_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

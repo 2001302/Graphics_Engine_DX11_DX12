@@ -1,17 +1,12 @@
-#include "Common.hlsli" // 쉐이더에서도 include 사용 가능
+#include "Common.hlsli" 
 
-// Vertex Shader에서도 텍스춰 사용
 Texture2D g_heightTexture : register(t0);
 
 PixelShaderInput main(VertexShaderInput input)
 {
-    // 뷰 좌표계는 NDC이기 때문에 월드 좌표를 이용해서 조명 계산
-    
     PixelShaderInput output;
     
 #ifdef SKINNED
-    
-    // 참고 자료: Luna DX 12 교재
     
     float weights[8];
     weights[0] = input.boneWeights0.x;

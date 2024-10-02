@@ -49,11 +49,16 @@ extern D3D12_INPUT_ELEMENT_DESC basicIEs[4];
 
 namespace rasterizer {
 extern D3D12_RASTERIZER_DESC solidRS;
+extern D3D12_RASTERIZER_DESC solidCCWRS;
+extern D3D12_RASTERIZER_DESC wireRS;
+extern D3D12_RASTERIZER_DESC wireCCWRS;
 extern D3D12_RASTERIZER_DESC postRS;
 } // namespace rasterizer
 
 namespace depth {
-extern D3D12_DEPTH_STENCIL_DESC basicDS;
+extern D3D12_DEPTH_STENCIL_DESC drawDSS;        // generally drawing
+extern D3D12_DEPTH_STENCIL_DESC maskDSS;		// displayed in stencil buffer
+extern D3D12_DEPTH_STENCIL_DESC drawMaskedDSS;  // stencil marked only
 } // namespace depth
 
 } // namespace graphics

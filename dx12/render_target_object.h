@@ -2,6 +2,7 @@
 #define _RENDER_TARGET_OBJECT
 
 #include "camera.h"
+#include "reflectable_model.h"
 #include <info.h>
 
 namespace graphics {
@@ -9,7 +10,7 @@ class RenderTargetObject : public common::IInfo {
   public:
     RenderTargetObject() {}
     std::unique_ptr<Camera> camera;
-    // std::shared_ptr<Ground> ground;
+    std::shared_ptr<ReflectableModel> ground;
     // std::shared_ptr<Model> player;
     std::map<int /*id*/, std::shared_ptr<Model>> objects;
 

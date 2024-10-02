@@ -159,6 +159,7 @@
     <ClCompile Include="shader_util.cpp" />
     <ClCompile Include="shadow_effect.cpp" />
     <ClCompile Include="mirror_effect.cpp" />
+    <ClCompile Include="reflectable_model.cpp" />
     <ClCompile Include="texture_2d.cpp" />
     <ClCompile Include="texture_cube.cpp" />
     <ClCompile Include="main.cpp" />
@@ -183,12 +184,14 @@
     <ClInclude Include="constant_buffer.h" />
     <ClInclude Include="buffer_manager.h" />
     <ClInclude Include="device_manager.h" />
+    <ClInclude Include="mirror_effect_node.h" />
     <ClInclude Include="heap_manager.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="mesh.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="query_heap.h" />
     <ClInclude Include="mirror_effect.h" />
+    <ClInclude Include="reflectable_model.h" />
     <ClInclude Include="sampler_state.h" />
     <ClInclude Include="shader_util.h" />
     <ClInclude Include="shadow_effect.h" />

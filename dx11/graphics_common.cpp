@@ -19,9 +19,9 @@ ComPtr<ID3D11RasterizerState> wireCCWRS;
 ComPtr<ID3D11RasterizerState> postProcessingRS;
 
 // Depth Stencil States
-ComPtr<ID3D11DepthStencilState> drawDSS;       // 일반적으로 그리기
-ComPtr<ID3D11DepthStencilState> maskDSS;       // 스텐실버퍼에 표시
-ComPtr<ID3D11DepthStencilState> drawMaskedDSS; // 스텐실 표시된 곳만
+ComPtr<ID3D11DepthStencilState> drawDSS;       // generally drawing
+ComPtr<ID3D11DepthStencilState> maskDSS;       // displayed in stencil buffer
+ComPtr<ID3D11DepthStencilState> drawMaskedDSS; // stencil marked only
 
 // Blend States
 ComPtr<ID3D11BlendState> mirrorBS;

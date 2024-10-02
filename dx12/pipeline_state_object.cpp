@@ -113,6 +113,39 @@ D3D12_RASTERIZER_DESC solidRS = {D3D12_FILL_MODE_SOLID,
                                  0,
                                  D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF};
 
+D3D12_RASTERIZER_DESC solidCCWRS = {D3D12_FILL_MODE_SOLID,
+                                    D3D12_CULL_MODE_BACK,
+                                    true,
+                                    0,
+                                    0.0f,
+                                    0.0f,
+                                    true,
+                                    true,
+                                    0,
+                                    D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF};
+
+D3D12_RASTERIZER_DESC wireRS = {D3D12_FILL_MODE_WIREFRAME,
+                                D3D12_CULL_MODE_BACK,
+                                false,
+                                0,
+                                0.0f,
+                                0.0f,
+                                true,
+                                true,
+                                0,
+                                D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF};
+
+D3D12_RASTERIZER_DESC wireCCWRS = {D3D12_FILL_MODE_WIREFRAME,
+                                   D3D12_CULL_MODE_BACK,
+                                   true,
+                                   0,
+                                   0.0f,
+                                   0.0f,
+                                   true,
+                                   true,
+                                   0,
+                                   D3D12_CONSERVATIVE_RASTERIZATION_MODE_OFF};
+
 D3D12_RASTERIZER_DESC postRS = {D3D12_FILL_MODE_SOLID,
                                 D3D12_CULL_MODE_NONE,
                                 false,
@@ -126,7 +159,7 @@ D3D12_RASTERIZER_DESC postRS = {D3D12_FILL_MODE_SOLID,
 } // namespace rasterizer
 
 namespace depth {
-D3D12_DEPTH_STENCIL_DESC basicDS = {
+D3D12_DEPTH_STENCIL_DESC drawDSS = {
     true,
     D3D12_DEPTH_WRITE_MASK_ALL,
     D3D12_COMPARISON_FUNC_LESS,
@@ -135,8 +168,36 @@ D3D12_DEPTH_STENCIL_DESC basicDS = {
     D3D12_DEFAULT_STENCIL_WRITE_MASK,
     {D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP,
      D3D12_COMPARISON_FUNC_ALWAYS},
-    {D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP,
+    {D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_REPLACE,
      D3D12_COMPARISON_FUNC_ALWAYS}};
-} // namespace depthstencil
 
-} // namespace dx12
+// it's a DSS that marks 1 on Stencil
+D3D12_DEPTH_STENCIL_DESC maskDSS = {
+    true,
+    D3D12_DEPTH_WRITE_MASK_ZERO,
+    D3D12_COMPARISON_FUNC_LESS,
+    true,
+    0xFF,
+    0xFF,
+    {D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_REPLACE,
+     D3D12_COMPARISON_FUNC_ALWAYS},
+    {D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_REPLACE,
+     D3D12_COMPARISON_FUNC_ALWAYS}};
+
+// it's a DSS that draws "only" when marked as 1 in Stencil.
+// D3D12_COMPARISON_FUNC_LESS_EQUAL: draw only when already marked as 1
+// OMSetDepthStencilState(..., 1); <- 1
+D3D12_DEPTH_STENCIL_DESC drawMaskedDSS = {
+    true,
+    D3D12_DEPTH_WRITE_MASK_ALL,
+    D3D12_COMPARISON_FUNC_LESS_EQUAL,
+    true,
+    D3D12_DEFAULT_STENCIL_READ_MASK,
+    D3D12_DEFAULT_STENCIL_WRITE_MASK,
+    {D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP,
+     D3D12_COMPARISON_FUNC_EQUAL},
+    {D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_KEEP, D3D12_STENCIL_OP_REPLACE,
+     D3D12_COMPARISON_FUNC_ALWAYS}};
+} // namespace depth
+
+} // namespace graphics

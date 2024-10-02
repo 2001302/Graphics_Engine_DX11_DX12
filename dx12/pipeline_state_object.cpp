@@ -200,4 +200,12 @@ D3D12_DEPTH_STENCIL_DESC drawMaskedDSS = {
      D3D12_COMPARISON_FUNC_ALWAYS}};
 } // namespace depth
 
+namespace blend {
+D3D12_BLEND_DESC mirrorBS = {
+    false /*MSAA*/,
+    false,
+    {true, false, D3D12_BLEND_BLEND_FACTOR, D3D12_BLEND_INV_BLEND_FACTOR,
+     D3D12_BLEND_OP_ADD, D3D12_BLEND_ONE, D3D12_BLEND_ONE, D3D12_BLEND_OP_ADD}};
+} // namespace blend
+
 } // namespace graphics

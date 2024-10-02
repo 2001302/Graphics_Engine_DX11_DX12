@@ -282,6 +282,9 @@
     <ClInclude Include="mirror_effect_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
+    <ClInclude Include="stencil_mark_pso.h">
+      <Filter>Graphics\Gpu\PSO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\Common.hlsli">

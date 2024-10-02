@@ -4,8 +4,8 @@
 #include "d3dx12.h"
 #include <d3d12.h>
 #include <d3dcompiler.h>
-#include <wrl/client.h>
 #include <directxtk/SimpleMath.h>
+#include <wrl/client.h>
 
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;
@@ -56,10 +56,14 @@ extern D3D12_RASTERIZER_DESC postRS;
 } // namespace rasterizer
 
 namespace depth {
-extern D3D12_DEPTH_STENCIL_DESC drawDSS;        // generally drawing
-extern D3D12_DEPTH_STENCIL_DESC maskDSS;		// displayed in stencil buffer
-extern D3D12_DEPTH_STENCIL_DESC drawMaskedDSS;  // stencil marked only
+extern D3D12_DEPTH_STENCIL_DESC drawDSS;       // generally drawing
+extern D3D12_DEPTH_STENCIL_DESC maskDSS;       // displayed in stencil buffer
+extern D3D12_DEPTH_STENCIL_DESC drawMaskedDSS; // stencil marked only
 } // namespace depth
+
+namespace blend {
+extern D3D12_BLEND_DESC mirrorBS;
+} // namespace blend
 
 } // namespace graphics
 #endif

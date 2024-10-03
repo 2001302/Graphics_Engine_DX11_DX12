@@ -40,6 +40,12 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
             // global const
             reflect_global_consts.Initialize();
 
+            // model
+            auto component =
+                (MeshRenderer *)targets->ground->mirror->GetComponent(
+                EnumComponentType::eRenderer);
+            component->UpdateConstantBuffers();
+            
             break;
         }
         case EnumStageType::eUpdate: {
@@ -75,18 +81,18 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                         condition->global_consts.Get(), component);
                 }
 
-                //// 2.reflectSolidPSO
-                //{
-                //    for (auto &i : targets->objects) {
-                //        auto component = (MeshRenderer *)i.second->GetComponent(
-                //            EnumComponentType::eRenderer);
+                // 2.reflectSolidPSO
+                {
+                    for (auto &i : targets->objects) {
+                        auto component = (MeshRenderer *)i.second->GetComponent(
+                            EnumComponentType::eRenderer);
 
-                //        reflect_mesh_solid_PSO->Render(
-                //            condition->shared_texture,
-                //            condition->shared_sampler,
-                //            reflect_global_consts.Get(), component);
-                //    }
-                //}
+                        reflect_mesh_solid_PSO->Render(
+                            condition->shared_texture,
+                            condition->shared_sampler,
+                            reflect_global_consts.Get(), component);
+                    }
+                }
 
                 //// 3.reflectSkyboxSolidPSO
                 //{
@@ -99,15 +105,15 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 //        reflect_global_consts.Get(), component);
                 //}
 
-                //// 4.mirrorBlendSolidPSO
-                //{
-                //    auto component =
-                //        (MeshRenderer *)targets->ground->mirror->GetComponent(
-                //            EnumComponentType::eRenderer);
-                //    mirror_blend_solid_PSO->Render(
-                //        condition->shared_texture, condition->shared_sampler,
-                //        reflect_global_consts.Get(), component);
-                //}
+                // 4.mirrorBlendSolidPSO
+                {
+                    auto component =
+                        (MeshRenderer *)targets->ground->mirror->GetComponent(
+                            EnumComponentType::eRenderer);
+                    mirror_blend_solid_PSO->Render(
+                        condition->shared_texture, condition->shared_sampler,
+                        reflect_global_consts.Get(), component);
+                }
             }
             break;
         }

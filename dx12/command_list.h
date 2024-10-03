@@ -266,10 +266,10 @@ class GraphicsCommandContext : public CommandContext {
                                              renderTarget->ClearColor(), 0,
                                              nullptr);
     };
-    void ClearDepthStencilView(DepthBuffer *depthStencil) {
-        command_list_->ClearDepthStencilView(depthStencil->GetDsvHandle(),
-                                             D3D12_CLEAR_FLAG_DEPTH, 1.0f, 0, 0,
-                                             nullptr);
+    void ClearDepthStencilView(DepthBuffer *depthStencil,
+                               D3D12_CLEAR_FLAGS flag) {
+        command_list_->ClearDepthStencilView(depthStencil->GetDsvHandle(), flag,
+                                             1.0f, 0, 0, nullptr);
     };
 };
 

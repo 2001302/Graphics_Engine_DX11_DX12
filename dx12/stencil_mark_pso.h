@@ -63,11 +63,11 @@ class StencilMarkPSO : public GraphicsPSO {
         psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(rasterizer::solidRS);
         psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
         psoDesc.DepthStencilState = depth::maskDSS;
-        psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         psoDesc.SampleMask = UINT_MAX;
         psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         psoDesc.NumRenderTargets = 1;
         psoDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         psoDesc.SampleDesc.Count = 1;
         psoDesc.SampleDesc.Quality = 0;
 
@@ -97,7 +97,7 @@ class StencilMarkPSO : public GraphicsPSO {
                 (UINT)common::env::screen_height);
             context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
                                          GpuBuffer::Instance().GetDSV());
-
+            context->GetList()->OMSetStencilRef(1);
             context->SetRootSignature(root_signature);
             context->SetPipelineState(pipeline_state);
 
@@ -121,7 +121,8 @@ class StencilMarkPSO : public GraphicsPSO {
             context->GetList()->IASetIndexBuffer(&mesh->index_buffer_view);
             context->GetList()->DrawIndexedInstanced(mesh->index_count, 1, 0, 0,
                                                      0);
-            context->ClearDepthStencilView(GpuBuffer::Instance().GetDSV());
+            context->ClearDepthStencilView(GpuBuffer::Instance().GetDSV(),
+                                           D3D12_CLEAR_FLAG_DEPTH);
         }
 
         GpuCore::Instance().GetCommand()->Finish(context);

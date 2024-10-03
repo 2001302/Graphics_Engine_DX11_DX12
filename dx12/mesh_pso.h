@@ -119,9 +119,10 @@ class SolidMeshPSO : public GraphicsPSO {
             context->GetList()->SetGraphicsRootConstantBufferView(
                 2, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                3, mesh_renderer->GetMeshConsts()->GetGPUVirtualAddress());
+                3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                4, mesh_renderer->GetMaterialConsts()->GetGPUVirtualAddress());
+                4,
+                mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootDescriptorTable(
                 5, mesh->texture_VS->GetGpuHandle());
             context->GetList()->SetGraphicsRootDescriptorTable(
@@ -258,9 +259,10 @@ class ReflectSolidMeshPSO : public GraphicsPSO {
             context->GetList()->SetGraphicsRootConstantBufferView(
                 2, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                3, mesh_renderer->GetMeshConsts()->GetGPUVirtualAddress());
+                3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                4, mesh_renderer->GetMaterialConsts()->GetGPUVirtualAddress());
+                4,
+                mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootDescriptorTable(
                 5, mesh->texture_VS->GetGpuHandle());
             context->GetList()->SetGraphicsRootDescriptorTable(
@@ -397,9 +399,10 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
             context->GetList()->SetGraphicsRootConstantBufferView(
                 2, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                3, mesh_renderer->GetMeshConsts()->GetGPUVirtualAddress());
+                3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                4, mesh_renderer->GetMaterialConsts()->GetGPUVirtualAddress());
+                4,
+                mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootDescriptorTable(
                 5, mesh->texture_VS->GetGpuHandle());
             context->GetList()->SetGraphicsRootDescriptorTable(

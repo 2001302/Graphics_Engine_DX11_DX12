@@ -10,6 +10,7 @@ class RenderTargetObject : public common::IInfo {
   public:
     RenderTargetObject() {}
     std::unique_ptr<Camera> camera;
+    std::shared_ptr<Model> skybox;
     std::shared_ptr<ReflectableModel> ground;
     // std::shared_ptr<Model> player;
     std::map<int /*id*/, std::shared_ptr<Model>> objects;

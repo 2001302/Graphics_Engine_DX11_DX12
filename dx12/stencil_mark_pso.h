@@ -18,7 +18,7 @@ class StencilMarkPSO : public GraphicsPSO {
         CD3DX12_DESCRIPTOR_RANGE1 textureRange;
         textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
 
-        CD3DX12_ROOT_PARAMETER1 rootParameters[7] = {};
+        CD3DX12_ROOT_PARAMETER1 rootParameters[5] = {};
         // Common.hlsli : s0~s6,t10~t16,b0~b2
         rootParameters[0].InitAsDescriptorTable(1, &samplerRange,
                                                 D3D12_SHADER_VISIBILITY_ALL);
@@ -109,13 +109,10 @@ class StencilMarkPSO : public GraphicsPSO {
             context->GetList()->SetGraphicsRootConstantBufferView(
                 2, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                3, mesh_renderer->GetMeshConsts()->GetGPUVirtualAddress());
+                3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                4, mesh_renderer->GetMaterialConsts()->GetGPUVirtualAddress());
-            context->GetList()->SetGraphicsRootDescriptorTable(
-                5, mesh->texture_VS->GetGpuHandle());
-            context->GetList()->SetGraphicsRootDescriptorTable(
-                6, mesh->texture_PS->GetGpuHandle());
+                4,
+                mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
 
             context->GetList()->IASetPrimitiveTopology(
                 D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

@@ -7,6 +7,7 @@
 #include "light_node.h"
 #include "skybox_node.h"
 #include "tone_mapping_node.h"
+#include "mirror_effect_node.h"
 
 namespace graphics {
 
@@ -24,6 +25,7 @@ auto tone_mapping = std::make_shared<ToneMappingNodeInvoker>();
 auto begin_init = std::make_shared<BeginInitNode>();
 auto end_init = std::make_shared<EndInitNode>();
 auto skybox_node = std::make_shared<SkyBoxNodeInvoker>();
+auto mirror_effect_node = std::make_shared<MirrorEffectNodeInvoker>();
 
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
@@ -49,6 +51,7 @@ bool Engine::Start() {
         ->Excute(light_node)
         ->Excute(game_object_node)
         ->Excute(skybox_node)
+        ->Excute(mirror_effect_node)
         ->Excute(tone_mapping)
         ->Excute(gui_node)
     ->Close()
@@ -62,6 +65,7 @@ bool Engine::Start() {
         ->Excute(global_resource_node)
         ->Excute(global_constant_node)
         ->Excute(game_object_node)
+        ->Excute(mirror_effect_node)
     ->Close();
      
     //render
@@ -69,6 +73,7 @@ bool Engine::Start() {
     ->Sequence()
         ->Excute(clear_buffer)
         ->Excute(skybox_node)
+        ->Excute(mirror_effect_node)
         ->Excute(game_object_node)
         ->Excute(tone_mapping)
         ->Excute(gui_node)

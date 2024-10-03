@@ -24,8 +24,10 @@ class MeshRenderer : public Component {
     void UpdateWorldRow(const Matrix &worldRow);
 
     std::vector<std::shared_ptr<Mesh>> GetMeshes() { return meshes; }
-    ID3D12Resource *GetMeshConsts() { return mesh_consts.Get(); }
-    ID3D12Resource *GetMaterialConsts() { return material_consts.Get(); }
+    ConstantBuffer<MeshConstants> MeshConsts() { return mesh_consts; }
+    ConstantBuffer<MaterialConstants> MaterialConsts() {
+        return material_consts;
+    }
 
   private:
     Matrix world_row = Matrix();    // Model(Object) To World

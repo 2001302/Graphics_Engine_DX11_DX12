@@ -4,6 +4,8 @@
 #include "black_board.h"
 #include "mesh_pso.h"
 #include "mesh_renderer.h"
+#include "skybox_pso.h"
+#include "stencil_mark_pso.h"
 #include <behavior_tree_builder.h>
 
 namespace graphics {
@@ -20,57 +22,119 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
-            //1.pso 생성 (mesh,mirror)
-            //2.model 생성 (mesh,mirror)
-            //3.reflect global const buffer 생성  
-            //  :기존 global const buffer를 복사해서 reflect row 만 업데이트해서 사용한다.
+            // pso
+            stencil_mark_PSO = std::make_shared<StencilMarkPSO>();
+            stencil_mark_PSO->Initialize();
 
-            //// pso
-            //mesh_solid_PSO = std::make_shared<SolidMeshPSO>();
-            //mesh_solid_PSO->Initialize();
+            reflect_mesh_solid_PSO = std::make_shared<ReflectSolidMeshPSO>();
+            reflect_mesh_solid_PSO->Initialize();
 
-            //// sample object
-            //std::string base_path = "Assets/Characters/Mixamo/";
-            //std::string file_name = "character.fbx";
+            reflect_skybox_solid_PSO =
+                std::make_shared<SolidReflectSkyboxPSO>();
+            reflect_skybox_solid_PSO->Initialize();
 
-            //auto component = std::make_shared<MeshRenderer>();
-            //component->Initialize(base_path, file_name);
-            //component->UpdateConstantBuffers();
+            mirror_blend_solid_PSO =
+                std::make_shared<MirrorBlendSolidMeshPSO>();
+            mirror_blend_solid_PSO->Initialize();
 
-            //auto model = std::make_shared<Model>();
-            //model->AddComponent(EnumComponentType::eRenderer, component);
+            // global const
+            reflect_global_consts.Initialize();
 
-            //targets->objects.insert({model->GetEntityId(), model});
+            // ground
+            auto mesh = GeometryGenerator::MakeSquare(5.0);
 
+            auto component = std::make_shared<MeshRenderer>();
+            component->Initialize(std::vector{mesh});
+            component->MaterialConsts().GetCpu().albedo_factor = Vector3(0.1f);
+            component->MaterialConsts().GetCpu().emission_factor =
+                Vector3(0.0f);
+            component->MaterialConsts().GetCpu().metallic_factor = 0.5f;
+            component->MaterialConsts().GetCpu().roughness_factor = 0.3f;
+
+            Vector3 position = Vector3(0.0f, -0.5f, 2.0f);
+            component->UpdateWorldRow(
+                Matrix::CreateRotationX(PI * 0.5f) *
+                Matrix::CreateTranslation(position));
+
+            targets->ground = std::make_shared<ReflectableModel>();
+            targets->ground->mirror = std::make_shared<Model>();
+            targets->ground->mirror->AddComponent(EnumComponentType::eRenderer,
+                                                 component);
+
+            targets->ground->mirror_plane =
+                DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
+
+            targets->objects.insert({targets->ground->mirror->GetEntityId(),
+									 targets->ground->mirror});
             break;
         }
         case EnumStageType::eUpdate: {
-            //update reflect global const buffer
-            
-            //for (auto &i : targets->objects) {
-            //    auto component = (MeshRenderer *)i.second->GetComponent(
-            //        EnumComponentType::eRenderer);
-            //    component->UpdateConstantBuffers();
-            //}
+            const Matrix reflectRow =
+                Matrix::CreateReflection(targets->ground->mirror_plane);
 
+            reflect_global_consts.CopyCpu(condition->global_consts.GetCpu());
+
+            reflect_global_consts.GetCpu().view =
+                (reflectRow * targets->camera->GetView()).Transpose();
+            reflect_global_consts.GetCpu().viewProj =
+                (reflectRow * targets->camera->GetView() *
+                 targets->camera->GetProjection())
+                    .Transpose();
+            reflect_global_consts.GetCpu().invViewProj =
+                reflect_global_consts.GetCpu().viewProj.Invert();
+
+            reflect_global_consts.Upload();
             break;
         }
         case EnumStageType::eRender: {
-            //1.stencilMaskPSO
-            //2.reflectSolidPSO
-            //3.reflectSkyboxSolidPSO
-            //4.mirrorBlendSolidPSO
 
+            // on mirror
+            if (targets->ground->mirror_alpha < 1.0f) {
 
-            //for (auto &i : targets->objects) {
-            //    auto component = (MeshRenderer *)i.second->GetComponent(
-            //        EnumComponentType::eRenderer);
+                // 1.stencilMaskPSO
+                {
+                    auto component =
+                        (MeshRenderer *)targets->ground->mirror->GetComponent(
+                            EnumComponentType::eRenderer);
+                     stencil_mark_PSO->Render(
+                     condition->shared_texture, condition->shared_sampler,
+                     condition->global_consts.Get(), component);
+                }
 
-            //    mesh_solid_PSO->Render(
-            //        condition->shared_texture, condition->shared_sampler,
-            //        condition->global_consts.Get(), component);
-            //}
+                // 2.reflectSolidPSO
+                {
+                    for (auto &i : targets->objects) {
+                        auto component = (MeshRenderer *)i.second->GetComponent(
+                            EnumComponentType::eRenderer);
 
+                        reflect_mesh_solid_PSO->Render(
+                            condition->shared_texture,
+                            condition->shared_sampler,
+                            condition->global_consts.Get(), component);
+                    }
+                }
+
+                // 3.reflectSkyboxSolidPSO
+                {
+                    auto component =
+                        (MeshRenderer *)targets->skybox->GetComponent(
+                            EnumComponentType::eRenderer);
+
+                    reflect_skybox_solid_PSO->Render(
+                        condition->shared_sampler, condition->shared_texture,
+                        condition->global_consts.Get(), component);
+                }
+
+                // 4.mirrorBlendSolidPSO
+                {
+                    auto component =
+                        (MeshRenderer *)targets->ground->mirror->GetComponent(
+                            EnumComponentType::eRenderer);
+                     mirror_blend_solid_PSO->Render(
+                     condition->shared_texture, condition->shared_sampler,
+                     condition->global_consts.Get(), component);
+                }
+            }
             break;
         }
         default:
@@ -80,8 +144,15 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
 
-    //std::shared_ptr<SolidMeshPSO> mesh_solid_PSO;
-    //std::shared_ptr<WireMeshPSO> mesh_wire_PSO;
+    ConstantBuffer<GlobalConstants> reflect_global_consts;
+
+    std::shared_ptr<StencilMarkPSO> stencil_mark_PSO;
+    std::shared_ptr<ReflectSolidMeshPSO> reflect_mesh_solid_PSO;
+    std::shared_ptr<WireReflectMeshPSO> reflect_mesh_wire_PSO;
+    std::shared_ptr<SolidReflectSkyboxPSO> reflect_skybox_solid_PSO;
+    std::shared_ptr<WireReflectSkyboxPSO> reflect_skybox_wire_PSO;
+    std::shared_ptr<MirrorBlendSolidMeshPSO> mirror_blend_solid_PSO;
+    std::shared_ptr<WireMirrorBlendMeshPSO> mirror_blend_wire_PSO;
 };
 } // namespace graphics
 

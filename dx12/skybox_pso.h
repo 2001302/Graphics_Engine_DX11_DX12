@@ -5,7 +5,7 @@
 #include "shader_util.h"
 
 namespace graphics {
-class SkyboxPSO : public GraphicsPSO {
+class SolidSkyboxPSO : public GraphicsPSO {
   public:
     void Initialize() override {
         // rootSignature
@@ -106,9 +106,9 @@ class SkyboxPSO : public GraphicsPSO {
         context->GetList()->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            3, mesh_renderer->GetMeshConsts()->GetGPUVirtualAddress());
+            3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            4, mesh_renderer->GetMaterialConsts()->GetGPUVirtualAddress());
+            4, mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
 
         context->GetList()->IASetPrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -124,10 +124,9 @@ class SkyboxPSO : public GraphicsPSO {
 };
 class WireSkyboxPSO : public GraphicsPSO {
   public:
-    void Initialize() override {
-    };
+    void Initialize() override{};
 };
-class ReflectSkyboxPSO : public GraphicsPSO {
+class SolidReflectSkyboxPSO : public GraphicsPSO {
   public:
     void Initialize() override {
         // rootSignature
@@ -229,9 +228,9 @@ class ReflectSkyboxPSO : public GraphicsPSO {
         context->GetList()->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            3, mesh_renderer->GetMeshConsts()->GetGPUVirtualAddress());
+            3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            4, mesh_renderer->GetMaterialConsts()->GetGPUVirtualAddress());
+            4, mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
 
         context->GetList()->IASetPrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

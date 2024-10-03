@@ -17,14 +17,14 @@ void MeshRenderer::Initialize(const std::string &basePath,
 
 void MeshRenderer::Initialize(const vector<MeshData> &mesh_data) {
 
+    material_consts.Initialize();
+    mesh_consts.Initialize();
     meshes.resize(mesh_data.size());
     for (int i = 0; i < mesh_data.size(); i++) {
 
         MeshData meshData = mesh_data[i];
         meshes[i] = std::make_shared<Mesh>();
         meshes[i]->Initialize(meshData, mesh_consts, material_consts);
-        material_consts.Initialize();
-        mesh_consts.Initialize();
     }
 }
 

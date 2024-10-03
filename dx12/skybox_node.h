@@ -20,7 +20,7 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
-            skyboxPSO = std::make_shared<SkyboxPSO>();
+            skyboxPSO = std::make_shared<SolidSkyboxPSO>();
             skyboxPSO->Initialize();
 
             auto mesh_data = GeometryGenerator::MakeBox(40.0f);
@@ -29,14 +29,15 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
             auto component = std::make_shared<MeshRenderer>();
             component->Initialize(std::vector{mesh_data});
 
-            skybox = std::make_shared<Model>();
-            skybox->AddComponent(EnumComponentType::eRenderer, component);
+            targets->skybox = std::make_shared<Model>();
+            targets->skybox->AddComponent(EnumComponentType::eRenderer,
+                                          component);
 
             break;
         }
         case EnumStageType::eRender: {
 
-            auto component = (MeshRenderer *)skybox->GetComponent(
+            auto component = (MeshRenderer *)targets->skybox->GetComponent(
                 EnumComponentType::eRenderer);
 
             skyboxPSO->Render(condition->shared_sampler,
@@ -51,8 +52,7 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
 
-    std::shared_ptr<SkyboxPSO> skyboxPSO;
-    std::shared_ptr<Model> skybox;
+    std::shared_ptr<SolidSkyboxPSO> skyboxPSO;
 };
 } // namespace graphics
 

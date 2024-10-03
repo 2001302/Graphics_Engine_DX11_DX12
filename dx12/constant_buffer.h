@@ -96,9 +96,11 @@ template <typename T_CONSTS> class ConstantBuffer {
     const auto Get() { return gpu.Get(); }
     const auto GetAddressOf() { return gpu.GetAddressOf(); }
 
+    void CopyCpu(const T_CONSTS &cpu) { memcpy(&this->cpu, &cpu, sizeof(cpu)); }
+
     T_CONSTS cpu;
     ComPtr<ID3D12Resource> gpu;
 };
 
-} // namespace core
+} // namespace graphics
 #endif

@@ -10,7 +10,63 @@
 #include "mirror_effect_node.h"
 
 namespace graphics {
+class PrepareModelNode : public common::BehaviorActionNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
 
+        auto black_board = dynamic_cast<BlackBoard *>(data_block);
+        assert(black_board != nullptr);
+
+        auto condition = black_board->conditions.get();
+        auto targets = black_board->targets.get();
+
+        // sample object
+        {
+            std::string base_path = "Assets/Characters/Mixamo/";
+            std::string file_name = "character.fbx";
+
+            auto component = std::make_shared<MeshRenderer>();
+            component->Initialize(base_path, file_name);
+            component->UpdateConstantBuffers();
+
+            auto model = std::make_shared<Model>();
+            model->AddComponent(EnumComponentType::eRenderer, component);
+
+            targets->objects.insert({model->GetEntityId(), model});
+        }
+
+        // ground
+        {
+            auto mesh = GeometryGenerator::MakeSquare(5.0);
+
+            auto component = std::make_shared<MeshRenderer>();
+            component->Initialize(std::vector{mesh});
+            component->MaterialConsts().GetCpu().albedo_factor = Vector3(0.1f);
+            component->MaterialConsts().GetCpu().emission_factor =
+                Vector3(0.0f);
+            component->MaterialConsts().GetCpu().metallic_factor = 0.5f;
+            component->MaterialConsts().GetCpu().roughness_factor = 0.3f;
+
+            Vector3 position = Vector3(0.0f, -0.5f, 2.0f);
+            component->UpdateWorldRow(Matrix::CreateRotationX(PI * 0.5f) *
+                                      Matrix::CreateTranslation(position));
+
+            targets->ground = std::make_shared<ReflectableModel>();
+            targets->ground->mirror = std::make_shared<Model>();
+            targets->ground->mirror->AddComponent(EnumComponentType::eRenderer,
+                                                  component);
+
+            targets->ground->mirror_plane =
+                DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
+
+            targets->objects.insert({targets->ground->mirror->GetEntityId(),
+                                     targets->ground->mirror});
+        }
+
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
+};
+
+auto prepare_model = std::make_shared<PrepareModelNode>();
 auto gpu_initialize = std::make_shared<GpuInitializeNode>();
 auto clear_buffer = std::make_shared<ClearBufferNode>();
 auto camera_node = std::make_shared<CameraNodeInvoker>();
@@ -22,8 +78,6 @@ auto present = std::make_shared<PresentNode>();
 auto light_node = std::make_shared<LightNodeInvoker>();
 auto resolve_buffer = std::make_shared<ResolveBuffer>();
 auto tone_mapping = std::make_shared<ToneMappingNodeInvoker>();
-auto begin_init = std::make_shared<BeginInitNode>();
-auto end_init = std::make_shared<EndInitNode>();
 auto skybox_node = std::make_shared<SkyBoxNodeInvoker>();
 auto mirror_effect_node = std::make_shared<MirrorEffectNodeInvoker>();
 
@@ -45,6 +99,7 @@ bool Engine::Start() {
     start_tree->Build(black_board.get())
     ->Sequence()
         ->Excute(gpu_initialize)
+        ->Excute(prepare_model)
         ->Excute(global_resource_node)
         ->Excute(global_constant_node)
         ->Excute(camera_node)
@@ -91,7 +146,7 @@ bool Engine::Frame() {
     // update
     {
         common::ScopeStopWatch stop_watch("Update tree");
-        black_board->conditions->delta_time = ImGui::GetIO().DeltaTime;
+        black_board->conditions->delta_time = ImGui::GetIO().DeltaTime;//TODO: need to be fixed
         black_board->conditions->stage_type = EnumStageType::eUpdate;
         update_tree->Run();
     }

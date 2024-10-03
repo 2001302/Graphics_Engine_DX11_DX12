@@ -24,19 +24,6 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
             mesh_solid_PSO = std::make_shared<SolidMeshPSO>();
             mesh_solid_PSO->Initialize();
 
-            // sample object
-            std::string base_path = "Assets/Characters/Mixamo/";
-            std::string file_name = "character.fbx";
-
-            auto component = std::make_shared<MeshRenderer>();
-            component->Initialize(base_path, file_name);
-            component->UpdateConstantBuffers();
-
-            auto model = std::make_shared<Model>();
-            model->AddComponent(EnumComponentType::eRenderer, component);
-
-            targets->objects.insert({model->GetEntityId(), model});
-
             break;
         }
         case EnumStageType::eUpdate: {

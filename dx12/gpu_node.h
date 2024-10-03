@@ -15,24 +15,6 @@ class GpuInitializeNode : public common::BehaviorActionNode {
     }
 };
 
-class BeginInitNode : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
-
-        // GpuCore::Instance().GetCommandMgr()->Queue()
-
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-
-class EndInitNode : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
-
-        // GpuCore::Instance().GetCommandMgr()->Queue()
-
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-
 class ClearBufferNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 

@@ -40,32 +40,6 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
             // global const
             reflect_global_consts.Initialize();
 
-            // ground
-            auto mesh = GeometryGenerator::MakeSquare(5.0);
-
-            auto component = std::make_shared<MeshRenderer>();
-            component->Initialize(std::vector{mesh});
-            component->MaterialConsts().GetCpu().albedo_factor = Vector3(0.1f);
-            component->MaterialConsts().GetCpu().emission_factor =
-                Vector3(0.0f);
-            component->MaterialConsts().GetCpu().metallic_factor = 0.5f;
-            component->MaterialConsts().GetCpu().roughness_factor = 0.3f;
-
-            Vector3 position = Vector3(0.0f, -0.5f, 2.0f);
-            component->UpdateWorldRow(
-                Matrix::CreateRotationX(PI * 0.5f) *
-                Matrix::CreateTranslation(position));
-
-            targets->ground = std::make_shared<ReflectableModel>();
-            targets->ground->mirror = std::make_shared<Model>();
-            targets->ground->mirror->AddComponent(EnumComponentType::eRenderer,
-                                                 component);
-
-            targets->ground->mirror_plane =
-                DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
-
-            targets->objects.insert({targets->ground->mirror->GetEntityId(),
-									 targets->ground->mirror});
             break;
         }
         case EnumStageType::eUpdate: {

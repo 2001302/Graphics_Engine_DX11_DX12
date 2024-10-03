@@ -52,9 +52,6 @@
     <ClInclude Include="skybox_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="tree_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
     <ClInclude Include="vertex.h">
       <Filter>Graphics\Model</Filter>
     </ClInclude>
@@ -123,6 +120,9 @@
     </ClInclude>
     <ClInclude Include="render_target_object.h">
       <Filter>Graphics\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="tree_node.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -24,8 +24,8 @@ class MeshRenderer : public Component {
     void UpdateWorldRow(const Matrix &worldRow);
 
     std::vector<std::shared_ptr<Mesh>> GetMeshes() { return meshes; }
-    ConstantBuffer<MeshConstants> MeshConsts() { return mesh_consts; }
-    ConstantBuffer<MaterialConstants> MaterialConsts() {
+    ConstantBuffer<MeshConstants> &MeshConsts() { return mesh_consts; }
+    ConstantBuffer<MaterialConstants> &MaterialConsts() {
         return material_consts;
     }
 

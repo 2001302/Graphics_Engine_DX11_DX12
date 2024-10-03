@@ -285,6 +285,9 @@
     <ClInclude Include="stencil_mark_pso.h">
       <Filter>Graphics\Gpu\PSO</Filter>
     </ClInclude>
+    <ClInclude Include="tree_node.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\Common.hlsli">

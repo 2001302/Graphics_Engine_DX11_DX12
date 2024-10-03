@@ -67,6 +67,7 @@ class SolidSkyboxPSO : public GraphicsPSO {
         psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         psoDesc.NumRenderTargets = 1;
         psoDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         psoDesc.SampleDesc.Count = 1;
         psoDesc.SampleDesc.Quality = 0;
 
@@ -93,7 +94,8 @@ class SolidSkyboxPSO : public GraphicsPSO {
                                            (UINT)common::env::screen_width,
                                            (UINT)common::env::screen_height);
 
-        context->SetRenderTargetView(GpuBuffer::Instance().GetHDR());
+        context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
+                                     GpuBuffer::Instance().GetDSV());
 
         context->SetRootSignature(root_signature);
         context->SetPipelineState(pipeline_state);
@@ -189,6 +191,7 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
         psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         psoDesc.NumRenderTargets = 1;
         psoDesc.RTVFormats[0] = DXGI_FORMAT_R16G16B16A16_FLOAT;
+        psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         psoDesc.SampleDesc.Count = 1;
         psoDesc.SampleDesc.Quality = 0;
 
@@ -202,7 +205,7 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
 
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
-                L"Skybox");
+                L"ReflectSkybox");
 
         context->SetDescriptorHeaps(
             std::vector{GpuCore::Instance().GetHeap().View(),
@@ -215,7 +218,8 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
                                            (UINT)common::env::screen_width,
                                            (UINT)common::env::screen_height);
 
-        context->SetRenderTargetView(GpuBuffer::Instance().GetHDR());
+        context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
+                                     GpuBuffer::Instance().GetDSV());
 
         context->SetRootSignature(root_signature);
         context->SetPipelineState(pipeline_state);

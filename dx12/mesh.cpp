@@ -15,17 +15,28 @@ void Mesh::Initialize(const MeshData &mesh_data,
 
     auto albedo =
         Texture2D::Create(mesh_data.albedo_name, mesh_data.opacity_name);
+    material_consts.GetCpu().use_albedo_map = albedo->IsUsable();
+
     auto normal = Texture2D::Create(mesh_data.normal_name);
-    auto ambient_occlusion =
-        Texture2D::Create(mesh_data.ambient_occlusion_name);
-    auto metallic_roughness = Texture2D::Create(mesh_data.metallic_name,
-                                                mesh_data.roughness_name, true);
+    material_consts.GetCpu().use_normal_map = normal->IsUsable();
+
+    auto ao = Texture2D::Create(mesh_data.ambient_occlusion_name);
+    material_consts.GetCpu().use_ambient_occlusion_map = ao->IsUsable();
+
+    auto metallic = Texture2D::Create(mesh_data.metallic_name,
+                                      mesh_data.roughness_name, true);
+    material_consts.GetCpu().use_metallic_map = metallic->IsUsable();
+    material_consts.GetCpu().use_roughness_map = metallic->IsUsable();
+
     auto emissive = Texture2D::Create(mesh_data.emissive_name);
+    material_consts.GetCpu().use_emissive_map = emissive->IsUsable();
+
     auto height = Texture2D::Create(mesh_data.height_name);
+    mesh_consts.GetCpu().useHeightMap = height->IsUsable();
 
     auto tex_PS = std::vector<GpuResource *>{
-        std::move(albedo), std::move(normal), std::move(ambient_occlusion),
-        std::move(metallic_roughness), std::move(emissive)};
+        std::move(albedo), std::move(normal), std::move(ao),
+        std::move(metallic), std::move(emissive)};
     auto tex_VS = std::vector<GpuResource *>{std::move(height)};
 
     texture_PS = std::make_shared<GpuResourceList>(tex_PS);

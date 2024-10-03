@@ -10,7 +10,7 @@
 namespace graphics {
 class Texture2D : public GpuResource {
   public:
-    Texture2D() : upload(0), cpu_handle_(), index_(0){};
+    Texture2D() : upload(0), cpu_handle_(), index_(0), is_usable_(false){};
 
     static Texture2D *Create(const std::string path1, const std::string path2) {
 
@@ -19,6 +19,7 @@ class Texture2D : public GpuResource {
 
         if (!image.IsEmpty()) {
             tex->Initialize(image);
+            tex->is_usable_ = true;
         } else { // dummy
             tex->Initialize(256, 256, DXGI_FORMAT_R8G8B8A8_UNORM);
             common::Logger::Debug(path1 + "," + path2 +
@@ -33,6 +34,7 @@ class Texture2D : public GpuResource {
 
         if (!image.IsEmpty()) {
             tex->Initialize(image);
+            tex->is_usable_ = true;
         } else { // dummy
             tex->Initialize(256, 256, DXGI_FORMAT_R8G8B8A8_UNORM);
             common::Logger::Debug(path + ": not exists. skip texture reading.");
@@ -48,6 +50,7 @@ class Texture2D : public GpuResource {
 
         if (!image.IsEmpty()) {
             tex->Initialize(image);
+            tex->is_usable_ = true;
         } else { // dummy
             tex->Initialize(256, 256, DXGI_FORMAT_R8G8B8A8_UNORM);
             common::Logger::Debug(metalic + "," + roughness +
@@ -66,6 +69,7 @@ class Texture2D : public GpuResource {
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() override {
         return GpuCore::Instance().GetHeap().View()->GetGpuHandle(index_);
     };
+    bool IsUsable() { return is_usable_; };
 
   private:
     void Initialize(int width, int height, DXGI_FORMAT format) {
@@ -165,6 +169,7 @@ class Texture2D : public GpuResource {
             resource_, &desc, cpu_handle_);
     };
 
+    bool is_usable_;
     UINT index_;
     ID3D12Resource *upload;
     D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle_;

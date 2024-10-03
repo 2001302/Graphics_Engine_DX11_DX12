@@ -63,7 +63,7 @@ class StencilMarkPSO : public GraphicsPSO {
         psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(rasterizer::solidRS);
         psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
         psoDesc.DepthStencilState = depth::maskDSS;
-        psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+        psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         psoDesc.SampleMask = UINT_MAX;
         psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         psoDesc.NumRenderTargets = 1;
@@ -81,7 +81,7 @@ class StencilMarkPSO : public GraphicsPSO {
 
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
-                L"MeshRenderer");
+                L"StencilMark");
 
         context->SetDescriptorHeaps(
             std::vector{GpuCore::Instance().GetHeap().View(),
@@ -121,6 +121,7 @@ class StencilMarkPSO : public GraphicsPSO {
             context->GetList()->IASetIndexBuffer(&mesh->index_buffer_view);
             context->GetList()->DrawIndexedInstanced(mesh->index_count, 1, 0, 0,
                                                      0);
+            context->ClearDepthStencilView(GpuBuffer::Instance().GetDSV());
         }
 
         GpuCore::Instance().GetCommand()->Finish(context);

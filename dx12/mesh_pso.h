@@ -73,7 +73,7 @@ class SolidMeshPSO : public GraphicsPSO {
         psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(rasterizer::solidRS);
         psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
         psoDesc.DepthStencilState = depth::drawDSS;
-        psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+        psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         psoDesc.SampleMask = UINT_MAX;
         psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         psoDesc.NumRenderTargets = 1;
@@ -213,7 +213,7 @@ class ReflectSolidMeshPSO : public GraphicsPSO {
             CD3DX12_RASTERIZER_DESC(rasterizer::solidCCWRS);
         psoDesc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
         psoDesc.DepthStencilState = depth::drawMaskedDSS;
-        psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+        psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         psoDesc.SampleMask = UINT_MAX;
         psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         psoDesc.NumRenderTargets = 1;
@@ -231,7 +231,7 @@ class ReflectSolidMeshPSO : public GraphicsPSO {
 
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
-                L"MeshRenderer");
+                L"ReflectMeshRenderer");
 
         context->SetDescriptorHeaps(
             std::vector{GpuCore::Instance().GetHeap().View(),
@@ -353,7 +353,7 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
             CD3DX12_RASTERIZER_DESC(rasterizer::solidCCWRS);
         psoDesc.BlendState = blend::mirrorBS;
         psoDesc.DepthStencilState = depth::drawMaskedDSS;
-        psoDesc.DSVFormat = DXGI_FORMAT_D32_FLOAT;
+        psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
         psoDesc.SampleMask = UINT_MAX;
         psoDesc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
         psoDesc.NumRenderTargets = 1;
@@ -371,7 +371,7 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
 
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
-                L"MeshRenderer");
+                L"MirrorBlendMeshRenderer");
 
         context->SetDescriptorHeaps(
             std::vector{GpuCore::Instance().GetHeap().View(),

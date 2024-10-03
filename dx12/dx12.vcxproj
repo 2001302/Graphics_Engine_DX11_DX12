@@ -196,6 +196,7 @@
     <ClInclude Include="shader_util.h" />
     <ClInclude Include="shadow_effect.h" />
     <ClInclude Include="stencil_mark_pso.h" />
+    <ClInclude Include="tree_node.h" />
     <ClInclude Include="vertex.h" />
     <ClInclude Include="gui_node.h" />
     <ClInclude Include="light_node.h" />

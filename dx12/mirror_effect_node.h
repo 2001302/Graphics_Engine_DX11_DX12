@@ -94,16 +94,16 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     }
                 }
 
-                //// 3.reflectSkyboxSolidPSO
-                //{
-                //    auto component =
-                //        (MeshRenderer *)targets->skybox->GetComponent(
-                //            EnumComponentType::eRenderer);
+                // 3.reflectSkyboxSolidPSO
+                {
+                    auto component =
+                        (MeshRenderer *)targets->skybox->GetComponent(
+                            EnumComponentType::eRenderer);
 
-                //    reflect_skybox_solid_PSO->Render(
-                //        condition->shared_sampler, condition->shared_texture,
-                //        reflect_global_consts.Get(), component);
-                //}
+                    reflect_skybox_solid_PSO->Render(
+                        condition->shared_sampler, condition->shared_texture,
+                        reflect_global_consts.Get(), component);
+                }
 
                 // 4.mirrorBlendSolidPSO
                 {

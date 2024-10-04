@@ -224,6 +224,7 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
         context->SetRootSignature(root_signature);
         context->SetPipelineState(pipeline_state);
 
+        context->GetList()->OMSetStencilRef(1);
         context->GetList()->SetGraphicsRootDescriptorTable(
             0, shared_sampler->GetGpuHandle());
         context->GetList()->SetGraphicsRootDescriptorTable(

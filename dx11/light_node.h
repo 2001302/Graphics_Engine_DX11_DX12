@@ -13,7 +13,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto job_context = black_board->job_context.get();
+        auto job_context = black_board->targets.get();
 
         switch (job_context->stage_type) {
         case EnumStageType::eInitialize: {

@@ -13,7 +13,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto manager = black_board->job_context.get();
+        auto manager = black_board->targets.get();
 
         switch (manager->stage_type) {
         case EnumStageType::eInitialize: {

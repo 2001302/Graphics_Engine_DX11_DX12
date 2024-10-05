@@ -9,6 +9,7 @@
 #include <action_node.h>
 #include <message.h>
 #include <platform.h>
+#include <logger.h>
 
 namespace graphics {
 
@@ -20,12 +21,15 @@ class Engine : public common::Platform, TreeNode {
     bool Frame() override final;
     bool Stop() override final;
 
-  private:
-    bool OnUpdate(float dt);
-    bool OnRender();
+    virtual void OnPrepare(BlackBoard *black_board);
 
+  private:
     std::shared_ptr<BlackBoard> black_board;
     std::unique_ptr<MessageReceiver> message_receiver;
+
+    std::shared_ptr<common::BehaviorTreeBuilder> start_tree;
+    std::shared_ptr<common::BehaviorTreeBuilder> update_tree;
+    std::shared_ptr<common::BehaviorTreeBuilder> render_tree;
 
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,
                                     LPARAM lparam) {
@@ -58,7 +62,7 @@ class Engine : public common::Platform, TreeNode {
                 if (CheckIfMouseInViewport(black_board->gui.get(),
                                            LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseRightDragRequest(
-                        black_board->job_context.get(), black_board->input,
+                        black_board->targets.get(), black_board->input,
                         LOWORD(lparam), HIWORD(lparam));
                 }
             }
@@ -66,7 +70,7 @@ class Engine : public common::Platform, TreeNode {
                 if (CheckIfMouseInViewport(black_board->gui.get(),
                                            LOWORD(lparam), HIWORD(lparam))) {
                     return message_receiver->OnMouseWheelDragRequest(
-                        black_board->job_context.get(), black_board->input,
+                        black_board->targets.get(), black_board->input,
                         LOWORD(lparam), HIWORD(lparam));
                 }
             }
@@ -76,7 +80,7 @@ class Engine : public common::Platform, TreeNode {
             if (CheckIfMouseInViewport(black_board->gui.get(), LOWORD(lparam),
                                        HIWORD(lparam))) {
                 return message_receiver->OnMouseWheelRequest(
-                    black_board->job_context.get(), black_board->input,
+                    black_board->targets.get(), black_board->input,
                     GET_WHEEL_DELTA_WPARAM(wparam));
             }
             break;
@@ -90,22 +94,22 @@ class Engine : public common::Platform, TreeNode {
         }
         case WM_MODEL_LOAD: {
             return message_receiver->OnModelLoadRequest(
-                black_board->job_context.get(), main_window);
+                black_board->targets.get(), main_window);
             break;
         }
         case WM_SPHERE_LOAD: {
             return message_receiver->OnSphereLoadRequest(
-                black_board->job_context.get());
+                black_board->targets.get());
             break;
         }
         case WM_BOX_LOAD: {
             return message_receiver->OnBoxLoadRequest(
-                black_board->job_context.get());
+                black_board->targets.get());
             break;
         }
         case WM_CYLINDER_LOAD: {
             return message_receiver->OnCylinderLoadRequest(
-                black_board->job_context.get());
+                black_board->targets.get());
             break;
         }
         case WM_KEYDOWN:

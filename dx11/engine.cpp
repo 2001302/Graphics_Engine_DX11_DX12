@@ -6,18 +6,23 @@ namespace graphics {
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
     message_receiver = std::make_unique<MessageReceiver>();
+    start_tree = std::make_shared<common::BehaviorTreeBuilder>();
+    update_tree = std::make_shared<common::BehaviorTreeBuilder>();
+    render_tree = std::make_shared<common::BehaviorTreeBuilder>();
 };
 
 bool Engine::Start() {
-
+    // clang-format off
     Platform::Start();
 
     graphics::GpuCore::Instance().Initialize();
-    black_board->job_context->stage_type = EnumStageType::eInitialize;
 
-    // clang-format off
-    auto tree = std::make_shared<common::BehaviorTreeBuilder>();
-    tree->Build(black_board.get())
+    OnPrepare(black_board.get());
+
+    black_board->targets->stage_type = EnumStageType::eInitialize;
+    
+    //initialize
+    start_tree->Build(black_board.get())
         ->Sequence()
             ->Excute(shadow_effect_node)
             ->Excute(light_node)
@@ -31,29 +36,9 @@ bool Engine::Start() {
             ->Excute(imgui_node)
         ->Close()
     ->Run();
-    // clang-format on
-
-    Frame();
-
-    return true;
-}
-
-bool Engine::Frame() {
-
-    OnUpdate(ImGui::GetIO().DeltaTime);
-    OnRender();
-
-    return true;
-}
-
-bool Engine::OnUpdate(float dt) {
-
-    black_board->job_context->delta_time = dt;
-    black_board->job_context->stage_type = EnumStageType::eUpdate;
-
-    // clang-format off
-    auto tree = std::make_shared<common::BehaviorTreeBuilder>();
-    tree->Build(black_board.get())
+    
+    //update
+    update_tree->Build(black_board.get())
         ->Sequence()
             ->Excute(camera_node)
             ->Excute(light_node)
@@ -62,20 +47,10 @@ bool Engine::OnUpdate(float dt) {
             ->Excute(mirror_effect_node)
             ->Excute(game_objects_node)
             ->Excute(player_node)
-        ->Close()
-    ->Run();
-    // clang-format on
-
-    return true;
-}
-
-bool Engine::OnRender() {
-
-    black_board->job_context->stage_type = EnumStageType::eRender;
-
-    // clang-format off
-    auto tree = std::make_shared<common::BehaviorTreeBuilder>();
-    tree->Build(black_board.get())
+        ->Close();
+    
+    //render
+    render_tree->Build(black_board.get())
         ->Sequence()
             ->Excute(shared_resource_node)
             ->Excute(shadow_effect_node)
@@ -89,9 +64,31 @@ bool Engine::OnRender() {
             ->Excute(post_processing)
             ->Excute(imgui_node)
             ->Excute(present)
-        ->Close()
-    ->Run();
+        ->Close();
+
+    Frame();
+
     // clang-format on
+    return true;
+}
+
+bool Engine::Frame() {
+
+    // update
+    {
+        common::ScopeStopWatch stop_watch("Update tree");
+        black_board->targets->delta_time =
+            ImGui::GetIO().DeltaTime; // TODO: need to be fixed
+        black_board->targets->stage_type = EnumStageType::eUpdate;
+        update_tree->Run();
+    }
+
+    // render
+    {
+        common::ScopeStopWatch stop_watch("Render tree");
+        black_board->targets->stage_type = EnumStageType::eRender;
+        render_tree->Run();
+    }
 
     return true;
 }
@@ -101,11 +98,11 @@ bool Engine::Stop() {
 
     if (black_board) {
 
-        if (black_board->job_context) {
-            for (auto &model : black_board->job_context->objects) {
+        if (black_board->targets) {
+            for (auto &model : black_board->targets->objects) {
                 model.second.reset();
             }
-            black_board->job_context->camera.reset();
+            black_board->targets->camera.reset();
         }
 
         if (black_board->gui) {
@@ -121,4 +118,5 @@ bool Engine::Stop() {
     return true;
 }
 
+void Engine::OnPrepare(BlackBoard *black_board) {}
 } // namespace engine

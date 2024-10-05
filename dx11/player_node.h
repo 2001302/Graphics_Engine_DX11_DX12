@@ -90,7 +90,7 @@ class PlayerNodeInvoker : public BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto job_context = black_board->job_context;
+        auto job_context = black_board->targets;
         auto gui = black_board->gui;
 
         switch (job_context->stage_type) {

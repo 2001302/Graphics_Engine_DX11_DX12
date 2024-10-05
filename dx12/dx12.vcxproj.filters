@@ -288,6 +288,9 @@
     <ClInclude Include="tree_node.h">
       <Filter>Graphics</Filter>
     </ClInclude>
+    <ClInclude Include="shadow_effect_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\Common.hlsli">

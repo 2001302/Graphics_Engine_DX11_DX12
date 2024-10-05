@@ -5,16 +5,6 @@
 #include <behavior_tree_builder.h>
 
 namespace graphics {
-class GpuInitializeNode : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
-
-        GpuCore::Instance().Initialize();
-        GpuBuffer::Instance().Initialize();
-
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-
 class ClearBufferNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 

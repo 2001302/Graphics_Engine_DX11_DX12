@@ -5,6 +5,7 @@ void main() {
         std::make_unique<graphics::Engine>();
 
     if (engine->Start()) {
+        //engine->Prepare();
         engine->Run();
     }
 

@@ -2,18 +2,17 @@
 #define _APPLICATION
 
 #include "black_board.h"
-#include "geometry_generator.h"
 #include "graphics_util.h"
 #include "message_receiver.h"
-#include "tree_node.h"
-#include <action_node.h>
-#include <message.h>
+#include <behavior_tree_builder.h>
 #include <platform.h>
+#include <setting_ui.h>
+#include <message.h>
 #include <logger.h>
 
 namespace graphics {
 
-class Engine : public common::Platform, TreeNode {
+class Engine : public common::Platform {
   public:
     Engine();
 
@@ -34,7 +33,7 @@ class Engine : public common::Platform, TreeNode {
     LRESULT CALLBACK MessageHandler(HWND main_window, UINT umsg, WPARAM wparam,
                                     LPARAM lparam) {
 
-        auto CheckIfMouseInViewport = [](SettingUi *ui, int mouseX,
+        auto CheckIfMouseInViewport = [](common::SettingUi *ui, int mouseX,
                                          int mouseY) -> bool {
             if (graphics::GpuCore::Instance().swap_chain) {
                 if ((0 < mouseX && mouseX < ui->GetSize().x) &&

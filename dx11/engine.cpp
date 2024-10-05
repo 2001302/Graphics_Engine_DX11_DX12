@@ -1,5 +1,5 @@
 #include "engine.h"
-#include "behavior_tree_builder.h"
+#include "tree_node.h"
 
 namespace graphics {
 
@@ -24,46 +24,46 @@ bool Engine::Start() {
     //initialize
     start_tree->Build(black_board.get())
         ->Sequence()
-            ->Excute(shadow_effect_node)
-            ->Excute(light_node)
-            ->Excute(camera_node)
-            ->Excute(skybox_node)
-            ->Excute(mirror_effect_node)
-            ->Excute(shared_resource_node)
-            ->Excute(post_processing)
-            ->Excute(game_objects_node)
-            ->Excute(player_node)
-            ->Excute(imgui_node)
+            ->Excute(node::shadow_effect_node)
+            ->Excute(node::light_node)
+            ->Excute(node::camera_node)
+            ->Excute(node::skybox_node)
+            ->Excute(node::mirror_effect_node)
+            ->Excute(node::shared_resource_node)
+            ->Excute(node::post_processing)
+            ->Excute(node::game_objects_node)
+            ->Excute(node::player_node)
+            ->Excute(node::imgui_node)
         ->Close()
     ->Run();
     
     //update
     update_tree->Build(black_board.get())
         ->Sequence()
-            ->Excute(camera_node)
-            ->Excute(light_node)
-            ->Excute(shared_resource_node)
-            ->Excute(shadow_effect_node)
-            ->Excute(mirror_effect_node)
-            ->Excute(game_objects_node)
-            ->Excute(player_node)
+            ->Excute(node::camera_node)
+            ->Excute(node::light_node)
+            ->Excute(node::shared_resource_node)
+            ->Excute(node::shadow_effect_node)
+            ->Excute(node::mirror_effect_node)
+            ->Excute(node::game_objects_node)
+            ->Excute(node::player_node)
         ->Close();
     
     //render
     render_tree->Build(black_board.get())
         ->Sequence()
-            ->Excute(shared_resource_node)
-            ->Excute(shadow_effect_node)
-            ->Excute(light_node)
-            ->Excute(game_objects_node)
-            ->Excute(player_node)
-            ->Excute(camera_node)
-            ->Excute(skybox_node)
-            ->Excute(mirror_effect_node)
-            ->Excute(resolve_buffer)
-            ->Excute(post_processing)
-            ->Excute(imgui_node)
-            ->Excute(present)
+            ->Excute(node::shared_resource_node)
+            ->Excute(node::shadow_effect_node)
+            ->Excute(node::light_node)
+            ->Excute(node::game_objects_node)
+            ->Excute(node::player_node)
+            ->Excute(node::camera_node)
+            ->Excute(node::skybox_node)
+            ->Excute(node::mirror_effect_node)
+            ->Excute(node::resolve_buffer)
+            ->Excute(node::post_processing)
+            ->Excute(node::imgui_node)
+            ->Excute(node::present)
         ->Close();
 
     Frame();

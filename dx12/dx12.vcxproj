@@ -184,6 +184,7 @@
     <ClInclude Include="constant_buffer.h" />
     <ClInclude Include="buffer_manager.h" />
     <ClInclude Include="device_manager.h" />
+    <ClInclude Include="shadow_mapping_pso.h" />
     <ClInclude Include="shadow_effect_node.h" />
     <ClInclude Include="mirror_effect_node.h" />
     <ClInclude Include="heap_manager.h" />

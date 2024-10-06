@@ -232,6 +232,10 @@ class GraphicsCommandContext : public CommandContext {
         auto rtv = renderTarget->GetRtvHandle();
         command_list_->OMSetRenderTargets(1, &rtv, false, nullptr);
     };
+    void SetRenderTargetView(DepthBuffer *depthStencil) {
+        auto dsv = depthStencil->GetDsvHandle();
+        command_list_->OMSetRenderTargets(0, nullptr, false, &dsv);
+    };
     void SetRenderTargetView(ColorBuffer *renderTarget,
                              DepthBuffer *depthStencil) {
         auto rtv = renderTarget->GetRtvHandle();

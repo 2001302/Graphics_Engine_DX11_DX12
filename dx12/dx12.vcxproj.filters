@@ -291,6 +291,9 @@
     <ClInclude Include="shadow_effect_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
+    <ClInclude Include="shadow_mapping_pso.h">
+      <Filter>Graphics\Gpu\PSO</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\Common.hlsli">

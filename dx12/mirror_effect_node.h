@@ -22,7 +22,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
-            // pso
+            // pipeline state object
             stencil_mark_PSO = std::make_shared<StencilMarkPSO>();
             stencil_mark_PSO->Initialize();
 
@@ -42,15 +42,9 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
             mirror_mesh_wire_PSO = std::make_shared<WireMeshPSO>();
             mirror_mesh_wire_PSO->Initialize();
+
             // global const
             reflect_global_consts.Initialize();
-
-            // model
-            auto component =
-                (MeshRenderer *)targets->ground->model->GetComponent(
-                    EnumComponentType::eRenderer);
-            component->UpdateConstantBuffers();
-
             break;
         }
         case EnumStageType::eUpdate: {

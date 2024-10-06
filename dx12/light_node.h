@@ -30,14 +30,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                 condition->global_consts.GetCpu().lights[0].type =
                     LIGHT_SPOT | LIGHT_SHADOW; // Point with shadow
 
-                condition->global_consts.GetCpu().lights[1].radiance =
-                    Vector3(5.0f);
-                condition->global_consts.GetCpu().lights[1].spotPower = 3.0f;
-                condition->global_consts.GetCpu().lights[1].fallOffEnd = 20.0f;
-                condition->global_consts.GetCpu().lights[1].radius = 0.02f;
-                condition->global_consts.GetCpu().lights[1].type =
-                    LIGHT_SPOT | LIGHT_SHADOW; // Point with shadow
-
+                condition->global_consts.GetCpu().lights[1].type = LIGHT_OFF;
                 condition->global_consts.GetCpu().lights[2].type = LIGHT_OFF;
             }
 

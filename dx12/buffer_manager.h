@@ -4,9 +4,9 @@
 #include "back_buffer.h"
 #include "color_buffer.h"
 #include "depth_buffer.h"
-#include "texture_cube.h"
-#include "texture_2d.h"
 #include "device_manager.h"
+#include "texture_2d.h"
+#include "texture_cube.h"
 
 namespace graphics {
 class GpuBuffer {
@@ -19,16 +19,16 @@ class GpuBuffer {
     bool InitializeBuffer();
     void Shutdown();
 
-    BackBuffer *GetDisplay() { return &back_buffer; }
-    ColorBuffer *GetHDR() { return &hdr_buffer; }
-    DepthBuffer *GetDSV() { return &dsv_buffer; }
+    BackBuffer *GetDisplay() { return back_buffer; }
+    ColorBuffer *GetHDR() { return hdr_buffer; }
+    DepthBuffer *GetDSV() { return dsv_buffer; }
 
   private:
-    GpuBuffer() {};
+    GpuBuffer() : back_buffer(0), hdr_buffer(0), dsv_buffer(0){};
 
-    BackBuffer back_buffer;
-    ColorBuffer hdr_buffer;
-    DepthBuffer dsv_buffer;
+    BackBuffer *back_buffer;
+    ColorBuffer *hdr_buffer;
+    DepthBuffer *dsv_buffer;
 };
 
 } // namespace graphics

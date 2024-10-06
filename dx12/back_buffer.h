@@ -10,22 +10,13 @@ class BackBuffer {
     BackBuffer()
         : index_(), rtv_handle_(), rtv_heap_(0), current_index_(0),
           current_state_(){};
-    void Create(ID3D12Device *device, DynamicDescriptorHeap *heap,
-                IDXGISwapChain1 *swap_chain) {
-        rtv_heap_ = heap;
-
-        for (UINT n = 0; n < SWAP_CHAIN_BUFFER_COUNT; n++) {
-            ASSERT_FAILED(
-                swap_chain->GetBuffer(n, IID_PPV_ARGS(&resource_[n])));
-            current_state_[n] = D3D12_RESOURCE_STATE_COMMON;
-        }
-
-        for (UINT n = 0; n < SWAP_CHAIN_BUFFER_COUNT; n++) {
-            rtv_heap_->AllocateDescriptor(rtv_handle_[n], index_[n]);
-            device->CreateRenderTargetView(resource_[n].Get(), nullptr,
-                                           rtv_handle_[n]);
-        }
+    static BackBuffer *Create(ID3D12Device *device, DynamicDescriptorHeap *heap,
+                              IDXGISwapChain1 *swap_chain) {
+        auto back_buffer = new BackBuffer();
+        back_buffer->Initialize(device, heap, swap_chain);
+        return back_buffer;
     };
+
 
     D3D12_CPU_DESCRIPTOR_HANDLE GetCpuHandle() {
         return rtv_handle_[current_index_];
@@ -45,6 +36,22 @@ class BackBuffer {
     };
 
   private:
+    void Initialize(ID3D12Device *device, DynamicDescriptorHeap *heap,
+                IDXGISwapChain1 *swap_chain) {
+        rtv_heap_ = heap;
+
+        for (UINT n = 0; n < SWAP_CHAIN_BUFFER_COUNT; n++) {
+            ASSERT_FAILED(
+                swap_chain->GetBuffer(n, IID_PPV_ARGS(&resource_[n])));
+            current_state_[n] = D3D12_RESOURCE_STATE_COMMON;
+        }
+
+        for (UINT n = 0; n < SWAP_CHAIN_BUFFER_COUNT; n++) {
+            rtv_heap_->AllocateDescriptor(rtv_handle_[n], index_[n]);
+            device->CreateRenderTargetView(resource_[n].Get(), nullptr,
+                                           rtv_handle_[n]);
+        }
+    };
     DynamicDescriptorHeap *rtv_heap_;
     ComPtr<ID3D12Resource> resource_[SWAP_CHAIN_BUFFER_COUNT];
     UINT index_[SWAP_CHAIN_BUFFER_COUNT];

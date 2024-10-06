@@ -95,7 +95,8 @@ class ToneMappingPSO : public GraphicsPSO {
                                            (UINT)common::env::screen_width,
                                            (UINT)common::env::screen_height);
 
-        context->SetRenderTargetView(GpuBuffer::Instance().GetDisplay());
+        context->SetRenderTargetView(
+            GpuBuffer::Instance().GetDisplay()->GetCpuHandle());
 
         context->SetRootSignature(root_signature);
         context->SetPipelineState(pipeline_state);

@@ -17,10 +17,11 @@ class ClearBufferNode : public common::BehaviorActionNode {
         context->TransitionResource(GpuBuffer::Instance().GetHDR(),
                                     D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
-        context->ClearRenderTargetView(GpuBuffer::Instance().GetHDR());
-        context->ClearDepthStencilView(GpuBuffer::Instance().GetDSV(),
-                                       D3D12_CLEAR_FLAG_DEPTH |
-                                           D3D12_CLEAR_FLAG_STENCIL);
+        context->ClearRenderTargetView(
+            GpuBuffer::Instance().GetHDR()->GetRtvHandle());
+        context->ClearDepthStencilView(
+            GpuBuffer::Instance().GetDSV()->GetDsvHandle(),
+            D3D12_CLEAR_FLAG_DEPTH | D3D12_CLEAR_FLAG_STENCIL);
 
         GpuCore::Instance().GetCommand()->Finish(context);
 

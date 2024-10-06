@@ -59,7 +59,8 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
                 0, 0, (UINT)common::env::screen_width,
                 (UINT)common::env::screen_height);
 
-            context->SetRenderTargetView(GpuBuffer::Instance().GetDisplay());
+            context->SetRenderTargetView(
+                GpuBuffer::Instance().GetDisplay()->GetCpuHandle());
 
             ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(),
                                           context->GetList());
@@ -76,11 +77,11 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
     }
 
   public:
-      static void Shutdown() {
-		  ImGui_ImplDX12_Shutdown();
-		  ImGui_ImplWin32_Shutdown();
-		  ImGui::DestroyContext();
-	  }
+    static void Shutdown() {
+        ImGui_ImplDX12_Shutdown();
+        ImGui_ImplWin32_Shutdown();
+        ImGui::DestroyContext();
+    }
 };
 
 } // namespace graphics

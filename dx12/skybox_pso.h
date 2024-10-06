@@ -94,8 +94,9 @@ class SolidSkyboxPSO : public GraphicsPSO {
                                            (UINT)common::env::screen_width,
                                            (UINT)common::env::screen_height);
 
-        context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
-                                     GpuBuffer::Instance().GetDSV());
+        context->SetRenderTargetView(
+            GpuBuffer::Instance().GetHDR()->GetRtvHandle(),
+            GpuBuffer::Instance().GetDSV()->GetDsvHandle());
 
         context->SetRootSignature(root_signature);
         context->SetPipelineState(pipeline_state);
@@ -218,8 +219,9 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
                                            (UINT)common::env::screen_width,
                                            (UINT)common::env::screen_height);
 
-        context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
-                                     GpuBuffer::Instance().GetDSV());
+        context->SetRenderTargetView(
+            GpuBuffer::Instance().GetHDR()->GetRtvHandle(),
+            GpuBuffer::Instance().GetDSV()->GetDsvHandle());
 
         context->SetRootSignature(root_signature);
         context->SetPipelineState(pipeline_state);

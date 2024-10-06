@@ -105,8 +105,9 @@ class SolidMeshPSO : public GraphicsPSO {
             context->SetViewportAndScissorRect(
                 0, 0, (UINT)common::env::screen_width,
                 (UINT)common::env::screen_height);
-            context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
-                                         GpuBuffer::Instance().GetDSV());
+            context->SetRenderTargetView(
+                GpuBuffer::Instance().GetHDR()->GetRtvHandle(),
+                GpuBuffer::Instance().GetDSV()->GetDsvHandle());
 
             context->SetRootSignature(root_signature);
             context->SetPipelineState(pipeline_state);
@@ -245,8 +246,9 @@ class ReflectSolidMeshPSO : public GraphicsPSO {
             context->SetViewportAndScissorRect(
                 0, 0, (UINT)common::env::screen_width,
                 (UINT)common::env::screen_height);
-            context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
-                                         GpuBuffer::Instance().GetDSV());
+            context->SetRenderTargetView(
+                GpuBuffer::Instance().GetHDR()->GetRtvHandle(),
+                GpuBuffer::Instance().GetDSV()->GetDsvHandle());
 
             context->SetRootSignature(root_signature);
             context->SetPipelineState(pipeline_state);
@@ -386,8 +388,9 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
             context->SetViewportAndScissorRect(
                 0, 0, (UINT)common::env::screen_width,
                 (UINT)common::env::screen_height);
-            context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
-                                         GpuBuffer::Instance().GetDSV());
+            context->SetRenderTargetView(
+                GpuBuffer::Instance().GetHDR()->GetRtvHandle(),
+                GpuBuffer::Instance().GetDSV()->GetDsvHandle());
 
             context->SetRootSignature(root_signature);
             context->SetPipelineState(pipeline_state);

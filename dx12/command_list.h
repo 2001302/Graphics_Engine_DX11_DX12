@@ -2,8 +2,6 @@
 #define _COMMAND_LIST
 
 #include "back_buffer.h"
-#include "color_buffer.h"
-#include "depth_buffer.h"
 #include "dynamic_descriptor_heap.h"
 #include <d3d12.h>
 #include <memory>
@@ -224,23 +222,15 @@ class GraphicsCommandContext : public CommandContext {
         command_list_->RSSetViewports(1, &viewport);
         command_list_->RSSetScissorRects(1, &scissorRect);
     };
-    void SetRenderTargetView(BackBuffer *renderTarget) {
-        auto rtv = renderTarget->GetCpuHandle();
+    void SetRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE rtv) {
         command_list_->OMSetRenderTargets(1, &rtv, false, nullptr);
     };
-    void SetRenderTargetView(ColorBuffer *renderTarget) {
-        auto rtv = renderTarget->GetRtvHandle();
-        command_list_->OMSetRenderTargets(1, &rtv, false, nullptr);
-    };
-    void SetRenderTargetView(DepthBuffer *depthStencil) {
-        auto dsv = depthStencil->GetDsvHandle();
-        command_list_->OMSetRenderTargets(0, nullptr, false, &dsv);
-    };
-    void SetRenderTargetView(ColorBuffer *renderTarget,
-                             DepthBuffer *depthStencil) {
-        auto rtv = renderTarget->GetRtvHandle();
-        auto dsv = depthStencil->GetDsvHandle();
+    void SetRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE rtv,
+                             D3D12_CPU_DESCRIPTOR_HANDLE dsv) {
         command_list_->OMSetRenderTargets(1, &rtv, false, &dsv);
+    };
+    void SetDepthStencilView(D3D12_CPU_DESCRIPTOR_HANDLE dsv) {
+        command_list_->OMSetRenderTargets(0, nullptr, false, &dsv);
     };
     void
     SetGraphicsRootDescriptorTable(UINT root_parameter_index,
@@ -260,20 +250,13 @@ class GraphicsCommandContext : public CommandContext {
     void DrawIndexedInstanced(UINT index_count) {
         command_list_->DrawIndexedInstanced(index_count, 0, 0, 0, 0);
     };
-    void ClearRenderTargetView(BackBuffer *renderTarget) {
+    void ClearRenderTargetView(D3D12_CPU_DESCRIPTOR_HANDLE rtv) {
         const float clearColor[4] = {0.0f, 0.0f, 0.0f, 1.0f};
-        command_list_->ClearRenderTargetView(renderTarget->GetCpuHandle(),
-                                             clearColor, 0, nullptr);
+        command_list_->ClearRenderTargetView(rtv, clearColor, 0, nullptr);
     };
-    void ClearRenderTargetView(ColorBuffer *renderTarget) {
-        command_list_->ClearRenderTargetView(renderTarget->GetRtvHandle(),
-                                             renderTarget->ClearColor(), 0,
-                                             nullptr);
-    };
-    void ClearDepthStencilView(DepthBuffer *depthStencil,
+    void ClearDepthStencilView(D3D12_CPU_DESCRIPTOR_HANDLE dsv,
                                D3D12_CLEAR_FLAGS flag) {
-        command_list_->ClearDepthStencilView(depthStencil->GetDsvHandle(), flag,
-                                             1.0f, 0, 0, nullptr);
+        command_list_->ClearDepthStencilView(dsv, flag, 1.0f, 0, 0, nullptr);
     };
 };
 

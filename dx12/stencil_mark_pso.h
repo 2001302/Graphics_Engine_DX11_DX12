@@ -95,8 +95,9 @@ class StencilMarkPSO : public GraphicsPSO {
             context->SetViewportAndScissorRect(
                 0, 0, (UINT)common::env::screen_width,
                 (UINT)common::env::screen_height);
-            context->SetRenderTargetView(GpuBuffer::Instance().GetHDR(),
-                                         GpuBuffer::Instance().GetDSV());
+            context->SetRenderTargetView(
+                GpuBuffer::Instance().GetHDR()->GetRtvHandle(),
+                GpuBuffer::Instance().GetDSV()->GetDsvHandle());
             context->GetList()->OMSetStencilRef(1);
             context->SetRootSignature(root_signature);
             context->SetPipelineState(pipeline_state);
@@ -121,8 +122,9 @@ class StencilMarkPSO : public GraphicsPSO {
             context->GetList()->IASetIndexBuffer(&mesh->index_buffer_view);
             context->GetList()->DrawIndexedInstanced(mesh->index_count, 1, 0, 0,
                                                      0);
-            context->ClearDepthStencilView(GpuBuffer::Instance().GetDSV(),
-                                           D3D12_CLEAR_FLAG_DEPTH);
+            context->ClearDepthStencilView(
+                GpuBuffer::Instance().GetDSV()->GetDsvHandle(),
+                D3D12_CLEAR_FLAG_DEPTH);
         }
 
         GpuCore::Instance().GetCommand()->Finish(context);

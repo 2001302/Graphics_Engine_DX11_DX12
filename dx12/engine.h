@@ -7,6 +7,7 @@
 #include <behavior_tree_builder.h>
 #include <platform.h>
 #include <setting_ui.h>
+#include <time_stamp.h>
 
 namespace graphics {
 
@@ -23,7 +24,8 @@ class Engine : public common::Platform {
   private:
     std::shared_ptr<BlackBoard> black_board;
     std::unique_ptr<MessageReceiver> message_receiver;
-
+    std::unique_ptr<common::TimeStamp> time_stamp;
+        
     std::shared_ptr<common::BehaviorTreeBuilder> start_tree;
     std::shared_ptr<common::BehaviorTreeBuilder> update_tree;
     std::shared_ptr<common::BehaviorTreeBuilder> render_tree;

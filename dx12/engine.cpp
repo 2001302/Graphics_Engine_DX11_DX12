@@ -5,6 +5,7 @@ namespace graphics {
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
     message_receiver = std::make_unique<MessageReceiver>();
+    time_stamp = std::make_unique<common::TimeStamp>();
     start_tree = std::make_shared<common::BehaviorTreeBuilder>();
     update_tree = std::make_shared<common::BehaviorTreeBuilder>();
     render_tree = std::make_shared<common::BehaviorTreeBuilder>();
@@ -73,8 +74,7 @@ bool Engine::Frame() {
     // update
     {
         common::ScopeStopWatch stop_watch("Update tree");
-        black_board->conditions->delta_time =
-            ImGui::GetIO().DeltaTime; // TODO: need to be fixed
+        black_board->conditions->delta_time = time_stamp->DeltaTime();
         black_board->conditions->stage_type = EnumStageType::eUpdate;
         update_tree->Run();
     }
@@ -112,7 +112,7 @@ bool Engine::Stop() {
 
     return true;
 }
-void Engine::OnPrepare(BlackBoard* black_board) {
+void Engine::OnPrepare(BlackBoard *black_board) {
 
     auto condition = black_board->conditions.get();
     auto targets = black_board->targets.get();
@@ -190,7 +190,7 @@ void Engine::OnPrepare(BlackBoard* black_board) {
         targets->ground = std::make_shared<ReflectableModel>();
         targets->ground->model = std::make_shared<Model>();
         targets->ground->model->AddComponent(EnumComponentType::eRenderer,
-                                              component);
+                                             component);
 
         targets->ground->mirror_plane =
             DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));

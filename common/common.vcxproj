@@ -54,6 +54,7 @@
     <ClInclude Include="dataBlock.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
+    <ClInclude Include="time_stamp.h" />
     <ClInclude Include="id_generator.h" />
     <ClInclude Include="ImGui\imconfig.h" />
     <ClInclude Include="ImGui\imgui.h" />

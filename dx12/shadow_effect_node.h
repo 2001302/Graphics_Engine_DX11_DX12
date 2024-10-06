@@ -20,7 +20,7 @@ class ShadowEffectNode : public common::BehaviorActionNode {
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
-            // pso
+            // pipeline state object
             shadow_map_PSO = std::make_shared<ShadowMappingPSO>();
             shadow_map_PSO->Initialize();
 

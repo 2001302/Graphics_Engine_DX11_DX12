@@ -86,10 +86,10 @@ class ShadowMappingPSO : public GraphicsPSO {
         context->SetDescriptorHeaps(
             std::vector{GpuCore::Instance().GetHeap().View(),
                         GpuCore::Instance().GetHeap().Sampler()});
-        context->ClearDepthStencilView(depth_buffer->GetDsvHandle(),
-                                       D3D12_CLEAR_FLAG_DEPTH);
         context->TransitionResource(depth_buffer,
                                     D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
+        context->ClearDepthStencilView(depth_buffer->GetDsvHandle(),
+                                       D3D12_CLEAR_FLAG_DEPTH);
 
         for (auto &object : objects) {
             auto mesh_renderer = (MeshRenderer *)object.second->GetComponent(
@@ -128,8 +128,11 @@ class ShadowMappingPSO : public GraphicsPSO {
                                                          0, 0, 0);
             }
         }
-        context->TransitionResource(depth_buffer,
-                                    D3D12_RESOURCE_STATE_DEPTH_READ, true);
+        context->TransitionResource(
+            depth_buffer,
+            D3D12_RESOURCE_STATE_NON_PIXEL_SHADER_RESOURCE |
+                D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+            true);
         GpuCore::Instance().GetCommand()->Finish(context);
     };
 };

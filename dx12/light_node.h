@@ -34,32 +34,6 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                 condition->global_consts.GetCpu().lights[2].type = LIGHT_OFF;
             }
 
-            //{
-            //    for (int i = 0; i < MAX_LIGHTS; i++) {
-            //        MeshData sphere =
-            //            GeometryGenerator::MakeSphere(1.0f, 20, 20);
-
-            //        auto renderer =
-            //            std::make_shared<MeshRenderer>(std::vector{sphere});
-
-            //        renderer->UpdateWorldRow(Matrix::CreateTranslation(
-            //            condition->global_consts.GetCpu().lights[i].position));
-            //        renderer->material_consts.GetCpu().albedoFactor =
-            //            Vector3(0.0f);
-            //        renderer->material_consts.GetCpu().emissionFactor =
-            //            Vector3(1.0f, 1.0f, 0.0f);
-            //        renderer->cast_shadow =
-            //            false;
-
-            //        if (condition->global_consts.GetCpu().lights[i].type == 0)
-            //            renderer->is_visible = false;
-
-            //        light_spheres[i] = std::make_shared<Model>();
-            //        light_spheres[i]->AddComponent(EnumComponentType::eRenderer,
-            //                                       renderer);
-            //    }
-            //}
-
             break;
         }
         case EnumStageType::eUpdate: {
@@ -79,37 +53,10 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                 condition->global_consts.GetCpu().lights[1].position;
             condition->global_consts.GetCpu().lights[1].direction.Normalize();
 
-            // for (int i = 0; i < MAX_LIGHTS; i++) {
-            //     auto renderer = (MeshRenderer
-            //     *)light_spheres[i]->GetComponent(
-            //         EnumComponentType::eRenderer);
-
-            //    renderer->UpdateWorldRow(
-            //        Matrix::CreateScale((std::max)(
-            //            0.01f,
-            //            condition->global_consts.GetCpu().lights[i].radius)) *
-            //        Matrix::CreateTranslation(
-            //            condition->global_consts.GetCpu().lights[i].position));
-            //}
-
-            // for (auto &i : light_spheres) {
-            //     auto renderer = (MeshRenderer *)i->GetComponent(
-            //         EnumComponentType::eRenderer);
-            //     renderer->UpdateConstantBuffers();
-            // }
             break;
         }
         case EnumStageType::eRender: {
 
-            // dx11::Util::SetPipelineState(
-            //     condition->draw_wire ? dx11::pso::defaultWirePSO
-            //                            : dx11::pso::defaultSolidPSO);
-            // dx11::Util::SetGlobalConsts(condition->global_consts_GPU);
-            // for (auto &i : light_spheres) {
-            //    auto renderer = (MeshRenderer *)i->GetComponent(
-            //        EnumComponentType::eRenderer);
-            //    renderer->Render();
-            //}
             break;
         }
         default:

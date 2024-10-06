@@ -183,6 +183,9 @@
     <ClInclude Include="ImGui\imgui_impl_dx11.h">
       <Filter>Gui\ImGui</Filter>
     </ClInclude>
+    <ClInclude Include="time_stamp.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="BehaviorTree">

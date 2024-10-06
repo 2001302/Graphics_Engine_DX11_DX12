@@ -147,8 +147,8 @@ class GlobalResourceNode : public common::BehaviorActionNode {
                 std::move(brdf)};
 
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                tex.push_back(std::move(
-                    Texture2D::Create(1024, 1024, DXGI_FORMAT_R8G8B8A8_UNORM)));
+                tex.push_back(std::move(DepthBuffer::Create(
+                    1024, 1024, DXGI_FORMAT_D24_UNORM_S8_UINT)));
             }
 
             condition->shared_texture = new GpuResourceList(tex);

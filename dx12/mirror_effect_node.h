@@ -37,15 +37,20 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 std::make_shared<MirrorBlendSolidMeshPSO>();
             mirror_blend_solid_PSO->Initialize();
 
+            mirror_mesh_solid_PSO = std::make_shared<SolidMeshPSO>();
+            mirror_mesh_solid_PSO->Initialize();
+
+            mirror_mesh_wire_PSO = std::make_shared<WireMeshPSO>();
+            mirror_mesh_wire_PSO->Initialize();
             // global const
             reflect_global_consts.Initialize();
 
             // model
             auto component =
-                (MeshRenderer *)targets->ground->mirror->GetComponent(
-                EnumComponentType::eRenderer);
+                (MeshRenderer *)targets->ground->model->GetComponent(
+                    EnumComponentType::eRenderer);
             component->UpdateConstantBuffers();
-            
+
             break;
         }
         case EnumStageType::eUpdate: {
@@ -64,6 +69,14 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 reflect_global_consts.GetCpu().viewProj.Invert();
 
             reflect_global_consts.Upload();
+
+            //mirror object
+            {
+                auto component =
+                    (MeshRenderer *)targets->ground->model->GetComponent(
+                        EnumComponentType::eRenderer);
+                component->UpdateConstantBuffers();
+            }
             break;
         }
         case EnumStageType::eRender: {
@@ -74,10 +87,10 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 // 1.stencilMaskPSO
                 {
                     auto component =
-                        (MeshRenderer *)targets->ground->mirror->GetComponent(
+                        (MeshRenderer *)targets->ground->model->GetComponent(
                             EnumComponentType::eRenderer);
                     stencil_mark_PSO->Render(
-                        condition->shared_texture, condition->shared_sampler,
+                        condition->skybox_texture, condition->shared_sampler,
                         condition->global_consts.Get(), component);
                 }
 
@@ -88,7 +101,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                             EnumComponentType::eRenderer);
 
                         reflect_mesh_solid_PSO->Render(
-                            condition->shared_texture,
+                            condition->skybox_texture,
                             condition->shared_sampler,
                             reflect_global_consts.Get(), component);
                     }
@@ -101,18 +114,28 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                             EnumComponentType::eRenderer);
 
                     reflect_skybox_solid_PSO->Render(
-                        condition->shared_sampler, condition->shared_texture,
+                        condition->shared_sampler, condition->skybox_texture,
                         reflect_global_consts.Get(), component);
                 }
 
                 // 4.mirrorBlendSolidPSO
                 {
                     auto component =
-                        (MeshRenderer *)targets->ground->mirror->GetComponent(
+                        (MeshRenderer *)targets->ground->model->GetComponent(
                             EnumComponentType::eRenderer);
                     mirror_blend_solid_PSO->Render(
-                        condition->shared_texture, condition->shared_sampler,
+                        condition->skybox_texture, condition->shared_sampler,
                         reflect_global_consts.Get(), component);
+                }
+            } else {
+                {
+                    auto component =
+                        (MeshRenderer *)targets->ground->model->GetComponent(
+                            EnumComponentType::eRenderer);
+
+                    mirror_mesh_solid_PSO->Render(
+                        condition->skybox_texture, condition->shared_sampler,
+                        condition->global_consts.Get(), component);
                 }
             }
             break;
@@ -133,6 +156,8 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
     std::shared_ptr<WireReflectSkyboxPSO> reflect_skybox_wire_PSO;
     std::shared_ptr<MirrorBlendSolidMeshPSO> mirror_blend_solid_PSO;
     std::shared_ptr<WireMirrorBlendMeshPSO> mirror_blend_wire_PSO;
+    std::shared_ptr<SolidMeshPSO> mirror_mesh_solid_PSO;
+    std::shared_ptr<WireMeshPSO> mirror_mesh_wire_PSO;
 };
 } // namespace graphics
 

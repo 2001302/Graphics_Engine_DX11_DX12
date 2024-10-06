@@ -9,6 +9,7 @@
 #include "mirror_effect_node.h"
 #include "skybox_node.h"
 #include "tone_mapping_node.h"
+#include "shadow_effect_node.h"
 
 namespace graphics {
 namespace node {
@@ -25,6 +26,7 @@ auto resolve_buffer = std::make_shared<ResolveBuffer>();
 auto tone_mapping = std::make_shared<ToneMappingNodeInvoker>();
 auto skybox_node = std::make_shared<SkyBoxNodeInvoker>();
 auto mirror_effect_node = std::make_shared<MirrorEffectNodeInvoker>();
+auto shadow_effect_node = std::make_shared<ShadowEffectNode>();
 
 } // namespace node
 

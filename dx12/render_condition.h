@@ -24,9 +24,9 @@ class RenderCondition : public common::IInfo {
           stage_type(EnumStageType::eInitialize), shared_sampler(0) {}
     ~RenderCondition() {
 
-        if (shared_texture) {
-            delete shared_texture;
-            shared_texture = 0;
+        if (skybox_texture) {
+            delete skybox_texture;
+            skybox_texture = 0;
         }
         if (shared_sampler) {
             delete shared_sampler;
@@ -34,7 +34,8 @@ class RenderCondition : public common::IInfo {
         }
     }
 
-    GpuResourceList *shared_texture; // t10~t16
+    GpuResourceList *skybox_texture; // t10~t13
+    GpuResourceList *shadow_texture; // t14~t16
     SamplerState *shared_sampler;
     ConstantBuffer<GlobalConstants> global_consts;
 

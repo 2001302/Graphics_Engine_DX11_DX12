@@ -41,7 +41,7 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
                 EnumComponentType::eRenderer);
 
             skyboxPSO->Render(condition->shared_sampler,
-                              condition->shared_texture,
+                              condition->skybox_texture,
                               condition->global_consts.Get(), component);
             break;
         }

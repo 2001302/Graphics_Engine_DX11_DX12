@@ -140,18 +140,18 @@ class GlobalResourceNode : public common::BehaviorActionNode {
                 L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds");
             auto brdf = TextureCube::Create(
                 L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds");
-            auto shadow = new DepthBuffer[MAX_LIGHTS];
 
-            std::vector<GpuResource *> tex = {
+            std::vector<GpuResource *> skybox = {
                 std::move(env), std::move(specular), std::move(diffuse),
                 std::move(brdf)};
+            condition->skybox_texture = new GpuResourceList(skybox);
 
+            std::vector<GpuResource *> shadow = {};
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                tex.push_back(std::move(DepthBuffer::Create(
+                shadow.push_back(std::move(DepthBuffer::Create(
                     1024, 1024, DXGI_FORMAT_D24_UNORM_S8_UINT)));
             }
-
-            condition->shared_texture = new GpuResourceList(tex);
+            condition->shadow_texture = new GpuResourceList(shadow);
 
             std::vector<D3D12_SAMPLER_DESC> sampler_desc{
                 sampler::linearWrapSS,  sampler::linearClampSS,

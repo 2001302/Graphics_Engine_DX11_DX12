@@ -30,6 +30,7 @@ bool Engine::Start() {
         ->Excute(node::light_node)
         ->Excute(node::game_object_node)
         ->Excute(node::skybox_node)
+        ->Excute(node::shadow_effect_node)
         ->Excute(node::mirror_effect_node)
         ->Excute(node::tone_mapping)
         ->Excute(node::gui_node)
@@ -44,6 +45,7 @@ bool Engine::Start() {
         ->Excute(node::global_resource_node)
         ->Excute(node::global_constant_node)
         ->Excute(node::game_object_node)
+        ->Excute(node::shadow_effect_node)
         ->Excute(node::mirror_effect_node)
     ->Close();
      
@@ -51,6 +53,7 @@ bool Engine::Start() {
     render_tree->Build(black_board.get())
     ->Sequence()
         ->Excute(node::clear_buffer)
+        ->Excute(node::shadow_effect_node)
         ->Excute(node::game_object_node)
         ->Excute(node::skybox_node)
         ->Excute(node::mirror_effect_node)
@@ -185,8 +188,8 @@ void Engine::OnPrepare(BlackBoard* black_board) {
                                   Matrix::CreateTranslation(position));
 
         targets->ground = std::make_shared<ReflectableModel>();
-        targets->ground->mirror = std::make_shared<Model>();
-        targets->ground->mirror->AddComponent(EnumComponentType::eRenderer,
+        targets->ground->model = std::make_shared<Model>();
+        targets->ground->model->AddComponent(EnumComponentType::eRenderer,
                                               component);
 
         targets->ground->mirror_plane =

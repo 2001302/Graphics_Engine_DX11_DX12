@@ -14,9 +14,9 @@ class ShadowMappingPSO : public GraphicsPSO {
         CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
         samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
 
-        // t10 ~ t16
+        // t10 ~ t13
         CD3DX12_DESCRIPTOR_RANGE1 textureRange;
-        textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
+        textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 10);
 
         CD3DX12_ROOT_PARAMETER1 rootParameters[5] = {};
         // Common.hlsli : s0~s6,t10~t16,b0~b2
@@ -77,53 +77,59 @@ class ShadowMappingPSO : public GraphicsPSO {
     };
     void Render(GpuResourceList *shared_texture, SamplerState *sampler_state,
                 ComPtr<ID3D12Resource> global_consts,
-                MeshRenderer *mesh_renderer, DepthBuffer *depth_buffer) {
+                std::map<int /*id*/, std::shared_ptr<Model>> objects,
+                DepthBuffer *depth_buffer) {
 
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
                 L"ShadowMapping");
-
         context->SetDescriptorHeaps(
             std::vector{GpuCore::Instance().GetHeap().View(),
                         GpuCore::Instance().GetHeap().Sampler()});
-
-        context->TransitionResource(GpuBuffer::Instance().GetHDR(),
-                                    D3D12_RESOURCE_STATE_RENDER_TARGET, true);
-
         context->ClearDepthStencilView(depth_buffer->GetDsvHandle(),
                                        D3D12_CLEAR_FLAG_DEPTH);
-        context->SetViewportAndScissorRect(0, 0,
-                                           (UINT)common::env::screen_width,
-                                           (UINT)common::env::screen_height);
-        context->SetDepthStencilView(depth_buffer->GetDsvHandle());
+        context->TransitionResource(depth_buffer,
+                                    D3D12_RESOURCE_STATE_DEPTH_WRITE, true);
 
-        context->SetRootSignature(root_signature);
-        context->SetPipelineState(pipeline_state);
+        for (auto &object : objects) {
+            auto mesh_renderer = (MeshRenderer *)object.second->GetComponent(
+                EnumComponentType::eRenderer);
+            context->SetViewportAndScissorRect(0, 0,
+                                               (UINT)depth_buffer->GetWidth(),
+                                               (UINT)depth_buffer->GetHeight());
+            context->SetDepthStencilView(depth_buffer->GetDsvHandle());
 
-        for (auto mesh : mesh_renderer->GetMeshes()) {
+            context->SetRootSignature(root_signature);
+            context->SetPipelineState(pipeline_state);
 
-            context->GetList()->SetGraphicsRootDescriptorTable(
-                0, sampler_state->GetGpuHandle());
-            // global texture
-            context->GetList()->SetGraphicsRootDescriptorTable(
-                1, shared_texture->GetGpuHandle());
-            context->GetList()->SetGraphicsRootConstantBufferView(
-                2, global_consts->GetGPUVirtualAddress());
-            context->GetList()->SetGraphicsRootConstantBufferView(
-                3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
-            context->GetList()->SetGraphicsRootConstantBufferView(
-                4,
-                mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
+            for (auto mesh : mesh_renderer->GetMeshes()) {
 
-            context->GetList()->IASetPrimitiveTopology(
-                D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-            context->GetList()->IASetVertexBuffers(0, 1,
-                                                   &mesh->vertex_buffer_view);
-            context->GetList()->IASetIndexBuffer(&mesh->index_buffer_view);
-            context->GetList()->DrawIndexedInstanced(mesh->index_count, 1, 0, 0,
-                                                     0);
+                context->GetList()->SetGraphicsRootDescriptorTable(
+                    0, sampler_state->GetGpuHandle());
+                context->GetList()->SetGraphicsRootDescriptorTable(
+                    1, shared_texture->GetGpuHandle());
+                context->GetList()->SetGraphicsRootConstantBufferView(
+                    2, global_consts->GetGPUVirtualAddress());
+                context->GetList()->SetGraphicsRootConstantBufferView(
+                    3,
+                    mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
+                context->GetList()->SetGraphicsRootConstantBufferView(
+                    4, mesh_renderer->MaterialConsts()
+                           .Get()
+                           ->GetGPUVirtualAddress());
+
+                context->GetList()->IASetPrimitiveTopology(
+                    D3D12_PRIMITIVE_TOPOLOGY::
+                        D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+                context->GetList()->IASetVertexBuffers(
+                    0, 1, &mesh->vertex_buffer_view);
+                context->GetList()->IASetIndexBuffer(&mesh->index_buffer_view);
+                context->GetList()->DrawIndexedInstanced(mesh->index_count, 1,
+                                                         0, 0, 0);
+            }
         }
-
+        context->TransitionResource(depth_buffer,
+                                    D3D12_RESOURCE_STATE_DEPTH_READ, true);
         GpuCore::Instance().GetCommand()->Finish(context);
     };
 };

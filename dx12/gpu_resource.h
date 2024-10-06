@@ -34,6 +34,7 @@ class GpuResourceList {
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
         return resources_.front()->GetGpuHandle();
     };
+    GpuResource *GetResource(int index) { return resources_[index]; };
 
   private:
     std::vector<GpuResource *> resources_;

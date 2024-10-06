@@ -20,7 +20,6 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
 
-            // pso
             mesh_solid_PSO = std::make_shared<SolidMeshPSO>();
             mesh_solid_PSO->Initialize();
 
@@ -41,7 +40,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                     EnumComponentType::eRenderer);
 
                 mesh_solid_PSO->Render(
-                    condition->shared_texture, condition->shared_sampler,
+                    condition->skybox_texture, condition->shared_sampler,
                     condition->global_consts.Get(), component);
             }
 

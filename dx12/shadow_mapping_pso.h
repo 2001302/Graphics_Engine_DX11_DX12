@@ -90,11 +90,12 @@ class ShadowMappingPSO : public GraphicsPSO {
         context->TransitionResource(GpuBuffer::Instance().GetHDR(),
                                     D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
-        context->ClearDepthStencilView(depth_buffer, D3D12_CLEAR_FLAG_DEPTH);
+        context->ClearDepthStencilView(depth_buffer->GetDsvHandle(),
+                                       D3D12_CLEAR_FLAG_DEPTH);
         context->SetViewportAndScissorRect(0, 0,
                                            (UINT)common::env::screen_width,
                                            (UINT)common::env::screen_height);
-        context->SetRenderTargetView(depth_buffer);
+        context->SetDepthStencilView(depth_buffer->GetDsvHandle());
 
         context->SetRootSignature(root_signature);
         context->SetPipelineState(pipeline_state);
@@ -121,8 +122,6 @@ class ShadowMappingPSO : public GraphicsPSO {
             context->GetList()->IASetIndexBuffer(&mesh->index_buffer_view);
             context->GetList()->DrawIndexedInstanced(mesh->index_count, 1, 0, 0,
                                                      0);
-            context->ClearDepthStencilView(GpuBuffer::Instance().GetDSV(),
-                                           D3D12_CLEAR_FLAG_DEPTH);
         }
 
         GpuCore::Instance().GetCommand()->Finish(context);

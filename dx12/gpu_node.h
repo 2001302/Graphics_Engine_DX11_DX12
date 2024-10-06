@@ -140,7 +140,7 @@ class GlobalResourceNode : public common::BehaviorActionNode {
                 L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds");
             auto brdf = TextureCube::Create(
                 L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds");
-            auto shadow = new Texture2D[MAX_LIGHTS];
+            auto shadow = new DepthBuffer[MAX_LIGHTS];
 
             std::vector<GpuResource *> tex = {
                 std::move(env), std::move(specular), std::move(diffuse),

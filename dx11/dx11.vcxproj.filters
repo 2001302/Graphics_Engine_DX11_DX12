@@ -242,16 +242,7 @@
     <FxCompile Include="DepthOnlyPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="NormalPS.hlsl">
-      <Filter>Graphics\Gpu\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="NormalVS.hlsl">
-      <Filter>Graphics\Gpu\Shader</Filter>
-    </FxCompile>
     <FxCompile Include="PostEffectsPS.hlsl">
-      <Filter>Graphics\Gpu\Shader</Filter>
-    </FxCompile>
-    <FxCompile Include="NormalGS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
     <FxCompile Include="BasicVS.hlsl">

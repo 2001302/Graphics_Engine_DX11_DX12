@@ -1,17 +1,12 @@
-#include "Common.hlsli" // 쉐이더에서도 include 사용 가능
+#include "Common.hlsli" 
 
-// Vertex Shader에서도 텍스춰 사용
 Texture2D g_heightTexture : register(t0);
 
 PixelShaderInput main(VertexShaderInput input)
 {
-    // 뷰 좌표계는 NDC이기 때문에 월드 좌표를 이용해서 조명 계산
-    
     PixelShaderInput output;
     
 #ifdef SKINNED
-    
-    // 참고 자료: Luna DX 12 교재
     
     float weights[8];
     weights[0] = input.boneWeights0.x;
@@ -37,8 +32,6 @@ PixelShaderInput main(VertexShaderInput input)
     float3 normalModel = float3(0.0f, 0.0f, 0.0f);
     float3 tangentModel = float3(0.0f, 0.0f, 0.0f);
     
-    // Uniform Scaling 가정
-    // (float3x3)boneTransforms 캐스팅으로 Translation 제외
     for(int i = 0; i < 8; ++i)
     {
         float4x4 boneTransform = boneTransforms[indices[i]];
@@ -53,7 +46,6 @@ PixelShaderInput main(VertexShaderInput input)
 
 #endif
 
-    //참고: windTrunk, windLeaves 옵션도 skinnedMesh처럼 매크로 사용 가능
     if (windTrunk != 0.0)
     {
         float2 rotCenter = float2(0.0f, -0.5f);
@@ -71,10 +63,6 @@ PixelShaderInput main(VertexShaderInput input)
         float3 windVel = float3(sin(input.posModel.x * 100.0 + globalTime * 0.1)
                                 * cos(input.posModel.y * 100 + globalTime * 0.1), 0, 0)
                                 * sin(globalTime * 10.0);
-
-        // float3 coeff = windLeaves * ... ;
-        
-        // input.posModel.xyz += coeff;
     }
     
     output.posModel = input.posModel;

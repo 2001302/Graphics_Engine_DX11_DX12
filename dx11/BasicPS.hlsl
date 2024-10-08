@@ -1,22 +1,17 @@
-#include "Common.hlsli" // 쉐이더에서도 include 사용 가능
+#include "Common.hlsli" 
 #include "DiskSamples.hlsli"
 
-// 참고자료
-// https://github.com/Nadrin/PBR/blob/master/data/shaders/hlsl/pbr.hlsl
-
-// 메쉬 재질 텍스춰들 t0 부터 시작
 Texture2D albedoTex : register(t0);
 Texture2D normalTex : register(t1);
 Texture2D aoTex : register(t2);
 Texture2D metallicRoughnessTex : register(t3);
 Texture2D emissiveTex : register(t4);
 
-static const float3 Fdielectric = 0.04; // 비금속(Dielectric) 재질의 F0
+static const float3 Fdielectric = 0.04; 
 
 float3 SchlickFresnel(float3 F0, float NdotH)
 {
     return F0 + (1.0 - F0) * pow(2.0, (-5.55473 * NdotH - 6.98316) * NdotH);
-    //return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
 }
 
 struct PixelShaderOutput
@@ -28,19 +23,17 @@ float3 GetNormal(PixelShaderInput input)
 {
     float3 normalWorld = normalize(input.normalWorld);
     
-    if (useNormalMap) // NormalWorld를 교체
+    if (useNormalMap) 
     {
         float3 normal = normalTex.SampleLevel(linearWrapSampler, input.texcoord, lodBias).rgb;
-        normal = 2.0 * normal - 1.0; // 범위 조절 [-1.0, 1.0]
+        normal = 2.0 * normal - 1.0; //[-1.0, 1.0]
 
-        // OpenGL 용 노멀맵일 경우에는 y 방향을 뒤집어줍니다.
         normal.y = invertNormalMapY ? -normal.y : normal.y;
         
         float3 N = normalWorld;
         float3 T = normalize(input.tangentWorld - dot(input.tangentWorld, N) * N);
         float3 B = cross(N, T);
         
-        // matrix는 float4x4, 여기서는 벡터 변환용이라서 3x3 사용
         float3x3 TBN = float3x3(T, B, N);
         normalWorld = normalize(mul(normal, TBN));
     }
@@ -65,7 +58,7 @@ float3 SpecularIBL(float3 albedo, float3 normalWorld, float3 pixelToEye,
     float2 specularBRDF = brdfTex.SampleLevel(linearClampSampler, float2(dot(normalWorld, pixelToEye), 1.0 - roughness), 0.0f).rg;
     float3 specularIrradiance = specularIBLTex.SampleLevel(linearWrapSampler, reflect(-pixelToEye, normalWorld),
                                                             2 + roughness * 5.0f).rgb;
-    const float3 Fdielectric = 0.04; // 비금속(Dielectric) 재질의 F0
+    const float3 Fdielectric = 0.04;
     float3 F0 = lerp(Fdielectric, albedo, metallic);
 
     return (F0 * specularBRDF.x + specularBRDF.y) * specularIrradiance;
@@ -104,7 +97,6 @@ float SchlickGGX(float NdotI, float NdotO, float roughness)
     return SchlickG1(NdotI, k) * SchlickG1(NdotO, k);
 }
 
-// 참고: https://github.com/opengl-tutorials/ogl/blob/master/tutorial16_shadowmaps/ShadowMapping.fragmentshader
 float random(float3 seed, int i)
 {
     float4 seed4 = float4(seed, i);
@@ -121,10 +113,7 @@ float N2V(float ndcDepth, matrix invProj)
 
 #define NEAR_PLANE 0.1
 // #define LIGHT_WORLD_RADIUS 0.001
-#define LIGHT_FRUSTUM_WIDTH 0.34641 // <- 계산해서 찾은 값
-
-// Assuming that LIGHT_FRUSTUM_WIDTH == LIGHT_FRUSTUM_HEIGHT
-// #define LIGHT_RADIUS_UV (LIGHT_WORLD_RADIUS / LIGHT_FRUSTUM_WIDTH)
+#define LIGHT_FRUSTUM_WIDTH 0.34641 
 
 float PCF_Filter(float2 uv, float zReceiverNdc, float filterRadiusUV, Texture2D shadowMap)
 {
@@ -137,8 +126,6 @@ float PCF_Filter(float2 uv, float zReceiverNdc, float filterRadiusUV, Texture2D 
     }
     return sum / 64;
 }
-
-// void Func(out float a) <- c++의 void Func(float& a) 처럼 출력값 저장 가능
 
 void FindBlocker(out float avgBlockerDepthView, out float numBlockers, float2 uv,
                  float zReceiverView, Texture2D shadowMap, matrix invProj, float lightRadiusWorld)
@@ -217,31 +204,19 @@ float3 LightRadiance(Light light, float3 representativePoint, float3 posWorld, f
 
     if (light.type & LIGHT_SHADOW)
     {
-        const float nearZ = 0.01; // 카메라 설정과 동일
+        const float nearZ = 0.01; //camera setting
         
-        // 1. Project posWorld to light screen    
         float4 lightScreen = mul(float4(posWorld, 1.0), light.viewProj);
         lightScreen.xyz /= lightScreen.w;
         
-        // 2. 카메라(광원)에서 볼 때의 텍스춰 좌표 계산
         float2 lightTexcoord = float2(lightScreen.x, -lightScreen.y);
         lightTexcoord += 1.0;
         lightTexcoord *= 0.5;
         
-        // 3. 쉐도우맵에서 값 가져오기
-        //float depth = shadowMap.Sample(shadowPointSampler, lightTexcoord).r;
-        
-        // 4. 가려져 있다면 그림자로 표시
-        //if (depth + 0.001 < lightScreen.z)
-          //  shadowFactor = 0.0;
-        
         uint width, height, numMips;
         shadowMap.GetDimensions(0, width, height, numMips);
         
-        // float dx = 5.0 / (float) width;
-        // shadowFactor = PCF_Filter(lightTexcoord.xy, lightScreen.z - 0.001, dx, shadowMap);
-        
-        float radiusScale = 0.5; // 광원의 반지름을 키웠을 때 깨지는 것 방지
+        float radiusScale = 0.5; 
         shadowFactor = PCSS(lightTexcoord, lightScreen.z - 0.001, shadowMap, light.invProj, light.radius * radiusScale);
     }
 
@@ -272,7 +247,6 @@ PixelShaderOutput main(PixelShaderInput input)
     
     float3 directLighting = float3(0, 0, 0);
 
-    // 임시로 unroll 사용
     [unroll] // warning X3550: sampler array index must be a literal expression, forcing loop to unroll
     for (int i = 0; i < MAX_LIGHTS; ++i)
     {
@@ -294,7 +268,7 @@ PixelShaderOutput main(PixelShaderInput input)
             float NdotH = max(0.0, dot(normalWorld, halfway));
             float NdotO = max(0.0, dot(normalWorld, pixelToEye));
         
-            const float3 Fdielectric = 0.04; // 비금속(Dielectric) 재질의 F0
+            const float3 Fdielectric = 0.04;
             float3 F0 = lerp(Fdielectric, albedo.rgb, metallic);
             float3 F = SchlickFresnel(F0, max(0.0, dot(halfway, pixelToEye)));
             float3 kd = lerp(float3(1, 1, 1) - F, float3(0, 0, 0), metallic);
@@ -310,14 +284,6 @@ PixelShaderOutput main(PixelShaderInput input)
 
             float3 radiance = LightRadiance(lights[i], representativePoint, input.posWorld, normalWorld, shadowMaps[i]);
             
-            /*if (i == 0)
-                radiance = LightRadiance(lights[i], input.posWorld, normalWorld, shadowMap0);
-            if (i == 1)
-                radiance = LightRadiance(lights[i], input.posWorld, normalWorld, shadowMap1);
-            if (i == 2)
-                radiance = LightRadiance(lights[i], input.posWorld, normalWorld, shadowMap2);*/
-            
-            // 오류 임시 수정 (radiance가 (0,0,0)일 경우  directLighting += ... 인데도 0 벡터가 되어버림
             if (abs(dot(float3(1, 1, 1), radiance)) > 1e-5)
                 directLighting += (diffuseBRDF + specularBRDF) * radiance * NdotI;
         }

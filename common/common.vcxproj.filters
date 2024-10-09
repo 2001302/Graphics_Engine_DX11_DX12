@@ -198,6 +198,12 @@
     <ClInclude Include="model.h">
       <Filter>Structure</Filter>
     </ClInclude>
+    <ClInclude Include="object_pool.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="data_set.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="BehaviorTree">

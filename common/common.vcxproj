@@ -57,7 +57,9 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="data_set.h" />
     <ClInclude Include="model.h" />
+    <ClInclude Include="object_pool.h" />
     <ClInclude Include="time_stamp.h" />
     <ClInclude Include="id_generator.h" />
     <ClInclude Include="ImGui\imconfig.h" />

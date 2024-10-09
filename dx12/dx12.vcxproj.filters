@@ -14,9 +14,6 @@
     <ClCompile Include="camera.cpp">
       <Filter>Graphics\Model</Filter>
     </ClCompile>
-    <ClCompile Include="model.cpp">
-      <Filter>Graphics\Model</Filter>
-    </ClCompile>
     <ClCompile Include="mesh_renderer.cpp">
       <Filter>Graphics\Component</Filter>
     </ClCompile>
@@ -150,9 +147,6 @@
     <ClInclude Include="camera.h">
       <Filter>Graphics\Model</Filter>
     </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>Graphics\Model</Filter>
-    </ClInclude>
     <ClInclude Include="skybox_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
@@ -173,9 +167,6 @@
     </ClInclude>
     <ClInclude Include="camera_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="component.h">
-      <Filter>Graphics\Component</Filter>
     </ClInclude>
     <ClInclude Include="mesh_renderer.h">
       <Filter>Graphics\Component</Filter>

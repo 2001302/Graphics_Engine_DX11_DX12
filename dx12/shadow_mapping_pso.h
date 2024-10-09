@@ -77,7 +77,7 @@ class ShadowMappingPSO : public GraphicsPSO {
     };
     void Render(GpuResourceList *shared_texture, SamplerState *sampler_state,
                 ComPtr<ID3D12Resource> global_consts,
-                std::map<int /*id*/, std::shared_ptr<Model>> objects,
+                std::map<int /*id*/, std::shared_ptr<common::Model>> objects,
                 DepthBuffer *depth_buffer) {
 
         auto context =
@@ -93,7 +93,7 @@ class ShadowMappingPSO : public GraphicsPSO {
 
         for (auto &object : objects) {
             auto mesh_renderer = (MeshRenderer *)object.second->GetComponent(
-                EnumComponentType::eRenderer);
+                common::EnumComponentType::eRenderer);
             context->SetViewportAndScissorRect(0, 0,
                                                (UINT)depth_buffer->GetWidth(),
                                                (UINT)depth_buffer->GetHeight());

@@ -1,7 +1,7 @@
 #ifndef _RENDERER
 #define _RENDERER
 
-#include "component.h"
+#include <component.h>
 #include "constant_buffer.h"
 #include "geometry_generator.h"
 #include "mesh.h"
@@ -12,7 +12,7 @@
 namespace graphics {
 using Microsoft::WRL::ComPtr;
 
-class MeshRenderer : public Component {
+class MeshRenderer : public common::Component {
   public:
     MeshRenderer() {}
 

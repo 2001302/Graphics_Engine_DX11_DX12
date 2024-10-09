@@ -131,8 +131,8 @@ void Engine::OnPrepare(BlackBoard *black_board) {
         renderer->MaterialConsts().GetCpu().emission_factor = Vector3(0.0f);
         renderer->UpdateConstantBuffers();
 
-        auto obj = std::make_shared<Model>();
-        obj->AddComponent(EnumComponentType::eRenderer, renderer);
+        auto obj = std::make_shared<common::Model>();
+        obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
 
         targets->objects.insert({obj->GetEntityId(), obj});
     }
@@ -151,8 +151,8 @@ void Engine::OnPrepare(BlackBoard *black_board) {
         renderer->MaterialConsts().GetCpu().emission_factor = Vector3(0.0f);
         renderer->UpdateConstantBuffers();
 
-        auto obj = std::make_shared<Model>();
-        obj->AddComponent(EnumComponentType::eRenderer, renderer);
+        auto obj = std::make_shared<common::Model>();
+        obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
 
         targets->objects.insert({obj->GetEntityId(), obj});
     }
@@ -166,8 +166,8 @@ void Engine::OnPrepare(BlackBoard *black_board) {
         component->Initialize(base_path, file_name);
         component->UpdateConstantBuffers();
 
-        auto model = std::make_shared<Model>();
-        model->AddComponent(EnumComponentType::eRenderer, component);
+        auto model = std::make_shared<common::Model>();
+        model->AddComponent(common::EnumComponentType::eRenderer, component);
 
         targets->objects.insert({model->GetEntityId(), model});
     }
@@ -188,9 +188,9 @@ void Engine::OnPrepare(BlackBoard *black_board) {
                                   Matrix::CreateTranslation(position));
 
         targets->ground = std::make_shared<ReflectableModel>();
-        targets->ground->model = std::make_shared<Model>();
-        targets->ground->model->AddComponent(EnumComponentType::eRenderer,
-                                             component);
+        targets->ground->model = std::make_shared<common::Model>();
+        targets->ground->model->AddComponent(
+            common::EnumComponentType::eRenderer, component);
 
         targets->ground->mirror_plane =
             DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));

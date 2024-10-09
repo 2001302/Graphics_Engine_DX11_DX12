@@ -64,11 +64,11 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
             reflect_global_consts.Upload();
 
-            //mirror object
+            // mirror object
             {
                 auto component =
                     (MeshRenderer *)targets->ground->model->GetComponent(
-                        EnumComponentType::eRenderer);
+                        common::EnumComponentType::eRenderer);
                 component->UpdateConstantBuffers();
             }
             break;
@@ -82,7 +82,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 {
                     auto component =
                         (MeshRenderer *)targets->ground->model->GetComponent(
-                            EnumComponentType::eRenderer);
+                            common::EnumComponentType::eRenderer);
                     stencil_mark_PSO->Render(
                         condition->skybox_texture, condition->shared_sampler,
                         condition->global_consts.Get(), component);
@@ -92,7 +92,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 {
                     for (auto &i : targets->objects) {
                         auto component = (MeshRenderer *)i.second->GetComponent(
-                            EnumComponentType::eRenderer);
+                            common::EnumComponentType::eRenderer);
 
                         reflect_mesh_solid_PSO->Render(
                             condition->skybox_texture,
@@ -105,7 +105,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 {
                     auto component =
                         (MeshRenderer *)targets->skybox->GetComponent(
-                            EnumComponentType::eRenderer);
+                            common::EnumComponentType::eRenderer);
 
                     reflect_skybox_solid_PSO->Render(
                         condition->shared_sampler, condition->skybox_texture,
@@ -116,7 +116,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 {
                     auto component =
                         (MeshRenderer *)targets->ground->model->GetComponent(
-                            EnumComponentType::eRenderer);
+                            common::EnumComponentType::eRenderer);
                     mirror_blend_solid_PSO->Render(
                         condition->skybox_texture, condition->shared_sampler,
                         reflect_global_consts.Get(), component);
@@ -125,7 +125,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 {
                     auto component =
                         (MeshRenderer *)targets->ground->model->GetComponent(
-                            EnumComponentType::eRenderer);
+                            common::EnumComponentType::eRenderer);
 
                     mirror_mesh_solid_PSO->Render(
                         condition->skybox_texture, condition->shared_sampler,

@@ -28,7 +28,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eUpdate: {
             for (auto &i : targets->objects) {
                 auto component = (MeshRenderer *)i.second->GetComponent(
-                    EnumComponentType::eRenderer);
+                    common::EnumComponentType::eRenderer);
                 component->UpdateConstantBuffers();
             }
 
@@ -37,7 +37,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eRender: {
             for (auto &i : targets->objects) {
                 auto component = (MeshRenderer *)i.second->GetComponent(
-                    EnumComponentType::eRenderer);
+                    common::EnumComponentType::eRenderer);
 
                 mesh_solid_PSO->Render(
                     condition->skybox_texture, condition->shared_sampler,

@@ -148,7 +148,6 @@
     <ClCompile Include="mesh.cpp" />
     <ClCompile Include="mesh_renderer.cpp" />
     <ClCompile Include="message_receiver.cpp" />
-    <ClCompile Include="model.cpp" />
     <ClCompile Include="mesh_loader.cpp" />
     <ClCompile Include="gpu_resource.cpp" />
     <ClCompile Include="pipeline_state_object.cpp" />
@@ -171,7 +170,6 @@
     <ClInclude Include="command_list.h" />
     <ClInclude Include="command_manager.h" />
     <ClInclude Include="command_queue.h" />
-    <ClInclude Include="component.h" />
     <ClInclude Include="dds.h" />
     <ClInclude Include="dds_texture_loader.h" />
     <ClInclude Include="depth_buffer.h" />
@@ -204,7 +202,6 @@
     <ClInclude Include="light_node.h" />
     <ClInclude Include="mesh_renderer.h" />
     <ClInclude Include="message_receiver.h" />
-    <ClInclude Include="model.h" />
     <ClInclude Include="mesh_loader.h" />
     <ClInclude Include="render_condition.h" />
     <ClInclude Include="render_target_object.h" />

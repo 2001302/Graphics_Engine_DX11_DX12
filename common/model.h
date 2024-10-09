@@ -4,6 +4,7 @@
 #include "component.h"
 #include "node.h"
 #include <memory>
+#include <typeinfo>
 #include <unordered_map>
 
 namespace common {
@@ -11,13 +12,25 @@ class Model : public INode {
   public:
     Model(){};
     ~Model();
-    void AddComponent(EnumComponentType type,
-                      std::shared_ptr<Component> component);
-    Component *GetComponent(EnumComponentType type);
+
+    template <typename T> bool TryAdd(std::shared_ptr<T> component) {
+        if (components.contains(typeid(T).name()))
+            return false;
+        else {
+            components[typeid(T).name()] = component;
+            return true;
+        }
+    }
+    template <typename T> bool TryGet(T *&component) {
+        component = (T*)components[typeid(T).name()].get();
+        if (component == nullptr)
+            return false;
+        else
+            return true;
+    }
 
   private:
-    std::unordered_map<EnumComponentType, std::shared_ptr<Component>>
-        components;
+    std::unordered_map<const char *, std::shared_ptr<Component>> components;
 };
-} // namespace graphics
+} // namespace common
 #endif

@@ -149,7 +149,6 @@
     <ClInclude Include="black_board.h" />
     <ClInclude Include="camera_node.h" />
     <ClInclude Include="constant_buffer.h" />
-    <ClInclude Include="depth_only_node.h" />
     <ClInclude Include="gpu_node.h" />
     <ClInclude Include="graphics_common.h" />
     <ClInclude Include="graphics_pso.h" />

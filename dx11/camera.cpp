@@ -51,8 +51,7 @@ void Camera::Initialize() {
     renderer->cast_shadow = false;
 
     look_at_target = std::make_shared<common::Model>();
-    look_at_target->AddComponent(common::EnumComponentType::eRenderer,
-                                 renderer);
+    look_at_target->TryAdd(renderer);
 }
 
 void Camera::Update() {
@@ -61,17 +60,18 @@ void Camera::Update() {
     auto up = XMVector3TransformCoord(upVector, rotationMatrix);
     view = XMMatrixLookAtLH(position, lookAtVector, up);
 
-    auto renderer = (MeshRenderer *)look_at_target->GetComponent(
-        common::EnumComponentType::eRenderer);
-
-    renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
-                             Matrix::CreateTranslation(lookAtVector));
-    renderer->UpdateConstantBuffers();
+    MeshRenderer *renderer = nullptr;
+    if (look_at_target->TryGet(renderer)) {
+        renderer->UpdateWorldRow(Matrix::CreateScale(1.0f) *
+                                 Matrix::CreateTranslation(lookAtVector));
+        renderer->UpdateConstantBuffers();
+    }
 }
 
 void Camera::Draw() {
-    auto renderer = (MeshRenderer *)look_at_target->GetComponent(
-        common::EnumComponentType::eRenderer);
-    renderer->Render();
+    MeshRenderer *renderer = nullptr;
+    if (look_at_target->TryGet(renderer)) {
+        renderer->Render();
+    }
 }
 } // namespace graphics

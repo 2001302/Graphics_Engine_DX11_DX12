@@ -30,19 +30,17 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
             component->Initialize(std::vector{mesh_data});
 
             targets->skybox = std::make_shared<common::Model>();
-            targets->skybox->AddComponent(common::EnumComponentType::eRenderer,
-                                          component);
+            targets->skybox->TryAdd(component);
 
             break;
         }
         case EnumStageType::eRender: {
-
-            auto component = (MeshRenderer *)targets->skybox->GetComponent(
-                common::EnumComponentType::eRenderer);
-
-            skyboxPSO->Render(condition->shared_sampler,
-                              condition->skybox_texture,
-                              condition->global_consts.Get(), component);
+            MeshRenderer *renderer = nullptr;
+            if (targets->skybox->TryGet(renderer)) {
+                skyboxPSO->Render(condition->shared_sampler,
+                                  condition->skybox_texture,
+                                  condition->global_consts.Get(), renderer);
+            }
             break;
         }
         default:

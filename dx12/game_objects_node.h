@@ -27,21 +27,22 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eUpdate: {
             for (auto &i : targets->objects) {
-                auto component = (MeshRenderer *)i.second->GetComponent(
-                    common::EnumComponentType::eRenderer);
-                component->UpdateConstantBuffers();
+                MeshRenderer *renderer = nullptr;
+                if (i.second->TryGet(renderer)) {
+                    renderer->UpdateConstantBuffers();
+                }
             }
 
             break;
         }
         case EnumStageType::eRender: {
             for (auto &i : targets->objects) {
-                auto component = (MeshRenderer *)i.second->GetComponent(
-                    common::EnumComponentType::eRenderer);
-
-                mesh_solid_PSO->Render(
-                    condition->skybox_texture, condition->shared_sampler,
-                    condition->global_consts.Get(), component);
+                MeshRenderer *renderer = nullptr;
+                if (i.second->TryGet(renderer)) {
+                    mesh_solid_PSO->Render(
+                        condition->skybox_texture, condition->shared_sampler,
+                        condition->global_consts.Get(), renderer);
+                }
             }
 
             break;

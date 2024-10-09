@@ -129,23 +129,19 @@ class PlayerNodeInvoker : public BehaviorActionNode {
                 aniData, renderer.get(), black_board->input.get());
 
             job_context->player = std::make_shared<Model>();
-            job_context->player->AddComponent(EnumComponentType::eRenderer,
-                                              renderer);
-            job_context->player->AddComponent(EnumComponentType::eAnimator,
-                                              animator);
+            job_context->player->TryAdd(renderer);
+            job_context->player->TryAdd(animator);
 
             break;
         }
         case EnumStageType::eUpdate: {
-            auto renderer =
-                (SkinnedMeshRenderer *)job_context->player->GetComponent(
-                    EnumComponentType::eRenderer);
-            auto animator = (PlayerAnimator *)job_context->player->GetComponent(
-                EnumComponentType::eAnimator);
-
-            animator->Run(job_context->delta_time);
-
-            renderer->UpdateConstantBuffers();
+            SkinnedMeshRenderer *renderer = nullptr;
+            PlayerAnimator *animator = nullptr;
+            if (job_context->player->TryGet(renderer) &&
+                job_context->player->TryGet(animator)) {
+                animator->Run(job_context->delta_time);
+                renderer->UpdateConstantBuffers();
+            }
 
             break;
         }
@@ -153,14 +149,14 @@ class PlayerNodeInvoker : public BehaviorActionNode {
             graphics::Util::SetPipelineState(
                 job_context->draw_wire ? graphics::pipeline::skinnedWirePSO
                                        : graphics::pipeline::skinnedSolidPSO);
-            auto renderer =
-                (SkinnedMeshRenderer *)job_context->player->GetComponent(
-                    EnumComponentType::eRenderer);
-            auto animator = (PlayerAnimator *)job_context->player->GetComponent(
-                EnumComponentType::eAnimator);
 
-            animator->UploadBoneData();
-            renderer->Render();
+            SkinnedMeshRenderer *renderer = nullptr;
+            PlayerAnimator *animator = nullptr;
+            if (job_context->player->TryGet(renderer) &&
+                job_context->player->TryGet(animator)) {
+                animator->UploadBoneData();
+                renderer->Render();
+            }
 
             break;
         }

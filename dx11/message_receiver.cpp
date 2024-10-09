@@ -145,7 +145,7 @@ bool MessageReceiver::OnModelLoadRequest(RenderTargetObject *manager,
         renderer->UpdateConstantBuffers();
 
         auto obj = std::make_shared<common::Model>();
-        obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
+        obj->TryAdd(renderer);
         obj->SetName(fileName);
 
         manager->objects.insert({obj->GetEntityId(), obj});
@@ -163,7 +163,7 @@ bool MessageReceiver::OnSphereLoadRequest(RenderTargetObject *manager) {
     renderer->UpdateConstantBuffers();
 
     auto obj = std::make_shared<common::Model>();
-    obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
+    obj->TryAdd(renderer);
     obj->SetName("sphere");
 
     manager->objects.insert({obj->GetEntityId(), obj});
@@ -178,7 +178,7 @@ bool MessageReceiver::OnBoxLoadRequest(RenderTargetObject *manager) {
     renderer->UpdateConstantBuffers();
 
     auto obj = std::make_shared<common::Model>();
-    obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
+    obj->TryAdd(renderer);
     obj->SetName("box");
 
     manager->objects.insert({obj->GetEntityId(), obj});
@@ -193,7 +193,7 @@ bool MessageReceiver::OnCylinderLoadRequest(RenderTargetObject *manager) {
     renderer->UpdateConstantBuffers();
 
     auto obj = std::make_shared<common::Model>();
-    obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
+    obj->TryAdd(renderer);
     obj->SetName("box");
 
     manager->objects.insert({obj->GetEntityId(), obj});

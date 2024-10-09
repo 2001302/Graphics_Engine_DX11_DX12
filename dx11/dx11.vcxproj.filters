@@ -76,9 +76,6 @@
     <ClInclude Include="gpu_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="depth_only_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
     <ClInclude Include="player_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>

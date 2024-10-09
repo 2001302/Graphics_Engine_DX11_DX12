@@ -35,8 +35,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
             manager->ground = std::make_shared<Ground>();
             manager->ground->model = std::make_shared<common::Model>();
-            manager->ground->model->AddComponent(
-                common::EnumComponentType::eRenderer, renderer);
+            manager->ground->model->TryAdd(renderer);
 
             manager->ground->mirror_plane =
                 DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
@@ -72,12 +71,10 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 graphics::Util::UpdateBuffer(reflect_global_consts_CPU,
                                              reflect_global_consts_GPU);
             }
-
-            auto renderer =
-                (MeshRenderer *)manager->ground->mirror->GetComponent(
-                    common::EnumComponentType::eRenderer);
-
-            renderer->UpdateConstantBuffers();
+            MeshRenderer *renderer = nullptr;
+            if (manager->ground->mirror->TryGet(renderer)) {
+                renderer->UpdateConstantBuffers();
+            }
 
             break;
         }
@@ -92,69 +89,71 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     graphics::pipeline::stencilMaskPSO);
 
                 if (true) {
-                    auto renderer =
-                        (MeshRenderer *)manager->ground->mirror->GetComponent(
-                            common::EnumComponentType::eRenderer);
-                    renderer->Render();
-                }
+                    MeshRenderer *renderer = nullptr;
+                    if (manager->ground->mirror->TryGet(renderer)) {
+                        renderer->Render();
+                    }
 
-                // Mirror 3. Render the reflected objects at the mirror
-                // position.
-                graphics::Util::SetPipelineState(
-                    manager->draw_wire ? graphics::pipeline::reflectWirePSO
-                                       : graphics::pipeline::reflectSolidPSO);
-                graphics::Util::SetGlobalConsts(reflect_global_consts_GPU);
-
-                graphics::GpuCore::Instance()
-                    .device_context->ClearDepthStencilView(
-                        graphics::GpuCore::Instance().depth_stencil_view.Get(),
-                        D3D11_CLEAR_DEPTH, 1.0f, 0);
-
-                for (auto &i : manager->objects) {
-                    auto renderer = (MeshRenderer *)i.second->GetComponent(
-                        common::EnumComponentType::eRenderer);
-                    renderer->Render();
-                }
-
-                if (true) {
+                    // Mirror 3. Render the reflected objects at the mirror
+                    // position.
                     graphics::Util::SetPipelineState(
                         manager->draw_wire
-                            ? graphics::pipeline::reflectSkyboxWirePSO
-                            : graphics::pipeline::reflectSkyboxSolidPSO);
-                    auto renderer =
-                        (MeshRenderer *)manager->skybox->model->GetComponent(
-                            common::EnumComponentType::eRenderer);
-                    renderer->Render();
-                }
+                            ? graphics::pipeline::reflectWirePSO
+                            : graphics::pipeline::reflectSolidPSO);
+                    graphics::Util::SetGlobalConsts(reflect_global_consts_GPU);
 
-                if (true) {
-                    // Mirror 4. Draw the mirror itself with the 'Blend'
-                    // material
-                    graphics::Util::SetPipelineState(
-                        manager->draw_wire
-                            ? graphics::pipeline::mirrorBlendWirePSO
-                            : graphics::pipeline::mirrorBlendSolidPSO);
-                    graphics::Util::SetGlobalConsts(manager->global_consts_GPU);
-                    auto renderer =
-                        (MeshRenderer *)manager->ground->mirror->GetComponent(
-                            common::EnumComponentType::eRenderer);
-                    renderer->Render();
-                }
+                    graphics::GpuCore::Instance()
+                        .device_context->ClearDepthStencilView(
+                            graphics::GpuCore::Instance()
+                                .depth_stencil_view.Get(),
+                            D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-            } // end of if (m_mirrorAlpha < 1.0f)
-            break;
-        }
+                    for (auto &i : manager->objects) {
+                        MeshRenderer *renderer = nullptr;
+                        if (i.second->TryGet(renderer)) {
+                            renderer->Render();
+                        }
+                    }
+
+                    if (true) {
+                        graphics::Util::SetPipelineState(
+                            manager->draw_wire
+                                ? graphics::pipeline::reflectSkyboxWirePSO
+                                : graphics::pipeline::reflectSkyboxSolidPSO);
+                        MeshRenderer *renderer = nullptr;
+                        if (manager->skybox->model->TryGet(renderer)) {
+                            renderer->Render();
+                        }
+                    }
+
+                    if (true) {
+                        // Mirror 4. Draw the mirror itself with the 'Blend'
+                        // material
+                        graphics::Util::SetPipelineState(
+                            manager->draw_wire
+                                ? graphics::pipeline::mirrorBlendWirePSO
+                                : graphics::pipeline::mirrorBlendSolidPSO);
+                        graphics::Util::SetGlobalConsts(
+                            manager->global_consts_GPU);
+                        MeshRenderer *renderer = nullptr;
+                        if (manager->ground->mirror->TryGet(renderer)) {
+                            renderer->Render();
+                        }
+                    }
+
+                } // end of if (m_mirrorAlpha < 1.0f)
+                break;
+            }
         default:
             break;
         }
 
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
+            return common::EnumBehaviorTreeStatus::eSuccess;
+        }
+    };
 
     GlobalConstants reflect_global_consts_CPU;
     ComPtr<ID3D11Buffer> reflect_global_consts_GPU;
 };
-
 } // namespace graphics
-
 #endif

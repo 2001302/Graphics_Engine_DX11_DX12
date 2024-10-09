@@ -130,10 +130,11 @@ class ShadowEffectNodeInvoker : public common::BehaviorActionNode {
                     Util::SetGlobalConsts(shadow_global_consts_GPU[i]);
 
                     for (auto &i : manager->objects) {
-                        auto renderer = (MeshRenderer *)i.second->GetComponent(
-                            EnumComponentType::eRenderer);
-                        if (renderer->cast_shadow && renderer->is_visible)
-                            renderer->Render();
+                        MeshRenderer *renderer = nullptr;
+                        if (i.second->TryGet(renderer)) {
+							if (renderer->cast_shadow && renderer->is_visible)
+								renderer->Render();
+						}
                     }
                 }
             }

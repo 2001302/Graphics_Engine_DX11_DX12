@@ -38,8 +38,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 renderer->UpdateConstantBuffers();
 
                 auto obj = std::make_shared<common::Model>();
-                obj->AddComponent(common::EnumComponentType::eRenderer,
-                                  renderer);
+                obj->TryAdd(renderer);
 
                 manager->objects.insert({obj->GetEntityId(), obj});
             }
@@ -62,8 +61,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 renderer->UpdateConstantBuffers();
 
                 auto obj = std::make_shared<common::Model>();
-                obj->AddComponent(common::EnumComponentType::eRenderer,
-                                  renderer);
+                obj->TryAdd(renderer);
 
                 manager->objects.insert({obj->GetEntityId(), obj});
             }
@@ -73,9 +71,10 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eUpdate: {
 
             for (auto &i : manager->objects) {
-                auto renderer = (MeshRenderer *)i.second->GetComponent(
-                    common::EnumComponentType::eRenderer);
-                renderer->UpdateConstantBuffers();
+                MeshRenderer *renderer = nullptr;
+                if (i.second->TryGet(renderer)) {
+                    renderer->UpdateConstantBuffers();
+                }
             }
 
             break;
@@ -88,26 +87,28 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
             graphics::Util::SetGlobalConsts(manager->global_consts_GPU);
 
             for (auto &i : manager->objects) {
-                auto renderer = (MeshRenderer *)i.second->GetComponent(
-                    common::EnumComponentType::eRenderer);
-                renderer->Render();
+                MeshRenderer *renderer = nullptr;
+                if (i.second->TryGet(renderer)) {
+					renderer->Render();
+				}
             }
 
             // If there is no need to draw mirror reflections, draw only the
             // opaque mirror
             if (manager->ground->mirror_alpha == 1.0f) {
-                auto renderer =
-                    (MeshRenderer *)manager->ground->mirror->GetComponent(
-                        common::EnumComponentType::eRenderer);
-                renderer->Render();
+                MeshRenderer *renderer = nullptr;
+                if (manager->ground->mirror->TryGet(renderer)) {
+					renderer->Render();
+				}
             }
 
             graphics::Util::SetPipelineState(graphics::pipeline::normalsPSO);
             for (auto &i : manager->objects) {
-                auto renderer = (MeshRenderer *)i.second->GetComponent(
-                    common::EnumComponentType::eRenderer);
-                if (renderer->draw_normals)
-                    renderer->RenderNormals();
+                MeshRenderer *renderer = nullptr;
+                if (i.second->TryGet(renderer)) {
+					if (renderer->draw_normals)
+						renderer->RenderNormals();
+				}
             }
 
             break;

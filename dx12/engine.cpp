@@ -132,7 +132,7 @@ void Engine::OnPrepare(BlackBoard *black_board) {
         renderer->UpdateConstantBuffers();
 
         auto obj = std::make_shared<common::Model>();
-        obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
+        obj->TryAdd(renderer);
 
         targets->objects.insert({obj->GetEntityId(), obj});
     }
@@ -152,7 +152,7 @@ void Engine::OnPrepare(BlackBoard *black_board) {
         renderer->UpdateConstantBuffers();
 
         auto obj = std::make_shared<common::Model>();
-        obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
+        obj->TryAdd(renderer);
 
         targets->objects.insert({obj->GetEntityId(), obj});
     }
@@ -167,7 +167,7 @@ void Engine::OnPrepare(BlackBoard *black_board) {
         component->UpdateConstantBuffers();
 
         auto model = std::make_shared<common::Model>();
-        model->AddComponent(common::EnumComponentType::eRenderer, component);
+        model->TryAdd(component);
 
         targets->objects.insert({model->GetEntityId(), model});
     }
@@ -189,8 +189,7 @@ void Engine::OnPrepare(BlackBoard *black_board) {
 
         targets->ground = std::make_shared<ReflectableModel>();
         targets->ground->model = std::make_shared<common::Model>();
-        targets->ground->model->AddComponent(
-            common::EnumComponentType::eRenderer, component);
+        targets->ground->model->TryAdd(component);
 
         targets->ground->mirror_plane =
             DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));

@@ -70,15 +70,17 @@ class RenderTargetObject : public common::IInfo {
                 graphics::pipeline::mirrorBlendSolidPSO.SetBlendFactor(
                     blendColor);
 
-            auto renderer = (MeshRenderer *)ground->mirror->GetComponent(
-                common::EnumComponentType::eRenderer);
-            ImGui::SliderFloat(
-                "Metallic", &renderer->material_consts.GetCpu().metallicFactor,
-                0.0f, 1.0f);
-            ImGui::SliderFloat(
-                "Roughness",
-                &renderer->material_consts.GetCpu().roughnessFactor, 0.0f,
-                1.0f);
+            MeshRenderer* renderer = nullptr;
+            if (ground->mirror->TryGet(renderer)) {
+                ImGui::SliderFloat(
+                    "Metallic",
+                    &renderer->material_consts.GetCpu().metallicFactor, 0.0f,
+                    1.0f);
+                ImGui::SliderFloat(
+                    "Roughness",
+                    &renderer->material_consts.GetCpu().roughnessFactor, 0.0f,
+                    1.0f);
+            }
 
             ImGui::TreePop();
         }

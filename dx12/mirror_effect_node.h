@@ -66,10 +66,10 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
             // mirror object
             {
-                auto component =
-                    (MeshRenderer *)targets->ground->model->GetComponent(
-                        common::EnumComponentType::eRenderer);
-                component->UpdateConstantBuffers();
+                MeshRenderer *renderer = nullptr;
+                if (targets->ground->model->TryGet(renderer)) {
+                    renderer->UpdateConstantBuffers();
+                }
             }
             break;
         }
@@ -80,56 +80,55 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
                 // 1.stencilMaskPSO
                 {
-                    auto component =
-                        (MeshRenderer *)targets->ground->model->GetComponent(
-                            common::EnumComponentType::eRenderer);
-                    stencil_mark_PSO->Render(
-                        condition->skybox_texture, condition->shared_sampler,
-                        condition->global_consts.Get(), component);
+                    MeshRenderer *renderer = nullptr;
+                    if (targets->ground->model->TryGet(renderer)) {
+                        stencil_mark_PSO->Render(condition->skybox_texture,
+                                                 condition->shared_sampler,
+                                                 condition->global_consts.Get(),
+                                                 renderer);
+                    }
                 }
 
                 // 2.reflectSolidPSO
                 {
                     for (auto &i : targets->objects) {
-                        auto component = (MeshRenderer *)i.second->GetComponent(
-                            common::EnumComponentType::eRenderer);
-
-                        reflect_mesh_solid_PSO->Render(
-                            condition->skybox_texture,
-                            condition->shared_sampler,
-                            reflect_global_consts.Get(), component);
+                        MeshRenderer *renderer = nullptr;
+                        if (i.second->TryGet(renderer)) {
+                            reflect_mesh_solid_PSO->Render(
+                                condition->skybox_texture,
+                                condition->shared_sampler,
+                                reflect_global_consts.Get(), renderer);
+                        }
                     }
                 }
 
                 // 3.reflectSkyboxSolidPSO
                 {
-                    auto component =
-                        (MeshRenderer *)targets->skybox->GetComponent(
-                            common::EnumComponentType::eRenderer);
-
-                    reflect_skybox_solid_PSO->Render(
-                        condition->shared_sampler, condition->skybox_texture,
-                        reflect_global_consts.Get(), component);
+                    MeshRenderer *renderer = nullptr;
+                    if (targets->skybox->TryGet(renderer)) {
+                        reflect_skybox_solid_PSO->Render(
+                            condition->shared_sampler,
+                            condition->skybox_texture,
+                            reflect_global_consts.Get(), renderer);
+                    }
                 }
 
                 // 4.mirrorBlendSolidPSO
                 {
-                    auto component =
-                        (MeshRenderer *)targets->ground->model->GetComponent(
-                            common::EnumComponentType::eRenderer);
-                    mirror_blend_solid_PSO->Render(
-                        condition->skybox_texture, condition->shared_sampler,
-                        reflect_global_consts.Get(), component);
+                    MeshRenderer *renderer = nullptr;
+                    if (targets->ground->model->TryGet(renderer)) {
+                        mirror_blend_solid_PSO->Render(
+                            condition->skybox_texture,
+                            condition->shared_sampler,
+                            reflect_global_consts.Get(), renderer);
+                    }
                 }
             } else {
-                {
-                    auto component =
-                        (MeshRenderer *)targets->ground->model->GetComponent(
-                            common::EnumComponentType::eRenderer);
-
+                MeshRenderer *renderer = nullptr;
+                if (targets->ground->model->TryGet(renderer)) {
                     mirror_mesh_solid_PSO->Render(
                         condition->skybox_texture, condition->shared_sampler,
-                        condition->global_consts.Get(), component);
+                        condition->global_consts.Get(), renderer);
                 }
             }
             break;

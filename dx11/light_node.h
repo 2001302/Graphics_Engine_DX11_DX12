@@ -66,8 +66,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                         renderer->is_visible = false;
 
                     light_spheres[i] = std::make_shared<common::Model>();
-                    light_spheres[i]->AddComponent(
-                        common::EnumComponentType::eRenderer, renderer);
+                    light_spheres[i]->TryAdd(renderer);
                 }
             }
 
@@ -93,21 +92,23 @@ class LightNodeInvoker : public common::BehaviorActionNode {
 
             // 조명의 위치 반영
             for (int i = 0; i < MAX_LIGHTS; i++) {
-                auto renderer = (MeshRenderer *)light_spheres[i]->GetComponent(
-                    common::EnumComponentType::eRenderer);
-
-                renderer->UpdateWorldRow(
-                    Matrix::CreateScale((std::max)(
-                        0.01f,
-                        job_context->global_consts_CPU.lights[i].radius)) *
-                    Matrix::CreateTranslation(
-                        job_context->global_consts_CPU.lights[i].position));
+                MeshRenderer *renderer = nullptr;
+                if (light_spheres[i]->TryGet(renderer)) {
+					renderer->UpdateWorldRow(
+						Matrix::CreateScale((std::max)(0.01f,
+													  job_context->global_consts_CPU
+														  .lights[i]
+														  .radius)) *
+						Matrix::CreateTranslation(
+							job_context->global_consts_CPU.lights[i].position));
+				}
             }
 
             for (auto &i : light_spheres) {
-                auto renderer = (MeshRenderer *)i->GetComponent(
-                    common::EnumComponentType::eRenderer);
-                renderer->UpdateConstantBuffers();
+                MeshRenderer *renderer = nullptr;
+                if (i->TryGet(renderer)) {
+					renderer->UpdateConstantBuffers();
+				}
             }
             break;
         }
@@ -118,9 +119,10 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                                        : graphics::pipeline::defaultSolidPSO);
             graphics::Util::SetGlobalConsts(job_context->global_consts_GPU);
             for (auto &i : light_spheres) {
-                auto renderer = (MeshRenderer *)i->GetComponent(
-                    common::EnumComponentType::eRenderer);
-                renderer->Render();
+                MeshRenderer *renderer = nullptr;
+                if (i->TryGet(renderer)) {
+					renderer->Render();
+				}
             }
             break;
         }

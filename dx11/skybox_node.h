@@ -26,8 +26,7 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
 
             manager->skybox = std::make_shared<Skybox>();
             manager->skybox->model = std::make_shared<Model>();
-            manager->skybox->model->AddComponent(EnumComponentType::eRenderer,
-                                                 renderer);
+            manager->skybox->model->TryAdd(renderer);
 
             auto envFilename =
                 L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
@@ -53,10 +52,10 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             graphics::Util::SetPipelineState(
                 manager->draw_wire ? graphics::pipeline::skyboxWirePSO
                                    : graphics::pipeline::skyboxSolidPSO);
-            auto renderer =
-                (MeshRenderer *)manager->skybox->model->GetComponent(
-                    EnumComponentType::eRenderer);
-            renderer->Render();
+            MeshRenderer *renderer = nullptr;
+            if (manager->skybox->model->TryGet(renderer)) {
+                renderer->Render();
+            }
             break;
         }
         default:

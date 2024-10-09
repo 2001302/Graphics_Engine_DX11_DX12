@@ -92,8 +92,9 @@ class ShadowMappingPSO : public GraphicsPSO {
                                        D3D12_CLEAR_FLAG_DEPTH);
 
         for (auto &object : objects) {
-            auto mesh_renderer = (MeshRenderer *)object.second->GetComponent(
-                common::EnumComponentType::eRenderer);
+            MeshRenderer *renderer = nullptr;
+            object.second->TryGet(renderer);
+
             context->SetViewportAndScissorRect(0, 0,
                                                (UINT)depth_buffer->GetWidth(),
                                                (UINT)depth_buffer->GetHeight());
@@ -102,7 +103,7 @@ class ShadowMappingPSO : public GraphicsPSO {
             context->SetRootSignature(root_signature);
             context->SetPipelineState(pipeline_state);
 
-            for (auto mesh : mesh_renderer->GetMeshes()) {
+            for (auto mesh : renderer->GetMeshes()) {
 
                 context->GetList()->SetGraphicsRootDescriptorTable(
                     0, sampler_state->GetGpuHandle());
@@ -111,12 +112,10 @@ class ShadowMappingPSO : public GraphicsPSO {
                 context->GetList()->SetGraphicsRootConstantBufferView(
                     2, global_consts->GetGPUVirtualAddress());
                 context->GetList()->SetGraphicsRootConstantBufferView(
-                    3,
-                    mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
+                    3, renderer->MeshConsts().Get()->GetGPUVirtualAddress());
                 context->GetList()->SetGraphicsRootConstantBufferView(
-                    4, mesh_renderer->MaterialConsts()
-                           .Get()
-                           ->GetGPUVirtualAddress());
+                    4,
+                    renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
 
                 context->GetList()->IASetPrimitiveTopology(
                     D3D12_PRIMITIVE_TOPOLOGY::

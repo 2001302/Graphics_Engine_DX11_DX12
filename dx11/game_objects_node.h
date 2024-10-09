@@ -37,8 +37,9 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                     Vector3(0.0f);
                 renderer->UpdateConstantBuffers();
 
-                auto obj = std::make_shared<Model>();
-                obj->AddComponent(EnumComponentType::eRenderer, renderer);
+                auto obj = std::make_shared<common::Model>();
+                obj->AddComponent(common::EnumComponentType::eRenderer,
+                                  renderer);
 
                 manager->objects.insert({obj->GetEntityId(), obj});
             }
@@ -60,8 +61,9 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                     Vector3(0.0f);
                 renderer->UpdateConstantBuffers();
 
-                auto obj = std::make_shared<Model>();
-                obj->AddComponent(EnumComponentType::eRenderer, renderer);
+                auto obj = std::make_shared<common::Model>();
+                obj->AddComponent(common::EnumComponentType::eRenderer,
+                                  renderer);
 
                 manager->objects.insert({obj->GetEntityId(), obj});
             }
@@ -72,7 +74,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
 
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
-                    EnumComponentType::eRenderer);
+                    common::EnumComponentType::eRenderer);
                 renderer->UpdateConstantBuffers();
             }
 
@@ -87,7 +89,7 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
 
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
-                    EnumComponentType::eRenderer);
+                    common::EnumComponentType::eRenderer);
                 renderer->Render();
             }
 
@@ -96,14 +98,14 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
             if (manager->ground->mirror_alpha == 1.0f) {
                 auto renderer =
                     (MeshRenderer *)manager->ground->mirror->GetComponent(
-                        EnumComponentType::eRenderer);
+                        common::EnumComponentType::eRenderer);
                 renderer->Render();
             }
 
             graphics::Util::SetPipelineState(graphics::pipeline::normalsPSO);
             for (auto &i : manager->objects) {
                 auto renderer = (MeshRenderer *)i.second->GetComponent(
-                    EnumComponentType::eRenderer);
+                    common::EnumComponentType::eRenderer);
                 if (renderer->draw_normals)
                     renderer->RenderNormals();
             }

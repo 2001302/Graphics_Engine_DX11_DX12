@@ -13,9 +13,6 @@
     <ClInclude Include="mesh_renderer.h">
       <Filter>Graphics\Component</Filter>
     </ClInclude>
-    <ClInclude Include="component.h">
-      <Filter>Graphics\Component</Filter>
-    </ClInclude>
     <ClInclude Include="tone_mapping.h">
       <Filter>Graphics\Component</Filter>
     </ClInclude>
@@ -68,9 +65,6 @@
       <Filter>Graphics\Model</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
-      <Filter>Graphics\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="model.h">
       <Filter>Graphics\Model</Filter>
     </ClInclude>
     <ClInclude Include="structured_buffer.h">
@@ -146,9 +140,6 @@
       <Filter>Graphics\Component</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
-      <Filter>Graphics\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="model.cpp">
       <Filter>Graphics\Model</Filter>
     </ClCompile>
     <ClCompile Include="animator.cpp">

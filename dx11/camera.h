@@ -2,9 +2,9 @@
 #define CAMERA
 
 #include "graphics_util.h"
-#include "model.h"
 #include <behavior_tree_builder.h>
 #include <env.h>
+#include <model.h>
 #include <node.h>
 
 namespace graphics {
@@ -24,7 +24,7 @@ class Camera : public common::INode {
     void Draw();
 
   private:
-    std::shared_ptr<Model> look_at_target;
+    std::shared_ptr<common::Model> look_at_target;
 
     Matrix view;
     Vector3 position;

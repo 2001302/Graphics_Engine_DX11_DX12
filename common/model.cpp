@@ -1,20 +1,19 @@
 #include "model.h"
 
-namespace graphics {
+namespace common {
 Model::~Model() {
     for (auto component : components) {
         component.second.reset();
     }
 }
 void Model::AddComponent(EnumComponentType type,
-                         std::shared_ptr<Component>component) {
+                         std::shared_ptr<Component> component) {
     if (components.find(type) == components.end()) {
-        components.insert({type, component}); 
-    } 
+        components.insert({type, component});
+    }
 }
 
-Component*
-Model::GetComponent(EnumComponentType type) {
+Component *Model::GetComponent(EnumComponentType type) {
     auto it = components.find(type);
     if (it != components.end()) {
         return it->second.get();
@@ -22,4 +21,4 @@ Model::GetComponent(EnumComponentType type) {
         return nullptr;
     }
 };
-}
+} // namespace graphics

@@ -65,9 +65,9 @@ class LightNodeInvoker : public common::BehaviorActionNode {
                     if (job_context->global_consts_CPU.lights[i].type == 0)
                         renderer->is_visible = false;
 
-                    light_spheres[i] = std::make_shared<Model>();
-                    light_spheres[i]->AddComponent(EnumComponentType::eRenderer,
-                                                   renderer);
+                    light_spheres[i] = std::make_shared<common::Model>();
+                    light_spheres[i]->AddComponent(
+                        common::EnumComponentType::eRenderer, renderer);
                 }
             }
 
@@ -94,7 +94,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
             // 조명의 위치 반영
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 auto renderer = (MeshRenderer *)light_spheres[i]->GetComponent(
-                    EnumComponentType::eRenderer);
+                    common::EnumComponentType::eRenderer);
 
                 renderer->UpdateWorldRow(
                     Matrix::CreateScale((std::max)(
@@ -106,7 +106,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
 
             for (auto &i : light_spheres) {
                 auto renderer = (MeshRenderer *)i->GetComponent(
-                    EnumComponentType::eRenderer);
+                    common::EnumComponentType::eRenderer);
                 renderer->UpdateConstantBuffers();
             }
             break;
@@ -119,7 +119,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
             graphics::Util::SetGlobalConsts(job_context->global_consts_GPU);
             for (auto &i : light_spheres) {
                 auto renderer = (MeshRenderer *)i->GetComponent(
-                    EnumComponentType::eRenderer);
+                    common::EnumComponentType::eRenderer);
                 renderer->Render();
             }
             break;
@@ -131,7 +131,7 @@ class LightNodeInvoker : public common::BehaviorActionNode {
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
 
-    std::shared_ptr<Model> light_spheres[MAX_LIGHTS];
+    std::shared_ptr<common::Model> light_spheres[MAX_LIGHTS];
 };
 
 } // namespace graphics

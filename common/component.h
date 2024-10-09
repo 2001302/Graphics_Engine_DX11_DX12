@@ -1,9 +1,9 @@
 #ifndef _COMPONENT
 #define _COMPONENT
 
-#include <node.h>
+#include "node.h"
 
-namespace graphics {
+namespace common {
 enum EnumComponentType {
     eRenderer = 0,
     eAnimator = 1,
@@ -14,5 +14,5 @@ class Component {
     Component(){};
 };
 
-} // namespace engine
+} // namespace common
 #endif

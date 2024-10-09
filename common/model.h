@@ -2,12 +2,12 @@
 #define _MODEL
 
 #include "component.h"
-#include "graphics_util.h"
-#include <node.h>
+#include "node.h"
+#include <memory>
 #include <unordered_map>
 
-namespace graphics {
-class Model : public common::INode {
+namespace common {
+class Model : public INode {
   public:
     Model(){};
     ~Model();

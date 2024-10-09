@@ -148,7 +148,6 @@
     <ClInclude Include="engine.h" />
     <ClInclude Include="black_board.h" />
     <ClInclude Include="camera_node.h" />
-    <ClInclude Include="component.h" />
     <ClInclude Include="constant_buffer.h" />
     <ClInclude Include="depth_only_node.h" />
     <ClInclude Include="gpu_node.h" />
@@ -181,7 +180,6 @@
     <ClInclude Include="mesh_renderer.h" />
     <ClInclude Include="game_objects_node.h" />
     <ClInclude Include="model_loader.h" />
-    <ClInclude Include="model.h" />
     <ClInclude Include="render_target_object.h" />
     <ClInclude Include="vertex.h" />
   </ItemGroup>
@@ -199,7 +197,6 @@
     <ClCompile Include="message_receiver.cpp" />
     <ClCompile Include="model_loader.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="model.cpp" />
     <ClCompile Include="tone_mapping.cpp" />
     <ClCompile Include="mesh_renderer.cpp" />
   </ItemGroup>

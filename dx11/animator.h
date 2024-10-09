@@ -2,10 +2,10 @@
 #define _ANIMATOR
 
 #include "animation_clip.h"
-#include "component.h"
 #include "graphics_util.h"
 #include "mesh_renderer.h"
 #include "structured_buffer.h"
+#include <component.h>
 #include <filesystem>
 #include <iostream>
 #include <node.h>
@@ -13,7 +13,7 @@
 namespace graphics {
 using Microsoft::WRL::ComPtr;
 
-class Animator : public Component {
+class Animator : public common::Component {
   public:
     Animator(){};
     Animator(const AnimationData &aniData);

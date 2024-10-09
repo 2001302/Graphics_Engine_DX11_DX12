@@ -1,11 +1,11 @@
 #ifndef _SKYBOX
 #define _SKYBOX
 
-#include "model.h"
+#include <model.h>
 
 namespace graphics {
 struct Skybox {
-    std::shared_ptr<Model> model;
+    std::shared_ptr<common::Model> model;
     ComPtr<ID3D11ShaderResourceView> env_SRV;
     ComPtr<ID3D11ShaderResourceView> irradiance_SRV;
     ComPtr<ID3D11ShaderResourceView> specular_SRV;

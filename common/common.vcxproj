@@ -44,6 +44,8 @@
     <ClCompile Include="selector_node.cpp" />
     <ClCompile Include="sequence_node.cpp" />
     <ClCompile Include="setting_ui.cpp" />
+    <ClCompile Include="component.cpp" />
+    <ClCompile Include="model.cpp" />
     <ClCompile Include="ui.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -54,6 +56,8 @@
     <ClInclude Include="dataBlock.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
+    <ClInclude Include="component.h" />
+    <ClInclude Include="model.h" />
     <ClInclude Include="time_stamp.h" />
     <ClInclude Include="id_generator.h" />
     <ClInclude Include="ImGui\imconfig.h" />

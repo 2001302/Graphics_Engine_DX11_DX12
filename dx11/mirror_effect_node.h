@@ -34,9 +34,9 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                                      Matrix::CreateTranslation(position));
 
             manager->ground = std::make_shared<Ground>();
-            manager->ground->model = std::make_shared<Model>();
-            manager->ground->model->AddComponent(EnumComponentType::eRenderer,
-                                                 renderer);
+            manager->ground->model = std::make_shared<common::Model>();
+            manager->ground->model->AddComponent(
+                common::EnumComponentType::eRenderer, renderer);
 
             manager->ground->mirror_plane =
                 DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
@@ -75,7 +75,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
             auto renderer =
                 (MeshRenderer *)manager->ground->mirror->GetComponent(
-                    EnumComponentType::eRenderer);
+                    common::EnumComponentType::eRenderer);
 
             renderer->UpdateConstantBuffers();
 
@@ -94,7 +94,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                 if (true) {
                     auto renderer =
                         (MeshRenderer *)manager->ground->mirror->GetComponent(
-                            EnumComponentType::eRenderer);
+                            common::EnumComponentType::eRenderer);
                     renderer->Render();
                 }
 
@@ -112,7 +112,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
                 for (auto &i : manager->objects) {
                     auto renderer = (MeshRenderer *)i.second->GetComponent(
-                        EnumComponentType::eRenderer);
+                        common::EnumComponentType::eRenderer);
                     renderer->Render();
                 }
 
@@ -123,7 +123,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                             : graphics::pipeline::reflectSkyboxSolidPSO);
                     auto renderer =
                         (MeshRenderer *)manager->skybox->model->GetComponent(
-                            EnumComponentType::eRenderer);
+                            common::EnumComponentType::eRenderer);
                     renderer->Render();
                 }
 
@@ -137,7 +137,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     graphics::Util::SetGlobalConsts(manager->global_consts_GPU);
                     auto renderer =
                         (MeshRenderer *)manager->ground->mirror->GetComponent(
-                            EnumComponentType::eRenderer);
+                            common::EnumComponentType::eRenderer);
                     renderer->Render();
                 }
 

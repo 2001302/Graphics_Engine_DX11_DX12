@@ -2,9 +2,9 @@
 #define _MODEL
 
 #include "component.h"
-#include "mesh_util.h"
 #include <node.h>
 #include <unordered_map>
+#include <memory>
 
 namespace graphics {
 class Model : public common::INode {

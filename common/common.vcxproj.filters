@@ -79,6 +79,12 @@
     <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
       <Filter>Gui\ImGui</Filter>
     </ClCompile>
+    <ClCompile Include="component.cpp">
+      <Filter>Structure</Filter>
+    </ClCompile>
+    <ClCompile Include="model.cpp">
+      <Filter>Structure</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="platform.h">
@@ -185,6 +191,12 @@
     </ClInclude>
     <ClInclude Include="time_stamp.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="component.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="model.h">
+      <Filter>Structure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

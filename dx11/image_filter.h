@@ -6,7 +6,7 @@
 
 namespace graphics {
 
-class ImageFilter : public Component {
+class ImageFilter : public common::Component {
   public:
     void Render(ComPtr<ID3D11ComputeShader> shader,
                 ComPtr<ID3D11Buffer> const_buffer,

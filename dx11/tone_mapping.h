@@ -1,9 +1,9 @@
 #ifndef _TONEMAPPING
 #define _TONEMAPPING
 
-#include "component.h"
 #include "constant_buffer.h"
 #include "mesh.h"
+#include <component.h>
 #include <env.h>
 
 namespace graphics {
@@ -18,7 +18,7 @@ struct ImageFilterConstData {
     float option4;
 };
 
-class ToneMapping : public Component {
+class ToneMapping : public common::Component {
   public:
     void Initialize();
     void Render(ComPtr<ID3D11Buffer> const_buffer);

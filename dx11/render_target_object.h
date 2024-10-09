@@ -6,10 +6,10 @@
 #include "graphics_util.h"
 #include "ground.h"
 #include "mesh_renderer.h"
-#include "model.h"
 #include "skybox.h"
 #include <dataBlock.h>
 #include <info.h>
+#include <model.h>
 
 namespace graphics {
 enum EnumStageType {
@@ -23,8 +23,8 @@ class RenderTargetObject : public common::IInfo {
     std::unique_ptr<Camera> camera;
     std::shared_ptr<Ground> ground;
     std::shared_ptr<Skybox> skybox;
-    std::shared_ptr<Model> player;
-    std::map<int /*id*/, std::shared_ptr<Model>> objects;
+    std::shared_ptr<common::Model> player;
+    std::map<int /*id*/, std::shared_ptr<common::Model>> objects;
 
     // condition
     GlobalConstants global_consts_CPU;
@@ -71,7 +71,7 @@ class RenderTargetObject : public common::IInfo {
                     blendColor);
 
             auto renderer = (MeshRenderer *)ground->mirror->GetComponent(
-                EnumComponentType::eRenderer);
+                common::EnumComponentType::eRenderer);
             ImGui::SliderFloat(
                 "Metallic", &renderer->material_consts.GetCpu().metallicFactor,
                 0.0f, 1.0f);

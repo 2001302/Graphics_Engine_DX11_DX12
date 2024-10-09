@@ -27,7 +27,6 @@ bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
             ImGui_ImplWin32_Init(common::env::main_window);
             ImGui_ImplDX11_Init(GpuCore::Instance().device.Get(),
                                 GpuCore::Instance().device_context.Get());
-
         }
     }
     return true;
@@ -39,8 +38,8 @@ bool MessageReceiver::OnMouseDownRequest(std::shared_ptr<common::Input> input,
 }
 
 bool MessageReceiver::OnMouseRightDragRequest(
-    RenderTargetObject *manager, std::shared_ptr<common::Input> input, int mouseX,
-    int mouseY) {
+    RenderTargetObject *manager, std::shared_ptr<common::Input> input,
+    int mouseX, int mouseY) {
 
     Vector2 move = Vector2(input->MouseX() - mouseX, input->MouseY() - mouseY);
     move = move / -1000.0f;
@@ -76,8 +75,8 @@ bool MessageReceiver::OnMouseWheelRequest(RenderTargetObject *manager,
 }
 
 bool MessageReceiver::OnMouseWheelDragRequest(
-    RenderTargetObject *manager, std::shared_ptr<common::Input> input, int mouseX,
-    int mouseY) {
+    RenderTargetObject *manager, std::shared_ptr<common::Input> input,
+    int mouseX, int mouseY) {
     auto offsetX = input->MouseX() - mouseX;
     auto offsetY = input->MouseY() - mouseY;
 
@@ -145,8 +144,8 @@ bool MessageReceiver::OnModelLoadRequest(RenderTargetObject *manager,
 
         renderer->UpdateConstantBuffers();
 
-        auto obj = std::make_shared<Model>();
-        obj->AddComponent(EnumComponentType::eRenderer, renderer);
+        auto obj = std::make_shared<common::Model>();
+        obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
         obj->SetName(fileName);
 
         manager->objects.insert({obj->GetEntityId(), obj});
@@ -163,8 +162,8 @@ bool MessageReceiver::OnSphereLoadRequest(RenderTargetObject *manager) {
     auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
     renderer->UpdateConstantBuffers();
 
-    auto obj = std::make_shared<Model>();
-    obj->AddComponent(EnumComponentType::eRenderer, renderer);
+    auto obj = std::make_shared<common::Model>();
+    obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
     obj->SetName("sphere");
 
     manager->objects.insert({obj->GetEntityId(), obj});
@@ -178,8 +177,8 @@ bool MessageReceiver::OnBoxLoadRequest(RenderTargetObject *manager) {
     auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
     renderer->UpdateConstantBuffers();
 
-    auto obj = std::make_shared<Model>();
-    obj->AddComponent(EnumComponentType::eRenderer, renderer);
+    auto obj = std::make_shared<common::Model>();
+    obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
     obj->SetName("box");
 
     manager->objects.insert({obj->GetEntityId(), obj});
@@ -193,8 +192,8 @@ bool MessageReceiver::OnCylinderLoadRequest(RenderTargetObject *manager) {
     auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
     renderer->UpdateConstantBuffers();
 
-    auto obj = std::make_shared<Model>();
-    obj->AddComponent(EnumComponentType::eRenderer, renderer);
+    auto obj = std::make_shared<common::Model>();
+    obj->AddComponent(common::EnumComponentType::eRenderer, renderer);
     obj->SetName("box");
 
     manager->objects.insert({obj->GetEntityId(), obj});

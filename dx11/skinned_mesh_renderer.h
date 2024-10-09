@@ -1,11 +1,11 @@
 #ifndef _SKINNED_MESH_RENDERER
 #define _SKINNED_MESH_RENDERER
 
-#include "component.h"
 #include "constant_buffer.h"
 #include "geometry_generator.h"
 #include "mesh.h"
 #include "mesh_renderer.h"
+#include <component.h>
 #include <filesystem>
 #include <iostream>
 #include <node.h>

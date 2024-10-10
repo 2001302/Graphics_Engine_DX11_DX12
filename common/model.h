@@ -28,6 +28,12 @@ class Model : public INode {
         else
             return true;
     }
+    template <typename T> bool Has() {
+        if (components.contains(typeid(T).name()))
+            return true;
+        else 
+            return true;
+    }
 
   private:
     std::unordered_map<const char *, std::shared_ptr<Component>> components;

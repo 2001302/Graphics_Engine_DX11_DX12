@@ -4,31 +4,44 @@
 #include <model.h>
 #include <vector>
 
-#define NUM_ELEMENTS 1000000
+#define NUM_ELEMENTS 10000000
 
 using namespace common;
 
-int main() {
-    auto arr1 = new Model[NUM_ELEMENTS];
-    std::vector<Model> vec1;
-    vec1.resize(NUM_ELEMENTS);
 
+int main() {
+    Model *arr1 = new Model[NUM_ELEMENTS];
+    std::vector<Model *> vec1;
+    std::vector<std::shared_ptr<Model>> vec2;
+
+    // write
     {
-        ScopeStopWatch sw("1) write array ptr");
+        ScopeStopWatch sw("1) write array");
         for (int i = 0; i < NUM_ELEMENTS; i++) {
-            arr1[i] = Model();
+            auto x = new Model();
+            arr1[i] = *x;
         }
     }
 
     {
         ScopeStopWatch sw("1) write vector");
         for (int i = 0; i < NUM_ELEMENTS; i++) {
-            vec1[i] = Model();
+            auto x = new Model();
+            vec1.push_back(x);
         }
     }
 
     {
-        ScopeStopWatch sw("2) read array ptr");
+        ScopeStopWatch sw("1) write vector(shared_ptr)");
+        for (int i = 0; i < NUM_ELEMENTS; i++) {
+            auto x = std::make_shared<Model>();
+            vec2.push_back(x);
+        }
+    }
+
+    // read
+    {
+        ScopeStopWatch sw("2) read array");
         for (int i = 0; i < NUM_ELEMENTS; i++) {
             auto x = arr1[i];
         }
@@ -41,42 +54,36 @@ int main() {
         }
     }
 
-    std::vector<Model> vec2;
-    Model *arr2;
-    Model *arr3;
-
     {
-        ScopeStopWatch sw("3) push_back");
+        ScopeStopWatch sw("2) read vector(shared_ptr)");
         for (int i = 0; i < NUM_ELEMENTS; i++) {
-            vec2.push_back(arr1[i]);
+            auto x = vec2[i].get();
+        }
+    }
+
+    // move
+    {
+        Model *dst_arr;
+        ScopeStopWatch sw("3) move array");
+        dst_arr = new Model[NUM_ELEMENTS];
+        for (int i = 0; i < NUM_ELEMENTS; i++) {
+            dst_arr[i] = arr1[i];
         }
     }
 
     {
-        ScopeStopWatch sw("3) new_delete");
-        int count = 0;
-        // count
+        std::vector<Model *> dst_vec;
+        ScopeStopWatch sw("3) move vector");
         for (int i = 0; i < NUM_ELEMENTS; i++) {
-            count++;
-        }
-        // write
-        arr2 = new Model[count];
-        for (int i = 0; i < NUM_ELEMENTS; i++) {
-            arr2[i] = arr1[i];
+            dst_vec.push_back(vec1[i]);
         }
     }
 
     {
-        ScopeStopWatch sw("3) move");
-        int count = 0;
-        // count
+        std::vector<Model *> dst_vec2;
+        ScopeStopWatch sw("3) move vector(shared_ptr)");
         for (int i = 0; i < NUM_ELEMENTS; i++) {
-            count++;
-        }
-        // write
-        arr3 = new Model[count];
-        for (int i = 0; i < NUM_ELEMENTS; i++) {
-            arr3[i] = std::move(arr1[i]);
+            dst_vec2.push_back(vec2[i].get());
         }
     }
 

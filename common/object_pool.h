@@ -17,7 +17,7 @@ class ObjectPool {
 
 // void Test() {
 //     From(objects)
-//         .Where([](Model model) -> F(model.GetEntityId() == 0))
+//         .Where([](Model model) -> FUNC(model.GetEntityId() == 0))
 //         .Count();
 // }
 

@@ -7,7 +7,7 @@
 #include <string>
 #include <vector>
 
-#define F(cond)                                                                \
+#define FUNC(cond)                                                             \
     bool {                                                                     \
         if (cond)                                                              \
             return true;                                                       \

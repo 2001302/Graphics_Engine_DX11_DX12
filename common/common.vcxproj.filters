@@ -201,7 +201,7 @@
     <ClInclude Include="object_pool.h">
       <Filter>Structure</Filter>
     </ClInclude>
-    <ClInclude Include="data_set.h">
+    <ClInclude Include="query.h">
       <Filter>Structure</Filter>
     </ClInclude>
   </ItemGroup>

@@ -20,29 +20,24 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
             auto mesh = GeometryGenerator::MakeSquare(5.0);
 
-            auto renderer = std::make_shared<MeshRenderer>(std::vector{mesh});
+            auto mirror = std::make_shared<MirrorRenderer>(std::vector{mesh});
 
             // mesh.albedoTextureFilename =
             //     "../Assets/Textures/blender_uv_grid_2k.png";
-            renderer->material_consts.GetCpu().albedoFactor = Vector3(0.1f);
-            renderer->material_consts.GetCpu().emissionFactor = Vector3(0.0f);
-            renderer->material_consts.GetCpu().metallicFactor = 0.5f;
-            renderer->material_consts.GetCpu().roughnessFactor = 0.3f;
+            mirror->material_consts.GetCpu().albedoFactor = Vector3(0.1f);
+            mirror->material_consts.GetCpu().emissionFactor = Vector3(0.0f);
+            mirror->material_consts.GetCpu().metallicFactor = 0.5f;
+            mirror->material_consts.GetCpu().roughnessFactor = 0.3f;
 
             Vector3 position = Vector3(0.0f, -0.5f, 2.0f);
-            renderer->UpdateWorldRow(Matrix::CreateRotationX(3.141592f * 0.5f) *
-                                     Matrix::CreateTranslation(position));
+            mirror->UpdateWorldRow(Matrix::CreateRotationX(3.141592f * 0.5f) *
+                                   Matrix::CreateTranslation(position));
 
-            manager->ground = std::make_shared<Ground>();
-            manager->ground->model = std::make_shared<common::Model>();
-            manager->ground->model->TryAdd(renderer);
+            mirror->SetMirrorPlane(
+                DirectX::SimpleMath::Plane(Vector3(0.0f, 1.0f, 0.0f), 0.0f));
 
-            manager->ground->mirror_plane =
-                DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
-            manager->ground->mirror =
-                manager->ground->model; // 바닥에 거울처럼 반사 구현
-
-            // m_basicList.push_back(m_ground); // 거울은 리스트에 등록 X
+            manager->ground = std::make_shared<common::Model>();
+            manager->ground->TryAdd(mirror);
 
             graphics::Util::CreateConstBuffer(reflect_global_consts_CPU,
                                               reflect_global_consts_GPU);
@@ -51,9 +46,11 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eUpdate: {
             // constant buffer
-            {
+            MirrorRenderer *mirror = nullptr;
+            if (manager->ground->TryGet(mirror)) {
+
                 const Matrix reflectRow =
-                    Matrix::CreateReflection(manager->ground->mirror_plane);
+                    Matrix::CreateReflection(mirror->GetMirrorPlane());
 
                 reflect_global_consts_CPU = manager->global_consts_CPU;
                 memcpy(&reflect_global_consts_CPU, &manager->global_consts_CPU,
@@ -70,10 +67,8 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
                 graphics::Util::UpdateBuffer(reflect_global_consts_CPU,
                                              reflect_global_consts_GPU);
-            }
-            MeshRenderer *renderer = nullptr;
-            if (manager->ground->mirror->TryGet(renderer)) {
-                renderer->UpdateConstantBuffers();
+
+                mirror->UpdateConstantBuffers();
             }
 
             break;
@@ -81,18 +76,14 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eRender: {
 
             // on mirror
-            if (manager->ground->mirror_alpha < 1.0f) {
-
-                // Mirror 2. Mark only the mirror position as 1 in the
-                // StencilBuffer.
-                graphics::Util::SetPipelineState(
-                    graphics::pipeline::stencilMaskPSO);
-
-                if (true) {
-                    MeshRenderer *renderer = nullptr;
-                    if (manager->ground->mirror->TryGet(renderer)) {
-                        renderer->Render();
-                    }
+            MirrorRenderer *mirror = nullptr;
+            if (manager->ground->TryGet(mirror)) {
+                if (mirror->GetMirrorAlpha() < 1.0f) {
+                    // Mirror 2. Mark only the mirror position as 1 in the
+                    // StencilBuffer.
+                    graphics::Util::SetPipelineState(
+                        graphics::pipeline::stencilMaskPSO);
+                    mirror->Render();
 
                     // Mirror 3. Render the reflected objects at the mirror
                     // position.
@@ -115,45 +106,39 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                         }
                     }
 
-                    if (true) {
-                        graphics::Util::SetPipelineState(
-                            manager->draw_wire
-                                ? graphics::pipeline::reflectSkyboxWirePSO
-                                : graphics::pipeline::reflectSkyboxSolidPSO);
+                    graphics::Util::SetPipelineState(
+                        manager->draw_wire
+                            ? graphics::pipeline::reflectSkyboxWirePSO
+                            : graphics::pipeline::reflectSkyboxSolidPSO);
+                    {
                         MeshRenderer *renderer = nullptr;
                         if (manager->skybox->model->TryGet(renderer)) {
                             renderer->Render();
                         }
                     }
 
-                    if (true) {
-                        // Mirror 4. Draw the mirror itself with the 'Blend'
-                        // material
-                        graphics::Util::SetPipelineState(
-                            manager->draw_wire
-                                ? graphics::pipeline::mirrorBlendWirePSO
-                                : graphics::pipeline::mirrorBlendSolidPSO);
-                        graphics::Util::SetGlobalConsts(
-                            manager->global_consts_GPU);
-                        MeshRenderer *renderer = nullptr;
-                        if (manager->ground->mirror->TryGet(renderer)) {
-                            renderer->Render();
-                        }
-                    }
-
-                } // end of if (m_mirrorAlpha < 1.0f)
-                break;
+                    // Mirror 4. Draw the mirror itself with the 'Blend'
+                    // material
+                    graphics::Util::SetPipelineState(
+                        manager->draw_wire
+                            ? graphics::pipeline::mirrorBlendWirePSO
+                            : graphics::pipeline::mirrorBlendSolidPSO);
+                    graphics::Util::SetGlobalConsts(manager->global_consts_GPU);
+                    mirror->Render();
+                }
             }
+
+            break;
+        }
         default:
             break;
         }
 
-            return common::EnumBehaviorTreeStatus::eSuccess;
-        }
-    };
+        return common::EnumBehaviorTreeStatus::eSuccess;
+    }
 
     GlobalConstants reflect_global_consts_CPU;
     ComPtr<ID3D11Buffer> reflect_global_consts_GPU;
 };
-} // namespace graphics
+}; // namespace graphics
 #endif

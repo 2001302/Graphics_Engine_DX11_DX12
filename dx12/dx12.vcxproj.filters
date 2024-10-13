@@ -27,10 +27,10 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="mesh.cpp">
-      <Filter>Graphics\Gpu\Structure</Filter>
+      <Filter>Graphics\Structure</Filter>
     </ClCompile>
     <ClCompile Include="image.cpp">
-      <Filter>Graphics\Gpu\Structure</Filter>
+      <Filter>Graphics\Structure</Filter>
     </ClCompile>
     <ClCompile Include="dynamic_descriptor_heap.cpp">
       <Filter>Graphics\Gpu\Heap</Filter>
@@ -109,9 +109,6 @@
     <Filter Include="Graphics\Gpu\Buffer">
       <UniqueIdentifier>{75e2fdb2-1df3-4f8a-b00e-3f37f241f0c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Graphics\Gpu\Structure">
-      <UniqueIdentifier>{618c9e8e-c783-44ce-98a1-32a3ad2ed2d8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Graphics\Gpu\Heap">
       <UniqueIdentifier>{6a573e0e-ae59-4d24-b0c9-b46c7a7f18d1}</UniqueIdentifier>
     </Filter>
@@ -120,6 +117,9 @@
     </Filter>
     <Filter Include="Graphics\Gpu\Core">
       <UniqueIdentifier>{44860be7-9917-4790-b438-ee4b6ee0aa43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics\Structure">
+      <UniqueIdentifier>{618c9e8e-c783-44ce-98a1-32a3ad2ed2d8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -178,16 +178,16 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="constant_buffer.h">
-      <Filter>Graphics\Gpu\Structure</Filter>
+      <Filter>Graphics\Structure</Filter>
     </ClInclude>
     <ClInclude Include="mesh.h">
-      <Filter>Graphics\Gpu\Structure</Filter>
+      <Filter>Graphics\Structure</Filter>
     </ClInclude>
     <ClInclude Include="vertex.h">
-      <Filter>Graphics\Gpu\Structure</Filter>
+      <Filter>Graphics\Structure</Filter>
     </ClInclude>
     <ClInclude Include="image.h">
-      <Filter>Graphics\Gpu\Structure</Filter>
+      <Filter>Graphics\Structure</Filter>
     </ClInclude>
     <ClInclude Include="render_target_object.h">
       <Filter>Graphics\Pipeline</Filter>

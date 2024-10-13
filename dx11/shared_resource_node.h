@@ -26,8 +26,6 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eUpdate: {
 
             const Vector3 eyeWorld = manager->camera->GetPosition();
-            const Matrix reflectRow =
-                Matrix::CreateReflection(manager->ground->mirror_plane);
             const Matrix viewRow = manager->camera->GetView();
             const Matrix projRow = manager->camera->GetProjection();
 

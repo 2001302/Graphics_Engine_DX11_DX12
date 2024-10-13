@@ -155,7 +155,7 @@
     <ClInclude Include="graphics_common.h" />
     <ClInclude Include="graphics_pso.h" />
     <ClInclude Include="graphics_util.h" />
-    <ClInclude Include="ground.h" />
+    <ClInclude Include="mirror_renderer.h" />
     <ClInclude Include="gui_node.h" />
     <ClInclude Include="image_filter.h" />
     <ClInclude Include="light_node.h" />
@@ -192,6 +192,7 @@
     <ClCompile Include="graphics_util.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="graphics_core.cpp" />
+    <ClCompile Include="mirror_renderer.cpp" />
     <ClCompile Include="player_node.cpp" />
     <ClCompile Include="skinned_mesh_renderer.cpp" />
     <ClCompile Include="geometry_generator.cpp" />

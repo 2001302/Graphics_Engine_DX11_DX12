@@ -89,26 +89,26 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
             for (auto &i : manager->objects) {
                 MeshRenderer *renderer = nullptr;
                 if (i.second->TryGet(renderer)) {
-					renderer->Render();
-				}
+                    renderer->Render();
+                }
             }
 
             // If there is no need to draw mirror reflections, draw only the
-            // opaque mirror
-            if (manager->ground->mirror_alpha == 1.0f) {
-                MeshRenderer *renderer = nullptr;
-                if (manager->ground->mirror->TryGet(renderer)) {
-					renderer->Render();
-				}
+            // opaque mirror {
+            MirrorRenderer *mirror = nullptr;
+            if (manager->ground->TryGet(mirror)) {
+                if (mirror->GetMirrorAlpha() == 1.0f) {
+                    mirror->Render();
+                }
             }
 
             graphics::Util::SetPipelineState(graphics::pipeline::normalsPSO);
             for (auto &i : manager->objects) {
                 MeshRenderer *renderer = nullptr;
                 if (i.second->TryGet(renderer)) {
-					if (renderer->draw_normals)
-						renderer->RenderNormals();
-				}
+                    if (renderer->draw_normals)
+                        renderer->RenderNormals();
+                }
             }
 
             break;
@@ -120,6 +120,6 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         return common::EnumBehaviorTreeStatus::eSuccess;
     }
 };
-} // namespace graphics
+}; // namespace graphics
 
 #endif

@@ -4,8 +4,8 @@
 #include "camera.h"
 #include "constant_buffer.h"
 #include "graphics_util.h"
-#include "ground.h"
 #include "mesh_renderer.h"
+#include "mirror_renderer.h"
 #include "skybox.h"
 #include <dataBlock.h>
 #include <info.h>
@@ -21,7 +21,7 @@ enum EnumStageType {
 class RenderTargetObject : public common::IInfo {
   public:
     std::unique_ptr<Camera> camera;
-    std::shared_ptr<Ground> ground;
+    std::shared_ptr<common::Model> ground;
     std::shared_ptr<Skybox> skybox;
     std::shared_ptr<common::Model> player;
     std::map<int /*id*/, std::shared_ptr<common::Model>> objects;
@@ -59,26 +59,27 @@ class RenderTargetObject : public common::IInfo {
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("Mirror")) {
 
-            ImGui::SliderFloat("Alpha", &ground->mirror_alpha, 0.0f, 1.0f);
-            const float blendColor[4] = {ground->mirror_alpha,
-                                         ground->mirror_alpha,
-                                         ground->mirror_alpha, 1.0f};
-            if (draw_wire)
-                graphics::pipeline::mirrorBlendWirePSO.SetBlendFactor(
-                    blendColor);
-            else
-                graphics::pipeline::mirrorBlendSolidPSO.SetBlendFactor(
-                    blendColor);
+            MirrorRenderer *mirror = nullptr;
+            if (ground->TryGet(mirror)) {
+                float mirror_alpha = mirror->GetMirrorAlpha();
+                ImGui::SliderFloat("Alpha", &mirror_alpha, 0.0f, 1.0f);
+                const float blendColor[4] = {mirror_alpha, mirror_alpha,
+                                             mirror_alpha, 1.0f};
+                mirror->SetMirrorAlpha(mirror_alpha);
+                if (draw_wire)
+                    graphics::pipeline::mirrorBlendWirePSO.SetBlendFactor(
+                        blendColor);
+                else
+                    graphics::pipeline::mirrorBlendSolidPSO.SetBlendFactor(
+                        blendColor);
 
-            MeshRenderer* renderer = nullptr;
-            if (ground->mirror->TryGet(renderer)) {
                 ImGui::SliderFloat(
                     "Metallic",
-                    &renderer->material_consts.GetCpu().metallicFactor, 0.0f,
+                    &mirror->material_consts.GetCpu().metallicFactor, 0.0f,
                     1.0f);
                 ImGui::SliderFloat(
                     "Roughness",
-                    &renderer->material_consts.GetCpu().roughnessFactor, 0.0f,
+                    &mirror->material_consts.GetCpu().roughnessFactor, 0.0f,
                     1.0f);
             }
 

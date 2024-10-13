@@ -33,8 +33,8 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
             mirror->UpdateWorldRow(Matrix::CreateRotationX(3.141592f * 0.5f) *
                                    Matrix::CreateTranslation(position));
 
-            mirror->SetMirrorPlane(
-                DirectX::SimpleMath::Plane(Vector3(0.0f, 1.0f, 0.0f), 0.0f));
+            mirror->SetMirrorPlane(DirectX::SimpleMath::Plane(
+                position, Vector3(0.0f, 1.0f, 0.0f)));
 
             manager->ground = std::make_shared<common::Model>();
             manager->ground->TryAdd(mirror);

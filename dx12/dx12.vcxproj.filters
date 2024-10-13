@@ -11,9 +11,6 @@
     <ClCompile Include="texture_2d.cpp">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>Graphics\Model</Filter>
-    </ClCompile>
     <ClCompile Include="mesh_renderer.cpp">
       <Filter>Graphics\Component</Filter>
     </ClCompile>
@@ -71,22 +68,22 @@
     <ClCompile Include="buffer_manager.cpp">
       <Filter>Graphics\Gpu\Core</Filter>
     </ClCompile>
-    <ClCompile Include="shadow_effect.cpp">
+    <ClCompile Include="mirror_renderer.cpp">
       <Filter>Graphics\Component</Filter>
     </ClCompile>
-    <ClCompile Include="mirror_effect.cpp">
+    <ClCompile Include="camera.cpp">
+      <Filter>Graphics\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="skybox_renderer.cpp">
       <Filter>Graphics\Component</Filter>
     </ClCompile>
-    <ClCompile Include="reflectable_model.cpp">
-      <Filter>Graphics\Model</Filter>
+    <ClCompile Include="shadow_map.cpp">
+      <Filter>Graphics\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphics">
       <UniqueIdentifier>{dbd5257f-e35e-4c37-8c3a-6cb4f021982b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Graphics\Model">
-      <UniqueIdentifier>{e49dfe72-3ee4-485a-8189-91138a47fab0}</UniqueIdentifier>
     </Filter>
     <Filter Include="Graphics\BehaviorTreeNode">
       <UniqueIdentifier>{693604ef-ac08-43fd-af75-3b70c784e779}</UniqueIdentifier>
@@ -144,9 +141,6 @@
     <ClInclude Include="texture_2d.h">
       <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>Graphics\Model</Filter>
-    </ClInclude>
     <ClInclude Include="skybox_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
@@ -156,7 +150,7 @@
     <ClInclude Include="light_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="game_objects_node.h">
+    <ClInclude Include="mesh_object_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="tone_mapping_node.h">
@@ -261,16 +255,10 @@
     <ClInclude Include="buffer_manager.h">
       <Filter>Graphics\Gpu\Core</Filter>
     </ClInclude>
-    <ClInclude Include="shadow_effect.h">
+    <ClInclude Include="mirror_renderer.h">
       <Filter>Graphics\Component</Filter>
     </ClInclude>
-    <ClInclude Include="mirror_effect.h">
-      <Filter>Graphics\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="reflectable_model.h">
-      <Filter>Graphics\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="mirror_effect_node.h">
+    <ClInclude Include="mirror_object_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="stencil_mark_pso.h">
@@ -284,6 +272,15 @@
     </ClInclude>
     <ClInclude Include="shadow_mapping_pso.h">
       <Filter>Graphics\Gpu\PSO</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>Graphics\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="skybox_renderer.h">
+      <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="shadow_map.h">
+      <Filter>Graphics\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

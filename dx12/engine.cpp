@@ -176,7 +176,7 @@ void Engine::OnPrepare(BlackBoard *black_board) {
     {
         auto mesh = GeometryGenerator::MakeSquare(5.0);
 
-        auto component = std::make_shared<MeshRenderer>();
+        auto component = std::make_shared<MirrorRenderer>();
         component->Initialize(std::vector{mesh});
         component->MaterialConsts().GetCpu().albedo_factor = Vector3(0.1f);
         component->MaterialConsts().GetCpu().emission_factor = Vector3(0.0f);
@@ -187,12 +187,11 @@ void Engine::OnPrepare(BlackBoard *black_board) {
         component->UpdateWorldRow(Matrix::CreateRotationX(PI * 0.5f) *
                                   Matrix::CreateTranslation(position));
 
-        targets->ground = std::make_shared<ReflectableModel>();
-        targets->ground->model = std::make_shared<common::Model>();
-        targets->ground->model->TryAdd(component);
+        component->SetMirrorPlane(
+            DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f)));
 
-        targets->ground->mirror_plane =
-            DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f));
+        targets->ground = std::make_shared<common::Model>();
+        targets->ground->TryAdd(component);
     }
 }
 } // namespace graphics

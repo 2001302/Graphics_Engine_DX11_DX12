@@ -2,8 +2,8 @@
 #define _SKYBOX_NODE
 
 #include "black_board.h"
-#include "mesh_renderer.h"
 #include "skybox_pso.h"
+#include "skybox_renderer.h"
 #include <behavior_tree_builder.h>
 
 namespace graphics {
@@ -26,7 +26,7 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
             auto mesh_data = GeometryGenerator::MakeBox(40.0f);
             std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
 
-            auto component = std::make_shared<MeshRenderer>();
+            auto component = std::make_shared<SkyboxRenderer>();
             component->Initialize(std::vector{mesh_data});
 
             targets->skybox = std::make_shared<common::Model>();
@@ -35,11 +35,11 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
             break;
         }
         case EnumStageType::eRender: {
-            MeshRenderer *renderer = nullptr;
-            if (targets->skybox->TryGet(renderer)) {
+            SkyboxRenderer *component = nullptr;
+            if (targets->skybox->TryGet(component)) {
                 skyboxPSO->Render(condition->shared_sampler,
                                   condition->skybox_texture,
-                                  condition->global_consts.Get(), renderer);
+                                  condition->global_consts.Get(), component);
             }
             break;
         }

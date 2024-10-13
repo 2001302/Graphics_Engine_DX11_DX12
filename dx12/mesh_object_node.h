@@ -8,7 +8,7 @@
 
 namespace graphics {
 
-class GameObjectNodeInvoker : public common::BehaviorActionNode {
+class MeshObjectNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);

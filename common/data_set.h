@@ -76,7 +76,7 @@ template <typename T, typename TPtr>
 template <typename S>
 DataSet<std::vector<S>>
 DataSet<T, TPtr>::Select(std::function<S(typename T::value_type)> sel) {
-    std::shared_ptr<vector<S>> new_container(new vector<S>());
+    std::shared_ptr<std::vector<S>> new_container(new std::vector<S>());
     for (typename T::const_iterator i = container_->begin();
          i != container_->end(); ++i) {
         new_container->push_back(sel(*i));

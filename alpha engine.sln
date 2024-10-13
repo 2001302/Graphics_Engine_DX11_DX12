@@ -15,6 +15,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simple_dx12", "simple_dx12\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "test", "test\test.vcxproj", "{A11DD221-BFCB-4E7F-9737-C9D487F09C5F}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{6DC8617D-4EC9-4D03-901D-3A3BCDA11C0E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -69,7 +71,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{2968567D-181F-4A53-812F-4E4BC42C0673} = {E8CE537F-C37E-4754-A9CB-07006A6284EF}
-		{A11DD221-BFCB-4E7F-9737-C9D487F09C5F} = {E8CE537F-C37E-4754-A9CB-07006A6284EF}
+		{A11DD221-BFCB-4E7F-9737-C9D487F09C5F} = {6DC8617D-4EC9-4D03-901D-3A3BCDA11C0E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FDC0592C-A852-41CB-B294-FC33983BDA1B}

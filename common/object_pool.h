@@ -15,10 +15,4 @@ class ObjectPool {
 };
 } // namespace common
 
-// void Test() {
-//     From(objects)
-//         .Where([](Model model) -> FUNC(model.GetEntityId() == 0))
-//         .Count();
-// }
-
 #endif

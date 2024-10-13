@@ -21,6 +21,7 @@ class GuiNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eInitialize: {
             gui->Start();
             gui->PushInfoItem(target);
+            gui->PushInfoItem(condition);
 
             UINT index = 0;
             D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle;

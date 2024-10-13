@@ -6,7 +6,6 @@
 #include "graphics_util.h"
 #include "mesh_renderer.h"
 #include "mirror_renderer.h"
-#include "skybox.h"
 #include <dataBlock.h>
 #include <info.h>
 #include <model.h>
@@ -22,7 +21,7 @@ class RenderTargetObject : public common::IInfo {
   public:
     std::unique_ptr<Camera> camera;
     std::shared_ptr<common::Model> ground;
-    std::shared_ptr<Skybox> skybox;
+    std::shared_ptr<common::Model> skybox;
     std::shared_ptr<common::Model> player;
     std::map<int /*id*/, std::shared_ptr<common::Model>> objects;
 

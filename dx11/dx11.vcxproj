@@ -171,7 +171,7 @@
     <ClInclude Include="shadow_effect_node.h" />
     <ClInclude Include="shared_resource_node.h" />
     <ClInclude Include="skinned_mesh_renderer.h" />
-    <ClInclude Include="skybox.h" />
+    <ClInclude Include="skybox_renderer.h" />
     <ClInclude Include="skybox_node.h" />
     <ClInclude Include="structured_buffer.h" />
     <ClInclude Include="texture_3d.h" />
@@ -199,6 +199,7 @@
     <ClCompile Include="message_receiver.cpp" />
     <ClCompile Include="model_loader.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="skybox_renderer.cpp" />
     <ClCompile Include="tone_mapping.cpp" />
     <ClCompile Include="mesh_renderer.cpp" />
   </ItemGroup>

@@ -109,7 +109,7 @@
     <ClInclude Include="camera.h">
       <Filter>Graphics\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="skybox.h">
+    <ClInclude Include="skybox_renderer.h">
       <Filter>Graphics\Component</Filter>
     </ClInclude>
     <ClInclude Include="mirror_renderer.h">
@@ -161,6 +161,9 @@
       <Filter>Graphics\Pipeline</Filter>
     </ClCompile>
     <ClCompile Include="mirror_renderer.cpp">
+      <Filter>Graphics\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="skybox_renderer.cpp">
       <Filter>Graphics\Component</Filter>
     </ClCompile>
   </ItemGroup>

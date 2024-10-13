@@ -1,11 +1,12 @@
-#ifndef _SKYBOX
-#define _SKYBOX
+#ifndef _SKYBOX_RENDERER
+#define _SKYBOX_RENDERER
 
-#include <model.h>
+#include "mesh_renderer.h"
 
 namespace graphics {
-struct Skybox {
-    std::shared_ptr<common::Model> model;
+struct SkyboxRenderer : public MeshRenderer {
+  public:
+    using MeshRenderer::MeshRenderer;
     ComPtr<ID3D11ShaderResourceView> env_SRV;
     ComPtr<ID3D11ShaderResourceView> irradiance_SRV;
     ComPtr<ID3D11ShaderResourceView> specular_SRV;

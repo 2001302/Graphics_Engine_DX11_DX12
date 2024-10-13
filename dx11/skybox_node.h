@@ -3,6 +3,7 @@
 
 #include "black_board.h"
 #include "mesh_renderer.h"
+#include "skybox_renderer.h"
 #include <behavior_tree_builder.h>
 
 namespace graphics {
@@ -22,11 +23,7 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             std::reverse(mesh_data.indices.begin(), mesh_data.indices.end());
 
             auto renderer =
-                std::make_shared<MeshRenderer>(std::vector{mesh_data});
-
-            manager->skybox = std::make_shared<Skybox>();
-            manager->skybox->model = std::make_shared<Model>();
-            manager->skybox->model->TryAdd(renderer);
+                std::make_shared<SkyboxRenderer>(std::vector{mesh_data});
 
             auto envFilename =
                 L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
@@ -38,13 +35,16 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
                 L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
             graphics::Util::CreateDDSTexture(envFilename, true,
-                                             manager->skybox->env_SRV);
+                                             renderer->env_SRV);
             graphics::Util::CreateDDSTexture(specularFilename, true,
-                                             manager->skybox->specular_SRV);
+                                             renderer->specular_SRV);
             graphics::Util::CreateDDSTexture(irradianceFilename, true,
-                                             manager->skybox->irradiance_SRV);
+                                             renderer->irradiance_SRV);
             graphics::Util::CreateDDSTexture(brdfFilename, true,
-                                             manager->skybox->brdf_SRV);
+                                             renderer->brdf_SRV);
+
+            manager->skybox = std::make_shared<Model>();
+            manager->skybox->TryAdd(renderer);
             break;
         }
         case EnumStageType::eRender: {
@@ -52,8 +52,8 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
             graphics::Util::SetPipelineState(
                 manager->draw_wire ? graphics::pipeline::skyboxWirePSO
                                    : graphics::pipeline::skyboxSolidPSO);
-            MeshRenderer *renderer = nullptr;
-            if (manager->skybox->model->TryGet(renderer)) {
+            SkyboxRenderer *renderer = nullptr;
+            if (manager->skybox->TryGet(renderer)) {
                 renderer->Render();
             }
             break;

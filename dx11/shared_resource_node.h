@@ -1,9 +1,9 @@
 #ifndef _SHARED_RESOURCE_NODE
 #define _SHARED_RESOURCE_NODE
 
-#include <behavior_tree_builder.h>
 #include "black_board.h"
 #include "mesh_renderer.h"
+#include <behavior_tree_builder.h>
 
 namespace graphics {
 
@@ -58,16 +58,16 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
                 0, UINT(graphics::pipeline::sampleStates.size()),
                 graphics::pipeline::sampleStates.data());
 
-            // Shared textures: start from register(t10) in 'Common.hlsli'
-            std::vector<ID3D11ShaderResourceView *> commonSRVs = {
-                manager->skybox->env_SRV.Get(),
-                manager->skybox->specular_SRV.Get(),
-                manager->skybox->irradiance_SRV.Get(),
-                manager->skybox->brdf_SRV.Get()};
-            graphics::GpuCore::Instance()
-                .device_context->PSSetShaderResources(
-                    10, UINT(commonSRVs.size()), commonSRVs.data());
-
+            SkyboxRenderer *renderer = nullptr;
+            if (manager->skybox->TryGet(renderer)) {
+                // Shared textures: start from register(t10) in 'Common.hlsli'
+                std::vector<ID3D11ShaderResourceView *> commonSRVs = {
+                    renderer->env_SRV.Get(), renderer->specular_SRV.Get(),
+                    renderer->irradiance_SRV.Get(), renderer->brdf_SRV.Get()};
+                graphics::GpuCore::Instance()
+                    .device_context->PSSetShaderResources(
+                        10, UINT(commonSRVs.size()), commonSRVs.data());
+            }
             break;
         }
         default:
@@ -78,6 +78,6 @@ class SharedResourceNodeInvoker : public common::BehaviorActionNode {
     }
 };
 
-} // namespace core
+} // namespace graphics
 
 #endif

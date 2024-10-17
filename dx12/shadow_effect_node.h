@@ -70,9 +70,10 @@ class ShadowEffectNode : public common::BehaviorActionNode {
 
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 auto depth_buffer = dynamic_cast<DepthBuffer *>(
-                    condition->shadow_texture->GetResource(i));
+                    ShadowMap::GetShadowMap(targets->world.get())
+                        ->GetResource(i));
 
-                shadow_map_PSO->Render(targets->skybox.get(),
+                shadow_map_PSO->Render(targets->world.get(),
                                        condition->shared_sampler,
                                        shadow_global_consts[i].Get(),
                                        targets->objects, depth_buffer);

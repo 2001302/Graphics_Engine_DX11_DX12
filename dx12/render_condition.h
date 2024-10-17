@@ -22,8 +22,7 @@ class RenderCondition : public common::IInfo {
   public:
     RenderCondition()
         : delta_time(0.0f), draw_wire(false), light_rotate(false),
-          stage_type(EnumStageType::eInitialize), shared_sampler(0),
-          shadow_texture(0) {}
+          stage_type(EnumStageType::eInitialize), shared_sampler(0) {}
     ~RenderCondition() {
 
         if (shared_sampler) {
@@ -32,7 +31,6 @@ class RenderCondition : public common::IInfo {
         }
     }
 
-    GpuResourceList *shadow_texture; // t14~t16
     SamplerState *shared_sampler;
     ConstantBuffer<GlobalConstants> global_consts;
 

@@ -83,7 +83,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
 
                     // 1.stencilMaskPSO
                     stencil_mark_PSO->Render(
-                        targets->skybox.get(), condition->shared_sampler,
+                        targets->world.get(), condition->shared_sampler,
                         condition->global_consts.Get(), mirror);
 
                     // 2.reflectSolidPSO
@@ -92,7 +92,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                             MeshRenderer *renderer = nullptr;
                             if (i.second->TryGet(renderer)) {
                                 reflect_mesh_solid_PSO->Render(
-                                    targets->skybox.get(),
+                                    targets->world.get(),
                                     condition->shared_sampler,
                                     reflect_global_consts.Get(), renderer);
                             }
@@ -102,21 +102,21 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     // 3.reflectSkyboxSolidPSO
                     {
                         SkyboxRenderer *renderer = nullptr;
-                        if (targets->skybox->TryGet(renderer)) {
+                        if (targets->world->TryGet(renderer)) {
                             reflect_skybox_solid_PSO->Render(
                                 condition->shared_sampler,
-                                targets->skybox.get(),
+                                targets->world.get(),
                                 reflect_global_consts.Get(), renderer);
                         }
                     }
 
                     // 4.mirrorBlendSolidPSO
                     mirror_blend_solid_PSO->Render(
-                        targets->skybox.get(), condition->shared_sampler,
+                        targets->world.get(), condition->shared_sampler,
                         reflect_global_consts.Get(), mirror);
                 } else {
                     mirror_mesh_solid_PSO->Render(
-                        targets->skybox.get(), condition->shared_sampler,
+                        targets->world.get(), condition->shared_sampler,
                         condition->global_consts.Get(), mirror);
                 }
             }

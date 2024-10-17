@@ -9,9 +9,10 @@ class SkyboxRenderer : public MeshRenderer {
   public:
     SkyboxRenderer(){};
     ~SkyboxRenderer(){};
-    static GpuResourceList *GetSkyboxTexture(common::Model *skybox) {
+    static GpuResourceList *
+    GetSkyboxTexture(common::Model* world) {
         SkyboxRenderer *component = nullptr;
-        if (skybox->TryGet(component))
+        if (world->TryGet(component))
             return component->skybox_texture.get();
         return nullptr;
     }

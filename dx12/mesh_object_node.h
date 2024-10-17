@@ -41,7 +41,7 @@ class MeshObjectNodeInvoker : public common::BehaviorActionNode {
                 MeshRenderer *renderer = nullptr;
                 if (i.second->TryGet(renderer)) {
                     mesh_solid_PSO->Render(
-                        targets->skybox.get(), condition->shared_sampler,
+                        targets->world.get(), condition->shared_sampler,
                         condition->global_consts.Get(), renderer);
                 }
             }

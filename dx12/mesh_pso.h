@@ -86,7 +86,7 @@ class SolidMeshPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(common::Model *skybox, SamplerState *sampler_state,
+    void Render(common::Model *world, SamplerState *sampler_state,
                 ComPtr<ID3D12Resource> global_consts,
                 MeshRenderer *mesh_renderer) {
 
@@ -117,7 +117,7 @@ class SolidMeshPSO : public GraphicsPSO {
                 0, sampler_state->GetGpuHandle());
             // global texture
             context->GetList()->SetGraphicsRootDescriptorTable(
-                1, SkyboxRenderer::GetSkyboxTexture(skybox)->GetGpuHandle());
+                1, SkyboxRenderer::GetSkyboxTexture(world)->GetGpuHandle());
             context->GetList()->SetGraphicsRootConstantBufferView(
                 2, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
@@ -227,7 +227,7 @@ class ReflectSolidMeshPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(common::Model *skybox, SamplerState *sampler_state,
+    void Render(common::Model *world, SamplerState *sampler_state,
                 ComPtr<ID3D12Resource> global_consts,
                 MeshRenderer *mesh_renderer) {
 
@@ -259,7 +259,7 @@ class ReflectSolidMeshPSO : public GraphicsPSO {
                 0, sampler_state->GetGpuHandle());
             // global texture
             context->GetList()->SetGraphicsRootDescriptorTable(
-                1, SkyboxRenderer::GetSkyboxTexture(skybox)->GetGpuHandle());
+                1, SkyboxRenderer::GetSkyboxTexture(world)->GetGpuHandle());
             context->GetList()->SetGraphicsRootConstantBufferView(
                 2, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
@@ -369,7 +369,7 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(common::Model *skybox, SamplerState *sampler_state,
+    void Render(common::Model *world, SamplerState *sampler_state,
                 ComPtr<ID3D12Resource> global_consts,
                 MeshRenderer *mesh_renderer) {
 
@@ -401,7 +401,7 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
                 0, sampler_state->GetGpuHandle());
             // global texture
             context->GetList()->SetGraphicsRootDescriptorTable(
-                1, SkyboxRenderer::GetSkyboxTexture(skybox)->GetGpuHandle());
+                1, SkyboxRenderer::GetSkyboxTexture(world)->GetGpuHandle());
             context->GetList()->SetGraphicsRootConstantBufferView(
                 2, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(

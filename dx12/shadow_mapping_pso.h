@@ -4,6 +4,7 @@
 #include "mesh_renderer.h"
 #include "pipeline_state_object.h"
 #include "shader_util.h"
+#include "skybox_renderer.h"
 
 namespace graphics {
 class ShadowMappingPSO : public GraphicsPSO {
@@ -75,7 +76,7 @@ class ShadowMappingPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(GpuResourceList *shared_texture, SamplerState *sampler_state,
+    void Render(common::Model *skybox, SamplerState *sampler_state,
                 ComPtr<ID3D12Resource> global_consts,
                 std::map<int /*id*/, std::shared_ptr<common::Model>> objects,
                 DepthBuffer *depth_buffer) {
@@ -108,7 +109,8 @@ class ShadowMappingPSO : public GraphicsPSO {
                 context->GetList()->SetGraphicsRootDescriptorTable(
                     0, sampler_state->GetGpuHandle());
                 context->GetList()->SetGraphicsRootDescriptorTable(
-                    1, shared_texture->GetGpuHandle());
+                    1,
+                    SkyboxRenderer::GetSkyboxTexture(skybox)->GetGpuHandle());
                 context->GetList()->SetGraphicsRootConstantBufferView(
                     2, global_consts->GetGPUVirtualAddress());
                 context->GetList()->SetGraphicsRootConstantBufferView(

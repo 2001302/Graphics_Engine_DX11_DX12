@@ -4,6 +4,7 @@
 #include "black_board.h"
 #include "mesh_pso.h"
 #include "mesh_renderer.h"
+#include "skybox_renderer.h"
 #include <behavior_tree_builder.h>
 
 namespace graphics {
@@ -40,7 +41,7 @@ class MeshObjectNodeInvoker : public common::BehaviorActionNode {
                 MeshRenderer *renderer = nullptr;
                 if (i.second->TryGet(renderer)) {
                     mesh_solid_PSO->Render(
-                        condition->skybox_texture, condition->shared_sampler,
+                        targets->skybox.get(), condition->shared_sampler,
                         condition->global_consts.Get(), renderer);
                 }
             }

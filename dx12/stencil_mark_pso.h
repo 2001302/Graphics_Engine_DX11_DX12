@@ -4,6 +4,7 @@
 #include "mesh_renderer.h"
 #include "pipeline_state_object.h"
 #include "shader_util.h"
+#include "skybox_renderer.h"
 
 namespace graphics {
 class StencilMarkPSO : public GraphicsPSO {
@@ -75,7 +76,7 @@ class StencilMarkPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(GpuResourceList *shared_texture, SamplerState *sampler_state,
+    void Render(common::Model* skybox, SamplerState *sampler_state,
                 ComPtr<ID3D12Resource> global_consts,
                 MeshRenderer *mesh_renderer) {
 
@@ -106,7 +107,7 @@ class StencilMarkPSO : public GraphicsPSO {
                 0, sampler_state->GetGpuHandle());
             // global texture
             context->GetList()->SetGraphicsRootDescriptorTable(
-                1, shared_texture->GetGpuHandle());
+                1, SkyboxRenderer::GetSkyboxTexture(skybox)->GetGpuHandle());
             context->GetList()->SetGraphicsRootConstantBufferView(
                 2, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(

@@ -16,7 +16,6 @@ namespace node {
 
 auto clear_buffer = std::make_shared<ClearBufferNode>();
 auto camera_node = std::make_shared<CameraNodeInvoker>();
-auto global_resource_node = std::make_shared<GlobalResourceNode>();
 auto global_constant_node = std::make_shared<GlobalConstantNode>();
 auto game_object_node = std::make_shared<MeshObjectNodeInvoker>();
 auto gui_node = std::make_shared<GuiNodeInvoker>();

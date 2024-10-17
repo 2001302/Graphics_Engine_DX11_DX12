@@ -25,7 +25,6 @@ bool Engine::Start() {
     //initialize
     start_tree->Build(black_board.get())
     ->Sequence()
-        ->Excute(node::global_resource_node)
         ->Excute(node::global_constant_node)
         ->Excute(node::camera_node)
         ->Excute(node::light_node)
@@ -43,7 +42,6 @@ bool Engine::Start() {
     ->Sequence()
         ->Excute(node::camera_node)
         ->Excute(node::light_node)
-        ->Excute(node::global_resource_node)
         ->Excute(node::global_constant_node)
         ->Excute(node::game_object_node)
         ->Excute(node::shadow_effect_node)

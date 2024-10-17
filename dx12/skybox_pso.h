@@ -3,6 +3,7 @@
 
 #include "pipeline_state_object.h"
 #include "shader_util.h"
+#include "skybox_renderer.h"
 
 namespace graphics {
 class SolidSkyboxPSO : public GraphicsPSO {
@@ -75,7 +76,7 @@ class SolidSkyboxPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(SamplerState *shared_sampler, GpuResourceList *shared_texture,
+    void Render(SamplerState *shared_sampler, common::Model *skybox,
                 ComPtr<ID3D12Resource> global_consts,
                 MeshRenderer *mesh_renderer) {
 
@@ -104,7 +105,7 @@ class SolidSkyboxPSO : public GraphicsPSO {
         context->GetList()->SetGraphicsRootDescriptorTable(
             0, shared_sampler->GetGpuHandle());
         context->GetList()->SetGraphicsRootDescriptorTable(
-            1, shared_texture->GetGpuHandle());
+            1, SkyboxRenderer::GetSkyboxTexture(skybox)->GetGpuHandle());
         // global texture
         context->GetList()->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());
@@ -200,7 +201,7 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(SamplerState *shared_sampler, GpuResourceList *shared_texture,
+    void Render(SamplerState *shared_sampler, common::Model *skybox,
                 ComPtr<ID3D12Resource> global_consts,
                 MeshRenderer *mesh_renderer) {
 
@@ -230,7 +231,7 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
         context->GetList()->SetGraphicsRootDescriptorTable(
             0, shared_sampler->GetGpuHandle());
         context->GetList()->SetGraphicsRootDescriptorTable(
-            1, shared_texture->GetGpuHandle());
+            1, SkyboxRenderer::GetSkyboxTexture(skybox)->GetGpuHandle());
         // global texture
         context->GetList()->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());

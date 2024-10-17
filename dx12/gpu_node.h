@@ -116,63 +116,6 @@ class GlobalConstantNode : public common::BehaviorActionNode {
     }
 };
 
-class GlobalResourceNode : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
-
-        auto black_board = dynamic_cast<BlackBoard *>(data_block);
-        assert(black_board != nullptr);
-
-        auto target = black_board->targets.get();
-        auto condition = black_board->conditions.get();
-
-        switch (condition->stage_type) {
-        case EnumStageType::eInitialize: {
-
-            auto context =
-                GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
-                    L"SharedResourceNode");
-
-            auto env = TextureCube::Create(
-                L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds");
-            auto specular = TextureCube::Create(
-                L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds");
-            auto diffuse = TextureCube::Create(
-                L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds");
-            auto brdf = TextureCube::Create(
-                L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds");
-
-            std::vector<GpuResource *> skybox = {
-                std::move(env), std::move(specular), std::move(diffuse),
-                std::move(brdf)};
-            condition->skybox_texture = new GpuResourceList(skybox);
-
-            std::vector<GpuResource *> shadow = {};
-            for (int i = 0; i < MAX_LIGHTS; i++) {
-                shadow.push_back(std::move(DepthBuffer::Create(
-                    1024, 1024, DXGI_FORMAT_D24_UNORM_S8_UINT)));
-            }
-            condition->shadow_texture = new GpuResourceList(shadow);
-
-            std::vector<D3D12_SAMPLER_DESC> sampler_desc{
-                sampler::linearWrapSS,  sampler::linearClampSS,
-                sampler::shadowPointSS, sampler::shadowCompareSS,
-                sampler::pointWrapSS,   sampler::linearMirrorSS,
-                sampler::pointClampSS};
-
-            condition->shared_sampler = SamplerState::Create(sampler_desc);
-
-            GpuCore::Instance().GetCommand()->Finish(context, true);
-
-            break;
-        }
-        default:
-            break;
-        }
-
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-
 } // namespace graphics
 
 #endif

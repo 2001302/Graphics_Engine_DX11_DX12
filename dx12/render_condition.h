@@ -23,20 +23,15 @@ class RenderCondition : public common::IInfo {
     RenderCondition()
         : delta_time(0.0f), draw_wire(false), light_rotate(false),
           stage_type(EnumStageType::eInitialize), shared_sampler(0),
-          skybox_texture(0), shadow_texture(0) {}
+          shadow_texture(0) {}
     ~RenderCondition() {
 
-        if (skybox_texture) {
-            delete skybox_texture;
-            skybox_texture = 0;
-        }
         if (shared_sampler) {
             delete shared_sampler;
             shared_sampler = 0;
         }
     }
 
-    GpuResourceList *skybox_texture; // t10~t13
     GpuResourceList *shadow_texture; // t14~t16
     SamplerState *shared_sampler;
     ConstantBuffer<GlobalConstants> global_consts;
@@ -72,24 +67,25 @@ class RenderCondition : public common::IInfo {
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("Mirror")) {
 
-            //ImGui::SliderFloat("Alpha", &ground->mirror_alpha, 0.0f, 1.0f);
-            //const float blendColor[4] = {ground->mirror_alpha,
-            //                             ground->mirror_alpha,
-            //                             ground->mirror_alpha, 1.0f};
-            //if (draw_wire)
-            //    dx11::pso::mirrorBlendWirePSO.SetBlendFactor(blendColor);
-            //else
-            //    dx11::pso::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
+            // ImGui::SliderFloat("Alpha", &ground->mirror_alpha, 0.0f, 1.0f);
+            // const float blendColor[4] = {ground->mirror_alpha,
+            //                              ground->mirror_alpha,
+            //                              ground->mirror_alpha, 1.0f};
+            // if (draw_wire)
+            //     dx11::pso::mirrorBlendWirePSO.SetBlendFactor(blendColor);
+            // else
+            //     dx11::pso::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
 
-            //auto renderer = (MeshRenderer *)ground->mirror->GetComponent(
-            //    EnumComponentType::eRenderer);
-            //ImGui::SliderFloat(
-            //    "Metallic", &renderer->material_consts.GetCpu().metallicFactor,
-            //    0.0f, 1.0f);
-            //ImGui::SliderFloat(
-            //    "Roughness",
-            //    &renderer->material_consts.GetCpu().roughnessFactor, 0.0f,
-            //    1.0f);
+            // auto renderer = (MeshRenderer *)ground->mirror->GetComponent(
+            //     EnumComponentType::eRenderer);
+            // ImGui::SliderFloat(
+            //     "Metallic",
+            //     &renderer->material_consts.GetCpu().metallicFactor,
+            //     0.0f, 1.0f);
+            // ImGui::SliderFloat(
+            //     "Roughness",
+            //     &renderer->material_consts.GetCpu().roughnessFactor, 0.0f,
+            //     1.0f);
 
             ImGui::TreePop();
         }

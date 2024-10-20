@@ -14,17 +14,17 @@
 namespace graphics {
 namespace node {
 
-auto clear_buffer = std::make_shared<ClearBufferNode>();
-auto camera_node = std::make_shared<CameraNodeInvoker>();
-auto global_constant_node = std::make_shared<GlobalConstantNode>();
-auto game_object_node = std::make_shared<MeshObjectNodeInvoker>();
-auto gui_node = std::make_shared<GuiNodeInvoker>();
-auto present = std::make_shared<PresentNode>();
-auto light_node = std::make_shared<LightNodeInvoker>();
-auto tone_mapping = std::make_shared<ToneMappingNodeInvoker>();
-auto skybox_node = std::make_shared<SkyBoxNodeInvoker>();
-auto mirror_effect_node = std::make_shared<MirrorEffectNodeInvoker>();
-auto shadow_effect_node = std::make_shared<ShadowEffectNode>();
+extern std::shared_ptr<ClearBufferNode> clear_buffer;
+extern std::shared_ptr<CameraNodeInvoker> camera_node;
+extern std::shared_ptr<GlobalConstantNode> global_constant_node;
+extern std::shared_ptr<MeshObjectNodeInvoker> game_object_node;
+extern std::shared_ptr<GuiNodeInvoker> gui_node;
+extern std::shared_ptr<PresentNode> present;
+extern std::shared_ptr<LightNodeInvoker> light_node;
+extern std::shared_ptr<ToneMappingNodeInvoker> tone_mapping;
+extern std::shared_ptr<SkyBoxNodeInvoker> skybox_node;
+extern std::shared_ptr<MirrorEffectNodeInvoker> mirror_effect_node;
+extern std::shared_ptr<ShadowEffectNode> shadow_effect_node;
 
 } // namespace node
 

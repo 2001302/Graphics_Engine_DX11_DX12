@@ -79,6 +79,9 @@
     <ClCompile Include="shadow_map.cpp">
       <Filter>Graphics\Component</Filter>
     </ClCompile>
+    <ClCompile Include="tree_node.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphics">

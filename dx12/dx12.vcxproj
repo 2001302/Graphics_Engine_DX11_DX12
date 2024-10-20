@@ -173,6 +173,7 @@
     <ClCompile Include="skybox_renderer.cpp" />
     <ClCompile Include="texture_2d.cpp" />
     <ClCompile Include="texture_cube.cpp" />
+    <ClCompile Include="tree_node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="black_board.h" />

@@ -52,9 +52,9 @@ class StencilMarkPSO : public GraphicsPSO {
         ComPtr<ID3DBlob> depthVS;
         ComPtr<ID3DBlob> depthPS;
         ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                       L"Shader/DepthOnlyVS.hlsl", depthVS);
+                                       L"../DX12/Shader/DepthOnlyVS.hlsl", depthVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                      L"Shader/DepthOnlyPS.hlsl", depthPS);
+                                      L"../DX12/Shader/DepthOnlyPS.hlsl", depthPS);
         //
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};

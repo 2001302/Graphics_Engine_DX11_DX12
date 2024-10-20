@@ -4,6 +4,7 @@
 #include "black_board.h"
 #include "mesh_util.h"
 #include "message_receiver.h"
+#include "tree_node.h"
 #include <behavior_tree_builder.h>
 #include <platform.h>
 #include <setting_ui.h>
@@ -19,13 +20,13 @@ class Engine : public common::Platform {
     bool Frame() override final;
     bool Stop() override final;
 
-    virtual void OnPrepare(BlackBoard* black_board);
+    virtual void OnPrepare(BlackBoard *black_board){};
 
   private:
     std::shared_ptr<BlackBoard> black_board;
     std::unique_ptr<MessageReceiver> message_receiver;
     std::unique_ptr<common::TimeStamp> time_stamp;
-        
+
     std::shared_ptr<common::BehaviorTreeBuilder> start_tree;
     std::shared_ptr<common::BehaviorTreeBuilder> update_tree;
     std::shared_ptr<common::BehaviorTreeBuilder> render_tree;

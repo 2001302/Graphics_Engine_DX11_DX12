@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{d6d780d9-93ce-4a9d-aee4-7a3f04950192}</ProjectGuid>
-    <RootNamespace>dx11simple</RootNamespace>
+    <ProjectGuid>{05b3e624-3d1b-4c8d-b090-6b6224562905}</ProjectGuid>
+    <RootNamespace>dx12game</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -104,7 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)common;$(SolutionDir)dx11</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dx12;$(SolutionDir)common</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -120,7 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)common;$(SolutionDir)dx11</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)dx12;$(SolutionDir)common</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp20</LanguageStandard>
     </ClCompile>
     <Link>
@@ -137,8 +137,8 @@
     <ProjectReference Include="..\common\common.vcxproj">
       <Project>{6f0a9805-9f14-4449-9f81-cf316c8d31d9}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\dx11\dx11.vcxproj">
-      <Project>{281b1146-ad53-4590-ba80-28f780639177}</Project>
+    <ProjectReference Include="..\dx12\dx12.vcxproj">
+      <Project>{594a28fe-43b7-417e-a384-016fea8b2f77}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

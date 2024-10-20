@@ -62,9 +62,9 @@ class SolidMeshPSO : public GraphicsPSO {
         ComPtr<ID3DBlob> basicVS;
         ComPtr<ID3DBlob> basicPS;
         ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                       L"Shader/BasicVS.hlsl", basicVS);
+                                       L"../DX12/Shader/BasicVS.hlsl", basicVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                      L"Shader/BasicPS.hlsl", basicPS);
+                                      L"../DX12/Shader/BasicPS.hlsl", basicPS);
         //
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
@@ -202,9 +202,9 @@ class ReflectSolidMeshPSO : public GraphicsPSO {
         ComPtr<ID3DBlob> basicVS;
         ComPtr<ID3DBlob> basicPS;
         ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                       L"Shader/BasicVS.hlsl", basicVS);
+                                       L"../DX12/Shader/BasicVS.hlsl", basicVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                      L"Shader/BasicPS.hlsl", basicPS);
+                                      L"../DX12/Shader/BasicPS.hlsl", basicPS);
         //
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
@@ -344,9 +344,9 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
         ComPtr<ID3DBlob> basicVS;
         ComPtr<ID3DBlob> basicPS;
         ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                       L"Shader/BasicVS.hlsl", basicVS);
+                                       L"../DX12/Shader/BasicVS.hlsl", basicVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                      L"Shader/BasicPS.hlsl", basicPS);
+                                      L"../DX12/Shader/BasicPS.hlsl", basicPS);
         //
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};

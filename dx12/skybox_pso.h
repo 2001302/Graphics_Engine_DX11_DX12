@@ -52,9 +52,9 @@ class SolidSkyboxPSO : public GraphicsPSO {
         ComPtr<ID3DBlob> skyboxVS;
         ComPtr<ID3DBlob> skyboxPS;
         ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                       L"Shader/SkyboxVS.hlsl", skyboxVS);
+                                       L"../DX12/Shader/SkyboxVS.hlsl", skyboxVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                      L"Shader/SkyboxPS.hlsl", skyboxPS);
+                                      L"../DX12/Shader/SkyboxPS.hlsl", skyboxPS);
         // pipeline state
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
@@ -176,9 +176,9 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
         ComPtr<ID3DBlob> skyboxVS;
         ComPtr<ID3DBlob> skyboxPS;
         ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                       L"Shader/SkyboxVS.hlsl", skyboxVS);
+                                       L"../DX12/Shader/SkyboxVS.hlsl", skyboxVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                      L"Shader/SkyboxPS.hlsl", skyboxPS);
+                                      L"../DX12/Shader/SkyboxPS.hlsl", skyboxPS);
         // pipeline state
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};

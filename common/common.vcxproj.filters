@@ -238,6 +238,5 @@
     <None Include="ImGui\NodeEditor\imgui_node_editor_internal.inl">
       <Filter>Gui\ImGui\NodeEditor</Filter>
     </None>
-    <None Include="packages.config" />
   </ItemGroup>
 </Project>

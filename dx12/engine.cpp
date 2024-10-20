@@ -115,6 +115,22 @@ void Engine::OnPrepare(BlackBoard *black_board) {
     auto condition = black_board->conditions.get();
     auto targets = black_board->targets.get();
 
+    // skybox
+    {
+        auto mesh = GeometryGenerator::MakeBox(40.0f);
+        std::reverse(mesh.indices.begin(), mesh.indices.end());
+
+        auto skybox_renderer = std::make_shared<SkyboxRenderer>();
+        skybox_renderer->Initialize(
+            std::vector{mesh},
+            L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds",
+            L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds",
+            L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds",
+            L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds");
+        targets->world->TryAdd(skybox_renderer);
+    }
+
+    // sample object
     {
         MeshData mesh = GeometryGenerator::MakeBox(0.2f);
         Vector3 center(0.0f, 0.5f, 2.5f);
@@ -135,6 +151,7 @@ void Engine::OnPrepare(BlackBoard *black_board) {
         targets->objects.insert({obj->GetEntityId(), obj});
     }
 
+    // sample object
     {
         MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
         Vector3 center(0.5f, 0.5f, 2.0f);

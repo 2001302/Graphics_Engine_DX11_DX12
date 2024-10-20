@@ -74,14 +74,9 @@ class GlobalConstantNode : public common::BehaviorActionNode {
                 std::reverse(mesh_data.indices.begin(),
                              mesh_data.indices.end());
 
-                //todo: need to change empty texture
                 auto skybox_renderer = std::make_shared<SkyboxRenderer>();
-                skybox_renderer->Initialize(std::vector{mesh_data});
-                skybox_renderer->SetSkyboxTexture(
-                    L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds",
-                    L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds",
-                    L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds",
-                    L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds");
+                skybox_renderer->Initialize(
+                    std::vector{mesh_data});
                 targets->world->TryAdd(skybox_renderer);
             }
 

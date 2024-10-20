@@ -9,6 +9,8 @@
 //
 //*********************************************************
 
+#pragma comment(lib, "dxguid.lib")
+
 #ifndef __D3DX12_H__
 #define __D3DX12_H__
 

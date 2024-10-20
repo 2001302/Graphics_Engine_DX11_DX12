@@ -120,8 +120,10 @@
       </AdditionalLibraryDirectories>
     </Link>
     <Lib>
-      <AdditionalDependencies>common.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(IntDir);$(LibraryPath)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,8 +150,10 @@
       </AdditionalLibraryDirectories>
     </Link>
     <Lib>
-      <AdditionalDependencies>common.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)$(IntDir);$(LibraryPath)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>
+      </AdditionalDependencies>
+      <AdditionalLibraryDirectories>
+      </AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -206,7 +210,6 @@
     <ClCompile Include="geometry_generator.cpp" />
     <ClCompile Include="message_receiver.cpp" />
     <ClCompile Include="model_loader.cpp" />
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="skybox_renderer.cpp" />
     <ClCompile Include="tone_mapping.cpp" />
     <ClCompile Include="mesh_renderer.cpp" />

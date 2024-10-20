@@ -22,6 +22,10 @@
 #include <windows.h>
 #include <wrl/client.h> 
 
+#pragma comment(lib, "d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
+#pragma comment(lib, "dxguid.lib")
+
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;
 using DirectX::SimpleMath::Vector3;

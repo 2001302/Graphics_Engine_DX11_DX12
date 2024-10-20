@@ -7,6 +7,7 @@
 #include "device_manager.h"
 #include "texture_2d.h"
 #include "texture_cube.h"
+#include <env.h>
 
 namespace graphics {
 class GpuBuffer {

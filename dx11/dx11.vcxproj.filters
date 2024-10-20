@@ -117,7 +117,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
     <ClCompile Include="geometry_generator.cpp">
       <Filter>Graphics\Util</Filter>
     </ClCompile>

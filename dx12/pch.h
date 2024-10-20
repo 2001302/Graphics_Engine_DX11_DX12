@@ -27,7 +27,10 @@
 #include <wrl/client.h>
 
 #include "d3dx12.h"
-#include <env.h>
+
+#pragma comment(lib, "d3d12.lib")
+#pragma comment(lib, "dxgi.lib") 
+#pragma comment(lib, "dxguid.lib")
 
 using DirectX::SimpleMath::Matrix;
 using DirectX::SimpleMath::Vector2;

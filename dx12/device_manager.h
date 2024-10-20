@@ -5,6 +5,7 @@
 #include "heap_manager.h"
 #include "pch.h"
 #include <logger.h>
+#include <env.h>
 
 namespace graphics {
 class GpuCore {

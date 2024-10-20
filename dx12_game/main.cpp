@@ -3,9 +3,9 @@
 #include <engine.h>
 
 namespace graphics {
-class SimpleDx12 : public Engine {
+class GameDx12 : public Engine {
   public:
-    void OnPrepare(BlackBoard *black_board) override {
+    void LoadAsset(BlackBoard *black_board) override {
         auto condition = black_board->conditions.get();
         auto targets = black_board->targets.get();
 
@@ -107,8 +107,8 @@ class SimpleDx12 : public Engine {
 } // namespace graphics
 
 void main() {
-    std::unique_ptr<graphics::SimpleDx12> engine =
-        std::make_unique<graphics::SimpleDx12>();
+    std::unique_ptr<graphics::GameDx12> engine =
+        std::make_unique<graphics::GameDx12>();
 
     if (engine->Start()) {
         engine->Run();

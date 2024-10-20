@@ -17,7 +17,7 @@ bool Engine::Start() {
     GpuCore::Instance().Initialize();
     GpuBuffer::Instance().Initialize();
 
-    OnPrepare(black_board.get());
+    LoadAsset(black_board.get());
 
     black_board->conditions->stage_type = EnumStageType::eInitialize;
 

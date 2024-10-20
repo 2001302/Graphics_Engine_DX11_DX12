@@ -18,7 +18,7 @@ class MirrorRenderer : public MeshRenderer {
 
   private:
     DirectX::SimpleMath::Plane mirror_plane;
-    float mirror_alpha = 0.0f; // opacity
+    float mirror_alpha = 1.0f; // opacity
 };
 } // namespace graphics
 #endif

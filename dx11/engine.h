@@ -20,7 +20,7 @@ class Engine : public common::Platform {
     bool Frame() override final;
     bool Stop() override final;
 
-    virtual void OnPrepare(BlackBoard *black_board);
+    virtual void LoadAsset(BlackBoard *black_board);
 
   private:
     std::shared_ptr<BlackBoard> black_board;

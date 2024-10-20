@@ -17,7 +17,7 @@ bool Engine::Start() {
 
     graphics::GpuCore::Instance().Initialize();
 
-    OnPrepare(black_board.get());
+    LoadAsset(black_board.get());
 
     black_board->targets->stage_type = EnumStageType::eInitialize;
     
@@ -118,5 +118,5 @@ bool Engine::Stop() {
     return true;
 }
 
-void Engine::OnPrepare(BlackBoard *black_board) {}
+void Engine::LoadAsset(BlackBoard *black_board) {}
 } // namespace engine

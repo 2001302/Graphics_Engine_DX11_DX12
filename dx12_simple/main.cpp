@@ -5,7 +5,7 @@
 namespace graphics {
 class SimpleDx12 : public Engine {
   public:
-    void OnPrepare(BlackBoard *black_board) override {
+    void LoadAsset(BlackBoard *black_board) override {
 
         auto condition = black_board->conditions.get();
         auto targets = black_board->targets.get();
@@ -70,6 +70,7 @@ class SimpleDx12 : public Engine {
 
             component->SetMirrorPlane(DirectX::SimpleMath::Plane(
                 position, Vector3(0.0f, 1.0f, 0.0f)));
+            component->SetMirrorAlpha(1.0f);
 
             targets->ground->TryAdd(component);
         }

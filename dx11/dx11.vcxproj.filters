@@ -199,64 +199,64 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Common.hlsli">
+    <None Include="shader\Common.hlsli">
       <Filter>Graphics\Gpu\Shader</Filter>
     </None>
-    <None Include="DiskSamples.hlsli">
+    <None Include="shader\DiskSamples.hlsli">
       <Filter>Graphics\Gpu\Shader</Filter>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="CombinePS.hlsl">
+    <FxCompile Include="shader\CombinePS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="SamplingVS.hlsl">
+    <FxCompile Include="shader\SamplingVS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="SamplingPS.hlsl">
+    <FxCompile Include="shader\SamplingPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="SkyboxPS.hlsl">
+    <FxCompile Include="shader\SkyboxPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="SkyboxVS.hlsl">
+    <FxCompile Include="shader\SkyboxVS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="BloomDownPS.hlsl">
+    <FxCompile Include="shader\BloomDownPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="BloomUpPS.hlsl">
+    <FxCompile Include="shader\BloomUpPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="DepthOnlyVS.hlsl">
+    <FxCompile Include="shader\DepthOnlyVS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="DepthOnlyPS.hlsl">
+    <FxCompile Include="shader\DepthOnlyPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="PostEffectsPS.hlsl">
+    <FxCompile Include="shader\PostEffectsPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="BasicVS.hlsl">
+    <FxCompile Include="shader\BasicVS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="BasicPS.hlsl">
+    <FxCompile Include="shader\BasicPS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="CombineCS.hlsl">
+    <FxCompile Include="shader\CombineCS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="BlurHorizontal.hlsl">
+    <FxCompile Include="shader\BlurHorizontal.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="BrightPassCS.hlsl">
+    <FxCompile Include="shader\BrightPassCS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="BloomCompositeCS.hlsl">
+    <FxCompile Include="shader\BloomCompositeCS.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
-    <FxCompile Include="BlurVertical.hlsl">
+    <FxCompile Include="shader\BlurVertical.hlsl">
       <Filter>Graphics\Gpu\Shader</Filter>
     </FxCompile>
   </ItemGroup>

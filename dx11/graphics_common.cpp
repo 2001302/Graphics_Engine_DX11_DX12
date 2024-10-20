@@ -482,42 +482,49 @@ void pipeline::InitShaders(ComPtr<ID3D11Device> &device) {
          D3D11_INPUT_PER_VERTEX_DATA, 0},
     };
 
-    CreateVertexShaderAndInputLayout(device, L"BasicVS.hlsl", basicIEs, basicVS,
-                                     basicIL);
+    CreateVertexShaderAndInputLayout(device, L"../DX11/Shader/BasicVS.hlsl",
+                                     basicIEs, basicVS, basicIL);
     CreateVertexShaderAndInputLayout(
-        device, L"BasicVS.hlsl", skinnedIEs, skinnedVS, skinnedIL,
+        device, L"../DX11/Shader/BasicVS.hlsl", skinnedIEs, skinnedVS,
+        skinnedIL,
         std::vector<D3D_SHADER_MACRO>{{"SKINNED", "1"}, {NULL, NULL}});
-    CreateVertexShaderAndInputLayout(device, L"NormalVS.hlsl", basicIEs,
-                                     normalVS, basicIL);
-    CreateVertexShaderAndInputLayout(device, L"SamplingVS.hlsl", samplingIED,
-                                     samplingVS, samplingIL);
+    CreateVertexShaderAndInputLayout(device, L"../DX11/Shader/NormalVS.hlsl",
+                                     basicIEs, normalVS, basicIL);
+    CreateVertexShaderAndInputLayout(device, L"../DX11/Shader/SamplingVS.hlsl",
+                                     samplingIED, samplingVS, samplingIL);
 
-    CreateVertexShaderAndInputLayout(device, L"SkyboxVS.hlsl", skyboxIE,
-                                     skyboxVS, skyboxIL);
+    CreateVertexShaderAndInputLayout(device, L"../DX11/Shader/SkyboxVS.hlsl",
+                                     skyboxIE, skyboxVS, skyboxIL);
 
-    CreateVertexShaderAndInputLayout(device, L"DepthOnlyVS.hlsl", basicIEs,
-                                     depthOnlyVS, skyboxIL);
+    CreateVertexShaderAndInputLayout(device, L"../DX11/Shader/DepthOnlyVS.hlsl",
+                                     basicIEs, depthOnlyVS, skyboxIL);
     CreateVertexShaderAndInputLayout(
-        device, L"DepthOnlyVS.hlsl", skinnedIEs, depthOnlySkinnedVS, skinnedIL,
+        device, L"../DX11/Shader/DepthOnlyVS.hlsl", skinnedIEs,
+        depthOnlySkinnedVS, skinnedIL,
         std::vector<D3D_SHADER_MACRO>{{"SKINNED", "1"}, {NULL, NULL}});
 
-    CreatePixelShader(device, L"BasicPS.hlsl", basicPS);
-    CreatePixelShader(device, L"NormalPS.hlsl", normalPS);
+    CreatePixelShader(device, L"../DX11/Shader/BasicPS.hlsl", basicPS);
+    CreatePixelShader(device, L"../DX11/Shader/NormalPS.hlsl", normalPS);
 
-    CreatePixelShader(device, L"SkyboxPS.hlsl", skyboxPS);
+    CreatePixelShader(device, L"../DX11/Shader/SkyboxPS.hlsl", skyboxPS);
 
-    CreatePixelShader(device, L"CombinePS.hlsl", combinePS);
-    CreatePixelShader(device, L"BloomDownPS.hlsl", bloomDownPS);
-    CreatePixelShader(device, L"BloomUpPS.hlsl", bloomUpPS);
-    CreatePixelShader(device, L"DepthOnlyPS.hlsl", depthOnlyPS);
-    CreatePixelShader(device, L"PostEffectsPS.hlsl", postEffectsPS);
+    CreatePixelShader(device, L"../DX11/Shader/CombinePS.hlsl", combinePS);
+    CreatePixelShader(device, L"../DX11/Shader/BloomDownPS.hlsl", bloomDownPS);
+    CreatePixelShader(device, L"../DX11/Shader/BloomUpPS.hlsl", bloomUpPS);
+    CreatePixelShader(device, L"../DX11/Shader/DepthOnlyPS.hlsl", depthOnlyPS);
+    CreatePixelShader(device, L"../DX11/Shader/PostEffectsPS.hlsl",
+                      postEffectsPS);
 
-    CreateGeometryShader(device, L"NormalGS.hlsl", normalGS);
+    CreateGeometryShader(device, L"../DX11/Shader/NormalGS.hlsl", normalGS);
 
-    CreateComputeShader(device, L"BrightPassCS.hlsl", brightPassCS);
-    CreateComputeShader(device, L"BlurVertical.hlsl", blurVerticalCS);
-    CreateComputeShader(device, L"BlurHorizontal.hlsl", blurHorizontalCS);
-    CreateComputeShader(device, L"BloomCompositeCS.hlsl", bloomComposite);
+    CreateComputeShader(device, L"../DX11/Shader/BrightPassCS.hlsl",
+                        brightPassCS);
+    CreateComputeShader(device, L"../DX11/Shader/BlurVertical.hlsl",
+                        blurVerticalCS);
+    CreateComputeShader(device, L"../DX11/Shader/BlurHorizontal.hlsl",
+                        blurHorizontalCS);
+    CreateComputeShader(device, L"../DX11/Shader/BloomCompositeCS.hlsl",
+                        bloomComposite);
 }
 
 void pipeline::InitPipelineStates(ComPtr<ID3D11Device> &device) {

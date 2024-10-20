@@ -95,7 +95,7 @@ class PlayerNodeInvoker : public BehaviorActionNode {
 
         switch (job_context->stage_type) {
         case EnumStageType::eInitialize: {
-            std::string path = "Assets/Characters/Mixamo/";
+            std::string path = "../Assets/Characters/Mixamo/";
             std::vector<std::string> clipNames = {
                 "CatwalkIdle.fbx", "CatwalkIdleToWalkForward.fbx",
                 "CatwalkWalkForward.fbx", "CatwalkWalkStop.fbx",

@@ -26,13 +26,13 @@ class SkyboxNodeInvoker : public common::BehaviorActionNode {
                 std::make_shared<SkyboxRenderer>(std::vector{mesh_data});
 
             auto envFilename =
-                L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
+                L"../Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds";
             auto specularFilename =
-                L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
+                L"../Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds";
             auto irradianceFilename =
-                L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
+                L"../Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds";
             auto brdfFilename =
-                L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
+                L"../Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds";
 
             graphics::Util::CreateDDSTexture(envFilename, true,
                                              renderer->env_SRV);

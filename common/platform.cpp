@@ -115,9 +115,14 @@ bool Platform::InitializeWindow() {
 
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, false);
 
+    //common::env::main_window = CreateWindow(
+    //    wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW, 10, 10,
+    //    wr.right - wr.left, wr.bottom - wr.top, NULL, NULL, wc.hInstance, NULL);
+
     common::env::main_window = CreateWindow(
-        wc.lpszClassName, L"Engine", WS_OVERLAPPEDWINDOW, 10, 10,
-        wr.right - wr.left, wr.bottom - wr.top, NULL, NULL, wc.hInstance, NULL);
+        wc.lpszClassName, L"Engine", WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU,
+        10, 10, wr.right - wr.left, wr.bottom - wr.top, NULL, NULL,
+        wc.hInstance, NULL);
 
     if (!common::env::main_window) {
         std::cout << "CreateWindow() failed." << std::endl;

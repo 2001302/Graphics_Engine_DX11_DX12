@@ -102,7 +102,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     // 3.reflectSkyboxSolidPSO
                     {
                         SkyboxRenderer *renderer = nullptr;
-                        if (targets->world->TryGet(renderer)) {
+                        if (targets->world->TryGet(renderer) && !renderer->IsBlack()) {
                             reflect_skybox_solid_PSO->Render(
                                 condition->shared_sampler,
                                 targets->world.get(),

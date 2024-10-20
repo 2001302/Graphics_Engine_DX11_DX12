@@ -9,7 +9,7 @@
 namespace graphics {
 class TextureCube : public GpuResource {
   public:
-    TextureCube() : cpu_handle_(), index_(0){};
+    TextureCube() : cpu_handle_(), index_(0), is_black_(false){};
 
     static TextureCube *Create(const wchar_t *file_name, bool is_brdf = false) {
         TextureCube *cube = new TextureCube();
@@ -18,6 +18,7 @@ class TextureCube : public GpuResource {
             cube->Initialize(file_name);
         } else {
             cube->Initialize(256, 256, is_brdf);
+            cube->is_black_ = true;
         }
         return cube;
     };
@@ -26,6 +27,7 @@ class TextureCube : public GpuResource {
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() override {
         return GpuCore::Instance().GetHeap().View()->GetGpuHandle(index_);
     };
+    bool IsBlack() { return is_black_; };
 
   private:
     void Initialize(const wchar_t *file_name) {
@@ -121,6 +123,7 @@ class TextureCube : public GpuResource {
     UINT index_;
     D3D12_CPU_DESCRIPTOR_HANDLE cpu_handle_;
     TextureLoadResult result_;
+    bool is_black_;
 };
 } // namespace graphics
 #endif

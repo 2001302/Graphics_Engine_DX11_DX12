@@ -7,7 +7,7 @@
 namespace graphics {
 class SkyboxRenderer : public MeshRenderer {
   public:
-    SkyboxRenderer(){};
+    SkyboxRenderer() : is_black_(false){};
     ~SkyboxRenderer(){};
     static GpuResourceList *GetSkyboxTexture(common::Model *world) {
         SkyboxRenderer *component = nullptr;
@@ -23,6 +23,7 @@ class SkyboxRenderer : public MeshRenderer {
         MeshRenderer::Initialize(meshes);
         SetTexture(env_path, specular_path, diffuse_path, brdf_path);
     }
+    bool IsBlack() { return is_black_; }
 
   private:
     void SetTexture(const wchar_t *env_path, const wchar_t *specular_path,
@@ -36,9 +37,13 @@ class SkyboxRenderer : public MeshRenderer {
             std::move(env), std::move(specular), std::move(diffuse),
             std::move(brdf)};
         skybox_texture = std::make_shared<GpuResourceList>(skybox);
+
+        is_black_ = env->IsBlack() && specular->IsBlack() &&
+                    diffuse->IsBlack() && brdf->IsBlack();
     }
 
     std::shared_ptr<GpuResourceList> skybox_texture; // t10~t13
+    bool is_black_;
 };
 } // namespace graphics
 #endif

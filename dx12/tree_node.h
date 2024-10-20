@@ -21,7 +21,6 @@ auto game_object_node = std::make_shared<MeshObjectNodeInvoker>();
 auto gui_node = std::make_shared<GuiNodeInvoker>();
 auto present = std::make_shared<PresentNode>();
 auto light_node = std::make_shared<LightNodeInvoker>();
-auto resolve_buffer = std::make_shared<ResolveBuffer>();
 auto tone_mapping = std::make_shared<ToneMappingNodeInvoker>();
 auto skybox_node = std::make_shared<SkyBoxNodeInvoker>();
 auto mirror_effect_node = std::make_shared<MirrorEffectNodeInvoker>();

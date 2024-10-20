@@ -17,7 +17,6 @@ class CameraNodeInvoker : public common::BehaviorActionNode {
 
         switch (condition->stage_type) {
         case EnumStageType::eInitialize: {
-            targets->camera = std::make_unique<Camera>();
             targets->camera->Initialize();
             targets->camera->Update();
             break;

@@ -7,7 +7,11 @@
 namespace graphics {
 class RenderTargetObject : public common::IInfo {
   public:
-    RenderTargetObject() {}
+    RenderTargetObject() {
+        camera = std::make_unique<Camera>();
+        world = std::make_shared<common::Model>();
+        ground = std::make_shared<common::Model>();
+    }
     std::unique_ptr<Camera> camera;
     std::shared_ptr<common::Model> world;
     std::shared_ptr<common::Model> ground;

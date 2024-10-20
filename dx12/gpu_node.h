@@ -2,6 +2,8 @@
 #define _GPU_NODE
 
 #include "mesh_util.h"
+#include "shadow_map.h"
+#include "skybox_renderer.h"
 #include <behavior_tree_builder.h>
 
 namespace graphics {
@@ -47,34 +49,13 @@ class PresentNode : public common::BehaviorActionNode {
     }
 };
 
-class ResolveBuffer : public common::BehaviorActionNode {
-    common::EnumBehaviorTreeStatus OnInvoke() override {
-        // auto command_manager = GpuCore::Instance().GetCommand();
-
-        // command_manager.GraphicsList()->TransitionResource(
-        //     GpuCore::Instance().GetBuffers().hdr_buffer,
-        //     D3D12_RESOURCE_STATE_RESOLVE_SOURCE, true);
-
-        // command_manager.GraphicsList()->TransitionResource(
-        //     GpuCore::Instance().GetBuffers().ldr_buffer,
-        //     D3D12_RESOURCE_STATE_RESOLVE_DEST, true);
-
-        // command_manager.GraphicsList()->ResolveSubresource(
-        //     GpuCore::Instance().GetBuffers().ldr_buffer,
-        //     GpuCore::Instance().GetBuffers().hdr_buffer,
-        //     DXGI_FORMAT_R16G16B16A16_FLOAT);
-
-        return common::EnumBehaviorTreeStatus::eSuccess;
-    }
-};
-
 class GlobalConstantNode : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto target = black_board->targets.get();
+        auto targets = black_board->targets.get();
         auto condition = black_board->conditions.get();
 
         switch (condition->stage_type) {
@@ -82,15 +63,51 @@ class GlobalConstantNode : public common::BehaviorActionNode {
 
             condition->global_consts.Initialize();
 
+            auto context =
+                GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
+                    L"SharedResource");
+
+            SkyboxRenderer *skybox = nullptr;
+            if (!targets->world->TryGet(skybox)) {
+
+                auto mesh_data = GeometryGenerator::MakeBox(40.0f);
+                std::reverse(mesh_data.indices.begin(),
+                             mesh_data.indices.end());
+
+                //todo: need to change empty texture
+                auto skybox_renderer = std::make_shared<SkyboxRenderer>();
+                skybox_renderer->Initialize(std::vector{mesh_data});
+                skybox_renderer->SetSkyboxTexture(
+                    L"./Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds",
+                    L"./Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds",
+                    L"./Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds",
+                    L"./Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds");
+                targets->world->TryAdd(skybox_renderer);
+            }
+
+            ShadowMap *shadow = nullptr;
+            if (!targets->world->TryGet(shadow)) {
+                auto shadow_map = std::make_shared<ShadowMap>();
+                shadow_map->Initialize();
+                targets->world->TryAdd(shadow_map);
+            }
+
+            std::vector<D3D12_SAMPLER_DESC> sampler_desc{
+                sampler::linearWrapSS,  sampler::linearClampSS,
+                sampler::shadowPointSS, sampler::shadowCompareSS,
+                sampler::pointWrapSS,   sampler::linearMirrorSS,
+                sampler::pointClampSS};
+
+            condition->shared_sampler = SamplerState::Create(sampler_desc);
+
+            GpuCore::Instance().GetCommand()->Finish(context, true);
             break;
         }
         case EnumStageType::eUpdate: {
 
-            const Vector3 eyeWorld = target->camera->GetPosition();
-            // const Matrix reflectRow =
-            //     Matrix::CreateReflection(condition->ground->mirror_plane);
-            const Matrix viewRow = target->camera->GetView();
-            const Matrix projRow = target->camera->GetProjection();
+            const Vector3 eyeWorld = targets->camera->GetPosition();
+            const Matrix viewRow = targets->camera->GetView();
+            const Matrix projRow = targets->camera->GetProjection();
 
             condition->global_consts.GetCpu().eyeWorld = eyeWorld;
             condition->global_consts.GetCpu().view = viewRow.Transpose();

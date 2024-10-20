@@ -22,6 +22,9 @@ class Model : public INode {
         }
     }
     template <typename T> bool TryGet(T *&component) {
+        if (!components.contains(typeid(T).name()))
+            return false;
+
         component = (T*)components[typeid(T).name()].get();
         if (component == nullptr)
             return false;

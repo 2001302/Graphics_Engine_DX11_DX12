@@ -188,7 +188,6 @@ void Engine::OnPrepare(BlackBoard *black_board) {
         component->SetMirrorPlane(
             DirectX::SimpleMath::Plane(position, Vector3(0.0f, 1.0f, 0.0f)));
 
-        targets->ground = std::make_shared<common::Model>();
         targets->ground->TryAdd(component);
     }
 }

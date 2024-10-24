@@ -52,9 +52,11 @@ class StencilMarkPSO : public GraphicsPSO {
         ComPtr<ID3DBlob> depthVS;
         ComPtr<ID3DBlob> depthPS;
         ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                       L"../DX12/Shader/DepthOnlyVS.hlsl", depthVS);
+                                       L"../DX12/Shader/DepthOnlyVS.hlsl",
+                                       depthVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                      L"../DX12/Shader/DepthOnlyPS.hlsl", depthPS);
+                                      L"../DX12/Shader/DepthOnlyPS.hlsl",
+                                      depthPS);
         //
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
@@ -76,7 +78,7 @@ class StencilMarkPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(common::Model* skybox, SamplerState *sampler_state,
+    void Render(common::Model *skybox, SamplerState *sampler_state,
                 ComPtr<ID3D12Resource> global_consts,
                 MeshRenderer *mesh_renderer) {
 
@@ -96,8 +98,7 @@ class StencilMarkPSO : public GraphicsPSO {
             context->SetViewportAndScissorRect(
                 0, 0, (UINT)common::env::screen_width,
                 (UINT)common::env::screen_height);
-            context->SetRenderTargetView(
-                GpuBuffer::Instance().GetHDR()->GetRtvHandle(),
+            context->SetDepthStencilView(
                 GpuBuffer::Instance().GetDSV()->GetDsvHandle());
             context->GetList()->OMSetStencilRef(1);
             context->SetRootSignature(root_signature);

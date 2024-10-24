@@ -353,8 +353,7 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
         psoDesc.pRootSignature = root_signature;
         psoDesc.VS = CD3DX12_SHADER_BYTECODE(basicVS.Get());
         psoDesc.PS = CD3DX12_SHADER_BYTECODE(basicPS.Get());
-        psoDesc.RasterizerState =
-            CD3DX12_RASTERIZER_DESC(rasterizer::solidCCWRS);
+        psoDesc.RasterizerState = CD3DX12_RASTERIZER_DESC(rasterizer::solidRS);
         psoDesc.BlendState = blend::mirrorBS;
         psoDesc.DepthStencilState = depth::drawMaskedDSS;
         psoDesc.DSVFormat = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -385,7 +384,6 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
                                     D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
         for (auto mesh : mesh_renderer->GetMeshes()) {
-
             context->SetViewportAndScissorRect(
                 0, 0, (UINT)common::env::screen_width,
                 (UINT)common::env::screen_height);
@@ -396,7 +394,9 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
             context->SetRootSignature(root_signature);
             context->SetPipelineState(pipeline_state);
             context->GetList()->OMSetStencilRef(1);
-
+            // TODO: from mirror alpha
+            float blend_factor[4] = {0.5f, 0.5f, 0.5f, 1.0f};
+            context->GetList()->OMSetBlendFactor(blend_factor);
             context->GetList()->SetGraphicsRootDescriptorTable(
                 0, sampler_state->GetGpuHandle());
             // global texture

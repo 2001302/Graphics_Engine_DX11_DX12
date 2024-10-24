@@ -113,7 +113,7 @@ class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
                     // 4.mirrorBlendSolidPSO
                     mirror_blend_solid_PSO->Render(
                         targets->world.get(), condition->shared_sampler,
-                        reflect_global_consts.Get(), mirror);
+                        condition->global_consts.Get(), mirror);
                 } else {
                     mirror_mesh_solid_PSO->Render(
                         targets->world.get(), condition->shared_sampler,

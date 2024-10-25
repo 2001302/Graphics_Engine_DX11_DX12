@@ -52,9 +52,11 @@ class SolidSkyboxPSO : public GraphicsPSO {
         ComPtr<ID3DBlob> skyboxVS;
         ComPtr<ID3DBlob> skyboxPS;
         ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                       L"../DX12/Shader/SkyboxVS.hlsl", skyboxVS);
+                                       L"../DX12/Shader/SkyboxVS.hlsl",
+                                       skyboxVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                      L"../DX12/Shader/SkyboxPS.hlsl", skyboxPS);
+                                      L"../DX12/Shader/SkyboxPS.hlsl",
+                                      skyboxPS);
         // pipeline state
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
@@ -76,7 +78,7 @@ class SolidSkyboxPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(SamplerState *shared_sampler, common::Model *skybox,
+    void Render(SamplerState *shared_sampler, common::Model *world,
                 ComPtr<ID3D12Resource> global_consts,
                 MeshRenderer *mesh_renderer) {
 
@@ -105,7 +107,7 @@ class SolidSkyboxPSO : public GraphicsPSO {
         context->GetList()->SetGraphicsRootDescriptorTable(
             0, shared_sampler->GetGpuHandle());
         context->GetList()->SetGraphicsRootDescriptorTable(
-            1, SkyboxRenderer::GetSkyboxTexture(skybox)->GetGpuHandle());
+            1, SkyboxRenderer::GetSkyboxTexture(world)->GetGpuHandle());
         // global texture
         context->GetList()->SetGraphicsRootConstantBufferView(
             2, global_consts->GetGPUVirtualAddress());
@@ -176,9 +178,11 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
         ComPtr<ID3DBlob> skyboxVS;
         ComPtr<ID3DBlob> skyboxPS;
         ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                       L"../DX12/Shader/SkyboxVS.hlsl", skyboxVS);
+                                       L"../DX12/Shader/SkyboxVS.hlsl",
+                                       skyboxVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                      L"../DX12/Shader/SkyboxPS.hlsl", skyboxPS);
+                                      L"../DX12/Shader/SkyboxPS.hlsl",
+                                      skyboxPS);
         // pipeline state
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};

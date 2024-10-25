@@ -28,9 +28,11 @@ class SkyBoxNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eRender: {
             SkyboxRenderer *component = nullptr;
             if (targets->world->TryGet(component)) {
-                skyboxPSO->Render(condition->shared_sampler,
-                                  targets->world.get(),
-                                  condition->global_consts.Get(), component);
+                if (!component->IsBlack()) {
+                    skyboxPSO->Render(
+                        condition->shared_sampler, targets->world.get(),
+                        condition->global_consts.Get(), component);
+                }
             }
             break;
         }

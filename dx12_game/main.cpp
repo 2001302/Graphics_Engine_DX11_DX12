@@ -99,6 +99,7 @@ class GameDx12 : public Engine {
 
             component->SetMirrorPlane(DirectX::SimpleMath::Plane(
                 position, Vector3(0.0f, 1.0f, 0.0f)));
+            component->SetMirrorAlpha(0.7f);
 
             targets->ground->TryAdd(component);
         }

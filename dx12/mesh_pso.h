@@ -5,6 +5,7 @@
 #include "pipeline_state_object.h"
 #include "shader_util.h"
 #include "skybox_renderer.h"
+#include "mirror_renderer.h"
 
 namespace graphics {
 class SolidMeshPSO : public GraphicsPSO {
@@ -370,7 +371,7 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
     };
     void Render(common::Model *world, SamplerState *sampler_state,
                 ComPtr<ID3D12Resource> global_consts,
-                MeshRenderer *mesh_renderer) {
+                MirrorRenderer *mesh_renderer) {
 
         auto context =
             GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
@@ -383,6 +384,9 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
         context->TransitionResource(GpuBuffer::Instance().GetHDR(),
                                     D3D12_RESOURCE_STATE_RENDER_TARGET, true);
 
+        float alpha = mesh_renderer->GetMirrorAlpha();
+        float blend_factor[4] = {alpha, alpha, alpha, 1.0f};
+
         for (auto mesh : mesh_renderer->GetMeshes()) {
             context->SetViewportAndScissorRect(
                 0, 0, (UINT)common::env::screen_width,
@@ -394,8 +398,6 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
             context->SetRootSignature(root_signature);
             context->SetPipelineState(pipeline_state);
             context->GetList()->OMSetStencilRef(1);
-            // TODO: from mirror alpha
-            float blend_factor[4] = {0.5f, 0.5f, 0.5f, 1.0f};
             context->GetList()->OMSetBlendFactor(blend_factor);
             context->GetList()->SetGraphicsRootDescriptorTable(
                 0, sampler_state->GetGpuHandle());

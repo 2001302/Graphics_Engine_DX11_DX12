@@ -30,7 +30,7 @@ bool Engine::Start() {
         ->Excute(node::game_object_node)
         ->Excute(node::skybox_node)
         ->Excute(node::shadow_effect_node)
-        ->Excute(node::mirror_effect_node)
+        ->Excute(node::mirror_object_node)
         ->Excute(node::tone_mapping)
         ->Excute(node::gui_node)
     ->Close()
@@ -44,7 +44,7 @@ bool Engine::Start() {
         ->Excute(node::global_constant_node)
         ->Excute(node::game_object_node)
         ->Excute(node::shadow_effect_node)
-        ->Excute(node::mirror_effect_node)
+        ->Excute(node::mirror_object_node)
     ->Close();
      
     //render
@@ -54,7 +54,7 @@ bool Engine::Start() {
         ->Excute(node::shadow_effect_node)
         ->Excute(node::game_object_node)
         ->Excute(node::skybox_node)
-        ->Excute(node::mirror_effect_node)
+        ->Excute(node::mirror_object_node)
         ->Excute(node::tone_mapping)
         ->Excute(node::gui_node)
         ->Excute(node::present)

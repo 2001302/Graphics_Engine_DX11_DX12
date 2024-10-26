@@ -8,7 +8,7 @@
 
 namespace graphics {
 
-class MirrorEffectNodeInvoker : public common::BehaviorActionNode {
+class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);

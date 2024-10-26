@@ -23,7 +23,7 @@ extern std::shared_ptr<PresentNode> present;
 extern std::shared_ptr<LightNodeInvoker> light_node;
 extern std::shared_ptr<ToneMappingNodeInvoker> tone_mapping;
 extern std::shared_ptr<SkyBoxNodeInvoker> skybox_node;
-extern std::shared_ptr<MirrorEffectNodeInvoker> mirror_effect_node;
+extern std::shared_ptr<MirrorObjectNodeInvoker> mirror_object_node;
 extern std::shared_ptr<ShadowEffectNode> shadow_effect_node;
 
 } // namespace node

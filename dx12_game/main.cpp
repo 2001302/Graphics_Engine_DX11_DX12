@@ -75,7 +75,7 @@ class GameDx12 : public Engine {
 
         // sample object
         {
-            std::string base_path = "Assets/Characters/Mixamo/";
+            std::string base_path = "../Assets/Characters/Mixamo/";
             std::string file_name = "character.fbx";
 
             auto component = std::make_shared<MeshRenderer>();

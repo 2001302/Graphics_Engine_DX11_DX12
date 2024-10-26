@@ -28,8 +28,8 @@ std::shared_ptr<ToneMappingNodeInvoker> tone_mapping =
 std::shared_ptr<SkyBoxNodeInvoker> skybox_node =
     std::make_shared<SkyBoxNodeInvoker>();
 
-std::shared_ptr<MirrorEffectNodeInvoker> mirror_effect_node =
-    std::make_shared<MirrorEffectNodeInvoker>();
+std::shared_ptr<MirrorObjectNodeInvoker> mirror_object_node =
+    std::make_shared<MirrorObjectNodeInvoker>();
 
 std::shared_ptr<ShadowEffectNode> shadow_effect_node =
     std::make_shared<ShadowEffectNode>();

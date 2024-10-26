@@ -19,7 +19,7 @@ namespace node {
 auto light_node = std::make_shared<LightNodeInvoker>();
 auto camera_node = std::make_shared<CameraNodeInvoker>();
 auto skybox_node = std::make_shared<SkyboxNodeInvoker>();
-auto mirror_effect_node = std::make_shared<MirrorEffectNodeInvoker>();
+auto mirror_object_node = std::make_shared<MirrorObjectNodeInvoker>();
 auto shared_resource_node = std::make_shared<SharedResourceNodeInvoker>();
 auto game_objects_node = std::make_shared<GameObjectNodeInvoker>();
 auto shadow_effect_node = std::make_shared<ShadowEffectNodeInvoker>();

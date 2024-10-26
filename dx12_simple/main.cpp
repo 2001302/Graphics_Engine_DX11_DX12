@@ -72,7 +72,7 @@ class SimpleDx12 : public Engine {
                 position, Vector3(0.0f, 1.0f, 0.0f)));
             component->SetMirrorAlpha(0.9f);
 
-            targets->ground->TryAdd(component);
+            targets->world->TryAdd(component);
         }
     }
 };

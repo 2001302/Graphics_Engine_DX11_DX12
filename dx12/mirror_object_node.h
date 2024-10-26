@@ -50,7 +50,7 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eUpdate: {
             MirrorRenderer *mirror = nullptr;
-            if (targets->ground->TryGet(mirror)) {
+            if (targets->world->TryGet(mirror)) {
 
                 const Matrix reflectRow =
                     Matrix::CreateReflection(mirror->GetMirrorPlane());
@@ -75,16 +75,16 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
         }
         case EnumStageType::eRender: {
 
-            MirrorRenderer *mirror = nullptr;
-            if (targets->ground->TryGet(mirror)) {
+            MirrorRenderer *ground = nullptr;
+            if (targets->world->TryGet(ground)) {
 
                 // on mirror
-                if (mirror->GetMirrorAlpha() < 1.0f) {
+                if (ground->GetMirrorAlpha() < 1.0f) {
 
                     // 1.stencilMaskPSO
                     stencil_mark_PSO->Render(
                         targets->world.get(), condition->shared_sampler,
-                        condition->global_consts.Get(), mirror);
+                        condition->global_consts.Get(), ground);
 
                     // 2.reflectSolidPSO
                     {
@@ -113,11 +113,11 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
                     // 4.mirrorBlendSolidPSO
                     mirror_blend_solid_PSO->Render(
                         targets->world.get(), condition->shared_sampler,
-                        condition->global_consts.Get(), mirror);
+                        condition->global_consts.Get(), ground);
                 } else {
                     mirror_mesh_solid_PSO->Render(
                         targets->world.get(), condition->shared_sampler,
-                        condition->global_consts.Get(), mirror);
+                        condition->global_consts.Get(), ground);
                 }
             }
 

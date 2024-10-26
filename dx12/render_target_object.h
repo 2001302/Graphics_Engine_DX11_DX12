@@ -10,11 +10,9 @@ class RenderTargetObject : public common::IInfo {
     RenderTargetObject() {
         camera = std::make_unique<Camera>();
         world = std::make_shared<common::Model>();
-        ground = std::make_shared<common::Model>();
     }
     std::unique_ptr<Camera> camera;
-    std::shared_ptr<common::Model> world;
-    std::shared_ptr<common::Model> ground;
+    std::shared_ptr<common::Model> world; // shadow,skybox,mirror ground
     std::map<int /*id*/, std::shared_ptr<common::Model>> objects;
 };
 } // namespace graphics

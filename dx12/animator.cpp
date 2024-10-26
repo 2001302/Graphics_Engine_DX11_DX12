@@ -39,6 +39,7 @@ void Animator::UpdateAnimation(int clipId, float elapse_time) {
     }
 
     bone_transforms.Upload();
+    common::Logger::Debug("Animator::UpdateBoneTransform");
 }
 
 void Animator::Move(MeshRenderer *renderer, Vector3 direction, float speed) {

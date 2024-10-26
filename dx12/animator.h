@@ -21,7 +21,7 @@ class Animator : public common::Component {
     void UpdateAnimation(int clipId, int frame);
     void UpdateAnimation(int clipId, float elapse_time);
 
-    D3D12_GPU_DESCRIPTOR_HANDLE GetBone() {
+    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
         return bone_transforms.GetHandle();
 	}
 

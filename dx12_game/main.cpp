@@ -79,7 +79,7 @@ class GameDx12 : public Engine {
         {
             std::string base_path = "../Assets/Characters/Mixamo/";
             std::vector<std::string> clipNames = {
-                "CatwalkIdle.fbx"};
+                "CatwalkWalkForward.fbx"};
 
             AnimationData aniData;
             auto [meshes, _] = GeometryGenerator::ReadAnimationFromFile(

@@ -564,7 +564,7 @@ class SkinnedSolidMeshPSO : public GraphicsPSO {
             context->GetList()->SetGraphicsRootDescriptorTable(
                 6, mesh->texture_PS->GetGpuHandle());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                7, animator->GetBone());
+                7, animator->GetGpuHandle());
 
             context->GetList()->IASetPrimitiveTopology(
                 D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

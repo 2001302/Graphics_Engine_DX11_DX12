@@ -15,7 +15,8 @@ void MeshRenderer::Initialize(const std::string &basePath,
     Initialize(meshes);
 }
 
-void MeshRenderer::Initialize(const vector<MeshData> &mesh_data) {
+void MeshRenderer::Initialize(const vector<MeshData> &mesh_data,
+                              bool is_skinned) {
 
     material_consts.Initialize();
     mesh_consts.Initialize();
@@ -24,7 +25,8 @@ void MeshRenderer::Initialize(const vector<MeshData> &mesh_data) {
 
         MeshData meshData = mesh_data[i];
         meshes[i] = std::make_shared<Mesh>();
-        meshes[i]->Initialize(meshData, mesh_consts, material_consts);
+        meshes[i]->Initialize(meshData, mesh_consts, material_consts,
+                              is_skinned);
     }
 }
 

@@ -147,6 +147,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="animator.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="command_queue.cpp" />
     <ClCompile Include="dds_texture_loader.cpp" />
@@ -176,6 +177,7 @@
     <ClCompile Include="tree_node.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="animator.h" />
     <ClInclude Include="black_board.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="camera_node.h" />
@@ -208,6 +210,7 @@
     <ClInclude Include="sampler_state.h" />
     <ClInclude Include="shader_util.h" />
     <ClInclude Include="stencil_mark_pso.h" />
+    <ClInclude Include="structured_buffer.h" />
     <ClInclude Include="tree_node.h" />
     <ClInclude Include="vertex.h" />
     <ClInclude Include="gui_node.h" />

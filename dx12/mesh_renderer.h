@@ -18,12 +18,13 @@ class MeshRenderer : public common::Component {
 
     virtual void Initialize();
     void Initialize(const std::string &basePath, const std::string &filename);
-    void Initialize(const std::vector<MeshData> &meshes);
+    void Initialize(const std::vector<MeshData> &meshes, bool is_skinned = false);
 
     void UpdateConstantBuffers();
     void UpdateWorldRow(const Matrix &worldRow);
 
     std::vector<std::shared_ptr<Mesh>> GetMeshes() { return meshes; }
+    Matrix GetWorldRow() { return world_row; }
     ConstantBuffer<MeshConstants> &MeshConsts() { return mesh_consts; }
     ConstantBuffer<MaterialConstants> &MaterialConsts() {
         return material_consts;

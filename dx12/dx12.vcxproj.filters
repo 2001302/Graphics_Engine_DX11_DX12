@@ -82,6 +82,9 @@
     <ClCompile Include="tree_node.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="animator.cpp">
+      <Filter>Graphics\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Graphics">
@@ -283,6 +286,12 @@
     </ClInclude>
     <ClInclude Include="shadow_map.h">
       <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="animator.h">
+      <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="structured_buffer.h">
+      <Filter>Graphics\Structure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-﻿#ifndef _ANIMATIONCLIP
+#ifndef _ANIMATIONCLIP
 #define _ANIMATIONCLIP
 
 #include <directxtk/SimpleMath.h>
@@ -40,9 +40,9 @@ struct AnimationClip {
 
 struct AnimationData {
 
-    map<string, int32_t> boneNameToId;  // 堉??대쫫怨??몃뜳???뺤닔
-    vector<string> boneIdToName;        // boneNameToId??Id ?쒖꽌?濡?堉??대쫫 ???
-    vector<int32_t> boneParents;        // 遺紐?堉덉쓽 ?몃뜳??
+    map<string, int32_t> boneNameToId;
+    vector<string> boneIdToName;
+    vector<int32_t> boneParents;
     vector<Matrix> offsetMatrices;
     vector<Matrix> boneTransforms;
     vector<AnimationClip> clips;
@@ -70,24 +70,20 @@ struct AnimationData {
         for (int boneId = 0; boneId < boneTransforms.size(); boneId++) {
             auto &keys = clip.keys[boneId];
 
-            // 二쇱쓽: 紐⑤뱺 梨꾨꼸(堉???frame 媛쒖닔媛 ?숈씪?섏쭊 ?딆쓬
-
             const int parentIdx = boneParents[boneId];
             const Matrix parentMatrix = parentIdx >= 0
                                             ? boneTransforms[parentIdx]
                                             : accumulatedRootTransform;
 
-            // keys.size()媛 0??寃쎌슦?먮뒗 Identity 蹂??
-            auto key = keys.size() > 0
-                           ? keys[frame % keys.size()]
-                           : AnimationClip::Key(); // key媛 reference ?꾨떂
+            auto key = keys.size() > 0 ? keys[frame % keys.size()]
+                                       : AnimationClip::Key();
 
             // Root
             if (parentIdx < 0) {
                 if (frame != 0) {
-                    //accumulatedRootTransform =
-                    //    Matrix::CreateTranslation(key.pos - prevPos) *
-                    //    accumulatedRootTransform;
+                    // accumulatedRootTransform =
+                    //     Matrix::CreateTranslation(key.pos - prevPos) *
+                    //     accumulatedRootTransform;
                 } else {
                     auto temp = accumulatedRootTransform.Translation();
                     temp.y = key.pos.y;
@@ -105,5 +101,5 @@ struct AnimationData {
     }
 };
 
-} // namespace engine
+} // namespace graphics
 #endif

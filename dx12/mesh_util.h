@@ -125,7 +125,7 @@ class Util {
         CD3DX12_RANGE readRange(0, 0);
         ASSERT_FAILED(
             buffer->Map(0, &readRange, reinterpret_cast<void **>(&begin)));
-        memcpy(begin, &bufferData.data(), sizeof(T_DATA) * bufferData.size());
+        memcpy(begin, bufferData.data(), sizeof(T_DATA) * bufferData.size());
         buffer->Unmap(0, nullptr);
     }
 
@@ -144,6 +144,40 @@ class Util {
             buffer->Map(0, &readRange, reinterpret_cast<void **>(&begin)));
         memcpy(begin, &bufferData, sizeof(T_DATA));
         buffer->Unmap(0, nullptr);
+    }
+
+    template <typename T_STRUCTURED>
+    static void CreateStructuredBuffer(
+        const std::vector<T_STRUCTURED> &structuredBufferData,
+        ComPtr<ID3D12Resource> &structuredBuffer) {
+        // static_assert((sizeof(T_STRUCTURED) % 16) == 0,
+        //               "Constant Buffer size must be 16-byte aligned");
+
+        D3D12_HEAP_PROPERTIES heapProps = {};
+        heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
+
+        D3D12_RESOURCE_DESC resourceDesc = {};
+        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+        resourceDesc.Width = sizeof(T_STRUCTURED) * structuredBufferData.size();
+        resourceDesc.Height = 1;
+        resourceDesc.DepthOrArraySize = 1;
+        resourceDesc.MipLevels = 1;
+        resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
+        resourceDesc.SampleDesc.Count = 1;
+        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+
+        ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
+            &heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc,
+            D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
+            IID_PPV_ARGS(&structuredBuffer)));
+
+        UINT8 *begin = 0;
+        D3D12_RANGE readRange = {};
+        ASSERT_FAILED(structuredBuffer->Map(0, &readRange,
+                                            reinterpret_cast<void **>(&begin)));
+        memcpy(begin, structuredBufferData.data(),
+               structuredBufferData.size() * sizeof(T_STRUCTURED));
+        structuredBuffer->Unmap(0, nullptr);
     }
 };
 } // namespace graphics

@@ -4,12 +4,19 @@
 namespace graphics {
 void Mesh::Initialize(const MeshData &mesh_data,
                       ConstantBuffer<MeshConstants> &mesh_consts,
-                      ConstantBuffer<MaterialConstants> &material_consts) {
+                      ConstantBuffer<MaterialConstants> &material_consts,
+                      bool is_skinned) {
+    if (!is_skinned) {
+        Util::CreateVertexBuffer(mesh_data.vertices, vertex_buffer,
+                                 vertex_buffer_view);
+        vertex_count = UINT(mesh_data.vertices.size());
+    } else {
+        Util::CreateVertexBuffer(mesh_data.skinned_vertices, vertex_buffer,
+                                 vertex_buffer_view);
+        vertex_count = UINT(mesh_data.skinned_vertices.size());
+    }
 
-    Util::CreateVertexBuffer(mesh_data.vertices, vertex_buffer,
-                             vertex_buffer_view);
     index_count = UINT(mesh_data.indices.size());
-    vertex_count = UINT(mesh_data.vertices.size());
     stride = UINT(sizeof(Vertex));
     Util::CreateIndexBuffer(mesh_data.indices, index_buffer, index_buffer_view);
 

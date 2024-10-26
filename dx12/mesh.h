@@ -2,9 +2,9 @@
 #define _MESH
 
 #include "constant_buffer.h"
+#include "device_manager.h"
 #include "gpu_resource.h"
 #include "mesh_util.h"
-#include "device_manager.h"
 #include "vertex.h"
 
 namespace graphics {
@@ -42,8 +42,9 @@ struct Mesh {
 
     void Initialize(const MeshData &mesh_data,
                     ConstantBuffer<MeshConstants> &mesh_consts,
-                    ConstantBuffer<MaterialConstants> &material_consts);
+                    ConstantBuffer<MaterialConstants> &material_consts,
+                    bool is_skinned = false);
 };
 
-} // namespace dx12
+} // namespace graphics
 #endif

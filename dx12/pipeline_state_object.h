@@ -45,6 +45,7 @@ extern D3D12_SAMPLER_DESC pointClampSS;
 namespace layout {
 extern D3D12_INPUT_ELEMENT_DESC combineIEs[2];
 extern D3D12_INPUT_ELEMENT_DESC basicIEs[4];
+extern D3D12_INPUT_ELEMENT_DESC skinnedIEs[8];
 } // namespace layout
 
 namespace rasterizer {

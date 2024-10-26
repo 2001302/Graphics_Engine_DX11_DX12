@@ -1,8 +1,10 @@
 #pragma once
 
 #include <engine.h>
+#include "animator.h"
 
 namespace graphics {
+
 class GameDx12 : public Engine {
   public:
     void LoadAsset(BlackBoard *black_board) override {
@@ -76,14 +78,34 @@ class GameDx12 : public Engine {
         // sample object
         {
             std::string base_path = "../Assets/Characters/Mixamo/";
-            std::string file_name = "character.fbx";
+            std::vector<std::string> clipNames = {
+                "CatwalkIdle.fbx"};
 
-            auto component = std::make_shared<MeshRenderer>();
-            component->Initialize(base_path, file_name);
-            component->UpdateConstantBuffers();
+            AnimationData aniData;
+            auto [meshes, _] = GeometryGenerator::ReadAnimationFromFile(
+                base_path, "character.fbx");
+
+            for (auto &name : clipNames) {
+                auto [_, ani] =
+                    GeometryGenerator::ReadAnimationFromFile(base_path, name);
+
+                if (aniData.clips.empty()) {
+                    aniData = ani;
+                } else {
+                    aniData.clips.push_back(ani.clips.front());
+                }
+            }
+
+            auto renderer = std::make_shared<MeshRenderer>();
+            renderer->Initialize(meshes,true);
+            renderer->UpdateConstantBuffers();
+
+            auto animator = std::make_shared<PlayerAnimator>(
+                aniData, renderer.get(), black_board->input.get());
 
             auto model = std::make_shared<common::Model>();
-            model->TryAdd(component);
+            model->TryAdd(renderer);
+            model->TryAdd(animator);
 
             targets->objects.insert({model->GetEntityId(), model});
         }

@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <iostream>
 #include <node.h>
+#include <logger.h>
 
 namespace graphics {
 using Microsoft::WRL::ComPtr;
@@ -19,7 +20,10 @@ class Animator : public common::Component {
     void InitAnimationData(const AnimationData &aniData);
     void UpdateAnimation(int clipId, int frame);
     void UpdateAnimation(int clipId, float elapse_time);
-    void UploadBoneData();
+
+    D3D12_GPU_DESCRIPTOR_HANDLE GetBone() {
+        return bone_transforms.GetHandle();
+	}
 
     void Move(MeshRenderer *renderer, Vector3 direction, float speed);
     void Turn(MeshRenderer *renderer, Vector3 direction, float speed);

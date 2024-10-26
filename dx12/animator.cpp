@@ -7,10 +7,10 @@ void Animator::InitAnimationData(const AnimationData &aniData) {
     if (!aniData.clips.empty()) {
         animation_data = aniData;
 
-        bone_transforms.cpu.resize(aniData.clips.front().keys.size());
+        bone_transforms.GetCpu().resize(aniData.clips.front().keys.size());
 
         for (int i = 0; i < aniData.clips.front().keys.size(); i++)
-            bone_transforms.cpu[i] = Matrix();
+            bone_transforms.GetCpu()[i] = Matrix();
         bone_transforms.Initialize();
     }
 }
@@ -19,8 +19,8 @@ void Animator::UpdateAnimation(int clipId, int frame) {
 
     animation_data.Update(clipId, frame);
 
-    for (int i = 0; i < bone_transforms.cpu.size(); i++) {
-        bone_transforms.cpu[i] =
+    for (int i = 0; i < bone_transforms.GetCpu().size(); i++) {
+        bone_transforms.GetCpu()[i] =
             animation_data.Get(clipId, i, frame).Transpose();
     }
 
@@ -33,17 +33,12 @@ void Animator::UpdateAnimation(int clipId, float elapse_time) {
 
     animation_data.Update(clipId, frame);
 
-    for (int i = 0; i < bone_transforms.cpu.size(); i++) {
-        bone_transforms.cpu[i] =
+    for (int i = 0; i < bone_transforms.GetCpu().size(); i++) {
+        bone_transforms.GetCpu()[i] =
             animation_data.Get(clipId, i, frame).Transpose();
     }
 
     bone_transforms.Upload();
-}
-
-void Animator::UploadBoneData() {
-    //graphics::GpuCore::Instance().device_context->VSSetShaderResources(
-    //    9, 1, bone_transforms.GetAddressOfSRV());
 }
 
 void Animator::Move(MeshRenderer *renderer, Vector3 direction, float speed) {

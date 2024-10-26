@@ -12,7 +12,7 @@ std::shared_ptr<CameraNodeInvoker> camera_node =
 std::shared_ptr<GlobalConstantNode> global_constant_node =
     std::make_shared<GlobalConstantNode>();
 
-std::shared_ptr<MeshObjectNodeInvoker> game_object_node =
+std::shared_ptr<MeshObjectNodeInvoker> mesh_object_node =
     std::make_shared<MeshObjectNodeInvoker>();
 
 std::shared_ptr<GuiNodeInvoker> gui_node = std::make_shared<GuiNodeInvoker>();

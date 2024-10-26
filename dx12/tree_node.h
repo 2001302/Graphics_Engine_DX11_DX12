@@ -17,7 +17,7 @@ namespace node {
 extern std::shared_ptr<ClearBufferNode> clear_buffer;
 extern std::shared_ptr<CameraNodeInvoker> camera_node;
 extern std::shared_ptr<GlobalConstantNode> global_constant_node;
-extern std::shared_ptr<MeshObjectNodeInvoker> game_object_node;
+extern std::shared_ptr<MeshObjectNodeInvoker> mesh_object_node;
 extern std::shared_ptr<GuiNodeInvoker> gui_node;
 extern std::shared_ptr<PresentNode> present;
 extern std::shared_ptr<LightNodeInvoker> light_node;

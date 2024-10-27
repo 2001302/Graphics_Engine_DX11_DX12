@@ -148,8 +148,7 @@ class Util {
 
     template <typename T_STRUCTURED>
     static void CreateStructuredBuffer(const std::vector<T_STRUCTURED> &data,
-                                       ComPtr<ID3D12Resource> &upload_buffer,
-                                       ComPtr<ID3D12Resource> &default_buffer) {
+                                       ComPtr<ID3D12Resource> &upload_buffer) {
 
         D3D12_RESOURCE_DESC desc = {};
         desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
@@ -169,15 +168,6 @@ class Util {
             &props_upload, D3D12_HEAP_FLAG_NONE, &desc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
             IID_PPV_ARGS(&upload_buffer)));
-
-        // default buffer : GPU access
-        D3D12_HEAP_PROPERTIES props_defualt = {};
-        props_defualt.Type = D3D12_HEAP_TYPE_DEFAULT;
-
-        ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
-            &props_defualt, D3D12_HEAP_FLAG_NONE, &desc,
-            D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
-            IID_PPV_ARGS(&default_buffer)));
     }
 };
 } // namespace graphics

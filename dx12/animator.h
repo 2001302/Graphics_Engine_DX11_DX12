@@ -7,8 +7,8 @@
 #include <component.h>
 #include <filesystem>
 #include <iostream>
-#include <node.h>
 #include <logger.h>
+#include <node.h>
 
 namespace graphics {
 using Microsoft::WRL::ComPtr;
@@ -18,12 +18,12 @@ class Animator : public common::Component {
     Animator(){};
     Animator(const AnimationData &aniData);
     void InitAnimationData(const AnimationData &aniData);
-    void UpdateAnimation(int clipId, int frame);
-    void UpdateAnimation(int clipId, float elapse_time);
+    void UpdateAnimation(ID3D12GraphicsCommandList *commandList, int clipId,
+                         float elapse_time);
 
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
         return bone_transforms.GetHandle();
-	}
+    }
 
     void Move(MeshRenderer *renderer, Vector3 direction, float speed);
     void Turn(MeshRenderer *renderer, Vector3 direction, float speed);

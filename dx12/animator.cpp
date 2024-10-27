@@ -15,19 +15,8 @@ void Animator::InitAnimationData(const AnimationData &aniData) {
     }
 }
 
-void Animator::UpdateAnimation(int clipId, int frame) {
-
-    animation_data.Update(clipId, frame);
-
-    for (int i = 0; i < bone_transforms.GetCpu().size(); i++) {
-        bone_transforms.GetCpu()[i] =
-            animation_data.Get(clipId, i, frame).Transpose();
-    }
-
-    bone_transforms.Upload();
-}
-
-void Animator::UpdateAnimation(int clipId, float elapse_time) {
+void Animator::UpdateAnimation(ID3D12GraphicsCommandList *command_list,
+                               int clipId, float elapse_time) {
     auto frame = animation_data.clips[clipId].keys[0].size() *
                  (elapse_time / (animation_data.clips[clipId].duration));
 
@@ -37,9 +26,8 @@ void Animator::UpdateAnimation(int clipId, float elapse_time) {
         bone_transforms.GetCpu()[i] =
             animation_data.Get(clipId, i, frame).Transpose();
     }
-
-    bone_transforms.Upload();
-    common::Logger::Debug("Animator::UpdateBoneTransform");
+    
+    bone_transforms.Upload(command_list);
 }
 
 void Animator::Move(MeshRenderer *renderer, Vector3 direction, float speed) {

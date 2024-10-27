@@ -147,37 +147,37 @@ class Util {
     }
 
     template <typename T_STRUCTURED>
-    static void CreateStructuredBuffer(
-        const std::vector<T_STRUCTURED> &structuredBufferData,
-        ComPtr<ID3D12Resource> &structuredBuffer) {
-        // static_assert((sizeof(T_STRUCTURED) % 16) == 0,
-        //               "Constant Buffer size must be 16-byte aligned");
+    static void CreateStructuredBuffer(const std::vector<T_STRUCTURED> &data,
+                                       ComPtr<ID3D12Resource> &upload_buffer,
+                                       ComPtr<ID3D12Resource> &default_buffer) {
 
-        D3D12_HEAP_PROPERTIES heapProps = {};
-        heapProps.Type = D3D12_HEAP_TYPE_UPLOAD;
+        D3D12_RESOURCE_DESC desc = {};
+        desc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
+        desc.Width = sizeof(T_STRUCTURED) * data.size();
+        desc.Height = 1;
+        desc.DepthOrArraySize = 1;
+        desc.MipLevels = 1;
+        desc.Format = DXGI_FORMAT_UNKNOWN;
+        desc.SampleDesc.Count = 1;
+        desc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
 
-        D3D12_RESOURCE_DESC resourceDesc = {};
-        resourceDesc.Dimension = D3D12_RESOURCE_DIMENSION_BUFFER;
-        resourceDesc.Width = sizeof(T_STRUCTURED) * structuredBufferData.size();
-        resourceDesc.Height = 1;
-        resourceDesc.DepthOrArraySize = 1;
-        resourceDesc.MipLevels = 1;
-        resourceDesc.Format = DXGI_FORMAT_UNKNOWN;
-        resourceDesc.SampleDesc.Count = 1;
-        resourceDesc.Layout = D3D12_TEXTURE_LAYOUT_ROW_MAJOR;
+        // upload buffer : CPU access
+        D3D12_HEAP_PROPERTIES props_upload = {};
+        props_upload.Type = D3D12_HEAP_TYPE_UPLOAD;
 
         ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
-            &heapProps, D3D12_HEAP_FLAG_NONE, &resourceDesc,
+            &props_upload, D3D12_HEAP_FLAG_NONE, &desc,
             D3D12_RESOURCE_STATE_GENERIC_READ, nullptr,
-            IID_PPV_ARGS(&structuredBuffer)));
+            IID_PPV_ARGS(&upload_buffer)));
 
-        UINT8 *begin = 0;
-        D3D12_RANGE readRange = {};
-        ASSERT_FAILED(structuredBuffer->Map(0, &readRange,
-                                            reinterpret_cast<void **>(&begin)));
-        memcpy(begin, structuredBufferData.data(),
-               structuredBufferData.size() * sizeof(T_STRUCTURED));
-        structuredBuffer->Unmap(0, nullptr);
+        // default buffer : GPU access
+        D3D12_HEAP_PROPERTIES props_defualt = {};
+        props_defualt.Type = D3D12_HEAP_TYPE_DEFAULT;
+
+        ASSERT_FAILED(GpuCore::Instance().GetDevice()->CreateCommittedResource(
+            &props_defualt, D3D12_HEAP_FLAG_NONE, &desc,
+            D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
+            IID_PPV_ARGS(&default_buffer)));
     }
 };
 } // namespace graphics

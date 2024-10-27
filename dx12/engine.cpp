@@ -71,7 +71,7 @@ bool Engine::Frame() {
     // update
     {
         common::ScopeStopWatch stop_watch("Update tree");
-        black_board->conditions->delta_time = time_stamp->DeltaTime();
+        black_board->conditions->delta_time = ImGui::GetIO().DeltaTime;
         black_board->conditions->stage_type = EnumStageType::eUpdate;
         update_tree->Run();
     }

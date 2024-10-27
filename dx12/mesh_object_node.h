@@ -19,6 +19,7 @@ class PlayerAnimator : public Animator {
             : state(EnumAnimationState::eIdle), animator(0), renderer(0),
               input(0), dt(0.0f){};
 
+        ID3D12GraphicsCommandList *command_list;
         EnumAnimationState state;
         PlayerAnimator *animator;
         MeshRenderer *renderer;
@@ -47,7 +48,8 @@ class PlayerAnimator : public Animator {
             ->Close();
         // clang-format on
     };
-    void Run(float dt) {
+    void Run(ID3D12GraphicsCommandList *command_list, float dt) {
+        block.command_list = command_list;
         block.dt = dt;
         behavior_tree.Run();
     }
@@ -65,7 +67,8 @@ class PlayerAnimator : public Animator {
             block->state = PlayerAnimator::EnumAnimationState::eIdle;
 
             block->animator->UpdateAnimation(
-                PlayerAnimator::EnumAnimationState::eIdle, elapsed_time);
+                block->command_list, PlayerAnimator::EnumAnimationState::eIdle,
+                elapsed_time);
             elapsed_time += block->dt;
 
             return common::EnumBehaviorTreeStatus::eRunning;
@@ -93,11 +96,16 @@ class MeshObjectNodeInvoker : public common::BehaviorActionNode {
             break;
         }
         case EnumStageType::eUpdate: {
+
+            auto context =
+                GpuCore::Instance().GetCommand()->Begin<GraphicsCommandContext>(
+                    L"MeshObjectNode:Update");
+
             for (auto &i : targets->objects) {
 
                 PlayerAnimator *animator = nullptr;
                 if (i.second->TryGet(animator)) {
-                    animator->Run(condition->delta_time);
+                    animator->Run(context->GetList(), condition->delta_time);
                 }
 
                 MeshRenderer *renderer = nullptr;
@@ -105,6 +113,8 @@ class MeshObjectNodeInvoker : public common::BehaviorActionNode {
                     renderer->UpdateConstantBuffers();
                 }
             }
+            GpuCore::Instance().GetCommand()->Finish(context,true);
+
 
             break;
         }
@@ -139,7 +149,7 @@ class MeshObjectNodeInvoker : public common::BehaviorActionNode {
     std::shared_ptr<SolidMeshPSO> mesh_solid_PSO;
     std::shared_ptr<WireMeshPSO> mesh_wire_PSO;
     std::shared_ptr<SkinnedSolidMeshPSO> skinned_mesh_solid_PSO;
-    //std::shared_ptr<SkinnedWireMeshPSO> skinned_wire_solid_PSO;
+    // std::shared_ptr<SkinnedWireMeshPSO> skinned_wire_solid_PSO;
 };
 } // namespace graphics
 

@@ -10,36 +10,36 @@ namespace graphics {
 template <typename T_ELEMENT> class StructuredBuffer {
   public:
     virtual void Initialize(const UINT numElements) {
-        cpu.resize(numElements);
+        data.resize(numElements);
         Initialize();
     }
 
     virtual void Initialize() {
-        Util::CreateStructuredBuffer(cpu, buffer);
+        Util::CreateStructuredBuffer(data, buffer);
         GpuCore::Instance().GetHeap().View()->AllocateDescriptor(handle_CPU,
                                                                  index);
         D3D12_SHADER_RESOURCE_VIEW_DESC desc_SRV = {
             DXGI_FORMAT_UNKNOWN, D3D12_SRV_DIMENSION_BUFFER,
             D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING};
         desc_SRV.Buffer.FirstElement = 0;
-        desc_SRV.Buffer.NumElements = cpu.size();
+        desc_SRV.Buffer.NumElements = data.size();
         desc_SRV.Buffer.Flags = D3D12_BUFFER_SRV_FLAG_NONE;
         desc_SRV.Buffer.StructureByteStride = sizeof(T_ELEMENT);
         GpuCore::Instance().GetDevice()->CreateShaderResourceView(
             buffer.Get(), &desc_SRV, handle_CPU);
     }
 
-    void Upload(ID3D12GraphicsCommandList *command_list) {
-        Util::UpdateBuffer(cpu, buffer);
+    void Upload() {
+        Util::UpdateBuffer(data, buffer);
     }
-    std::vector<T_ELEMENT> &GetCpu() { return cpu; }
+    std::vector<T_ELEMENT> &GetCpu() { return data; }
     const auto GetBuffer() { return buffer.Get(); }
     const auto GetHandle() {
         return GpuCore::Instance().GetHeap().View()->GetGpuHandle(index);
     }
 
   private:
-    std::vector<T_ELEMENT> cpu;
+    std::vector<T_ELEMENT> data;
     ComPtr<ID3D12Resource> buffer;
     UINT index;
     D3D12_CPU_DESCRIPTOR_HANDLE handle_CPU;

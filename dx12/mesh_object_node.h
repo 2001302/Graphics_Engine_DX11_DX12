@@ -19,7 +19,6 @@ class PlayerAnimator : public Animator {
             : state(EnumAnimationState::eIdle), animator(0), renderer(0),
               input(0), dt(0.0f){};
 
-        ID3D12GraphicsCommandList *command_list;
         EnumAnimationState state;
         PlayerAnimator *animator;
         MeshRenderer *renderer;
@@ -48,8 +47,7 @@ class PlayerAnimator : public Animator {
             ->Close();
         // clang-format on
     };
-    void Run(ID3D12GraphicsCommandList *command_list, float dt) {
-        block.command_list = command_list;
+    void Run(float dt) {
         block.dt = dt;
         behavior_tree.Run();
     }
@@ -67,8 +65,7 @@ class PlayerAnimator : public Animator {
             block->state = PlayerAnimator::EnumAnimationState::eIdle;
 
             block->animator->UpdateAnimation(
-                block->command_list, PlayerAnimator::EnumAnimationState::eIdle,
-                elapsed_time);
+                PlayerAnimator::EnumAnimationState::eIdle, elapsed_time);
             elapsed_time += block->dt;
 
             return common::EnumBehaviorTreeStatus::eRunning;
@@ -105,7 +102,7 @@ class MeshObjectNodeInvoker : public common::BehaviorActionNode {
 
                 PlayerAnimator *animator = nullptr;
                 if (i.second->TryGet(animator)) {
-                    animator->Run(context->GetList(), condition->delta_time);
+                    animator->Run(condition->delta_time);
                 }
 
                 MeshRenderer *renderer = nullptr;
@@ -113,8 +110,7 @@ class MeshObjectNodeInvoker : public common::BehaviorActionNode {
                     renderer->UpdateConstantBuffers();
                 }
             }
-            GpuCore::Instance().GetCommand()->Finish(context,true);
-
+            GpuCore::Instance().GetCommand()->Finish(context, true);
 
             break;
         }

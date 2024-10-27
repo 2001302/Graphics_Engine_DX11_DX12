@@ -182,9 +182,6 @@
     <ClInclude Include="engine.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="constant_buffer.h">
-      <Filter>Graphics\Structure</Filter>
-    </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>Graphics\Structure</Filter>
     </ClInclude>
@@ -291,7 +288,10 @@
       <Filter>Graphics\Component</Filter>
     </ClInclude>
     <ClInclude Include="structured_buffer.h">
-      <Filter>Graphics\Structure</Filter>
+      <Filter>Graphics\Gpu\Buffer</Filter>
+    </ClInclude>
+    <ClInclude Include="constant_buffer.h">
+      <Filter>Graphics\Gpu\Buffer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -80,15 +80,11 @@ struct AnimationData {
 
             // Root
             if (parentIdx < 0) {
-                if (frame != 0) {
-                    // accumulatedRootTransform =
-                    //     Matrix::CreateTranslation(key.pos - prevPos) *
-                    //     accumulatedRootTransform;
-                } else {
+                if (frame == 0) {
                     auto temp = accumulatedRootTransform.Translation();
                     temp.y = key.pos.y;
                     accumulatedRootTransform.Translation(temp);
-                }
+                } 
 
                 prevPos = key.pos;
                 key.pos = Vector3(0.0f);

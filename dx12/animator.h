@@ -38,9 +38,9 @@ class Animator : public common::Component {
     void SetBlock(Block *block) { this->block = block; };
 
     void Run(float delta_time) {
-        block->elapsed_time += delta_time;
         behavior_tree->Run();
         UpdateAnimation(block->clip_id, block->elapsed_time);
+        block->elapsed_time += delta_time;
     };
 
     void Move(MeshRenderer *renderer, Vector3 direction, float speed);

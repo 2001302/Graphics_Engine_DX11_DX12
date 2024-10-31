@@ -10,70 +10,6 @@
 
 namespace graphics {
 
-class PlayerAnimator : public Animator {
-  public:
-    enum EnumAnimationState { eIdle = 0 };
-
-    struct AnimationBlock : public common::IDataBlock {
-        AnimationBlock()
-            : state(EnumAnimationState::eIdle), animator(0), renderer(0),
-              input(0), dt(0.0f){};
-
-        EnumAnimationState state;
-        PlayerAnimator *animator;
-        MeshRenderer *renderer;
-        common::Input *input;
-        float dt;
-    };
-
-    PlayerAnimator(){};
-    PlayerAnimator(const AnimationData &aniData, MeshRenderer *renderer,
-                   common::Input *input)
-        : Animator(aniData) {
-
-        block.animator = this;
-        block.renderer = renderer;
-        block.input = input;
-
-        idle = std::make_shared<Idle>();
-
-        Build();
-    };
-
-    void Build() {
-        // clang-format off
-        behavior_tree.Build(&block)
-            ->Excute(idle)
-            ->Close();
-        // clang-format on
-    };
-    void Run(float dt) {
-        block.dt = dt;
-        behavior_tree.Run();
-    }
-
-  private:
-    AnimationBlock block;
-    common::BehaviorTreeBuilder behavior_tree;
-
-    struct Idle : public common::AnimationNode {
-        common::EnumBehaviorTreeStatus OnInvoke() override {
-            auto block =
-                dynamic_cast<PlayerAnimator::AnimationBlock *>(data_block);
-            assert(block != nullptr);
-
-            block->state = PlayerAnimator::EnumAnimationState::eIdle;
-
-            block->animator->UpdateAnimation(
-                PlayerAnimator::EnumAnimationState::eIdle, elapsed_time);
-            elapsed_time += block->dt;
-
-            return common::EnumBehaviorTreeStatus::eRunning;
-        }
-    };
-    std::shared_ptr<Idle> idle;
-};
-
 class MeshObjectNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
@@ -100,7 +36,7 @@ class MeshObjectNodeInvoker : public common::BehaviorActionNode {
 
             for (auto &i : targets->objects) {
 
-                PlayerAnimator *animator = nullptr;
+                Animator *animator = nullptr;
                 if (i.second->TryGet(animator)) {
                     animator->Run(condition->delta_time);
                 }
@@ -120,7 +56,7 @@ class MeshObjectNodeInvoker : public common::BehaviorActionNode {
 
                 if (i.second->TryGet(renderer)) {
 
-                    PlayerAnimator *animator = nullptr;
+                    Animator *animator = nullptr;
                     if (i.second->TryGet(animator)) {
                         skinned_mesh_solid_PSO->Render(
                             targets->world.get(), condition->shared_sampler,

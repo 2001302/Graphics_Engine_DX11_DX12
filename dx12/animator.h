@@ -4,8 +4,10 @@
 #include "animation_clip.h"
 #include "mesh_renderer.h"
 #include "structured_buffer.h"
+#include <behavior_tree_builder.h>
 #include <component.h>
 #include <filesystem>
+#include <input.h>
 #include <iostream>
 #include <logger.h>
 #include <node.h>
@@ -15,21 +17,43 @@ using Microsoft::WRL::ComPtr;
 
 class Animator : public common::Component {
   public:
-    Animator(){};
+    struct Block : public common::IDataBlock {
+        Block() : clip_id(0), input(0), elapsed_time(0.0f){};
+
+        int clip_id;
+        float elapsed_time;
+        common::Input *input;
+    };
+
+    Animator() : block(0), behavior_tree(0){};
     Animator(const AnimationData &aniData);
-    void InitAnimationData(const AnimationData &aniData);
-    void UpdateAnimation(int clipId, float elapse_time);
 
     D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() {
         return bone_transforms.GetHandle();
     }
 
+    void SetBuilder(common::BehaviorTreeBuilder *behavior_tree) {
+        this->behavior_tree = behavior_tree;
+    };
+    void SetBlock(Block *block) { this->block = block; };
+
+    void Run(float delta_time) {
+        block->elapsed_time += delta_time;
+        behavior_tree->Run();
+        UpdateAnimation(block->clip_id, block->elapsed_time);
+    };
+
     void Move(MeshRenderer *renderer, Vector3 direction, float speed);
     void Turn(MeshRenderer *renderer, Vector3 direction, float speed);
 
-  public:
+  private:
+    void InitAnimationData(const AnimationData &aniData);
+    void UpdateAnimation(int clipId, float elapse_time);
+
     StructuredBuffer<Matrix> bone_transforms;
     AnimationData animation_data;
+    Block *block;
+    common::BehaviorTreeBuilder *behavior_tree;
 };
 } // namespace graphics
 #endif

@@ -1,9 +1,19 @@
 #pragma once
 
-#include <engine.h>
 #include "animator.h"
+#include <engine.h>
 
 namespace graphics {
+struct Idle : public common::AnimationNode {
+    common::EnumBehaviorTreeStatus OnInvoke() override {
+        auto block = dynamic_cast<Animator::Block *>(data_block);
+        assert(block != nullptr);
+
+        block->clip_id = 0;
+
+        return common::EnumBehaviorTreeStatus::eRunning;
+    }
+};
 
 class GameDx12 : public Engine {
   public:
@@ -78,8 +88,7 @@ class GameDx12 : public Engine {
         // sample object
         {
             std::string base_path = "../Assets/Characters/Mixamo/";
-            std::vector<std::string> clipNames = {
-                "CatwalkIdle.fbx"};
+            std::vector<std::string> clipNames = {"CatwalkIdle.fbx"};
 
             AnimationData aniData;
             auto [meshes, _] = GeometryGenerator::ReadAnimationFromFile(
@@ -96,13 +105,20 @@ class GameDx12 : public Engine {
                 }
             }
 
+            auto behavior_tree = new common::BehaviorTreeBuilder();
+            auto block = new Animator::Block();
+            behavior_tree->Build(block)
+                ->Excute(std::make_shared<Idle>())
+                ->Close();
+
             auto renderer = std::make_shared<MeshRenderer>();
-            renderer->Initialize(meshes,true);
+            renderer->Initialize(meshes, true);
             renderer->UpdateConstantBuffers();
 
-            auto animator = std::make_shared<PlayerAnimator>(
-                aniData, renderer.get(), black_board->input.get());
-
+            auto animator = std::make_shared<Animator>(aniData);
+            animator->SetBuilder(std::move(behavior_tree));
+            animator->SetBlock(std::move(block));
+            
             auto model = std::make_shared<common::Model>();
             model->TryAdd(renderer);
             model->TryAdd(animator);

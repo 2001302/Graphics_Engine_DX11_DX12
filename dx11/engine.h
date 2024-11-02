@@ -5,10 +5,10 @@
 #include "graphics_util.h"
 #include "message_receiver.h"
 #include <behavior_tree_builder.h>
+#include <logger.h>
+#include <message.h>
 #include <platform.h>
 #include <setting_ui.h>
-#include <message.h>
-#include <logger.h>
 
 namespace graphics {
 
@@ -36,8 +36,15 @@ class Engine : public common::Platform {
         auto CheckIfMouseInViewport = [](common::SettingUi *ui, int mouseX,
                                          int mouseY) -> bool {
             if (graphics::GpuCore::Instance().swap_chain) {
-                if ((0 < mouseX && mouseX < ui->GetSize().x) &&
-                    (0 < mouseY && mouseY < ui->GetSize().y))
+                if (ui->GetViewType() == common::SettingUi::EnumViewType::eGame)
+                    return false;
+
+                common::Rect rect = ui->GetRect();
+
+                if ((rect.left < mouseX && mouseX < rect.right) &&
+                    (rect.top < mouseY && mouseY < rect.bottom))
+                    return true;
+                else
                     return false;
             }
             return true;

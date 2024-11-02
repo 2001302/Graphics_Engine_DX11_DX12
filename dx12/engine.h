@@ -37,8 +37,15 @@ class Engine : public common::Platform {
         auto CheckIfMouseInViewport = [](common::SettingUi *ui, int mouseX,
                                          int mouseY) -> bool {
             if (GpuCore::Instance().GetSwapChain()) {
-                if ((0 < mouseX && mouseX < ui->GetSize().x) &&
-                    (0 < mouseY && mouseY < ui->GetSize().y))
+                if (ui->GetViewType() == common::SettingUi::EnumViewType::eGame)
+                    return false;
+
+                common::Rect rect = ui->GetRect();
+
+                if ((rect.left < mouseX && mouseX < rect.right) &&
+                    (rect.top < mouseY && mouseY < rect.bottom))
+                    return true;
+                else
                     return false;
             }
             return true;
@@ -51,12 +58,6 @@ class Engine : public common::Platform {
             return true;
 
         switch (umsg) {
-        case WM_SIZE: {
-            return message_receiver->OnWindowSizeRequest(black_board->gui.get(),
-                                                         int(LOWORD(lparam)),
-                                                         int(HIWORD(lparam)));
-            break;
-        }
         case WM_MOUSEMOVE: {
             if (wparam & MK_RBUTTON) {
                 if (CheckIfMouseInViewport(black_board->gui.get(),

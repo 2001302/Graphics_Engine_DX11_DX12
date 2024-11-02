@@ -13,12 +13,9 @@ class IGui : public IDataBlock {
     virtual void OnStart(){};
     virtual void OnFrame(){};
 
-    ImVec2 GetSize() { return gui_size; }
-
   protected:
     ImGuiContext *context_ = nullptr;
     std::string ini_file_name_;
-    ImVec2 gui_size;
 
   private:
     void RecreateFontAtlas();

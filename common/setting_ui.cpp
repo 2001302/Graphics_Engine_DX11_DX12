@@ -32,6 +32,17 @@ void SettingUi::PushInfoItem(IInfo *node) { info_items.push_back(node); };
 
 void SettingUi::ClearInfoItem() { info_items.clear(); };
 
+SettingUi::EnumViewType SettingUi::GetViewType() { return view_type; }
+
+Rect SettingUi::GetRect() {
+    if (view_type == EnumViewType::eEdit) {
+        return Rect(left_panel_width, offset_top, screen_width,
+                      screen_hieght * 0.7f);
+    } else {
+        return Rect(0.0f, offset_top, screen_width, screen_hieght);
+    }
+}
+
 void SettingUi::OnStart() {
 
     ed::Config config;
@@ -50,6 +61,7 @@ void SettingUi::OnFrame() {
 
 void SettingUi::TopBar() {
     SetWindowLocation(0.0f, 0.0f, screen_width, offset_top);
+
     const float button_width = 150.0f;
 
     ImGui::Begin("Top Bar", nullptr,

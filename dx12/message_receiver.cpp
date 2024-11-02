@@ -3,29 +3,6 @@
 namespace graphics {
 using namespace DirectX::SimpleMath;
 
-bool MessageReceiver::OnWindowSizeRequest(common::SettingUi *gui, int size_x,
-                                          int size_y) {
-
-    common::env::screen_width = size_x;
-    common::env::screen_height = size_y;
-
-    if (common::env::screen_width && common::env::screen_height) {
-        // if (dx11::GpuCore::Instance().swap_chain) {
-
-        //    gui->Shutdown();
-
-        //    dx11::GpuCore::Instance().back_buffer_RTV.Reset();
-        //    dx11::GpuCore::Instance().swap_chain->ResizeBuffers(
-        //        0, size_x, size_y, DXGI_FORMAT_UNKNOWN, 0);
-
-        //    dx11::GpuCore::Instance().CreateBuffer();
-        //    dx11::GpuCore::Instance().SetMainViewport();
-
-        //    gui->Start();
-        //}
-    }
-    return true;
-}
 bool MessageReceiver::OnMouseDownRequest(std::shared_ptr<common::Input> input,
                                          int mouseX, int mouseY) {
     input->SetMouse(mouseX, mouseY);

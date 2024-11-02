@@ -14,17 +14,27 @@ namespace ed = ax::NodeEditor;
 
 namespace common {
 
+struct Rect {
+    float left, right, top, bottom;
+    constexpr Rect() : left(0.0f), right(0.0f), top(0.0f), bottom(0.0f) {}
+    constexpr Rect(float _left, float _top, float _right, float _bottom)
+        : left(_left), top(_top), right(_right), bottom(_bottom) {}
+};
+
 class SettingUi : public IGui {
+  public:
     enum EnumViewType {
         eEdit = 0,
         eGame = 1,
     };
 
-  public:
     void PushNodeItem(INode *node);
     void ClearNodeItem();
     void PushInfoItem(IInfo *node);
     void ClearInfoItem();
+
+    EnumViewType GetViewType();
+    Rect GetRect();
 
   private:
     void OnStart() override;

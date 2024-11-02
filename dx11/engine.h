@@ -121,8 +121,8 @@ class Engine : public common::Platform {
         case WM_KEYDOWN:
             black_board->input->KeyPressed(wparam, true);
             if (wparam == VK_ESCAPE) {
-                DestroyWindow(main_window);
-                PostQuitMessage(0);
+                //DestroyWindow(main_window);
+                //PostQuitMessage(0);
             }
             break;
         case WM_KEYUP:

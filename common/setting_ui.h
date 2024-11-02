@@ -16,8 +16,8 @@ namespace common {
 
 class SettingUi : public IGui {
     enum EnumViewType {
-        e3dViewport = 0,
-        eNodeEditor = 1,
+        eEdit = 0,
+        eGame = 1,
     };
 
   public:

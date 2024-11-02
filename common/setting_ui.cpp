@@ -58,47 +58,55 @@ void SettingUi::TopBar() {
     FrameRate();
 
     ImGui::SameLine(left_panel_width + 3.0f, 0.0f);
-    if (ImGui::Selectable("3D Viewport", view_type == EnumViewType::e3dViewport,
+    if (ImGui::Selectable("Edit", view_type == EnumViewType::eEdit,
                           ImGuiSelectableFlags_None,
                           ImVec2(button_width, 0.0f))) {
-        view_type = EnumViewType::e3dViewport;
+        view_type = EnumViewType::eEdit;
     }
 
     ImGui::SameLine();
-    if (ImGui::Selectable("Node Editor", view_type == EnumViewType::eNodeEditor,
+    if (ImGui::Selectable("Game", view_type == EnumViewType::eGame,
                           ImGuiSelectableFlags_None,
                           ImVec2(button_width, 0.0f))) {
-        view_type = EnumViewType::eNodeEditor;
+        view_type = EnumViewType::eGame;
     }
 
     ImGui::End();
 }
 
 void SettingUi::MainView() {
-    if (view_type == EnumViewType::e3dViewport) {
+
+    if (view_type == EnumViewType::eEdit) {
+
+        // left panel
         SetWindowLocation(0.0f, offset_top, left_panel_width,
                           screen_hieght - offset_top);
 
-    } else if (view_type == EnumViewType::eNodeEditor) {
-        SetWindowLocation(0.0f, offset_top, screen_width,
-                          screen_hieght - offset_top);
-    }
+        ImGui::Begin("main ui", nullptr,
+                     ImGuiWindowFlags_NoTitleBar |
+                         ImGuiWindowFlags_NoScrollbar |
+                         ImGuiWindowFlags_NoResize);
 
-    ImGui::Begin("main ui", nullptr,
-                 ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar |
-                     ImGuiWindowFlags_NoResize);
-    gui_size = ImGui::GetWindowSize();
+        ImGui::BeginChild("left panel", ImVec2(left_panel_width, 0.0f));
+        LeftPanel();
+        ImGui::EndChild();
 
-    ImGui::BeginChild("left panel", ImVec2(left_panel_width, 0.0f));
-    LeftPanel();
-    ImGui::EndChild();
+        ImGui::End();
 
-    if (view_type == EnumViewType::eNodeEditor) {
-        ImGui::SameLine(left_panel_width, 0.0f);
+        // node editor
+        const float editor_ratio = 0.7f;
+        SetWindowLocation(left_panel_width, screen_hieght * editor_ratio,
+                          screen_width, screen_hieght * (1.0f - editor_ratio));
+
+        ImGui::Begin("node editor", nullptr,
+                     ImGuiWindowFlags_NoTitleBar |
+                         ImGuiWindowFlags_NoScrollbar |
+                         ImGuiWindowFlags_NoResize);
+
         NodeEditor();
-    }
 
-    ImGui::End();
+        ImGui::End();
+    }
 }
 
 void SettingUi::LeftPanel() {

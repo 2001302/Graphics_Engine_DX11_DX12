@@ -29,10 +29,10 @@ class GameDx12 : public Engine {
             auto skybox_renderer = std::make_shared<SkyboxRenderer>();
             skybox_renderer->Initialize(
                 std::vector{mesh},
-                L"../Assets/Textures/Cubemaps/HDRI/SampleEnvHDR.dds",
-                L"../Assets/Textures/Cubemaps/HDRI/SampleSpecularHDR.dds",
-                L"../Assets/Textures/Cubemaps/HDRI/SampleDiffuseHDR.dds",
-                L"../Assets/Textures/Cubemaps/HDRI/SampleBrdf.dds");
+                L"../Assets/Textures/Cubemaps/HDRI/NightSky/NightSkyEnvHDR.dds",
+                L"../Assets/Textures/Cubemaps/HDRI/NightSky/NightSkySpecularHDR.dds",
+                L"../Assets/Textures/Cubemaps/HDRI/NightSky/NightSkyDiffuseHDR.dds",
+                L"../Assets/Textures/Cubemaps/HDRI/NightSky/NightSkyBrdf.dds");
             targets->world->TryAdd(skybox_renderer);
         }
 

@@ -6,6 +6,7 @@ namespace graphics {
 Engine::Engine() {
     black_board = std::make_shared<BlackBoard>();
     message_receiver = std::make_unique<MessageReceiver>();
+    time_stamp = std::make_unique<common::TimeStamp>();
     start_tree = std::make_shared<common::BehaviorTreeBuilder>();
     update_tree = std::make_shared<common::BehaviorTreeBuilder>();
     render_tree = std::make_shared<common::BehaviorTreeBuilder>();
@@ -77,8 +78,7 @@ bool Engine::Frame() {
     // update
     {
         common::ScopeStopWatch stop_watch("Update tree");
-        black_board->targets->delta_time =
-            ImGui::GetIO().DeltaTime; // TODO: need to be fixed
+        black_board->targets->delta_time = time_stamp->DeltaTime();
         black_board->targets->stage_type = EnumStageType::eUpdate;
         update_tree->Run();
     }

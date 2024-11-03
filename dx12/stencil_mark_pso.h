@@ -12,31 +12,34 @@ class StencilMarkPSO : public GraphicsPSO {
     void Initialize() override {
         // rootSignature
         // s0 ~ s6
-        CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
-        samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
+        CD3DX12_DESCRIPTOR_RANGE1 sampler_range;
+        sampler_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
 
         // t10 ~ t16
-        CD3DX12_DESCRIPTOR_RANGE1 textureRange;
-        textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 cubemap_range;
+        cubemap_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 shadow_range;
+        shadow_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, MAX_LIGHTS, 14);
 
-        CD3DX12_ROOT_PARAMETER1 rootParameters[5] = {};
-        // Common.hlsli : s0~s6,t10~t16,b0~b2
-        rootParameters[0].InitAsDescriptorTable(1, &samplerRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[1].InitAsDescriptorTable(1, &textureRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[2].InitAsConstantBufferView(
+        CD3DX12_ROOT_PARAMETER1 root_parameters[6] = {};
+        root_parameters[0].InitAsDescriptorTable(1, &sampler_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[1].InitAsDescriptorTable(1, &cubemap_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[2].InitAsDescriptorTable(1, &shadow_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[3].InitAsConstantBufferView(
             0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[3].InitAsConstantBufferView(
+        root_parameters[4].InitAsConstantBufferView(
             1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[4].InitAsConstantBufferView(
+        root_parameters[5].InitAsConstantBufferView(
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
 
         auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
-            ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,
+            ARRAYSIZE(root_parameters), root_parameters, 0, nullptr,
             D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
         ComPtr<ID3DBlob> signature;
@@ -78,7 +81,7 @@ class StencilMarkPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(common::Model *skybox, SamplerState *sampler_state,
+    void Render(common::Model *world, SamplerState *sampler_state,
                 ComPtr<ID3D12Resource> global_consts,
                 MeshRenderer *mesh_renderer) {
 
@@ -106,15 +109,16 @@ class StencilMarkPSO : public GraphicsPSO {
 
             context->GetList()->SetGraphicsRootDescriptorTable(
                 0, sampler_state->GetGpuHandle());
-            // global texture
             context->GetList()->SetGraphicsRootDescriptorTable(
-                1, SkyboxRenderer::GetSkyboxTexture(skybox)->GetGpuHandle());
+                1, SkyboxRenderer::GetSkyboxTexture(world)->GetGpuHandle());
+            context->GetList()->SetGraphicsRootDescriptorTable(
+                2, ShadowMap::GetShadowMap(world)->GetGpuHandle());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                2, global_consts->GetGPUVirtualAddress());
+                3, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
+                4, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                4,
+                5,
                 mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
 
             context->GetList()->IASetPrimitiveTopology(

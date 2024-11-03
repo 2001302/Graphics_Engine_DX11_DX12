@@ -79,7 +79,6 @@ class MeshObjectNodeInvoker : public common::BehaviorActionNode {
     }
 
     std::shared_ptr<SolidMeshPSO> mesh_solid_PSO;
-    std::shared_ptr<WireMeshPSO> mesh_wire_PSO;
     std::shared_ptr<SkinnedSolidMeshPSO> skinned_mesh_solid_PSO;
     // std::shared_ptr<SkinnedWireMeshPSO> skinned_wire_solid_PSO;
 };

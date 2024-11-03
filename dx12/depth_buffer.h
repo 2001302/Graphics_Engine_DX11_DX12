@@ -7,12 +7,15 @@
 namespace graphics {
 class DepthBuffer : public GpuResource {
   public:
-    DepthBuffer() : handle_DSV_(), handle_SRV_(){};
+    DepthBuffer() : handle_DSV_(), handle_SRV_(), srv_index(0){};
     static DepthBuffer *Create(int width, int height, DXGI_FORMAT format,
                                bool use_msaa = false) {
         auto depth_buffer = new DepthBuffer();
         depth_buffer->Initialize(width, height, format, use_msaa);
         return depth_buffer;
+    };
+    D3D12_GPU_DESCRIPTOR_HANDLE GetGpuHandle() override {
+        return GpuCore::Instance().GetHeap().View()->GetGpuHandle(srv_index);
     };
     D3D12_CPU_DESCRIPTOR_HANDLE GetDsvHandle() { return handle_DSV_; };
     D3D12_CPU_DESCRIPTOR_HANDLE GetSrvHandle() { return handle_SRV_; };
@@ -76,7 +79,6 @@ class DepthBuffer : public GpuResource {
         auto dimension_SRV = use_msaa ? D3D12_SRV_DIMENSION_TEXTURE2DMS
                                       : D3D12_SRV_DIMENSION_TEXTURE2D;
 
-        UINT srv_index = 0;
         GpuCore::Instance().GetHeap().View()->AllocateDescriptor(handle_SRV_,
                                                                  srv_index);
         D3D12_SHADER_RESOURCE_VIEW_DESC desc_SRV = {};
@@ -90,6 +92,7 @@ class DepthBuffer : public GpuResource {
             resource_, &desc_SRV, handle_SRV_);
     };
 
+    UINT srv_index;
     D3D12_CPU_DESCRIPTOR_HANDLE handle_DSV_;
     D3D12_CPU_DESCRIPTOR_HANDLE handle_SRV_;
 };

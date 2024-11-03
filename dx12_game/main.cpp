@@ -36,13 +36,6 @@ class GameDx12 : public Engine {
             targets->world->TryAdd(skybox_renderer);
         }
 
-        ShadowMap *shadow = nullptr;
-        if (!targets->world->TryGet(shadow)) {
-            auto shadow_map = std::make_shared<ShadowMap>();
-            shadow_map->Initialize();
-            targets->world->TryAdd(shadow_map);
-        }
-
         // sample object
         {
             MeshData mesh = GeometryGenerator::MakeBox(0.2f);

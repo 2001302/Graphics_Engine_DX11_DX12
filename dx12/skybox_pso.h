@@ -9,29 +9,30 @@ namespace graphics {
 class SolidSkyboxPSO : public GraphicsPSO {
   public:
     void Initialize() override {
-        // rootSignature
         // s0 ~ s6
         CD3DX12_DESCRIPTOR_RANGE1 sampler_range;
         sampler_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0);
 
         // t10 ~ t16
-        CD3DX12_DESCRIPTOR_RANGE1 texture_range;
-        texture_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 cubemap_range;
+        cubemap_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 shadow_range;
+        shadow_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, MAX_LIGHTS, 14);
 
-        // rootSignature
-        CD3DX12_ROOT_PARAMETER1 root_parameters[5] = {};
-        // Common.hlsli : s0~s6,t10~t16,b0~b2
+        CD3DX12_ROOT_PARAMETER1 root_parameters[6] = {};
         root_parameters[0].InitAsDescriptorTable(1, &sampler_range,
                                                  D3D12_SHADER_VISIBILITY_ALL);
-        root_parameters[1].InitAsDescriptorTable(1, &texture_range,
+        root_parameters[1].InitAsDescriptorTable(1, &cubemap_range,
                                                  D3D12_SHADER_VISIBILITY_ALL);
-        root_parameters[2].InitAsConstantBufferView(
+        root_parameters[2].InitAsDescriptorTable(1, &shadow_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[3].InitAsConstantBufferView(
             0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        root_parameters[3].InitAsConstantBufferView(
+        root_parameters[4].InitAsConstantBufferView(
             1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        root_parameters[4].InitAsConstantBufferView(
+        root_parameters[5].InitAsConstantBufferView(
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
 
@@ -108,13 +109,14 @@ class SolidSkyboxPSO : public GraphicsPSO {
             0, shared_sampler->GetGpuHandle());
         context->GetList()->SetGraphicsRootDescriptorTable(
             1, SkyboxRenderer::GetSkyboxTexture(world)->GetGpuHandle());
-        // global texture
+        context->GetList()->SetGraphicsRootDescriptorTable(
+            2, ShadowMap::GetShadowMap(world)->GetGpuHandle());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            2, global_consts->GetGPUVirtualAddress());
+            3, global_consts->GetGPUVirtualAddress());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
+            4, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            4, mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
+            5, mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
 
         context->GetList()->IASetPrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -141,23 +143,25 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
         sampler_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, 0);
 
         // t10 ~ t16
-        CD3DX12_DESCRIPTOR_RANGE1 texture_range;
-        texture_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 cubemap_range;
+        cubemap_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 shadow_range;
+        shadow_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, MAX_LIGHTS, 14);
 
-        // rootSignature
-        CD3DX12_ROOT_PARAMETER1 root_parameters[5] = {};
-        // Common.hlsli : s0~s6,t10~t16,b0~b2
+        CD3DX12_ROOT_PARAMETER1 root_parameters[6] = {};
         root_parameters[0].InitAsDescriptorTable(1, &sampler_range,
                                                  D3D12_SHADER_VISIBILITY_ALL);
-        root_parameters[1].InitAsDescriptorTable(1, &texture_range,
+        root_parameters[1].InitAsDescriptorTable(1, &cubemap_range,
                                                  D3D12_SHADER_VISIBILITY_ALL);
-        root_parameters[2].InitAsConstantBufferView(
+        root_parameters[2].InitAsDescriptorTable(1, &shadow_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[3].InitAsConstantBufferView(
             0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        root_parameters[3].InitAsConstantBufferView(
+        root_parameters[4].InitAsConstantBufferView(
             1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        root_parameters[4].InitAsConstantBufferView(
+        root_parameters[5].InitAsConstantBufferView(
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
 
@@ -205,7 +209,7 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
             GpuCore::Instance().GetDevice()->CreateGraphicsPipelineState(
                 &psoDesc, IID_PPV_ARGS(&pipeline_state)));
     };
-    void Render(SamplerState *shared_sampler, common::Model *skybox,
+    void Render(SamplerState *shared_sampler, common::Model *world,
                 ComPtr<ID3D12Resource> global_consts,
                 MeshRenderer *mesh_renderer) {
 
@@ -235,14 +239,15 @@ class SolidReflectSkyboxPSO : public GraphicsPSO {
         context->GetList()->SetGraphicsRootDescriptorTable(
             0, shared_sampler->GetGpuHandle());
         context->GetList()->SetGraphicsRootDescriptorTable(
-            1, SkyboxRenderer::GetSkyboxTexture(skybox)->GetGpuHandle());
-        // global texture
+            1, SkyboxRenderer::GetSkyboxTexture(world)->GetGpuHandle());
+        context->GetList()->SetGraphicsRootDescriptorTable(
+            2, ShadowMap::GetShadowMap(world)->GetGpuHandle());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            2, global_consts->GetGPUVirtualAddress());
+            3, global_consts->GetGPUVirtualAddress());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
+            4, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
         context->GetList()->SetGraphicsRootConstantBufferView(
-            4, mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
+            5, mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
 
         context->GetList()->IASetPrimitiveTopology(
             D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

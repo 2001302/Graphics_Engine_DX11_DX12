@@ -41,9 +41,6 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
             mirror_mesh_solid_PSO = std::make_shared<SolidMeshPSO>();
             mirror_mesh_solid_PSO->Initialize();
 
-            mirror_mesh_wire_PSO = std::make_shared<WireMeshPSO>();
-            mirror_mesh_wire_PSO->Initialize();
-
             // global const
             reflect_global_consts.Initialize();
             break;
@@ -134,13 +131,10 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
 
     std::shared_ptr<StencilMarkPSO> stencil_mark_PSO;
     std::shared_ptr<ReflectSolidMeshPSO> reflect_mesh_solid_PSO;
-    std::shared_ptr<WireReflectMeshPSO> reflect_mesh_wire_PSO;
     std::shared_ptr<SolidReflectSkyboxPSO> reflect_skybox_solid_PSO;
     std::shared_ptr<WireReflectSkyboxPSO> reflect_skybox_wire_PSO;
     std::shared_ptr<MirrorBlendSolidMeshPSO> mirror_blend_solid_PSO;
-    std::shared_ptr<WireMirrorBlendMeshPSO> mirror_blend_wire_PSO;
     std::shared_ptr<SolidMeshPSO> mirror_mesh_solid_PSO;
-    std::shared_ptr<WireMeshPSO> mirror_mesh_wire_PSO;
 };
 } // namespace graphics
 

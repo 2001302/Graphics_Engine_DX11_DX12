@@ -5,49 +5,52 @@
 #include "mirror_renderer.h"
 #include "pipeline_state_object.h"
 #include "shader_util.h"
+#include "shadow_map.h"
 #include "skybox_renderer.h"
 
 namespace graphics {
 class SolidMeshPSO : public GraphicsPSO {
   public:
     void Initialize() override {
-        // rootSignature
         // s0 ~ s6
-        CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
-        samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
-
+        CD3DX12_DESCRIPTOR_RANGE1 sampler_range;
+        sampler_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
         // t10 ~ t16
-        CD3DX12_DESCRIPTOR_RANGE1 textureRange;
-        textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 cubemap_range;
+        cubemap_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 shadow_range;
+        shadow_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, MAX_LIGHTS, 14);
 
-        CD3DX12_ROOT_PARAMETER1 rootParameters[7] = {};
-        // Common.hlsli : s0~s6,t10~t16,b0~b2
-        rootParameters[0].InitAsDescriptorTable(1, &samplerRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[1].InitAsDescriptorTable(1, &textureRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[2].InitAsConstantBufferView(
+        CD3DX12_ROOT_PARAMETER1 root_parameters[8] = {};
+
+        root_parameters[0].InitAsDescriptorTable(1, &sampler_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[1].InitAsDescriptorTable(1, &cubemap_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[2].InitAsDescriptorTable(1, &shadow_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[3].InitAsConstantBufferView(
             0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[3].InitAsConstantBufferView(
+        root_parameters[4].InitAsConstantBufferView(
             1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[4].InitAsConstantBufferView(
+        root_parameters[5].InitAsConstantBufferView(
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
         // VS : t0
         CD3DX12_DESCRIPTOR_RANGE1 textureRangeVS;
         textureRangeVS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-        rootParameters[5].InitAsDescriptorTable(1, &textureRangeVS,
-                                                D3D12_SHADER_VISIBILITY_VERTEX);
+        root_parameters[6].InitAsDescriptorTable(
+            1, &textureRangeVS, D3D12_SHADER_VISIBILITY_VERTEX);
         // PS : t0 ~ t4
         CD3DX12_DESCRIPTOR_RANGE1 textureRangePS;
         textureRangePS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
-        rootParameters[6].InitAsDescriptorTable(1, &textureRangePS,
-                                                D3D12_SHADER_VISIBILITY_PIXEL);
+        root_parameters[7].InitAsDescriptorTable(1, &textureRangePS,
+                                                 D3D12_SHADER_VISIBILITY_PIXEL);
 
         auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
-            ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,
+            ARRAYSIZE(root_parameters), root_parameters, 0, nullptr,
             D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
         ComPtr<ID3DBlob> signature;
@@ -66,7 +69,7 @@ class SolidMeshPSO : public GraphicsPSO {
                                        L"../DX12/Shader/BasicVS.hlsl", basicVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
                                       L"../DX12/Shader/BasicPS.hlsl", basicPS);
-        //
+
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};
         psoDesc.pRootSignature = root_signature;
@@ -119,17 +122,19 @@ class SolidMeshPSO : public GraphicsPSO {
             // global texture
             context->GetList()->SetGraphicsRootDescriptorTable(
                 1, SkyboxRenderer::GetSkyboxTexture(world)->GetGpuHandle());
+            context->GetList()->SetGraphicsRootDescriptorTable(
+                2, ShadowMap::GetShadowMap(world)->GetGpuHandle());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                2, global_consts->GetGPUVirtualAddress());
+                3, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
+                4, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                4,
+                5,
                 mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                5, mesh->texture_VS->GetGpuHandle());
+                6, mesh->texture_VS->GetGpuHandle());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                6, mesh->texture_PS->GetGpuHandle());
+                7, mesh->texture_PS->GetGpuHandle());
 
             context->GetList()->IASetPrimitiveTopology(
                 D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -143,51 +148,48 @@ class SolidMeshPSO : public GraphicsPSO {
         GpuCore::Instance().GetCommand()->Finish(context);
     };
 };
-class WireMeshPSO : public GraphicsPSO {
-  public:
-    void Initialize(){};
-    void Render(){};
-};
 class ReflectSolidMeshPSO : public GraphicsPSO {
   public:
     void Initialize() override {
-        // rootSignature
         // s0 ~ s6
-        CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
-        samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
-
+        CD3DX12_DESCRIPTOR_RANGE1 sampler_range;
+        sampler_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
         // t10 ~ t16
-        CD3DX12_DESCRIPTOR_RANGE1 textureRange;
-        textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 cubemap_range;
+        cubemap_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 shadow_range;
+        shadow_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, MAX_LIGHTS, 14);
 
-        CD3DX12_ROOT_PARAMETER1 rootParameters[7] = {};
-        // Common.hlsli : s0~s6,t10~t16,b0~b2
-        rootParameters[0].InitAsDescriptorTable(1, &samplerRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[1].InitAsDescriptorTable(1, &textureRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[2].InitAsConstantBufferView(
+        CD3DX12_ROOT_PARAMETER1 root_parameters[8] = {};
+
+        root_parameters[0].InitAsDescriptorTable(1, &sampler_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[1].InitAsDescriptorTable(1, &cubemap_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[2].InitAsDescriptorTable(1, &shadow_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[3].InitAsConstantBufferView(
             0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[3].InitAsConstantBufferView(
+        root_parameters[4].InitAsConstantBufferView(
             1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[4].InitAsConstantBufferView(
+        root_parameters[5].InitAsConstantBufferView(
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
         // VS : t0
         CD3DX12_DESCRIPTOR_RANGE1 textureRangeVS;
         textureRangeVS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-        rootParameters[5].InitAsDescriptorTable(1, &textureRangeVS,
-                                                D3D12_SHADER_VISIBILITY_VERTEX);
+        root_parameters[6].InitAsDescriptorTable(
+            1, &textureRangeVS, D3D12_SHADER_VISIBILITY_VERTEX);
         // PS : t0 ~ t4
         CD3DX12_DESCRIPTOR_RANGE1 textureRangePS;
         textureRangePS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
-        rootParameters[6].InitAsDescriptorTable(1, &textureRangePS,
-                                                D3D12_SHADER_VISIBILITY_PIXEL);
+        root_parameters[7].InitAsDescriptorTable(1, &textureRangePS,
+                                                 D3D12_SHADER_VISIBILITY_PIXEL);
 
         auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
-            ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,
+            ARRAYSIZE(root_parameters), root_parameters, 0, nullptr,
             D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
         ComPtr<ID3DBlob> signature;
@@ -261,17 +263,19 @@ class ReflectSolidMeshPSO : public GraphicsPSO {
             // global texture
             context->GetList()->SetGraphicsRootDescriptorTable(
                 1, SkyboxRenderer::GetSkyboxTexture(world)->GetGpuHandle());
+            context->GetList()->SetGraphicsRootDescriptorTable(
+                2, ShadowMap::GetShadowMap(world)->GetGpuHandle());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                2, global_consts->GetGPUVirtualAddress());
+                3, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
+                4, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                4,
+                5,
                 mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                5, mesh->texture_VS->GetGpuHandle());
+                6, mesh->texture_VS->GetGpuHandle());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                6, mesh->texture_PS->GetGpuHandle());
+                7, mesh->texture_PS->GetGpuHandle());
 
             context->GetList()->IASetPrimitiveTopology(
                 D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -285,51 +289,50 @@ class ReflectSolidMeshPSO : public GraphicsPSO {
         GpuCore::Instance().GetCommand()->Finish(context);
     };
 };
-class WireReflectMeshPSO : public GraphicsPSO {
-  public:
-    void Initialize(){};
-    void Render(){};
-};
 class MirrorBlendSolidMeshPSO : public GraphicsPSO {
   public:
     void Initialize() override {
         // rootSignature
         // s0 ~ s6
-        CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
-        samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
+        CD3DX12_DESCRIPTOR_RANGE1 sampler_range;
+        sampler_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
 
         // t10 ~ t16
-        CD3DX12_DESCRIPTOR_RANGE1 textureRange;
-        textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 cubemap_range;
+        cubemap_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 shadow_range;
+        shadow_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, MAX_LIGHTS, 14);
 
-        CD3DX12_ROOT_PARAMETER1 rootParameters[7] = {};
-        // Common.hlsli : s0~s6,t10~t16,b0~b2
-        rootParameters[0].InitAsDescriptorTable(1, &samplerRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[1].InitAsDescriptorTable(1, &textureRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[2].InitAsConstantBufferView(
+        CD3DX12_ROOT_PARAMETER1 root_parameters[8] = {};
+
+        root_parameters[0].InitAsDescriptorTable(1, &sampler_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[1].InitAsDescriptorTable(1, &cubemap_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[2].InitAsDescriptorTable(1, &shadow_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[3].InitAsConstantBufferView(
             0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[3].InitAsConstantBufferView(
+        root_parameters[4].InitAsConstantBufferView(
             1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[4].InitAsConstantBufferView(
+        root_parameters[5].InitAsConstantBufferView(
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
         // VS : t0
         CD3DX12_DESCRIPTOR_RANGE1 textureRangeVS;
         textureRangeVS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-        rootParameters[5].InitAsDescriptorTable(1, &textureRangeVS,
-                                                D3D12_SHADER_VISIBILITY_VERTEX);
+        root_parameters[6].InitAsDescriptorTable(
+            1, &textureRangeVS, D3D12_SHADER_VISIBILITY_VERTEX);
         // PS : t0 ~ t4
         CD3DX12_DESCRIPTOR_RANGE1 textureRangePS;
         textureRangePS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
-        rootParameters[6].InitAsDescriptorTable(1, &textureRangePS,
-                                                D3D12_SHADER_VISIBILITY_PIXEL);
+        root_parameters[7].InitAsDescriptorTable(1, &textureRangePS,
+                                                 D3D12_SHADER_VISIBILITY_PIXEL);
 
         auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
-            ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,
+            ARRAYSIZE(root_parameters), root_parameters, 0, nullptr,
             D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
         ComPtr<ID3DBlob> signature;
@@ -404,17 +407,19 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
             // global texture
             context->GetList()->SetGraphicsRootDescriptorTable(
                 1, SkyboxRenderer::GetSkyboxTexture(world)->GetGpuHandle());
+            context->GetList()->SetGraphicsRootDescriptorTable(
+                2, ShadowMap::GetShadowMap(world)->GetGpuHandle());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                2, global_consts->GetGPUVirtualAddress());
+                3, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
+                4, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                4,
+                5,
                 mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                5, mesh->texture_VS->GetGpuHandle());
+                6, mesh->texture_VS->GetGpuHandle());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                6, mesh->texture_PS->GetGpuHandle());
+                7, mesh->texture_PS->GetGpuHandle());
 
             context->GetList()->IASetPrimitiveTopology(
                 D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -428,56 +433,54 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
         GpuCore::Instance().GetCommand()->Finish(context);
     };
 };
-class WireMirrorBlendMeshPSO : public GraphicsPSO {
-  public:
-    void Initialize(){};
-    void Render(){};
-};
 class SkinnedSolidMeshPSO : public GraphicsPSO {
   public:
     void Initialize() override {
-        // rootSignature
         // s0 ~ s6
-        CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
-        samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
+        CD3DX12_DESCRIPTOR_RANGE1 sampler_range;
+        sampler_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
 
         // t10 ~ t16
-        CD3DX12_DESCRIPTOR_RANGE1 textureRange;
-        textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 7, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 cubemap_range;
+        cubemap_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 10);
+        CD3DX12_DESCRIPTOR_RANGE1 shadow_range;
+        shadow_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, MAX_LIGHTS, 14);
 
         CD3DX12_DESCRIPTOR_RANGE1 boneRange;
         boneRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 9);
 
-        CD3DX12_ROOT_PARAMETER1 rootParameters[8] = {};
-        // Common.hlsli : s0~s6,t10~t16,b0~b2
-        rootParameters[0].InitAsDescriptorTable(1, &samplerRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[1].InitAsDescriptorTable(1, &textureRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[2].InitAsConstantBufferView(
+        CD3DX12_ROOT_PARAMETER1 root_parameters[9] = {};
+
+        root_parameters[0].InitAsDescriptorTable(1, &sampler_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[1].InitAsDescriptorTable(1, &cubemap_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[2].InitAsDescriptorTable(1, &shadow_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[3].InitAsConstantBufferView(
             0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[3].InitAsConstantBufferView(
+        root_parameters[4].InitAsConstantBufferView(
             1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[4].InitAsConstantBufferView(
+        root_parameters[5].InitAsConstantBufferView(
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
         // VS : t0
         CD3DX12_DESCRIPTOR_RANGE1 textureRangeVS;
         textureRangeVS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
-        rootParameters[5].InitAsDescriptorTable(1, &textureRangeVS,
-                                                D3D12_SHADER_VISIBILITY_VERTEX);
+        root_parameters[6].InitAsDescriptorTable(
+            1, &textureRangeVS, D3D12_SHADER_VISIBILITY_VERTEX);
         // PS : t0 ~ t4
         CD3DX12_DESCRIPTOR_RANGE1 textureRangePS;
         textureRangePS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
-        rootParameters[6].InitAsDescriptorTable(1, &textureRangePS,
-                                                D3D12_SHADER_VISIBILITY_PIXEL);
-        rootParameters[7].InitAsDescriptorTable(1, &boneRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[7].InitAsDescriptorTable(1, &textureRangePS,
+                                                 D3D12_SHADER_VISIBILITY_PIXEL);
+        root_parameters[8].InitAsDescriptorTable(1, &boneRange,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
 
         auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
-            ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,
+            ARRAYSIZE(root_parameters), root_parameters, 0, nullptr,
             D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
         ComPtr<ID3DBlob> signature;
@@ -552,19 +555,21 @@ class SkinnedSolidMeshPSO : public GraphicsPSO {
             // global texture
             context->GetList()->SetGraphicsRootDescriptorTable(
                 1, SkyboxRenderer::GetSkyboxTexture(world)->GetGpuHandle());
+            context->GetList()->SetGraphicsRootDescriptorTable(
+                2, ShadowMap::GetShadowMap(world)->GetGpuHandle());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                2, global_consts->GetGPUVirtualAddress());
+                3, global_consts->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                3, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
+                4, mesh_renderer->MeshConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootConstantBufferView(
-                4,
+                5,
                 mesh_renderer->MaterialConsts().Get()->GetGPUVirtualAddress());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                5, mesh->texture_VS->GetGpuHandle());
+                6, mesh->texture_VS->GetGpuHandle());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                6, mesh->texture_PS->GetGpuHandle());
+                7, mesh->texture_PS->GetGpuHandle());
             context->GetList()->SetGraphicsRootDescriptorTable(
-                7, animator->GetGpuHandle());
+                8, animator->GetGpuHandle());
 
             context->GetList()->IASetPrimitiveTopology(
                 D3D12_PRIMITIVE_TOPOLOGY::D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);

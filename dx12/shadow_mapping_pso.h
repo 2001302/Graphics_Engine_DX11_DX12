@@ -12,31 +12,31 @@ class ShadowMappingPSO : public GraphicsPSO {
     void Initialize() override {
         // rootSignature
         // s0 ~ s6
-        CD3DX12_DESCRIPTOR_RANGE1 samplerRange;
-        samplerRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
+        CD3DX12_DESCRIPTOR_RANGE1 sampler_range;
+        sampler_range.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 7, 0);
 
         // t10 ~ t13
         CD3DX12_DESCRIPTOR_RANGE1 textureRange;
         textureRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 4, 10);
 
-        CD3DX12_ROOT_PARAMETER1 rootParameters[5] = {};
+        CD3DX12_ROOT_PARAMETER1 root_parameters[5] = {};
         // Common.hlsli : s0~s6,t10~t16,b0~b2
-        rootParameters[0].InitAsDescriptorTable(1, &samplerRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[1].InitAsDescriptorTable(1, &textureRange,
-                                                D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[2].InitAsConstantBufferView(
+        root_parameters[0].InitAsDescriptorTable(1, &sampler_range,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[1].InitAsDescriptorTable(1, &textureRange,
+                                                 D3D12_SHADER_VISIBILITY_ALL);
+        root_parameters[2].InitAsConstantBufferView(
             0, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[3].InitAsConstantBufferView(
+        root_parameters[3].InitAsConstantBufferView(
             1, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
-        rootParameters[4].InitAsConstantBufferView(
+        root_parameters[4].InitAsConstantBufferView(
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
 
         auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
-            ARRAYSIZE(rootParameters), rootParameters, 0, nullptr,
+            ARRAYSIZE(root_parameters), root_parameters, 0, nullptr,
             D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
         ComPtr<ID3DBlob> signature;
@@ -52,9 +52,11 @@ class ShadowMappingPSO : public GraphicsPSO {
         ComPtr<ID3DBlob> depthVS;
         ComPtr<ID3DBlob> depthPS;
         ShaderUtil::CreateVertexShader(GpuCore::Instance().GetDevice(),
-                                       L"../DX12/Shader/DepthOnlyVS.hlsl", depthVS);
+                                       L"../DX12/Shader/DepthOnlyVS.hlsl",
+                                       depthVS);
         ShaderUtil::CreatePixelShader(GpuCore::Instance().GetDevice(),
-                                      L"../DX12/Shader/DepthOnlyPS.hlsl", depthPS);
+                                      L"../DX12/Shader/DepthOnlyPS.hlsl",
+                                      depthPS);
         //
         D3D12_GRAPHICS_PIPELINE_STATE_DESC psoDesc = {};
         psoDesc.InputLayout = {layout::basicIEs, _countof(layout::basicIEs)};

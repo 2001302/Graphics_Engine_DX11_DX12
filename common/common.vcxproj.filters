@@ -227,6 +227,9 @@
     <Filter Include="Gui\ImGui\NodeEditor">
       <UniqueIdentifier>{fa1f3d81-b209-4b39-95b8-4c6f715b0aad}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{c95b243f-863d-44b2-810f-010ad7f3238c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="ImGui\NodeEditor\imgui_bezier_math.inl">
@@ -238,5 +241,10 @@
     <None Include="ImGui\NodeEditor\imgui_node_editor_internal.inl">
       <Filter>Gui\ImGui\NodeEditor</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Cuprum-Bold.ttf">
+      <Filter>Resource</Filter>
+    </Font>
   </ItemGroup>
 </Project>

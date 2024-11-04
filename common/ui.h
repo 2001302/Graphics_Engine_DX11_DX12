@@ -3,6 +3,8 @@
 
 #include "dataBlock.h"
 #include "node.h"
+#include <filesystem>
+#include <windows.h>
 
 namespace common {
 class IGui : public IDataBlock {

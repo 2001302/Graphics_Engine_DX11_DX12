@@ -94,6 +94,9 @@
     <None Include="ImGui\NodeEditor\imgui_extra_math.inl" />
     <None Include="ImGui\NodeEditor\imgui_node_editor_internal.inl" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="Cuprum-Bold.ttf" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -195,6 +198,9 @@
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command> copy /Y "$(SolutionDir)\common\Cuprum-Bold.ttf" "$(OutDir)Cuprum-Bold.ttf" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -215,6 +221,9 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
+    <PostBuildEvent>
+      <Command> copy /Y "$(SolutionDir)\common\Cuprum-Bold.ttf" "$(OutDir)Cuprum-Bold.ttf" </Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

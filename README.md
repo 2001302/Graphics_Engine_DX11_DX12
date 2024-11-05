@@ -13,5 +13,5 @@ This engine is based on DirectX 11 and DirectX 12.
 		- Desktop development using C++
 		- C++ game development
 
-1. run third_party/_1.Prepare_Third_Party.bat
+1. Run third_party/_1.Prepare_Third_Party.bat
 2. Build with Visual Studio 2022

@@ -29,6 +29,14 @@ __declspec(align(256)) struct MaterialConstants {
     int use_roughness_map = 0;
     int use_emissive_map = 0;
     float dummy = 0.0f;
+
+    void SetMaterialConstants(Vector3 albedo_factor, float roughness_factor,
+                              float metallic_factor, Vector3 emission_factor) {
+        this->albedo_factor = albedo_factor;
+        this->roughness_factor = roughness_factor;
+        this->metallic_factor = metallic_factor;
+        this->emission_factor = emission_factor;
+    }
 };
 
 struct Light {

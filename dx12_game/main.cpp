@@ -36,19 +36,16 @@ class GameDx12 : public Engine {
             targets->world->TryAdd(skybox_renderer);
         }
 
-        // sample object
+        // sample object 1
         {
             MeshData mesh = GeometryGenerator::MakeBox(0.2f);
-            Vector3 center(0.0f, 0.5f, 2.5f);
 
             auto renderer = std::make_shared<MeshRenderer>();
             renderer->Initialize(std::vector{mesh});
-            renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
-            renderer->MaterialConsts().GetCpu().albedo_factor =
-                Vector3(1.0f, 0.2f, 0.2f);
-            renderer->MaterialConsts().GetCpu().roughness_factor = 0.5f;
-            renderer->MaterialConsts().GetCpu().metallic_factor = 0.9f;
-            renderer->MaterialConsts().GetCpu().emission_factor = Vector3(0.0f);
+            renderer->UpdateWorldRow(
+                Matrix::CreateTranslation(Vector3(0.0f, 0.5f, 2.5f)));
+            renderer->MaterialConsts().GetCpu().SetMaterialConstants(
+                Vector3(1.0f, 0.2f, 0.2f), 0.5f, 0.9f, Vector3(0.0f));
             renderer->UpdateConstantBuffers();
 
             auto obj = std::make_shared<common::Model>();
@@ -57,19 +54,16 @@ class GameDx12 : public Engine {
             targets->objects.insert({obj->GetEntityId(), obj});
         }
 
-        // sample object
+        // sample object 2
         {
             MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
-            Vector3 center(0.5f, 0.5f, 2.0f);
 
             auto renderer = std::make_shared<MeshRenderer>();
             renderer->Initialize(std::vector{mesh});
-            renderer->UpdateWorldRow(Matrix::CreateTranslation(center));
-            renderer->MaterialConsts().GetCpu().albedo_factor =
-                Vector3(0.1f, 0.1f, 1.0f);
-            renderer->MaterialConsts().GetCpu().roughness_factor = 0.2f;
-            renderer->MaterialConsts().GetCpu().metallic_factor = 0.6f;
-            renderer->MaterialConsts().GetCpu().emission_factor = Vector3(0.0f);
+            renderer->UpdateWorldRow(
+                Matrix::CreateTranslation(Vector3(0.5f, 0.5f, 2.0f)));
+            renderer->MaterialConsts().GetCpu().SetMaterialConstants(
+                Vector3(0.1f, 0.1f, 1.0f), 0.2f, 0.6f, Vector3(0.0f));
             renderer->UpdateConstantBuffers();
 
             auto obj = std::make_shared<common::Model>();
@@ -78,10 +72,10 @@ class GameDx12 : public Engine {
             targets->objects.insert({obj->GetEntityId(), obj});
         }
 
-        // sample object
+        // sample object 3
         {
             std::string base_path = "../Assets/Characters/Mixamo/";
-            std::vector<std::string> clipNames = {"CatwalkIdle.fbx"};
+            std::vector<std::string> clipNames = {"Idle.fbx"};
 
             AnimationData aniData;
             auto [meshes, _] = GeometryGenerator::ReadAnimationFromFile(
@@ -125,11 +119,8 @@ class GameDx12 : public Engine {
 
             auto component = std::make_shared<MirrorRenderer>();
             component->Initialize(std::vector{mesh});
-            component->MaterialConsts().GetCpu().albedo_factor = Vector3(0.1f);
-            component->MaterialConsts().GetCpu().emission_factor =
-                Vector3(0.0f);
-            component->MaterialConsts().GetCpu().metallic_factor = 0.5f;
-            component->MaterialConsts().GetCpu().roughness_factor = 0.3f;
+            component->MaterialConsts().GetCpu().SetMaterialConstants(
+                Vector3(0.1f), 0.5f, 0.3f, Vector3(0.0f));
 
             Vector3 position = Vector3(0.0f, -0.5f, 2.0f);
             component->UpdateWorldRow(Matrix::CreateRotationX(PI * 0.5f) *

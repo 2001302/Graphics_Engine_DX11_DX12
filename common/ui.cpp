@@ -38,7 +38,7 @@ bool IGui::Frame() {
 std::filesystem::path GetExecutablePath() {
     char path[MAX_PATH];
     GetModuleFileNameA(NULL, path, MAX_PATH);
-    return std::filesystem::path(path);
+    return std::filesystem::path(path).parent_path();
 }
 
 void IGui::RecreateFontAtlas() {
@@ -53,7 +53,7 @@ void IGui::RecreateFontAtlas() {
     config.OversampleV = 4;
     config.PixelSnapH = false;
 
-    std::filesystem::path font_path = GetExecutablePath().parent_path() / "Cuprum-Bold.ttf";
+    std::filesystem::path font_path = GetExecutablePath() / "Cuprum-Bold.ttf";
     io.Fonts->AddFontFromFileTTF(font_path.string().c_str(), 20.0f, &config);
 
     io.Fonts->Build();

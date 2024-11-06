@@ -75,7 +75,7 @@ class GameDx12 : public Engine {
         // sample object 3
         {
             std::string base_path = "../Assets/Characters/Mixamo/";
-            std::vector<std::string> clipNames = {"Idle.fbx"};
+            std::vector<std::string> clipNames = {"Shuffling.fbx"};
 
             AnimationData aniData;
             auto [meshes, _] = GeometryGenerator::ReadAnimationFromFile(

@@ -39,14 +39,14 @@ class SolidMeshPSO : public GraphicsPSO {
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
         // VS : t0
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangeVS;
-        textureRangeVS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+        CD3DX12_DESCRIPTOR_RANGE1 texture_range_VS;
+        texture_range_VS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
         root_parameters[6].InitAsDescriptorTable(
-            1, &textureRangeVS, D3D12_SHADER_VISIBILITY_VERTEX);
+            1, &texture_range_VS, D3D12_SHADER_VISIBILITY_VERTEX);
         // PS : t0 ~ t4
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangePS;
-        textureRangePS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
-        root_parameters[7].InitAsDescriptorTable(1, &textureRangePS,
+        CD3DX12_DESCRIPTOR_RANGE1 texture_range_PS;
+        texture_range_PS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
+        root_parameters[7].InitAsDescriptorTable(1, &texture_range_PS,
                                                  D3D12_SHADER_VISIBILITY_PIXEL);
 
         auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
@@ -178,14 +178,14 @@ class ReflectSolidMeshPSO : public GraphicsPSO {
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
         // VS : t0
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangeVS;
-        textureRangeVS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+        CD3DX12_DESCRIPTOR_RANGE1 texture_range_VS;
+        texture_range_VS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
         root_parameters[6].InitAsDescriptorTable(
-            1, &textureRangeVS, D3D12_SHADER_VISIBILITY_VERTEX);
+            1, &texture_range_VS, D3D12_SHADER_VISIBILITY_VERTEX);
         // PS : t0 ~ t4
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangePS;
-        textureRangePS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
-        root_parameters[7].InitAsDescriptorTable(1, &textureRangePS,
+        CD3DX12_DESCRIPTOR_RANGE1 texture_range_PS;
+        texture_range_PS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
+        root_parameters[7].InitAsDescriptorTable(1, &texture_range_PS,
                                                  D3D12_SHADER_VISIBILITY_PIXEL);
 
         auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
@@ -321,14 +321,14 @@ class MirrorBlendSolidMeshPSO : public GraphicsPSO {
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
         // VS : t0
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangeVS;
-        textureRangeVS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+        CD3DX12_DESCRIPTOR_RANGE1 texture_range_VS;
+        texture_range_VS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
         root_parameters[6].InitAsDescriptorTable(
-            1, &textureRangeVS, D3D12_SHADER_VISIBILITY_VERTEX);
+            1, &texture_range_VS, D3D12_SHADER_VISIBILITY_VERTEX);
         // PS : t0 ~ t4
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangePS;
-        textureRangePS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
-        root_parameters[7].InitAsDescriptorTable(1, &textureRangePS,
+        CD3DX12_DESCRIPTOR_RANGE1 texture_range_PS;
+        texture_range_PS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
+        root_parameters[7].InitAsDescriptorTable(1, &texture_range_PS,
                                                  D3D12_SHADER_VISIBILITY_PIXEL);
 
         auto rootSignatureDesc = CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC(
@@ -467,14 +467,14 @@ class SkinnedSolidMeshPSO : public GraphicsPSO {
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
         // VS : t0
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangeVS;
-        textureRangeVS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+        CD3DX12_DESCRIPTOR_RANGE1 texture_range_VS;
+        texture_range_VS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
         root_parameters[6].InitAsDescriptorTable(
-            1, &textureRangeVS, D3D12_SHADER_VISIBILITY_VERTEX);
+            1, &texture_range_VS, D3D12_SHADER_VISIBILITY_VERTEX);
         // PS : t0 ~ t4
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangePS;
-        textureRangePS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
-        root_parameters[7].InitAsDescriptorTable(1, &textureRangePS,
+        CD3DX12_DESCRIPTOR_RANGE1 texture_range_PS;
+        texture_range_PS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
+        root_parameters[7].InitAsDescriptorTable(1, &texture_range_PS,
                                                  D3D12_SHADER_VISIBILITY_PIXEL);
         root_parameters[8].InitAsDescriptorTable(1, &boneRange,
                                                  D3D12_SHADER_VISIBILITY_ALL);
@@ -615,14 +615,14 @@ class ReflectSkinnedSolidMeshPSO : public GraphicsPSO {
             2, 0, D3D12_ROOT_DESCRIPTOR_FLAG_DATA_STATIC,
             D3D12_SHADER_VISIBILITY_ALL);
         // VS : t0
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangeVS;
-        textureRangeVS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
+        CD3DX12_DESCRIPTOR_RANGE1 texture_range_VS;
+        texture_range_VS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0);
         root_parameters[6].InitAsDescriptorTable(
-            1, &textureRangeVS, D3D12_SHADER_VISIBILITY_VERTEX);
+            1, &texture_range_VS, D3D12_SHADER_VISIBILITY_VERTEX);
         // PS : t0 ~ t4
-        CD3DX12_DESCRIPTOR_RANGE1 textureRangePS;
-        textureRangePS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
-        root_parameters[7].InitAsDescriptorTable(1, &textureRangePS,
+        CD3DX12_DESCRIPTOR_RANGE1 texture_range_PS;
+        texture_range_PS.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 5, 0);
+        root_parameters[7].InitAsDescriptorTable(1, &texture_range_PS,
                                                  D3D12_SHADER_VISIBILITY_PIXEL);
         root_parameters[8].InitAsDescriptorTable(1, &bone_range,
                                                  D3D12_SHADER_VISIBILITY_ALL);

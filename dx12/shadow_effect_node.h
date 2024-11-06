@@ -24,6 +24,10 @@ class ShadowEffectNode : public common::BehaviorActionNode {
             shadow_map_PSO = std::make_shared<ShadowMappingPSO>();
             shadow_map_PSO->Initialize();
 
+            skinned_shadow_map_PSO =
+                std::make_shared<SkinnedShadowMappingPSO>();
+            skinned_shadow_map_PSO->Initialize();
+            
             // global const
             for (int i = 0; i < MAX_LIGHTS; i++) {
                 shadow_global_consts[i].Initialize();
@@ -73,10 +77,24 @@ class ShadowEffectNode : public common::BehaviorActionNode {
                     ShadowMap::GetShadowMap(targets->world.get())
                         ->GetResource(i));
 
-                shadow_map_PSO->Render(targets->world.get(),
-                                       condition->shared_sampler,
-                                       shadow_global_consts[i].Get(),
-                                       targets->objects, depth_buffer);
+                for (auto &object : targets->objects) {
+                    MeshRenderer *renderer = nullptr;
+                    if (object.second->TryGet(renderer)) {
+
+                        Animator *animator = nullptr;
+                        if (object.second->TryGet(animator)) {
+                            skinned_shadow_map_PSO->Render(
+                                targets->world.get(), condition->shared_sampler,
+                                shadow_global_consts[i].Get(), renderer,
+                                depth_buffer, animator);
+                        } else {
+                            shadow_map_PSO->Render(
+                                targets->world.get(), condition->shared_sampler,
+                                shadow_global_consts[i].Get(), renderer,
+                                depth_buffer);
+                        }
+                    }
+                }
             }
             break;
         }
@@ -89,6 +107,7 @@ class ShadowEffectNode : public common::BehaviorActionNode {
 
     ConstantBuffer<GlobalConstants> shadow_global_consts[MAX_LIGHTS];
     std::shared_ptr<ShadowMappingPSO> shadow_map_PSO;
+    std::shared_ptr<SkinnedShadowMappingPSO> skinned_shadow_map_PSO;
 };
 } // namespace graphics
 

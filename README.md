@@ -1,7 +1,7 @@
 # GraphicsEngine/DX11_DX12_Renderer
 ![simple](https://github.com/user-attachments/assets/9abc30d8-e34b-430e-8248-8abaa200aa52)
 
-https://github.com/user-attachments/assets/bee5eb38-1f18-464e-9a39-235343139880
+![shuffle](https://github.com/user-attachments/assets/16f4844d-aadd-4c65-bca5-e0dd7a8da9af)
 
 This engine is based on DirectX 11 and DirectX 12.
 - It can create simple 3D models and display them on the screen.

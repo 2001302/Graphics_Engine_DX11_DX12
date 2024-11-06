@@ -30,6 +30,10 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
             reflect_mesh_solid_PSO = std::make_shared<ReflectSolidMeshPSO>();
             reflect_mesh_solid_PSO->Initialize();
 
+            skinned_reflect_mesh_solid_PSO =
+                std::make_shared<ReflectSkinnedSolidMeshPSO>();
+            skinned_reflect_mesh_solid_PSO->Initialize();
+
             reflect_skybox_solid_PSO =
                 std::make_shared<SolidReflectSkyboxPSO>();
             reflect_skybox_solid_PSO->Initialize();
@@ -87,11 +91,22 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
                     {
                         for (auto &i : targets->objects) {
                             MeshRenderer *renderer = nullptr;
+
                             if (i.second->TryGet(renderer)) {
-                                reflect_mesh_solid_PSO->Render(
-                                    targets->world.get(),
-                                    condition->shared_sampler,
-                                    reflect_global_consts.Get(), renderer);
+
+                                Animator *animator = nullptr;
+                                if (i.second->TryGet(animator)) {
+                                    skinned_reflect_mesh_solid_PSO->Render(
+                                        targets->world.get(),
+                                        condition->shared_sampler,
+                                        reflect_global_consts.Get(), renderer,
+                                        animator);
+                                } else {
+                                    reflect_mesh_solid_PSO->Render(
+                                        targets->world.get(),
+                                        condition->shared_sampler,
+                                        reflect_global_consts.Get(), renderer);
+                                }
                             }
                         }
                     }
@@ -99,10 +114,10 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
                     // 3.reflectSkyboxSolidPSO
                     {
                         SkyboxRenderer *renderer = nullptr;
-                        if (targets->world->TryGet(renderer) && !renderer->IsBlack()) {
+                        if (targets->world->TryGet(renderer) &&
+                            !renderer->IsBlack()) {
                             reflect_skybox_solid_PSO->Render(
-                                condition->shared_sampler,
-                                targets->world.get(),
+                                condition->shared_sampler, targets->world.get(),
                                 reflect_global_consts.Get(), renderer);
                         }
                     }
@@ -131,6 +146,7 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
 
     std::shared_ptr<StencilMarkPSO> stencil_mark_PSO;
     std::shared_ptr<ReflectSolidMeshPSO> reflect_mesh_solid_PSO;
+    std::shared_ptr<ReflectSkinnedSolidMeshPSO> skinned_reflect_mesh_solid_PSO;
     std::shared_ptr<SolidReflectSkyboxPSO> reflect_skybox_solid_PSO;
     std::shared_ptr<WireReflectSkyboxPSO> reflect_skybox_wire_PSO;
     std::shared_ptr<MirrorBlendSolidMeshPSO> mirror_blend_solid_PSO;

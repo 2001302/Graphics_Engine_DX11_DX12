@@ -19,6 +19,11 @@ enum EnumStageType {
 
 class RenderTargetObject : public common::IInfo {
   public:
+    RenderTargetObject() : delta_time(0.0f), stage_type() {
+        skybox = std::make_shared<common::Model>();
+        ground = std::make_shared<common::Model>();
+    }
+
     std::unique_ptr<Camera> camera;
     std::shared_ptr<common::Model> ground;
     std::shared_ptr<common::Model> skybox;

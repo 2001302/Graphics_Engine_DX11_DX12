@@ -213,6 +213,7 @@
     <ClCompile Include="skybox_renderer.cpp" />
     <ClCompile Include="tone_mapping.cpp" />
     <ClCompile Include="mesh_renderer.cpp" />
+    <ClCompile Include="tree_node.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="shader\Common.hlsli">

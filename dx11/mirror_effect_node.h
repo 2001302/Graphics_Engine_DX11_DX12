@@ -14,31 +14,10 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
         assert(black_board != nullptr);
 
-        auto manager = black_board->targets.get();
+        auto targets = black_board->targets.get();
 
-        switch (manager->stage_type) {
+        switch (targets->stage_type) {
         case EnumStageType::eInitialize: {
-
-            auto mesh = GeometryGenerator::MakeSquare(5.0);
-
-            auto mirror = std::make_shared<MirrorRenderer>(std::vector{mesh});
-
-            // mesh.albedoTextureFilename =
-            //     "../Assets/Textures/blender_uv_grid_2k.png";
-            mirror->material_consts.GetCpu().albedoFactor = Vector3(0.1f);
-            mirror->material_consts.GetCpu().emissionFactor = Vector3(0.0f);
-            mirror->material_consts.GetCpu().metallicFactor = 0.5f;
-            mirror->material_consts.GetCpu().roughnessFactor = 0.3f;
-
-            Vector3 position = Vector3(0.0f, -0.5f, 2.0f);
-            mirror->UpdateWorldRow(Matrix::CreateRotationX(3.141592f * 0.5f) *
-                                   Matrix::CreateTranslation(position));
-
-            mirror->SetMirrorPlane(DirectX::SimpleMath::Plane(
-                position, Vector3(0.0f, 1.0f, 0.0f)));
-
-            manager->ground = std::make_shared<common::Model>();
-            manager->ground->TryAdd(mirror);
 
             graphics::Util::CreateConstBuffer(reflect_global_consts_CPU,
                                               reflect_global_consts_GPU);
@@ -48,19 +27,19 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eUpdate: {
             // constant buffer
             MirrorRenderer *mirror = nullptr;
-            if (manager->ground->TryGet(mirror)) {
+            if (targets->ground->TryGet(mirror)) {
 
                 const Matrix reflectRow =
                     Matrix::CreateReflection(mirror->GetMirrorPlane());
 
-                reflect_global_consts_CPU = manager->global_consts_CPU;
-                memcpy(&reflect_global_consts_CPU, &manager->global_consts_CPU,
-                       sizeof(manager->global_consts_CPU));
+                reflect_global_consts_CPU = targets->global_consts_CPU;
+                memcpy(&reflect_global_consts_CPU, &targets->global_consts_CPU,
+                       sizeof(targets->global_consts_CPU));
                 reflect_global_consts_CPU.view =
-                    (reflectRow * manager->camera->GetView()).Transpose();
+                    (reflectRow * targets->camera->GetView()).Transpose();
                 reflect_global_consts_CPU.viewProj =
-                    (reflectRow * manager->camera->GetView() *
-                     manager->camera->GetProjection())
+                    (reflectRow * targets->camera->GetView() *
+                     targets->camera->GetProjection())
                         .Transpose();
 
                 reflect_global_consts_CPU.invViewProj =
@@ -78,7 +57,7 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
 
             // on mirror
             MirrorRenderer *mirror = nullptr;
-            if (manager->ground->TryGet(mirror)) {
+            if (targets->ground->TryGet(mirror)) {
                 if (mirror->GetMirrorAlpha() < 1.0f) {
                     // Mirror 2. Mark only the mirror position as 1 in the
                     // StencilBuffer.
@@ -89,7 +68,7 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
                     // Mirror 3. Render the reflected objects at the mirror
                     // position.
                     graphics::Util::SetPipelineState(
-                        manager->draw_wire
+                        targets->draw_wire
                             ? graphics::pipeline::reflectWirePSO
                             : graphics::pipeline::reflectSolidPSO);
                     graphics::Util::SetGlobalConsts(reflect_global_consts_GPU);
@@ -100,7 +79,7 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
                                 .depth_stencil_view.Get(),
                             D3D11_CLEAR_DEPTH, 1.0f, 0);
 
-                    for (auto &i : manager->objects) {
+                    for (auto &i : targets->objects) {
                         MeshRenderer *renderer = nullptr;
                         if (i.second->TryGet(renderer)) {
                             renderer->Render();
@@ -108,12 +87,12 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
                     }
 
                     graphics::Util::SetPipelineState(
-                        manager->draw_wire
+                        targets->draw_wire
                             ? graphics::pipeline::reflectSkyboxWirePSO
                             : graphics::pipeline::reflectSkyboxSolidPSO);
                     {
                         SkyboxRenderer *renderer = nullptr;
-                        if (manager->skybox->TryGet(renderer)) {
+                        if (targets->skybox->TryGet(renderer)) {
                             renderer->Render();
                         }
                     }
@@ -121,10 +100,10 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
                     // Mirror 4. Draw the mirror itself with the 'Blend'
                     // material
                     graphics::Util::SetPipelineState(
-                        manager->draw_wire
+                        targets->draw_wire
                             ? graphics::pipeline::mirrorBlendWirePSO
                             : graphics::pipeline::mirrorBlendSolidPSO);
-                    graphics::Util::SetGlobalConsts(manager->global_consts_GPU);
+                    graphics::Util::SetGlobalConsts(targets->global_consts_GPU);
                     mirror->Render();
                 }
             }

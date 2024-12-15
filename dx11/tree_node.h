@@ -16,18 +16,18 @@
 namespace graphics {
 namespace node {
 
-auto light_node = std::make_shared<LightNodeInvoker>();
-auto camera_node = std::make_shared<CameraNodeInvoker>();
-auto skybox_node = std::make_shared<SkyboxNodeInvoker>();
-auto mirror_object_node = std::make_shared<MirrorObjectNodeInvoker>();
-auto shared_resource_node = std::make_shared<SharedResourceNodeInvoker>();
-auto game_objects_node = std::make_shared<GameObjectNodeInvoker>();
-auto shadow_effect_node = std::make_shared<ShadowEffectNodeInvoker>();
-auto resolve_buffer = std::make_shared<ResolveBufferNode>();
-auto imgui_node = std::make_shared<GuiNodeInvoker>();
-auto post_processing = std::make_shared<PostProcessingNode>();
-auto present = std::make_shared<PresentNode>();
-auto player_node = std::make_shared<PlayerNodeInvoker>();
+extern std::shared_ptr<LightNodeInvoker> light_node;
+extern std::shared_ptr<CameraNodeInvoker> camera_node;
+extern std::shared_ptr<SkyboxNodeInvoker> skybox_node;
+extern std::shared_ptr<MirrorObjectNodeInvoker> mirror_object_node;
+extern std::shared_ptr<SharedResourceNodeInvoker> shared_resource_node;
+extern std::shared_ptr<GameObjectNodeInvoker> game_objects_node;
+extern std::shared_ptr<ShadowEffectNodeInvoker> shadow_effect_node;
+extern std::shared_ptr<ResolveBufferNode> resolve_buffer;
+extern std::shared_ptr<GuiNodeInvoker> imgui_node;
+extern std::shared_ptr<PostProcessingNode> post_processing;
+extern std::shared_ptr<PresentNode> present;
+extern std::shared_ptr<PlayerNodeInvoker> player_node;
 
 } // namespace node
 } // namespace graphics

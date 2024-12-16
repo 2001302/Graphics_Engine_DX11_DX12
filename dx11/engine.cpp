@@ -32,7 +32,6 @@ bool Engine::Start() {
             ->Excute(node::shared_resource_node)
             ->Excute(node::post_processing)
             ->Excute(node::game_objects_node)
-            //->Excute(node::player_node)
             ->Excute(node::imgui_node)
         ->Close()
     ->Run();
@@ -46,7 +45,6 @@ bool Engine::Start() {
             ->Excute(node::shadow_effect_node)
             ->Excute(node::mirror_object_node)
             ->Excute(node::game_objects_node)
-            //->Excute(node::player_node)
         ->Close();
     
     //render
@@ -56,7 +54,6 @@ bool Engine::Start() {
             ->Excute(node::shadow_effect_node)
             ->Excute(node::light_node)
             ->Excute(node::game_objects_node)
-            //->Excute(node::player_node)
             ->Excute(node::camera_node)
             ->Excute(node::skybox_node)
             ->Excute(node::mirror_object_node)

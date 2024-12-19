@@ -24,6 +24,7 @@ class Animator : public common::Component {
 
     void Move(MeshRenderer *renderer, Vector3 direction, float speed);
     void Turn(MeshRenderer *renderer, Vector3 direction, float speed);
+    void Run(float time){};
 
   public:
     StructuredBuffer<Matrix> bone_transforms;

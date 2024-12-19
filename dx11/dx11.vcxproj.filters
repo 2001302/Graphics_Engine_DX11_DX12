@@ -25,7 +25,7 @@
     <ClInclude Include="camera_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
-    <ClInclude Include="game_objects_node.h">
+    <ClInclude Include="mesh_objects_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="gui_node.h">
@@ -71,9 +71,6 @@
       <Filter>Graphics\Structure</Filter>
     </ClInclude>
     <ClInclude Include="gpu_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="player_node.h">
       <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClInclude>
     <ClInclude Include="animator.h">
@@ -137,9 +134,6 @@
     </ClCompile>
     <ClCompile Include="animator.cpp">
       <Filter>Graphics\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="player_node.cpp">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
     </ClCompile>
     <ClCompile Include="engine.cpp">
       <Filter>Graphics</Filter>

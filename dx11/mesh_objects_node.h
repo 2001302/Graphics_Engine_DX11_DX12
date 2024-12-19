@@ -4,11 +4,12 @@
 #include "black_board.h"
 #include "mesh_renderer.h"
 #include "skinned_mesh_renderer.h"
+#include "animator.h"
 #include <behavior_tree_builder.h>
 
 namespace graphics {
 
-class GameObjectNodeInvoker : public common::BehaviorActionNode {
+class MeshObjectNodeInvoker : public common::BehaviorActionNode {
     common::EnumBehaviorTreeStatus OnInvoke() override {
 
         auto black_board = dynamic_cast<BlackBoard *>(data_block);
@@ -25,9 +26,19 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
         case EnumStageType::eUpdate: {
 
             for (auto &i : targets->objects) {
-                MeshRenderer *renderer = nullptr;
-                if (i.second->TryGet(renderer)) {
-                    renderer->UpdateConstantBuffers();
+                
+                MeshRenderer *mesh_renderer = nullptr;
+                SkinnedMeshRenderer *skinned_mesh_renderer = nullptr;
+                if (i.second->TryGet(mesh_renderer)) {
+                    mesh_renderer->UpdateConstantBuffers();
+                }
+                if (i.second->TryGet(skinned_mesh_renderer)) {
+                    Animator *animator = nullptr;
+                    if (i.second->TryGet(animator))
+                    {
+                        animator->Run(targets->delta_time);
+                        skinned_mesh_renderer->UpdateConstantBuffers();
+                    }
                 }
             }
 
@@ -54,14 +65,20 @@ class GameObjectNodeInvoker : public common::BehaviorActionNode {
                 }
             }
 
-            graphics::Util::SetPipelineState(graphics::pipeline::normalsPSO);
+            graphics::Util::SetPipelineState(
+                targets->draw_wire ? graphics::pipeline::skinnedWirePSO
+                                       : graphics::pipeline::skinnedSolidPSO);
+
             for (auto &i : targets->objects) {
-                MeshRenderer *renderer = nullptr;
-                if (i.second->TryGet(renderer)) {
-                    if (renderer->draw_normals)
-                        renderer->RenderNormals();
+                SkinnedMeshRenderer *renderer = nullptr;
+                Animator *animator = nullptr;
+                if (i.second->TryGet(renderer) && i.second->TryGet(animator)) {
+                    animator->UploadBoneData();
+                    renderer->Render();
                 }
             }
+
+            //todo: skinned mirror object
 
             break;
         }

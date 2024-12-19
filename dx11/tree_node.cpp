@@ -13,8 +13,8 @@ std::shared_ptr<MirrorObjectNodeInvoker> mirror_object_node =
     std::make_shared<MirrorObjectNodeInvoker>();
 std::shared_ptr<SharedResourceNodeInvoker> shared_resource_node =
     std::make_shared<SharedResourceNodeInvoker>();
-std::shared_ptr<GameObjectNodeInvoker> game_objects_node =
-    std::make_shared<GameObjectNodeInvoker>();
+std::shared_ptr<MeshObjectNodeInvoker> game_objects_node =
+    std::make_shared<MeshObjectNodeInvoker>();
 std::shared_ptr<ShadowEffectNodeInvoker> shadow_effect_node =
     std::make_shared<ShadowEffectNodeInvoker>();
 std::shared_ptr<ResolveBufferNode> resolve_buffer =
@@ -23,8 +23,6 @@ std::shared_ptr<GuiNodeInvoker> imgui_node = std::make_shared<GuiNodeInvoker>();
 std::shared_ptr<PostProcessingNode> post_processing =
     std::make_shared<PostProcessingNode>();
 std::shared_ptr<PresentNode> present = std::make_shared<PresentNode>();
-std::shared_ptr<PlayerNodeInvoker> player_node =
-    std::make_shared<PlayerNodeInvoker>();
 
 } // namespace node
 } // namespace graphics

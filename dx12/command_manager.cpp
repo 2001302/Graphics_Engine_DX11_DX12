@@ -27,7 +27,7 @@ CommandQueue *GpuCommand::Queue(D3D12_COMMAND_LIST_TYPE type) {
 
 CommandContext *GpuCommand::AllocateContext(ID3D12Device *device,
                                             D3D12_COMMAND_LIST_TYPE type) {
-    std::lock_guard<std::mutex> lock_guard(context_allocation_mutex_);
+    //std::lock_guard<std::mutex> lock_guard(context_allocation_mutex_);//release mode에서 문제 발생
 
     CommandContext *context = nullptr;
     if (available_contexts_[type].empty()) {

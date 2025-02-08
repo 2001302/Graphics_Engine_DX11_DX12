@@ -38,6 +38,7 @@ class RenderCondition : public common::IInfo {
     bool draw_wire;
     bool light_rotate;
     EnumStageType stage_type;
+    bool use_mirror;
 
     void OnShow() override {
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);
@@ -65,26 +66,7 @@ class RenderCondition : public common::IInfo {
         ImGui::SetNextItemOpen(false, ImGuiCond_Once);
         if (ImGui::TreeNode("Mirror")) {
 
-            // ImGui::SliderFloat("Alpha", &ground->mirror_alpha, 0.0f, 1.0f);
-            // const float blendColor[4] = {ground->mirror_alpha,
-            //                              ground->mirror_alpha,
-            //                              ground->mirror_alpha, 1.0f};
-            // if (draw_wire)
-            //     dx11::pso::mirrorBlendWirePSO.SetBlendFactor(blendColor);
-            // else
-            //     dx11::pso::mirrorBlendSolidPSO.SetBlendFactor(blendColor);
-
-            // auto renderer = (MeshRenderer *)ground->mirror->GetComponent(
-            //     EnumComponentType::eRenderer);
-            // ImGui::SliderFloat(
-            //     "Metallic",
-            //     &renderer->material_consts.GetCpu().metallicFactor,
-            //     0.0f, 1.0f);
-            // ImGui::SliderFloat(
-            //     "Roughness",
-            //     &renderer->material_consts.GetCpu().roughnessFactor, 0.0f,
-            //     1.0f);
-
+            ImGui::Checkbox("Use", &use_mirror);
             ImGui::TreePop();
         }
 

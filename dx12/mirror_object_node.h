@@ -80,7 +80,7 @@ class MirrorObjectNodeInvoker : public common::BehaviorActionNode {
             if (targets->world->TryGet(ground)) {
 
                 // on mirror
-                if (ground->GetMirrorAlpha() < 1.0f) {
+                if (ground->GetMirrorAlpha() < 1.0f && condition->use_mirror) {
 
                     // 1.stencilMaskPSO
                     stencil_mark_PSO->Render(

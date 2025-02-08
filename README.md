@@ -27,3 +27,9 @@ This engine is based on DirectX 11 and DirectX 12.
 # BehaviorTree
 
 ![Image](https://github.com/user-attachments/assets/c24d9c90-4668-4c82-8b1c-a3a1256cebb0)
+
+- Basically, the process follows the order of data block bind-build-run.
+- Individual functionalities are managed by separate Nodes.
+- The execution of a Node can be determined at runtime.
+- Nodes should minimize the use of new and reuse resources from the DataBlock whenever possible.
+- If a Node fails, it logs an error and may escalate the failure to the parent Node.

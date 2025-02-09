@@ -204,6 +204,9 @@
     <ClInclude Include="query.h">
       <Filter>Structure</Filter>
     </ClInclude>
+    <ClInclude Include="path.h">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="BehaviorTree">

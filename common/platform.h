@@ -4,7 +4,10 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include "env.h"
+#include "logger.h"
 #include <iostream>
+#include <windows.h>
+#include <filesystem>
 #include <shellscalingapi.h>
 #pragma comment(lib, "shcore.lib")
 

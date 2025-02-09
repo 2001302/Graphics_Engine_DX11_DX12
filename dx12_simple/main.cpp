@@ -10,25 +10,7 @@ class SimpleDx12 : public Engine {
         auto condition = black_board->conditions.get();
         auto targets = black_board->targets.get();
 
-        // sample object 1
-        {
-            MeshData mesh = GeometryGenerator::MakeBox(0.2f);
-
-            auto renderer = std::make_shared<MeshRenderer>();
-            renderer->Initialize(std::vector{mesh});
-            renderer->UpdateWorldRow(
-                Matrix::CreateTranslation(Vector3(0.0f, 0.5f, 2.5f)));
-            renderer->MaterialConsts().GetCpu().SetMaterialConstants(
-                Vector3(1.0f, 0.2f, 0.2f), 0.5f, 0.9f, Vector3(0.0f));
-            renderer->UpdateConstantBuffers();
-
-            auto obj = std::make_shared<common::Model>();
-            obj->TryAdd(renderer);
-
-            targets->objects.insert({obj->GetEntityId(), obj});
-        }
-
-        // sample object 2
+        // sample object
         {
             MeshData mesh = GeometryGenerator::MakeSphere(0.2f, 200, 200);
 

@@ -57,6 +57,7 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="env.h" />
     <ClInclude Include="component.h" />
+    <ClInclude Include="path.h" />
     <ClInclude Include="query.h" />
     <ClInclude Include="model.h" />
     <ClInclude Include="object_pool.h" />

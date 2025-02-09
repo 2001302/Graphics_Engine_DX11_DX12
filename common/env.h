@@ -3,11 +3,14 @@
 
 #include <cmath>
 #include <windows.h>
+#include <string>
 
 const double PI = std::acos(-1);
 
 namespace common {
 namespace env {
+extern std::string env_root;
+
 extern const bool full_screen;
 extern const bool vsync_enabled;
 extern const double field_of_view;

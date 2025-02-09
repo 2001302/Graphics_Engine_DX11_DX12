@@ -36,6 +36,19 @@ bool Platform::Start() {
 bool Platform::Frame() { return true; }
 
 void Platform::Run() {
+
+    std::filesystem::path root_dir(env::env_root);
+
+    if (!std::filesystem::exists(root_dir)) {
+        if (std::filesystem::create_directory(root_dir)) {
+            Logger::Debug("Success to create RootDirectory");
+        } else {
+            Logger::Debug("Failed to create RootDirectory");
+        }
+    } else {
+        Logger::Debug("Already exist RootDirectory");
+    }
+
     MSG msg;
     bool done, result;
 

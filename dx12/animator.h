@@ -4,13 +4,13 @@
 #include "animation_clip.h"
 #include "mesh_renderer.h"
 #include "structured_buffer.h"
-#include <behavior_tree_builder.h>
-#include <component.h>
+#include <behaviortree/behavior_tree_builder.h>
+#include <structure/component.h>
 #include <filesystem>
-#include <input.h>
+#include <structure/input.h>
 #include <iostream>
-#include <logger.h>
-#include <node.h>
+#include <util/logger.h>
+#include <structure/node.h>
 
 namespace graphics {
 using Microsoft::WRL::ComPtr;

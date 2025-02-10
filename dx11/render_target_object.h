@@ -6,9 +6,9 @@
 #include "graphics_util.h"
 #include "mesh_renderer.h"
 #include "mirror_renderer.h"
-#include <dataBlock.h>
-#include <info.h>
-#include <model.h>
+#include <structure/dataBlock.h>
+#include <structure/info.h>
+#include <structure/model.h>
 
 namespace graphics {
 enum EnumStageType {

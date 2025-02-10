@@ -5,7 +5,7 @@
 #include "gpu_resource.h"
 #include "image.h"
 #include <filesystem>
-#include <logger.h>
+#include <util/logger.h>
 
 namespace graphics {
 class Texture2D : public GpuResource {

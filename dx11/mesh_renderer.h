@@ -4,10 +4,10 @@
 #include "constant_buffer.h"
 #include "geometry_generator.h"
 #include "mesh.h"
-#include <component.h>
+#include <structure/component.h>
 #include <filesystem>
 #include <iostream>
-#include <node.h>
+#include <structure/node.h>
 
 namespace graphics {
 using Microsoft::WRL::ComPtr;

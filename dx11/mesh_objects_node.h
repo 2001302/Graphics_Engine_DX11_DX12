@@ -5,7 +5,7 @@
 #include "mesh_renderer.h"
 #include "skinned_mesh_renderer.h"
 #include "animator.h"
-#include <behavior_tree_builder.h>
+#include <behaviortree/behavior_tree_builder.h>
 
 namespace graphics {
 

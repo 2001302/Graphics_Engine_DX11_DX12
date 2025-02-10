@@ -1,8 +1,8 @@
 #ifndef _BehaviorTree
 #define _BehaviorTree
 
-#include "dataBlock.h"
-#include "node.h"
+#include "../structure/dataBlock.h"
+#include "../structure/node.h"
 #include <iostream>
 #include <map>
 #include <vector>

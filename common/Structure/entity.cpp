@@ -1,5 +1,5 @@
 ﻿#include "entity.h"
-#include "id_generator.h"
+#include "../util/id_generator.h"
 
 using namespace common;
 

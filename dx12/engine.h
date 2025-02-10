@@ -5,10 +5,10 @@
 #include "mesh_util.h"
 #include "message_receiver.h"
 #include "tree_node.h"
-#include <behavior_tree_builder.h>
-#include <platform.h>
-#include <setting_ui.h>
-#include <time_stamp.h>
+#include <behaviortree/behavior_tree_builder.h>
+#include <platform/platform.h>
+#include <gui/setting_ui.h>
+#include <util/time_stamp.h>
 
 namespace graphics {
 

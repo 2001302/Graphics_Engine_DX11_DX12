@@ -3,7 +3,7 @@
 
 #include "gpu_resource.h"
 #include "mesh_util.h"
-#include <model.h>
+#include <structure/model.h>
 
 namespace graphics {
 class ShadowMap : public common::Component {

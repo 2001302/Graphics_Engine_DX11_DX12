@@ -5,10 +5,10 @@
 #include "graphics_util.h"
 #include "mesh_renderer.h"
 #include "structured_buffer.h"
-#include <component.h>
+#include <structure/component.h>
 #include <filesystem>
 #include <iostream>
-#include <node.h>
+#include <structure/node.h>
 
 namespace graphics {
 using Microsoft::WRL::ComPtr;

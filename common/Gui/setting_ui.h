@@ -1,10 +1,10 @@
 #ifndef _PANEL
 #define _PANEL
 
-#include "env.h"
-#include "info.h"
-#include "message.h"
-#include "node.h"
+#include "../structure/env.h"
+#include "../structure/info.h"
+#include "../structure/message.h"
+#include "../structure/node.h"
 #include "ui.h"
 #include <map>
 #include <string>

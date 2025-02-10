@@ -7,7 +7,7 @@
 #include "skybox_pso.h"
 #include "skybox_renderer.h"
 #include "stencil_mark_pso.h"
-#include <behavior_tree_builder.h>
+#include <behaviortree/behavior_tree_builder.h>
 
 namespace graphics {
 

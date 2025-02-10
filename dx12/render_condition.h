@@ -8,8 +8,8 @@
 #include "sampler_state.h"
 #include "texture_2d.h"
 #include "texture_cube.h"
-#include <info.h>
-#include <setting_ui.h>
+#include <structure/info.h>
+#include <gui/setting_ui.h>
 
 namespace graphics {
 enum EnumStageType {

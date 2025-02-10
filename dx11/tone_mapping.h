@@ -3,8 +3,8 @@
 
 #include "constant_buffer.h"
 #include "mesh.h"
-#include <component.h>
-#include <env.h>
+#include <structure/component.h>
+#include <structure/env.h>
 
 namespace graphics {
 struct ImageFilterConstData {

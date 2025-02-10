@@ -3,7 +3,7 @@
 
 #include "animation_clip.h"
 #include "mesh_util.h"
-#include "model.h"
+#include <structure/model.h>
 #include "mesh_loader.h"
 #include <tuple>
 

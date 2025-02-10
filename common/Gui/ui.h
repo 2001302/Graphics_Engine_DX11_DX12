@@ -1,8 +1,8 @@
 #ifndef _BASEGUI
 #define _BASEGUI
 
-#include "dataBlock.h"
-#include "node.h"
+#include "../structure/dataBlock.h"
+#include "../structure/node.h"
 #include <filesystem>
 #include <windows.h>
 

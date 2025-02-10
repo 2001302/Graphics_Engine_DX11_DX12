@@ -1,7 +1,7 @@
 #pragma once
 
-#include <query.h>
-#include <logger.h>
+#include <structure/query.h>
+#include <util/logger.h>
 
 #define NUM_ELEMENTS 10000000
 

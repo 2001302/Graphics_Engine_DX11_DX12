@@ -1,12 +1,12 @@
 ﻿#ifndef _NODEUI
 #define _NODEUI
 
-#include "ImGui/imgui.h"
-#include "ImGui/imgui_impl_dx12.h"
-#include "ImGui/imgui_impl_dx11.h"
-#include "ImGui/imgui_impl_win32.h"
-#include "ImGui/imgui_internal.h"
-#include "ImGui/NodeEditor/imgui_node_editor.h"
+#include "../gui/ImGui/imgui.h"
+#include "../gui/ImGui/imgui_impl_dx12.h"
+#include "../gui/ImGui/imgui_impl_dx11.h"
+#include "../gui/ImGui/imgui_impl_win32.h"
+#include "../gui/ImGui/imgui_internal.h"
+#include "../gui/ImGui/NodeEditor/imgui_node_editor.h"
 #include "entity.h"
 
 namespace ed = ax::NodeEditor;

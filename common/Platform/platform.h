@@ -3,8 +3,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 
-#include "env.h"
-#include "logger.h"
+#include "../structure/env.h"
+#include "../util/logger.h"
 #include <iostream>
 #include <windows.h>
 #include <filesystem>

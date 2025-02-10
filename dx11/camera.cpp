@@ -2,7 +2,7 @@
 #include "geometry_generator.h"
 #include "mesh_renderer.h"
 #include "render_target_object.h"
-#include <setting_ui.h>
+#include <gui/setting_ui.h>
 
 namespace graphics {
 

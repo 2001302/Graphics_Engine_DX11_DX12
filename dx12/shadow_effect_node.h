@@ -4,7 +4,7 @@
 #include "black_board.h"
 #include "mesh_renderer.h"
 #include "shadow_mapping_pso.h"
-#include <behavior_tree_builder.h>
+#include <behaviortree/behavior_tree_builder.h>
 
 namespace graphics {
 

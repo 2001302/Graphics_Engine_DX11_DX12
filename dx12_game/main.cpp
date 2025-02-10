@@ -2,7 +2,7 @@
 
 #include "animator.h"
 #include <engine.h>
-#include <path.h>
+#include <util/path.h>
 
 namespace graphics {
 struct Idle : public common::AnimationNode {

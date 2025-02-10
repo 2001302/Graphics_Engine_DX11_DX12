@@ -3,8 +3,8 @@
 
 #include "render_condition.h"
 #include "render_target_object.h"
-#include <input.h>
-#include <setting_ui.h>
+#include <structure/input.h>
+#include <gui/setting_ui.h>
 
 namespace graphics {
 

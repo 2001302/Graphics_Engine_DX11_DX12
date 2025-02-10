@@ -2,10 +2,10 @@
 #define CAMERA
 
 #include "mesh_util.h"
-#include <behavior_tree_builder.h>
-#include <env.h>
-#include <model.h>
-#include <node.h>
+#include <behaviortree/behavior_tree_builder.h>
+#include <structure/env.h>
+#include <structure/model.h>
+#include <structure/node.h>
 
 namespace graphics {
 class Camera : public common::INode {

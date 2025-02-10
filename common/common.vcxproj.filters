@@ -1,211 +1,211 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="platform.cpp">
+    <ClCompile Include="BehaviorTree\action_node.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorTree\animation_node.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorTree\behavior_tree_builder.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorTree\conditional_node.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorTree\sequence_node.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="BehaviorTree\selector_node.cpp">
+      <Filter>BehaviorTree</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\NodeEditor\crude_json.cpp">
+      <Filter>Gui\ImGui\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\NodeEditor\imgui_canvas.cpp">
+      <Filter>Gui\ImGui\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\NodeEditor\imgui_node_editor.cpp">
+      <Filter>Gui\ImGui\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\NodeEditor\imgui_node_editor_api.cpp">
+      <Filter>Gui\ImGui\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\imgui.cpp">
+      <Filter>Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\imgui_demo.cpp">
+      <Filter>Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\imgui_draw.cpp">
+      <Filter>Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\imgui_impl_dx11.cpp">
+      <Filter>Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\imgui_impl_dx12.cpp">
+      <Filter>Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\imgui_impl_win32.cpp">
+      <Filter>Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\imgui_tables.cpp">
+      <Filter>Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ImGui\imgui_widgets.cpp">
+      <Filter>Gui\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\ui.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="Gui\setting_ui.cpp">
+      <Filter>Gui</Filter>
+    </ClCompile>
+    <ClCompile Include="Platform\platform.cpp">
       <Filter>Platform</Filter>
     </ClCompile>
-    <ClCompile Include="logger.cpp">
+    <ClCompile Include="Util\id_generator.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="id_generator.cpp">
+    <ClCompile Include="Util\logger.cpp">
       <Filter>Util</Filter>
     </ClCompile>
-    <ClCompile Include="entity.cpp">
+    <ClCompile Include="Structure\component.cpp">
       <Filter>Structure</Filter>
     </ClCompile>
-    <ClCompile Include="env.cpp">
+    <ClCompile Include="Structure\entity.cpp">
       <Filter>Structure</Filter>
     </ClCompile>
-    <ClCompile Include="node.cpp">
+    <ClCompile Include="Structure\env.cpp">
       <Filter>Structure</Filter>
     </ClCompile>
-    <ClCompile Include="action_node.cpp">
-      <Filter>BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="animation_node.cpp">
-      <Filter>BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="behavior_tree_builder.cpp">
-      <Filter>BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="conditional_node.cpp">
-      <Filter>BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="selector_node.cpp">
-      <Filter>BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="sequence_node.cpp">
-      <Filter>BehaviorTree</Filter>
-    </ClCompile>
-    <ClCompile Include="setting_ui.cpp">
-      <Filter>Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="ui.cpp">
-      <Filter>Gui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\NodeEditor\crude_json.cpp">
-      <Filter>Gui\ImGui\NodeEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\NodeEditor\imgui_canvas.cpp">
-      <Filter>Gui\ImGui\NodeEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\NodeEditor\imgui_node_editor.cpp">
-      <Filter>Gui\ImGui\NodeEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\NodeEditor\imgui_node_editor_api.cpp">
-      <Filter>Gui\ImGui\NodeEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui.cpp">
-      <Filter>Gui\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_demo.cpp">
-      <Filter>Gui\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_draw.cpp">
-      <Filter>Gui\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_dx12.cpp">
-      <Filter>Gui\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_win32.cpp">
-      <Filter>Gui\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_tables.cpp">
-      <Filter>Gui\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_widgets.cpp">
-      <Filter>Gui\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="ImGui\imgui_impl_dx11.cpp">
-      <Filter>Gui\ImGui</Filter>
-    </ClCompile>
-    <ClCompile Include="component.cpp">
+    <ClCompile Include="Structure\model.cpp">
       <Filter>Structure</Filter>
     </ClCompile>
-    <ClCompile Include="model.cpp">
+    <ClCompile Include="Structure\node.cpp">
       <Filter>Structure</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="platform.h">
-      <Filter>Platform</Filter>
-    </ClInclude>
-    <ClInclude Include="logger.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="id_generator.h">
-      <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="node.h">
-      <Filter>Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="dataBlock.h">
-      <Filter>Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="entity.h">
-      <Filter>Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="env.h">
-      <Filter>Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="info.h">
-      <Filter>Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="input.h">
-      <Filter>Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="message.h">
-      <Filter>Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="sequence_node.h">
-      <Filter>BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="action_node.h">
-      <Filter>BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="animation_node.h">
-      <Filter>BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="behavior_tree_builder.h">
-      <Filter>BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="conditional_node.h">
-      <Filter>BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="selector_node.h">
-      <Filter>BehaviorTree</Filter>
-    </ClInclude>
-    <ClInclude Include="ui.h">
-      <Filter>Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="setting_ui.h">
-      <Filter>Gui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\NodeEditor\crude_json.h">
-      <Filter>Gui\ImGui\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\NodeEditor\imgui_bezier_math.h">
-      <Filter>Gui\ImGui\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\NodeEditor\imgui_canvas.h">
-      <Filter>Gui\ImGui\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\NodeEditor\imgui_extra_keys.h">
-      <Filter>Gui\ImGui\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\NodeEditor\imgui_extra_math.h">
-      <Filter>Gui\ImGui\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\NodeEditor\imgui_node_editor.h">
-      <Filter>Gui\ImGui\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\NodeEditor\imgui_node_editor_internal.h">
-      <Filter>Gui\ImGui\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui.h">
-      <Filter>Gui\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_dx12.h">
-      <Filter>Gui\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_win32.h">
-      <Filter>Gui\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_internal.h">
-      <Filter>Gui\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_rectpack.h">
-      <Filter>Gui\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_textedit.h">
-      <Filter>Gui\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imstb_truetype.h">
-      <Filter>Gui\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imconfig.h">
-      <Filter>Gui\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="ImGui\imgui_impl_dx11.h">
-      <Filter>Gui\ImGui</Filter>
-    </ClInclude>
-    <ClInclude Include="time_stamp.h">
-      <Filter>Util</Filter>
-    </ClInclude>
     <ClInclude Include="component.h">
       <Filter>Structure</Filter>
     </ClInclude>
-    <ClInclude Include="model.h">
-      <Filter>Structure</Filter>
+    <ClInclude Include="BehaviorTree\action_node.h">
+      <Filter>BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="object_pool.h">
-      <Filter>Structure</Filter>
+    <ClInclude Include="BehaviorTree\animation_node.h">
+      <Filter>BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="query.h">
-      <Filter>Structure</Filter>
+    <ClInclude Include="BehaviorTree\behavior_tree_builder.h">
+      <Filter>BehaviorTree</Filter>
     </ClInclude>
-    <ClInclude Include="path.h">
+    <ClInclude Include="BehaviorTree\conditional_node.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTree\sequence_node.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTree\selector_node.h">
+      <Filter>BehaviorTree</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\NodeEditor\crude_json.h">
+      <Filter>Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\NodeEditor\imgui_bezier_math.h">
+      <Filter>Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\NodeEditor\imgui_canvas.h">
+      <Filter>Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\NodeEditor\imgui_extra_keys.h">
+      <Filter>Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\NodeEditor\imgui_extra_math.h">
+      <Filter>Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\NodeEditor\imgui_node_editor.h">
+      <Filter>Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\NodeEditor\imgui_node_editor_internal.h">
+      <Filter>Gui\ImGui\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\imgui.h">
+      <Filter>Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\imgui_impl_dx11.h">
+      <Filter>Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\imgui_impl_dx12.h">
+      <Filter>Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\imgui_impl_win32.h">
+      <Filter>Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\imgui_internal.h">
+      <Filter>Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\imstb_rectpack.h">
+      <Filter>Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\imstb_textedit.h">
+      <Filter>Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\imstb_truetype.h">
+      <Filter>Gui\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ui.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\setting_ui.h">
+      <Filter>Gui</Filter>
+    </ClInclude>
+    <ClInclude Include="Platform\platform.h">
+      <Filter>Platform</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\id_generator.h">
       <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\logger.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\path.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util\time_stamp.h">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\dataBlock.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\entity.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\env.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Gui\ImGui\imconfig.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\info.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\input.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\message.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\model.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\node.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\object_pool.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\query.h">
+      <Filter>Structure</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -235,13 +235,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ImGui\NodeEditor\imgui_bezier_math.inl">
+    <None Include="Gui\ImGui\NodeEditor\imgui_bezier_math.inl">
       <Filter>Gui\ImGui\NodeEditor</Filter>
     </None>
-    <None Include="ImGui\NodeEditor\imgui_extra_math.inl">
+    <None Include="Gui\ImGui\NodeEditor\imgui_extra_math.inl">
       <Filter>Gui\ImGui\NodeEditor</Filter>
     </None>
-    <None Include="ImGui\NodeEditor\imgui_node_editor_internal.inl">
+    <None Include="Gui\ImGui\NodeEditor\imgui_node_editor_internal.inl">
       <Filter>Gui\ImGui\NodeEditor</Filter>
     </None>
   </ItemGroup>

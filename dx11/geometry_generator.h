@@ -2,7 +2,7 @@
 #define _GEOMETRYGENERATOR
 
 #include "graphics_util.h"
-#include "model.h"
+#include <structure/model.h>
 #include "model_loader.h"
 #include "animation_clip.h"
 #include <tuple>

@@ -4,7 +4,7 @@
 #include "black_board.h"
 #include "mesh_renderer.h"
 #include "skybox_renderer.h"
-#include <behavior_tree_builder.h>
+#include <behaviortree/behavior_tree_builder.h>
 
 namespace graphics {
 

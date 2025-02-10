@@ -5,12 +5,12 @@
 #include "graphics_util.h"
 #include "message_receiver.h"
 #include "tree_node.h"
-#include <behavior_tree_builder.h>
-#include <logger.h>
-#include <message.h>
-#include <platform.h>
-#include <setting_ui.h>
-#include <time_stamp.h>
+#include <behaviortree/behavior_tree_builder.h>
+#include <util/logger.h>
+#include <structure/message.h>
+#include <platform/platform.h>
+#include <gui/setting_ui.h>
+#include <util/time_stamp.h>
 
 namespace graphics {
 

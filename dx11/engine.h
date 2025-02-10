@@ -1,9 +1,9 @@
 #ifndef _APPLICATION
 #define _APPLICATION
 
-#include "black_board.h"
-#include "graphics_util.h"
-#include "message_receiver.h"
+#include "pipeline/black_board.h"
+#include "gpu/graphics_util.h"
+#include "util/message_receiver.h"
 #include "tree_node.h"
 #include <behaviortree/behavior_tree_builder.h>
 #include <util/logger.h>

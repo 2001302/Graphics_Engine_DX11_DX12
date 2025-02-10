@@ -1,16 +1,16 @@
 #ifndef _TREENODE
 #define _TREENODE
 
-#include "camera_node.h"
-#include "mesh_objects_node.h"
-#include "gpu_node.h"
-#include "gui_node.h"
-#include "light_node.h"
-#include "mirror_effect_node.h"
-#include "post_process_node.h"
-#include "shadow_effect_node.h"
-#include "shared_resource_node.h"
-#include "skybox_node.h"
+#include "behaviortreenode/camera_node.h"
+#include "behaviortreenode/mesh_objects_node.h"
+#include "behaviortreenode/gpu_node.h"
+#include "behaviortreenode/gui_node.h"
+#include "behaviortreenode/light_node.h"
+#include "behaviortreenode/mirror_effect_node.h"
+#include "behaviortreenode/post_process_node.h"
+#include "behaviortreenode/shadow_effect_node.h"
+#include "behaviortreenode/shared_resource_node.h"
+#include "behaviortreenode/skybox_node.h"
 
 namespace graphics {
 namespace node {

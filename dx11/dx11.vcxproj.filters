@@ -1,166 +1,166 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="model_loader.h">
-      <Filter>Graphics\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="geometry_generator.h">
-      <Filter>Graphics\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="message_receiver.h">
-      <Filter>Graphics\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh_renderer.h">
-      <Filter>Graphics\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="tone_mapping.h">
-      <Filter>Graphics\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="image_filter.h">
-      <Filter>Graphics\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="skinned_mesh_renderer.h">
-      <Filter>Graphics\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="camera_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh_objects_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="gui_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="light_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="mirror_effect_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="post_process_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="shadow_effect_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="shared_resource_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="skybox_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="vertex.h">
-      <Filter>Graphics\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="animation_clip.h">
-      <Filter>Graphics\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="constant_buffer.h">
-      <Filter>Graphics\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>Graphics\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>Graphics\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="structured_buffer.h">
-      <Filter>Graphics\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="texture_3d.h">
-      <Filter>Graphics\Structure</Filter>
-    </ClInclude>
-    <ClInclude Include="gpu_node.h">
-      <Filter>Graphics\BehaviorTreeNode</Filter>
-    </ClInclude>
-    <ClInclude Include="animator.h">
-      <Filter>Graphics\Component</Filter>
-    </ClInclude>
     <ClInclude Include="engine.h">
       <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="black_board.h">
-      <Filter>Graphics\Pipeline</Filter>
-    </ClInclude>
-    <ClInclude Include="pch.h">
-      <Filter>Graphics\Gpu</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics_pso.h">
-      <Filter>Graphics\Gpu\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics_common.h">
-      <Filter>Graphics\Gpu\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics_core.h">
-      <Filter>Graphics\Gpu\Core</Filter>
-    </ClInclude>
-    <ClInclude Include="graphics_util.h">
-      <Filter>Graphics\Gpu\Util</Filter>
-    </ClInclude>
-    <ClInclude Include="render_target_object.h">
-      <Filter>Graphics\Pipeline</Filter>
     </ClInclude>
     <ClInclude Include="tree_node.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="camera.h">
+    <ClInclude Include="Component/animator.h">
+      <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component/image_filter.h">
+      <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component/mesh_renderer.h">
+      <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component/mirror_renderer.h">
+      <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component/skinned_mesh_renderer.h">
+      <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component/skybox_renderer.h">
+      <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Component/tone_mapping.h">
+      <Filter>Graphics\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeNode/camera_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeNode/gui_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeNode/gpu_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeNode/light_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeNode/mesh_objects_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeNode/mirror_effect_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeNode/post_process_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeNode/shadow_effect_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeNode/shared_resource_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="BehaviorTreeNode/skybox_node.h">
+      <Filter>Graphics\BehaviorTreeNode</Filter>
+    </ClInclude>
+    <ClInclude Include="Gpu/graphics_common.h">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Gpu/graphics_core.h">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Gpu/graphics_pso.h">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Gpu/graphics_util.h">
+      <Filter>Graphics\Gpu\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Pipeline/black_board.h">
       <Filter>Graphics\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="skybox_renderer.h">
-      <Filter>Graphics\Component</Filter>
+    <ClInclude Include="Pipeline/camera.h">
+      <Filter>Graphics\Pipeline</Filter>
     </ClInclude>
-    <ClInclude Include="mirror_renderer.h">
-      <Filter>Graphics\Component</Filter>
+    <ClInclude Include="Pipeline/render_target_object.h">
+      <Filter>Graphics\Pipeline</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure/animation_clip.h">
+      <Filter>Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure/constant_buffer.h">
+      <Filter>Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure/material.h">
+      <Filter>Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure/mesh.h">
+      <Filter>Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure/structured_buffer.h">
+      <Filter>Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure/texture_3d.h">
+      <Filter>Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure/vertex.h">
+      <Filter>Graphics\Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Util/geometry_generator.h">
+      <Filter>Graphics\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util/message_receiver.h">
+      <Filter>Graphics\Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Util/model_loader.h">
+      <Filter>Graphics\Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="geometry_generator.cpp">
-      <Filter>Graphics\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="message_receiver.cpp">
-      <Filter>Graphics\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="model_loader.cpp">
-      <Filter>Graphics\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh_renderer.cpp">
-      <Filter>Graphics\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="tone_mapping.cpp">
-      <Filter>Graphics\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="skinned_mesh_renderer.cpp">
-      <Filter>Graphics\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="animator.cpp">
-      <Filter>Graphics\Component</Filter>
-    </ClCompile>
     <ClCompile Include="engine.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="graphics_common.cpp">
-      <Filter>Graphics\Gpu\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics_core.cpp">
-      <Filter>Graphics\Gpu\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics_pso.cpp">
-      <Filter>Graphics\Gpu\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="graphics_util.cpp">
-      <Filter>Graphics\Gpu\Util</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>Graphics\Pipeline</Filter>
-    </ClCompile>
-    <ClCompile Include="mirror_renderer.cpp">
-      <Filter>Graphics\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="skybox_renderer.cpp">
-      <Filter>Graphics\Component</Filter>
-    </ClCompile>
     <ClCompile Include="tree_node.cpp">
       <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Component/animator.cpp">
+      <Filter>Graphics\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component/mesh_renderer.cpp">
+      <Filter>Graphics\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component/mirror_renderer.cpp">
+      <Filter>Graphics\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component/skinned_mesh_renderer.cpp">
+      <Filter>Graphics\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component/skybox_renderer.cpp">
+      <Filter>Graphics\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Component/tone_mapping.cpp">
+      <Filter>Graphics\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Gpu/graphics_common.cpp">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Gpu/graphics_core.cpp">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Gpu/graphics_pso.cpp">
+      <Filter>Graphics\Gpu\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Gpu/graphics_util.cpp">
+      <Filter>Graphics\Gpu\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Pipeline/camera.cpp">
+      <Filter>Graphics\Pipeline</Filter>
+    </ClCompile>
+    <ClCompile Include="Util/geometry_generator.cpp">
+      <Filter>Graphics\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util/message_receiver.cpp">
+      <Filter>Graphics\Util</Filter>
+    </ClCompile>
+    <ClCompile Include="Util/model_loader.cpp">
+      <Filter>Graphics\Util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

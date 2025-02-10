@@ -26,7 +26,7 @@
 #include <windows.h>
 #include <wrl/client.h>
 
-#include "d3dx12.h"
+#include "util/d3dx12.h"
 
 #pragma comment(lib, "d3d12.lib")
 #pragma comment(lib, "dxgi.lib") 

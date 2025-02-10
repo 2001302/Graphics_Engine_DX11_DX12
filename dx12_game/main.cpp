@@ -1,6 +1,6 @@
 #pragma once
 
-#include "animator.h"
+#include <component/animator.h>
 #include <engine.h>
 #include <util/path.h>
 

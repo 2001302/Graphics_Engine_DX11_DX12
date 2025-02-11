@@ -40,8 +40,8 @@ class MeshLoader {
     void UpdateBoneIDs(aiNode *node, int *counter) {
         static int id = 0;
         if (node) {
-            if (m_aniData.boneNameToId.count(node->mName.C_Str())) {
-                m_aniData.boneNameToId[node->mName.C_Str()] = *counter;
+            if (animation_data.boneNameToId.count(node->mName.C_Str())) {
+                animation_data.boneNameToId[node->mName.C_Str()] = *counter;
                 *counter += 1;
             }
             for (UINT i = 0; i < node->mNumChildren; i++) {
@@ -51,12 +51,12 @@ class MeshLoader {
     }
 
   public:
-    string m_basePath;
-    vector<MeshData> m_meshes;
+    string base_path;
+    vector<MeshData> meshes;
 
-    AnimationData m_aniData;
+    AnimationData animation_data;
 
-    bool m_isGLTF = false; // gltf or fbx
-    bool m_revertNormals = false;
+    bool is_GLTF = false; // gltf or fbx
+    bool revert_normals = false;
 };
 } // namespace core

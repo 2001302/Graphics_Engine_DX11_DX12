@@ -55,24 +55,24 @@ string GetExtension(const string filename) {
 
 void MeshLoader::ReadAnimation(const aiScene *pScene) {
 
-    m_aniData.clips.resize(pScene->mNumAnimations);
+    animation_data.clips.resize(pScene->mNumAnimations);
 
     for (uint32_t i = 0; i < pScene->mNumAnimations; i++) {
 
-        auto &clip = m_aniData.clips[i];
+        auto &clip = animation_data.clips[i];
 
         const aiAnimation *ani = pScene->mAnimations[i];
 
         clip.duration = ani->mDuration / 100.0f;
         clip.ticksPerSec = ani->mTicksPerSecond;
-        clip.keys.resize(m_aniData.boneNameToId.size());
+        clip.keys.resize(animation_data.boneNameToId.size());
         clip.numChannels = ani->mNumChannels;
         clip.numKeys = clip.keys.size();
 
         for (uint32_t c = 0; c < ani->mNumChannels; c++) {
             const aiNodeAnim *nodeAnim = ani->mChannels[c];
             const int boneId =
-                m_aniData.boneNameToId[nodeAnim->mNodeName.C_Str()];
+                animation_data.boneNameToId[nodeAnim->mNodeName.C_Str()];
             clip.keys[boneId].resize(nodeAnim->mNumPositionKeys);
             for (uint32_t k = 0; k < nodeAnim->mNumPositionKeys; k++) {
                 const auto pos = nodeAnim->mPositionKeys[k].mValue;
@@ -91,16 +91,16 @@ void MeshLoader::Load(std::string basePath, std::string filename,
                        bool revertNormals) {
 
     if (GetExtension(filename) == ".gltf") {
-        m_isGLTF = true;
-        m_revertNormals = revertNormals;
+        is_GLTF = true;
+        revert_normals = revertNormals;
     }
 
-    m_basePath = basePath;
+    base_path = basePath;
 
     Assimp::Importer importer;
 
     const aiScene *pScene = importer.ReadFile(
-        m_basePath + filename,
+        base_path + filename,
         aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
     if (pScene) {
 
@@ -109,11 +109,11 @@ void MeshLoader::Load(std::string basePath, std::string filename,
         int counter = 0;
         UpdateBoneIDs(pScene->mRootNode, &counter);
 
-        m_aniData.boneIdToName.resize(m_aniData.boneNameToId.size());
-        for (auto &i : m_aniData.boneNameToId)
-            m_aniData.boneIdToName[i.second] = i.first;
+        animation_data.boneIdToName.resize(animation_data.boneNameToId.size());
+        for (auto &i : animation_data.boneNameToId)
+            animation_data.boneIdToName[i.second] = i.first;
 
-        m_aniData.boneParents.resize(m_aniData.boneNameToId.size(), -1);
+        animation_data.boneParents.resize(animation_data.boneNameToId.size(), -1);
 
         Matrix tr; // Initial transformation
         ProcessNode(pScene->mRootNode, pScene, tr);
@@ -123,7 +123,7 @@ void MeshLoader::Load(std::string basePath, std::string filename,
 
         UpdateTangents();
     } else {
-        std::cout << "Failed to read file: " << m_basePath + filename
+        std::cout << "Failed to read file: " << base_path + filename
                   << std::endl;
         auto errorDescription = importer.GetErrorString();
         std::cout << "Assimp error: " << errorDescription << endl;
@@ -132,19 +132,19 @@ void MeshLoader::Load(std::string basePath, std::string filename,
 
 void MeshLoader::LoadAnimation(string basePath, string filename) {
 
-    m_basePath = basePath;
+    base_path = basePath;
 
     Assimp::Importer importer;
 
     const aiScene *pScene = importer.ReadFile(
-        m_basePath + filename,
+        base_path + filename,
         aiProcess_Triangulate | aiProcess_ConvertToLeftHanded);
 
     if (pScene && pScene->HasAnimations()) {
         ReadAnimation(pScene);
     } else {
         std::cout << "Failed to read animation from file: "
-                  << m_basePath + filename << std::endl;
+                  << base_path + filename << std::endl;
         auto errorDescription = importer.GetErrorString();
         std::cout << "Assimp error: " << errorDescription << endl;
     }
@@ -155,7 +155,7 @@ void MeshLoader::UpdateTangents() {
     using namespace std;
     using namespace DirectX;
 
-    for (auto &m : this->m_meshes) {
+    for (auto &m : this->meshes) {
 
         vector<XMFLOAT3> positions(m.vertices.size());
         vector<XMFLOAT3> normals(m.vertices.size());
@@ -193,7 +193,7 @@ void MeshLoader::FindDeformingBones(const aiScene *scene) {
             for (uint32_t i = 0; i < mesh->mNumBones; i++) {
                 const aiBone *bone = mesh->mBones[i];
 
-                m_aniData.boneNameToId[bone->mName.C_Str()] = -1;
+                animation_data.boneNameToId[bone->mName.C_Str()] = -1;
             }
         }
     }
@@ -202,18 +202,18 @@ void MeshLoader::FindDeformingBones(const aiScene *scene) {
 const aiNode *MeshLoader::FindParent(const aiNode *node) {
     if (!node)
         return nullptr;
-    if (m_aniData.boneNameToId.count(node->mName.C_Str()) > 0)
+    if (animation_data.boneNameToId.count(node->mName.C_Str()) > 0)
         return node;
     return FindParent(node->mParent);
 }
 
 void MeshLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
 
-    if (node->mParent && m_aniData.boneNameToId.count(node->mName.C_Str()) &&
+    if (node->mParent && animation_data.boneNameToId.count(node->mName.C_Str()) &&
         FindParent(node->mParent)) {
-        const auto boneId = m_aniData.boneNameToId[node->mName.C_Str()];
-        m_aniData.boneParents[boneId] =
-            m_aniData.boneNameToId[FindParent(node->mParent)->mName.C_Str()];
+        const auto boneId = animation_data.boneNameToId[node->mName.C_Str()];
+        animation_data.boneParents[boneId] =
+            animation_data.boneNameToId[FindParent(node->mParent)->mName.C_Str()];
     }
 
     Matrix m(&node->mTransformation.a1);
@@ -225,7 +225,7 @@ void MeshLoader::ProcessNode(aiNode *node, const aiScene *scene, Matrix tr) {
         for (auto &v : newMesh.vertices) {
             v.position = DirectX::SimpleMath::Vector3::Transform(v.position, m);
         }
-        m_meshes.push_back(newMesh);
+        meshes.push_back(newMesh);
     }
 
     for (UINT i = 0; i < node->mNumChildren; i++) {
@@ -242,7 +242,7 @@ string MeshLoader::ReadTextureFilename(const aiScene *scene,
         material->GetTexture(type, 0, &filepath);
 
         string fullPath =
-            m_basePath +
+            base_path +
             string(filesystem::path(filepath.C_Str()).filename().string());
 
         if (!filesystem::exists(fullPath)) {
@@ -286,7 +286,7 @@ MeshData MeshLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
         vertex.position.z = mesh->mVertices[i].z;
 
         vertex.normal.x = mesh->mNormals[i].x;
-        if (m_isGLTF) {
+        if (is_GLTF) {
             vertex.normal.y = mesh->mNormals[i].z;
             vertex.normal.z = -mesh->mNormals[i].y;
         } else {
@@ -294,7 +294,7 @@ MeshData MeshLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
             vertex.normal.z = mesh->mNormals[i].z;
         }
 
-        if (m_revertNormals) {
+        if (revert_normals) {
             vertex.normal *= -1.0f;
         }
 
@@ -319,8 +319,8 @@ MeshData MeshLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
         vector<vector<float>> boneWeights(vertices.size());
         vector<vector<uint8_t>> boneIndices(vertices.size());
 
-        m_aniData.offsetMatrices.resize(m_aniData.boneNameToId.size());
-        m_aniData.boneTransforms.resize(m_aniData.boneNameToId.size());
+        animation_data.offsetMatrices.resize(animation_data.boneNameToId.size());
+        animation_data.boneTransforms.resize(animation_data.boneNameToId.size());
 
         int count = 0;
         for (uint32_t i = 0; i < mesh->mNumBones; i++) {
@@ -329,9 +329,9 @@ MeshData MeshLoader::ProcessMesh(aiMesh *mesh, const aiScene *scene) {
             // cout << "BoneMap " << count++ << " : " << bone->mName.C_Str()
             //     << " NumBoneWeights = " << bone->mNumWeights << endl;
 
-            const uint32_t boneId = m_aniData.boneNameToId[bone->mName.C_Str()];
+            const uint32_t boneId = animation_data.boneNameToId[bone->mName.C_Str()];
 
-            m_aniData.offsetMatrices[boneId] =
+            animation_data.offsetMatrices[boneId] =
                 Matrix((float *)&bone->mOffsetMatrix).Transpose();
 
             for (uint32_t j = 0; j < bone->mNumWeights; j++) {

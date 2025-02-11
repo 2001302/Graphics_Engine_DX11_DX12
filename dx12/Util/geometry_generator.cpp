@@ -504,7 +504,7 @@ vector<MeshData> GeometryGenerator::ReadFromFile(std::string basePath,
 
     MeshLoader modelLoader;
     modelLoader.Load(basePath, filename, revertNormals);
-    vector<MeshData> &meshes = modelLoader.m_meshes;
+    vector<MeshData> &meshes = modelLoader.meshes;
 
     // Normalize vertices
     Vector3 vmin(1000, 1000, 1000);
@@ -654,10 +654,10 @@ auto GeometryGenerator::ReadAnimationFromFile(string basePath, string filename,
     MeshLoader modelLoader;
     modelLoader.Load(basePath, filename, revertNormals);
 
-    GeometryGenerator::Normalize(Vector3(0.0f), 1.0f, modelLoader.m_meshes,
-                                 modelLoader.m_aniData);
+    GeometryGenerator::Normalize(Vector3(0.0f), 1.0f, modelLoader.meshes,
+                                 modelLoader.animation_data);
 
-    return {modelLoader.m_meshes, modelLoader.m_aniData};
+    return {modelLoader.meshes, modelLoader.animation_data};
 }
 
 void GeometryGenerator::Normalize(const Vector3 center,

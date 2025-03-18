@@ -20,16 +20,10 @@ This engine is based on DirectX 11 and DirectX 12.
 1. Run third_party/_1.Prepare_Third_Party.bat
 2. Build with Visual Studio 2022
 
-# Structure
+# Software Design
+## Project Dependencies
 
-![Image](https://github.com/user-attachments/assets/74e371e0-1f8b-4e6d-adc8-b9322630912b)
-
-# BehaviorTree
-
-![Image](https://github.com/user-attachments/assets/c24d9c90-4668-4c82-8b1c-a3a1256cebb0)
-
-- Basically, the process follows the order of data block bind-build-run.
-- Individual functionalities are managed by separate Nodes.
-- The execution of a Node can be determined at runtime.
-- Nodes should minimize the use of new and reuse resources from the DataBlock whenever possible.
-- If a Node fails, it logs an error and may escalate the failure to the parent Node.
+- Common : 공용 인터페이스 및 자료구조를 포함하는 프로젝트로, 특정 플랫폼이나 라이브러리에 의존성이 없도록 설계한다.
+- GraphicsEngine : DX12 및 DX11 등 Graphics API에 의존성을 가지며 Rendering Pipeline을 제어한다. 추후 다른 API으로 확장할 수 있어야한다.(Vulkan, Metal 등)
+## Pipeline
+## Class Diagram

@@ -28,8 +28,9 @@ This engine is based on DirectX 11 and DirectX 12.
 ## Pipeline
 ![Image](https://github.com/user-attachments/assets/c0b7338a-2b8f-4c0b-a273-13c5f907c703)
 ## Class Diagram
-- 
+- GpuCore
 ![Image](https://github.com/user-attachments/assets/b83c87f0-8253-4a6e-88c3-70b61f90f16b)
+- Platform
 ![Image](https://github.com/user-attachments/assets/3759e3d0-1411-4d2b-a505-b82576f75610)
 
 

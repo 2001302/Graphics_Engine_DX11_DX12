@@ -53,10 +53,10 @@
     <ClInclude Include="BehaviorTree\animation_node.h" />
     <ClInclude Include="BehaviorTree\behavior_tree_builder.h" />
     <ClInclude Include="BehaviorTree\conditional_node.h" />
+    <ClInclude Include="Structure\component.h" />
     <ClInclude Include="Structure\dataBlock.h" />
     <ClInclude Include="Structure\entity.h" />
     <ClInclude Include="Structure\env.h" />
-    <ClInclude Include="component.h" />
     <ClInclude Include="Util\path.h" />
     <ClInclude Include="Structure\query.h" />
     <ClInclude Include="Structure\model.h" />

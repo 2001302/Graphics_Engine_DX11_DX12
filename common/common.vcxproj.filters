@@ -87,9 +87,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="component.h">
-      <Filter>Structure</Filter>
-    </ClInclude>
     <ClInclude Include="BehaviorTree\action_node.h">
       <Filter>BehaviorTree</Filter>
     </ClInclude>
@@ -205,6 +202,9 @@
       <Filter>Structure</Filter>
     </ClInclude>
     <ClInclude Include="Structure\query.h">
+      <Filter>Structure</Filter>
+    </ClInclude>
+    <ClInclude Include="Structure\component.h">
       <Filter>Structure</Filter>
     </ClInclude>
   </ItemGroup>

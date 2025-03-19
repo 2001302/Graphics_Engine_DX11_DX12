@@ -23,8 +23,8 @@ This engine is based on DirectX 11 and DirectX 12.
 # Software Design
 ## Project Dependencies
 ![Image](https://github.com/user-attachments/assets/6b556983-145e-43c1-aa5d-41b1ffc43e71)
-- Common : 공용 인터페이스 및 자료구조를 포함하는 프로젝트로, 특정 플랫폼이나 라이브러리에 의존성이 없도록 설계한다.
-- GraphicsEngine : DX12 및 DX11 등 Graphics API에 의존성을 가지며 Rendering Pipeline을 제어한다. 추후 다른 API으로 확장할 수 있어야한다.(Vulkan, Metal 등)
+- Common: A project that includes shared interfaces and data structures, designed to be independent of any specific platform or library.
+- GraphicsEngine: A project that manages the rendering pipeline and depends on graphics APIs such as DX12 and DX11. It should be designed for future expansion to support other APIs like Vulkan and Metal.
 ## Pipeline
 ![Image](https://github.com/user-attachments/assets/c0b7338a-2b8f-4c0b-a273-13c5f907c703)
 ## Class Diagram
